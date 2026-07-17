@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using GitExtensions.Extensibility.Translations;
@@ -9,6 +10,22 @@ namespace GitUI.Compat;
 // field uses the shared walker.
 internal static class AvaloniaTranslationUtils
 {
+    private static readonly ConditionalWeakTable<TextBlock, TextBlockSource> TextBlockSources = new();
+
+    internal static void RemoveTextBlockMnemonicMarkers(object host)
+    {
+        foreach ((_, object item) in TranslationUtils.GetObjFields(host, "$this"))
+        {
+            if (item is not TextBlock textBlock || textBlock.Text is not string text)
+            {
+                continue;
+            }
+
+            RememberTextBlockSource(textBlock, text);
+            textBlock.Text = RemoveAvaloniaMnemonics(text);
+        }
+    }
+
     public static void AddTranslationItemsFromFields(string category, object host, ITranslation translation)
     {
         List<(string Name, object Item)> sharedItems = [];
@@ -60,6 +77,12 @@ internal static class AvaloniaTranslationUtils
                 {
                     SetAvaloniaText(item, convertMnemonics ? ToAvaloniaMnemonics(translatedText) : translatedText);
                 }
+                else if (item is TextBlock)
+                {
+                    // English XLF targets are intentionally empty, so the source AXAML is
+                    // also the display fallback and still needs its access marker removed.
+                    SetAvaloniaText(item, text);
+                }
             }
 
             if (hasToolTip && ToolTip.GetTip((Control)item) is string toolTip)
@@ -100,7 +123,7 @@ internal static class AvaloniaTranslationUtils
                 text = contentControl.Content as string;
                 return true;
             case TextBlock textBlock:
-                text = textBlock.Text;
+                text = GetTextBlockSource(textBlock);
                 return true;
             default:
                 text = null;
@@ -131,7 +154,9 @@ internal static class AvaloniaTranslationUtils
                 contentControl.Content = text;
                 break;
             case TextBlock textBlock:
-                textBlock.Text = text;
+                // TextBlock has no access-key presenter. Keep the marker in AXAML so the
+                // existing WinForms XLF key round-trips, but do not render it to the user.
+                textBlock.Text = RemoveAvaloniaMnemonics(text);
                 break;
         }
     }
@@ -162,4 +187,25 @@ internal static class AvaloniaTranslationUtils
             .Replace('_', '&')
             .Replace(escapedUnderscore, "_", StringComparison.Ordinal);
     }
+
+    private static string? GetTextBlockSource(TextBlock textBlock)
+    {
+        if (TextBlockSources.TryGetValue(textBlock, out TextBlockSource? source))
+        {
+            return source.Text;
+        }
+
+        string? text = textBlock.Text;
+        if (text is not null)
+        {
+            RememberTextBlockSource(textBlock, text);
+        }
+
+        return text;
+    }
+
+    private static void RememberTextBlockSource(TextBlock textBlock, string text)
+        => TextBlockSources.GetValue(textBlock, _ => new TextBlockSource(text));
+
+    private sealed record TextBlockSource(string Text);
 }

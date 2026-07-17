@@ -15,6 +15,7 @@ public class TranslatedControl : UserControl, ITranslate
     protected void InitializeComplete()
     {
         Translator.Translate(this, AppSettings.CurrentTranslation);
+        AvaloniaTranslationUtils.RemoveTextBlockMnemonicMarkers(this);
     }
 
     void IDisposable.Dispose()
