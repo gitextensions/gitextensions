@@ -81,9 +81,8 @@
                   IsEnabled="False" />
           <Button x:Name="CommitAndPush"
                   Margin="6,0,0,0"
-                  IsEnabled="False">
-            <TextBlock Text="Commit &amp; _push" />
-          </Button>
+                  IsEnabled="False"
+                  Content="Commit &amp; _push" />
         </StackPanel>
         <TextBox x:Name="Message"
                  AcceptsReturn="True"

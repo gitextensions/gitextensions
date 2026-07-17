@@ -166,6 +166,17 @@ public sealed class CloneAndInitTests
     }
 
     [AvaloniaTest]
+    public void FormClone_should_not_render_mnemonic_markers_in_plain_text_labels()
+    {
+        FormClone form = new();
+
+        form.FindControl<TextBlock>("repositoryLabel")!.Text.Should().Be("Repository to clone:");
+        form.FindControl<TextBlock>("destinationLabel")!.Text.Should().Be("Destination:");
+        form.FindControl<TextBlock>("subdirectoryLabel")!.Text.Should().Be("Subdirectory to create:");
+        form.FindControl<TextBlock>("brachLabel")!.Text.Should().Be("Branch:");
+    }
+
+    [AvaloniaTest]
     public void FormClone_should_use_existing_translation_keys_once()
     {
         FormClone form = new();

@@ -94,7 +94,7 @@ public sealed class FormCommitTests
         ToolTip.GetTip(unstageAll).Should().Be("Unstage all");
         Button commitAndPush = form.FindControl<Button>("CommitAndPush")
             ?? throw new InvalidOperationException("Commit-and-push button was not created.");
-        (commitAndPush.Content as TextBlock)?.Text.Should().Be("Commit & _push");
+        commitAndPush.Content.Should().Be("Commit & _push");
         commitAndPush.IsEnabled.Should().BeFalse("there are no staged changes in the construction-only form");
 
         string[] emittedKeys = translation.ReceivedCalls()

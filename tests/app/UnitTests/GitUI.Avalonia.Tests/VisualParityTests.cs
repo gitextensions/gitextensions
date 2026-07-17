@@ -166,11 +166,23 @@ public sealed class VisualParityTests
 
             form.MinWidth.Should().Be(900);
             form.MinHeight.Should().Be(560);
+            form.repoObjectsTree.Bounds.Width.Should().BeApproximately(258, 0.1);
             form.repoObjectsTree.Bounds.Width.Should().BeGreaterThan(0);
             form.RevisionGrid.Bounds.Width.Should().BeGreaterThan(0);
             form.RevisionGrid.Bounds.Height.Should().BeGreaterThan(0);
             form.fileStatusList.Bounds.Height.Should().BeGreaterThan(0);
             form.fileViewer.Bounds.Width.Should().BeGreaterThan(0);
+
+            GridSplitter[] splitters =
+            [
+                .. form.GetVisualDescendants().OfType<GridSplitter>(),
+            ];
+            splitters.Where(splitter => splitter.ResizeDirection == GridResizeDirection.Columns)
+                .Should().HaveCount(2)
+                .And.OnlyContain(splitter => splitter.Bounds.Width == 6);
+            splitters.Where(splitter => splitter.ResizeDirection == GridResizeDirection.Rows)
+                .Should().ContainSingle()
+                .Which.Bounds.Height.Should().Be(6);
         }
         finally
         {

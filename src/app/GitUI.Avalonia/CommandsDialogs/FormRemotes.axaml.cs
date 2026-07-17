@@ -607,9 +607,10 @@ Inactive remote is completely invisible to git.");
         comboBoxPushUrl.IsVisible = visible;
         folderBrowserButtonPushUrl.IsVisible = visible;
 
-        label2.Text = AvaloniaTranslationUtils.ToAvaloniaMnemonics(visible
-            ? _labelUrlAsFetch.Text
-            : _labelUrlAsFetchPush.Text);
+        label2.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(
+            AvaloniaTranslationUtils.ToAvaloniaMnemonics(visible
+                ? _labelUrlAsFetch.Text
+                : _labelUrlAsFetchPush.Text));
     }
 
     private void FillWithSomeGeneratedRemoteUrls(ComboBox combobox, Func<ConfigFileRemote, string> urlGetter)
