@@ -54,6 +54,24 @@
                            Color="#808080" />
           <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
                            Color="#8A8A8A" />
+          <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#EBEBEB" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberSelectedBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffSectionBrush" Color="#E6E6E6" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedBrush" Color="#FFC8C8" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedBrush" Color="#C8FFC8" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimBrush" Color="#FFF1F1" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimBrush" Color="#F1FFF1" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedBrush" Color="#F6CEFF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedBrush" Color="#C8D0F4" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedForegroundBrush" Color="#D3000B" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedForegroundBrush" Color="#189100" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimForegroundBrush" Color="#F4C0C2" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimForegroundBrush" Color="#C5E4BF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedForegroundBrush" Color="#B148C6" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedForegroundBrush" Color="#005DFF" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
           <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
@@ -78,6 +96,24 @@
                            Color="#CFB3B3" />
           <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
                            Color="#7A7A7A" />
+          <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#F1F1F1" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#252526" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBrush" Color="#AAAAAA" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberSelectedBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffSectionBrush" Color="#5F5E5E" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedBrush" Color="#6E1919" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedBrush" Color="#076641" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimBrush" Color="#453030" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimBrush" Color="#274439" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedBrush" Color="#622163" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedBrush" Color="#12396B" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedForegroundBrush" Color="#CD3131" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedForegroundBrush" Color="#0DBC79" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimForegroundBrush" Color="#5E3131" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimForegroundBrush" Color="#2B544A" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedForegroundBrush" Color="#D670D6" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedForegroundBrush" Color="#65A4FF" />
         </ResourceDictionary>
       </ResourceDictionary.ThemeDictionaries>
     </ResourceDictionary>
@@ -211,6 +247,8 @@
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsFixedWidthFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsFixedWidthFontStyle}" />
     <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsFixedWidthFontWeight}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsDiffEditorBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDiffTextBrush}" />
   </Style>
   <Style Selector="SelectableTextBlock.gitextensions-commit-header">
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsMonospaceFontFamily}" />
