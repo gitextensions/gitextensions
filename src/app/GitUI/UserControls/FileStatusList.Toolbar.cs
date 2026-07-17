@@ -291,6 +291,10 @@ partial class FileStatusList
         btnFindInFilesGitGrep.Visible = findInFilesGitGrepVisible;
         sepOptions.Visible = findInFilesGitGrepVisible;
 
+        btnAiFilter.Visible = CanUseAiFilter;
+        btnAiFilterOptions.Visible = CanUseAiFilter;
+        sepAiFilter.Visible = CanUseAiFilter;
+
         for (int itemIndex = 0; itemIndex < FindUsingMenuItems.Length; ++itemIndex)
         {
             FindUsingMenuItems[itemIndex].Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value == itemIndex;

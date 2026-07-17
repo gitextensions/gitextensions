@@ -35,6 +35,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         InitializeComplete();
         HotkeysEnabled = true;
         DiffFiles.CanUseFindInCommitFilesGitGrep = true;
+        DiffFiles.CanUseAiFilter = true;
         DiffText.TopScrollReached += FileViewer_TopScrollReached;
         DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
         DiffText.LinePatchingBlocksUntilReload = true;
