@@ -115,6 +115,11 @@ For example:
 
 ## Testing
 
+* **ALWAYS run the associated tests locally before pushing to CI.** Whenever you change code, identify the tests that
+  cover it and run them locally (e.g. `dotnet test <project> --filter "FullyQualifiedName~<Type>"`) and confirm they
+  pass. **NEVER** rely on CI as the first place a change is tested — pushing untested changes wastes CI compute and
+  hides failures behind slow feedback. If a change cannot be tested locally (e.g. an architecture-specific path),
+  say so explicitly and state what was and was not verified.
 * We use NUnit SDK.
 * Do not emit "Act", "Arrange" or "Assert" comments.
 * The test names must follow snake-casing in the suffix BUT keeping the methods under test intact.
