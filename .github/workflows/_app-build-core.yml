@@ -198,7 +198,9 @@ jobs:
       # aborted and named in a Sequence_*.xml, so a deadlocked test (e.g. a UI integration test) fails fast instead
       # of silently eating the whole job timeout. The slowest healthy test is ~25s on x64 / ~50s on the slower arm64
       # runner, so 3m leaves ample headroom for CI variance while still surfacing a real hang quickly.
-      run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx --blame-hang-timeout 3m --blame-hang-dump-type none /bl:artifacts\log\tests.binlog
+      # --blame-hang-dump-type mini captures a minidump (all managed thread stacks) of the hung test host so the
+      # actual deadlock is diagnosable from the artifact, instead of only knowing which test was running.
+      run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx --blame-hang-timeout 3m --blame-hang-dump-type mini /bl:artifacts\log\tests.binlog
 
     - name: Upload test results
       id: upload-test-results
@@ -212,7 +214,9 @@ jobs:
         if-no-files-found: ignore
 
     - name: Upload build logs on failure
-      if: failure()
+      # Also run on cancellation (e.g. the job hits its timeout while a test is stuck) so a stuck pipeline still
+      # yields the hang dump and blame sequence needed to diagnose the deadlock, not just on a clean step failure.
+      if: failure() || cancelled()
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       with:
         # Suffixed with the runner image so parallel release matrix legs do not collide on a shared artifact name.
@@ -222,5 +226,6 @@ jobs:
           **\English*.xlf
           artifacts\Release\**\*.dgml
           **\Sequence_*.xml
+          **\*.dmp
         retention-days: 7
         if-no-files-found: ignore
