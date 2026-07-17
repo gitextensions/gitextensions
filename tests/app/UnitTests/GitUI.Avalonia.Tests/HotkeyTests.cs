@@ -57,6 +57,18 @@ public sealed class HotkeyTests
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.Rebase
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.E));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.FocusRevisionGrid
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D1));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.FocusCommitInfo
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D2));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.FocusDiff
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D3));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.FocusNextTab
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Tab));
         }
         finally
         {
@@ -240,6 +252,46 @@ public sealed class HotkeyTests
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_workspace_hotkeys_should_select_and_cycle_functional_tabs()
+    {
+        CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
+        AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+        AppSettings.ShowSplitViewLayout = true;
+        (FormBrowse form, _, _) = CreateBrowseForm(
+            new HotkeyCommand((int)FormBrowse.Command.FocusDiff, nameof(FormBrowse.Command.FocusDiff))
+            {
+                KeyData = WinFormsShims.Keys.F6,
+            },
+            new HotkeyCommand((int)FormBrowse.Command.FocusNextTab, nameof(FormBrowse.Command.FocusNextTab))
+            {
+                KeyData = WinFormsShims.Keys.F7,
+            },
+            new HotkeyCommand((int)FormBrowse.Command.FocusPrevTab, nameof(FormBrowse.Command.FocusPrevTab))
+            {
+                KeyData = WinFormsShims.Keys.F8,
+            });
+        form.Show();
+        try
+        {
+            form.KeyPress(Key.F6, RawInputModifiers.None, PhysicalKey.F6, keySymbol: null);
+            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.DiffTabPage);
+
+            form.KeyPress(Key.F7, RawInputModifiers.None, PhysicalKey.F7, keySymbol: null);
+            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.CommitInfoTabPage);
+
+            form.KeyPress(Key.F8, RawInputModifiers.None, PhysicalKey.F8, keySymbol: null);
+            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.DiffTabPage);
+        }
+        finally
+        {
+            form.Close();
+            AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowSplitViewLayout = originalShowSplitView;
         }
     }
 

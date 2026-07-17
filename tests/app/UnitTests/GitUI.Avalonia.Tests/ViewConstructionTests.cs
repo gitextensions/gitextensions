@@ -33,6 +33,70 @@ public sealed class ViewConstructionTests
         form.Should().NotBeNull();
     }
 
+    [AvaloniaTest]
+    public void FormBrowse_workspace_layout_should_follow_and_persist_shared_settings()
+    {
+        CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.ShowSplitViewLayout = true;
+            foreach (CommitInfoPosition position in Enum.GetValues<CommitInfoPosition>())
+            {
+                AppSettings.CommitInfoPosition = position;
+                FormBrowse form = new();
+
+                Border expectedHost = position switch
+                {
+                    CommitInfoPosition.BelowList => form.commitInfoBelowHost,
+                    CommitInfoPosition.LeftwardFromList => form.commitInfoLeftHost,
+                    CommitInfoPosition.RightwardFromList => form.commitInfoRightHost,
+                    _ => throw new NotSupportedException(),
+                };
+                form.RevisionInfo.Parent.Should().BeSameAs(expectedHost);
+                form.CommitInfoTabPage.IsVisible.Should().Be(position == CommitInfoPosition.BelowList);
+                form.RevisionsSplitContainer.ColumnDefinitions[0].Width.Value
+                    .Should().Be(position == CommitInfoPosition.LeftwardFromList ? 490 : 0);
+                form.RevisionsSplitContainer.ColumnDefinitions[4].Width.Value
+                    .Should().Be(position == CommitInfoPosition.RightwardFromList ? 490 : 0);
+                form.CommitInfoTabControl.IsVisible.Should().BeTrue();
+                form.RightSplitContainer.RowDefinitions[2].Height.Value.Should().BeGreaterThan(0);
+                form.Close();
+            }
+
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            FormBrowse changedForm = new();
+            changedForm.CommitInfoTabControl.SelectedItem = changedForm.DiffTabPage;
+            changedForm.RightSplitContainer.RowDefinitions[0].Height = new GridLength(4, GridUnitType.Star);
+            changedForm.RightSplitContainer.RowDefinitions[2].Height = new GridLength(1, GridUnitType.Star);
+            changedForm.toggleSplitViewLayout.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            changedForm.toggleSplitViewLayout.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            changedForm.CommitInfoTabControl.SelectedItem.Should().BeSameAs(changedForm.DiffTabPage);
+            changedForm.RightSplitContainer.RowDefinitions[0].Height.Value.Should().Be(4);
+            changedForm.RightSplitContainer.RowDefinitions[2].Height.Value.Should().Be(1);
+
+            changedForm.menuCommitInfoPosition.RaiseEvent(new RoutedEventArgs(SplitButton.ClickEvent));
+            AppSettings.CommitInfoPosition.Should().Be(CommitInfoPosition.LeftwardFromList);
+            changedForm.RevisionInfo.Parent.Should().BeSameAs(changedForm.commitInfoLeftHost);
+
+            changedForm.toggleSplitViewLayout.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            AppSettings.ShowSplitViewLayout.Should().BeFalse();
+            changedForm.CommitInfoTabControl.IsVisible.Should().BeFalse();
+            changedForm.RightSplitContainer.RowDefinitions[2].Height.Value.Should().Be(0);
+            changedForm.Close();
+
+            FormBrowse restoredForm = new();
+            restoredForm.RevisionInfo.Parent.Should().BeSameAs(restoredForm.commitInfoLeftHost);
+            restoredForm.CommitInfoTabControl.IsVisible.Should().BeFalse();
+            restoredForm.Close();
+        }
+        finally
+        {
+            AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
     // The constructor the designer and the XAML loader use must complete initialisation like
     // the run-time one, or the dialog they build is left untranslated.
     [AvaloniaTest]
@@ -125,6 +189,36 @@ public sealed class ViewConstructionTests
             "deleteTagToolStripMenuItem",
             "Text",
             "&Delete tag...");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "CommitInfoTabPage",
+            "Text",
+            "Commit");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "DiffTabPage",
+            "Text",
+            "Diff");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "commitInfoBelowMenuItem",
+            "Text",
+            "Commit info &below graph");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "toggleSplitViewLayout",
+            "ToolTipText",
+            "Toggle split view layout");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "menuCommitInfoPosition",
+            "ToolTipText",
+            "Commit info position");
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(FormBrowse),
+            "menuCommitInfoPosition",
+            "toolTip",
+            Arg.Any<string>());
         translation.Received(1).TranslateItem(
             nameof(FormBrowse),
             "fetchAllToolStripMenuItem",

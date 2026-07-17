@@ -20,7 +20,10 @@ namespace GitUI.CommandsDialogs;
 public sealed partial class FormBrowse : GitModuleForm
 {
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+    private GridLength _commitInfoWidth = new(490);
     private GridLength _leftPanelWidth = new(260);
+    private GridLength _splitViewBottomHeight = new(2, GridUnitType.Star);
+    private GridLength _splitViewTopHeight = new(3, GridUnitType.Star);
     private bool _updatingWorkingDirectories;
 
     public static readonly string HotkeySettingsName = "Browse";
@@ -28,8 +31,15 @@ public sealed partial class FormBrowse : GitModuleForm
     internal enum Command
     {
         GitBash = 0,
+        FocusRevisionGrid = 3,
+        FocusCommitInfo = 4,
+        FocusDiff = 5,
         Commit = 7,
         CheckoutBranch = 10,
+        FocusFilter = 18,
+        ToggleLeftPanel = 21,
+        FocusNextTab = 31,
+        FocusPrevTab = 32,
         PullOrFetch = 39,
         Push = 40,
         CreateBranch = 41,
@@ -45,6 +55,7 @@ public sealed partial class FormBrowse : GitModuleForm
     public FormBrowse()
     {
         InitializeComponent();
+        InitializeWorkspaceLayout();
         InitializeComplete();
     }
 
@@ -80,6 +91,7 @@ public sealed partial class FormBrowse : GitModuleForm
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
         RefreshButton.Click += RefreshToolStripMenuItemClick;
         toggleLeftPanel.Click += ToggleLeftPanelClick;
+        InitializeWorkspaceLayout();
         branchSelect.Click += BranchSelectClick;
         BranchSelectFlyout.Opening += (_, _) => PopulateBranchSelector();
         toolStripButtonPull.Click += ToolStripButtonPullClick;
@@ -261,6 +273,154 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
+    private void InitializeWorkspaceLayout()
+    {
+        toggleSplitViewLayout.Click += ToggleSplitViewLayoutClick;
+        menuCommitInfoPosition.Click += CommitInfoPositionClick;
+        commitInfoBelowMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.BelowList);
+        commitInfoLeftwardMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.LeftwardFromList);
+        commitInfoRightwardMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.RightwardFromList);
+        RefreshWorkspaceLayout();
+    }
+
+    private void ToggleSplitViewLayoutClick(object? sender, EventArgs e)
+    {
+        RememberWorkspaceDimensions();
+        AppSettings.ShowSplitViewLayout = !AppSettings.ShowSplitViewLayout;
+        RefreshWorkspaceLayout(selectCommitInfoTab: false);
+    }
+
+    private void CommitInfoPositionClick(object? sender, EventArgs e)
+    {
+        CommitInfoPosition[] positions = Enum.GetValues<CommitInfoPosition>();
+        int next = ((int)AppSettings.CommitInfoPosition + 1) % positions.Length;
+        SetCommitInfoPosition((CommitInfoPosition)next);
+    }
+
+    private void SetCommitInfoPosition(CommitInfoPosition position)
+    {
+        RememberWorkspaceDimensions();
+        AppSettings.CommitInfoPosition = position;
+        RefreshWorkspaceLayout(refreshCommitInfoPositionToolTip: true);
+    }
+
+    private void RememberWorkspaceDimensions()
+    {
+        CommitInfoPosition position = AppSettings.CommitInfoPosition;
+        if (position == CommitInfoPosition.LeftwardFromList
+            && RevisionsSplitContainer.ColumnDefinitions[0].Width.Value > 0)
+        {
+            _commitInfoWidth = RevisionsSplitContainer.ColumnDefinitions[0].Width;
+        }
+        else if (position == CommitInfoPosition.RightwardFromList
+                 && RevisionsSplitContainer.ColumnDefinitions[4].Width.Value > 0)
+        {
+            _commitInfoWidth = RevisionsSplitContainer.ColumnDefinitions[4].Width;
+        }
+
+        if (AppSettings.ShowSplitViewLayout
+            && RightSplitContainer.RowDefinitions[2].Height.Value > 0)
+        {
+            _splitViewTopHeight = RightSplitContainer.RowDefinitions[0].Height;
+            _splitViewBottomHeight = RightSplitContainer.RowDefinitions[2].Height;
+        }
+    }
+
+    private void RefreshWorkspaceLayout(
+        bool selectCommitInfoTab = true,
+        bool refreshCommitInfoPositionToolTip = false)
+    {
+        CommitInfoPosition position = AppSettings.CommitInfoPosition;
+        bool below = position == CommitInfoPosition.BelowList;
+
+        Border commitInfoHost = position switch
+        {
+            CommitInfoPosition.BelowList => commitInfoBelowHost,
+            CommitInfoPosition.LeftwardFromList => commitInfoLeftHost,
+            CommitInfoPosition.RightwardFromList => commitInfoRightHost,
+            _ => throw new NotSupportedException(),
+        };
+        if (!ReferenceEquals(commitInfoHost.Child, RevisionInfo))
+        {
+            if (ReferenceEquals(commitInfoBelowHost.Child, RevisionInfo))
+            {
+                commitInfoBelowHost.Child = null;
+            }
+            else if (ReferenceEquals(commitInfoLeftHost.Child, RevisionInfo))
+            {
+                commitInfoLeftHost.Child = null;
+            }
+            else if (ReferenceEquals(commitInfoRightHost.Child, RevisionInfo))
+            {
+                commitInfoRightHost.Child = null;
+            }
+
+            commitInfoHost.Child = RevisionInfo;
+        }
+
+        ColumnDefinitions columns = RevisionsSplitContainer.ColumnDefinitions;
+        columns[0].Width = position == CommitInfoPosition.LeftwardFromList ? _commitInfoWidth : new GridLength(0);
+        columns[1].Width = new GridLength(0);
+        columns[2].Width = new GridLength(1, GridUnitType.Star);
+        columns[3].Width = new GridLength(0);
+        columns[4].Width = position == CommitInfoPosition.RightwardFromList ? _commitInfoWidth : new GridLength(0);
+
+        commitInfoLeftSplitter.IsVisible = position == CommitInfoPosition.LeftwardFromList;
+        commitInfoRightSplitter.IsVisible = position == CommitInfoPosition.RightwardFromList;
+        CommitInfoTabPage.IsVisible = below;
+
+        if (below)
+        {
+            if (selectCommitInfoTab)
+            {
+                CommitInfoTabControl.SelectedIndex = 0;
+            }
+        }
+        else
+        {
+            if (CommitInfoTabControl.SelectedIndex == 0)
+            {
+                CommitInfoTabControl.SelectedIndex = 1;
+            }
+        }
+
+        bool showSplitView = AppSettings.ShowSplitViewLayout;
+        RowDefinitions rows = RightSplitContainer.RowDefinitions;
+        rows[0].Height = showSplitView ? _splitViewTopHeight : new GridLength(1, GridUnitType.Star);
+        rows[1].Height = new GridLength(0);
+        rows[2].Height = showSplitView ? _splitViewBottomHeight : new GridLength(0);
+        splitViewSplitter.IsVisible = showSplitView;
+        CommitInfoTabControl.IsVisible = showSplitView;
+
+        toggleSplitViewLayout.Classes.Set("checked", showSplitView);
+        menuCommitInfoPositionImage.Source = position switch
+        {
+            CommitInfoPosition.BelowList => Properties.Images.LayoutFooterTab,
+            CommitInfoPosition.LeftwardFromList => Properties.Images.LayoutSidebarTopLeft,
+            CommitInfoPosition.RightwardFromList => Properties.Images.LayoutSidebarTopRight,
+            _ => throw new NotSupportedException(),
+        };
+        if (refreshCommitInfoPositionToolTip)
+        {
+            RefreshCommitInfoPositionToolTip();
+        }
+    }
+
+    private void RefreshCommitInfoPositionToolTip()
+    {
+        MenuItem selectedItem = AppSettings.CommitInfoPosition switch
+        {
+            CommitInfoPosition.BelowList => commitInfoBelowMenuItem,
+            CommitInfoPosition.LeftwardFromList => commitInfoLeftwardMenuItem,
+            CommitInfoPosition.RightwardFromList => commitInfoRightwardMenuItem,
+            _ => throw new NotSupportedException(),
+        };
+        if (selectedItem.Header is string header)
+        {
+            ToolTip.SetTip(menuCommitInfoPosition, header.Replace("_", string.Empty));
+        }
+    }
+
     private void BranchSelectClick(object? sender, EventArgs e)
     {
         PopulateBranchSelector();
@@ -306,7 +466,7 @@ public sealed partial class FormBrowse : GitModuleForm
     {
         fileStatusList.Clear();
         fileViewer.ViewPatch(string.Empty);
-        CommitInfo.Revision = RevisionGrid.SelectedRevision;
+        RevisionInfo.Revision = RevisionGrid.SelectedRevision;
         rebaseToolStripMenuItem.IsEnabled =
             RevisionGrid.SelectedRevision is { IsArtificial: false }
             && !Module.IsBareRepository();
@@ -521,6 +681,23 @@ public sealed partial class FormBrowse : GitModuleForm
         switch ((Command)command)
         {
             case Command.GitBash: userShell_Click(this, EventArgs.Empty); break;
+            case Command.FocusRevisionGrid: RevisionGrid.Focus(); break;
+            case Command.FocusCommitInfo:
+                if (AppSettings.CommitInfoPosition == CommitInfoPosition.BelowList)
+                {
+                    CommitInfoTabControl.SelectedIndex = 0;
+                }
+
+                RevisionInfo.Focus();
+                break;
+            case Command.FocusDiff:
+                CommitInfoTabControl.SelectedIndex = 1;
+                fileStatusList.Focus();
+                break;
+            case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
+            case Command.ToggleLeftPanel: ToggleLeftPanelClick(this, EventArgs.Empty); break;
+            case Command.FocusNextTab: FocusNextWorkspaceTab(forward: true); break;
+            case Command.FocusPrevTab: FocusNextWorkspaceTab(forward: false); break;
             case Command.Refresh: RefreshToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
@@ -534,6 +711,29 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         return true;
+    }
+
+    private void FocusNextWorkspaceTab(bool forward)
+    {
+        Control[] tabs =
+        [
+            .. CommitInfoTabControl.Items
+                .OfType<Control>()
+                .Where(tab => tab.IsVisible),
+        ];
+        if (tabs.Length == 0)
+        {
+            return;
+        }
+
+        int selectedIndex = Array.IndexOf(tabs, CommitInfoTabControl.SelectedItem);
+        if (selectedIndex < 0)
+        {
+            selectedIndex = forward ? -1 : 0;
+        }
+
+        int offset = forward ? 1 : -1;
+        CommitInfoTabControl.SelectedItem = tabs[(selectedIndex + offset + tabs.Length) % tabs.Length];
     }
 
     public override bool ProcessHotkey(WinFormsShims.Keys keyData)
@@ -560,6 +760,8 @@ public sealed partial class FormBrowse : GitModuleForm
         base.AddTranslationItems(translation);
         translation.AddTranslationItem(nameof(FormBrowse), nameof(RefreshButton), "ToolTipText", "Refresh");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toggleLeftPanel), "ToolTipText", "Toggle left panel");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(toggleSplitViewLayout), "ToolTipText", "Toggle split view layout");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(menuCommitInfoPosition), "ToolTipText", "Commit info position");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(branchSelect), "ToolTipText", "Change current branch");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripSplitStash), "ToolTipText", "Manage stashes");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripFileExplorer), "ToolTipText", "File Explorer");
@@ -571,6 +773,8 @@ public sealed partial class FormBrowse : GitModuleForm
         base.TranslateItems(translation);
         SetTranslatedToolTip(RefreshButton, nameof(RefreshButton), "Refresh");
         SetTranslatedToolTip(toggleLeftPanel, nameof(toggleLeftPanel), "Toggle left panel");
+        SetTranslatedToolTip(toggleSplitViewLayout, nameof(toggleSplitViewLayout), "Toggle split view layout");
+        SetTranslatedToolTip(menuCommitInfoPosition, nameof(menuCommitInfoPosition), "Commit info position");
         SetTranslatedToolTip(branchSelect, nameof(branchSelect), "Change current branch");
         SetTranslatedToolTip(toolStripSplitStash, nameof(toolStripSplitStash), "Manage stashes");
         SetTranslatedToolTip(toolStripFileExplorer, nameof(toolStripFileExplorer), "File Explorer");
@@ -580,6 +784,8 @@ public sealed partial class FormBrowse : GitModuleForm
         {
             header.Text = terminalText;
         }
+
+        RefreshCommitInfoPositionToolTip();
 
         return;
 
