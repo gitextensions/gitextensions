@@ -1,5 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormCreateBranch"
         Width="580" Height="425"
@@ -13,7 +15,12 @@
                 DockPanel.Dock="Bottom"
                 Spacing="8"
                 Margin="10">
-      <Button x:Name="cmdOk" Classes="gitextensions-dialog-action" MinWidth="110" Content="_Create branch" IsDefault="True" />
+      <compat:IconButton x:Name="cmdOk"
+                         Classes="gitextensions-dialog-action"
+                         MinWidth="110"
+                         Icon="{x:Static properties:Images.BranchCreate}"
+                         Content="_Create branch"
+                         IsDefault="True" />
     </StackPanel>
     <Grid x:Name="MainPanel" Classes="gitextensions-dialog-main" ColumnDefinitions="Auto,*"
           RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="10" RowSpacing="8">

@@ -1,5 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormRemotes"
         Width="820" Height="560"
@@ -16,9 +18,18 @@
                       Margin="0,6,0,0"
                       Orientation="Horizontal"
                       Spacing="4">
-            <Button x:Name="New" MinWidth="34" Content="+" />
-            <Button x:Name="Delete" MinWidth="34" Content="✕" />
-            <Button x:Name="btnToggleState" MinWidth="34" Content="👁" />
+            <compat:IconButton x:Name="New"
+                               Classes="gitextensions-icon-only"
+                               MinWidth="34"
+                               Icon="{x:Static properties:Images.RemoteAdd}" />
+            <compat:IconButton x:Name="Delete"
+                               Classes="gitextensions-icon-only"
+                               MinWidth="34"
+                               Icon="{x:Static properties:Images.RemoteDelete}" />
+            <compat:IconButton x:Name="btnToggleState"
+                               Classes="gitextensions-icon-only"
+                               MinWidth="34"
+                               Icon="{x:Static properties:Images.EyeOpened}" />
           </StackPanel>
         </Grid>
 
@@ -73,12 +84,13 @@
             <TextBox x:Name="txtRemotePrefix"
                      Grid.Row="4" Grid.Column="1" />
 
-            <Button x:Name="Save"
-                    Classes="gitextensions-dialog-action"
-                    Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
-                    MinWidth="120"
-                    HorizontalAlignment="Right"
-                    Content="_Save changes" />
+            <compat:IconButton x:Name="Save"
+                               Classes="gitextensions-dialog-action"
+                               Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
+                               MinWidth="120"
+                               HorizontalAlignment="Right"
+                               Icon="{x:Static properties:Images.Save}"
+                               Content="_Save changes" />
           </Grid>
         </HeaderedContentControl>
       </Grid>
@@ -145,12 +157,13 @@
                     HorizontalAlignment="Stretch"
                     IsEditable="True" />
 
-          <Button x:Name="SaveDefaultPushPull"
-                  Classes="gitextensions-dialog-action"
-                  Grid.Row="2" Grid.Column="2"
-                  MinWidth="120"
-                  VerticalAlignment="Bottom"
-                  Content="_Save changes" />
+          <compat:IconButton x:Name="SaveDefaultPushPull"
+                             Classes="gitextensions-dialog-action"
+                             Grid.Row="2" Grid.Column="2"
+                             MinWidth="120"
+                             VerticalAlignment="Bottom"
+                             Icon="{x:Static properties:Images.Save}"
+                             Content="_Save changes" />
         </Grid>
       </Grid>
     </TabItem>

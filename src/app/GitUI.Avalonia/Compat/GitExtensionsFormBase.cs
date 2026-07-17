@@ -6,6 +6,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Compat;
+using GitUI.Properties;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace ResourceManager;
@@ -20,6 +21,11 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
     private bool _runtimeLoadRaised;
     private Button? _acceptButton;
     private IReadOnlyList<HotkeyCommand> _hotkeys = [];
+
+    public GitExtensionsFormBase()
+    {
+        Icon = Images.ApplicationIcon;
+    }
 
     /// <summary>The window title, under its WinForms name so ported code compiles unchanged.</summary>
     public string? Text

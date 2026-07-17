@@ -5,11 +5,17 @@
     "basedOn: the upstream commit the twin was last synchronized with.",
     "eng/avalonia/upstream-drift.sh joins upstream diffs against this map; keep it accurate when porting or syncing."
   ],
+  "src/app/GitUI/Properties/Images.resx": {
+    "twin": "src/app/GitUI.Avalonia/Properties/Images.g.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "All file-backed images are deterministically generated as same-named cached Avalonia Bitmap properties and packaged from their existing tracked files; the setup logo also supplies the shared application WindowIcon. The generator/completeness test detects Images.resx drift, missing package resources, decode failures, and exceptional property-to-filename mappings."
+  },
   "src/app/GitUI/CommandsDialogs/FormBrowse.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Delete branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Create tag/Delete tag/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The main panes preserve the original invisible 6px splitter drag targets, adjacent 1px pane borders, 6px content padding, and 260px repository-tree distance; the menu uses the original 24/20/22px desktop density. The auto-discovered headless-Skia harness captures this shell with an open menu and every other AXAML view in light/dark mode over a seeded repository. Remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Delete branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Create tag/Delete tag/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The main panes preserve the original invisible 6px splitter drag targets, adjacent 1px pane borders, 6px content padding, and 260px repository-tree distance; the menu uses the original 24/20/22px desktop density and original command icons. The auto-discovered headless-Skia harness captures this shell with an open menu and every other AXAML view in light/dark mode at 100%/200% scaling over a seeded repository. Remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -204,7 +210,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "List with change-kind markers, exposed statuses, configurable multi-selection, revision-aware FileStatusItem entries, worktree/index grouping, repository refresh binding, selection navigation, and WinForms-shaped selection/double-click events. Filtering, staging interactions, and context menus remain deferred."
+    "notes": "List with the original cached status images for added/removed/modified/renamed/copied/unmerged/range-diff and basic submodule entries, exposed statuses, configurable multi-selection, revision-aware FileStatusItem entries, worktree/index grouping, repository refresh binding, selection navigation, and WinForms-shaped selection/double-click events. Detailed asynchronous submodule variants, filtering, staging interactions, and context menus remain deferred."
   },
   "src/app/GitUI/UserControls/GotoUserManualControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/GotoUserManualControl.axaml.cs",
@@ -356,7 +362,7 @@
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Flat Branches/Remotes/Tags lists with the native tree's compact 18px rows and dotted hierarchy lines continuing through root nodes, expanders, and expanded descendants. Auto-hidden overlay scrollbars are disabled so simultaneous horizontal/vertical scrolling does not cover the last expanded item. No nested folders, stashes, or submodules yet."
+    "notes": "Flat Branches/Remotes/Tags lists with the original group/ref images, the native tree's compact 18px rows, and dotted hierarchy lines continuing through root nodes, expanders, and expanded descendants. Auto-hidden overlay scrollbars are disabled so simultaneous horizontal/vertical scrolling does not cover the last expanded item. No nested folders, stashes, or submodules yet."
   },
   "src/app/GitUI/GitExtensionsForm.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsForm.cs",
@@ -487,7 +493,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/PasswordInput.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "No drag and drop of text; eye button has no image yet."
+    "notes": "The reveal action switches between the original closed/open eye images. No drag and drop of text."
   },
   "src/app/GitUI/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs": {
     "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs",

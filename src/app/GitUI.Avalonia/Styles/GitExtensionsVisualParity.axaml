@@ -1,6 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit">
+        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+        xmlns:compat="using:GitUI.Compat">
   <Styles.Resources>
     <ResourceDictionary>
       <!-- WinForms stores fonts in points; these defaults are the equivalent Avalonia
@@ -106,6 +107,45 @@
   <Style Selector="Button.gitextensions-dialog-action">
     <Setter Property="MinWidth" Value="75" />
     <Setter Property="MinHeight" Value="25" />
+  </Style>
+  <!-- Button.Content must stay a string so AvaloniaTranslationUtils can continue mapping
+       the original control .Text key. These templates add the original raster icon without
+       wrapping or replacing that translatable value in each form. -->
+  <Style Selector="compat|IconButton">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[compat:IconButton].Icon}" />
+          <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="compat|IconButton.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="compat|IconRadioButton">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[compat:IconRadioButton].Icon}" />
+          <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
   </Style>
   <Style Selector="StackPanel.gitextensions-dialog-controls">
     <Setter Property="MinHeight" Value="32" />

@@ -1,5 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormClone"
         Width="647" SizeToContent="Height"
         MinWidth="450" MaxWidth="950" CanResize="False"
@@ -18,11 +20,12 @@
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
                 IsEditable="True" />
-      <Button x:Name="FromBrowse"
-              Grid.Column="2"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Center"
-              Content="_Browse" />
+      <compat:IconButton x:Name="FromBrowse"
+                         Grid.Column="2"
+                         HorizontalAlignment="Stretch"
+                         HorizontalContentAlignment="Center"
+                         Icon="{x:Static properties:Images.BrowseFileExplorer}"
+                         Content="_Browse" />
 
       <TextBlock x:Name="destinationLabel"
                  Classes="gitextensions-dialog-label"
@@ -32,11 +35,12 @@
                 Grid.Row="1" Grid.Column="1"
                 HorizontalAlignment="Stretch"
                 IsEditable="True" />
-      <Button x:Name="ToBrowse"
-              Grid.Row="1" Grid.Column="2"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Center"
-              Content="B_rowse" />
+      <compat:IconButton x:Name="ToBrowse"
+                         Grid.Row="1" Grid.Column="2"
+                         HorizontalAlignment="Stretch"
+                         HorizontalContentAlignment="Center"
+                         Icon="{x:Static properties:Images.BrowseFileExplorer}"
+                         Content="B_rowse" />
 
       <TextBlock x:Name="subdirectoryLabel"
                  Classes="gitextensions-dialog-label"
