@@ -1,18 +1,27 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.RevisionGridControl">
   <DockPanel>
     <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" />
     <ListBox x:Name="lstRevisions" SelectionMode="Single">
       <ListBox.ContextMenu>
         <ContextMenu x:Name="revisionContextMenu">
-          <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch..." />
-          <MenuItem x:Name="createNewBranchToolStripMenuItem" Header="Create new branch here (_x)..." />
+          <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="createNewBranchToolStripMenuItem" Header="Create new branch here (_x)...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
+          </MenuItem>
           <MenuItem x:Name="createTagToolStripMenuItem"
                     Header="Create new ta_g here..."
-                    InputGesture="Ctrl+T" />
+                    InputGesture="Ctrl+T">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
+          </MenuItem>
           <!-- One sub-item per local branch on the commit, filled when the menu opens. -->
-          <MenuItem x:Name="renameBranchToolStripMenuItem" Header="R_ename branch..." />
+          <MenuItem x:Name="renameBranchToolStripMenuItem" Header="R_ename branch...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Renamed}" /></MenuItem.Icon>
+          </MenuItem>
         </ContextMenu>
       </ListBox.ContextMenu>
       <ListBox.Styles>

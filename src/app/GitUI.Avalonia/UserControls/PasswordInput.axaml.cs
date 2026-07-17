@@ -33,6 +33,9 @@ public partial class PasswordInput : TranslatedControl
     private void ShowPassword_Click(object sender, EventArgs e)
     {
         Password.RevealPassword = !Password.RevealPassword;
+        ShowPassword.Icon = Password.RevealPassword
+            ? Properties.Images.EyeOpened
+            : Properties.Images.EyeClosed;
         Password.Focus();
     }
 

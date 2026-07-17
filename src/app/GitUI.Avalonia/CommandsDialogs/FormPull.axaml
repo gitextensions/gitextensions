@@ -1,5 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormPull"
         Width="680"
         Height="440"
@@ -63,28 +65,31 @@
                                 Header="Merge options">
           <StackPanel x:Name="PanelMergeOptions"
                       Spacing="6">
-            <RadioButton x:Name="Merge"
-                         GroupName="PullAction"
-                         Content="_Merge remote branch into current branch"
-                         IsChecked="True" />
-            <RadioButton x:Name="Rebase"
-                         GroupName="PullAction"
-                         Content="R_ebase current branch on top of remote branch, creates linear history (use with caution)" />
+            <compat:IconRadioButton x:Name="Merge"
+                                    GroupName="PullAction"
+                                    Icon="{x:Static properties:Images.Merge}"
+                                    Content="_Merge remote branch into current branch"
+                                    IsChecked="True" />
+            <compat:IconRadioButton x:Name="Rebase"
+                                    GroupName="PullAction"
+                                    Icon="{x:Static properties:Images.Rebase}"
+                                    Content="R_ebase current branch on top of remote branch, creates linear history (use with caution)" />
             <RadioButton x:Name="Fetch"
                          GroupName="PullAction"
                          Content="Do not merge, only _fetch remote changes" />
           </StackPanel>
         </HeaderedContentControl>
 
-        <Button x:Name="Pull"
-                Classes="gitextensions-dialog-action"
-                Grid.Row="3"
-                Margin="0,18,0,0"
-                MinWidth="120"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                IsDefault="True"
-                Content="Pull" />
+        <compat:IconButton x:Name="Pull"
+                           Classes="gitextensions-dialog-action"
+                           Grid.Row="3"
+                           Margin="0,18,0,0"
+                           MinWidth="120"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Bottom"
+                           Icon="{x:Static properties:Images.ArrowDown}"
+                           IsDefault="True"
+                           Content="Pull" />
       </Grid>
     </Grid>
 
@@ -93,7 +98,9 @@
     <StackPanel IsVisible="False">
       <RadioButton x:Name="PullFromUrl" Content="_URL" />
       <ComboBox x:Name="comboBoxPullSource" />
-      <Button x:Name="AddRemote" Content="Mana_ge remotes" />
+      <compat:IconButton x:Name="AddRemote"
+                         Icon="{x:Static properties:Images.Remotes}"
+                         Content="Mana_ge remotes" />
       <Button x:Name="folderBrowserButton1" />
       <Button x:Name="Stash" Content="Stash _changes" />
       <Button x:Name="Mergetool" Content="_Solve conflicts" />
