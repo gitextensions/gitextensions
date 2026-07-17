@@ -83,6 +83,30 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Local branch selection and forced deletion preserve the upstream current-branch, unmerged-branch, main/linked/stale-worktree safety flow. The Compat TaskDialog supplies the explicit default button and reflog footnote used by the confirmations."
   },
+  "src/app/GitUI/CommandsDialogs/FormInit.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormInit.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Directory picker (shared FolderBrowserButton twin), recent-locals history in the combo (path strings rather than Repository objects), personal/central repository types, rooted-path validation, git init through the module, module-changed event, and history update. StartInitializeDialog is live."
+  },
+  "src/app/GitUI/CommandsDialogs/FormClone.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormClone.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "URL/destination/subdirectory with live location info, clipboard URL suggestion, current-remote prefill, remote branch listing on dropdown (default remote-HEAD / no-checkout items), shallow-clone and submodule options, repository type, open-after-clone question, and history updates; the clone runs in the existing process dialog until FormRemoteProcess is ported. StartCloneDialog is live. Not ported: the PuTTY pieces (Load SSH key, host-key/authentication recovery), the busy cursor during branch loading, and the ShowInTaskbar test (replaced by the dialog invocation itself); history combos hold path strings rather than Repository objects."
+  },
+  "src/app/GitUI/CommandsDialogs/FormClone.RemoteActionResult.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/FormClone.RemoteActionResult.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/UserControls/FolderBrowserButton.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FolderBrowserButton.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Same-named button with the original buttonBrowse.Text translation key; PathShowingControl is typed as the Avalonia ComboBox (the WinForms property accepts any Control). Picks through the portable OsShellUtil.PickFolder (XDG portal on Linux)."
+  },
   "src/app/GitUI/CommandsDialogs/FormFileHistory.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormFileHistory.axaml.cs",
     "status": "functional",
