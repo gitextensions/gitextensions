@@ -153,6 +153,50 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task FormBrowse_commit_and_diff_tabs_should_follow_the_selected_revision()
+    {
+        CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "\nsecond");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
+
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            try
+            {
+                form.Show();
+                TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+                await WaitUntilAsync(() =>
+                    loadingStatus.Text == "2 revisions"
+                    && form.RevisionInfo.Revision?.Subject == "second"
+                    && form.fileStatusList.GitItemStatuses.Count == 1
+                    && form.fileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
+
+                form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.CommitInfoTabPage);
+                form.fileStatusList.SelectedItem!.Name.Should().Be("tracked.txt");
+
+                form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+                Dispatcher.UIThread.RunJobs();
+                form.fileStatusList.Bounds.Height.Should().BeGreaterThan(0);
+                form.fileViewer.TextEditor.Text.Should().Contain("+second");
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Revision_grid_notes_provider_should_load_and_render_git_notes()
     {
         bool originalShowNotesColumn = AppSettings.ShowGitNotesColumn.Value;
