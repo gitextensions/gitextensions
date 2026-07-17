@@ -201,7 +201,9 @@ public partial class FormUpdates : GitExtensionsDialog
         int length = versionText2.Length;
         linkRequiredDotNetRuntime.LinkArea = new LinkArea(start, length);
 
-        _netRuntimeDownloadUrl = $@"https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch={RuntimeInformation.OSArchitecture}&rid=win-{RuntimeInformation.OSArchitecture}&apphost_version={requiredNetRuntimeVersion.ToString(fieldCount: 3)}&gui=true";
+        // The aka.ms/dotnet-core-applaunch URL expects the architecture and RID in lowercase (e.g. x64, arm64).
+        string arch = RuntimeInformation.OSArchitecture.ToString().ToLowerInvariant();
+        _netRuntimeDownloadUrl = $@"https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch={arch}&rid=win-{arch}&apphost_version={requiredNetRuntimeVersion.ToString(fieldCount: 3)}&gui=true";
 
         linkRequiredDotNetRuntime.Visible = true;
     }
