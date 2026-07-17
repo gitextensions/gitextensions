@@ -203,6 +203,26 @@
       </DataTemplate>
     </Setter>
   </Style>
+  <Style Selector="TabItem.gitextensions-workspace-tab">
+    <Setter Property="Height" Value="23" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="6,1" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="HeaderTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[TabItem].Icon}" />
+          <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
   <Style Selector="Button.gitextensions-toolbar-button,
                    compat|IconButton.gitextensions-toolbar-button,
                    compat|IconSplitButton.gitextensions-toolbar-button,
@@ -215,6 +235,9 @@
     <Setter Property="Padding" Value="3,1" />
     <Setter Property="CornerRadius" Value="0" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button.checked">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
   </Style>
   <Style Selector="Border.gitextensions-toolbar-separator">
     <Setter Property="Width" Value="1" />
