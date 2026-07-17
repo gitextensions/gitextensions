@@ -998,7 +998,7 @@ public sealed partial class GitModule : IGitModule
         return GitExecutable.Execute(args, cache: GitCommandCache)
             .StandardOutput
             .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries)
-            .Select(line => ObjectId.Parse(line))
+            .Select(ObjectId.Parse)
             .ToList();
     }
 

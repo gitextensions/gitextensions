@@ -127,12 +127,28 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
     /// Parses an <see cref="ObjectId"/> from <paramref name="s"/>.
     /// </summary>
     /// <remarks>
+    /// For parsing to succeed, <paramref name="s"/> must be a valid 40-character SHA-1 string.
+    /// Any extra characters at the end will cause parsing to fail.
+    /// </remarks>
+    /// <param name="s">The string to try parsing from.</param>
+    /// <returns>The parsed <see cref="ObjectId"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
+    [Pure]
+    public static ObjectId Parse(string s)
+    {
+        return Parse(s.AsSpan());
+    }
+
+    /// <summary>
+    /// Parses an <see cref="ObjectId"/> from <paramref name="s"/>.
+    /// </summary>
+    /// <remarks>
     /// For parsing to succeed, <paramref name="s"/> must be a valid 40-character SHA-1 span of chars.
     /// Any extra characters at the end will cause parsing to fail.
     /// </remarks>
     /// <param name="s">The span to try parsing from.</param>
     /// <returns>The parsed <see cref="ObjectId"/>.</returns>
-    /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash, or <paramref name="s"/> is <see langword="null"/>.</exception>
+    /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
     [Pure]
     public static ObjectId Parse(ReadOnlySpan<char> s)
     {

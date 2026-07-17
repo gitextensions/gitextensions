@@ -115,7 +115,7 @@ public sealed partial class GitTreeParser : IGitTreeParser
         return tree.LazySplit('\0').Select(ParseSingleLsFiles).WhereNotNull();
     }
 
-    private GitItem? ParseSingleLsFiles(string? rawItem)
+    private static GitItem? ParseSingleLsFiles(string? rawItem)
     {
         if (rawItem is null)
         {
