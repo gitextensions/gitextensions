@@ -244,8 +244,63 @@
   "src/app/GitUI/Editor/FileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only unified diff on AvaloniaEdit, including revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. For the blame view: plain-text mode (ViewTextAsync/ClearAsync), GoToLine/CurrentFileLine, SelectedLineChanged from the caret, GetLineFromVisualPosY, and full-width line-background highlighting (HighlightLines/ClearHighlighting/Refresh). No encodings menu, blob/range modes, or line patching yet."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. Encodings, blob modes, search, and line patching remain deferred."
+  },
+  "src/app/GitUI/Editor/Diff/DiffLineType.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLineType.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/DiffLineInfo.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLineInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses AvaloniaEdit.Document.ISegment in place of the former WinForms editor segment."
+  },
+  "src/app/GitUI/Editor/Diff/DiffLinesInfo.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLinesInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/DiffLineNumAnalyzer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLineNumAnalyzer.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Normal, combined, ANSI word-diff, moved-line, multiple-hunk, and no-newline mapping over AvaloniaEdit documents."
+  },
+  "src/app/GitUI/Editor/Diff/LinesMatcher.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/LinesMatcher.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "AvaloniaEdit segment twin used for bounded replacement-line pairing and common-word matching."
+  },
+  "src/app/GitUI/Editor/Diff/DiffHighlightService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffHighlightService.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-native highlight model retains ANSI semantic spans and computes dimmed common spans; rendering is split between AvaloniaEdit background and text layers."
+  },
+  "src/app/GitUI/Editor/Diff/PatchHighlightService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/PatchHighlightService.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/CombinedDiffHighlightService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/CombinedDiffHighlightService.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/RangeDiffHighlightService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/RangeDiffHighlightService.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/DiffViewerLineNumberControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffViewerLineNumberControl.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "AvaloniaEdit AbstractMargin with separate old/new columns, semantic gutter backgrounds, and bold current-line numbers."
   },
   "src/app/GitUI/Editor/IFileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/IFileViewer.cs",
