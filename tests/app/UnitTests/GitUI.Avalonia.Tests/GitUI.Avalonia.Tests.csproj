@@ -16,8 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Headless.NUnit" />
-    <!-- Skia renderer for the golden-image tests: rendered frames are captured and
-         compared against the images in GoldenImages/. -->
+    <!-- Skia renderer for graph golden images and the opt-in all-view parity captures. -->
     <PackageReference Include="Avalonia.Skia" />
   </ItemGroup>
 
