@@ -117,9 +117,6 @@ public partial class FormRebase : GitExtensionsDialog
         base.TranslateItems(translation);
 
         PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
-        label2.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(label2.Text ?? string.Empty);
-        lblRangeFrom.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblRangeFrom.Text ?? string.Empty);
-        lblRangeTo.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblRangeTo.Text ?? string.Empty);
         string? ignoreDateToolTip = translation.TranslateItem(
             nameof(FormRebase),
             nameof(chkIgnoreDate),
@@ -138,9 +135,6 @@ public partial class FormRebase : GitExtensionsDialog
     {
         base.OnRuntimeLoad(e);
 
-        label2.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(label2.Text ?? string.Empty);
-        lblRangeFrom.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblRangeFrom.Text ?? string.Empty);
-        lblRangeTo.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblRangeTo.Text ?? string.Empty);
         string selectedHead = Module.GetSelectedBranch();
         Currentbranch.Text = selectedHead;
 
