@@ -48,6 +48,12 @@ public sealed partial class FormCommit : GitModuleForm
 
     private readonly TranslationString _amendCommitCaption = new("Amend commit");
 
+    private readonly TranslationString _aiGenerateButton = new("✨ Generate AI commit message");
+    private readonly TranslationString _aiGenerating = new("Generating…");
+    private readonly TranslationString _aiCaption = new("AI commit message");
+    private readonly TranslationString _aiNoStagedChanges = new("No staged changes were found. Stage the files you want to commit, then try again.");
+    private readonly TranslationString _aiGenerationFailed = new("Failed to generate a commit message:");
+
     private readonly TranslationString _commitAndPush = new("Commit && &push");
 
     private readonly TranslationString _commitAndForcePush = new("Commit && force &push");
@@ -463,6 +469,120 @@ public sealed partial class FormCommit : GitModuleForm
         MinimizeBox = Owner is null;
 
         base.OnLoad(e);
+
+        AddAiCommitMessageButton();
+    }
+
+    /// <summary>
+    /// Adds the "Generate AI commit message" button to the commit toolbar when the feature is enabled
+    /// (Settings > Commit dialog). The staged diff is sent to the configured endpoint only on click.
+    /// </summary>
+    private void AddAiCommitMessageButton()
+    {
+        if (!AppSettings.AiCommitMessageEnabled.Value)
+        {
+            return;
+        }
+
+        ToolStripButton button = new(_aiGenerateButton.Text)
+        {
+            Name = "aiCommitMessageButton",
+            DisplayStyle = ToolStripItemDisplayStyle.Text,
+            ToolTipText = _aiGenerateButton.Text
+        };
+        button.Click += AiCommitMessageButton_Click;
+
+        int insertIndex = toolbarCommit.Items.IndexOf(commitTemplatesToolStripMenuItem) + 1;
+        if (insertIndex > 0 && insertIndex <= toolbarCommit.Items.Count)
+        {
+            toolbarCommit.Items.Insert(insertIndex, button);
+        }
+        else
+        {
+            toolbarCommit.Items.Add(button);
+        }
+    }
+
+    private void AiCommitMessageButton_Click(object? sender, EventArgs e)
+    {
+        if (sender is not ToolStripButton button)
+        {
+            return;
+        }
+
+        // Generate off the UI thread so the dialog stays responsive; show progress on the button.
+        button.Enabled = false;
+        button.Text = _aiGenerating.Text;
+        ThreadHelper.FileAndForget(() => RunAiCommitMessageGenerationAsync(button));
+    }
+
+    private async Task RunAiCommitMessageGenerationAsync(ToolStripButton button)
+    {
+        // Cancel the request if the user closes the commit dialog while it is running.
+        using CancellationTokenSource cts = new();
+        void CancelOnClose(object? sender, FormClosedEventArgs e) => cts.Cancel();
+        FormClosed += CancelOnClose;
+        try
+        {
+            string? message = await GetAiCommitMessageAsync(cts.Token);
+
+            await this.SwitchToMainThreadAsync();
+            if (!IsDisposed && !string.IsNullOrEmpty(message))
+            {
+                ReplaceMessage(message);
+                Message.Focus();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // The commit dialog was closed while generating; nothing to do.
+        }
+        catch (Exception ex)
+        {
+            await this.SwitchToMainThreadAsync();
+            if (!IsDisposed)
+            {
+                MessageBoxes.Show(this, _aiGenerationFailed.Text + Environment.NewLine + Environment.NewLine + ex.Message, _aiCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        finally
+        {
+            FormClosed -= CancelOnClose;
+            await this.SwitchToMainThreadAsync();
+            if (!IsDisposed && !button.IsDisposed)
+            {
+                button.Text = _aiGenerateButton.Text;
+                button.Enabled = true;
+            }
+        }
+    }
+
+    private async Task<string?> GetAiCommitMessageAsync(CancellationToken cancellationToken)
+    {
+        IGitModule module = Module;
+
+        // Use a structured argument list with --no-ext-diff so a user-configured external diff
+        // driver is never invoked here; we only want the plain textual diff to send to the model.
+        GitArgumentBuilder args = new("diff")
+        {
+            "--no-ext-diff",
+            "--cached",
+            "--no-color"
+        };
+        string diff = await Task.Run(() => module.GitExecutable.GetOutput(args), cancellationToken);
+
+        if (string.IsNullOrWhiteSpace(diff))
+        {
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            if (!IsDisposed)
+            {
+                MessageBoxes.Show(this, _aiNoStagedChanges.Text, _aiCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            return null;
+        }
+
+        return await AiCommitMessageGenerator.GenerateAsync(diff, cancellationToken);
     }
 
     private void RestoreSplitters()
@@ -1099,12 +1219,10 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
                 // commit, because amend may be used just to change the commit message or timestamp.
-                if (!AppSettings.DontConfirmAmend)
+                if (!AppSettings.DontConfirmAmend
+                    && MessageBoxes.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 {
-                    if (MessageBoxes.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
 
                 return true;
@@ -1221,12 +1339,9 @@ public sealed partial class FormCommit : GitModuleForm
                         return;
                     }
                 }
-                else if (result == btnCreate)
+                else if (result == btnCreate && !UICommands.StartCreateBranchDialog(this, _editedCommit?.ObjectId ?? default))
                 {
-                    if (!UICommands.StartCreateBranchDialog(this, _editedCommit?.ObjectId ?? default))
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
 

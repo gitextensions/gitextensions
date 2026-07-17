@@ -872,6 +872,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Remember 'Amend commit' checkbox on commit form close</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkAiCommitMessageEnabled.Text">
+        <source>Enable AI commit message generation (adds a button to the commit dialog; the staged diff is sent to the configured endpoint only when you click it)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
         <source>Provide auto-completion in commit dialog</source>
         <target />
@@ -901,12 +905,40 @@ Please make sure that Git for Windows is installed or set the correct command ma
 (otherwise the message will be requested during commit)</source>
         <target />
       </trans-unit>
+      <trans-unit id="groupBoxAiCommitMessage.Text">
+        <source>AI commit message</source>
+        <target />
+      </trans-unit>
       <trans-unit id="groupBoxBehaviour.Text">
         <source>Behaviour</source>
         <target />
       </trans-unit>
       <trans-unit id="grpAdditionalButtons.Text">
         <source>Show additional buttons in commit button area</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiCommitMessageApiKey.Text">
+        <source>API key (leave blank for local servers such as Ollama):</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiCommitMessageBaseUrl.Text">
+        <source>API base URL (OpenAI-compatible):</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiCommitMessageMaxDiff.Text">
+        <source>Max diff characters sent to the model (0 = no limit):</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiCommitMessageModel.Text">
+        <source>Model:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiCommitMessageProvider.Text">
+        <source>Provider:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAiCommitMessageSystemPrompt.Text">
+        <source>System prompt:</source>
         <target />
       </trans-unit>
       <trans-unit id="lblCommitDialogNumberOfPreviousMessages.Text">
@@ -4032,6 +4064,26 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="_addSelectionToCommitMessage.Text">
         <source>Add selection to commit message</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiCaption.Text">
+        <source>AI commit message</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiGenerateButton.Text">
+        <source>✨ Generate AI commit message</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiGenerating.Text">
+        <source>Generating…</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiGenerationFailed.Text">
+        <source>Failed to generate a commit message:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_aiNoStagedChanges.Text">
+        <source>No staged changes were found. Stage the files you want to commit, then try again.</source>
         <target />
       </trans-unit>
       <trans-unit id="_amendCommit.Text">
