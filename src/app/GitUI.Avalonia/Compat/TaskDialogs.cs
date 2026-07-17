@@ -97,6 +97,7 @@ public static class TaskDialog
             Window dialog = new()
             {
                 Title = page.Caption ?? string.Empty,
+                Icon = Properties.Images.ApplicationIcon,
                 SizeToContent = Avalonia.Controls.SizeToContent.WidthAndHeight,
                 CanResize = false,
                 WindowStartupLocation = ownerWindow is null ? WindowStartupLocation.CenterScreen : WindowStartupLocation.CenterOwner,
@@ -107,7 +108,6 @@ public static class TaskDialog
 
             StackPanel content = new()
             {
-                Margin = new Avalonia.Thickness(20),
                 Spacing = 12,
             };
 
@@ -185,7 +185,20 @@ public static class TaskDialog
                 content.Children.Add(buttonPanel);
             }
 
-            dialog.Content = content;
+            StackPanel root = new()
+            {
+                Margin = new Avalonia.Thickness(20),
+                Orientation = Orientation.Horizontal,
+                Spacing = 16,
+            };
+            Control? pageIcon = DialogIconFactory.Create(page.Icon);
+            if (pageIcon is not null)
+            {
+                root.Children.Add(pageIcon);
+            }
+
+            root.Children.Add(content);
+            dialog.Content = root;
 
             if (ownerWindow is not null && ownerWindow != dialog && ownerWindow.IsVisible)
             {

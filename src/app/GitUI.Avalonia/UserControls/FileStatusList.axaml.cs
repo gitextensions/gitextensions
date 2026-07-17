@@ -3,6 +3,7 @@ using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
+using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
@@ -275,14 +276,6 @@ public partial class FileStatusList : GitModuleControl
             return new Panel();
         }
 
-        (string marker, Avalonia.Media.Color color) = gitItemStatus switch
-        {
-            { IsNew: true } => ("A", Colors.SeaGreen),
-            { IsDeleted: true } => ("D", Colors.IndianRed),
-            { IsRenamed: true } => ("R", Colors.SteelBlue),
-            _ => ("M", Colors.Goldenrod),
-        };
-
         StackPanel row = new()
         {
             Orientation = Avalonia.Layout.Orientation.Vertical,
@@ -303,13 +296,13 @@ public partial class FileStatusList : GitModuleControl
                 Orientation = Avalonia.Layout.Orientation.Horizontal,
                 Children =
                 {
-                    new TextBlock
+                    new Image
                     {
-                        Text = marker,
-                        Foreground = new SolidColorBrush(color),
-                        FontWeight = FontWeight.Bold,
-                        Width = 18,
-                        Margin = new Avalonia.Thickness(4, 0, 0, 0),
+                        Width = 16,
+                        Height = 16,
+                        Stretch = Stretch.Uniform,
+                        Source = GetItemImage(gitItemStatus),
+                        Margin = new Avalonia.Thickness(3, 0, 3, 0),
                     },
                     new TextBlock
                     {
@@ -320,6 +313,86 @@ public partial class FileStatusList : GitModuleControl
             });
 
         return row;
+    }
+
+    private static IImage GetItemImage(GitItemStatus item)
+    {
+        if (item.IsDeleted)
+        {
+            return item.DiffStatus switch
+            {
+                DiffBranchStatus.OnlyAChange => Images.FileStatusRemovedOnlyA,
+                DiffBranchStatus.OnlyBChange => Images.FileStatusRemovedOnlyB,
+                DiffBranchStatus.SameChange => Images.FileStatusRemovedSame,
+                DiffBranchStatus.UnequalChange => Images.FileStatusRemovedUnequal,
+                _ => Images.FileStatusRemoved,
+            };
+        }
+
+        if (item.IsRangeDiff)
+        {
+            return Images.DiffR;
+        }
+
+        if (item.IsNew || !item.IsTracked)
+        {
+            return item.DiffStatus switch
+            {
+                DiffBranchStatus.OnlyAChange => Images.FileStatusAddedOnlyA,
+                DiffBranchStatus.OnlyBChange => Images.FileStatusAddedOnlyB,
+                DiffBranchStatus.SameChange => Images.FileStatusAddedSame,
+                DiffBranchStatus.UnequalChange => Images.FileStatusAddedUnequal,
+                _ => Images.FileStatusAdded,
+            };
+        }
+
+        if (item.IsUnmerged)
+        {
+            return Images.Unmerged;
+        }
+
+        if (item.IsSubmodule)
+        {
+            return item.IsDirty ? Images.SubmoduleDirty : Images.SubmodulesManage;
+        }
+
+        if (item.IsChanged || (item.IsRenamed && item.RenameCopyPercentage != "100"))
+        {
+            return item.DiffStatus switch
+            {
+                DiffBranchStatus.OnlyAChange => Images.FileStatusModifiedOnlyA,
+                DiffBranchStatus.OnlyBChange => Images.FileStatusModifiedOnlyB,
+                DiffBranchStatus.SameChange => Images.FileStatusModifiedSame,
+                DiffBranchStatus.UnequalChange => Images.FileStatusModifiedUnequal,
+                _ => Images.FileStatusModified,
+            };
+        }
+
+        if (item.IsRenamed)
+        {
+            return item.DiffStatus switch
+            {
+                DiffBranchStatus.OnlyAChange => Images.FileStatusRenamedOnlyA,
+                DiffBranchStatus.OnlyBChange => Images.FileStatusRenamedOnlyB,
+                DiffBranchStatus.SameChange => Images.FileStatusRenamedSame,
+                DiffBranchStatus.UnequalChange => Images.FileStatusRenamedUnequal,
+                _ => Images.FileStatusRenamed,
+            };
+        }
+
+        if (item.IsCopied)
+        {
+            return item.DiffStatus switch
+            {
+                DiffBranchStatus.OnlyAChange => Images.FileStatusCopiedOnlyA,
+                DiffBranchStatus.OnlyBChange => Images.FileStatusCopiedOnlyB,
+                DiffBranchStatus.SameChange => Images.FileStatusCopiedSame,
+                DiffBranchStatus.UnequalChange => Images.FileStatusCopiedUnequal,
+                _ => Images.FileStatusCopied,
+            };
+        }
+
+        return Images.FileStatusUnknown;
     }
 
     private sealed record FileStatusEntry(FileStatusItem Item, string? GroupDescription);

@@ -3,6 +3,7 @@
        GitExtensions.slnx so the Windows Forms solution and its pipelines are unaffected
        by the Avalonia port. See src/app/GitExtensions.Avalonia/README.md. -->
   <Folder Name="/eng/tools/">
+    <Project Path="eng/tools/ImagesResxToAvalonia/ImagesResxToAvalonia.csproj" />
     <Project Path="eng/tools/WinFormsToAxaml/WinFormsToAxaml.csproj" />
   </Folder>
   <Folder Name="/src/app/">

@@ -4,6 +4,7 @@
         xmlns:editor="clr-namespace:GitUI.Editor"
         xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
         xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
+        xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormBrowse"
         Width="1280" Height="800"
         MinWidth="900" MinHeight="560"
@@ -11,27 +12,52 @@
   <DockPanel>
     <Menu x:Name="mainMenuStrip" DockPanel.Dock="Top">
       <MenuItem x:Name="repositoryToolStripMenuItem" Header="_Repository">
-        <MenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh" />
+        <MenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
+        </MenuItem>
       </MenuItem>
       <MenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
-        <MenuItem x:Name="commitToolStripMenuItem" Header="_Commit..." />
+        <MenuItem x:Name="commitToolStripMenuItem" Header="_Commit...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RepoStateClean}" /></MenuItem.Icon>
+        </MenuItem>
         <Separator />
-        <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch..." />
-        <MenuItem x:Name="branchToolStripMenuItem" Header="Create _branch..." />
-        <MenuItem x:Name="deleteBranchToolStripMenuItem" Header="De_lete branch..." />
-        <MenuItem x:Name="pullToolStripMenuItem" Header="Pull_/Fetch..." />
-        <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all" />
+        <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="branchToolStripMenuItem" Header="Create _branch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="deleteBranchToolStripMenuItem" Header="De_lete branch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchDelete}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="pullToolStripMenuItem" Header="Pull_/Fetch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PullFetchAll}" /></MenuItem.Icon>
+        </MenuItem>
         <Separator />
-        <MenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge branches..." />
-        <MenuItem x:Name="rebaseToolStripMenuItem" Header="Rebas_e..." />
+        <MenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge branches...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Merge}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="rebaseToolStripMenuItem" Header="Rebas_e...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
+        </MenuItem>
         <Separator />
-        <MenuItem x:Name="tagToolStripMenuItem" Header="Create _tag..." />
-        <MenuItem x:Name="deleteTagToolStripMenuItem" Header="_Delete tag..." />
+        <MenuItem x:Name="tagToolStripMenuItem" Header="Create _tag...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="deleteTagToolStripMenuItem" Header="_Delete tag...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
+        </MenuItem>
         <Separator />
-        <MenuItem x:Name="stashToolStripMenuItem" Header="Ma_nage stashes..." />
+        <MenuItem x:Name="stashToolStripMenuItem" Header="Ma_nage stashes...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+        </MenuItem>
       </MenuItem>
       <MenuItem x:Name="toolsToolStripMenuItem" Header="_Tools">
         <MenuItem x:Name="userShell">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GitForWindows}" /></MenuItem.Icon>
           <MenuItem.Header>
             <TextBlock Text="Git bash" />
           </MenuItem.Header>

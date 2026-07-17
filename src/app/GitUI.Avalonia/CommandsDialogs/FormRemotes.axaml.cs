@@ -237,6 +237,9 @@ Inactive remote is completely invisible to git.");
 
     private void BindBtnToggleState(bool disabled)
     {
+        btnToggleState.Icon = disabled
+            ? Properties.Images.EyeOpened
+            : Properties.Images.EyeClosed;
         ToolTip.SetTip(btnToggleState, disabled
             ? (_btnToggleStateTooltip_Activate.Text ?? "").Trim()
             : (_btnToggleStateTooltip_Deactivate.Text ?? "").Trim());

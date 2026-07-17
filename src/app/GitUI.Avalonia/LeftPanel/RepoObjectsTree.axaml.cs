@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using GitExtensions.Extensibility.Git;
+using GitUI.Properties;
 using GitUIPluginInterfaces;
 
 using ResourceManager;
@@ -38,16 +39,25 @@ public partial class RepoObjectsTree : GitExtensionsControl
     /// </summary>
     public void SetRefs(IReadOnlyList<IGitRef> refs)
     {
-        TreeViewItem branchesNode = CreateGroupNode("Branches", refs.Where(gitRef => gitRef.IsHead && !gitRef.IsTag));
-        TreeViewItem remotesNode = CreateGroupNode("Remotes", refs.Where(gitRef => gitRef.IsRemote));
-        TreeViewItem tagsNode = CreateGroupNode("Tags", refs.Where(gitRef => gitRef.IsTag));
+        TreeViewItem branchesNode = CreateGroupNode(
+            "Branches",
+            Images.BranchLocalRoot,
+            refs.Where(gitRef => gitRef.IsHead && !gitRef.IsTag));
+        TreeViewItem remotesNode = CreateGroupNode(
+            "Remotes",
+            Images.BranchRemoteRoot,
+            refs.Where(gitRef => gitRef.IsRemote));
+        TreeViewItem tagsNode = CreateGroupNode(
+            "Tags",
+            Images.TagHorizontal,
+            refs.Where(gitRef => gitRef.IsTag));
         branchesNode.IsExpanded = true;
 
         treeMain.ItemsSource = new[] { branchesNode, remotesNode, tagsNode };
 
         return;
 
-        static TreeViewItem CreateGroupNode(string caption, IEnumerable<IGitRef> groupRefs)
+        static TreeViewItem CreateGroupNode(string caption, IImage groupIcon, IEnumerable<IGitRef> groupRefs)
         {
             IGitRef[] refs =
             [
@@ -57,16 +67,44 @@ public partial class RepoObjectsTree : GitExtensionsControl
             [
                 .. refs.Select(gitRef => new TreeViewItem
                 {
-                    Header = gitRef.Name,
+                    Header = CreateHeader(
+                        gitRef.Name,
+                        gitRef.IsTag
+                            ? Images.TagHorizontal
+                            : gitRef.IsRemote
+                                ? Images.BranchRemote
+                                : Images.BranchLocal),
                     Tag = gitRef,
                 }),
             ];
             return new TreeViewItem
             {
-                Header = $"{caption} ({children.Length})",
+                Header = CreateHeader($"{caption} ({children.Length})", groupIcon),
                 ItemsSource = children,
             };
         }
+
+        static Control CreateHeader(string caption, IImage icon)
+            => new StackPanel
+            {
+                Orientation = Avalonia.Layout.Orientation.Horizontal,
+                Spacing = 3,
+                Children =
+                {
+                    new Image
+                    {
+                        Width = 16,
+                        Height = 16,
+                        Stretch = Stretch.Uniform,
+                        Source = icon,
+                    },
+                    new TextBlock
+                    {
+                        VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                        Text = caption,
+                    },
+                },
+            };
     }
 }
 
