@@ -15,7 +15,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Delete branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Create tag/Delete tag/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The main panes preserve the original invisible 6px splitter drag targets, adjacent 1px pane borders, 6px content padding, and 260px repository-tree distance; the menu uses the original 24/20/22px desktop density and original command icons. The auto-discovered headless-Skia harness captures this shell with an open menu and every other AXAML view in light/dark mode at 100%/200% scaling over a seeded repository. Remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Delete branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Create tag/Delete tag/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The revision grid receives the shared ahead/behind provider and resets its cache on repository reload. The main panes preserve the original invisible 6px splitter drag targets, adjacent 1px pane borders, 6px content padding, and 260px repository-tree distance; the menu uses the original 24/20/22px desktop density and original command icons. The auto-discovered headless-Skia harness captures this shell with an open menu and every other AXAML view in light/dark mode at 100%/200% scaling over a seeded repository. Remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -159,7 +159,19 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit, create a branch or tag at it, and the per-branch rename dropdown (underscores escaped for Avalonia access keys). Recycled rows are shaped by the same ordered ColumnProvider boundary as WinForms; settings control graph, notes, author, date and object-ID visibility, while the visible graph lanes still determine the graph width. Refs mark the checked-out branch and matching tracking remote before rows are attached. ReloadRevisions accepts a path filter, requests notes when either notes presentation is enabled, and mirrors the default --all exclusions for hidden notes, stash and session refs. Remaining provider interactions, menu items, and hotkeys are deferred."
+    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit, create a branch or tag at it, and the per-branch rename dropdown (underscores escaped for Avalonia access keys). Recycled rows are shaped by the same ordered ColumnProvider boundary as WinForms; settings control graph, notes, author, date and object-ID visibility, while the visible graph lanes still determine the graph width. Refs mark the checked-out branch and matching tracking remote before rows are attached. Selection drives the shared author-highlighting state, related real/virtual refs can select their loaded target, and superproject checkout/conflict/ref data loads independently without delaying history. ReloadRevisions accepts a path filter, requests notes when either notes presentation is enabled, and mirrors the default --all exclusions for hidden notes, stash and session refs. Remaining menu items and hotkeys are deferred."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/AuthorRevisionHighlighting.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/AuthorRevisionHighlighting.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged; the Avalonia revision grid refreshes realized provider rows when the selected-author state changes."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/SuperProjectInfo.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/SuperProjectInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged and populated through the shared superproject module APIs."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Columns/ColumnProvider.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/ColumnProvider.cs",
@@ -171,13 +183,13 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/RevisionGraphColumnProvider.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Owns graph cells and the existing visible-lane autosizing. The WinForms bitmap GraphCache is intentionally omitted; lane tooltips remain with the interaction follow-up."
+    "notes": "Owns graph cells, visible-lane autosizing, the draw-non-relatives setting and lane tooltips from the shared LaneInfoProvider. The WinForms bitmap GraphCache is intentionally omitted because Avalonia draws only realized cells."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Columns/MessageColumnProvider.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/MessageColumnProvider.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Owns ref capsules, checked-out title weight and subject tooltips. Ref hover/hit testing, ahead/behind virtual refs, fill/dashed settings, superproject labels and expanded message content remain in the provider-interaction follow-up."
+    "notes": "Owns ref capsules, checked-out title weight, subject/ref tooltips, tag/remote filtering, fill styling, exact-shape hover highlighting and related-ref double-click navigation. Shared ahead/behind data produces dashed virtual tracking refs; independently loaded superproject checkout/conflict/additional refs and matching-ref dashed outlines mirror WinForms. Expanded commit-message/artificial/stash content remains deferred."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Columns/NotesColumnProvider.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/NotesColumnProvider.cs",
@@ -195,7 +207,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/AuthorNameColumnProvider.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Author text, visibility setting and translated author/committer tooltip are functional; author highlighting remains with the interaction follow-up."
+    "notes": "Author text, visibility setting and translated author/committer tooltip are functional; the linked upstream AuthorRevisionHighlighting state bolds all realized revisions matching the selected author."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Columns/DateColumnProvider.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/DateColumnProvider.cs",
@@ -218,8 +230,8 @@
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridRefRenderer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridRefRenderer.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Avalonia DrawingContext twin preserves the WinForms ref ordering, tag point, current-branch and tracking-remote indicators, and joined local/tracking-remote point/notch geometry. Theme-variant semantic resources supply the exact invariant/dark branch, remote, tag, other, and neutral-capsule colors. Hover hit testing, ahead/behind virtual refs, fill/dashed settings, and superproject labels remain deferred with the full column-provider port."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Avalonia DrawingContext twin preserves the WinForms ref ordering, tag point, current-branch and tracking-remote indicators, joined local/tracking-remote point/notch geometry, fill mode, dashed virtual/superproject outlines and hover emphasis. Each capsule retains its ref and exact geometry for point/notch hit testing. Theme-variant semantic resources supply the exact invariant/dark branch, remote, tag, other, and neutral-capsule colors."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RefLabelIcon.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RefLabelIcon.cs",
