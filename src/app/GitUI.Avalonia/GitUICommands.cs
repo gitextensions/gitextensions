@@ -281,8 +281,23 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartCherryPickDialog(IWin32Window? owner = null, GitRevision? revision = null) => throw NotPorted(nameof(StartCherryPickDialog));
     public bool StartCherryPickDialog(IWin32Window? owner, IEnumerable<GitRevision> revisions) => throw NotPorted(nameof(StartCherryPickDialog));
     public bool StartCleanupRepositoryDialog(IWin32Window? owner = null, string? path = null) => throw NotPorted(nameof(StartCleanupRepositoryDialog));
-    public bool StartCloneDialog(IWin32Window? owner, string url, EventHandler<GitModuleEventArgs> gitModuleChanged) => throw NotPorted(nameof(StartCloneDialog));
-    public bool StartCloneDialog(IWin32Window? owner, string? url = null, bool openedFromProtocolHandler = false, EventHandler<GitModuleEventArgs>? gitModuleChanged = null) => throw NotPorted(nameof(StartCloneDialog));
+    public bool StartCloneDialog(IWin32Window? owner, string url, EventHandler<GitModuleEventArgs> gitModuleChanged)
+    {
+        return StartCloneDialog(owner, url, false, gitModuleChanged);
+    }
+
+    public bool StartCloneDialog(IWin32Window? owner, string? url = null, bool openedFromProtocolHandler = false, EventHandler<GitModuleEventArgs>? gitModuleChanged = null)
+    {
+        bool Action()
+        {
+            CommandsDialogs.FormClone form = new(this, url, openedFromProtocolHandler, gitModuleChanged);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, changesRepo: false);
+    }
+
     public void StartCloneForkFromHoster(IWin32Window? owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged) => throw NotPorted(nameof(StartCloneForkFromHoster));
     public bool StartCommitDialog(IWin32Window? owner, string? commitMessage = null, bool showOnlyWhenChanges = false)
     {
@@ -393,7 +408,20 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartFormCommitDiff(ObjectId objectId) => throw NotPorted(nameof(StartFormCommitDiff));
     public bool StartFormatPatchDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartFormatPatchDialog));
     public bool StartGeneralSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartGeneralSettingsDialog));
-    public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null) => throw NotPorted(nameof(StartInitializeDialog));
+    public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null)
+    {
+        bool Action()
+        {
+            dir ??= Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
+
+            CommandsDialogs.FormInit frm = new(this, dir, gitModuleChanged);
+            frm.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, changesRepo: false);
+    }
+
     public bool StartInteractiveRebase(IWin32Window? owner, string onto)
     {
         return StartRebaseDialog(
