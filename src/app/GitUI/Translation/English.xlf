@@ -4575,10 +4575,6 @@ Examples on branch name: "feature/ABC-4587-commitMessageRegex"
         <source>&amp;Create the new worktree</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target />
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target />

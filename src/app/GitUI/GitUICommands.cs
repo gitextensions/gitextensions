@@ -336,14 +336,8 @@ public sealed class GitUICommands : IGitUICommands
                 return false;
             }
 
-            if (form.OpenWorktree)
-            {
-                GitModule newModule = new(this.GetRequiredService<IGitExecutorProvider>(), form.WorktreeDirectory);
-                if (newModule.IsValidGitWorkingDir() && FindFormBrowse(owner) is FormBrowse browse)
-                {
-                    browse.SetWorkingDir(Path.GetFullPath(form.WorktreeDirectory));
-                }
-            }
+            // Offer to switch to the freshly created worktree, mirroring the clone flow.
+            WorktreeSwitch(owner, form.WorktreeDirectory);
 
             return true;
         });
@@ -356,8 +350,19 @@ public sealed class GitUICommands : IGitUICommands
             return browse;
         }
 
+        // The owner may be a child control (e.g. the repository objects tree), so resolve its containing form first.
+        if (window is Control control and not Form)
+        {
+            window = control.FindForm();
+        }
+
         if (window is Form form)
         {
+            if (form is FormBrowse formBrowse)
+            {
+                return formBrowse;
+            }
+
             while (form.Owner is not null)
             {
                 if (form.Owner is FormBrowse ownerBrowse)
