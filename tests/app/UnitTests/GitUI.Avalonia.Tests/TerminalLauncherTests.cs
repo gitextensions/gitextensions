@@ -144,14 +144,14 @@ public sealed class TerminalLauncherTests
     }
 
     [AvaloniaTest]
-    public void FormBrowse_terminal_menu_should_launch_in_the_repository_working_directory()
+    public void FormBrowse_terminal_toolbar_button_should_launch_in_the_repository_working_directory()
     {
         RecordingTerminalLauncher launcher = new();
         FormBrowse form = CreateBrowseForm(launcher);
-        MenuItem userShell = form.FindControl<MenuItem>("userShell")
-            ?? throw new InvalidOperationException("Terminal menu item was not created.");
+        Button userShell = form.FindControl<Button>("userShell")
+            ?? throw new InvalidOperationException("Terminal toolbar button was not created.");
 
-        userShell.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        userShell.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
         launcher.WorkingDirectory.Should().Be("/work/repository");
     }
@@ -172,7 +172,9 @@ public sealed class TerminalLauncherTests
         form.TranslateItems(translation);
 
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "userShell", "ToolTipText", "Git bash");
-        ((TextBlock)form.FindControl<MenuItem>("userShell")!.Header!).Text.Should().Be("Translated terminal");
+        ToolTip.GetTip(form.FindControl<Button>("userShell")!).Should().Be("Translated terminal");
+        MenuItem tools = form.FindControl<MenuItem>("toolsToolStripMenuItem")!;
+        ((TextBlock)tools.Items.OfType<MenuItem>().Single().Header!).Text.Should().Be("Translated terminal");
     }
 
     private static FormBrowse CreateBrowseForm(ITerminalLauncher launcher)

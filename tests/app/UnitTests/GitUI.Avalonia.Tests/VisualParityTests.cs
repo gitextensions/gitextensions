@@ -203,6 +203,39 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_toolbars_should_stay_compact_and_wrap_only_at_narrow_widths()
+    {
+        foreach (ThemeVariant theme in new[] { ThemeVariant.Light, ThemeVariant.Dark })
+        {
+            FormBrowse form = new()
+            {
+                Width = 1400,
+                Height = 700,
+                RequestedThemeVariant = theme,
+            };
+            form.Show();
+            try
+            {
+                Dispatcher.UIThread.RunJobs();
+                WrapPanel toolPanel = form.FindControl<WrapPanel>("toolPanel")!;
+                StackPanel mainToolbar = form.FindControl<StackPanel>("ToolStripMain")!;
+                mainToolbar.Bounds.Height.Should().Be(25);
+                toolPanel.Bounds.Height.Should().Be(25);
+                mainToolbar.GetVisualDescendants().OfType<Button>()
+                    .Should().OnlyContain(button => button.Bounds.Height <= 23);
+
+                form.Width = 900;
+                Dispatcher.UIThread.RunJobs();
+                toolPanel.Bounds.Height.Should().BeGreaterThan(25);
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+    }
+
+    [AvaloniaTest]
     public void Ref_labels_should_use_contrast_safe_theme_colors_and_a_neutral_capsule()
     {
         AssertRefLabelRendering(
