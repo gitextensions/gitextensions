@@ -32,7 +32,7 @@ public enum RevisionGraphDrawStyle
     HighlightSelected
 }
 
-public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
+public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, IRevisionGridFilter
 {
     public static readonly string HotkeySettingsName = "RevisionGrid";
 
@@ -59,6 +59,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
     ];
 
     private readonly CancellationTokenSequence _refreshSequence = new();
+    private readonly FilterInfo _filterInfo = new();
     private readonly AuthorRevisionHighlighting _authorHighlighting = new();
     private readonly List<ColumnProvider> _columnProviders = [];
     private readonly List<GitRevision> _revisions = [];
@@ -75,6 +76,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
     private bool _headHighlighted;
     private string _lastPathFilter = string.Empty;
     private string _lastRevisionFilter = "--all";
+    private IGitModule? _lastModule;
     private bool _parentsAreRewritten;
     private ILookup<ObjectId, IGitRef>? _refsByObjectId;
     private string? _rebaseOnTopOf;
@@ -152,6 +154,12 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
     /// </summary>
     public event EventHandler? SelectionChanged;
 
+    /// <inheritdoc />
+    public event EventHandler<FilterChangedEventArgs>? FilterChanged;
+
+    /// <summary>Occurs when the advanced-filter command should focus the available filter UI.</summary>
+    public event EventHandler? RevisionFilterRequested;
+
     /// <summary>Occurs when the selected revision is double-clicked.</summary>
     public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
 
@@ -207,6 +215,103 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
 
     internal void SetAheadBehindDataProvider(IAheadBehindDataProvider? provider)
         => _messageColumnProvider.SetAheadBehindDataProvider(provider);
+
+    /// <inheritdoc />
+    public void ResetAllFiltersAndRefresh()
+    {
+        _filterInfo.ResetAllFilters();
+        RefreshFilteredRevisions();
+    }
+
+    /// <inheritdoc />
+    public void SetAndApplyBranchFilter(string filter)
+    {
+        _filterInfo.SetBranchFilter(filter);
+        RefreshFilteredRevisions();
+    }
+
+    /// <inheritdoc />
+    public void SetAndApplyRevisionFilter(RevisionFilter filter)
+    {
+        if (_filterInfo.Apply(filter))
+        {
+            RefreshFilteredRevisions();
+        }
+    }
+
+    /// <inheritdoc />
+    public void SetAndApplyPathFilter(string filter)
+    {
+        _filterInfo.ByPathFilter = !string.IsNullOrWhiteSpace(filter);
+        _filterInfo.PathFilter = filter;
+        RefreshFilteredRevisions();
+    }
+
+    /// <inheritdoc />
+    public void ShowReflog()
+    {
+        if (!_filterInfo.ShowReflogReferences)
+        {
+            _filterInfo.ShowReflogReferences = true;
+            RefreshFilteredRevisions();
+        }
+    }
+
+    /// <inheritdoc />
+    public void ShowAllBranches()
+    {
+        _filterInfo.ByBranchFilter = false;
+        _filterInfo.ShowCurrentBranchOnly = false;
+        RefreshFilteredRevisions();
+    }
+
+    /// <inheritdoc />
+    public void ShowCurrentBranchOnly()
+    {
+        _filterInfo.ByBranchFilter = false;
+        _filterInfo.ShowCurrentBranchOnly = true;
+        RefreshFilteredRevisions();
+    }
+
+    /// <inheritdoc />
+    public void ShowFilteredBranches()
+    {
+        _filterInfo.ByBranchFilter = true;
+        _filterInfo.ShowCurrentBranchOnly = false;
+        RefreshFilteredRevisions();
+    }
+
+    /// <inheritdoc />
+    public void ShowRevisionFilterDialog()
+        => RevisionFilterRequested?.Invoke(this, EventArgs.Empty);
+
+    /// <inheritdoc />
+    public void ToggleShowOnlyFirstParent()
+    {
+        _filterInfo.ShowOnlyFirstParent = !_filterInfo.ShowOnlyFirstParent;
+        RefreshFilteredRevisions();
+    }
+
+    /// <inheritdoc />
+    public void ToggleShowReflogReferences()
+    {
+        _filterInfo.ShowReflogReferences = !_filterInfo.ShowReflogReferences;
+        RefreshFilteredRevisions();
+    }
+
+    private void RefreshFilteredRevisions()
+    {
+        if (_lastModule is null)
+        {
+            return;
+        }
+
+        ReloadRevisions(
+            _lastModule,
+            _lastRevisionFilter,
+            SelectedRevision?.ObjectId ?? default,
+            _lastPathFilter);
+    }
 
     internal bool TryGetSuperProjectInfo([System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out SuperProjectInfo? superProjectInfo)
     {
@@ -954,30 +1059,17 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
         string pathFilter = "")
     {
         CancellationToken cancellationToken = _refreshSequence.Next();
+        _lastModule = module;
         _lastRevisionFilter = revisionFilter;
         _lastPathFilter = pathFilter;
 
         if (revisionFilter == "--all")
         {
-            List<string> filterArguments = [];
-            if (!AppSettings.ShowGitNotes)
-            {
-                filterArguments.Add($"--exclude={GitRefName.RefsNotesPrefix}");
-            }
-
-            if (!AppSettings.ShowStashes)
-            {
-                filterArguments.Add($"--exclude={GitRefName.RefsStashPrefix}");
-            }
-
-            if (!AppSettings.ShowSessionRefs)
-            {
-                filterArguments.Add($"--exclude={GitRefName.RefsSessionsPrefix}**");
-            }
-
-            filterArguments.Add("--all");
-            revisionFilter = string.Join(' ', filterArguments);
+            revisionFilter = _filterInfo.GetRevisionFilter(new Lazy<ObjectId>(module.GetCurrentCheckout)).ToString();
+            pathFilter = _filterInfo.PathFilter;
         }
+
+        FilterChanged?.Invoke(this, new FilterChangedEventArgs(_filterInfo));
 
         _revisions.Clear();
         foreach (ColumnProvider columnProvider in _columnProviders)

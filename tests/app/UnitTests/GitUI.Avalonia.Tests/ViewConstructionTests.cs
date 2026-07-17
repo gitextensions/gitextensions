@@ -310,6 +310,48 @@ public sealed class ViewConstructionTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_toolbar_should_route_commit_push_stash_and_default_pull_actions()
+    {
+        GitPullAction originalDefaultPullAction = AppSettings.DefaultPullAction;
+        try
+        {
+            AppSettings.DefaultPullAction = GitPullAction.Merge;
+            IGitModule module = Substitute.For<IGitModule>();
+            module.WorkingDir.Returns(Path.GetTempPath());
+            module.IsValidGitWorkingDir().Returns(false);
+
+            IAppTitleGenerator titleGenerator = Substitute.For<IAppTitleGenerator>();
+            titleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
+            commands.GetService(typeof(IAppTitleGenerator)).Returns(titleGenerator);
+            commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+
+            FormBrowse form = new(commands);
+            Button commit = form.FindControl<Button>("toolStripButtonCommit")!;
+            Button push = form.FindControl<Button>("toolStripButtonPush")!;
+            SplitButton stash = form.FindControl<SplitButton>("toolStripSplitStash")!;
+            SplitButton pull = form.FindControl<SplitButton>("toolStripButtonPull")!;
+            commit.IsEnabled = push.IsEnabled = stash.IsEnabled = pull.IsEnabled = true;
+
+            commit.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            push.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            stash.RaiseEvent(new RoutedEventArgs(SplitButton.ClickEvent));
+            pull.RaiseEvent(new RoutedEventArgs(SplitButton.ClickEvent));
+
+            commands.Received(1).StartCommitDialog(form);
+            commands.Received(1).StartPushDialog(form, pushOnShow: false);
+            commands.Received(1).StartStashDialog(form);
+            commands.Received(1).StartPullDialogAndPullImmediately(form, pullAction: GitPullAction.Merge);
+        }
+        finally
+        {
+            AppSettings.DefaultPullAction = originalDefaultPullAction;
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_checkout_branch_should_start_the_dialog()
     {
         IGitModule module = Substitute.For<IGitModule>();
