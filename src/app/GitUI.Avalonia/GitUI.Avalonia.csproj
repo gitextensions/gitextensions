@@ -23,6 +23,8 @@
     <!-- Framework-free GitUI sources compiled unchanged (update
          eng/avalonia/portmap.json when this list changes). -->
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridFileUpdate.cs" Link="CommandsDialogs\IRevisionGridFileUpdate.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridInfo.cs" Link="CommandsDialogs\IRevisionGridInfo.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\ConsoleOutputEventArgs.cs" Link="ConsoleEmulation\ConsoleOutputEventArgs.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\ConsoleProcessExitEventArgs.cs" Link="ConsoleEmulation\ConsoleProcessExitEventArgs.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\IConsoleEmulatorsRegistry.cs" Link="ConsoleEmulation\IConsoleEmulatorsRegistry.cs" />
@@ -36,6 +38,7 @@
     <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
+    <Compile Include="..\GitUI\UserControls\GitBlameParser.cs" Link="UserControls\GitBlameParser.cs" />
     <Compile Include="..\GitUI\UserControls\PatchFile.cs" Link="UserControls\PatchFile.cs" />
     <Compile Include="..\GitUI\UserControls\TextEventArgs.cs" Link="UserControls\TextEventArgs.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" Link="UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" />
