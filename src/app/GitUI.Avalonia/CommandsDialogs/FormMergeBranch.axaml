@@ -23,9 +23,10 @@
                                       UniqueIsExpandedSettingsId="MergeBranches" />
 
     <HeaderedContentControl x:Name="groupBox1"
+                            Classes="gitextensions-group-box"
                             Grid.Column="1"
                             Header="Merge">
-      <Border Padding="10">
+      <Border>
         <Grid x:Name="tableLayoutPanel2"
               ColumnDefinitions="Auto,*"
               RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
@@ -126,6 +127,7 @@
     </HeaderedContentControl>
 
     <Button x:Name="Ok"
+            Classes="gitextensions-dialog-action"
             Grid.Row="1"
             Grid.Column="1"
             MinWidth="108"

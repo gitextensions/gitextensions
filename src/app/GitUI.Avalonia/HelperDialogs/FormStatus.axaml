@@ -7,16 +7,19 @@
         WindowStartupLocation="CenterOwner"
         Title="Process">
   <DockPanel>
-    <StackPanel x:Name="ControlsPanel" DockPanel.Dock="Bottom" Orientation="Horizontal"
-                HorizontalAlignment="Right" Spacing="8" Margin="8">
+    <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
+                DockPanel.Dock="Bottom"
+                Spacing="8"
+                Margin="8">
       <CheckBox x:Name="ShowPassword" Content="Show _password input" />
       <CheckBox x:Name="KeepDialogOpen" Content="_Keep dialog open" />
-      <Button x:Name="Ok" MinWidth="75" Content="OK" />
-      <Button x:Name="Abort" MinWidth="75" Content="_Abort" />
+      <Button x:Name="Ok" Classes="gitextensions-dialog-action" MinHeight="23" Content="OK" />
+      <Button x:Name="Abort" Classes="gitextensions-dialog-action" MinHeight="23" Content="_Abort" />
     </StackPanel>
     <ProgressBar x:Name="ProgressBar" DockPanel.Dock="Bottom" IsIndeterminate="True" />
     <usercontrols:PasswordInput x:Name="PasswordInput" DockPanel.Dock="Bottom" />
-    <Panel x:Name="MainPanel" Margin="12">
+    <Panel x:Name="MainPanel">
       <Panel x:Name="pnlOutput" />
     </Panel>
   </DockPanel>

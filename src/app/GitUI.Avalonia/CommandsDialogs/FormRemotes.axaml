@@ -23,10 +23,10 @@
         </Grid>
 
         <HeaderedContentControl x:Name="gbMgtPanel"
+                                Classes="gitextensions-group-box"
                                 Grid.Column="1"
                                 Header="Create New Remote">
           <Grid x:Name="flpnlRemoteManagement"
-                Margin="4"
                 ColumnDefinitions="Auto,*,110"
                 RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                 ColumnSpacing="8" RowSpacing="6"
@@ -74,6 +74,7 @@
                      Grid.Row="4" Grid.Column="1" />
 
             <Button x:Name="Save"
+                    Classes="gitextensions-dialog-action"
                     Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
                     MinWidth="120"
                     HorizontalAlignment="Right"
@@ -145,6 +146,7 @@
                     IsEditable="True" />
 
           <Button x:Name="SaveDefaultPushPull"
+                  Classes="gitextensions-dialog-action"
                   Grid.Row="2" Grid.Column="2"
                   MinWidth="120"
                   VerticalAlignment="Bottom"

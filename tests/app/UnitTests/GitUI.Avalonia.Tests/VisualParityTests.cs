@@ -9,19 +9,120 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
 using GitUI.LeftPanel;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
 [TestFixture]
 public sealed class VisualParityTests
 {
+    [AvaloniaTest]
+    public void Application_fonts_should_follow_point_based_Git_Extensions_settings()
+    {
+        Application application = Application.Current
+            ?? throw new InvalidOperationException("The Avalonia application was not created.");
+        WinFormsShims.Font originalUiFont = AppSettings.Font;
+        WinFormsShims.Font originalCommitFont = AppSettings.CommitFont;
+        WinFormsShims.Font originalFixedWidthFont = AppSettings.FixedWidthFont;
+        WinFormsShims.Font originalMonospaceFont = AppSettings.MonospaceFont;
+
+        try
+        {
+            AppSettings.Font = new WinFormsShims.Font(
+                "Parity UI",
+                10,
+                WinFormsShims.FontStyle.Bold | WinFormsShims.FontStyle.Italic);
+            AppSettings.CommitFont = new WinFormsShims.Font("Parity Commit", 9);
+            AppSettings.FixedWidthFont = new WinFormsShims.Font("Parity Diff", 11);
+            AppSettings.MonospaceFont = new WinFormsShims.Font("Parity Monospace", 8);
+
+            AvaloniaFontSettings.ApplyAppSettings();
+
+            GetResource<FontFamily>(application, "GitExtensionsUiFontFamily").Name.Should().Be("Parity UI");
+            GetResource<double>(application, "GitExtensionsUiFontSize").Should().BeApproximately(40d / 3d, 0.001);
+            GetResource<FontStyle>(application, "GitExtensionsUiFontStyle").Should().Be(FontStyle.Italic);
+            GetResource<FontWeight>(application, "GitExtensionsUiFontWeight").Should().Be(FontWeight.Bold);
+            GetResource<FontFamily>(application, "GitExtensionsCommitFontFamily").Name.Should().Be("Parity Commit");
+            GetResource<FontFamily>(application, "GitExtensionsFixedWidthFontFamily").Name.Should().Be("Parity Diff");
+            GetResource<double>(application, "GitExtensionsFixedWidthFontSize").Should().BeApproximately(44d / 3d, 0.001);
+            GetResource<FontFamily>(application, "GitExtensionsMonospaceFontFamily").Name.Should().Be("Parity Monospace");
+        }
+        finally
+        {
+            AppSettings.Font = originalUiFont;
+            AppSettings.CommitFont = originalCommitFont;
+            AppSettings.FixedWidthFont = originalFixedWidthFont;
+            AppSettings.MonospaceFont = originalMonospaceFont;
+            AvaloniaFontSettings.ApplyAppSettings();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Dialog_styles_should_use_WinForms_metrics_and_square_group_box_chrome()
+    {
+        Grid mainPanel = new()
+        {
+            Classes = { "gitextensions-dialog-main" },
+            RowDefinitions = new RowDefinitions("*,Auto"),
+        };
+        HeaderedContentControl groupBox = new()
+        {
+            Classes = { "gitextensions-group-box" },
+            Header = "Repository type",
+            Content = new TextBlock { Text = "Personal repository" },
+        };
+        Button action = new()
+        {
+            Classes = { "gitextensions-dialog-action" },
+            Content = "Clone",
+        };
+        mainPanel.Children.Add(groupBox);
+        mainPanel.Children.Add(action);
+        Grid.SetRow(action, 1);
+
+        Window window = new()
+        {
+            Width = 400,
+            Height = 220,
+            RequestedThemeVariant = ThemeVariant.Light,
+            Content = mainPanel,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            Border frame = groupBox.GetVisualDescendants()
+                .OfType<Border>()
+                .Single(border => border.Name == "PART_GroupBoxFrame");
+            ContentPresenter header = groupBox.GetVisualDescendants()
+                .OfType<ContentPresenter>()
+                .Single(presenter => presenter.Name == "PART_HeaderPresenter");
+
+            mainPanel.Margin.Should().Be(new Thickness(12));
+            action.MinWidth.Should().Be(75);
+            action.MinHeight.Should().Be(25);
+            groupBox.Padding.Should().Be(new Thickness(8));
+            frame.BorderThickness.Should().Be(new Thickness(1, 0, 1, 1));
+            frame.CornerRadius.Should().Be(new CornerRadius(0));
+            header.Content.Should().Be("Repository type");
+            GetColor(frame.BorderBrush).Should().Be(Color.Parse("#D2D2D2"));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaTest]
     public void Selection_palette_should_use_Git_Extensions_blue_in_both_theme_variants()
     {
@@ -466,4 +567,10 @@ public sealed class VisualParityTests
 
     private static Color GetColor(IBrush? brush)
         => brush.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+
+    private static T GetResource<T>(Application application, string key)
+    {
+        application.TryGetResource(key, theme: null, out object? resource).Should().BeTrue();
+        return resource.Should().BeOfType<T>().Subject;
+    }
 }
