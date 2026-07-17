@@ -1,10 +1,17 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.Help.HelpImageDisplayUserControl">
   <Grid x:Name="tableLayoutPanel1" RowDefinitions="Auto,Auto,*" RowSpacing="4">
     <StackPanel x:Name="flowLayoutPanel1" Orientation="Horizontal" Spacing="6">
       <HyperlinkButton x:Name="linkLabelShowHelp" Content="Show help" IsVisible="False" />
-      <Button x:Name="buttonShowHelp" Width="28" Height="28" Padding="2" Content="ⓘ" />
+      <compat:IconButton x:Name="buttonShowHelp"
+                         Classes="gitextensions-icon-only"
+                         Width="28"
+                         Height="28"
+                         Padding="2"
+                         Icon="{x:Static properties:Images.Information}" />
       <HyperlinkButton x:Name="linkLabelHide" Content="Hide help" />
     </StackPanel>
     <TextBlock x:Name="labelHoverText" Grid.Row="1" TextWrapping="Wrap" />

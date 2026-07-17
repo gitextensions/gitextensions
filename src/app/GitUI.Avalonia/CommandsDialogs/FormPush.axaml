@@ -1,5 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormPush"
         Width="600"
         Height="285"
@@ -48,13 +50,14 @@
               Margin="8,14,8,0"
               Content="_Force with lease" />
 
-    <Button x:Name="Push"
-            Classes="gitextensions-dialog-action"
-            Grid.Row="3"
-            Margin="0,18,0,0"
-            MinWidth="100"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            IsDefault="True" />
+    <compat:IconButton x:Name="Push"
+                       Classes="gitextensions-dialog-action"
+                       Grid.Row="3"
+                       Margin="0,18,0,0"
+                       MinWidth="100"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom"
+                       Icon="{x:Static properties:Images.ArrowUp}"
+                       IsDefault="True" />
   </Grid>
 </Window>

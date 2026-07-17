@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eng\tools\ImagesResxToAvalonia\ImagesResxToAvalonia.csproj" />
     <ProjectReference Include="..\..\..\..\src\app\GitExtensions.Avalonia\GitExtensions.Avalonia.csproj" />
   </ItemGroup>
 

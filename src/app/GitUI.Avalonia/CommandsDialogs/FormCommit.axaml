@@ -2,6 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:editor="using:GitUI.Editor"
         xmlns:gitui="using:GitUI"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormCommit"
         Width="1100"
         Height="720"
@@ -19,21 +21,25 @@
                     HorizontalAlignment="Right"
                     Margin="0,0,0,4"
                     Orientation="Horizontal">
-          <Button x:Name="btnResetUnstagedChanges"
-                  Content="Reset _unstaged changes"
-                  IsEnabled="False" />
-          <Button x:Name="btnResetAllChanges"
-                  Margin="4,0,0,0"
-                  Content="Reset _all changes"
-                  IsEnabled="False" />
-          <Button x:Name="toolStageAllItem"
-                  Margin="4,0,0,0"
-                  Content="⇊"
-                  IsEnabled="False" />
-          <Button x:Name="toolStageItem"
-                  Margin="4,0,0,0"
-                  Content="_Stage"
-                  IsEnabled="False" />
+          <compat:IconButton x:Name="btnResetUnstagedChanges"
+                             Icon="{x:Static properties:Images.ResetWorkingDirChanges}"
+                             Content="Reset _unstaged changes"
+                             IsEnabled="False" />
+          <compat:IconButton x:Name="btnResetAllChanges"
+                             Margin="4,0,0,0"
+                             Icon="{x:Static properties:Images.ResetWorkingDirChanges}"
+                             Content="Reset _all changes"
+                             IsEnabled="False" />
+          <compat:IconButton x:Name="toolStageAllItem"
+                             Classes="gitextensions-icon-only"
+                             Margin="4,0,0,0"
+                             Icon="{x:Static properties:Images.StageAll}"
+                             IsEnabled="False" />
+          <compat:IconButton x:Name="toolStageItem"
+                             Margin="4,0,0,0"
+                             Icon="{x:Static properties:Images.Stage}"
+                             Content="_Stage"
+                             IsEnabled="False" />
         </StackPanel>
         <gitui:FileStatusList x:Name="Unstaged" />
       </DockPanel>
@@ -51,14 +57,16 @@
           <TextBlock x:Name="commitStagedCount"
                      Margin="6,0,0,0"
                      VerticalAlignment="Center" />
-          <Button x:Name="toolUnstageItem"
-                  Margin="12,0,0,0"
-                  Content="_Unstage"
-                  IsEnabled="False" />
-          <Button x:Name="toolUnstageAllItem"
-                  Margin="4,0,0,0"
-                  Content="⇈"
-                  IsEnabled="False" />
+          <compat:IconButton x:Name="toolUnstageItem"
+                             Margin="12,0,0,0"
+                             Icon="{x:Static properties:Images.Unstage}"
+                             Content="_Unstage"
+                             IsEnabled="False" />
+          <compat:IconButton x:Name="toolUnstageAllItem"
+                             Classes="gitextensions-icon-only"
+                             Margin="4,0,0,0"
+                             Icon="{x:Static properties:Images.UnstageAll}"
+                             IsEnabled="False" />
         </StackPanel>
         <gitui:FileStatusList x:Name="Staged" />
       </DockPanel>
@@ -76,13 +84,15 @@
                     Margin="0,6,0,0"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-          <Button x:Name="Commit"
-                  Content="_Commit"
-                  IsEnabled="False" />
-          <Button x:Name="CommitAndPush"
-                  Margin="6,0,0,0"
-                  IsEnabled="False"
-                  Content="Commit &amp; _push" />
+          <compat:IconButton x:Name="Commit"
+                             Icon="{x:Static properties:Images.RepoStateClean}"
+                             Content="_Commit"
+                             IsEnabled="False" />
+          <compat:IconButton x:Name="CommitAndPush"
+                             Margin="6,0,0,0"
+                             Icon="{x:Static properties:Images.ArrowUp}"
+                             IsEnabled="False"
+                             Content="Commit &amp; _push" />
         </StackPanel>
         <TextBox x:Name="Message"
                  AcceptsReturn="True"
