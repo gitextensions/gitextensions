@@ -186,20 +186,7 @@ public sealed class VisualParityTests
             splitters.Where(splitter => splitter.ResizeDirection == GridResizeDirection.Rows)
                 .Should().ContainSingle()
                 .Which.Bounds.Height.Should().Be(6);
-            foreach (GridSplitter splitter in splitters)
-            {
-                Border line = splitter.GetVisualDescendants()
-                    .OfType<Border>()
-                    .Single(border => border.Name == "PART_VisibleSplitter");
-                if (splitter.ResizeDirection == GridResizeDirection.Columns)
-                {
-                    line.Bounds.Width.Should().Be(1);
-                }
-                else
-                {
-                    line.Bounds.Height.Should().Be(1);
-                }
-            }
+            splitters.Should().OnlyContain(splitter => GetColor(splitter.Background) == Colors.Transparent);
 
             Menu menu = form.FindControl<Menu>("mainMenuStrip")
                 ?? throw new InvalidOperationException("The main menu was not created.");

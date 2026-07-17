@@ -41,8 +41,6 @@
                            Color="#E6E6E6" />
           <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
                            Color="#D2D2D2" />
-          <SolidColorBrush x:Key="GitExtensionsSplitterBrush"
-                           Color="#A6A6A6" />
           <SolidColorBrush x:Key="GitExtensionsRefLabelBackgroundBrush"
                            Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsBranchRefBrush"
@@ -67,8 +65,6 @@
                            Color="#3A3A3A" />
           <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
                            Color="#4C4C4C" />
-          <SolidColorBrush x:Key="GitExtensionsSplitterBrush"
-                           Color="#686868" />
           <SolidColorBrush x:Key="GitExtensionsRefLabelBackgroundBrush"
                            Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsBranchRefBrush"
@@ -232,29 +228,9 @@
   </Style>
 
   <Style Selector="GridSplitter">
-    <!-- SplitContainer.SplitterWidth is the drag target, not a request to paint a solid
-         bar. Individual orientation classes below keep the 6px target and draw one line. -->
+    <!-- SplitContainer.SplitterWidth is an invisible drag target in FormBrowse. The visible
+         separators are the adjacent panes' one-pixel borders, not an extra splitter rule. -->
     <Setter Property="Background" Value="Transparent" />
-  </Style>
-  <Style Selector="GridSplitter.gitextensions-column-splitter">
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border x:Name="PART_VisibleSplitter"
-                Width="1"
-                HorizontalAlignment="Center"
-                Background="{DynamicResource GitExtensionsSplitterBrush}" />
-      </ControlTemplate>
-    </Setter>
-  </Style>
-  <Style Selector="GridSplitter.gitextensions-row-splitter">
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border x:Name="PART_VisibleSplitter"
-                Height="1"
-                VerticalAlignment="Center"
-                Background="{DynamicResource GitExtensionsSplitterBrush}" />
-      </ControlTemplate>
-    </Setter>
   </Style>
   <Style Selector="Border.gitextensions-section">
     <Setter Property="BorderBrush"
