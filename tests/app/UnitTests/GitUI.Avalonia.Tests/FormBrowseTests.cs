@@ -116,6 +116,56 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task Revision_grid_notes_provider_should_load_and_render_git_notes()
+    {
+        bool originalShowNotesColumn = AppSettings.ShowGitNotesColumn.Value;
+        bool originalShowGitNotes = AppSettings.ShowGitNotes;
+        bool originalShowToolTips = AppSettings.ShowRevisionGridTooltips.Value;
+        try
+        {
+            AppSettings.ShowGitNotesColumn.Value = true;
+            AppSettings.ShowGitNotes = false;
+            AppSettings.ShowRevisionGridTooltips.Value = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("notes")
+            {
+                "add",
+                "-m",
+                "First note\nSecond note".Quote(),
+            }).Should().BeTrue();
+
+            GitUICommands commands = new(_serviceContainer, module);
+            FormBrowse form = new(commands);
+            try
+            {
+                form.Show();
+                RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
+                    ?? throw new InvalidOperationException("Revision grid was not created.");
+                TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")
+                    ?? throw new InvalidOperationException("Revision loading status was not created.");
+
+                await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
+
+                TextBlock notesCell = revisionGrid.GetVisualDescendants()
+                    .OfType<TextBlock>()
+                    .Single(textBlock => textBlock.Classes.Contains("revision-notes-cell"));
+                notesCell.Text.Should().Be("First note");
+                ToolTip.GetTip(notesCell).Should().Be("First note\nSecond note");
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.ShowGitNotesColumn.Value = originalShowNotesColumn;
+            AppSettings.ShowGitNotes = originalShowGitNotes;
+            AppSettings.ShowRevisionGridTooltips.Value = originalShowToolTips;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task RevisionGrid_context_menu_should_route_the_selected_revision()
     {
         GitModule module = CreateRepositoryWithInitialCommit();

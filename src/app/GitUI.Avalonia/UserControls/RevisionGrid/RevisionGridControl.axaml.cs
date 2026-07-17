@@ -10,6 +10,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
+using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;
 using GitUIPluginInterfaces;
@@ -34,15 +35,15 @@ public enum RevisionGraphDrawStyle
 public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
 {
     private const int RowHeight = 24;
-    private const int GraphLeftMargin = 6;
 
     private readonly CancellationTokenSequence _refreshSequence = new();
+    private readonly List<ColumnProvider> _columnProviders = [];
     private readonly List<GitRevision> _revisions = [];
     private readonly RevisionGraph _revisionGraph = new();
-    private RevisionGraphConfig _config = new();
+    private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
+    private readonly MessageColumnProvider _messageColumnProvider;
     private ObjectId? _headId;
     private ObjectId _pendingSelectedObjectId;
-    private int _graphColumnWidth = CalculateGraphColumnWidth(visibleLaneCount: 0);
     private bool _headHighlighted;
     private bool _parentsAreRewritten;
     private ILookup<ObjectId, IGitRef>? _refsByObjectId;
@@ -50,6 +51,18 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
     public RevisionGridControl()
     {
         InitializeComponent();
+
+        _revisionGraphColumnProvider = new RevisionGraphColumnProvider(_revisionGraph, this);
+        AddColumn(_revisionGraphColumnProvider);
+        _messageColumnProvider = new MessageColumnProvider(this);
+        AddColumn(_messageColumnProvider);
+        AddColumn(new NotesColumnProvider());
+        AddColumn(new AvatarColumnProvider());
+        AddColumn(new AuthorNameColumnProvider());
+        AddColumn(new DateColumnProvider());
+        AddColumn(new CommitIdColumnProvider());
+        AddColumn(new BuildStatusColumnProvider());
+        ApplyColumnSettings();
 
         lstRevisions.ItemTemplate = new FuncDataTemplate<GitRevision>((_, _) => new RevisionRowControl(this), supportsRecycling: true);
         lstRevisions.SelectionChanged += (_, _) =>
@@ -83,13 +96,34 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
     /// <summary>Occurs when the selected revision is double-clicked.</summary>
     public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
 
-    internal int GraphColumnWidth => _graphColumnWidth;
+    internal IReadOnlyList<ColumnProvider> ColumnProviders => _columnProviders;
+
+    internal int GraphColumnWidth => (int)_revisionGraphColumnProvider.Column.Width.Value;
 
     internal static int CalculateGraphColumnWidth(int visibleLaneCount)
-        => GraphLeftMargin
-            + Math.Max(
-                GraphRenderer.LaneWidth * Math.Min(visibleLaneCount, GraphRenderer.MaxLanes),
-                GraphRenderer.LaneWidth);
+        => RevisionGraphColumnProvider.CalculateGraphColumnWidth(visibleLaneCount);
+
+    internal bool IsCurrentCheckout(GitRevision revision)
+        => _headId is ObjectId headId && revision.ObjectId == headId;
+
+    private void AddColumn(ColumnProvider columnProvider)
+    {
+        columnProvider.Index = _columnProviders.Count;
+        _columnProviders.Add(columnProvider);
+    }
+
+    internal void ApplyColumnSettings()
+    {
+        foreach (ColumnProvider columnProvider in _columnProviders)
+        {
+            columnProvider.ApplySettings();
+        }
+
+        foreach (RevisionRowControl row in lstRevisions.GetVisualDescendants().OfType<RevisionRowControl>())
+        {
+            row.ApplyColumnLayout();
+        }
+    }
 
     /// <summary>
     ///  Selects and scrolls to the given revision if it is loaded.
@@ -269,10 +303,32 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
     {
         CancellationToken cancellationToken = _refreshSequence.Next();
 
+        if (revisionFilter == "--all")
+        {
+            List<string> filterArguments = [];
+            if (!AppSettings.ShowGitNotes)
+            {
+                filterArguments.Add($"--exclude={GitRefName.RefsNotesPrefix}");
+            }
+
+            if (!AppSettings.ShowStashes)
+            {
+                filterArguments.Add($"--exclude={GitRefName.RefsStashPrefix}");
+            }
+
+            if (!AppSettings.ShowSessionRefs)
+            {
+                filterArguments.Add($"--exclude={GitRefName.RefsSessionsPrefix}**");
+            }
+
+            filterArguments.Add("--all");
+            revisionFilter = string.Join(' ', filterArguments);
+        }
+
         _revisions.Clear();
         _revisionGraph.Clear();
-        _config = new RevisionGraphConfig();
         _headId = module.GetCurrentCheckout();
+        _revisionGraph.HeadId = _headId.Value;
 
         // A path filter makes git rewrite parents ("history simplification"), so revisions
         // may carry parent ids that are not their real parents.
@@ -306,7 +362,8 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
                 .ToLookup(gitRef => gitRef.ObjectId);
 
             RevisionReader reader = new(module);
-            reader.GetLog(observer, revisionFilter, pathFilter, hasNotes: false, autostashLabel: "autostash", cancellationToken);
+            bool hasNotes = AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes;
+            reader.GetLog(observer, revisionFilter, pathFilter, hasNotes, autostashLabel: "autostash", cancellationToken);
         });
     }
 
@@ -369,6 +426,11 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
         // The graph rows straightened after the final CacheTo become visible only when the
         // realized row controls render again, so refresh the list once at the end.
         lstRevisions.ItemsSource = _revisions.ToArray();
+        foreach (RevisionRowControl row in lstRevisions.GetVisualDescendants().OfType<RevisionRowControl>())
+        {
+            row.RefreshCells();
+        }
+
         lblLoadingStatus.Text = $"{_revisions.Count} revisions";
         SelectPendingRevision();
 
@@ -406,35 +468,49 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
         int visibleLaneCount = visibleRows
             .Select(row => row.DataContext)
             .OfType<GitRevision>()
-            .Select(GetLaneCount)
+            .Select(_revisionGraphColumnProvider.GetLaneCount)
             .DefaultIfEmpty()
             .Max();
         int graphColumnWidth = CalculateGraphColumnWidth(visibleLaneCount);
-        if (_graphColumnWidth == graphColumnWidth)
+        if (_revisionGraphColumnProvider.Column.Width.Value == graphColumnWidth)
         {
             return;
         }
 
-        _graphColumnWidth = graphColumnWidth;
+        _revisionGraphColumnProvider.Column.Width = new GridLength(graphColumnWidth);
         foreach (RevisionRowControl row in visibleRows)
         {
-            row.SetGraphColumnWidth(graphColumnWidth);
+            row.ApplyColumnLayout();
         }
     }
 
-    private int GetLaneCount(GitRevision revision)
+    internal bool DrawGraphCell(
+        DrawingContext context,
+        GitRevision revision,
+        RevisionGraphDrawStyle drawStyle)
     {
+        if (_headId is not ObjectId headId
+            || !_revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex))
+        {
+            return false;
+        }
+
         try
         {
-            return _revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex)
-                ? _revisionGraph.GetSegmentsForRow(rowIndex)?.GetLaneCount() ?? 0
-                : 0;
+            GraphRenderer.DrawItem(
+                _revisionGraph.Config,
+                context,
+                rowIndex,
+                RowHeight,
+                _revisionGraph.GetSegmentsForRow,
+                drawStyle,
+                headId);
+            return true;
         }
         catch (Exception)
         {
-            // The reader can advance the row cache while layout is measuring the visible
-            // controls. The next layout pass recalculates the width from the stable rows.
-            return 0;
+            // The reader can advance the row cache while layout is painting realized rows.
+            return false;
         }
     }
 
@@ -462,64 +538,32 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
             => Dispatcher.UIThread.Post(() => owner.OnLoadingError(error, cancellationToken));
     }
 
-    /// <summary>
-    ///  One list row: graph cell, subject, author, date. Recycled by the virtualizing panel;
-    ///  content follows the <c>DataContext</c>.
-    /// </summary>
+    /// <summary>One provider-shaped row recycled by the virtualizing panel.</summary>
     private sealed class RevisionRowControl : Grid
     {
-        private readonly RevisionGridControl _owner;
-        private readonly GraphCellControl _graph;
-        private readonly StackPanel _messagePanel;
-        private readonly TextBlock _subject;
-        private readonly TextBlock _author;
-        private readonly TextBlock _date;
+        private readonly List<(ColumnProvider Provider, Control Cell)> _cells = [];
 
         public RevisionRowControl(RevisionGridControl owner)
         {
-            _owner = owner;
             Height = RowHeight;
-            ColumnDefinitions = new ColumnDefinitions($"{owner.GraphColumnWidth},*,180,140");
             Classes.Add("revision-row");
 
-            _graph = new GraphCellControl(owner)
+            foreach (ColumnProvider provider in owner._columnProviders)
             {
-                ClipToBounds = true,
-                Margin = new Avalonia.Thickness(GraphLeftMargin, 0, 0, 0),
-            };
-            _graph.Classes.Add("revision-graph-cell");
-            _subject = CreateTextBlock(leftMargin: 0);
-            _subject.Classes.Add("revision-subject");
-            _messagePanel = new StackPanel
-            {
-                Orientation = Avalonia.Layout.Orientation.Horizontal,
-                Margin = new Avalonia.Thickness(6, 0, 2, 0),
-                ClipToBounds = true,
-            };
-            _messagePanel.Classes.Add("revision-message-cell");
-            _messagePanel.Children.Add(_subject);
-            _author = CreateTextBlock(leftMargin: 8, opacity: 0.85);
-            _date = CreateTextBlock(leftMargin: 8, opacity: 0.7);
-
-            SetColumn(_graph, 0);
-            SetColumn(_messagePanel, 1);
-            SetColumn(_author, 2);
-            SetColumn(_date, 3);
-            Children.Add(_graph);
-            Children.Add(_messagePanel);
-            Children.Add(_author);
-            Children.Add(_date);
-
-            return;
-
-            static TextBlock CreateTextBlock(int leftMargin, double opacity = 1)
-                => new()
+                ColumnDefinitions.Add(new ColumnDefinition
                 {
-                    TextTrimming = TextTrimming.CharacterEllipsis,
-                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                    Margin = new Avalonia.Thickness(leftMargin, 0, 2, 0),
-                    Opacity = opacity,
-                };
+                    Width = provider.Column.EffectiveWidth,
+                    MinWidth = provider.Column.IsVisible && provider.Column.IsAvailable
+                        ? provider.Column.MinimumWidth
+                        : 0,
+                });
+                Control cell = provider.CreateCell();
+                SetColumn(cell, provider.Index);
+                Children.Add(cell);
+                _cells.Add((provider, cell));
+            }
+
+            ApplyColumnLayout();
         }
 
         protected override void OnDataContextChanged(EventArgs e)
@@ -528,74 +572,31 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
 
             if (DataContext is GitRevision revision)
             {
-                // The subject TextBlock is the persistent last child; only ref chips are rebuilt.
-                _messagePanel.Children.RemoveRange(0, _messagePanel.Children.Count - 1);
-                foreach (Control label in RevisionGridRefRenderer.CreateLabels(revision.Refs))
-                {
-                    _messagePanel.Children.Insert(_messagePanel.Children.Count - 1, label);
-                }
-
-                _subject.Text = revision.Subject;
-                _subject.FontWeight = _owner._headId is ObjectId headId
-                    && revision.ObjectId == headId
-                        ? FontWeight.Bold
-                        : FontWeight.Normal;
-                _author.Text = revision.Author ?? string.Empty;
-                _date.Text = revision.AuthorDate.ToString("yyyy-MM-dd HH:mm");
-                _graph.Revision = revision;
+                RefreshCells();
             }
         }
 
-        public void SetGraphColumnWidth(int width)
-            => ColumnDefinitions[0].Width = new GridLength(width);
-    }
-
-    /// <summary>
-    ///  Renders the graph cell of one row with the ported <see cref="GraphRenderer"/>.
-    /// </summary>
-    private sealed class GraphCellControl(RevisionGridControl owner) : Control
-    {
-        private GitRevision? _revision;
-
-        public GitRevision? Revision
+        public void RefreshCells()
         {
-            get => _revision;
-            set
-            {
-                _revision = value;
-                InvalidateVisual();
-            }
-        }
-
-        public override void Render(DrawingContext context)
-        {
-            if (_revision is null
-                || owner._headId is not ObjectId headId
-                || !owner._revisionGraph.TryGetRowIndex(_revision.ObjectId, out int rowIndex))
+            if (DataContext is not GitRevision revision)
             {
                 return;
             }
 
-            // Like the WinForms grid, only paint rows the row cache has fully prepared
-            // (drawing looks at the neighbor rows, hence the margin of 2). During loading
-            // the reader thread grows the cache concurrently; rows near the frontier are
-            // skipped now and repainted with the next batch refresh.
-            if (rowIndex + 2 >= owner._revisionGraph.GetCachedCount())
+            foreach ((ColumnProvider provider, Control cell) in _cells)
             {
-                return;
+                provider.UpdateCell(cell, revision);
             }
+        }
 
-            try
+        public void ApplyColumnLayout()
+        {
+            foreach ((ColumnProvider provider, Control cell) in _cells)
             {
-                GraphRenderer.DrawItem(owner._config, context, rowIndex, RowHeight,
-                    owner._revisionGraph.GetSegmentsForRow,
-                    RevisionGraphDrawStyle.DrawNonRelativesGray,
-                    headId);
-            }
-            catch (Exception)
-            {
-                // The row cache can shift under a concurrent CacheTo while loading;
-                // skip this frame, the next refresh repaints the row.
+                ColumnDefinitions[provider.Index].Width = provider.Column.EffectiveWidth;
+                bool isVisible = provider.Column.IsVisible && provider.Column.IsAvailable;
+                ColumnDefinitions[provider.Index].MinWidth = isVisible ? provider.Column.MinimumWidth : 0;
+                cell.IsVisible = isVisible;
             }
         }
     }
