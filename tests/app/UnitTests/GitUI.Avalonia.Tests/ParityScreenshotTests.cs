@@ -406,6 +406,7 @@ public sealed partial class ParityScreenshotTests
 
     private static void SeedPatchGrid(PatchGrid patchGrid, CaptureContext context)
     {
+        patchGrid.IsManagingRebase = true;
         PatchFile[] patches =
         [
             new PatchFile

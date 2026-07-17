@@ -419,10 +419,7 @@ public sealed partial class FormCommit : GitModuleForm
         base.TranslateItems(translation);
         ToolTip.SetTip(toolStageAllItem, _stageAll.Text);
         ToolTip.SetTip(toolUnstageAllItem, _unstageAll.Text);
-        if (CommitAndPush.Content is TextBlock commitAndPushText)
-        {
-            commitAndPushText.Text = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_commitAndPush.Text);
-        }
+        CommitAndPush.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_commitAndPush.Text);
     }
 }
 
