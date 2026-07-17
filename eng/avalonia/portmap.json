@@ -95,6 +95,18 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "URL/destination/subdirectory with live location info, clipboard URL suggestion, current-remote prefill, remote branch listing on dropdown (default remote-HEAD / no-checkout items), shallow-clone and submodule options, repository type, open-after-clone question, and history updates; the clone runs in the existing process dialog until FormRemoteProcess is ported. StartCloneDialog is live. Not ported: the PuTTY pieces (Load SSH key, host-key/authentication recovery), the busy cursor during branch loading, and the ShowInTaskbar test (replaced by the dialog invocation itself); history combos hold path strings rather than Repository objects."
   },
+  "src/app/GitUI/CommandsDialogs/FormRemotes.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRemotes.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Remote management (create/edit/rename via SaveRemote, delete with confirmation, activate/deactivate via ToggleRemoteState, separate push url, URL suggestions from history + git-hosting-pattern rewriting, owner-from-URL name suggestion, prefix behind AlwaysShowAdvOpt, auto-configure question wiring StartPullDialogAndPullImmediately) and the default-pull tab (branch list with tracking-remote and merge-with editing through the detail fields, committed on focus leave like the WinForms Validated events; preselect opens the tab). StartRemotesDialog is live. Not ported: PuTTY panel/connection test (OpenSSH per platform matrix), the remote color button (existing colors are preserved on save), Active/Inactive list group headers (inactive remotes render gray), and in-grid editing of the pull behaviors. URL combos hold path strings."
+  },
+  "src/app/GitUI/CommandsDialogs/FormRemotesController.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/FormRemotesController.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
   "src/app/GitUI/CommandsDialogs/FormClone.RemoteActionResult.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/FormClone.RemoteActionResult.cs",
     "status": "parity",
