@@ -1,0 +1,108 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.FormClone"
+        Width="647" SizeToContent="Height"
+        MinWidth="450" MaxWidth="950" CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Clone">
+  <!-- MainPanel (tpnlMain rows) + bottom ControlsPanel like the WinForms dialog chrome. -->
+  <Grid Margin="12" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+    <Grid x:Name="tableLayoutPanel1"
+          ColumnDefinitions="Auto,*,100"
+          RowDefinitions="Auto,Auto,Auto,Auto"
+          ColumnSpacing="8" RowSpacing="6">
+      <TextBlock x:Name="repositoryLabel"
+                 Text="Repository to _clone:"
+                 VerticalAlignment="Center" />
+      <ComboBox x:Name="_NO_TRANSLATE_From"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                IsEditable="True" />
+      <Button x:Name="FromBrowse"
+              Grid.Column="2"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              Content="_Browse" />
+
+      <TextBlock x:Name="destinationLabel"
+                 Grid.Row="1"
+                 Text="_Destination:"
+                 VerticalAlignment="Center" />
+      <ComboBox x:Name="_NO_TRANSLATE_To"
+                Grid.Row="1" Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                IsEditable="True" />
+      <Button x:Name="ToBrowse"
+              Grid.Row="1" Grid.Column="2"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              Content="B_rowse" />
+
+      <TextBlock x:Name="subdirectoryLabel"
+                 Grid.Row="2"
+                 Text="_Subdirectory to create:"
+                 VerticalAlignment="Center" />
+      <TextBox x:Name="_NO_TRANSLATE_NewDirectory"
+               Grid.Row="2" Grid.Column="1"
+               HorizontalAlignment="Stretch" />
+
+      <TextBlock x:Name="brachLabel"
+                 Grid.Row="3"
+                 Text="Br_anch:"
+                 VerticalAlignment="Center" />
+      <ComboBox x:Name="_NO_TRANSLATE_Branches"
+                Grid.Row="3" Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                IsEditable="True" />
+    </Grid>
+
+    <Border Grid.Row="1"
+            Margin="0,13,0,0"
+            MinHeight="42"
+            BorderThickness="1"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+            Padding="6,4">
+      <TextBlock x:Name="Info"
+                 TextWrapping="Wrap"
+                 VerticalAlignment="Center" />
+    </Border>
+
+    <HeaderedContentControl x:Name="groupBox1"
+                            Grid.Row="2"
+                            Margin="0,10,0,0"
+                            Header="Repository type">
+      <StackPanel Margin="8,4" Spacing="6">
+        <RadioButton x:Name="PersonalRepository"
+                     Content="_Personal repository"
+                     IsChecked="True" />
+        <RadioButton x:Name="CentralRepository"
+                     Content="P_ublic repository, no working directory  (--bare)" />
+      </StackPanel>
+    </HeaderedContentControl>
+
+    <StackPanel x:Name="optionsPanel"
+                Grid.Row="3"
+                Margin="0,10,0,0"
+                Orientation="Horizontal"
+                Spacing="24">
+      <CheckBox x:Name="cbIntializeAllSubmodules"
+                Content="Initialize all submodules"
+                IsChecked="True" />
+      <CheckBox x:Name="cbDownloadFullHistory"
+                Content="Download full _history"
+                IsChecked="True" />
+    </StackPanel>
+
+    <!-- ControlsPanel -->
+    <StackPanel x:Name="ControlsPanel"
+                Grid.Row="4"
+                Margin="0,14,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right">
+      <Button x:Name="Ok"
+              MinWidth="75"
+              Content="Clone"
+              IsDefault="True" />
+    </StackPanel>
+  </Grid>
+</Window>
