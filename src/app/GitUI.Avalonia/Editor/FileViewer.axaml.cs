@@ -8,28 +8,39 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.Editor.Diff;
 using GitUI.UserControls;
 
 using ResourceManager;
 
 namespace GitUI.Editor;
 
-// Reduced twin of GitUI/Editor/FileViewer.cs. It renders unified diffs and supports the
-// file-to-file continuous scrolling used by FormStash, plus the plain-text mode with
-// line highlighting used by the blame view. Blob/range modes, syntax highlighting, and
-// line patching remain deferred.
+// Functional twin of GitUI/Editor/FileViewer.cs. It renders parsed patch, combined, word,
+// and range diffs and supports the file-to-file continuous scrolling used by FormStash,
+// plus the plain-text mode with line highlighting used by blame. Blob modes, search,
+// syntax highlighting, and line patching remain deferred.
 public partial class FileViewer : GitModuleControl
 {
+    private readonly DiffBackgroundRenderer _diffBackgroundRenderer;
+    private readonly DiffTextColorizer _diffTextColorizer;
+    private readonly DiffViewerLineNumberControl _diffViewerLineNumberControl;
     private readonly List<HighlightedLines> _lineHighlights = [];
-    private bool _isDiffView;
+    private DiffHighlightService? _diffHighlightService;
     private int _lastCaretLine = -1;
 
     public FileViewer()
     {
         InitializeComponent();
 
-        TextEditor.TextArea.TextView.LineTransformers.Add(new DiffLineColorizer(() => _isDiffView));
+        _diffViewerLineNumberControl = new DiffViewerLineNumberControl(TextEditor);
+        _diffViewerLineNumberControl.Clear();
+        TextEditor.TextArea.LeftMargins.Insert(0, _diffViewerLineNumberControl);
+
+        _diffBackgroundRenderer = new DiffBackgroundRenderer(this);
+        _diffTextColorizer = new DiffTextColorizer(this);
+        TextEditor.TextArea.TextView.BackgroundRenderers.Add(_diffBackgroundRenderer);
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(new HighlightBackgroundRenderer(_lineHighlights));
+        TextEditor.TextArea.TextView.LineTransformers.Add(_diffTextColorizer);
         TextEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
         TextEditor.KeyDown += TextEditor_KeyDown;
         TextEditor.PointerWheelChanged += TextEditor_PointerWheelChanged;
@@ -67,8 +78,29 @@ public partial class FileViewer : GitModuleControl
     /// </summary>
     public void ViewPatch(string? text)
     {
-        _isDiffView = true;
-        SetText(text);
+        ViewPatch(text, useGitColoring: false);
+    }
+
+    /// <summary>
+    /// Shows a patch using Git's ANSI coloring, combined-diff parsing, or word-diff parsing.
+    /// </summary>
+    public void ViewPatch(string? text, bool useGitColoring, bool isCombinedDiff = false, bool isGitWordDiff = false)
+    {
+        string parsedText = text ?? string.Empty;
+        DiffHighlightService highlightService = isCombinedDiff
+            ? new CombinedDiffHighlightService(ref parsedText, useGitColoring)
+            : new PatchHighlightService(ref parsedText, useGitColoring, isGitWordDiff);
+        SetDiffText(parsedText, highlightService, showLeftColumn: true);
+    }
+
+    /// <summary>
+    /// Shows the output of git range-diff with its single right-side line-number column.
+    /// </summary>
+    public void ViewRangeDiff(string? text)
+    {
+        string parsedText = text ?? string.Empty;
+        RangeDiffHighlightService highlightService = new(ref parsedText);
+        SetDiffText(parsedText, highlightService, showLeftColumn: false);
     }
 
     /// <summary>
@@ -78,7 +110,7 @@ public partial class FileViewer : GitModuleControl
     {
         await this.SwitchToMainThreadAsync(cancellationToken);
 
-        _isDiffView = false;
+        ClearDiffHighlighting();
         SetText(text);
     }
 
@@ -94,12 +126,48 @@ public partial class FileViewer : GitModuleControl
         TextEditor.Document ??= new TextDocument();
         TextEditor.Document.Text = text ?? string.Empty;
         TextEditor.ScrollToHome();
+        TextEditor.TextArea.TextView.Redraw();
+    }
+
+    private void SetDiffText(string text, DiffHighlightService highlightService, bool showLeftColumn)
+    {
+        _diffHighlightService = highlightService;
+        _diffBackgroundRenderer.SetHighlightService(highlightService);
+        _diffTextColorizer.SetHighlightService(highlightService);
+        _diffViewerLineNumberControl.DisplayLineNum(highlightService.LinesInfo, showLeftColumn);
+        TextEditor.ShowLineNumbers = false;
+        SetText(text);
+    }
+
+    private void ClearDiffHighlighting()
+    {
+        _diffHighlightService = null;
+        _diffBackgroundRenderer.SetHighlightService(null);
+        _diffTextColorizer.SetHighlightService(null);
+        _diffViewerLineNumberControl.Clear();
+        TextEditor.ShowLineNumbers = true;
     }
 
     /// <summary>
     ///  Gets the one-based line number of the caret.
     /// </summary>
-    public int CurrentFileLine => TextEditor.TextArea.Caret.Line;
+    public int CurrentFileLine
+    {
+        get
+        {
+            DiffLineInfo? lineInfo = _diffViewerLineNumberControl.GetLineInfo(TextEditor.TextArea.Caret.Line - 1);
+            if (lineInfo is null)
+            {
+                return TextEditor.TextArea.Caret.Line;
+            }
+
+            return lineInfo.RightLineNumber != DiffLineInfo.NotApplicableLineNum
+                ? lineInfo.RightLineNumber
+                : lineInfo.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
+                    ? lineInfo.LeftLineNumber
+                    : TextEditor.TextArea.Caret.Line;
+        }
+    }
 
     /// <summary>
     ///  Moves the caret to the given one-based line and scrolls it into view.
@@ -112,9 +180,24 @@ public partial class FileViewer : GitModuleControl
             return;
         }
 
-        line = Math.Clamp(line, 1, document.LineCount);
-        TextEditor.TextArea.Caret.Position = new TextViewPosition(line, column: 1);
-        TextEditor.ScrollToLine(line);
+        int documentLine = FindDocumentLine(line);
+        documentLine = Math.Clamp(documentLine, 1, document.LineCount);
+        TextEditor.TextArea.Caret.Position = new TextViewPosition(documentLine, column: 1);
+        TextEditor.ScrollToLine(documentLine);
+    }
+
+    private int FindDocumentLine(int fileLine)
+    {
+        if (_diffHighlightService is null)
+        {
+            return fileLine;
+        }
+
+        DiffLineInfo? mapped = _diffHighlightService.LinesInfo.DiffLines.Values.FirstOrDefault(
+            info => info.RightLineNumber == fileLine);
+        mapped ??= _diffHighlightService.LinesInfo.DiffLines.Values.FirstOrDefault(
+            info => info.LeftLineNumber == fileLine);
+        return mapped?.LineNumInDiff ?? fileLine;
     }
 
     /// <summary>
@@ -153,6 +236,7 @@ public partial class FileViewer : GitModuleControl
     public void Refresh()
     {
         TextEditor.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
+        _diffViewerLineNumberControl.InvalidateVisual();
     }
 
     private void Caret_PositionChanged(object? sender, EventArgs e)
@@ -164,7 +248,8 @@ public partial class FileViewer : GitModuleControl
         }
 
         _lastCaretLine = line;
-        SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(line));
+        _diffViewerLineNumberControl.InvalidateVisual();
+        SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(CurrentFileLine - 1));
     }
 
     /// <summary>
@@ -285,47 +370,6 @@ public partial class FileViewer : GitModuleControl
                         break;
                     }
                 }
-            }
-        }
-    }
-
-    /// <summary>
-    ///  Colors added/removed/section lines of a unified diff, approximating the WinForms
-    ///  diff highlight service until the full highlighting port lands.
-    /// </summary>
-    private sealed class DiffLineColorizer : DocumentColorizingTransformer
-    {
-        private static readonly IBrush _addedBrush = new SolidColorBrush(Colors.SeaGreen).ToImmutable();
-        private static readonly IBrush _removedBrush = new SolidColorBrush(Colors.IndianRed).ToImmutable();
-        private static readonly IBrush _sectionBrush = new SolidColorBrush(Colors.SteelBlue).ToImmutable();
-
-        private readonly Func<bool> _isDiffView;
-
-        public DiffLineColorizer(Func<bool> isDiffView)
-        {
-            _isDiffView = isDiffView;
-        }
-
-        protected override void ColorizeLine(DocumentLine line)
-        {
-            if (!_isDiffView())
-            {
-                return;
-            }
-
-            string text = CurrentContext.Document.GetText(line.Offset, Math.Min(line.Length, 4));
-            IBrush? brush = text switch
-            {
-                _ when text.StartsWith("+++") || text.StartsWith("---") => _sectionBrush,
-                _ when text.StartsWith("@@") => _sectionBrush,
-                _ when text.StartsWith('+') => _addedBrush,
-                _ when text.StartsWith('-') => _removedBrush,
-                _ => null,
-            };
-
-            if (brush is not null)
-            {
-                ChangeLinePart(line.Offset, line.EndOffset, element => element.TextRunProperties.SetForegroundBrush(brush));
             }
         }
     }
