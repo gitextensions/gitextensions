@@ -46,16 +46,12 @@
       <Border Grid.Column="0" Classes="gitextensions-section">
         <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" />
       </Border>
-      <GridSplitter Grid.Column="1"
-                    Classes="gitextensions-column-splitter"
-                    ResizeDirection="Columns" />
+      <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
       <Grid Grid.Column="2" RowDefinitions="3*,6,2*">
         <Border Grid.Row="0" Classes="gitextensions-section">
           <gitui:RevisionGridControl x:Name="RevisionGrid" />
         </Border>
-        <GridSplitter Grid.Row="1"
-                      Classes="gitextensions-row-splitter"
-                      ResizeDirection="Rows" />
+        <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
         <Grid Grid.Row="2" ColumnDefinitions="380,6,*">
           <Border Grid.Column="0" Classes="gitextensions-section">
             <Grid RowDefinitions="Auto,1,*">
@@ -64,9 +60,7 @@
               <gitui:FileStatusList x:Name="fileStatusList" Grid.Row="2" />
             </Grid>
           </Border>
-          <GridSplitter Grid.Column="1"
-                        Classes="gitextensions-column-splitter"
-                        ResizeDirection="Columns" />
+          <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
           <Border Grid.Column="2" Classes="gitextensions-section">
             <editor:FileViewer x:Name="fileViewer" />
           </Border>
