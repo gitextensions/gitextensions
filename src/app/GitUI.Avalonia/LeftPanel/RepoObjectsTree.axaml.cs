@@ -115,6 +115,8 @@ public partial class RepoObjectsTree : GitExtensionsControl
 internal sealed class TreeConnectorControl : Control
 {
     private const double ChevronCenter = 18;
+    private const double ChevronGapHalfHeight = 6;
+    private const double ChevronGapHalfWidth = 6;
     private const double Indent = 16;
     private static readonly DashStyle DottedLine = new([1, 1], 0);
 
@@ -151,9 +153,12 @@ internal sealed class TreeConnectorControl : Control
         double x = ChevronCenter + (item.Level * Indent);
         double top = item.Level == 0 && index == 0 ? middle : 0;
         double bottom = index == count - 1 ? middle : Bounds.Height;
+        bool hasChevron = item.Items.Count > 0;
 
-        context.DrawLine(pen, new Avalonia.Point(x, top), new Avalonia.Point(x, bottom));
-        context.DrawLine(pen, new Avalonia.Point(x, middle), new Avalonia.Point(x + ChevronCenter, middle));
+        foreach ((Avalonia.Point start, Avalonia.Point end) in GetCurrentItemLines(x, top, bottom, middle, hasChevron))
+        {
+            context.DrawLine(pen, start, end);
+        }
 
         for (TreeViewItem? ancestor = GetParentItem(item);
              ancestor is not null;
@@ -169,6 +174,37 @@ internal sealed class TreeConnectorControl : Control
                     new Avalonia.Point(ancestorX, Bounds.Height));
             }
         }
+    }
+
+    internal static IEnumerable<(Avalonia.Point Start, Avalonia.Point End)> GetCurrentItemLines(
+        double x,
+        double top,
+        double bottom,
+        double middle,
+        bool hasChevron)
+    {
+        if (!hasChevron)
+        {
+            yield return (new Avalonia.Point(x, top), new Avalonia.Point(x, bottom));
+            yield return (new Avalonia.Point(x, middle), new Avalonia.Point(x + ChevronCenter, middle));
+            yield break;
+        }
+
+        double upperEnd = Math.Min(bottom, middle - ChevronGapHalfHeight);
+        if (top < upperEnd)
+        {
+            yield return (new Avalonia.Point(x, top), new Avalonia.Point(x, upperEnd));
+        }
+
+        double lowerStart = Math.Max(top, middle + ChevronGapHalfHeight);
+        if (lowerStart < bottom)
+        {
+            yield return (new Avalonia.Point(x, lowerStart), new Avalonia.Point(x, bottom));
+        }
+
+        yield return (
+            new Avalonia.Point(x + ChevronGapHalfWidth, middle),
+            new Avalonia.Point(x + ChevronCenter, middle));
     }
 
     private static TreeViewItem? GetParentItem(TreeViewItem item)

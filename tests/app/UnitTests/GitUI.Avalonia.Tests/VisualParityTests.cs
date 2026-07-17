@@ -360,6 +360,18 @@ public sealed class VisualParityTests
         }
     }
 
+    [Test]
+    public void RepoObjectsTree_connectors_should_leave_the_chevron_rectangle_clear()
+    {
+        (Point Start, Point End)[] lines =
+        [.. TreeConnectorControl.GetCurrentItemLines(x: 18, top: 0, bottom: 18, middle: 9, hasChevron: true)];
+
+        lines.Should().Equal(
+            (new Point(18, 0), new Point(18, 3)),
+            (new Point(18, 15), new Point(18, 18)),
+            (new Point(24, 9), new Point(36, 9)));
+    }
+
     [AvaloniaTest]
     public void RepoObjectsTree_scrollbars_should_not_cover_the_last_expanded_item()
     {
