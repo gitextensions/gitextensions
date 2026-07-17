@@ -7,15 +7,18 @@
         CanResize="False"
         Title="Checkout branch">
   <DockPanel>
-    <StackPanel x:Name="ControlsPanel" DockPanel.Dock="Bottom" Orientation="Horizontal"
-                HorizontalAlignment="Right" Spacing="8" Margin="8">
-      <Button x:Name="Ok" MinWidth="75" MinHeight="23" Content="_Checkout" IsDefault="True" />
+    <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
+                DockPanel.Dock="Bottom"
+                Spacing="8"
+                Margin="8">
+      <Button x:Name="Ok" Classes="gitextensions-dialog-action" Content="_Checkout" IsDefault="True" />
     </StackPanel>
 
     <!-- Retained for field-name parity with the WinForms Designer; it has no children there. -->
     <StackPanel x:Name="flowLayoutPanel1" IsVisible="False" />
 
-    <Border x:Name="MainPanel" Padding="14">
+    <Border x:Name="MainPanel" Classes="gitextensions-dialog-main" Padding="14">
       <Grid x:Name="tlpnlMain" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
         <Grid x:Name="tlpnlBranches" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto"
               ColumnSpacing="8" RowSpacing="8">
@@ -44,8 +47,11 @@
                        Content="Ch_eckout the commit (in detached head)" />
         </Grid>
 
-        <HeaderedContentControl x:Name="localChangesGB" Grid.Row="3" Header="Local changes">
-          <Border Padding="9,6">
+        <HeaderedContentControl x:Name="localChangesGB"
+                                Classes="gitextensions-group-box"
+                                Grid.Row="3"
+                                Header="Local changes">
+          <Border>
             <StackPanel x:Name="flpnlLocalOptions" Orientation="Horizontal" Spacing="8">
               <RadioButton x:Name="rbDontChange" Content="Do_n't change" />
               <RadioButton x:Name="rbMerge" Content="_Merge" />

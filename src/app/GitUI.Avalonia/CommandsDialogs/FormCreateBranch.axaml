@@ -8,19 +8,28 @@
         WindowStartupLocation="CenterOwner"
         Title="Create branch">
   <DockPanel>
-    <StackPanel x:Name="ControlsPanel" DockPanel.Dock="Bottom" Orientation="Horizontal"
-                HorizontalAlignment="Right" Spacing="8" Margin="10">
-      <Button x:Name="cmdOk" MinWidth="110" Content="_Create branch" IsDefault="True" />
+    <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
+                DockPanel.Dock="Bottom"
+                Spacing="8"
+                Margin="10">
+      <Button x:Name="cmdOk" Classes="gitextensions-dialog-action" MinWidth="110" Content="_Create branch" IsDefault="True" />
     </StackPanel>
-    <Grid x:Name="MainPanel" Margin="12,8" ColumnDefinitions="Auto,*"
+    <Grid x:Name="MainPanel" Classes="gitextensions-dialog-main" ColumnDefinitions="Auto,*"
           RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="10" RowSpacing="8">
-      <Label x:Name="label1" Padding="0" Content="_Branch name"
-             Target="{Binding #BranchNameTextBox}" VerticalAlignment="Center" />
+      <Label x:Name="label1"
+             Classes="gitextensions-dialog-label"
+             Padding="0"
+             Content="_Branch name"
+             Target="{Binding #BranchNameTextBox}" />
       <TextBox x:Name="BranchNameTextBox" Grid.Column="1" />
 
-      <Label x:Name="lblCreateBranch" Grid.Row="1" Padding="0"
-             Content="Create b_ranch at this revision" Target="{Binding #commitPicker}"
-             VerticalAlignment="Center" />
+      <Label x:Name="lblCreateBranch"
+             Classes="gitextensions-dialog-label"
+             Grid.Row="1"
+             Padding="0"
+             Content="Create b_ranch at this revision"
+             Target="{Binding #commitPicker}" />
       <usercontrols:CommitPickerSmallControl x:Name="commitPicker" Grid.Row="1" Grid.Column="1" />
 
       <CheckBox x:Name="chkCheckoutAfterCreate" Grid.Row="2" Grid.Column="1"
@@ -29,8 +38,11 @@
       <usercontrols:CommitSummaryUserControl x:Name="commitSummaryUserControl1"
                                              Grid.Row="3" Grid.ColumnSpan="2" />
 
-      <HeaderedContentControl x:Name="grpOrphan" Grid.Row="4" Grid.ColumnSpan="2"
-                              Padding="8" Header="Orphan">
+      <HeaderedContentControl x:Name="grpOrphan"
+                              Classes="gitextensions-group-box"
+                              Grid.Row="4"
+                              Grid.ColumnSpan="2"
+                              Header="Orphan">
         <WrapPanel x:Name="flowLayoutPanel1" Margin="8,0,0,0" Orientation="Horizontal">
           <CheckBox x:Name="chkCreateOrphan" Margin="0,0,16,0"
                     Content="Create or_phan" ToolTip.Tip="New branch will have NO parents" />

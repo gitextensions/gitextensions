@@ -427,7 +427,7 @@
     "twin": "src/app/GitUI.Avalonia/GitExtensionsDialog.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "MainPanel/ControlsPanel chrome is declared per-dialog in axaml, not inherited."
+    "notes": "MainPanel/ControlsPanel chrome is declared per-dialog in axaml, not inherited; shared visual-parity classes supply the standard 12px content margin, 32px action row, and 75x25 action-button minimums."
   },
   "src/app/GitUI/GitUICommands.cs": {
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
@@ -505,6 +505,6 @@
     "twin": "src/app/GitExtensions.Avalonia/Program.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Entry point twin (with App.axaml.cs); browse command and repo detection only."
+    "notes": "Entry point twin (with App.axaml.cs); browse command and repo detection only. Startup maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources."
   }
 }

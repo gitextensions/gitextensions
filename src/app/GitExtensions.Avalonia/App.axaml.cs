@@ -34,7 +34,9 @@ public partial class App : Application
             Shims.WinForms.Application.ThreadException += (_, e)
                 => GitUI.MessageBoxes.ShowError(owner: null, e.Exception.ToString(), "Unhandled exception");
 
+            AvaloniaFontSettings.InstallSystemDefaults();
             AppSettings.LoadSettings();
+            AvaloniaFontSettings.ApplyAppSettings();
 
             string[] args = Environment.GetCommandLineArgs();
             GitModule module = new(Program.ServiceContainer.GetRequiredService<IGitExecutorProvider>(), GetWorkingDir(args));
