@@ -1,26 +1,105 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:properties="using:GitUI.Properties"
+             xmlns:revisionGrid="using:GitUI.UserControls.RevisionGrid"
              x:Class="GitUI.RevisionGridControl">
   <DockPanel>
     <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" />
     <ListBox x:Name="lstRevisions" SelectionMode="Single">
       <ListBox.ContextMenu>
         <ContextMenu x:Name="revisionContextMenu">
+          <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" />
+          <Separator x:Name="sepCopy" />
+          <MenuItem x:Name="applyStashToolStripMenuItem" Header="Appl_y stash">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="popStashToolStripMenuItem" Header="Pop _stash">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="dropStashToolStripMenuItem" Header="_Drop stash...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+          </MenuItem>
+          <Separator x:Name="sepStash" />
           <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch...">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
           </MenuItem>
-          <MenuItem x:Name="createNewBranchToolStripMenuItem" Header="Create new branch here (_x)...">
+          <MenuItem x:Name="tsmiPushBranch" Header="Pus_h branch...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Push}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge into current branch...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Merge}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="rebaseOnToolStripMenuItem" Header="_Rebase current branch on">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
+            <MenuItem x:Name="rebaseToolStripMenuItem" Header="_Selected commit" />
+            <MenuItem x:Name="rebaseInteractivelyToolStripMenuItem" Header="Selected commit _interactively..." />
+            <Separator x:Name="sepRebase" />
+            <MenuItem x:Name="rebaseWithAdvOptionsToolStripMenuItem" Header="Selected commit with _advanced options..." />
+          </MenuItem>
+          <Separator x:Name="sepBranch" />
+          <MenuItem x:Name="resetChangesToolStripMenuItem" Header="_Reset changes">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="commitToolStripMenuItem" Header="_Commit">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RepoStateDirty}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="createNewBranchToolStripMenuItem"
+                    Header="Create new branch here (_x)..."
+                    InputGesture="Ctrl+B">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
           </MenuItem>
+          <MenuItem x:Name="renameBranchToolStripMenuItem" Header="R_ename branch...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Renamed}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="deleteBranchToolStripMenuItem" Header="_Delete branch...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchDelete}" /></MenuItem.Icon>
+          </MenuItem>
+          <Separator x:Name="sepBranchModification" />
           <MenuItem x:Name="createTagToolStripMenuItem"
                     Header="Create new ta_g here..."
                     InputGesture="Ctrl+T">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
           </MenuItem>
-          <!-- One sub-item per local branch on the commit, filled when the menu opens. -->
-          <MenuItem x:Name="renameBranchToolStripMenuItem" Header="R_ename branch...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Renamed}" /></MenuItem.Icon>
+          <MenuItem x:Name="deleteTagToolStripMenuItem" Header="_Delete tag...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
+          </MenuItem>
+          <Separator x:Name="sepNavigate" />
+          <MenuItem x:Name="navigateToolStripMenuItem" Header="_Navigate">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GotoCommit}" /></MenuItem.Icon>
+            <MenuItem Tag="GotoCurrentRevision"
+                      Header="Go to c_urrent revision"
+                      InputGesture="Ctrl+Shift+C">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GotoCurrentRevision}" /></MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Tag="GotoChildCommit" Header="Go to c_hild commit" InputGesture="Ctrl+N">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GoToChildCommit}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Tag="GotoParentCommit" Header="Go to _parent commit" InputGesture="Ctrl+P">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GoToParentCommit}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Tag="GotoFirstParentCommit" Header="Go to f_irst parent commit" InputGesture="Ctrl+Left">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GoToFirstParentCommit}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Tag="GotoLastParentCommit" Header="Go to _last parent commit" InputGesture="Ctrl+Right">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GoToLastParentCommit}" /></MenuItem.Icon>
+            </MenuItem>
+          </MenuItem>
+          <MenuItem x:Name="viewToolStripMenuItem" Header="_View">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.AdvancedSettings}" /></MenuItem.Icon>
+            <MenuItem Tag="drawNonrelativesGrayToolStripMenuItem" Header="Draw non relatives gra_y" ToggleType="CheckBox" />
+            <Separator />
+            <MenuItem Tag="ShowRemoteBranches" Header="Show remote _branches" InputGesture="Ctrl+Shift+R" ToggleType="CheckBox" />
+            <MenuItem Tag="showTagsToolStripMenuItem" Header="Show _tags" ToggleType="CheckBox" />
+            <Separator />
+            <MenuItem Tag="showAuthorDateToolStripMenuItem" Header="Sho_w author date" ToggleType="CheckBox" />
+            <MenuItem Tag="showRelativeDateToolStripMenuItem" Header="Show relati_ve date" ToggleType="CheckBox" />
+            <Separator />
+            <MenuItem Tag="showRevisionGraphColumnToolStripMenuItem" Header="Show revision _graph column" ToggleType="CheckBox" />
+            <MenuItem Tag="showGitNotesColumnToolStripMenuItem" Header="Show Git _notes column" ToggleType="CheckBox" />
+            <MenuItem Tag="showAuthorNameColumnToolStripMenuItem" Header="Show a_uthor name column" ToggleType="CheckBox" />
+            <MenuItem Tag="showDateColumnToolStripMenuItem" Header="Show _date column" ToggleType="CheckBox" />
+            <MenuItem Tag="showIdColumnToolStripMenuItem" Header="Show SHA_-1 column" ToggleType="CheckBox" />
           </MenuItem>
         </ContextMenu>
       </ListBox.ContextMenu>

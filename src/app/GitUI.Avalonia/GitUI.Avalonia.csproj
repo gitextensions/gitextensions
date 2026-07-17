@@ -41,6 +41,7 @@
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" Link="UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionGridControl.Command.cs" Link="UserControls\RevisionGrid\RevisionGridControl.Command.cs" />
     <Compile Include="..\GitUI\UserControls\GitBlameParser.cs" Link="UserControls\GitBlameParser.cs" />
     <Compile Include="..\GitUI\UserControls\PatchFile.cs" Link="UserControls\PatchFile.cs" />
     <Compile Include="..\GitUI\UserControls\TextEventArgs.cs" Link="UserControls\TextEventArgs.cs" />
