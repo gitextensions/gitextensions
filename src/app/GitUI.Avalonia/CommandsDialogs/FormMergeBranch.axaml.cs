@@ -1,6 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
@@ -121,15 +119,8 @@ public partial class FormMergeBranch : GitModuleForm
             "ours",
             "subtree",
         };
-        helpImageDisplayUserControl1.Image1 = LoadHelpImage("HelpCommandMerge.png");
-        helpImageDisplayUserControl1.Image2 = LoadHelpImage("HelpCommandMergeFastForward.png");
-    }
-
-    private static Bitmap LoadHelpImage(string fileName)
-    {
-        Uri uri = new($"avares://GitUI.Avalonia/Resources/Help/{fileName}");
-        using Stream stream = AssetLoader.Open(uri);
-        return new Bitmap(stream);
+        helpImageDisplayUserControl1.Image1 = Properties.Images.HelpCommandMerge;
+        helpImageDisplayUserControl1.Image2 = Properties.Images.HelpCommandMergeFastForward;
     }
 
     private void OkClick(object? sender, EventArgs e)

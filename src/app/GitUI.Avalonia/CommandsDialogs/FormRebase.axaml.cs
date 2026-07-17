@@ -1,8 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -182,7 +180,7 @@ public partial class FormRebase : GitExtensionsDialog
     {
         cboBranches.ItemTemplate = CreateRefTemplate();
         cboTo.ItemTemplate = CreateRefTemplate();
-        PanelLeftImage.Image1 = LoadHelpImage();
+        PanelLeftImage.Image1 = Properties.Images.HelpCommandRebase;
         PanelLeftImage.IsOnHoverShowImage2 = false;
         btnSolveMergeconflicts.Content = $"There are unresolved merge conflicts{Environment.NewLine}";
     }
@@ -191,13 +189,6 @@ public partial class FormRebase : GitExtensionsDialog
         => new(
             (gitRef, _) => new TextBlock { Text = gitRef?.Name ?? string.Empty },
             supportsRecycling: false);
-
-    private static Bitmap LoadHelpImage()
-    {
-        Uri uri = new("avares://GitUI.Avalonia/Resources/Help/HelpCommandRebase.png");
-        using Stream stream = AssetLoader.Open(uri);
-        return new Bitmap(stream);
-    }
 
     private static void SetComboText(ComboBox comboBox, IReadOnlyList<IGitRef> refs, string text)
     {

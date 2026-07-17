@@ -70,10 +70,13 @@
     <!-- The language files are shared with the WinForms application; translation keys are
          identical, so all existing translations apply to the Avalonia twins unchanged. -->
     <None Include="..\GitUI\Translation\*.xlf" Link="Translation\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandMerge.png" Link="Resources\Help\HelpCommandMerge.png" />
-    <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandMergeFastForward.png" Link="Resources\Help\HelpCommandMergeFastForward.png" />
-    <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandRebase.png" Link="Resources\Help\HelpCommandRebase.png" />
-    <AvaloniaResource Include="..\GitUI\Resources\Icons\GotoManual.png" Link="Resources\Icons\GotoManual.png" />
+    <!-- Images.resx's existing file-backed assets. Properties/Images.g.cs exposes the same
+         property names as the WinForms resource designer and loads these packaged PNGs. -->
+    <AvaloniaResource Include="..\GitUI\Resources\Backgrounds\*.png" Link="Resources\Backgrounds\%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\GitUI\Resources\Help\*.png" Link="Resources\Help\%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\GitUI\Resources\Icons\*.png" Link="Resources\Icons\%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\GitUI\Resources\Icons\*.ico" Link="Resources\Icons\%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\..\..\setup\assets\Logo\*.png" Link="Resources\Logo\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

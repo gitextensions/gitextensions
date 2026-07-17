@@ -1,5 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormResolveConflicts"
         Width="619" Height="392"
@@ -31,16 +33,28 @@
             <Separator x:Name="toolStripMenuItem1" />
             <MenuItem x:Name="openToolStripMenuItem" Header="Open" />
             <MenuItem x:Name="openWithToolStripMenuItem" Header="Open With" />
-            <MenuItem x:Name="openFolderToolStripMenuItem" Header="Show in folder" />
+            <MenuItem x:Name="openFolderToolStripMenuItem" Header="Show in folder">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
+            </MenuItem>
             <Separator x:Name="toolStripSeparator4" />
             <MenuItem x:Name="fileHistoryToolStripMenuItem" Header="File history" />
           </ContextMenu>
         </ListBox.ContextMenu>
       </ListBox>
       <Grid x:Name="tableLayoutPanel3" Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="3">
-        <TextBlock x:Name="pictureBox1" Text="ⓘ" VerticalAlignment="Center" />
+        <Image x:Name="pictureBox1"
+               Width="16"
+               Height="16"
+               Source="{x:Static properties:Images.Information}"
+               VerticalAlignment="Center" />
         <TextBlock x:Name="conflictDescription" Grid.Column="1" Text="Select file" VerticalAlignment="Center" />
-        <Button x:Name="merge" Classes="gitextensions-dialog-action" Grid.Column="2" MinWidth="130" Margin="0,0,0,2" Content="Merge" />
+        <compat:IconButton x:Name="merge"
+                           Classes="gitextensions-dialog-action"
+                           Grid.Column="2"
+                           MinWidth="130"
+                           Margin="0,0,0,2"
+                           Icon="{x:Static properties:Images.SelectBranch}"
+                           Content="Merge" />
       </Grid>
     </Grid>
     <StackPanel x:Name="flowLayoutPanel1" Grid.Column="1" Margin="8,0,0,0" Spacing="6">
