@@ -39,9 +39,7 @@ jobs:
     # A separate job for test takes too much time for transferring artifacts and setting up the job.
     # So we build and test in the same job, but upload test results as a separate artifact to be consumed by the test-report job.
     runs-on: ${{ inputs.os }}
-    # The arm64 Windows runner executes the test suite roughly twice as slowly as x64, so it needs a higher cap
-    # to avoid the job timeout cancelling tests mid-run. x64 keeps the tighter cap so genuine hangs surface quickly.
-    timeout-minutes: ${{ inputs.os == 'windows-11-arm' && 60 || 30 }}
+    timeout-minutes: 30
     permissions:
       contents: read
     outputs:
@@ -193,7 +191,10 @@ jobs:
 
     - name: Run tests
       if: ${{ !inputs.release }}
-      run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx /bl:artifacts\log\tests.binlog
+      # --blame-hang-timeout aborts and names any test that produces no output for the given period, so a hung
+      # test (e.g. a deadlocked UI integration test) fails fast with a Sequence_*.xml instead of silently eating
+      # the whole job timeout with no diagnostic. Healthy tests complete in well under this window.
+      run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx --blame-hang-timeout 10m --blame-hang-dump-type none /bl:artifacts\log\tests.binlog
 
     - name: Upload test results
       id: upload-test-results
@@ -216,5 +217,6 @@ jobs:
           artifacts\**\log\**\*.binlog
           **\English*.xlf
           artifacts\Release\**\*.dgml
+          **\Sequence_*.xml
         retention-days: 7
         if-no-files-found: ignore
