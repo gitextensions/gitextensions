@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
@@ -17,6 +18,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
@@ -110,6 +112,39 @@ public sealed class FormBrowseTests
             commands.RepoChangedNotifier.Notify();
 
             await WaitUntilAsync(() => reloadStarted && loadingStatus.Text == "2 revisions");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormBrowse_quick_revision_filter_should_reload_the_revision_grid()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
+
+        FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
+            TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            await WaitUntilAsync(() => loadingStatus.Text == "2 revisions");
+
+            FilterToolBar filters = form.FindControl<FilterToolBar>("ToolStripFilters")!;
+            ComboBox revisionFilter = filters.FindControl<ComboBox>("tstxtRevisionFilter")!;
+            revisionFilter.Text = "initial";
+            revisionFilter.RaiseEvent(new KeyEventArgs
+            {
+                RoutedEvent = InputElement.KeyUpEvent,
+                Key = Key.Enter,
+            });
+
+            await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
+            revisionGrid.SelectedRevision!.Subject.Should().Be("initial");
         }
         finally
         {

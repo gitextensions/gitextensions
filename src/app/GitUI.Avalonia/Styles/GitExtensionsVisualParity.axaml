@@ -170,6 +170,62 @@
       </DataTemplate>
     </Setter>
   </Style>
+  <Style Selector="compat|IconSplitButton">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[compat:IconSplitButton].Icon}" />
+          <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="compat|IconSplitButton.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconSplitButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="compat|IconDropDownButton.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconDropDownButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button,
+                   compat|IconButton.gitextensions-toolbar-button,
+                   compat|IconSplitButton.gitextensions-toolbar-button,
+                   compat|IconDropDownButton.gitextensions-toolbar-button,
+                   SplitButton.gitextensions-toolbar-button,
+                   DropDownButton.gitextensions-toolbar-button">
+    <Setter Property="Height" Value="23" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="MinWidth" Value="23" />
+    <Setter Property="Padding" Value="3,1" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Border.gitextensions-toolbar-separator">
+    <Setter Property="Width" Value="1" />
+    <Setter Property="Height" Value="17" />
+    <Setter Property="Margin" Value="3,3" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-toolbar-label">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Margin" Value="3,0,1,0" />
+  </Style>
   <Style Selector="compat|IconRadioButton">
     <Setter Property="ContentTemplate">
       <DataTemplate>

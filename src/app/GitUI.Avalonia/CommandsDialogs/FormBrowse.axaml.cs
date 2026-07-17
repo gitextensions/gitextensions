@@ -1,6 +1,8 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -13,11 +15,13 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Reduced shell: the read-only browse panels and first repository commands are functional;
-// the remaining upstream menus and toolbars arrive with their corresponding dialogs.
+// Avalonia twin of the repository browser. Controls owned by later port phases are added only
+// when their commands are functional, rather than presenting inert toolbar entries.
 public sealed partial class FormBrowse : GitModuleForm
 {
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+    private GridLength _leftPanelWidth = new(260);
+    private bool _updatingWorkingDirectories;
 
     public static readonly string HotkeySettingsName = "Browse";
 
@@ -58,6 +62,8 @@ public sealed partial class FormBrowse : GitModuleForm
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
+        RevisionGrid.RevisionFilterRequested += (_, _) => ToolStripFilters.SetFocus();
+        ToolStripFilters.Bind(() => Module, RevisionGrid);
         fileStatusList.SelectedIndexChanged += FileStatusList_SelectedIndexChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
@@ -72,7 +78,36 @@ public sealed partial class FormBrowse : GitModuleForm
         tagToolStripMenuItem.Click += TagToolStripMenuItemClick;
         deleteTagToolStripMenuItem.Click += DeleteTagToolStripMenuItemClick;
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
+        RefreshButton.Click += RefreshToolStripMenuItemClick;
+        toggleLeftPanel.Click += ToggleLeftPanelClick;
+        branchSelect.Click += BranchSelectClick;
+        BranchSelectFlyout.Opening += (_, _) => PopulateBranchSelector();
+        toolStripButtonPull.Click += ToolStripButtonPullClick;
+        toolStripButtonPush.Click += (_, _) => UICommands.StartPushDialog(this, pushOnShow: false);
+        toolStripButtonCommit.Click += CommitToolStripMenuItemClick;
+        toolStripSplitStash.Click += StashToolStripMenuItemClick;
+        toolStripFileExplorer.Click += FileExplorerToolStripMenuItemClick;
         userShell.Click += userShell_Click;
+        UserShellToolStripMenuItem.Click += userShell_Click;
+        pullToolStripMenuItem1.Click += (_, _) => DoPull(AppSettings.FormPullAction, isSilent: false);
+        mergeToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.Merge, isSilent: true);
+        rebaseToolStripMenuItem1.Click += (_, _) => DoPull(GitPullAction.Rebase, isSilent: true);
+        fetchToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.Fetch, isSilent: true);
+        FetchAllToolbarMenuItem.Click += (_, _) => DoPull(GitPullAction.FetchAll, isSilent: true);
+        fetchPruneAllToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.FetchPruneAll, isSilent: true);
+        defaultPullDialogToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.None);
+        defaultPullMergeToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.Merge);
+        defaultPullRebaseToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.Rebase);
+        defaultPullFetchToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.Fetch);
+        defaultPullFetchAllToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.FetchAll);
+        defaultPullFetchPruneAllToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.FetchPruneAll);
+        stashChangesToolStripMenuItem.Click += (_, _) => UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
+        stashStagedToolStripMenuItem.Click += (_, _) => UICommands.StashStaged(this);
+        stashPopToolStripMenuItem.Click += (_, _) => UICommands.StashPop(this);
+        manageStashesToolStripMenuItem.Click += StashToolStripMenuItemClick;
+        createAStashToolStripMenuItem.Click += (_, _) => UICommands.StartStashDialog(this, manageStashes: false);
+        _NO_TRANSLATE_WorkingDir.SelectionChanged += WorkingDirectorySelectionChanged;
+        _NO_TRANSLATE_WorkingDir.KeyUp += WorkingDirectoryKeyUp;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
 
         ReloadRepository();
@@ -104,9 +139,21 @@ public sealed partial class FormBrowse : GitModuleForm
         tagToolStripMenuItem.IsEnabled = isValidWorkingDir;
         deleteTagToolStripMenuItem.IsEnabled = isValidWorkingDir;
         stashToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
+        RefreshButton.IsEnabled = isValidWorkingDir;
+        branchSelect.IsEnabled = isValidWorkingDir;
+        toolStripButtonPull.IsEnabled = isValidWorkingDir;
+        toolStripButtonPush.IsEnabled = isValidWorkingDir;
+        toolStripButtonCommit.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
+        toolStripSplitStash.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
+        toolStripFileExplorer.IsEnabled = Directory.Exists(module.WorkingDir);
+        userShell.IsEnabled = Directory.Exists(module.WorkingDir);
+        ToolStripFilters.IsEnabled = isValidWorkingDir;
+        branchSelect.Content = string.IsNullOrEmpty(branchName) ? "Branch" : branchName;
+        RefreshDefaultPullAction();
 
         if (isValidWorkingDir)
         {
+            LoadWorkingDirectories();
             _aheadBehindDataProvider?.ResetCache();
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
             lblStatus.Text = $"git: {GitVersion.Current}";
@@ -121,10 +168,131 @@ public sealed partial class FormBrowse : GitModuleForm
         }
         else
         {
+            _NO_TRANSLATE_WorkingDir.Text = module.WorkingDir;
             lblRepoPath.Text = "No git repository";
             lblStatus.Text = "Start the app inside a repository or pass one on the command line: GitExtensions.Avalonia browse <path>";
         }
     }
+
+    private void LoadWorkingDirectories()
+    {
+        string workingDirectory = Module.WorkingDir;
+        ThreadHelper.FileAndForget(async () =>
+        {
+            IList<Repository> history = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
+            string[] directories =
+            [
+                workingDirectory,
+                .. history.Select(repository => repository.Path)
+                    .Where(path => !string.Equals(path, workingDirectory, StringComparison.OrdinalIgnoreCase))
+                    .Distinct(StringComparer.OrdinalIgnoreCase),
+            ];
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (!string.Equals(Module.WorkingDir, workingDirectory, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            _updatingWorkingDirectories = true;
+            _NO_TRANSLATE_WorkingDir.ItemsSource = directories;
+            _NO_TRANSLATE_WorkingDir.Text = workingDirectory;
+            _updatingWorkingDirectories = false;
+        });
+    }
+
+    private void WorkingDirectorySelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (!_updatingWorkingDirectories && _NO_TRANSLATE_WorkingDir.SelectedItem is string path)
+        {
+            ChangeWorkingDirectory(path);
+        }
+    }
+
+    private void WorkingDirectoryKeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(_NO_TRANSLATE_WorkingDir.Text))
+        {
+            ChangeWorkingDirectory(_NO_TRANSLATE_WorkingDir.Text);
+        }
+    }
+
+    private void ChangeWorkingDirectory(string path)
+    {
+        string normalizedPath;
+        try
+        {
+            normalizedPath = Path.GetFullPath(path);
+        }
+        catch (Exception exception) when (exception is ArgumentException or NotSupportedException or PathTooLongException)
+        {
+            MessageBoxes.ShowError(this, exception.Message);
+            return;
+        }
+
+        if (string.Equals(normalizedPath, Path.GetFullPath(Module.WorkingDir), StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
+        UICommands = UICommands.WithWorkingDirectory(normalizedPath);
+        UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+        ReloadRepository();
+        ThreadHelper.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath));
+    }
+
+    private void ToggleLeftPanelClick(object? sender, EventArgs e)
+    {
+        ColumnDefinition leftColumn = mainContentGrid.ColumnDefinitions[0];
+        bool hide = leftColumn.Width.Value > 0;
+        if (hide)
+        {
+            _leftPanelWidth = leftColumn.Width;
+            leftColumn.Width = new GridLength(0);
+            leftPanel.IsVisible = false;
+            leftPanelSplitter.IsVisible = false;
+        }
+        else
+        {
+            leftColumn.Width = _leftPanelWidth.Value > 0 ? _leftPanelWidth : new GridLength(260);
+            leftPanel.IsVisible = true;
+            leftPanelSplitter.IsVisible = true;
+        }
+    }
+
+    private void BranchSelectClick(object? sender, EventArgs e)
+    {
+        PopulateBranchSelector();
+        branchSelect.Flyout?.ShowAt(branchSelect);
+    }
+
+    private void PopulateBranchSelector()
+    {
+        BranchSelectFlyout.Items.Clear();
+        MenuItem checkout = new() { Header = checkoutBranchToolStripMenuItem.Header, Icon = checkoutBranchToolStripMenuItem.Icon };
+        checkout.Click += CheckoutBranchToolStripMenuItemClick;
+        BranchSelectFlyout.Items.Add(checkout);
+        BranchSelectFlyout.Items.Add(new Separator());
+        foreach (IGitRef branch in Module.GetRefs(RefsFilter.Heads).Take(100))
+        {
+            MenuItem item = new() { Header = branch.Name, IsEnabled = !branch.ObjectId.IsZero };
+            item.Click += (_, _) => UICommands.StartCheckoutBranch(this, branch.Name);
+            BranchSelectFlyout.Items.Add(item);
+        }
+    }
+
+    private MenuFlyout BranchSelectFlyout => (MenuFlyout)branchSelect.Flyout!;
+
+    private MenuItem UserShellToolStripMenuItem
+        => toolsToolStripMenuItem.Items
+            .OfType<MenuItem>()
+            .Single(item => item.Tag as string == "userShell");
+
+    private MenuItem FetchAllToolbarMenuItem
+        => ((MenuFlyout)toolStripButtonPull.Flyout!).Items
+            .OfType<MenuItem>()
+            .Single(item => item.Tag as string == "fetchAllToolbar");
 
     private void RepoObjectsTree_SelectionChanged(object? sender, EventArgs e)
     {
@@ -240,6 +408,53 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartPullDialog(this);
     }
 
+    private void ToolStripButtonPullClick(object? sender, EventArgs e)
+    {
+        GitPullAction action = AppSettings.DefaultPullAction == GitPullAction.None
+            ? AppSettings.FormPullAction
+            : AppSettings.DefaultPullAction;
+        DoPull(action, isSilent: AppSettings.DefaultPullAction != GitPullAction.None);
+    }
+
+    private void DoPull(GitPullAction action, bool isSilent)
+    {
+        if (isSilent)
+        {
+            UICommands.StartPullDialogAndPullImmediately(this, pullAction: action);
+        }
+        else
+        {
+            UICommands.StartPullDialog(this, pullAction: action);
+        }
+    }
+
+    private void SetDefaultPullAction(GitPullAction action)
+    {
+        AppSettings.DefaultPullAction = action;
+        RefreshDefaultPullAction();
+    }
+
+    private void RefreshDefaultPullAction()
+    {
+        GitPullAction action = AppSettings.DefaultPullAction;
+        defaultPullDialogToolStripMenuItem.IsChecked = action == GitPullAction.None;
+        defaultPullMergeToolStripMenuItem.IsChecked = action == GitPullAction.Merge;
+        defaultPullRebaseToolStripMenuItem.IsChecked = action == GitPullAction.Rebase;
+        defaultPullFetchToolStripMenuItem.IsChecked = action == GitPullAction.Fetch;
+        defaultPullFetchAllToolStripMenuItem.IsChecked = action == GitPullAction.FetchAll;
+        defaultPullFetchPruneAllToolStripMenuItem.IsChecked = action == GitPullAction.FetchPruneAll;
+
+        toolStripButtonPull.Icon = action switch
+        {
+            GitPullAction.Fetch => Properties.Images.PullFetch,
+            GitPullAction.FetchAll => Properties.Images.PullFetchAll,
+            GitPullAction.FetchPruneAll => Properties.Images.PullFetchPruneAll,
+            GitPullAction.Rebase => Properties.Images.PullRebase,
+            GitPullAction.Merge => Properties.Images.PullMerge,
+            _ => Properties.Images.Pull,
+        };
+    }
+
     private void fetchAllToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         ArgumentString arguments = new GitArgumentBuilder("fetch")
@@ -257,6 +472,11 @@ public sealed partial class FormBrowse : GitModuleForm
     private void StashToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartStashDialog(this);
+    }
+
+    private void FileExplorerToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        OsShellUtil.OpenWithFileExplorer(Module.WorkingDir);
     }
 
     private void MergeBranchToolStripMenuItemClick(object? sender, EventArgs e)
@@ -338,20 +558,40 @@ public sealed partial class FormBrowse : GitModuleForm
     public override void AddTranslationItems(ITranslation translation)
     {
         base.AddTranslationItems(translation);
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(RefreshButton), "ToolTipText", "Refresh");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(toggleLeftPanel), "ToolTipText", "Toggle left panel");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(branchSelect), "ToolTipText", "Change current branch");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripSplitStash), "ToolTipText", "Manage stashes");
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripFileExplorer), "ToolTipText", "File Explorer");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(userShell), "ToolTipText", "Git bash");
     }
 
     public override void TranslateItems(ITranslation translation)
     {
         base.TranslateItems(translation);
-        string? translated = translation.TranslateItem(
-            nameof(FormBrowse),
-            nameof(userShell),
-            "ToolTipText",
-            () => "Git bash");
-        if (!string.IsNullOrEmpty(translated) && userShell.Header is TextBlock header)
+        SetTranslatedToolTip(RefreshButton, nameof(RefreshButton), "Refresh");
+        SetTranslatedToolTip(toggleLeftPanel, nameof(toggleLeftPanel), "Toggle left panel");
+        SetTranslatedToolTip(branchSelect, nameof(branchSelect), "Change current branch");
+        SetTranslatedToolTip(toolStripSplitStash, nameof(toolStripSplitStash), "Manage stashes");
+        SetTranslatedToolTip(toolStripFileExplorer, nameof(toolStripFileExplorer), "File Explorer");
+        string terminalText = SetTranslatedToolTip(userShell, nameof(userShell), "Git bash");
+        FetchAllToolbarMenuItem.Header = fetchAllToolStripMenuItem.Header;
+        if (UserShellToolStripMenuItem.Header is TextBlock header)
         {
-            header.Text = translated;
+            header.Text = terminalText;
+        }
+
+        return;
+
+        string SetTranslatedToolTip(Control control, string name, string source)
+        {
+            string translated = translation.TranslateItem(
+                nameof(FormBrowse),
+                name,
+                "ToolTipText",
+                () => source) ?? source;
+            ToolTip.SetTip(control, translated);
+            return translated;
         }
     }
 }
