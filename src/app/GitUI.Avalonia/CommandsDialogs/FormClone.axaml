@@ -6,14 +6,14 @@
         WindowStartupLocation="CenterOwner"
         Title="Clone">
   <!-- MainPanel (tpnlMain rows) + bottom ControlsPanel like the WinForms dialog chrome. -->
-  <Grid Margin="12" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+  <Grid Classes="gitextensions-dialog-main" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
     <Grid x:Name="tableLayoutPanel1"
           ColumnDefinitions="Auto,*,100"
           RowDefinitions="Auto,Auto,Auto,Auto"
           ColumnSpacing="8" RowSpacing="6">
       <TextBlock x:Name="repositoryLabel"
-                 Text="Repository to _clone:"
-                 VerticalAlignment="Center" />
+                 Classes="gitextensions-dialog-label"
+                 Text="Repository to _clone:" />
       <ComboBox x:Name="_NO_TRANSLATE_From"
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
@@ -25,9 +25,9 @@
               Content="_Browse" />
 
       <TextBlock x:Name="destinationLabel"
+                 Classes="gitextensions-dialog-label"
                  Grid.Row="1"
-                 Text="_Destination:"
-                 VerticalAlignment="Center" />
+                 Text="_Destination:" />
       <ComboBox x:Name="_NO_TRANSLATE_To"
                 Grid.Row="1" Grid.Column="1"
                 HorizontalAlignment="Stretch"
@@ -39,17 +39,17 @@
               Content="B_rowse" />
 
       <TextBlock x:Name="subdirectoryLabel"
+                 Classes="gitextensions-dialog-label"
                  Grid.Row="2"
-                 Text="_Subdirectory to create:"
-                 VerticalAlignment="Center" />
+                 Text="_Subdirectory to create:" />
       <TextBox x:Name="_NO_TRANSLATE_NewDirectory"
                Grid.Row="2" Grid.Column="1"
                HorizontalAlignment="Stretch" />
 
       <TextBlock x:Name="brachLabel"
+                 Classes="gitextensions-dialog-label"
                  Grid.Row="3"
-                 Text="Br_anch:"
-                 VerticalAlignment="Center" />
+                 Text="Br_anch:" />
       <ComboBox x:Name="_NO_TRANSLATE_Branches"
                 Grid.Row="3" Grid.Column="1"
                 HorizontalAlignment="Stretch"
@@ -68,10 +68,11 @@
     </Border>
 
     <HeaderedContentControl x:Name="groupBox1"
+                            Classes="gitextensions-group-box"
                             Grid.Row="2"
                             Margin="0,10,0,0"
                             Header="Repository type">
-      <StackPanel Margin="8,4" Spacing="6">
+      <StackPanel Spacing="6">
         <RadioButton x:Name="PersonalRepository"
                      Content="_Personal repository"
                      IsChecked="True" />
@@ -95,12 +96,11 @@
 
     <!-- ControlsPanel -->
     <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
                 Grid.Row="4"
-                Margin="0,14,0,0"
-                Orientation="Horizontal"
-                HorizontalAlignment="Right">
+                Margin="0,14,0,0">
       <Button x:Name="Ok"
-              MinWidth="75"
+              Classes="gitextensions-dialog-action"
               Content="Clone"
               IsDefault="True" />
     </StackPanel>

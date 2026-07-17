@@ -3,9 +3,8 @@
              xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
              x:Class="GitUI.Editor.FileViewer">
   <avaloniaEdit:TextEditor x:Name="TextEditor"
+                           Classes="gitextensions-diff-editor"
                            IsReadOnly="True"
-                           FontFamily="monospace"
-                           FontSize="12"
                            ShowLineNumbers="True"
                            HorizontalScrollBarVisibility="Auto"
                            VerticalScrollBarVisibility="Auto" />

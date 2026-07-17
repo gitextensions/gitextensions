@@ -7,12 +7,13 @@
         MinHeight="200"
         WindowStartupLocation="CenterOwner"
         Title="Select multiple branches">
-  <Grid Margin="12" RowDefinitions="Auto,*,Auto" RowSpacing="8">
+  <Grid Classes="gitextensions-dialog-main" RowDefinitions="Auto,*,Auto" RowSpacing="8">
     <TextBlock x:Name="selectBranchesLabel" Text="Select branches" />
     <ListBox x:Name="Branches" Grid.Row="1" SelectionMode="Multiple" />
     <Button x:Name="okButton"
+            Classes="gitextensions-dialog-action"
             Grid.Row="2"
-            MinWidth="75"
+            MinHeight="23"
             HorizontalAlignment="Right"
             Content="OK"
             IsDefault="True" />
