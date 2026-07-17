@@ -158,8 +158,62 @@
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit, create a branch or tag at it, and the per-branch rename dropdown (underscores escaped for Avalonia access keys). Like WinForms, the graph column is six pixels plus the lane width needed by the currently realized rows, the message column has its own six-pixel inset, and the checked-out commit title is bold. Refs mark the checked-out branch and matching tracking remote before rows are attached. ReloadRevisions accepts a path filter (file history) and the context menu can be disabled like WinForms. Remaining menu items, column providers, and hotkeys are deferred."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit, create a branch or tag at it, and the per-branch rename dropdown (underscores escaped for Avalonia access keys). Recycled rows are shaped by the same ordered ColumnProvider boundary as WinForms; settings control graph, notes, author, date and object-ID visibility, while the visible graph lanes still determine the graph width. Refs mark the checked-out branch and matching tracking remote before rows are attached. ReloadRevisions accepts a path filter, requests notes when either notes presentation is enabled, and mirrors the default --all exclusions for hidden notes, stash and session refs. Remaining provider interactions, menu items, and hotkeys are deferred."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/ColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/ColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named ordered provider boundary adapted from DataGridView painting/formatting to creation and update of controls in recycled Avalonia rows; the companion layout model retains width, minimum width, visibility, availability and resizability metadata."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/RevisionGraphColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/RevisionGraphColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Owns graph cells and the existing visible-lane autosizing. The WinForms bitmap GraphCache is intentionally omitted; lane tooltips remain with the interaction follow-up."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/MessageColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/MessageColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Owns ref capsules, checked-out title weight and subject tooltips. Ref hover/hit testing, ahead/behind virtual refs, fill/dashed settings, superproject labels and expanded message content remain in the provider-interaction follow-up."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/NotesColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/NotesColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Shows the first note line and the complete note tooltip; RevisionReader requests note data when this column is enabled. Delayed commit-data loading remains with its owning service integration."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/AvatarColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/AvatarColumnProvider.cs",
+    "status": "scaffolded",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Correct ordered slot, width and visibility setting; deliberately unavailable until the real Avalonia avatar service lands in Phase 3.22, so no placeholder data is displayed."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/AuthorNameColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/AuthorNameColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Author text, visibility setting and translated author/committer tooltip are functional; author highlighting remains with the interaction follow-up."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/DateColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/DateColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Honors date-column visibility, author-versus-committer date and relative-versus-absolute formatting, including the shared LocalizationHelpers relative-date text and the original detailed tooltip."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/CommitIdColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/CommitIdColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses the configured monospace styling, sizes the abbreviated object ID to the available column width and exposes the full ID tooltip."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/BuildStatusColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/BuildStatusColumnProvider.cs",
+    "status": "scaffolded",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Correct ordered slot and layout metadata; deliberately unavailable until its build-server integration supplies real status data."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridRefRenderer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridRefRenderer.cs",
