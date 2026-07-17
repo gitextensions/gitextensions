@@ -9,6 +9,7 @@ using GitUI.Compat;
 using GitUIPluginInterfaces;
 
 using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
@@ -313,6 +314,23 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         return true;
+    }
+
+    public override bool ProcessHotkey(WinFormsShims.Keys keyData)
+    {
+        if (base.ProcessHotkey(keyData))
+        {
+            return true;
+        }
+
+        object? focused = FocusManager?.GetFocusedElement();
+        if (focused is TextBox && GitExtensionsControl.IsTextEditKey(keyData, multiLine: true))
+        {
+            return false;
+        }
+
+        return keyData != (WinFormsShims.Keys.Control | WinFormsShims.Keys.A)
+            && RevisionGrid.ProcessHotkey(keyData);
     }
 
     protected override bool CloseOnEscape => false;

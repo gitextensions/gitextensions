@@ -5,6 +5,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -239,6 +240,7 @@ public sealed class FormBrowseTests
     public async Task RevisionGrid_context_menu_should_route_the_selected_revision()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" });
         ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
@@ -259,36 +261,111 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Revision context menu was not created.");
             MenuItem checkoutBranch = revisionGrid.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Checkout-branch menu item was not created.");
+            MenuItem pushBranch = revisionGrid.FindControl<MenuItem>("tsmiPushBranch")
+                ?? throw new InvalidOperationException("Push-branch menu item was not created.");
+            MenuItem mergeBranch = revisionGrid.FindControl<MenuItem>("mergeBranchToolStripMenuItem")
+                ?? throw new InvalidOperationException("Merge-branch menu item was not created.");
             MenuItem createBranch = revisionGrid.FindControl<MenuItem>("createNewBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Create-branch menu item was not created.");
+            MenuItem renameBranch = revisionGrid.FindControl<MenuItem>("renameBranchToolStripMenuItem")
+                ?? throw new InvalidOperationException("Rename-branch menu item was not created.");
+            MenuItem deleteBranch = revisionGrid.FindControl<MenuItem>("deleteBranchToolStripMenuItem")
+                ?? throw new InvalidOperationException("Delete-branch menu item was not created.");
             MenuItem createTag = revisionGrid.FindControl<MenuItem>("createTagToolStripMenuItem")
                 ?? throw new InvalidOperationException("Create-tag menu item was not created.");
+            CopyContextMenuItem copy = revisionGrid.FindControl<CopyContextMenuItem>("copyToClipboardToolStripMenuItem")
+                ?? throw new InvalidOperationException("Copy menu item was not created.");
+            MenuItem rebase = revisionGrid.FindControl<MenuItem>("rebaseToolStripMenuItem")
+                ?? throw new InvalidOperationException("Rebase menu item was not created.");
+            MenuItem view = revisionGrid.FindControl<MenuItem>("viewToolStripMenuItem")
+                ?? throw new InvalidOperationException("View menu item was not created.");
             ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")
                 ?? throw new InvalidOperationException("Revision list was not created.");
 
-            contextMenu.Open(revisions);
-            Dispatcher.UIThread.RunJobs();
+            (string Name, ThemeVariant Variant)[] themes =
+            [
+                ("Light", ThemeVariant.Light),
+                ("Dark", ThemeVariant.Dark),
+            ];
+            foreach ((string themeName, ThemeVariant themeVariant) in themes)
+            {
+                form.RequestedThemeVariant = themeVariant;
+                contextMenu.Open(revisions);
+                Dispatcher.UIThread.RunJobs();
 
-            TopLevel contextMenuRoot = TopLevel.GetTopLevel(contextMenu)
-                ?? throw new InvalidOperationException("Revision context menu did not open in a top level.");
-            WriteableBitmap? contextMenuFrame = contextMenuRoot.CaptureRenderedFrame();
-            contextMenuFrame.Should().NotBeNull("the opened context menu should render headlessly");
+                TopLevel contextMenuRoot = TopLevel.GetTopLevel(contextMenu)
+                    ?? throw new InvalidOperationException("Revision context menu did not open in a top level.");
+                WriteableBitmap? contextMenuFrame = contextMenuRoot.CaptureRenderedFrame();
+                contextMenuFrame.Should().NotBeNull($"the opened context menu should render in {themeName}");
+                view.IsSubMenuOpen = true;
+                Dispatcher.UIThread.RunJobs();
+                WriteableBitmap? viewMenuFrame = contextMenuRoot.CaptureRenderedFrame();
+                viewMenuFrame.Should().NotBeNull($"the opened revision View menu should render in {themeName}");
+                if (Environment.GetEnvironmentVariable("GITEXT_CAPTURE_REVISION_CONTEXT_MENU") == "1")
+                {
+                    string captureDirectory = Path.Combine(Path.GetTempPath(), "gitextensions-avalonia-revision-context");
+                    Directory.CreateDirectory(captureDirectory);
+                    using FileStream stream = File.Create(Path.Combine(captureDirectory, $"{themeName}.png"));
+                    contextMenuFrame!.Save(stream, PngBitmapEncoderOptions.Default);
+                    using FileStream viewStream = File.Create(Path.Combine(captureDirectory, $"{themeName}.View.png"));
+                    viewMenuFrame!.Save(viewStream, PngBitmapEncoderOptions.Default);
+                }
+
+                view.IsSubMenuOpen = false;
+                contextMenu.Close();
+            }
 
             ObjectId selectedObjectId = revisionGrid.SelectedRevision!.ObjectId;
             checkoutBranch.IsEnabled.Should().BeTrue();
+            pushBranch.IsEnabled.Should().BeTrue();
+            mergeBranch.IsEnabled.Should().BeTrue();
             createBranch.IsEnabled.Should().BeTrue();
+            renameBranch.IsEnabled.Should().BeTrue();
+            deleteBranch.IsEnabled.Should().BeTrue();
             createTag.IsEnabled.Should().BeTrue();
-            checkoutBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            copy.Items.Should().NotBeEmpty();
+
+            MenuItem checkoutFeature = checkoutBranch.Items.Cast<MenuItem>()
+                .Single(item => item.Header?.ToString() == "feature");
+            MenuItem pushFeature = pushBranch.Items.Cast<MenuItem>()
+                .Single(item => item.Header?.ToString() == "feature");
+            MenuItem mergeFeature = mergeBranch.Items.Cast<MenuItem>()
+                .Single(item => item.Header?.ToString() == "feature");
+            MenuItem renameFeature = renameBranch.Items.Cast<MenuItem>()
+                .Single(item => item.Header?.ToString() == "feature");
+            MenuItem deleteFeature = deleteBranch.Items.Cast<MenuItem>()
+                .Single(item => item.Header?.ToString() == "feature");
+
+            checkoutFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            pushFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            mergeFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            renameFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            deleteFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             createBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             createTag.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
-            commands.Received(1).StartCheckoutBranch(
-                form,
-                Arg.Is<IReadOnlyList<ObjectId>>(objectIds => objectIds.SequenceEqual(new[] { selectedObjectId })));
+            commands.Received(1).StartCheckoutBranch(form, "feature");
+            bool pushCompleted;
+            commands.Received(1).StartPushDialog(form, false, false, out pushCompleted, "feature");
+            commands.Received(1).StartMergeBranchDialog(form, "feature");
+            commands.Received(1).StartRenameDialog(form, "feature");
+            commands.Received(1).StartDeleteBranchDialog(form, "feature");
             commands.Received(1).StartCreateBranchDialog(form, selectedObjectId);
             commands.Received(1).StartCreateTagDialog(
                 form,
                 Arg.Is<GitRevision>(revision => revision.ObjectId == selectedObjectId));
+
+            bool originalDontConfirmRebase = AppSettings.DontConfirmRebase;
+            try
+            {
+                AppSettings.DontConfirmRebase = true;
+                rebase.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+                commands.Received(1).StartRebase(form, "feature");
+            }
+            finally
+            {
+                AppSettings.DontConfirmRebase = originalDontConfirmRebase;
+            }
         }
         finally
         {
