@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
 using GitCommands;
 using GitUI.UserControls.RevisionGrid.Graph;
@@ -10,14 +11,21 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class RevisionGraphColumnProvider : ColumnProvider
 {
+    private static readonly Cursor HandCursor = new(StandardCursorType.Hand);
+
     private readonly RevisionGridControl _grid;
+    private readonly LaneInfoProvider _laneInfoProvider;
     private readonly RevisionGraph _revisionGraph;
 
-    public RevisionGraphColumnProvider(RevisionGraph revisionGraph, RevisionGridControl grid)
+    public RevisionGraphColumnProvider(
+        RevisionGraph revisionGraph,
+        RevisionGridControl grid,
+        IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
         : base("Graph", new GridLength(CalculateGraphColumnWidth(visibleLaneCount: 0)), GraphRenderer.LaneWidth, resizable: false)
     {
         _revisionGraph = revisionGraph;
         _grid = grid;
+        _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(revisionGraph), gitRevisionSummaryBuilder);
     }
 
     public RevisionGraphDrawStyle RevisionGraphDrawStyle { get; set; } = RevisionGraphDrawStyle.DrawNonRelativesGray;
@@ -25,6 +33,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     public override void ApplySettings()
     {
         Column.IsVisible = AppSettings.ShowRevisionGridGraphColumn;
+        RevisionGraphDrawStyle = AppSettings.RevisionGraphDrawNonRelativesGray
+            ? RevisionGraphDrawStyle.DrawNonRelativesGray
+            : RevisionGraphDrawStyle.Normal;
     }
 
     public override Control CreateCell()
@@ -40,7 +51,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
     public override void UpdateCell(Control control, GitRevision revision)
     {
-        ((GraphCellControl)control).Revision = revision;
+        GraphCellControl graph = (GraphCellControl)control;
+        graph.Revision = revision;
+        ToolTip.SetTip(graph, null);
     }
 
     internal static int CalculateGraphColumnWidth(int visibleLaneCount)
@@ -66,6 +79,20 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     internal bool DrawGraph(DrawingContext context, GitRevision revision)
         => _grid.DrawGraphCell(context, revision, RevisionGraphDrawStyle);
 
+    internal string? GetLaneToolTip(GitRevision revision, double x)
+    {
+        if (!AppSettings.ShowRevisionGridTooltips.Value
+            || x < 0
+            || !_revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex))
+        {
+            return null;
+        }
+
+        int lane = (int)(x / GraphRenderer.LaneWidth);
+        string toolTip = _laneInfoProvider.GetLaneInfo(rowIndex, lane);
+        return string.IsNullOrEmpty(toolTip) ? null : toolTip;
+    }
+
     private sealed class GraphCellControl : Control
     {
         private readonly RevisionGraphColumnProvider _provider;
@@ -74,6 +101,12 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         public GraphCellControl(RevisionGraphColumnProvider provider)
         {
             _provider = provider;
+            PointerMoved += OnPointerMoved;
+            PointerExited += (_, _) =>
+            {
+                ToolTip.SetTip(this, null);
+                Cursor = null;
+            };
         }
 
         public GitRevision? Revision
@@ -92,6 +125,17 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
             {
                 _provider.DrawGraph(context, _revision);
             }
+        }
+
+        private void OnPointerMoved(object? sender, PointerEventArgs e)
+        {
+            string? toolTip = _revision is null
+                ? null
+                : _provider.GetLaneToolTip(_revision, e.GetPosition(this).X);
+            ToolTip.SetTip(this, toolTip);
+            Cursor = toolTip is null
+                ? null
+                : HandCursor;
         }
     }
 }

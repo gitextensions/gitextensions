@@ -2,15 +2,19 @@ using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Media;
 using GitCommands;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class AuthorNameColumnProvider : ColumnProvider
 {
-    public AuthorNameColumnProvider()
+    private readonly AuthorRevisionHighlighting _authorHighlighting;
+
+    public AuthorNameColumnProvider(AuthorRevisionHighlighting authorHighlighting)
         : base("Author Name", new GridLength(130), minimumWidth: 25, resizable: true)
     {
+        _authorHighlighting = authorHighlighting;
     }
 
     public override void ApplySettings()
@@ -29,7 +33,9 @@ internal sealed class AuthorNameColumnProvider : ColumnProvider
     {
         TextBlock textBlock = (TextBlock)control;
         textBlock.Text = revision.IsArtificial ? string.Empty : revision.Author ?? string.Empty;
-        textBlock.FontWeight = FontWeight.Normal;
+        textBlock.FontWeight = _authorHighlighting.IsHighlighted(revision)
+            ? FontWeight.Bold
+            : FontWeight.Normal;
         UpdateToolTip(control, revision);
     }
 

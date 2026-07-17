@@ -40,6 +40,7 @@
     <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" Link="UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" />
     <Compile Include="..\GitUI\UserControls\GitBlameParser.cs" Link="UserControls\GitBlameParser.cs" />
     <Compile Include="..\GitUI\UserControls\PatchFile.cs" Link="UserControls\PatchFile.cs" />
     <Compile Include="..\GitUI\UserControls\TextEventArgs.cs" Link="UserControls\TextEventArgs.cs" />
@@ -47,6 +48,7 @@
     <Compile Include="..\GitUI\UserControls\RevisionGrid\GitRefListsForRevision.cs" Link="UserControls\RevisionGrid\GitRefListsForRevision.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\RefLabelIcon.cs" Link="UserControls\RevisionGrid\RefLabelIcon.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\RefLabelShape.cs" Link="UserControls\RevisionGrid\RefLabelShape.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\SuperProjectInfo.cs" Link="UserControls\RevisionGrid\SuperProjectInfo.cs" />
     <Compile Include="..\GitUI\UserManual\IProvideUserManual.cs" Link="UserManual\IProvideUserManual.cs" />
     <Compile Include="..\GitUI\UserManual\StandardHtmlUserManual.cs" Link="UserManual\StandardHtmlUserManual.cs" />
     <Compile Include="..\GitUI\UserManual\UserManual.cs" Link="UserManual\UserManual.cs" />
@@ -84,6 +86,7 @@
     <PackageReference Include="Avalonia.AvaloniaEdit" />
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
 
   <ItemGroup>
