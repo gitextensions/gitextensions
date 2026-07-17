@@ -21,6 +21,38 @@ public class IconButton : Button
 }
 
 /// <summary>
+/// An Avalonia split button whose string content keeps the original translation key while
+/// the shared template presents the corresponding WinForms toolbar image.
+/// </summary>
+public class IconSplitButton : SplitButton
+{
+    public static readonly StyledProperty<IImage?> IconProperty =
+        AvaloniaProperty.Register<IconSplitButton, IImage?>(nameof(Icon));
+
+    public IImage? Icon
+    {
+        get => GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+}
+
+/// <summary>
+/// A drop-down button retaining its original string content for translation while the
+/// toolbar presents only the corresponding image.
+/// </summary>
+public class IconDropDownButton : DropDownButton
+{
+    public static readonly StyledProperty<IImage?> IconProperty =
+        AvaloniaProperty.Register<IconDropDownButton, IImage?>(nameof(Icon));
+
+    public IImage? Icon
+    {
+        get => GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+}
+
+/// <summary>
 /// A radio button variant retaining a string Content value for the existing translation
 /// adapter while presenting the original WinForms image beside it.
 /// </summary>

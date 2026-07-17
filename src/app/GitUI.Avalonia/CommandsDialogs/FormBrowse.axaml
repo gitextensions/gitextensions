@@ -4,6 +4,8 @@
         xmlns:editor="clr-namespace:GitUI.Editor"
         xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
         xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
+        xmlns:controls="clr-namespace:GitUI.UserControls"
+        xmlns:compat="using:GitUI.Compat"
         xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.FormBrowse"
         Width="1280" Height="800"
@@ -56,7 +58,7 @@
         </MenuItem>
       </MenuItem>
       <MenuItem x:Name="toolsToolStripMenuItem" Header="_Tools">
-        <MenuItem x:Name="userShell">
+        <MenuItem Tag="userShell">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GitForWindows}" /></MenuItem.Icon>
           <MenuItem.Header>
             <TextBlock Text="Git bash" />
@@ -64,15 +66,101 @@
         </MenuItem>
       </MenuItem>
     </Menu>
-    <StackPanel DockPanel.Dock="Top" Margin="8,6" Spacing="2">
-      <TextBlock x:Name="lblRepoPath" FontWeight="SemiBold" />
-      <TextBlock x:Name="lblStatus" Opacity="0.7" TextWrapping="Wrap" />
-    </StackPanel>
-    <Grid ColumnDefinitions="260,6,*" Margin="6,0,6,6">
-      <Border Grid.Column="0" Classes="gitextensions-section">
+    <WrapPanel x:Name="toolPanel"
+               DockPanel.Dock="Top"
+               Margin="3,0"
+               Orientation="Horizontal">
+      <StackPanel x:Name="ToolStripMain"
+                  Height="25"
+                  Orientation="Horizontal"
+                  Spacing="1">
+        <Button x:Name="RefreshButton" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.ReloadRevisions}" />
+        </Button>
+        <Border Classes="gitextensions-toolbar-separator" />
+        <Button x:Name="toggleLeftPanel" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutSidebarLeft}" />
+        </Button>
+        <ComboBox x:Name="_NO_TRANSLATE_WorkingDir"
+                  Width="180"
+                  Height="23"
+                  IsEditable="True" />
+        <compat:IconSplitButton x:Name="branchSelect"
+                                Classes="gitextensions-toolbar-button"
+                                Content="Branch"
+                                Icon="{x:Static properties:Images.Branch}">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <Border Classes="gitextensions-toolbar-separator" />
+        <compat:IconSplitButton x:Name="toolStripButtonPull"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Content="Pull"
+                                Icon="{x:Static properties:Images.Pull}">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout>
+              <MenuItem x:Name="pullToolStripMenuItem1" Header="Open _pull dialog..." />
+              <Separator />
+              <MenuItem x:Name="mergeToolStripMenuItem" Header="Pull - _merge" />
+              <MenuItem x:Name="rebaseToolStripMenuItem1" Header="Pull - _rebase" />
+              <MenuItem x:Name="fetchToolStripMenuItem" Header="_Fetch" />
+              <MenuItem Tag="fetchAllToolbar" Header="Fetch _all" />
+              <MenuItem x:Name="fetchPruneAllToolStripMenuItem" Header="F_etch and prune all" />
+              <Separator />
+              <MenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action">
+                <MenuItem x:Name="defaultPullDialogToolStripMenuItem" Header="Open pull dialog" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullMergeToolStripMenuItem" Header="Pull - merge" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullRebaseToolStripMenuItem" Header="Pull - rebase" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullFetchToolStripMenuItem" Header="Fetch" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullFetchAllToolStripMenuItem" Header="Fetch all" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullFetchPruneAllToolStripMenuItem" Header="Fetch and prune all" ToggleType="Radio" />
+              </MenuItem>
+            </MenuFlyout>
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <compat:IconButton x:Name="toolStripButtonPush"
+                           Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                           Content="Push"
+                           Icon="{x:Static properties:Images.Push}" />
+        <compat:IconButton x:Name="toolStripButtonCommit"
+                           Classes="gitextensions-toolbar-button"
+                           Content="Commit"
+                           Icon="{x:Static properties:Images.RepoStateClean}" />
+        <SplitButton x:Name="toolStripSplitStash"
+                     Classes="gitextensions-toolbar-button">
+          <SplitButton.Content>
+            <Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" />
+          </SplitButton.Content>
+          <SplitButton.Flyout>
+            <MenuFlyout>
+              <MenuItem x:Name="stashChangesToolStripMenuItem" Header="_Stash" />
+              <MenuItem x:Name="stashStagedToolStripMenuItem" Header="S_tash staged" />
+              <MenuItem x:Name="stashPopToolStripMenuItem" Header="Stash _pop" />
+              <Separator />
+              <MenuItem x:Name="manageStashesToolStripMenuItem" Header="_Manage stashes..." />
+              <MenuItem x:Name="createAStashToolStripMenuItem" Header="_Create a stash..." />
+            </MenuFlyout>
+          </SplitButton.Flyout>
+        </SplitButton>
+        <Border Classes="gitextensions-toolbar-separator" />
+        <Button x:Name="toolStripFileExplorer" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
+        </Button>
+        <Button x:Name="userShell" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.GitForWindows}" />
+        </Button>
+      </StackPanel>
+      <controls:FilterToolBar x:Name="ToolStripFilters" />
+      <StackPanel x:Name="ToolStripScripts" IsVisible="False" />
+    </WrapPanel>
+    <TextBlock x:Name="lblRepoPath" IsVisible="False" />
+    <TextBlock x:Name="lblStatus" IsVisible="False" />
+    <Grid x:Name="mainContentGrid" ColumnDefinitions="260,0,*" Margin="6,0,6,6">
+      <Border x:Name="leftPanel" Grid.Column="0" Classes="gitextensions-section">
         <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" />
       </Border>
-      <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+      <GridSplitter x:Name="leftPanelSplitter" Grid.Column="1" ResizeDirection="Columns" />
       <Grid Grid.Column="2" RowDefinitions="3*,6,2*">
         <Border Grid.Row="0" Classes="gitextensions-section">
           <gitui:RevisionGridControl x:Name="RevisionGrid" />
