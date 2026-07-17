@@ -67,7 +67,7 @@ public static class PhoneticUtility
                 case '7':
                 case '8':
                 case '9':
-                    rule.Priority = int.Parse([cond]);
+                    rule.Priority = cond - '0';
                     break;
                 default:
                     if (group)
