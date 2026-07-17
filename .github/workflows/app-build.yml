@@ -52,6 +52,26 @@ jobs:
     with:
       os: ${{ matrix.os }}
 
+  # Single aggregate status that branch protection can require instead of the per-architecture matrix legs. The build matrix is dynamic
+  # (pull requests build only 'windows-latest' while release branches also build 'windows-11-arm'), so requiring individual legs would
+  # either miss coverage or block on a check that never runs. This gate always runs and passes only when every matrix leg succeeded.
+  # Require the 'Build gate' status check in branch protection.
+  build-gate:
+    name: Build gate
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: always()
+    steps:
+    - name: Verify build matrix succeeded
+      shell: bash
+      run: |
+        result="${{ needs.build-and-test.result }}"
+        echo "build-and-test result: $result"
+        if [ "$result" != "success" ]; then
+          echo "::error::One or more build/test legs did not succeed (result: $result)."
+          exit 1
+        fi
+
   test-report:
     name: Test Report
     runs-on: ubuntu-latest
