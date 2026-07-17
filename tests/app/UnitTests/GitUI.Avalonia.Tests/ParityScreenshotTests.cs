@@ -157,6 +157,11 @@ public sealed partial class ParityScreenshotTests
 
             await WaitForAsyncViewsAsync(view);
             Dispatcher.UIThread.RunJobs();
+            if (view is FormBrowse formBrowse)
+            {
+                formBrowse.commandsToolStripMenuItem.IsSubMenuOpen = true;
+                Dispatcher.UIThread.RunJobs();
+            }
 
             WriteableBitmap? frame = window.CaptureRenderedFrame();
             frame.Should().NotBeNull($"{descriptor.ClassName} should render with headless Skia");
