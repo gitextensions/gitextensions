@@ -187,6 +187,7 @@ public sealed class TerminalLauncherTests
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(ITerminalLauncher)).Returns(launcher);
 
         return new FormBrowse(commands);

@@ -50,4 +50,6 @@ public class GitModuleControl : GitExtensionsControl
 
     /// <summary>Gets the current Git module.</summary>
     public IGitModule Module => UICommands.Module;
+
+    protected override IServiceProvider ServiceProvider => UICommands;
 }

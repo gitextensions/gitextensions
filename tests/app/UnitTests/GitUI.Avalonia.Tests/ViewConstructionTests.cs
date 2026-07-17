@@ -13,6 +13,7 @@ using GitUI.Editor;
 using GitUI.LeftPanel;
 using GitUIPluginInterfaces;
 using NSubstitute;
+using ResourceManager;
 
 namespace GitExtensionsTests;
 
@@ -68,6 +69,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem refresh = form.FindControl<MenuItem>("refreshToolStripMenuItem")
@@ -134,6 +136,38 @@ public sealed class ViewConstructionTests
     }
 
     [AvaloniaTest]
+    public void RevisionGrid_should_use_the_shared_menu_command_translation_keys()
+    {
+        RevisionGridControl revisionGrid = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+        translation.TranslateItem(
+                "RevisionGrid",
+                "GotoCurrentRevision",
+                "Text",
+                Arg.Any<Func<string?>>())
+            .Returns("Go to translated &revision");
+
+        revisionGrid.AddTranslationItems(translation);
+        revisionGrid.TranslateItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            "RevisionGrid",
+            "GotoCurrentRevision",
+            "Text",
+            "Go to c&urrent revision");
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(RevisionGridControl),
+            "GotoCurrentRevision",
+            "Text",
+            Arg.Any<string>());
+        MenuItem navigate = revisionGrid.FindControl<MenuItem>("navigateToolStripMenuItem")
+            ?? throw new InvalidOperationException("Navigate menu was not created.");
+        MenuItem translatedItem = navigate.Items.OfType<MenuItem>()
+            .Single(menuItem => menuItem.Tag as string == "GotoCurrentRevision");
+        translatedItem.Header.Should().Be("Go to translated _revision");
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_commit_should_start_the_dialog()
     {
         IGitModule module = Substitute.For<IGitModule>();
@@ -148,6 +182,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem commit = form.FindControl<MenuItem>("commitToolStripMenuItem")
@@ -174,6 +209,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem stash = form.FindControl<MenuItem>("stashToolStripMenuItem")
@@ -200,6 +236,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem merge = form.FindControl<MenuItem>("mergeBranchToolStripMenuItem")
@@ -226,6 +263,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem rebase = form.FindControl<MenuItem>("rebaseToolStripMenuItem")
@@ -259,6 +297,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem pull = form.FindControl<MenuItem>("pullToolStripMenuItem")
@@ -285,6 +324,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem checkout = form.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
@@ -311,6 +351,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem createBranch = form.FindControl<MenuItem>("branchToolStripMenuItem")
@@ -337,6 +378,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem deleteBranch = form.FindControl<MenuItem>("deleteBranchToolStripMenuItem")
@@ -363,6 +405,7 @@ public sealed class ViewConstructionTests
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
 
         FormBrowse form = new(commands);
         MenuItem createTag = form.FindControl<MenuItem>("tagToolStripMenuItem")
