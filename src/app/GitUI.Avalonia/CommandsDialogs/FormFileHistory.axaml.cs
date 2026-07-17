@@ -1,4 +1,5 @@
 using System.Text;
+using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -9,12 +10,12 @@ using GitUIPluginInterfaces;
 namespace GitUI.CommandsDialogs;
 
 // Twin of GitUI/CommandsDialogs/FormFileHistory.cs, reduced to the shell: the revision
-// grid filtered to one path plus the Diff tab. Deferred: the View/Blame/Commit tabs
-// (blame is subphase 3.9), the browse menus and filter toolbar, rename following
-// (--follow and FilePathByObjectId), full-history/simplify-merges options, custom diff
-// tools, and the build report. The history always loads on show (there is no menu yet
-// to load it later).
-public sealed partial class FormFileHistory : GitModuleForm
+// grid filtered to one path plus the Diff and Blame tabs. Deferred: the View/Commit
+// tabs, the browse menus and filter toolbar (including the blame display options),
+// rename following (--follow and FilePathByObjectId), full-history/simplify-merges
+// options, custom diff tools, and the build report. The history always loads on show
+// (there is no menu yet to load it later).
+public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUpdate
 {
     private readonly CancellationTokenSequence _viewChangesSequence = new();
     private readonly ObjectId _initialSelectedId = default;
@@ -44,12 +45,26 @@ public sealed partial class FormFileHistory : GitModuleForm
         // browse dialog.
         FileName = fileName.RemoveQuotes().ToPosixPath();
 
+        tabControl1.SelectedItem = showBlame ? BlameTab : DiffTab;
+
         SetTitle();
     }
 
     private void WireControls()
     {
         RevisionGrid.SelectionChanged += FileChangesSelectionChanged;
+        tabControl1.SelectionChanged += TabControl1SelectedIndexChanged;
+        Blame.EscapePressed += Close;
+    }
+
+    private void TabControl1SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+    {
+        // SelectionChanged is a routed event; the revision list and future tab content
+        // must not retrigger the viewers.
+        if (ReferenceEquals(e.Source, tabControl1))
+        {
+            FileChangesSelectionChanged(sender, e);
+        }
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -108,6 +123,19 @@ public sealed partial class FormFileHistory : GitModuleForm
 
         SetTitle(alternativeFileName: fileName);
 
+        // Like WinForms: no blame tab for artificial commits.
+        BlameTab.IsVisible = !revision.IsArtificial;
+        if (!BlameTab.IsVisible && ReferenceEquals(tabControl1.SelectedItem, BlameTab))
+        {
+            tabControl1.SelectedItem = DiffTab;
+        }
+
+        if (ReferenceEquals(tabControl1.SelectedItem, BlameTab))
+        {
+            _ = Blame.LoadBlameAsync(revision, fileName, revisionGridInfo: RevisionGrid, revisionGridFileUpdate: this, Module.FilesEncoding, force: force, cancellationTokenSequence: _viewChangesSequence);
+            return;
+        }
+
         GitItemStatus file = new(name: fileName)
         {
             IsTracked = true,
@@ -118,4 +146,7 @@ public sealed partial class FormFileHistory : GitModuleForm
             file);
         _ = Diff.ViewChangesAsync(item, _viewChangesSequence.Next());
     }
+
+    bool IRevisionGridFileUpdate.SelectFileInRevision(ObjectId commitId, RelativePath ignoredFilename)
+        => RevisionGrid.SetSelectedRevision(commitId);
 }
