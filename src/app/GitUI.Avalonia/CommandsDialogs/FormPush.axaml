@@ -7,15 +7,15 @@
         MinHeight="285"
         CanResize="True"
         Title="Push">
-  <Grid Margin="12"
+  <Grid Classes="gitextensions-dialog-main"
         RowDefinitions="Auto,Auto,Auto,*">
     <HeaderedContentControl x:Name="groupBox2"
+                            Classes="gitextensions-group-box"
                             Header="Push to">
-      <Grid Margin="8"
-            ColumnDefinitions="Auto,*"
+      <Grid ColumnDefinitions="Auto,*"
             RowDefinitions="Auto">
-        <TextBlock Margin="0,0,12,0"
-                   VerticalAlignment="Center"
+        <TextBlock Classes="gitextensions-dialog-label"
+                   Margin="0,0,12,0"
                    Text="Remote" />
         <ComboBox x:Name="_NO_TRANSLATE_Remotes"
                   Grid.Column="1"
@@ -27,16 +27,16 @@
           Margin="8,14,8,0"
           ColumnDefinitions="Auto,*,Auto,*">
       <TextBlock x:Name="labelFrom"
+                 Classes="gitextensions-dialog-label"
                  Margin="0,0,12,0"
-                 VerticalAlignment="Center"
                  Text="_Branch to push" />
       <TextBox x:Name="_NO_TRANSLATE_Branch"
                Grid.Column="1"
                IsReadOnly="True" />
       <TextBlock x:Name="labelTo"
+                 Classes="gitextensions-dialog-label"
                  Grid.Column="2"
                  Margin="12,0"
-                 VerticalAlignment="Center"
                  Text="_to" />
       <TextBox x:Name="RemoteBranch"
                Grid.Column="3"
@@ -49,6 +49,7 @@
               Content="_Force with lease" />
 
     <Button x:Name="Push"
+            Classes="gitextensions-dialog-action"
             Grid.Row="3"
             Margin="0,18,0,0"
             MinWidth="100"

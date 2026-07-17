@@ -9,26 +9,26 @@
         Title="Delete branch">
   <DockPanel>
     <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
                 DockPanel.Dock="Bottom"
-                Orientation="Horizontal"
-                HorizontalAlignment="Right"
                 Spacing="8"
                 Margin="10,8">
       <Button x:Name="Delete"
-              MinWidth="75"
+              Classes="gitextensions-dialog-action"
               Content="_Delete"
               IsDefault="True" />
     </StackPanel>
 
     <Grid x:Name="MainPanel"
-          Margin="12"
+          Classes="gitextensions-dialog-main"
+          Margin="9"
           ColumnDefinitions="Auto,*"
           ColumnSpacing="10">
       <Label x:Name="labelSelectBranches"
+             Classes="gitextensions-dialog-label"
              Padding="0"
              Content="Select _branches"
-             Target="{Binding #Branches}"
-             VerticalAlignment="Center" />
+             Target="{Binding #Branches}" />
       <gitui:BranchComboBox x:Name="Branches"
                             Grid.Column="1"
                             MinWidth="260" />

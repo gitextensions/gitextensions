@@ -7,28 +7,28 @@
         MaxWidth="1000" MaxHeight="210"
         WindowStartupLocation="CenterOwner"
         Title="Delete tag">
-  <Grid Margin="12"
+  <Grid Classes="gitextensions-dialog-main"
         ColumnDefinitions="Auto,*,Auto"
         RowDefinitions="30,32,30,30,*,24"
         ColumnSpacing="10">
     <TextBlock x:Name="label1"
-               Text="Select tag"
-               VerticalAlignment="Center" />
+               Classes="gitextensions-dialog-label"
+               Text="Select tag" />
     <ComboBox x:Name="Tags"
               Grid.Column="1"
               HorizontalAlignment="Stretch"
               IsEditable="True" />
     <Button x:Name="Ok"
+            Classes="gitextensions-dialog-action"
             Grid.Column="2"
-            MinWidth="75"
             Content="Delete"
             IsDefault="True" />
 
     <TextBlock x:Name="label2"
+               Classes="gitextensions-dialog-label"
                Grid.Row="1"
                Grid.ColumnSpan="3"
-               Text="This will delete the selected tag from the (local) repository."
-               VerticalAlignment="Center" />
+               Text="This will delete the selected tag from the (local) repository." />
 
     <CheckBox x:Name="deleteTag"
               Grid.Row="2"
@@ -53,11 +53,11 @@
                                           ManualSectionAnchorName="delete-tag"
                                           ManualSectionSubfolder="tag" />
       <TextBlock x:Name="label3"
+                 Classes="gitextensions-dialog-label"
                  Grid.Column="1"
                  FontSize="11.5"
                  Text="(includes information about deleting tags which are already pushed)"
-                 TextTrimming="CharacterEllipsis"
-                 VerticalAlignment="Center" />
+                 TextTrimming="CharacterEllipsis" />
     </Grid>
   </Grid>
 </Window>

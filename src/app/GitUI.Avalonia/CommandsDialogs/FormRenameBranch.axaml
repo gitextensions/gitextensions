@@ -11,14 +11,14 @@
         ColumnDefinitions="Auto,*,Auto"
         ColumnSpacing="8">
     <TextBlock x:Name="label1"
-               Text="New name"
-               VerticalAlignment="Center" />
+               Classes="gitextensions-dialog-label"
+               Text="New name" />
     <TextBox x:Name="BranchNameTextBox"
              Grid.Column="1"
              VerticalAlignment="Center" />
     <Button x:Name="Ok"
+            Classes="gitextensions-dialog-action"
             Grid.Column="2"
-            MinWidth="75"
             Content="Rename"
             IsDefault="True" />
   </Grid>
