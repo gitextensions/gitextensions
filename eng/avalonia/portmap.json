@@ -15,7 +15,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Delete branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Create tag/Delete tag/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The form routes non-editing keys to the revision grid's persisted upstream hotkeys. The revision grid receives the shared ahead/behind provider and resets its cache on repository reload. The main panes preserve the original invisible 6px splitter drag targets, adjacent 1px pane borders, 6px content padding, and 260px repository-tree distance; the menu uses the original 24/20/22px desktop density and original command icons. The auto-discovered headless-Skia harness captures this shell with an open menu and every other AXAML view in light/dark mode at 100%/200% scaling over a seeded repository. Remaining menus and toolbars are added with their dialogs."
+    "notes": "Functional repository shell: five browse panes plus the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel layout, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer and terminal; it wraps rather than hiding commands at narrow widths. Settings, scripts/plugins, worktrees/submodules and lower-workspace position controls remain absent until their owning phases. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The revision grid receives the shared ahead/behind provider and quick filter state. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/200% scaling."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -155,11 +155,47 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Reduced flow: merge pull, rebase pull, and fetch-only from a selected configured remote; immediate execution and the browse entry point are functional. URL pulls, remote management, auto-stash, tag/prune/unshallow controls, scripts, submodule follow-up, and conflict recovery remain deferred."
   },
+  "src/app/GitUI/UserControls/FilterToolBar.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "WinForms-shaped quick-filter twin bound to IRevisionGridFilter: all/current/filtered branches, branch-type completion, commit/committer/author/diff text filters, reflog, first-parent and reset actions. The not-yet-ported advanced date/limit dialog is intentionally absent; its primary funnel action focuses the functional quick text filter. Existing FormBrowse translation and tooltip keys are reused explicitly."
+  },
+  "src/app/GitUI/UserControls/FilterToolBar.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact 25px Avalonia toolbar layout with the original field names, ordering, split menus and icons."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FilterInfo.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/FilterInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free filter argument builder linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/IRevisionGridFilter.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/IRevisionGridFilter.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free filter contract linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionFilter.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionFilter.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free quick-filter value linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FilterChangedEventArgs.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/FilterChangedEventArgs.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free filter-state event payload linked unchanged."
+  },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters and double-click notification. The context menu routes copy details, stash apply/pop/drop, local/remote checkout, local push, merge and rebase variants, artificial-row reset/commit, branch/tag creation, local rename/delete, tag delete, parent/child/current navigation, and provider visibility toggles through real Avalonia workflows; unavailable dialog-owned commands remain absent. Persisted upstream RevisionGrid command IDs/default hotkeys dispatch from FormBrowse, including safe single-ref rename/delete. Recycled rows are shaped by the same ordered ColumnProvider boundary as WinForms; settings control graph, notes, author, date and object-ID visibility, while the visible graph lanes still determine the graph width. Refs mark the checked-out branch and matching tracking remote before rows are attached. Selection drives the shared author-highlighting state, related real/virtual refs can select their loaded target, and superproject checkout/conflict/ref data loads independently without delaying history. ReloadRevisions accepts a path filter, requests notes when either notes presentation is enabled, and mirrors the default --all exclusions for hidden notes, stash and session refs."
+    "notes": "Read-only graph/ref labels/selection plus preselection, double-click notification and the shared IRevisionGridFilter contract. Default reloads use the unchanged FilterInfo argument builder, so branch/current/reflog, message/committer/author/diff, first-parent and path filters match WinForms and persist through AppSettings; explicit caller-supplied revision filters remain supported. The context menu routes copy details, stash apply/pop/drop, local/remote checkout, local push, merge and rebase variants, artificial-row reset/commit, branch/tag creation, local rename/delete, tag delete, parent/child/current navigation, and provider visibility toggles through real Avalonia workflows. Persisted upstream RevisionGrid command IDs/default hotkeys dispatch from FormBrowse. Recycled rows use the same ordered ColumnProvider boundary; settings control graph, notes, author, date and object-ID visibility, while visible lanes determine graph width. Refs mark the checked-out branch/tracking remote. Selection drives shared author highlighting; related refs and superproject data are functional."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs": {
     "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
