@@ -132,11 +132,27 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
     /// </remarks>
     /// <param name="s">The string to try parsing from.</param>
     /// <returns>The parsed <see cref="ObjectId"/>.</returns>
-    /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash, or <paramref name="s"/> is <see langword="null"/>.</exception>
+    /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
     [Pure]
     public static ObjectId Parse(string s)
     {
-        if (s?.Length is not Sha1CharCount || !TryParse(s.AsSpan(), out ObjectId id))
+        return Parse(s.AsSpan());
+    }
+
+    /// <summary>
+    /// Parses an <see cref="ObjectId"/> from <paramref name="s"/>.
+    /// </summary>
+    /// <remarks>
+    /// For parsing to succeed, <paramref name="s"/> must be a valid 40-character SHA-1 span of chars.
+    /// Any extra characters at the end will cause parsing to fail.
+    /// </remarks>
+    /// <param name="s">The span to try parsing from.</param>
+    /// <returns>The parsed <see cref="ObjectId"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
+    [Pure]
+    public static ObjectId Parse(ReadOnlySpan<char> s)
+    {
+        if (s.Length is not Sha1CharCount || !TryParse(s, out ObjectId id))
         {
             throw new FormatException($"Unable to parse object ID \"{s}\".");
         }

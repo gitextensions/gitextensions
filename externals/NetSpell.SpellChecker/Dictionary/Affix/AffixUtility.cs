@@ -306,11 +306,8 @@ public static class AffixUtility
             && (tempLength + entry.StripCharacters.Length >= entry.ConditionCount)
             && word.EndsWith(entry.AddCharacters))
         {
-            // word with out affix
-            string tempWord = word[..tempLength];
-
-            // add back strip chars
-            tempWord += entry.StripCharacters;
+            // word without affix plus strip chars
+            string tempWord = $"{word.AsSpan(0, tempLength)}{entry.StripCharacters}";
 
             // check that this is valid
             int passCount = 0;

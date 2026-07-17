@@ -94,11 +94,10 @@ internal static class TranslationHelpers
             Dictionary<string, string> dict = [];
             foreach (TranslationItemWithCategory item in items)
             {
-                IEnumerable<TranslationItemWithCategory> curItems = oldItems.Where(
+                TranslationItemWithCategory? curItem = oldItems.Find(
                     oldItem => oldItem.Category?.TrimStart('_') == item.Category?.TrimStart('_') &&
                               oldItem.Name?.TrimStart('_') == item.Name?.TrimStart('_') &&
                               oldItem.Property == item.Property);
-                TranslationItemWithCategory? curItem = curItems.FirstOrDefault();
 
                 if (curItem is null)
                 {
