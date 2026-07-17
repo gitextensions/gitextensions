@@ -87,7 +87,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormFileHistory.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Shell: the revision grid filtered to one path (history always loads on show) above the Diff tab, with the WinForms title format. StartFileHistoryDialog opens the window in-process and non-modal instead of launching a separate client process. Deferred: View/Blame/Commit tabs (blame is 3.9), browse menus and filter toolbar, rename following (--follow, FilePathByObjectId), full-history/simplify-merges options, custom diff tools, and the build report."
+    "notes": "Shell: the revision grid filtered to one path (history always loads on show) above the Diff and Blame tabs, with the WinForms title format and showBlame initial-tab selection; implements IRevisionGridFileUpdate for blame navigation; the Blame tab hides for artificial commits. StartFileHistoryDialog opens the window in-process and non-modal instead of launching a separate client process. Deferred: View/Commit tabs, browse menus and filter toolbar (including the blame display options), rename following (--follow, FilePathByObjectId), full-history/simplify-merges options, custom diff tools, and the build report."
   },
   "src/app/GitUI/CommandsDialogs/FormDeleteTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteTag.axaml.cs",
@@ -203,7 +203,49 @@
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only unified diff on AvaloniaEdit, including revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. No margins, encodings menu, blob/blame/range modes, or line patching yet."
+    "notes": "Read-only unified diff on AvaloniaEdit, including revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. For the blame view: plain-text mode (ViewTextAsync/ClearAsync), GoToLine/CurrentFileLine, SelectedLineChanged from the caret, GetLineFromVisualPosY, and full-width line-background highlighting (HighlightLines/ClearHighlighting/Refresh). No encodings menu, blob/range modes, or line patching yet."
+  },
+  "src/app/GitUI/Editor/IFileViewer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/IFileViewer.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Only SelectedLineEventArgs is twinned; the IFileViewer interface itself is not ported (the reduced FileViewer is used directly)."
+  },
+  "src/app/GitUI/Editor/GitBlameEntry.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/GitBlameEntry.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Age-bucket index and color; the Avatar image property waits for the avatar subphase."
+  },
+  "src/app/GitUI/Editor/BlameAuthorMargin.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/BlameAuthorMargin.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Extended role: an AvaloniaEdit margin that renders the age-bucket markers and the author line text itself, replacing the second scroll-synchronised author editor of the WinForms BlameControl. Avatars wait for the avatar subphase."
+  },
+  "src/app/GitUI/UserControls/BlameControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/BlameControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Commit info over the blamed file with the author margin; hover highlights the hovered commit's lines and shows the summary tooltip; caret movement drives the commit info; the context menu blames this/the previous revision (via IRevisionGridInfo/IRevisionGridFileUpdate and the linked GitBlameParser) and copies hash/message/info; double-click blames the clicked line's revision. Deferred: avatars, 'Show changes' (needs FormCommitDiff), repository-hoster menu items (plugins), splitter persistence, theme-adapted highlight/age colors, and the FormCommitDiff fallback when no grid hosts the control."
+  },
+  "src/app/GitUI/UserControls/GitBlameParser.cs": {
+    "twin": "src/app/GitUI/UserControls/GitBlameParser.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/IRevisionGridInfo.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/IRevisionGridInfo.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia; implemented by the twin RevisionGridControl (DescribeRevision without ambiguous-ref disambiguation; parents-rewritten detection from the path filter)."
+  },
+  "src/app/GitUI/CommandsDialogs/IRevisionGridFileUpdate.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/IRevisionGridFileUpdate.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia; implemented by the twin FormFileHistory."
   },
   "src/app/GitUI/HelperDialogs/FormSelectMultipleBranches.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormSelectMultipleBranches.axaml.cs",
