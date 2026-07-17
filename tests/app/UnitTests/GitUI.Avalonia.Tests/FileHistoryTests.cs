@@ -63,6 +63,7 @@ public sealed class FileHistoryTests
         form.FindControl<RevisionGridControl>("RevisionGrid").Should().NotBeNull();
         form.FindControl<TabControl>("tabControl1").Should().NotBeNull();
         form.FindControl<FileViewer>("Diff").Should().NotBeNull();
+        form.FindControl<GitUI.Blame.BlameControl>("Blame").Should().NotBeNull();
     }
 
     [AvaloniaTest]
@@ -76,6 +77,7 @@ public sealed class FileHistoryTests
 
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "$this", "Text", "File History");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "DiffTab", "Text", "Diff");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "BlameTab", "Text", "Blame");
 
         string[] emittedKeys = translation.ReceivedCalls()
             .Where(call => call.GetMethodInfo().Name == nameof(ITranslation.AddTranslationItem))
@@ -111,6 +113,48 @@ public sealed class FileHistoryTests
             await WaitUntilAsync(() => diff.TextEditor.Text.Contains("+second line", StringComparison.Ordinal));
 
             form.CaptureRenderedFrame().Should().NotBeNull("the file history shell should render headlessly");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormFileHistory_blame_tab_should_show_the_file_with_its_authors()
+    {
+        GitModule module = CreateRepositoryWithFileHistory();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+
+        FormFileHistory form = new(commands, "tracked.txt", showBlame: true);
+        form.Show();
+        try
+        {
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
+                ?? throw new InvalidOperationException("Revision grid was not created.");
+            GitUI.Blame.BlameControl blame = form.FindControl<GitUI.Blame.BlameControl>("Blame")
+                ?? throw new InvalidOperationException("Blame control was not created.");
+            GitUI.CommitInfo.CommitInfo commitInfo = blame.FindControl<GitUI.CommitInfo.CommitInfo>("CommitInfo")
+                ?? throw new InvalidOperationException("Commit info was not created.");
+
+            await WaitUntilAsync(() => revisionGrid.SelectedRevision is not null);
+
+            await WaitUntilAsync(() =>
+                blame.BlameFile.TextEditor.Text.Contains("second line", StringComparison.Ordinal)
+                && commitInfo.Revision is not null);
+
+            GitBlame gitBlame = blame.GetTestAccessor().Blame
+                ?? throw new InvalidOperationException("The blame was not stored.");
+            gitBlame.Lines.Should().HaveCount(2, "tracked.txt has two lines");
+            gitBlame.Lines.Should().OnlyContain(line => line.Commit.Author == "Avalonia Test");
+
+            // The grid revision stays displayed in the commit details after loading.
+            commitInfo.Revision!.ObjectId.Should().Be(revisionGrid.SelectedRevision!.ObjectId);
+
+            form.CaptureRenderedFrame().Should().NotBeNull("the blame view should render headlessly");
+            blame.BlameAuthor.Bounds.Width.Should().BeGreaterThan(0, "the author margin shows the author lines");
         }
         finally
         {
