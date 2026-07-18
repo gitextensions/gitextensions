@@ -26,8 +26,9 @@
       <!-- WinForms MenuStrip is a compact desktop control: 24px bar, 20px top-level
            items, and 22px dropdown rows. Fluent's defaults are intentionally roomier. -->
       <x:Double x:Key="MenuBarHeight">24</x:Double>
-      <Thickness x:Key="MenuBarItemPadding">8,0</Thickness>
+      <Thickness x:Key="MenuBarItemPadding">7,0</Thickness>
       <Thickness x:Key="MenuFlyoutItemThemePaddingNarrow">8,2</Thickness>
+      <Thickness x:Key="MenuFlyoutScrollerMargin">0</Thickness>
       <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
 
       <ResourceDictionary.ThemeDictionaries>
@@ -140,6 +141,11 @@
   <Style Selector="ComboBox">
     <Setter Property="MinHeight" Value="23" />
   </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input">
+    <!-- Fluent's default 5/7px vertical padding clips a 16px text presenter when the
+         WinForms-shaped toolbar constrains the editable combo to 23px. -->
+    <Setter Property="Padding" Value="4,2,0,2" />
+  </Style>
   <Style Selector="Button.gitextensions-dialog-action">
     <Setter Property="MinWidth" Value="75" />
     <Setter Property="MinHeight" Value="25" />
@@ -147,7 +153,7 @@
   <!-- Button.Content must stay a string so AvaloniaTranslationUtils can continue mapping
        the original control .Text key. These templates add the original raster icon without
        wrapping or replacing that translatable value in each form. -->
-  <Style Selector="compat|IconButton">
+  <Style Selector="Button.gitextensions-icon-button">
     <Setter Property="ContentTemplate">
       <DataTemplate>
         <StackPanel Orientation="Horizontal" Spacing="4">
@@ -160,7 +166,7 @@
       </DataTemplate>
     </Setter>
   </Style>
-  <Style Selector="compat|IconButton.gitextensions-icon-only">
+  <Style Selector="Button.gitextensions-icon-button.gitextensions-icon-only">
     <Setter Property="ContentTemplate">
       <DataTemplate>
         <Image Width="16"
@@ -170,7 +176,7 @@
       </DataTemplate>
     </Setter>
   </Style>
-  <Style Selector="compat|IconSplitButton">
+  <Style Selector="SplitButton.gitextensions-icon-split-button">
     <Setter Property="ContentTemplate">
       <DataTemplate>
         <StackPanel Orientation="Horizontal" Spacing="4">
@@ -183,7 +189,7 @@
       </DataTemplate>
     </Setter>
   </Style>
-  <Style Selector="compat|IconSplitButton.gitextensions-icon-only">
+  <Style Selector="SplitButton.gitextensions-icon-split-button.gitextensions-icon-only">
     <Setter Property="ContentTemplate">
       <DataTemplate>
         <Image Width="16"
@@ -193,7 +199,7 @@
       </DataTemplate>
     </Setter>
   </Style>
-  <Style Selector="compat|IconDropDownButton.gitextensions-icon-only">
+  <Style Selector="DropDownButton.gitextensions-icon-drop-down-button.gitextensions-icon-only">
     <Setter Property="ContentTemplate">
       <DataTemplate>
         <Image Width="16"
@@ -236,6 +242,16 @@
     <Setter Property="CornerRadius" Value="0" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
+  <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_PrimaryButton">
+    <Setter Property="MinWidth" Value="23" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_SecondaryButton">
+    <Setter Property="MinWidth" Value="13" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_SecondaryButton > PathIcon">
+    <Setter Property="Width" Value="7" />
+    <Setter Property="Height" Value="5" />
+  </Style>
   <Style Selector="Button.gitextensions-toolbar-button.checked">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
   </Style>
@@ -249,7 +265,7 @@
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Margin" Value="3,0,1,0" />
   </Style>
-  <Style Selector="compat|IconRadioButton">
+  <Style Selector="RadioButton.gitextensions-icon-radio-button">
     <Setter Property="ContentTemplate">
       <DataTemplate>
         <StackPanel Orientation="Horizontal" Spacing="4">
@@ -382,6 +398,15 @@
   <Style Selector="Menu > MenuItem">
     <Setter Property="Margin" Value="0,2" />
     <Setter Property="MinHeight" Value="20" />
+    <!-- Reserve the open-state border so selecting an item never remeasures the menu bar. -->
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="1,1,1,0" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="Menu > MenuItem:selected /template/ Border#PART_LayoutRoot">
+    <!-- WinForms joins an open top-level item visually to its dropdown. -->
+    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
   </Style>
 
   <Style Selector="GridSplitter">

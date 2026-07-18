@@ -64,7 +64,7 @@ public sealed class FormPullTests
         {
             if (Directory.Exists(directory))
             {
-                Directory.Delete(directory, recursive: true);
+                TestDirectory.Delete(directory);
             }
         }
     }

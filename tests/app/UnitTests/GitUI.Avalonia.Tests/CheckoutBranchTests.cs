@@ -313,7 +313,7 @@ public sealed class CheckoutBranchTests
         finally
         {
             AppSettings.CloseProcessDialog = closeProcessDialog;
-            Directory.Delete(root, recursive: true);
+            TestDirectory.Delete(root);
         }
     }
 
