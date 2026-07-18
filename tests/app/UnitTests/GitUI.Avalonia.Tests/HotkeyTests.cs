@@ -74,6 +74,12 @@ public sealed class HotkeyTests
                 command.CommandCode == (int)FormBrowse.Command.FocusGpgInfo
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D5));
             hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.FocusGitConsole
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D6));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.FocusOutputHistoryAndToggleIfPanel
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D9));
+            hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.FocusNextTab
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Tab));
         }
