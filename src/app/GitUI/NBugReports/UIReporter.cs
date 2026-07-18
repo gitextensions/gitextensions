@@ -398,7 +398,6 @@ internal sealed class UIReporter : IBugReporter
     }
 
     /// <inheritdoc />
-    /// <inheritdoc />
     public bool ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating)
     {
         if (!HasFailedToLoadAnAssembly(exception))
