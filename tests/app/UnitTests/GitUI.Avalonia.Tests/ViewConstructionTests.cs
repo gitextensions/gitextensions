@@ -3,6 +3,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
+using GitCommands.Git.Gpg;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -204,6 +205,11 @@ public sealed class ViewConstructionTests
             "TreeTabPage",
             "Text",
             "File tree");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "GpgInfoTabPage",
+            "Text",
+            "GPG");
         translation.Received(1).AddTranslationItem(
             nameof(FormBrowse),
             "commitInfoBelowMenuItem",
@@ -608,6 +614,60 @@ public sealed class ViewConstructionTests
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(
             emittedKeys.Length,
             "each field must be routed through exactly one translation path");
+    }
+
+    [AvaloniaTest]
+    public void RevisionGpgInfoControl_should_render_commit_and_tag_statuses()
+    {
+        RevisionGpgInfoControl control = new();
+        Window window = new() { Content = control, Width = 640, Height = 260 };
+        window.Show();
+        try
+        {
+            Image commitPicture = control.FindControl<Image>("commitSignPicture")!;
+            Image tagPicture = control.FindControl<Image>("tagSignPicture")!;
+            TextBox commitInfo = control.FindControl<TextBox>("txtCommitGpgInfo")!;
+            TextBox tagInfo = control.FindControl<TextBox>("txtTagGpgInfo")!;
+            Grid layout = control.FindControl<Grid>("tableLayoutPanel1")!;
+
+            control.DisplayGpgInfo(new GpgInfo(
+                CommitStatus.GoodSignature,
+                "good commit signature\nsecond line",
+                TagStatus.OneBad,
+                "bad tag signature"));
+            Dispatcher.UIThread.RunJobs();
+
+            commitPicture.Source.Should().BeSameAs(GitUI.Properties.Images.CommitSignatureOk);
+            tagPicture.Source.Should().BeSameAs(GitUI.Properties.Images.TagError);
+            commitInfo.Text.Should().Be($"good commit signature{Environment.NewLine}second line");
+            tagInfo.Text.Should().Be("bad tag signature");
+            tagInfo.IsVisible.Should().BeTrue();
+            layout.RowDefinitions.Should().OnlyContain(row => row.Height == new GridLength(1, GridUnitType.Star));
+
+            control.DisplayGpgInfo(new GpgInfo(
+                CommitStatus.NoSignature,
+                string.Empty,
+                TagStatus.NoTag,
+                TagVerificationMessage: null));
+            commitPicture.IsVisible.Should().BeFalse();
+            commitInfo.Text.Should().Be("Commit is not signed");
+            tagPicture.IsVisible.Should().BeFalse();
+            tagInfo.IsVisible.Should().BeFalse();
+            layout.RowDefinitions[1].Height.Should().Be(new GridLength(0));
+
+            control.DisplayGpgInfo(new GpgInfo(
+                CommitStatus.SignatureError,
+                "bad commit signature",
+                TagStatus.TagNotSigned,
+                TagVerificationMessage: null));
+            commitPicture.Source.Should().BeSameAs(GitUI.Properties.Images.CommitSignatureError);
+            tagInfo.IsVisible.Should().BeTrue();
+            tagInfo.Text.Should().Be("Tag is not signed");
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]

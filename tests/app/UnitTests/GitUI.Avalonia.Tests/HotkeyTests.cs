@@ -10,6 +10,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Hotkey;
+using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -69,6 +70,9 @@ public sealed class HotkeyTests
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.FocusFileTree
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D4));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.FocusGpgInfo
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D5));
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.FocusNextTab
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Tab));
@@ -274,6 +278,10 @@ public sealed class HotkeyTests
             {
                 KeyData = WinFormsShims.Keys.F9,
             },
+            new HotkeyCommand((int)FormBrowse.Command.FocusGpgInfo, nameof(FormBrowse.Command.FocusGpgInfo))
+            {
+                KeyData = WinFormsShims.Keys.F10,
+            },
             new HotkeyCommand((int)FormBrowse.Command.FocusNextTab, nameof(FormBrowse.Command.FocusNextTab))
             {
                 KeyData = WinFormsShims.Keys.F7,
@@ -302,6 +310,12 @@ public sealed class HotkeyTests
             form.KeyPress(Key.F9, RawInputModifiers.None, PhysicalKey.F9, keySymbol: null);
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
             form.fileTree.FileViewer.IsKeyboardFocusWithin.Should().BeTrue();
+
+            form.RefreshGpgInfo(new GitRevision(ObjectId.Parse("0123456789012345678901234567890123456789")));
+            form.KeyPress(Key.F10, RawInputModifiers.None, PhysicalKey.F10, keySymbol: null);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.GpgInfoTabPage);
+            form.revisionGpgInfo1.IsKeyboardFocusWithin.Should().BeTrue();
         }
         finally
         {
