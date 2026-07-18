@@ -88,7 +88,7 @@ public partial class RepoObjectsTree : GitExtensionsControl
             => new StackPanel
             {
                 Orientation = Avalonia.Layout.Orientation.Horizontal,
-                Spacing = 3,
+                Spacing = 2,
                 Children =
                 {
                     new Image
@@ -114,10 +114,10 @@ public partial class RepoObjectsTree : GitExtensionsControl
 /// </summary>
 internal sealed class TreeConnectorControl : Control
 {
-    private const double ChevronCenter = 11;
+    private const double ChevronCenter = 10;
     private const double ChevronGapHalfHeight = 6;
     private const double ChevronGapHalfWidth = 6;
-    private const double Indent = 19;
+    private const double Indent = 18;
     private static readonly DashStyle DottedLine = new([1, 1], 0);
 
     internal TreeViewItem? Item => this.FindAncestorOfType<TreeViewItem>();

@@ -27,8 +27,9 @@
            items, and 22px dropdown rows. Fluent's defaults are intentionally roomier. -->
       <x:Double x:Key="MenuBarHeight">24</x:Double>
       <Thickness x:Key="MenuBarItemPadding">7,0</Thickness>
-      <Thickness x:Key="MenuFlyoutItemThemePaddingNarrow">8,2</Thickness>
+      <Thickness x:Key="MenuFlyoutItemThemePaddingNarrow">8,1</Thickness>
       <Thickness x:Key="MenuFlyoutScrollerMargin">0</Thickness>
+      <x:Double x:Key="MenuFlyoutThemeMinHeight">0</x:Double>
       <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
 
       <ResourceDictionary.ThemeDictionaries>
@@ -142,9 +143,22 @@
     <Setter Property="MinHeight" Value="23" />
   </Style>
   <Style Selector="ComboBox.gitextensions-toolbar-input">
-    <!-- Fluent's default 5/7px vertical padding clips a 16px text presenter when the
-         WinForms-shaped toolbar constrains the editable combo to 23px. -->
+    <!-- Fluent's default 5/7px padding and 32px arrow column are touch metrics. Keep the
+         editor vertically symmetric and use the compact ToolStripComboBox arrow segment. -->
     <Setter Property="Padding" Value="4,2,0,2" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input /template/ TextBox#PART_EditableTextBox">
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input /template/ Border#DropDownOverlay">
+    <Setter Property="Width" Value="15" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input /template/ PathIcon#DropDownGlyph">
+    <Setter Property="Width" Value="7" />
+    <Setter Property="Height" Value="5" />
+    <Setter Property="Margin" Value="0,0,5,0" />
   </Style>
   <Style Selector="Button.gitextensions-dialog-action">
     <Setter Property="MinWidth" Value="75" />
@@ -240,6 +254,7 @@
     <Setter Property="MinWidth" Value="23" />
     <Setter Property="Padding" Value="3,1" />
     <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
   <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_PrimaryButton">
@@ -391,6 +406,25 @@
 
   <Style Selector="MenuItem">
     <Setter Property="MinHeight" Value="22" />
+  </Style>
+  <Style Selector="ContextMenu">
+    <!-- ContextMenu owns a private 4px scroller inset in Fluent; setting only the shared
+         resource does not affect this presenter variant. -->
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="ContextMenu /template/ ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="Margin" Value="0" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter">
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter /template/ Border#LayoutRoot">
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter /template/ ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="Margin" Value="0" />
   </Style>
   <Style Selector="Menu">
     <Setter Property="Padding" Value="4,0" />
