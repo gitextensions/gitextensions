@@ -198,12 +198,15 @@ internal sealed class UIReporter : IBugReporter
     {
         string fileName = GetFileName(exception);
 
+        bool isMissingMethod = exception is MissingMethodException;
         TaskDialogPage page = new()
         {
             Icon = TaskDialogIcon.Warning,
             Caption = TranslatedStrings.FailedToLoadAnAssembly,
-            Heading = string.Format(TranslatedStrings.FailedToLoadFileOrAssemblyFormat, fileName),
-            Text = TranslatedStrings.FailedToLoadFileOrAssemblyText,
+            Heading = string.Format(
+                isMissingMethod ? TranslatedStrings.MethodNotFoundInAssemblyFormat : TranslatedStrings.FailedToLoadFileOrAssemblyFormat,
+                fileName),
+            Text = isMissingMethod ? TranslatedStrings.MethodNotFoundInAssemblyText : TranslatedStrings.FailedToLoadFileOrAssemblyText,
             AllowCancel = false,
             SizeToContent = true,
         };
@@ -285,6 +288,17 @@ internal sealed class UIReporter : IBugReporter
                 }
             }
         }
+        else if (exception is MissingMethodException missingMethodException)
+        {
+            // Combine ClassName and MemberName so the heading names the exact missing method.
+            // Both are populated by the runtime when a version-mismatch triggers the exception
+            // (e.g. ClassName="ICSharpCode.TextEditor.TextAreaControl", MemberName="get_VScrollBar").
+            string? className = missingMethodException.ClassName;
+            string? memberName = missingMethodException.MemberName;
+            fileName = (!string.IsNullOrEmpty(className) && !string.IsNullOrEmpty(memberName))
+                ? $"{className}.{memberName}"
+                : className ?? memberName ?? "unknown";
+        }
         else
         {
             fileName = "unknown";
@@ -361,6 +375,7 @@ internal sealed class UIReporter : IBugReporter
         static bool HasFailedToLoadAnAssembly(Exception exception)
            => (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
            || (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
+           || exception is MissingMethodException
            || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
     }
 
