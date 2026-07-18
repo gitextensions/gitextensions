@@ -21,7 +21,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed-blob viewing in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Blame, script options, context commands, custom tools, and remaining FileViewer modes retain their later owners."
+    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed blob/image viewing through FileViewer in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Blame, script options, context commands, and custom tools retain their later owners."
   },
   "src/app/GitUI/CommandsDialogs/RevisionDiffControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml",
@@ -443,13 +443,25 @@
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. The original Find/Find previous/Go-to-line command IDs, persisted hotkeys, reusable FindAndReplaceForm, modal FormGoToLine, and functional Copy/Find/Go-to-line context actions are present; Replace stays hidden while the viewer is read-only. F3 performs Find-next after a search; its original no-search Open-with-difftool fallback waits for the shared custom-tool integration. Encodings, blob modes, syntax/display options, full context actions, and line patching remain deferred."
+    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. The original Find/Find previous/Go-to-line command IDs, persisted hotkeys, reusable FindAndReplaceForm, modal FormGoToLine, and functional Copy/Find/Go-to-line context actions are present; Replace stays hidden while the viewer is read-only. The original cancellation/latest-load boundary now covers working-tree files and committed blobs; text, binary detection with bounded hex output, image preview/fallback, submodules, 5 MB deferred preview, file preambles, encoding selection/reload notification, and error display are functional. F3's no-search Open-with-difftool fallback waits for shared custom-tool integration. Syntax/display options, full context actions, and line patching remain deferred."
   },
   "src/app/GitUI/Editor/FileViewer.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "AvaloniaEdit surface with the currently functional original context-menu identities: Copy, Find, Replace (hidden while read-only), and Go to line. The remaining toolbar, image, encoding, diff-option, and line-patching chrome retains later owners."
+    "notes": "AvaloniaEdit surface with the functional original context-menu identities: Copy, Find, Replace (hidden while read-only), and Go to line; a centered no-upscale image surface; the original large-preview link identity; and a compact hover encoding selector without premature toolbar actions. Diff-option and line-patching chrome retain later owners."
+  },
+  "src/app/GitUI/Editor/ViewMode.cs": {
+    "twin": "src/app/GitUI/Editor/ViewMode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free view-mode enum linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Editor/ViewModeExtension.cs": {
+    "twin": "src/app/GitUI/Editor/ViewModeExtension.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free view-mode classification linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/Editor/FindAndReplaceForm.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FindAndReplaceForm.axaml.cs",
