@@ -107,11 +107,10 @@
             </MenuFlyout>
           </SplitButton.Flyout>
         </SplitButton>
-        <ComboBox x:Name="_NO_TRANSLATE_WorkingDir"
-                  Classes="gitextensions-toolbar-input"
-                  Width="180"
-                  Height="23"
-                  IsEditable="True" />
+        <compat:ToolbarComboBox x:Name="_NO_TRANSLATE_WorkingDir"
+                                Width="180"
+                                Height="23"
+                                IsEditable="True" />
         <compat:IconSplitButton x:Name="branchSelect"
                                 Classes="gitextensions-toolbar-button"
                                 Content="Branch"
