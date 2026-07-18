@@ -40,6 +40,14 @@ internal interface IBugReporter
     ///  These are transient errors typically caused by Windows updates.
     /// </remarks>
     bool ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating);
+
+    /// <summary>
+    ///  Reports a plugin incompatibility error caused by a type mismatch between the plugin
+    ///  and the current version of Git Extensions.
+    /// </summary>
+    /// <param name="exception">The <see cref="TypeLoadException"/> to evaluate and potentially report.</param>
+    /// <returns><see langword="true" /> if the exception was handled; otherwise, <see langword="false" />.</returns>
+    bool ReportIncompatiblePlugin(TypeLoadException exception);
 }
 
 /// <summary>
@@ -194,6 +202,33 @@ internal sealed class UIReporter : IBugReporter
         }
     }
 
+    private static TaskDialogPage CreateIncompatiblePluginReport(TypeLoadException exception)
+    {
+        string pluginName = GetPluginAssemblyName(exception);
+
+        TaskDialogPage page = new()
+        {
+            Icon = TaskDialogIcon.Warning,
+            Caption = TranslatedStrings.IncompatiblePlugin,
+            Heading = string.Format(TranslatedStrings.IncompatiblePluginHeadingFormat, pluginName),
+            Text = TranslatedStrings.IncompatiblePluginText,
+            AllowCancel = true,
+            SizeToContent = true,
+        };
+
+        page.Buttons.Add(TaskDialogButton.OK);
+
+        page.Expander = new TaskDialogExpander
+        {
+            CollapsedButtonText = TranslatedStrings.SeeErrorMessage,
+            ExpandedButtonText = TranslatedStrings.HideErrorMessage,
+            Position = TaskDialogExpanderPosition.AfterFootnote,
+            Text = exception.Message,
+        };
+
+        return page;
+    }
+
     private static TaskDialogPage CreateFailedToLoadAnAssemblyReport(Exception exception, bool isTerminating)
     {
         string fileName = GetFileName(exception);
@@ -293,6 +328,28 @@ internal sealed class UIReporter : IBugReporter
         return fileName;
     }
 
+    private static string GetPluginAssemblyName(TypeLoadException exception)
+    {
+        // TypeLoadException message format:
+        // "Could not load type '...' from assembly 'AssemblyName, Version=...' due to value type mismatch."
+        string message = exception.Message;
+        const string FromAssembly = "from assembly '";
+        int startIndex = message.IndexOf(FromAssembly, StringComparison.Ordinal);
+        if (startIndex < 0)
+        {
+            return exception.TypeName ?? "unknown";
+        }
+
+        startIndex += FromAssembly.Length;
+        int commaIndex = message.IndexOf(',', startIndex);
+        int quoteIndex = message.IndexOf('\'', startIndex);
+        int endIndex = commaIndex >= 0 && quoteIndex >= 0 ? Math.Min(commaIndex, quoteIndex)
+            : commaIndex >= 0 ? commaIndex
+            : quoteIndex >= 0 ? quoteIndex
+            : message.Length;
+        return message[startIndex..endIndex];
+    }
+
     // Determines if the assembly name is a .NET framework assembly.
     // .NET framework assemblies are typically affected by Patch Tuesday updates,
     // causing transient FileNotFoundException errors that are resolved by restarting the application.
@@ -341,6 +398,7 @@ internal sealed class UIReporter : IBugReporter
     }
 
     /// <inheritdoc />
+    /// <inheritdoc />
     public bool ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating)
     {
         if (!HasFailedToLoadAnAssembly(exception))
@@ -362,6 +420,21 @@ internal sealed class UIReporter : IBugReporter
            => (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
            || (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
            || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
+    }
+
+    /// <inheritdoc />
+    public bool ReportIncompatiblePlugin(TypeLoadException exception)
+    {
+        if (!IsValueTypeMismatch(exception))
+        {
+            return false;
+        }
+
+        TaskDialog.ShowDialog(OwnerFormHandle, CreateIncompatiblePluginReport(exception));
+        return true;
+
+        static bool IsValueTypeMismatch(TypeLoadException ex)
+            => ex.Message.Contains("due to value type mismatch", StringComparison.Ordinal);
     }
 
     private static void ShowGitRepo(Form? ownerForm, string? workingDir)
@@ -397,7 +470,9 @@ internal sealed class UIReporter : IBugReporter
         internal static TaskDialogPage CreateDubiousOwnershipReport(ExternalOperationException exception) => UIReporter.CreateDubiousOwnershipReport(exception);
         internal static TaskDialogPage CreateErrorReport(Exception exception, string rootError, StringBuilder text, OperationInfo operationInfo) => UIReporter.CreateErrorReport(exception, rootError, text, operationInfo);
         internal static TaskDialogPage CreateFailedToLoadAnAssemblyReport(Exception exception, bool isTerminating) => UIReporter.CreateFailedToLoadAnAssemblyReport(exception, isTerminating);
+        internal static TaskDialogPage CreateIncompatiblePluginReport(TypeLoadException exception) => UIReporter.CreateIncompatiblePluginReport(exception);
         internal static string GetFileName(Exception exception) => UIReporter.GetFileName(exception);
+        internal static string GetPluginAssemblyName(TypeLoadException exception) => UIReporter.GetPluginAssemblyName(exception);
         internal static bool IsDotNetFrameworkAssembly(string assemblyName) => UIReporter.IsDotNetFrameworkAssembly(assemblyName);
         internal static bool IsVCRuntimeDll(string dllName) => UIReporter.IsVCRuntimeDll(dllName);
     }
