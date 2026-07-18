@@ -91,8 +91,9 @@ public class DiffViewerLineNumberControl : AbstractMargin
         IBrush selectedBrush = GetBrush("GitExtensionsDiffLineNumberSelectedBrush", Colors.Black);
         context.FillRectangle(background, new Avalonia.Rect(Bounds.Size));
 
-        double numbersWidth = Bounds.Width - TextHorizontalMargin;
-        double leftWidth = _showLeftColumn ? TextHorizontalMargin + (numbersWidth / 2) : 0;
+        (double backgroundSplit, double rightNumberX) = _showLeftColumn
+            ? GetTwoColumnGeometry(Bounds.Width)
+            : (0, TextHorizontalMargin);
         foreach (VisualLine visualLine in textView.VisualLines)
         {
             int documentLine = visualLine.FirstDocumentLine.LineNumber;
@@ -103,7 +104,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
             double y = visualLine.VisualTop - textView.ScrollOffset.Y;
             Avalonia.Rect row = new(0, y, Bounds.Width, visualLine.Height);
-            DrawSemanticBackground(context, row, leftWidth, info);
+            DrawSemanticBackground(context, row, backgroundSplit, info);
 
             bool current = documentLine == _editor.TextArea.Caret.Line;
             IBrush textBrush = current ? selectedBrush : numberBrush;
@@ -114,9 +115,15 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
             if (info.RightLineNumber != DiffLineInfo.NotApplicableLineNum)
             {
-                DrawNumber(context, info.RightLineNumber, leftWidth, y, current, textBrush);
+                DrawNumber(context, info.RightLineNumber, rightNumberX, y, current, textBrush);
             }
         }
+    }
+
+    internal static (double BackgroundSplit, double RightNumberX) GetTwoColumnGeometry(double width)
+    {
+        double numbersWidth = width - TextHorizontalMargin;
+        return (width / 2, TextHorizontalMargin + (numbersWidth / 2));
     }
 
     private void DrawSemanticBackground(DrawingContext context, Avalonia.Rect row, double leftWidth, DiffLineInfo info)

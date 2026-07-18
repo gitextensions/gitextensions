@@ -284,7 +284,19 @@ public sealed class VisualParityTests
                         .Single();
 
                     input.Bounds.Height.Should().Be(23);
+                    input.Bounds.Y.Should().Be(1);
                     textViewport.Bounds.Height.Should().BeGreaterThanOrEqualTo(textPresenter.Bounds.Height);
+                    Point presenterPosition = textPresenter.TranslatePoint(default, input)!.Value;
+                    double topInset = presenterPosition.Y;
+                    double bottomInset = input.Bounds.Height - presenterPosition.Y - textPresenter.Bounds.Height;
+                    Math.Abs(topInset - bottomInset).Should().BeLessThanOrEqualTo(1);
+
+                    Grid templateGrid = editor.GetVisualAncestors().OfType<Grid>().First();
+                    templateGrid.ColumnDefinitions[1].Width.Should().Be(new GridLength(16));
+                    PathIcon dropDownGlyph = input.GetVisualDescendants()
+                        .OfType<PathIcon>()
+                        .Single(icon => icon.Name == "DropDownGlyph");
+                    dropDownGlyph.Bounds.Size.Should().Be(new Size(7, 5));
                 }
 
                 SplitButton[] splitButtons = form.GetVisualDescendants()
@@ -334,6 +346,91 @@ public sealed class VisualParityTests
             {
                 form.Close();
             }
+        }
+    }
+
+    [AvaloniaTest]
+    public void Desktop_menus_should_not_reserve_touch_padding_or_empty_rows()
+    {
+        Button target = new() { Content = "Open" };
+        Window window = new()
+        {
+            Width = 320,
+            Height = 160,
+            Content = target,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            MenuItem nestedContextItem = new() { Header = "Nested command" };
+            MenuItem contextItem = new() { Header = "Context command", Items = { nestedContextItem } };
+            ContextMenu contextMenu = new() { Items = { contextItem } };
+            contextMenu.Open(target);
+            Dispatcher.UIThread.RunJobs();
+            AssertSingleItemPopupFits(contextItem);
+            contextMenu.GetVisualDescendants()
+                .OfType<ItemsPresenter>()
+                .Single(presenter => presenter.Name == "PART_ItemsPresenter")
+                .Margin.Should().Be(new Thickness(0));
+            contextItem.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            AssertSingleItemPopupFits(nestedContextItem);
+            contextMenu.Close();
+
+            MenuItem flyoutItem = new() { Header = "Flyout command" };
+            MenuFlyout flyout = new() { Items = { flyoutItem } };
+            flyout.ShowAt(target);
+            Dispatcher.UIThread.RunJobs();
+            AssertSingleItemPopupFits(flyoutItem);
+            TopLevel flyoutRoot = TopLevel.GetTopLevel(flyoutItem)!;
+            MenuFlyoutPresenter flyoutPresenter = flyoutRoot.GetVisualDescendants()
+                .Prepend(flyoutRoot)
+                .OfType<MenuFlyoutPresenter>()
+                .Single();
+            flyoutPresenter.MinHeight.Should().Be(0);
+            flyout.Hide();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Top_menu_should_keep_its_size_and_join_its_popup()
+    {
+        MenuItem child = new() { Header = "Child command" };
+        MenuItem parent = new() { Header = "Commands", Items = { child } };
+        Menu menu = new() { Items = { parent } };
+        Window window = new()
+        {
+            Width = 320,
+            Height = 160,
+            Content = menu,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Rect closedBounds = parent.Bounds;
+            Border layoutRoot = parent.GetVisualDescendants()
+                .OfType<Border>()
+                .Single(border => border.Name == "PART_LayoutRoot");
+
+            parent.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+
+            parent.Bounds.Should().Be(closedBounds);
+            AssertSingleItemPopupFits(child);
+            Point layoutPosition = layoutRoot.TranslatePoint(default, parent)!.Value;
+            layoutPosition.Y.Should().Be(0);
+            layoutRoot.Bounds.Height.Should().Be(parent.Bounds.Height);
+        }
+        finally
+        {
+            window.Close();
         }
     }
 
@@ -512,9 +609,17 @@ public sealed class VisualParityTests
             double childIconX = childIcon.TranslatePoint(default, children[0])!.Value.X;
             double childTextX = childText.TranslatePoint(default, children[0])!.Value.X;
 
-            parentIconX.Should().BeApproximately(22, 0.1);
+            ToggleButton parentChevron = branches.GetVisualDescendants()
+                .OfType<ToggleButton>()
+                .Single(toggle => toggle.Name == "PART_ExpandCollapseChevron"
+                    && toggle.FindAncestorOfType<TreeViewItem>() == branches);
+            Point parentChevronPosition = parentChevron.TranslatePoint(default, branches)!.Value;
+            parentChevronPosition.X.Should().Be(4);
+            parentChevron.Bounds.Size.Should().Be(new Size(12, 12));
+            parentIconX.Should().BeApproximately(20, 0.1);
+            (parentIconX - parentChevronPosition.X - parentChevron.Bounds.Width).Should().Be(4);
             childIconX.Should().Be(parentTextX);
-            childTextX.Should().Be(parentTextX + 19);
+            childTextX.Should().Be(parentTextX + 18);
             window.CaptureRenderedFrame().Should().NotBeNull();
         }
         finally
@@ -527,12 +632,12 @@ public sealed class VisualParityTests
     public void RepoObjectsTree_connectors_should_leave_the_chevron_rectangle_clear()
     {
         (Point Start, Point End)[] lines =
-        [.. TreeConnectorControl.GetCurrentItemLines(x: 11, top: 0, bottom: 18, middle: 9, hasChevron: true)];
+        [.. TreeConnectorControl.GetCurrentItemLines(x: 10, top: 0, bottom: 18, middle: 9, hasChevron: true)];
 
         lines.Should().Equal(
-            (new Point(11, 0), new Point(11, 3)),
-            (new Point(11, 15), new Point(11, 18)),
-            (new Point(17, 9), new Point(22, 9)));
+            (new Point(10, 0), new Point(10, 3)),
+            (new Point(10, 15), new Point(10, 18)),
+            (new Point(16, 9), new Point(20, 9)));
     }
 
     [AvaloniaTest]
@@ -726,6 +831,27 @@ public sealed class VisualParityTests
         {
             window.Close();
         }
+    }
+
+    private static void AssertSingleItemPopupFits(MenuItem item)
+    {
+        Visual[] ancestors = [.. item.GetVisualAncestors()];
+        Control? popupSurface = ancestors.OfType<ContextMenu>().FirstOrDefault();
+        popupSurface ??= ancestors.OfType<MenuFlyoutPresenter>().FirstOrDefault();
+        popupSurface ??= ancestors.OfType<Border>().LastOrDefault();
+        if (popupSurface is null)
+        {
+            throw new InvalidOperationException("The popup chrome was not created.");
+        }
+
+        Point itemPosition = item.TranslatePoint(default, popupSurface)
+            ?? throw new InvalidOperationException("The menu item position was not available.");
+        double topInset = itemPosition.Y;
+        double bottomInset = popupSurface.Bounds.Height - itemPosition.Y - item.Bounds.Height;
+
+        item.Bounds.Height.Should().Be(22);
+        topInset.Should().BeLessThanOrEqualTo(1);
+        bottomInset.Should().BeLessThanOrEqualTo(1);
     }
 
     private static void AssertRefLabelRendering(

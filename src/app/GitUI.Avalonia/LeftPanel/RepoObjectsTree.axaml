@@ -6,8 +6,8 @@
   <UserControl.Resources>
     <!-- Match NativeTreeView: the root icon follows the chevron immediately and each
          child icon begins at its parent's text column. -->
-    <x:Double x:Key="TreeViewItemIndent">19</x:Double>
-    <Thickness x:Key="TreeViewItemExpandCollapseChevronMargin">5,0</Thickness>
+    <x:Double x:Key="TreeViewItemIndent">18</x:Double>
+    <Thickness x:Key="TreeViewItemExpandCollapseChevronMargin">4,0</Thickness>
   </UserControl.Resources>
   <UserControl.Styles>
     <!-- Fluent deliberately omits hierarchy lines. Keep its selection states and PART
