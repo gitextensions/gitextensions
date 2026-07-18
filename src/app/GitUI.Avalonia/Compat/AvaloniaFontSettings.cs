@@ -12,6 +12,20 @@ public static class AvaloniaFontSettings
 {
     private const double DeviceIndependentPixelsPerPoint = 96d / 72d;
     private const float DefaultUiFontSizeInPoints = 9F;
+    private const string WinFormsDefaultMonospaceFontName = "Consolas";
+
+    /// <summary>Replaces the Windows design-time monospace defaults before any view is created.</summary>
+    public static void InstallPlatformDefaults(Application application)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        FontFamily fontFamily = new(GetPlatformMonospaceFontName());
+        application.Resources["GitExtensionsFixedWidthFontFamily"] = fontFamily;
+        application.Resources["GitExtensionsMonospaceFontFamily"] = fontFamily;
+    }
 
     /// <summary>
     ///  Makes the platform's Avalonia font family the non-Windows equivalent of
@@ -40,9 +54,21 @@ public static class AvaloniaFontSettings
 
     private static void ApplyFont(Application application, string resourcePrefix, WinFormsShims.Font font)
     {
-        application.Resources[$"{resourcePrefix}FontFamily"] = new FontFamily(font.Name);
+        string fontFamilyName = !OperatingSystem.IsWindows()
+            && IsMonospaceResource(resourcePrefix)
+            && string.Equals(font.Name, WinFormsDefaultMonospaceFontName, StringComparison.OrdinalIgnoreCase)
+                ? GetPlatformMonospaceFontName()
+                : font.Name;
+
+        application.Resources[$"{resourcePrefix}FontFamily"] = new FontFamily(fontFamilyName);
         application.Resources[$"{resourcePrefix}FontSize"] = font.Size * DeviceIndependentPixelsPerPoint;
         application.Resources[$"{resourcePrefix}FontStyle"] = font.Italic ? FontStyle.Italic : FontStyle.Normal;
         application.Resources[$"{resourcePrefix}FontWeight"] = font.Bold ? FontWeight.Bold : FontWeight.Normal;
     }
+
+    private static bool IsMonospaceResource(string resourcePrefix)
+        => resourcePrefix is "GitExtensionsFixedWidth" or "GitExtensionsMonospace";
+
+    private static string GetPlatformMonospaceFontName()
+        => OperatingSystem.IsMacOS() ? "Menlo" : "DejaVu Sans Mono";
 }
