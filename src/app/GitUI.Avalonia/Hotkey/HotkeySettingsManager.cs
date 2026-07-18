@@ -54,6 +54,7 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
                 Hk(FormBrowse.Command.FocusCommitInfo, WinFormsShims.Keys.Control | WinFormsShims.Keys.D2),
                 Hk(FormBrowse.Command.FocusDiff, WinFormsShims.Keys.Control | WinFormsShims.Keys.D3),
                 Hk(FormBrowse.Command.FocusFileTree, WinFormsShims.Keys.Control | WinFormsShims.Keys.D4),
+                Hk(FormBrowse.Command.FocusGpgInfo, WinFormsShims.Keys.Control | WinFormsShims.Keys.D5),
                 Hk(FormBrowse.Command.Refresh, WinFormsShims.Keys.F5),
                 Hk(FormBrowse.Command.Commit, WinFormsShims.Keys.Control | WinFormsShims.Keys.Space),
                 Hk(FormBrowse.Command.CheckoutBranch, WinFormsShims.Keys.Control | WinFormsShims.Keys.OemPeriod),

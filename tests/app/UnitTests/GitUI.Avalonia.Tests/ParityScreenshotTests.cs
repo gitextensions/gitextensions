@@ -14,6 +14,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Gpg;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -370,6 +371,16 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task SeedStandaloneControlAsync(Control root, CaptureContext context)
     {
+        if (root is RevisionGpgInfoControl revisionGpgInfo)
+        {
+            revisionGpgInfo.DisplayGpgInfo(new GpgInfo(
+                CommitStatus.GoodSignature,
+                "Good signature from Visual Parity <visual@example.com>\nPrimary key fingerprint: 0123 4567 89AB CDEF",
+                TagStatus.OneGood,
+                "Good signature on tag v1.0.0\nTagger: Visual Parity <visual@example.com>"));
+            return;
+        }
+
         if (root is RevisionDiffControl revisionFileTree)
         {
             IReadOnlyList<GitItemStatus> treeItems = context.Module.GetTreeFiles(context.HeadRevision.ObjectId, full: true);
