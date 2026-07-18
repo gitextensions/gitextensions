@@ -1,7 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:gitui="clr-namespace:GitUI"
-        xmlns:editor="clr-namespace:GitUI.Editor"
         xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
         xmlns:commandsDialogs="using:GitUI.CommandsDialogs"
         xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
@@ -215,15 +214,13 @@
                    Classes="gitextensions-workspace-tab"
                    Header="Diff"
                    Icon="{x:Static properties:Images.Diff}">
-            <Grid x:Name="revisionDiff" ColumnDefinitions="380,0,*">
-              <Border Grid.Column="0" Classes="gitextensions-section">
-                <gitui:FileStatusList x:Name="fileStatusList" />
-              </Border>
-              <GridSplitter x:Name="revisionDiffSplitter" Grid.Column="1" ResizeDirection="Columns" />
-              <Border Grid.Column="2" Classes="gitextensions-section">
-                <editor:FileViewer x:Name="fileViewer" />
-              </Border>
-            </Grid>
+            <commandsDialogs:RevisionDiffControl x:Name="revisionDiff" />
+          </TabItem>
+          <TabItem x:Name="TreeTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="File tree"
+                   Icon="{x:Static properties:Images.FileTree}">
+            <commandsDialogs:RevisionDiffControl x:Name="fileTree" />
           </TabItem>
         </commandsDialogs:FullBleedTabControl>
       </Grid>
