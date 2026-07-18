@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.Editor.FormGoToLine"
+        Title="Go to line"
+        Width="237"
+        Height="100"
+        CanResize="False"
+        CanMinimize="False"
+        CanMaximize="False"
+        WindowStartupLocation="CenterOwner">
+  <Canvas>
+    <TextBlock x:Name="lineLabel"
+               Canvas.Left="12"
+               Canvas.Top="6"
+               Text="Line number" />
+    <NumericUpDown x:Name="_NO_TRANSLATE_LineNumberUpDown"
+                   Canvas.Left="15"
+                   Canvas.Top="25"
+                   Width="210"
+                   Height="32"
+                   Minimum="1"
+                   Value="1" />
+    <Button x:Name="okBtn"
+            Classes="gitextensions-dialog-action"
+            Canvas.Left="40"
+            Canvas.Top="65"
+            Width="75"
+            Height="25"
+            Content="OK" />
+    <Button x:Name="cancelBtn"
+            Classes="gitextensions-dialog-action"
+            Canvas.Left="121"
+            Canvas.Top="65"
+            Width="75"
+            Height="25"
+            Content="Cancel" />
+  </Canvas>
+</Window>

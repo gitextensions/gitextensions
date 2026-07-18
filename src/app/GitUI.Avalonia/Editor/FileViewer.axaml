@@ -7,5 +7,24 @@
                            IsReadOnly="True"
                            ShowLineNumbers="True"
                            HorizontalScrollBarVisibility="Auto"
-                           VerticalScrollBarVisibility="Auto" />
+                           VerticalScrollBarVisibility="Auto">
+    <avaloniaEdit:TextEditor.ContextMenu>
+      <ContextMenu x:Name="contextMenu">
+        <MenuItem x:Name="copyToolStripMenuItem"
+                  Header="_Copy"
+                  InputGesture="Ctrl+C" />
+        <Separator x:Name="toolStripSeparator1" />
+        <MenuItem x:Name="findToolStripMenuItem"
+                  Header="_Find..."
+                  InputGesture="Ctrl+F" />
+        <MenuItem x:Name="replaceToolStripMenuItem"
+                  Header="_Replace..."
+                  InputGesture="Ctrl+H"
+                  IsVisible="False" />
+        <MenuItem x:Name="goToLineToolStripMenuItem"
+                  Header="_Go to line"
+                  InputGesture="Ctrl+G" />
+      </ContextMenu>
+    </avaloniaEdit:TextEditor.ContextMenu>
+  </avaloniaEdit:TextEditor>
 </UserControl>

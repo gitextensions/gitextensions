@@ -1,6 +1,7 @@
 using System.Xml.Serialization;
 using GitCommands;
 using GitUI.CommandsDialogs;
+using GitUI.Editor;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -130,6 +131,13 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
                 Hk(FormStash.Command.NextStash, WinFormsShims.Keys.Control | WinFormsShims.Keys.N),
                 Hk(FormStash.Command.PreviousStash, WinFormsShims.Keys.Control | WinFormsShims.Keys.P),
                 Hk(FormStash.Command.Refresh, WinFormsShims.Keys.F5)),
+            new HotkeySettings(
+                FileViewer.HotkeySettingsName,
+                Hk(FileViewer.Command.Find, WinFormsShims.Keys.Control | WinFormsShims.Keys.F),
+                Hk(FileViewer.Command.Replace, WinFormsShims.Keys.Control | WinFormsShims.Keys.H),
+                Hk(FileViewer.Command.FindNextOrOpenWithDifftool, WinFormsShims.Keys.F3),
+                Hk(FileViewer.Command.FindPrevious, WinFormsShims.Keys.Shift | WinFormsShims.Keys.F3),
+                Hk(FileViewer.Command.GoToLine, WinFormsShims.Keys.Control | WinFormsShims.Keys.G)),
         ];
     }
 
