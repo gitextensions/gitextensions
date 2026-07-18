@@ -407,9 +407,8 @@ public sealed partial class ParityScreenshotTests
                 [new FileStatusWithDescription(null, context.HeadRevision, "File tree", treeItems)],
                 isFileTreeMode: true);
             revisionFileTree.FileStatusList.SelectFileOrFolder(RelativePath.From(AppSourcePath));
-            GitItemStatus selectedItem = revisionFileTree.FileStatusList.SelectedItem!;
-            string text = context.Module.GetFileText(selectedItem.TreeId, context.Module.FilesEncoding, stripAnsiEscapeCodes: false) ?? string.Empty;
-            await revisionFileTree.FileViewer.ViewTextAsync(selectedItem.Name, text);
+            FileStatusItem fileStatusItem = revisionFileTree.FileStatusList.SelectedFileStatusItem!;
+            await revisionFileTree.FileViewer.ViewGitItemAsync(fileStatusItem);
             return;
         }
 

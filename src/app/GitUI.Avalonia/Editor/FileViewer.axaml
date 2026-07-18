@@ -2,29 +2,61 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
              x:Class="GitUI.Editor.FileViewer">
-  <avaloniaEdit:TextEditor x:Name="TextEditor"
-                           Classes="gitextensions-diff-editor"
-                           IsReadOnly="True"
-                           ShowLineNumbers="True"
-                           HorizontalScrollBarVisibility="Auto"
-                           VerticalScrollBarVisibility="Auto">
-    <avaloniaEdit:TextEditor.ContextMenu>
-      <ContextMenu x:Name="contextMenu">
-        <MenuItem x:Name="copyToolStripMenuItem"
-                  Header="_Copy"
-                  InputGesture="Ctrl+C" />
-        <Separator x:Name="toolStripSeparator1" />
-        <MenuItem x:Name="findToolStripMenuItem"
-                  Header="_Find..."
-                  InputGesture="Ctrl+F" />
-        <MenuItem x:Name="replaceToolStripMenuItem"
-                  Header="_Replace..."
-                  InputGesture="Ctrl+H"
-                  IsVisible="False" />
-        <MenuItem x:Name="goToLineToolStripMenuItem"
-                  Header="_Go to line"
-                  InputGesture="Ctrl+G" />
-      </ContextMenu>
-    </avaloniaEdit:TextEditor.ContextMenu>
-  </avaloniaEdit:TextEditor>
+  <Grid>
+    <avaloniaEdit:TextEditor x:Name="TextEditor"
+                             Classes="gitextensions-diff-editor"
+                             IsReadOnly="True"
+                             ShowLineNumbers="True"
+                             HorizontalScrollBarVisibility="Auto"
+                             VerticalScrollBarVisibility="Auto">
+      <avaloniaEdit:TextEditor.ContextMenu>
+        <ContextMenu x:Name="contextMenu">
+          <MenuItem x:Name="copyToolStripMenuItem"
+                    Header="_Copy"
+                    InputGesture="Ctrl+C" />
+          <Separator x:Name="toolStripSeparator1" />
+          <MenuItem x:Name="findToolStripMenuItem"
+                    Header="_Find..."
+                    InputGesture="Ctrl+F" />
+          <MenuItem x:Name="replaceToolStripMenuItem"
+                    Header="_Replace..."
+                    InputGesture="Ctrl+H"
+                    IsVisible="False" />
+          <MenuItem x:Name="goToLineToolStripMenuItem"
+                    Header="_Go to line"
+                    InputGesture="Ctrl+G" />
+        </ContextMenu>
+      </avaloniaEdit:TextEditor.ContextMenu>
+    </avaloniaEdit:TextEditor>
+
+    <Border x:Name="PictureBox"
+            IsVisible="False"
+            Background="{DynamicResource ThemeBackgroundBrush}">
+      <Image x:Name="ImagePreview"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center"
+             Stretch="Uniform"
+             StretchDirection="DownOnly" />
+    </Border>
+
+    <HyperlinkButton x:Name="_NO_TRANSLATE_lblShowPreview"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     Margin="43,23,0,0"
+                     Padding="0"
+                     IsVisible="False"
+                     Content="This file is over 5 MB. Click to show preview" />
+
+    <Border x:Name="fileviewerToolbar"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Margin="0,0,40,0"
+            IsVisible="False"
+            Background="{DynamicResource ThemeBackgroundBrush}">
+      <ComboBox x:Name="encodingToolStripComboBox"
+                Classes="gitextensions-toolbar-input"
+                Width="140"
+                Height="23" />
+    </Border>
+  </Grid>
 </UserControl>
