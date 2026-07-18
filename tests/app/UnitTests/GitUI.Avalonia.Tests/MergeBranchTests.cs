@@ -75,7 +75,7 @@ public sealed class MergeBranchTests
         AppSettings.DontCommitMerge = _dontCommitMerge;
         AppSettings.DontShowHelpImages = _dontShowHelpImages;
         _serviceContainer.Dispose();
-        Directory.Delete(_workingDirectory, recursive: true);
+        TestDirectory.Delete(_workingDirectory);
     }
 
     [AvaloniaTest]

@@ -10,6 +10,11 @@ namespace GitUI.Compat;
 /// </summary>
 public class IconButton : Button
 {
+    public IconButton()
+    {
+        Classes.Add("gitextensions-icon-button");
+    }
+
     public static readonly StyledProperty<IImage?> IconProperty =
         AvaloniaProperty.Register<IconButton, IImage?>(nameof(Icon));
 
@@ -18,6 +23,8 @@ public class IconButton : Button
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
+
+    protected override Type StyleKeyOverride => typeof(Button);
 }
 
 /// <summary>
@@ -26,6 +33,11 @@ public class IconButton : Button
 /// </summary>
 public class IconSplitButton : SplitButton
 {
+    public IconSplitButton()
+    {
+        Classes.Add("gitextensions-icon-split-button");
+    }
+
     public static readonly StyledProperty<IImage?> IconProperty =
         AvaloniaProperty.Register<IconSplitButton, IImage?>(nameof(Icon));
 
@@ -34,6 +46,8 @@ public class IconSplitButton : SplitButton
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
+
+    protected override Type StyleKeyOverride => typeof(SplitButton);
 }
 
 /// <summary>
@@ -42,6 +56,11 @@ public class IconSplitButton : SplitButton
 /// </summary>
 public class IconDropDownButton : DropDownButton
 {
+    public IconDropDownButton()
+    {
+        Classes.Add("gitextensions-icon-drop-down-button");
+    }
+
     public static readonly StyledProperty<IImage?> IconProperty =
         AvaloniaProperty.Register<IconDropDownButton, IImage?>(nameof(Icon));
 
@@ -50,6 +69,8 @@ public class IconDropDownButton : DropDownButton
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
+
+    protected override Type StyleKeyOverride => typeof(DropDownButton);
 }
 
 /// <summary>
@@ -58,6 +79,11 @@ public class IconDropDownButton : DropDownButton
 /// </summary>
 public class IconRadioButton : RadioButton
 {
+    public IconRadioButton()
+    {
+        Classes.Add("gitextensions-icon-radio-button");
+    }
+
     public static readonly StyledProperty<IImage?> IconProperty =
         AvaloniaProperty.Register<IconRadioButton, IImage?>(nameof(Icon));
 
@@ -66,4 +92,6 @@ public class IconRadioButton : RadioButton
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
+
+    protected override Type StyleKeyOverride => typeof(RadioButton);
 }

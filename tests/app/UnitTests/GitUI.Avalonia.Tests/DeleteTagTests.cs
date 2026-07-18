@@ -200,7 +200,7 @@ public sealed class DeleteTagTests
         }
         finally
         {
-            Directory.Delete(workingDirectory, recursive: true);
+            TestDirectory.Delete(workingDirectory);
         }
     }
 

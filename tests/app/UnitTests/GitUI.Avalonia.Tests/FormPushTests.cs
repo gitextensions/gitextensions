@@ -54,10 +54,10 @@ public sealed class FormPushTests
     public void TearDown()
     {
         _serviceContainer.Dispose();
-        Directory.Delete(_workingDirectory, recursive: true);
+        TestDirectory.Delete(_workingDirectory);
         if (Directory.Exists(_bareRemoteDirectory))
         {
-            Directory.Delete(_bareRemoteDirectory, recursive: true);
+            TestDirectory.Delete(_bareRemoteDirectory);
         }
     }
 
