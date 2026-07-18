@@ -32,7 +32,7 @@ public enum RevisionGraphDrawStyle
     HighlightSelected
 }
 
-public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, IRevisionGridFilter
+public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, IRevisionGridFilter, IRevisionGridUpdate
 {
     public static readonly string HotkeySettingsName = "RevisionGrid";
 
@@ -392,6 +392,9 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         lstRevisions.ScrollIntoView(revision);
         return true;
     }
+
+    bool IRevisionGridUpdate.SetSelectedRevision(ObjectId commitId, bool toggleSelection, bool updateNavigationHistory)
+        => SetSelectedRevision(commitId);
 
     #region IRevisionGridInfo
 

@@ -15,7 +15,19 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Functional repository shell: five browse panes plus the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer and terminal; it wraps rather than hiding commands at narrow widths. The original CommitInfoTabControl identities host the selection-driven Commit and Diff workflows; ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. Settings, scripts/plugins and worktrees/submodules remain absent until their owning phases. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The revision grid receives the shared ahead/behind provider and quick filter state. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+    "notes": "Functional repository shell: five browse panes plus the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer and terminal; it wraps rather than hiding commands at narrow widths. The original CommitInfoTabControl identities host the selection-driven Commit, Diff, and lazily loaded File tree workflows; ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. Settings, scripts/plugins and worktrees/submodules remain absent until their owning phases. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+  },
+  "src/app/GitUI/CommandsDialogs/RevisionDiffControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed-blob viewing in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Blame, script options, context commands, custom tools, and remaining FileViewer modes retain their later owners."
+  },
+  "src/app/GitUI/CommandsDialogs/RevisionDiffControl.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The original DiffSplitContainer, DiffFiles, and DiffText identities map to a bordered two-pane Avalonia grid with an invisible six-DIP splitter hit target. BlameControl remains deferred."
   },
   "src/app/GitUI/CommandsDialogs/FullBleedTabControl.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FullBleedTabControl.cs",
@@ -330,7 +342,25 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "List with the original cached status images for added/removed/modified/renamed/copied/unmerged/range-diff and basic submodule entries, exposed statuses, configurable multi-selection, revision-aware FileStatusItem entries, worktree/index grouping, repository refresh binding, selection navigation, and WinForms-shaped selection/double-click events. Detailed asynchronous submodule variants, filtering, staging interactions, and context menus remain deferred."
+    "notes": "List with the original cached status images for added/removed/modified/renamed/copied/unmerged/range-diff and basic submodule entries, exposed statuses, configurable multi-selection, revision-aware FileStatusItem entries, worktree/index grouping, repository refresh binding, selection navigation, and WinForms-shaped selection/double-click events. File-tree mode builds an ordinal, folders-first hierarchy from POSIX paths, expands followed-file ancestors, selects files or folders by RelativePath, and preserves the same status/icon source. Detailed asynchronous submodule variants, interactive filtering, staging interactions, and context menus remain deferred."
+  },
+  "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs": {
+    "twin": "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged; supplies both ordinary revision groups and GetTreeFiles-backed file-tree data."
+  },
+  "src/app/GitUI/UserControls/FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs": {
+    "twin": "src/app/GitUI/UserControls/FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free calculator state linked unchanged."
+  },
+  "src/app/GitUI/UserControls/FileStatusWithDescription.cs": {
+    "twin": "src/app/GitUI/UserControls/FileStatusWithDescription.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free grouped-status value linked unchanged."
   },
   "src/app/GitUI/UserControls/GotoUserManualControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/GotoUserManualControl.axaml.cs",
@@ -457,6 +487,12 @@
     "status": "parity",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Framework-free source linked unchanged into GitUI.Avalonia; implemented by the twin RevisionGridControl (DescribeRevision without ambiguous-ref disambiguation; parents-rewritten detection from the path filter)."
+  },
+  "src/app/GitUI/CommandsDialogs/IRevisionGridUpdate.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/IRevisionGridUpdate.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged; the Avalonia RevisionGridControl implements the selection member used by RevisionDiffControl."
   },
   "src/app/GitUI/CommandsDialogs/IRevisionGridFileUpdate.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/IRevisionGridFileUpdate.cs",

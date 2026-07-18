@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
@@ -300,6 +301,17 @@ public partial class FileViewer : GitModuleControl
     ///  Scrolls to the last line.
     /// </summary>
     public void ScrollToBottom() => TextEditor.ScrollToEnd();
+
+    /// <summary>
+    ///  Focuses the text editor hosted by this viewer.
+    /// </summary>
+    public void FocusViewer()
+    {
+        if (!TextEditor.TextArea.Focus())
+        {
+            Dispatcher.UIThread.Post(() => TextEditor.TextArea.Focus());
+        }
+    }
 
     private void TextEditor_KeyDown(object? sender, KeyEventArgs e)
     {
