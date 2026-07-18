@@ -9,6 +9,9 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Compat;
+using GitUI.ConsoleEmulation;
+using GitUI.Models;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
 using ResourceManager;
@@ -20,7 +23,11 @@ namespace GitUI.CommandsDialogs;
 // when their commands are functional, rather than presenting inert toolbar entries.
 public sealed partial class FormBrowse : GitModuleForm
 {
+    private readonly TranslationString _consoleTabCaption = new("Console");
+    private readonly TranslationString _outputHistoryTabCaption = new("Output");
+
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+    private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private readonly IGpgInfoProvider? _controller;
     private GridLength _commitInfoWidth = new(490);
     private GpgInfo? _gpgInfo;
@@ -31,8 +38,12 @@ public sealed partial class FormBrowse : GitModuleForm
     private GridLength _splitViewTopHeight = new(3, GridUnitType.Star);
     private GitRevision? _fileTreeRevision;
     private bool _gpgInfoLoaded;
+    private bool _hasRuntimeCommands;
     private int _gpgInfoLoadVersion;
     private bool _updatingWorkingDirectories;
+    private IConsoleShellRunner? _terminal;
+    private TabItem? _consoleTabPage;
+    private OutputHistoryControllerBase? _outputHistoryController;
 
     public static readonly string HotkeySettingsName = "Browse";
 
@@ -44,6 +55,8 @@ public sealed partial class FormBrowse : GitModuleForm
         FocusDiff = 5,
         FocusFileTree = 6,
         FocusGpgInfo = 26,
+        FocusGitConsole = 29,
+        FocusOutputHistoryAndToggleIfPanel = 47,
         Commit = 7,
         CheckoutBranch = 10,
         FocusFilter = 18,
@@ -84,9 +97,11 @@ public sealed partial class FormBrowse : GitModuleForm
     {
         InitializeComponent();
 
+        _hasRuntimeCommands = true;
         RevisionGrid.UICommandsSource = this;
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
+        _consoleEmulatorsRegistry = UICommands.GetService(typeof(IConsoleEmulatorsRegistry)) as IConsoleEmulatorsRegistry;
         _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
@@ -113,6 +128,8 @@ public sealed partial class FormBrowse : GitModuleForm
         RefreshButton.Click += RefreshToolStripMenuItemClick;
         toggleLeftPanel.Click += ToggleLeftPanelClick;
         InitializeWorkspaceLayout();
+        FillTerminalTab();
+        InitializeOutputHistory();
         branchSelect.Click += BranchSelectClick;
         BranchSelectFlyout.Opening += (_, _) => PopulateBranchSelector();
         toolStripButtonPull.Click += ToolStripButtonPullClick;
@@ -271,6 +288,7 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
         UICommands = UICommands.WithWorkingDirectory(normalizedPath);
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+        ChangeTerminalActiveFolder(normalizedPath);
         ReloadRepository();
         ThreadHelper.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath));
     }
@@ -533,6 +551,10 @@ public sealed partial class FormBrowse : GitModuleForm
             FillGpgInfo();
             revisionGpgInfo1.FocusInfo();
         }
+        else if (CommitInfoTabControl.SelectedItem == _consoleTabPage)
+        {
+            StartTerminal();
+        }
     }
 
     private void FillFileTree()
@@ -768,6 +790,86 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
+    /// <summary>
+    ///  Adds a tab with a console interface over the current working copy. Recreates the
+    ///  terminal when the tab is activated again after the shell exits.
+    /// </summary>
+    private void FillTerminalTab()
+    {
+        if (!AppSettings.ShowConEmuTab.Value
+            || _consoleEmulatorsRegistry is null
+            || _consoleEmulatorsRegistry.AvailableConsoleEmulators.Count == 0
+            || _consoleTabPage is not null)
+        {
+            return;
+        }
+
+        _consoleTabPage = new TabItem
+        {
+            Header = _consoleTabCaption.Text,
+            Name = _consoleTabCaption.Text,
+            Icon = Properties.Images.Console,
+        };
+        _consoleTabPage.Classes.Add("gitextensions-workspace-tab");
+        CommitInfoTabControl.Items.Add(_consoleTabPage);
+    }
+
+    public void ChangeTerminalActiveFolder(string path)
+    {
+        if (_terminal?.IsShellRunning is true)
+        {
+            _terminal.ChangeWorkingDirectory(path);
+        }
+    }
+
+    private void StartTerminal()
+    {
+        if (_consoleTabPage is null || _consoleEmulatorsRegistry is null)
+        {
+            return;
+        }
+
+        _terminal ??= _consoleEmulatorsRegistry.CreateShellRunner();
+        if (_terminal is null)
+        {
+            return;
+        }
+
+        if (!ReferenceEquals(_consoleTabPage.Content, _terminal.Control))
+        {
+            _consoleTabPage.Content = _terminal.Control;
+        }
+
+        if (!_terminal.IsShellRunning)
+        {
+            _terminal.StartShell(Module.WorkingDir);
+        }
+
+        _terminal.FocusTerminal();
+    }
+
+    private void InitializeOutputHistory()
+    {
+        if (UICommands.GetService(typeof(IOutputHistoryProvider)) is not IOutputHistoryProvider outputHistoryProvider)
+        {
+            return;
+        }
+
+        OutputHistoryControl outputHistoryControl = new();
+        _outputHistoryController = AppSettings.ShowOutputHistoryAsTab.Value
+            ? new OutputHistoryTabController(
+                outputHistoryProvider,
+                outputHistoryControl,
+                CommitInfoTabControl,
+                _outputHistoryTabCaption.Text)
+            : new OutputHistoryPanelController(
+                outputHistoryProvider,
+                outputHistoryControl,
+                mainContentGrid,
+                outputHistorySplitter,
+                outputHistoryPanelHost);
+    }
+
     protected override bool ExecuteCommand(int command)
     {
         switch ((Command)command)
@@ -796,6 +898,17 @@ public sealed partial class FormBrowse : GitModuleForm
                 CommitInfoTabControl.SelectedItem = GpgInfoTabPage;
                 revisionGpgInfo1.FocusInfo();
                 break;
+            case Command.FocusGitConsole:
+                FillTerminalTab();
+                if (_consoleTabPage is not null)
+                {
+                    CommitInfoTabControl.SelectedItem = _consoleTabPage;
+                    StartTerminal();
+                }
+
+                break;
+            case Command.FocusOutputHistoryAndToggleIfPanel:
+                return _outputHistoryController?.FocusAndToggleIfPanel() ?? false;
             case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
             case Command.ToggleLeftPanel: ToggleLeftPanelClick(this, EventArgs.Empty); break;
             case Command.FocusNextTab: FocusNextWorkspaceTab(forward: true); break;
@@ -856,6 +969,20 @@ public sealed partial class FormBrowse : GitModuleForm
     }
 
     protected override bool CloseOnEscape => false;
+
+    protected override void OnClosed(EventArgs e)
+    {
+        if (_hasRuntimeCommands)
+        {
+            UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
+        }
+
+        (_terminal as IDisposable)?.Dispose();
+        _terminal = null;
+        _outputHistoryController?.Dispose();
+        _outputHistoryController = null;
+        base.OnClosed(e);
+    }
 
     internal FileStatusList fileStatusList => revisionDiff.FileStatusList;
     internal Editor.FileViewer fileViewer => revisionDiff.FileViewer;
