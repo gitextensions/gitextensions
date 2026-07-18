@@ -1266,12 +1266,13 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
             .DefaultIfEmpty()
             .Max();
         int graphColumnWidth = CalculateGraphColumnWidth(visibleLaneCount);
-        if (_revisionGraphColumnProvider.Column.Width.Value == graphColumnWidth)
+        GridLength graphColumnGridLength = new(graphColumnWidth);
+        if (_revisionGraphColumnProvider.Column.Width == graphColumnGridLength)
         {
             return;
         }
 
-        _revisionGraphColumnProvider.Column.Width = new GridLength(graphColumnWidth);
+        _revisionGraphColumnProvider.Column.Width = graphColumnGridLength;
         foreach (RevisionRowControl row in visibleRows)
         {
             row.ApplyColumnLayout();
