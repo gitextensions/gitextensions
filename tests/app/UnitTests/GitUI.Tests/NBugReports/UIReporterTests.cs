@@ -64,6 +64,17 @@ public sealed class UIReporterTests
                 new FileNotFoundException("Assembly not found", fileName: ", version=1.0.0.0"),
                 ", version=1.0.0.0");
 
+            // MissingMethodException
+            yield return new TestCaseData(
+                new MissingMethodException("ICSharpCode.TextEditor.TextAreaControl", "get_VScrollBar"),
+                "ICSharpCode.TextEditor.TextAreaControl");
+            yield return new TestCaseData(
+                new MissingMethodException("MyAssembly.MyType", "MyMethod"),
+                "MyAssembly.MyType");
+            yield return new TestCaseData(
+                new MissingMethodException(),
+                "unknown");
+
             // Other exceptions
             yield return new TestCaseData(
                 new Exception("No quotes in this message"),
@@ -234,6 +245,22 @@ public sealed class UIReporterTests
 
         TaskDialogPage page = UIReporter.TestAccessor.CreateFailedToLoadAnAssemblyReport(exception, isTerminating: false);
 
+        page.Expander.Should().NotBeNull();
+        page.Expander!.Text.Should().Be(exception.Message);
+    }
+
+    [Test]
+    public void CreateFailedToLoadAnAssemblyReport_should_use_method_not_found_text_for_MissingMethodException()
+    {
+        MissingMethodException exception = new("ICSharpCode.TextEditor.TextAreaControl", "get_VScrollBar");
+
+        TaskDialogPage page = UIReporter.TestAccessor.CreateFailedToLoadAnAssemblyReport(exception, isTerminating: false);
+
+        page.Icon.Should().Be(TaskDialogIcon.Warning);
+        page.AllowCancel.Should().BeFalse();
+        page.Heading.Should().Contain("ICSharpCode.TextEditor.TextAreaControl");
+        // Report button should appear because ICSharpCode.TextEditor is not a .NET framework or VC runtime assembly
+        page.Buttons.Should().HaveCount(2);
         page.Expander.Should().NotBeNull();
         page.Expander!.Text.Should().Be(exception.Message);
     }

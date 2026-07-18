@@ -10415,6 +10415,14 @@ Select this commit to populate the full message.</source>
         <source>Most of the times the error is temporary, likely caused by Windows Update.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_methodNotFoundInAssemblyFormat.Text">
+        <source>Method not found in assembly '{0}'.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_methodNotFoundInAssemblyText.Text">
+        <source>A required method was not found in the assembly, likely due to a version mismatch or an incomplete installation. Reinstalling the application should resolve the issue.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_failedToLoadPlugin.Text">
         <source>Plugin loading failure</source>
         <target />

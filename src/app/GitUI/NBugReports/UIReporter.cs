@@ -198,12 +198,15 @@ internal sealed class UIReporter : IBugReporter
     {
         string fileName = GetFileName(exception);
 
+        bool isMissingMethod = exception is MissingMethodException;
         TaskDialogPage page = new()
         {
             Icon = TaskDialogIcon.Warning,
             Caption = TranslatedStrings.FailedToLoadAnAssembly,
-            Heading = string.Format(TranslatedStrings.FailedToLoadFileOrAssemblyFormat, fileName),
-            Text = TranslatedStrings.FailedToLoadFileOrAssemblyText,
+            Heading = string.Format(
+                isMissingMethod ? TranslatedStrings.MethodNotFoundInAssemblyFormat : TranslatedStrings.FailedToLoadFileOrAssemblyFormat,
+                fileName),
+            Text = isMissingMethod ? TranslatedStrings.MethodNotFoundInAssemblyText : TranslatedStrings.FailedToLoadFileOrAssemblyText,
             AllowCancel = false,
             SizeToContent = true,
         };
@@ -285,6 +288,12 @@ internal sealed class UIReporter : IBugReporter
                 }
             }
         }
+        else if (exception is MissingMethodException missingMethodException)
+        {
+            // ClassName is the fully-qualified name of the type that declares the missing method
+            // (e.g. "ICSharpCode.TextEditor.TextAreaControl"), set by the runtime for version-mismatch errors.
+            fileName = missingMethodException.ClassName ?? "unknown";
+        }
         else
         {
             fileName = "unknown";
@@ -361,6 +370,7 @@ internal sealed class UIReporter : IBugReporter
         static bool HasFailedToLoadAnAssembly(Exception exception)
            => (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
            || (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
+           || exception is MissingMethodException
            || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
     }
 
