@@ -12,6 +12,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Gpg;
@@ -342,6 +343,24 @@ public sealed partial class ParityScreenshotTests
                 "Reset the representative staged and unstaged changes?");
         }
 
+        if (viewType == typeof(FindAndReplaceForm))
+        {
+            FindAndReplaceForm form = new();
+            TextEditor editor = new() { Text = "Find representative text in the diff viewer." };
+            FindAndReplaceForm.TestAccessor accessor = form.GetTestAccessor();
+            accessor.SetEditor(editor);
+            accessor.TxtLookFor.Text = "representative";
+            form.ReplaceMode = false;
+            return form;
+        }
+
+        if (viewType == typeof(FormGoToLine))
+        {
+            FormGoToLine form = new();
+            form.SetMaxLineNumber(120);
+            return form;
+        }
+
         return (Control)(Activator.CreateInstance(viewType)
             ?? throw new InvalidOperationException($"Could not construct {viewType.FullName}."));
     }
@@ -563,6 +582,16 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(BlameControl))
         {
             return (1000, 650);
+        }
+
+        if (viewType == typeof(FindAndReplaceForm))
+        {
+            return (419, 169);
+        }
+
+        if (viewType == typeof(FormGoToLine))
+        {
+            return (237, 100);
         }
 
         if (typeof(Window).IsAssignableFrom(viewType))

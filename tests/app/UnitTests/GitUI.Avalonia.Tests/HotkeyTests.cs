@@ -9,6 +9,7 @@ using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
+using GitUI.Editor;
 using GitUI.Hotkey;
 using GitUIPluginInterfaces;
 using NSubstitute;
@@ -82,6 +83,36 @@ public sealed class HotkeyTests
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.FocusNextTab
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Tab));
+        }
+        finally
+        {
+            AppSettings.SerializedHotkeys = serializedHotkeys!;
+        }
+    }
+
+    [Test]
+    public void HotkeySettingsManager_should_load_default_FileViewer_hotkeys()
+    {
+        string? serializedHotkeys = AppSettings.SerializedHotkeys;
+        AppSettings.SerializedHotkeys = string.Empty;
+        try
+        {
+            IHotkeySettingsLoader loader = new HotkeySettingsManager();
+
+            IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(FileViewer.HotkeySettingsName);
+
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FileViewer.Command.Find
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.F));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FileViewer.Command.FindNextOrOpenWithDifftool
+                && command.KeyData == WinFormsShims.Keys.F3);
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FileViewer.Command.FindPrevious
+                && command.KeyData == (WinFormsShims.Keys.Shift | WinFormsShims.Keys.F3));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FileViewer.Command.GoToLine
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.G));
         }
         finally
         {
