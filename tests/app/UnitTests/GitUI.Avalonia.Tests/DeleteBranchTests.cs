@@ -222,7 +222,7 @@ public sealed class DeleteBranchTests
         }
         finally
         {
-            Directory.Delete(workingDirectory, recursive: true);
+            TestDirectory.Delete(workingDirectory);
         }
     }
 
