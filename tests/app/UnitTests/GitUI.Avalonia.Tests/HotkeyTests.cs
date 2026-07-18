@@ -67,6 +67,9 @@ public sealed class HotkeyTests
                 command.CommandCode == (int)FormBrowse.Command.FocusDiff
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D3));
             hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.FocusFileTree
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D4));
+            hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.FocusNextTab
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Tab));
         }
@@ -267,6 +270,10 @@ public sealed class HotkeyTests
             {
                 KeyData = WinFormsShims.Keys.F6,
             },
+            new HotkeyCommand((int)FormBrowse.Command.FocusFileTree, nameof(FormBrowse.Command.FocusFileTree))
+            {
+                KeyData = WinFormsShims.Keys.F9,
+            },
             new HotkeyCommand((int)FormBrowse.Command.FocusNextTab, nameof(FormBrowse.Command.FocusNextTab))
             {
                 KeyData = WinFormsShims.Keys.F7,
@@ -282,10 +289,19 @@ public sealed class HotkeyTests
             form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.DiffTabPage);
 
             form.KeyPress(Key.F7, RawInputModifiers.None, PhysicalKey.F7, keySymbol: null);
-            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.CommitInfoTabPage);
+            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.TreeTabPage);
 
             form.KeyPress(Key.F8, RawInputModifiers.None, PhysicalKey.F8, keySymbol: null);
             form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.DiffTabPage);
+
+            form.KeyPress(Key.F9, RawInputModifiers.None, PhysicalKey.F9, keySymbol: null);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.TreeTabPage);
+            form.fileTree.FileStatusList.IsKeyboardFocusWithin.Should().BeTrue();
+
+            form.KeyPress(Key.F9, RawInputModifiers.None, PhysicalKey.F9, keySymbol: null);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            form.fileTree.FileViewer.IsKeyboardFocusWithin.Should().BeTrue();
         }
         finally
         {

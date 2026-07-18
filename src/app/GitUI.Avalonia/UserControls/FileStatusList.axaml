@@ -3,6 +3,15 @@
              x:Class="GitUI.FileStatusList">
   <DockPanel>
     <TextBlock DockPanel.Dock="Top" x:Name="lblCount" Margin="4,2" Opacity="0.7" />
-    <ListBox x:Name="lstFiles" SelectionMode="Single" />
+    <Grid>
+      <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" />
+      <TreeView x:Name="tvFiles" IsVisible="False" Focusable="True" x:CompileBindings="False">
+        <TreeView.Styles>
+          <Style Selector="TreeViewItem">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+          </Style>
+        </TreeView.Styles>
+      </TreeView>
+    </Grid>
   </DockPanel>
 </UserControl>
