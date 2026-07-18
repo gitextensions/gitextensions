@@ -364,7 +364,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
                     }
                 }
 
-                if (messageBoxResult ?? false)
+                if (messageBoxResult is true)
                 {
                     UICommands.StashPop(this);
                 }
