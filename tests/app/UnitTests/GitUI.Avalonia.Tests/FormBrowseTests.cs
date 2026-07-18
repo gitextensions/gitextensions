@@ -63,7 +63,7 @@ public sealed class FormBrowseTests
     public void TearDown()
     {
         _serviceContainer.Dispose();
-        Directory.Delete(_workingDirectory, recursive: true);
+        TestDirectory.Delete(_workingDirectory);
     }
 
     [AvaloniaTest]

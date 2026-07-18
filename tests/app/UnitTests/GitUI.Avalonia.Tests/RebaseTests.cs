@@ -71,7 +71,7 @@ public sealed class RebaseTests
         AppSettings.DontShowHelpImages = _dontShowHelpImages;
         AppSettings.RebaseAutoStash = _rebaseAutoStash;
         _serviceContainer.Dispose();
-        Directory.Delete(_workingDirectory, recursive: true);
+        TestDirectory.Delete(_workingDirectory);
     }
 
     [AvaloniaTest]

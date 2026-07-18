@@ -60,7 +60,7 @@ public sealed class RenameBranchTests
     {
         AppSettings.CloseProcessDialog = _closeProcessDialog;
         _serviceContainer.Dispose();
-        Directory.Delete(_workingDirectory, recursive: true);
+        TestDirectory.Delete(_workingDirectory);
     }
 
     [AvaloniaTest]

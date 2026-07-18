@@ -39,6 +39,7 @@
                Classes="gitextensions-toolbar-label"
                Text="_Branches:" />
     <ComboBox x:Name="tscboBranchFilter"
+              Classes="gitextensions-toolbar-input"
               Width="100"
               Height="23"
               IsEditable="True" />
@@ -59,6 +60,7 @@
                Classes="gitextensions-toolbar-label"
                Text="_Filter:" />
     <ComboBox x:Name="tstxtRevisionFilter"
+              Classes="gitextensions-toolbar-input"
               Width="100"
               Height="23"
               IsEditable="True" />

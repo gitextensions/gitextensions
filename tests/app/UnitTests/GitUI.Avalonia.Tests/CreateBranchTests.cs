@@ -199,7 +199,7 @@ public sealed class CreateBranchTests
         }
         finally
         {
-            Directory.Delete(workingDirectory, recursive: true);
+            TestDirectory.Delete(workingDirectory);
         }
     }
 
