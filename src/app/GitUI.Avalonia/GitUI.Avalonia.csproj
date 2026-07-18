@@ -32,6 +32,8 @@
     <Compile Include="..\GitUI\ConsoleEmulation\ConsoleProcessExitEventArgs.cs" Link="ConsoleEmulation\ConsoleProcessExitEventArgs.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\IConsoleEmulatorsRegistry.cs" Link="ConsoleEmulation\IConsoleEmulatorsRegistry.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\PlainText\IPlainTextConsoleCommandRunner.cs" Link="ConsoleEmulation\PlainText\IPlainTextConsoleCommandRunner.cs" />
+    <Compile Include="..\GitUI\Editor\ViewMode.cs" Link="Editor\ViewMode.cs" />
+    <Compile Include="..\GitUI\Editor\ViewModeExtension.cs" Link="Editor\ViewModeExtension.cs" />
     <Compile Include="..\GitUI\FormStatusOutputLog.cs" Link="FormStatusOutputLog.cs" />
     <Compile Include="..\GitUI\IGitUICommandsSource.cs" Link="IGitUICommandsSource.cs" />
     <Compile Include="..\GitUI\GitUICommandsSourceEventArgs.cs" Link="GitUICommandsSourceEventArgs.cs" />
