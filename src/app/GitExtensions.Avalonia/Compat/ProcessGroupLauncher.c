@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
+    if (argc < 2 || argv[1][0] == '\0')
     {
         fputs("Usage: GitExtensions.ProcessGroupLauncher <command> [arguments...]\n", stderr);
         return 64;
@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
         return 71;
     }
 
+    // The managed caller passes ProcessStartInfo's executable and argument vector directly.
+    // No shell interprets this input, and execvp preserves the original argument boundaries.
+    // flawfinder: ignore
     execvp(argv[1], &argv[1]);
     fprintf(stderr, "Unable to execute %s: %s\n", argv[1], strerror(errno));
     return 127;
