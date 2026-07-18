@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia.Controls;
@@ -12,6 +13,7 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
+using GitCommands.Git.Gpg;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -249,6 +251,96 @@ public sealed class FormBrowseTests
         }
         finally
         {
+            AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormBrowse_gpg_tab_should_load_lazily_and_ignore_stale_results()
+    {
+        bool originalShowGpgInformation = AppSettings.ShowGpgInformation.Value;
+        CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.ShowGpgInformation.Value = true;
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.WriteAllText(Path.Combine(_workingDirectory, "second.txt"), "second commit");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "second.txt" });
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "second commit".Quote() });
+
+            ConcurrentDictionary<ObjectId, TaskCompletionSource<GpgInfo?>> completions = [];
+            IGpgInfoProvider provider = Substitute.For<IGpgInfoProvider>();
+            provider.LoadGpgInfoAsync(Arg.Any<GitRevision?>()).Returns(callInfo =>
+            {
+                GitRevision revision = callInfo.Arg<GitRevision>();
+                TaskCompletionSource<GpgInfo?> completion = new();
+                completions[revision.ObjectId] = completion;
+                return completion.Task;
+            });
+
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module), provider);
+            try
+            {
+                form.Show();
+                TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+                await WaitUntilAsync(() => loadingStatus.Text == "2 revisions");
+
+                GitRevision headRevision = form.RevisionGrid.SelectedRevision!;
+                ObjectId parentId = headRevision.FirstParentId;
+                form.GpgInfoTabPage.IsVisible.Should().BeTrue();
+                _ = provider.DidNotReceive().LoadGpgInfoAsync(Arg.Any<GitRevision?>());
+
+                form.CommitInfoTabControl.SelectedItem = form.GpgInfoTabPage;
+                Dispatcher.UIThread.RunJobs();
+                await WaitUntilAsync(() => completions.ContainsKey(headRevision.ObjectId));
+                form.revisionGpgInfo1.IsKeyboardFocusWithin.Should().BeTrue();
+
+                form.RevisionGrid.SetSelectedRevision(parentId).Should().BeTrue();
+                await WaitUntilAsync(() => completions.ContainsKey(parentId));
+                completions[parentId].SetResult(new GpgInfo(
+                    CommitStatus.MissingPublicKey,
+                    "current revision signature",
+                    TagStatus.TagNotSigned,
+                    TagVerificationMessage: null));
+
+                TextBox commitInfo = form.revisionGpgInfo1.FindControl<TextBox>("txtCommitGpgInfo")!;
+                TextBox tagInfo = form.revisionGpgInfo1.FindControl<TextBox>("txtTagGpgInfo")!;
+                Image commitPicture = form.revisionGpgInfo1.FindControl<Image>("commitSignPicture")!;
+                Image tagPicture = form.revisionGpgInfo1.FindControl<Image>("tagSignPicture")!;
+                await WaitUntilAsync(() => commitInfo.Text == "current revision signature");
+                tagInfo.Text.Should().Be("Tag is not signed");
+                tagInfo.IsVisible.Should().BeTrue();
+                commitPicture.Source.Should().BeSameAs(GitUI.Properties.Images.CommitSignatureWarning);
+                tagPicture.IsVisible.Should().BeFalse();
+
+                completions[headRevision.ObjectId].SetResult(new GpgInfo(
+                    CommitStatus.GoodSignature,
+                    "stale revision signature",
+                    TagStatus.OneGood,
+                    "stale tag signature"));
+                Dispatcher.UIThread.RunJobs();
+                commitInfo.Text.Should().Be("current revision signature");
+
+                form.RefreshGpgInfo(new GitRevision(ObjectId.WorkTreeId));
+                form.GpgInfoTabPage.IsVisible.Should().BeFalse();
+                form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.TreeTabPage);
+
+                AppSettings.ShowGpgInformation.Value = false;
+                form.RefreshGpgInfo(headRevision);
+                form.GpgInfoTabPage.IsVisible.Should().BeFalse();
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.ShowGpgInformation.Value = originalShowGpgInformation;
             AppSettings.CommitInfoPosition = originalPosition;
             AppSettings.ShowSplitViewLayout = originalShowSplitView;
         }

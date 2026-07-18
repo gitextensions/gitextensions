@@ -222,6 +222,13 @@
                    Icon="{x:Static properties:Images.FileTree}">
             <commandsDialogs:RevisionDiffControl x:Name="fileTree" />
           </TabItem>
+          <TabItem x:Name="GpgInfoTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="GPG"
+                   Icon="{x:Static properties:Images.Key}"
+                   IsVisible="False">
+            <commandsDialogs:RevisionGpgInfoControl x:Name="revisionGpgInfo1" Padding="6" />
+          </TabItem>
         </commandsDialogs:FullBleedTabControl>
       </Grid>
     </Grid>
