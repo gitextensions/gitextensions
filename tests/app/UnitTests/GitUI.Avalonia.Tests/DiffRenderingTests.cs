@@ -1,4 +1,9 @@
+using System.Globalization;
+using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media;
+using Avalonia.Threading;
+using AvaloniaEdit;
 using GitUI.Editor;
 using GitUI.Editor.Diff;
 
@@ -106,4 +111,47 @@ public sealed class DiffRenderingTests
         viewer.GoToLine(10);
         viewer.CurrentFileLine.Should().Be(10);
     }
+
+    [AvaloniaTest]
+    public void Diff_margin_should_match_WinForms_two_column_geometry_and_monospace_markers()
+    {
+        FileViewer viewer = new();
+        viewer.ViewPatch("@@ -100 +100 @@\n-old\n+new\n");
+        Window window = new()
+        {
+            Width = 480,
+            Height = 240,
+            Content = viewer,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            TextEditor editor = viewer.TextEditor;
+            DiffViewerLineNumberControl margin = editor.TextArea.LeftMargins
+                .OfType<DiffViewerLineNumberControl>()
+                .Single();
+            FormattedText digit = CreateFormattedText(editor, "0");
+            FormattedText plus = CreateFormattedText(editor, "+");
+            FormattedText minus = CreateFormattedText(editor, "-");
+
+            margin.Bounds.Width.Should().Be(Math.Ceiling(4 + (2 * digit.Width * 4)));
+            plus.Width.Should().BeApproximately(minus.Width, 0.01);
+            plus.Width.Should().BeApproximately(digit.Width, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static FormattedText CreateFormattedText(TextEditor editor, string text)
+        => new(
+            text,
+            CultureInfo.InvariantCulture,
+            FlowDirection.LeftToRight,
+            new Typeface(editor.FontFamily, editor.FontStyle, editor.FontWeight),
+            editor.FontSize,
+            Brushes.Black);
 }

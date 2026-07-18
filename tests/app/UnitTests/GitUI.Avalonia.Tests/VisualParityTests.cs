@@ -11,10 +11,12 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.LeftPanel;
+using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using NSubstitute;
@@ -212,9 +214,23 @@ public sealed class VisualParityTests
                     ?? throw new InvalidOperationException("The main menu was not created.");
                 menu.Bounds.Height.Should().Be(24);
                 menu.Items.Cast<MenuItem>().Should().OnlyContain(item => item.Bounds.Height == 20);
+                Rect[] closedMenuItemBounds = menu.Items.Cast<MenuItem>().Select(item => item.Bounds).ToArray();
                 form.commandsToolStripMenuItem.IsSubMenuOpen = true;
                 Dispatcher.UIThread.RunJobs();
+                menu.Items.Cast<MenuItem>().Select(item => item.Bounds).Should().Equal(closedMenuItemBounds);
                 form.commitToolStripMenuItem.Bounds.Height.Should().Be(22);
+                ItemsPresenter menuItemsPresenter = form.commitToolStripMenuItem
+                    .GetVisualAncestors()
+                    .OfType<ItemsPresenter>()
+                    .Single(presenter => presenter.Name == "PART_ItemsPresenter");
+                menuItemsPresenter.Margin.Should().Be(new Thickness(0));
+
+                Border openMenuBorder = form.commandsToolStripMenuItem
+                    .GetVisualDescendants()
+                    .OfType<Border>()
+                    .Single(border => border.Name == "PART_LayoutRoot");
+                openMenuBorder.BorderThickness.Should().Be(new Thickness(1, 1, 1, 0));
+                openMenuBorder.CornerRadius.Should().Be(new CornerRadius(0));
             }
             finally
             {
@@ -249,6 +265,66 @@ public sealed class VisualParityTests
                 toolPanel.Bounds.Height.Should().Be(25);
                 mainToolbar.GetVisualDescendants().OfType<Button>()
                     .Should().OnlyContain(button => button.Bounds.Height <= 23);
+
+                ComboBox[] editableInputs = form.GetVisualDescendants()
+                    .OfType<ComboBox>()
+                    .Where(combo => combo.Classes.Contains("gitextensions-toolbar-input"))
+                    .ToArray();
+                editableInputs.Should().HaveCount(3);
+                foreach (ComboBox input in editableInputs)
+                {
+                    TextBox editor = input.GetVisualDescendants()
+                        .OfType<TextBox>()
+                        .Single(textBox => textBox.Name == "PART_EditableTextBox");
+                    ScrollViewer textViewport = editor.GetVisualDescendants()
+                        .OfType<ScrollViewer>()
+                        .Single();
+                    TextPresenter textPresenter = editor.GetVisualDescendants()
+                        .OfType<TextPresenter>()
+                        .Single();
+
+                    input.Bounds.Height.Should().Be(23);
+                    textViewport.Bounds.Height.Should().BeGreaterThanOrEqualTo(textPresenter.Bounds.Height);
+                }
+
+                SplitButton[] splitButtons = form.GetVisualDescendants()
+                    .OfType<SplitButton>()
+                    .Where(button => button.Classes.Contains("gitextensions-toolbar-button"))
+                    .ToArray();
+                splitButtons.Should().HaveCount(6);
+                foreach (SplitButton splitButton in splitButtons)
+                {
+                    Button primaryButton = splitButton.GetVisualDescendants()
+                        .OfType<Button>()
+                        .Single(button => button.Name == "PART_PrimaryButton");
+                    Button secondaryButton = splitButton.GetVisualDescendants()
+                        .OfType<Button>()
+                        .Single(button => button.Name == "PART_SecondaryButton");
+                    PathIcon arrow = secondaryButton.GetVisualDescendants()
+                        .OfType<PathIcon>()
+                        .Single();
+
+                    splitButton.Bounds.Height.Should().Be(23);
+                    primaryButton.Bounds.Height.Should().Be(23);
+                    secondaryButton.Bounds.Width.Should().Be(13);
+                    secondaryButton.Bounds.Height.Should().Be(23);
+                    arrow.Bounds.Size.Should().Be(new Size(7, 5));
+                }
+
+                IconSplitButton branchSelect = form.FindControl<IconSplitButton>("branchSelect")!;
+                branchSelect.GetVisualDescendants().OfType<Image>().Should().ContainSingle();
+                branchSelect.GetVisualDescendants().OfType<TextBlock>()
+                    .Should().ContainSingle(text => text.Text == "Branch");
+                foreach (IconSplitButton iconOnlyButton in new[]
+                {
+                    form.FindControl<IconSplitButton>("toolStripButtonPull")!,
+                    form.FindControl<FilterToolBar>("ToolStripFilters")!
+                        .FindControl<IconSplitButton>("tsbtnAdvancedFilter")!,
+                })
+                {
+                    iconOnlyButton.GetVisualDescendants().OfType<Image>().Should().ContainSingle();
+                    iconOnlyButton.GetVisualDescendants().OfType<TextBlock>().Should().BeEmpty();
+                }
 
                 form.Width = 900;
                 Dispatcher.UIThread.RunJobs();
@@ -418,6 +494,27 @@ public sealed class VisualParityTests
                 connector.Bounds.Width > 0
                 && connector.Bounds.Height >= 17
                 && connector.Bounds.Height <= 18);
+
+            ContentPresenter parentHeader = branches.GetVisualDescendants()
+                .OfType<ContentPresenter>()
+                .Single(presenter => presenter.Name == "PART_HeaderPresenter"
+                    && presenter.FindAncestorOfType<TreeViewItem>() == branches);
+            ContentPresenter childHeader = children[0].GetVisualDescendants()
+                .OfType<ContentPresenter>()
+                .Single(presenter => presenter.Name == "PART_HeaderPresenter"
+                    && presenter.FindAncestorOfType<TreeViewItem>() == children[0]);
+            Image parentIcon = parentHeader.GetVisualDescendants().OfType<Image>().Single();
+            TextBlock parentText = parentHeader.GetVisualDescendants().OfType<TextBlock>().Single();
+            Image childIcon = childHeader.GetVisualDescendants().OfType<Image>().Single();
+            TextBlock childText = childHeader.GetVisualDescendants().OfType<TextBlock>().Single();
+            double parentIconX = parentIcon.TranslatePoint(default, branches)!.Value.X;
+            double parentTextX = parentText.TranslatePoint(default, branches)!.Value.X;
+            double childIconX = childIcon.TranslatePoint(default, children[0])!.Value.X;
+            double childTextX = childText.TranslatePoint(default, children[0])!.Value.X;
+
+            parentIconX.Should().BeApproximately(22, 0.1);
+            childIconX.Should().Be(parentTextX);
+            childTextX.Should().Be(parentTextX + 19);
             window.CaptureRenderedFrame().Should().NotBeNull();
         }
         finally
@@ -430,12 +527,12 @@ public sealed class VisualParityTests
     public void RepoObjectsTree_connectors_should_leave_the_chevron_rectangle_clear()
     {
         (Point Start, Point End)[] lines =
-        [.. TreeConnectorControl.GetCurrentItemLines(x: 18, top: 0, bottom: 18, middle: 9, hasChevron: true)];
+        [.. TreeConnectorControl.GetCurrentItemLines(x: 11, top: 0, bottom: 18, middle: 9, hasChevron: true)];
 
         lines.Should().Equal(
-            (new Point(18, 0), new Point(18, 3)),
-            (new Point(18, 15), new Point(18, 18)),
-            (new Point(24, 9), new Point(36, 9)));
+            (new Point(11, 0), new Point(11, 3)),
+            (new Point(11, 15), new Point(11, 18)),
+            (new Point(17, 9), new Point(22, 9)));
     }
 
     [AvaloniaTest]
@@ -544,6 +641,34 @@ public sealed class VisualParityTests
         finally
         {
             window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Application_theme_should_follow_built_in_Git_Extensions_settings()
+    {
+        Application application = Application.Current
+            ?? throw new InvalidOperationException("The Avalonia application was not created.");
+        ThemeId originalTheme = AppSettings.ThemeId;
+        ThemeVariant? originalVariant = application.RequestedThemeVariant;
+        try
+        {
+            AppSettings.ThemeId = ThemeId.DefaultLight;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            application.RequestedThemeVariant.Should().Be(ThemeVariant.Light);
+
+            AppSettings.ThemeId = ThemeId.DefaultDark;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            application.RequestedThemeVariant.Should().Be(ThemeVariant.Dark);
+
+            AppSettings.ThemeId = ThemeId.WindowsAppColorModeId;
+            AvaloniaThemeSettings.ApplyAppSettings();
+            application.RequestedThemeVariant.Should().Be(ThemeVariant.Default);
+        }
+        finally
+        {
+            AppSettings.ThemeId = originalTheme;
+            application.RequestedThemeVariant = originalVariant;
         }
     }
 

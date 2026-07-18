@@ -223,7 +223,7 @@ public sealed class CreateTagTests
         }
         finally
         {
-            Directory.Delete(workingDirectory, recursive: true);
+            TestDirectory.Delete(workingDirectory);
         }
     }
 

@@ -36,6 +36,7 @@ public partial class App : Application
 
             AvaloniaFontSettings.InstallSystemDefaults();
             AppSettings.LoadSettings();
+            AvaloniaThemeSettings.ApplyAppSettings();
             AvaloniaFontSettings.ApplyAppSettings();
 
             string[] args = Environment.GetCommandLineArgs();
