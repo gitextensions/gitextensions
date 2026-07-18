@@ -135,8 +135,12 @@ public sealed class DiffRenderingTests
             FormattedText digit = CreateFormattedText(editor, "0");
             FormattedText plus = CreateFormattedText(editor, "+");
             FormattedText minus = CreateFormattedText(editor, "-");
+            (double backgroundSplit, double rightNumberX) =
+                DiffViewerLineNumberControl.GetTwoColumnGeometry(margin.Bounds.Width);
 
             margin.Bounds.Width.Should().Be(Math.Ceiling(4 + (2 * digit.Width * 4)));
+            backgroundSplit.Should().Be(margin.Bounds.Width / 2);
+            rightNumberX.Should().Be(backgroundSplit + 2);
             plus.Width.Should().BeApproximately(minus.Width, 0.01);
             plus.Width.Should().BeApproximately(digit.Width, 0.01);
         }
