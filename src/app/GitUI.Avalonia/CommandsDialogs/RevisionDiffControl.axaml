@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gitui="clr-namespace:GitUI"
+             xmlns:editor="clr-namespace:GitUI.Editor"
+             x:Class="GitUI.CommandsDialogs.RevisionDiffControl">
+  <Grid x:Name="DiffSplitContainer" ColumnDefinitions="380,0,*">
+    <Border Grid.Column="0" Classes="gitextensions-section">
+      <gitui:FileStatusList x:Name="DiffFiles" />
+    </Border>
+    <GridSplitter x:Name="DiffSplitter" Grid.Column="1" ResizeDirection="Columns" />
+    <Border Grid.Column="2" Classes="gitextensions-section">
+      <editor:FileViewer x:Name="DiffText" />
+    </Border>
+  </Grid>
+</UserControl>
