@@ -181,7 +181,10 @@
     </WrapPanel>
     <TextBlock x:Name="lblRepoPath" IsVisible="False" />
     <TextBlock x:Name="lblStatus" IsVisible="False" />
-    <Grid x:Name="mainContentGrid" ColumnDefinitions="260,0,*" Margin="6,0,6,6">
+    <Grid x:Name="mainContentGrid"
+          ColumnDefinitions="260,0,*"
+          RowDefinitions="*,0,0"
+          Margin="6,0,6,6">
       <Border x:Name="leftPanel" Grid.Column="0" Classes="gitextensions-section">
         <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" />
       </Border>
@@ -231,6 +234,16 @@
           </TabItem>
         </commandsDialogs:FullBleedTabControl>
       </Grid>
+      <GridSplitter x:Name="outputHistorySplitter"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="3"
+                    ResizeDirection="Rows"
+                    IsVisible="False" />
+      <Border x:Name="outputHistoryPanelHost"
+              Grid.Row="2"
+              Grid.ColumnSpan="3"
+              Classes="gitextensions-section"
+              IsVisible="False" />
     </Grid>
   </DockPanel>
 </Window>
