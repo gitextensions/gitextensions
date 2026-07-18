@@ -226,11 +226,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         {
             if (IsFileTreeMode)
             {
-                await TaskScheduler.Default;
-                string text = selectedItem.Item.IsSubmodule
-                    ? selectedItem.Item.TreeId.ToString()
-                    : Module.GetFileText(selectedItem.Item.TreeId, Module.FilesEncoding, stripAnsiEscapeCodes: false) ?? string.Empty;
-                await DiffText.ViewTextAsync(selectedItem.Item.Name, text, cancellationToken);
+                await DiffText.ViewGitItemAsync(selectedItem, cancellationToken: cancellationToken);
             }
             else
             {
