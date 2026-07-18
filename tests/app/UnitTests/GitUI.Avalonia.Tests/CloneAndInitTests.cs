@@ -61,7 +61,7 @@ public sealed class CloneAndInitTests
     {
         AppSettings.CloseProcessDialog = _closeProcessDialog;
         _serviceContainer.Dispose();
-        Directory.Delete(_workingDirectory, recursive: true);
+        TestDirectory.Delete(_workingDirectory);
     }
 
     [AvaloniaTest]

@@ -80,12 +80,17 @@ public sealed partial class ParityScreenshotTests
         WinFormsShims.ShimHost.MessageBoxHost = new StubMessageBoxHost();
 
         string outputDirectory = GetOutputDirectory();
-        if (Directory.Exists(outputDirectory))
+        foreach (string themeName in new[] { "Light", "Dark" })
         {
-            Directory.Delete(outputDirectory, recursive: true);
+            string themeDirectory = Path.Combine(outputDirectory, themeName);
+            if (Directory.Exists(themeDirectory))
+            {
+                TestDirectory.Delete(themeDirectory);
+            }
         }
 
         Directory.CreateDirectory(outputDirectory);
+        File.Delete(Path.Combine(outputDirectory, "manifest.json"));
         IReadOnlyList<ViewDescriptor> views = GetViewDescriptors();
         List<ManifestEntry> manifest = [];
 
@@ -98,6 +103,8 @@ public sealed partial class ParityScreenshotTests
         (string Name, double Factor)[] scales =
         [
             ("100", 1),
+            ("125", 1.25),
+            ("150", 1.5),
             ("200", 2),
         ];
 
@@ -707,7 +714,7 @@ public sealed partial class ParityScreenshotTests
         public void Dispose()
         {
             _serviceContainer.Dispose();
-            Directory.Delete(_workingDirectory, recursive: true);
+            TestDirectory.Delete(_workingDirectory);
         }
 
         private void CreateRepository()

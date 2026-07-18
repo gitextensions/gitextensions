@@ -61,7 +61,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
         int digits = MaxLineNumber > 0 ? ((int)Math.Log10(MaxLineNumber) + 1) : 1;
         double digitWidth = CreateFormattedText("0", bold: false, Brushes.Black).Width;
         int columnCount = _showLeftColumn ? 2 : 1;
-        return new Avalonia.Size(TextHorizontalMargin + (columnCount * ((digitWidth * digits) + TextHorizontalMargin)), 0);
+        return new Avalonia.Size(TextHorizontalMargin + (columnCount * digitWidth * (digits + 1)), 0);
     }
 
     protected override void OnTextViewChanged(TextView oldTextView, TextView newTextView)
@@ -91,7 +91,8 @@ public class DiffViewerLineNumberControl : AbstractMargin
         IBrush selectedBrush = GetBrush("GitExtensionsDiffLineNumberSelectedBrush", Colors.Black);
         context.FillRectangle(background, new Avalonia.Rect(Bounds.Size));
 
-        double leftWidth = _showLeftColumn ? Bounds.Width / 2 : 0;
+        double numbersWidth = Bounds.Width - TextHorizontalMargin;
+        double leftWidth = _showLeftColumn ? TextHorizontalMargin + (numbersWidth / 2) : 0;
         foreach (VisualLine visualLine in textView.VisualLines)
         {
             int documentLine = visualLine.FirstDocumentLine.LineNumber;
@@ -113,7 +114,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
             if (info.RightLineNumber != DiffLineInfo.NotApplicableLineNum)
             {
-                DrawNumber(context, info.RightLineNumber, leftWidth + TextHorizontalMargin, y, current, textBrush);
+                DrawNumber(context, info.RightLineNumber, leftWidth, y, current, textBrush);
             }
         }
     }

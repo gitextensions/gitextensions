@@ -3,11 +3,18 @@
              xmlns:converters="using:Avalonia.Controls.Converters"
              xmlns:leftpanel="using:GitUI.LeftPanel"
              x:Class="GitUI.LeftPanel.RepoObjectsTree">
+  <UserControl.Resources>
+    <!-- Match NativeTreeView: the root icon follows the chevron immediately and each
+         child icon begins at its parent's text column. -->
+    <x:Double x:Key="TreeViewItemIndent">19</x:Double>
+    <Thickness x:Key="TreeViewItemExpandCollapseChevronMargin">5,0</Thickness>
+  </UserControl.Resources>
   <UserControl.Styles>
     <!-- Fluent deliberately omits hierarchy lines. Keep its selection states and PART
          names, but add the dotted NativeTreeView lines beneath the standard chevron. -->
     <Style Selector="TreeViewItem">
       <Setter Property="MinHeight" Value="18" />
+      <Setter Property="BorderThickness" Value="0" />
       <Setter Property="Template">
         <ControlTemplate>
           <StackPanel>
