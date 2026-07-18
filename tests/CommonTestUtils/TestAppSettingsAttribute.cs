@@ -41,7 +41,12 @@ public sealed class TestAppSettingsAttribute : Attribute, ITestAction
         // a modal error dialog that hangs the headless run). Pin the path to the test's own directory so it resolves.
         AppSettings.GetTestAccessor().ApplicationExecutablePath = Path.Combine(AppContext.BaseDirectory, "GitExtensions.exe");
 
-        File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
+        string settingsFilePath = AppSettings.SettingsContainer.SettingsCache.SettingsFilePath;
+        if (File.Exists(settingsFilePath))
+        {
+            File.Delete(settingsFilePath);
+        }
+
         AppSettings.SettingsContainer.SettingsCache.Load();
 
         AppSettings.CheckForUpdates = false;
