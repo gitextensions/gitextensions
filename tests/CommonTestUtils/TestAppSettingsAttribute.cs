@@ -34,7 +34,12 @@ public sealed class TestAppSettingsAttribute : Attribute, ITestAction
             _portableMutex!.WaitOne();
         }
 
-        File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
+        string settingsFilePath = AppSettings.SettingsContainer.SettingsCache.SettingsFilePath;
+        if (File.Exists(settingsFilePath))
+        {
+            File.Delete(settingsFilePath);
+        }
+
         AppSettings.SettingsContainer.SettingsCache.Load();
 
         AppSettings.CheckForUpdates = false;
