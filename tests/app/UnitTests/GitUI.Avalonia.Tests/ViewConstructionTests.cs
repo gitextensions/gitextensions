@@ -201,6 +201,11 @@ public sealed class ViewConstructionTests
             "Diff");
         translation.Received(1).AddTranslationItem(
             nameof(FormBrowse),
+            "TreeTabPage",
+            "Text",
+            "File tree");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
             "commitInfoBelowMenuItem",
             "Text",
             "Commit info &below graph");

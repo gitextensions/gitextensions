@@ -24,6 +24,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private GridLength _leftPanelWidth = new(260);
     private GridLength _splitViewBottomHeight = new(2, GridUnitType.Star);
     private GridLength _splitViewTopHeight = new(3, GridUnitType.Star);
+    private GitRevision? _fileTreeRevision;
     private bool _updatingWorkingDirectories;
 
     public static readonly string HotkeySettingsName = "Browse";
@@ -34,6 +35,7 @@ public sealed partial class FormBrowse : GitModuleForm
         FocusRevisionGrid = 3,
         FocusCommitInfo = 4,
         FocusDiff = 5,
+        FocusFileTree = 6,
         Commit = 7,
         CheckoutBranch = 10,
         FocusFilter = 18,
@@ -70,12 +72,17 @@ public sealed partial class FormBrowse : GitModuleForm
         InitializeComponent();
 
         RevisionGrid.UICommandsSource = this;
+        revisionDiff.UICommandsSource = this;
+        fileTree.UICommandsSource = this;
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
         RevisionGrid.RevisionFilterRequested += (_, _) => ToolStripFilters.SetFocus();
         ToolStripFilters.Bind(() => Module, RevisionGrid);
-        fileStatusList.SelectedIndexChanged += FileStatusList_SelectedIndexChanged;
+        revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => string.Empty, refreshGitStatus: null);
+        fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => string.Empty, refreshGitStatus: null);
+        RevisionGrid.FilterChanged += RevisionGrid_FilterChanged;
+        CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectionChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
@@ -373,14 +380,14 @@ public sealed partial class FormBrowse : GitModuleForm
         {
             if (selectCommitInfoTab)
             {
-                CommitInfoTabControl.SelectedIndex = 0;
+                CommitInfoTabControl.SelectedItem = CommitInfoTabPage;
             }
         }
         else
         {
-            if (CommitInfoTabControl.SelectedIndex == 0)
+            if (CommitInfoTabControl.SelectedItem == CommitInfoTabPage)
             {
-                CommitInfoTabControl.SelectedIndex = 1;
+                CommitInfoTabControl.SelectedItem = DiffTabPage;
             }
         }
 
@@ -464,73 +471,60 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void RevisionGrid_SelectionChanged(object? sender, EventArgs e)
     {
-        fileStatusList.Clear();
-        fileViewer.ViewPatch(string.Empty);
+        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+        revisionDiff.DisplayDiffTab(selectedRevisions);
+        fileTree.Clear();
+        _fileTreeRevision = null;
         RevisionInfo.Revision = RevisionGrid.SelectedRevision;
         rebaseToolStripMenuItem.IsEnabled =
             RevisionGrid.SelectedRevision is { IsArtificial: false }
             && !Module.IsBareRepository();
 
-        if (RevisionGrid.SelectedRevision is not GitRevision revision
-            || !revision.HasParent)
+        if (CommitInfoTabControl.SelectedItem == TreeTabPage)
         {
-            return;
+            FillFileTree();
         }
-
-        IGitModule module = Module;
-        ObjectId parentId = revision.FirstParentId;
-        ThreadHelper.FileAndForget(async () =>
-        {
-            IReadOnlyList<GitItemStatus> diffs = module.GetDiffFilesWithSubmodulesStatus(
-                parentId,
-                revision.ObjectId,
-                parentToSecond: parentId,
-                excludeSkipWorktreeFiles: false,
-                UntrackedFilesMode.Default,
-                CancellationToken.None);
-
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            if (ReferenceEquals(RevisionGrid.SelectedRevision, revision))
-            {
-                fileStatusList.SetDiffs(diffs);
-            }
-        });
     }
 
-    private void FileStatusList_SelectedIndexChanged(object? sender, EventArgs e)
+    private void RevisionGrid_FilterChanged(object? sender, FilterChangedEventArgs e)
+    {
+        string? path = e.PathFilter;
+        if (path?.Length is > 1 && path[0] == '"' && path[^1] == '"')
+        {
+            path = path[1..^1];
+        }
+
+        if (!string.IsNullOrWhiteSpace(path))
+        {
+            RelativePath relativePath = RelativePath.From(path);
+            revisionDiff.FallbackFollowedFile = relativePath;
+            fileTree.FallbackFollowedFile = relativePath;
+        }
+    }
+
+    private void CommitInfoTabControl_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (CommitInfoTabControl.SelectedItem == TreeTabPage)
+        {
+            FillFileTree();
+            fileTree.SwitchFocus(alreadyContainedFocus: false);
+        }
+        else if (CommitInfoTabControl.SelectedItem == DiffTabPage)
+        {
+            revisionDiff.SwitchFocus(alreadyContainedFocus: false);
+        }
+    }
+
+    private void FillFileTree()
     {
         if (RevisionGrid.SelectedRevision is not GitRevision revision
-            || !revision.HasParent
-            || fileStatusList.SelectedItem is not GitItemStatus item)
+            || ReferenceEquals(_fileTreeRevision, revision))
         {
             return;
         }
 
-        IGitModule module = Module;
-        ObjectId parentId = revision.FirstParentId;
-        ThreadHelper.FileAndForget(async () =>
-        {
-            (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(
-                parentId,
-                revision.ObjectId,
-                item.Name,
-                item.OldName,
-                extraDiffArguments: "",
-                module.FilesEncoding,
-                cacheResult: true,
-                isTracked: item.IsTracked,
-                useGitColoring: false,
-                GitCommandConfiguration.Default,
-                CancellationToken.None);
-
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            if (ReferenceEquals(fileStatusList.SelectedItem, item))
-            {
-                fileViewer.ViewPatch(patch?.Text ?? errorMessage);
-            }
-        });
+        _fileTreeRevision = revision;
+        fileTree.DisplayDiffTab([revision]);
     }
 
     private void UICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
@@ -685,14 +679,20 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.FocusCommitInfo:
                 if (AppSettings.CommitInfoPosition == CommitInfoPosition.BelowList)
                 {
-                    CommitInfoTabControl.SelectedIndex = 0;
+                    CommitInfoTabControl.SelectedItem = CommitInfoTabPage;
                 }
 
                 RevisionInfo.Focus();
                 break;
             case Command.FocusDiff:
-                CommitInfoTabControl.SelectedIndex = 1;
-                fileStatusList.Focus();
+                bool diffAlreadyContainedFocus = revisionDiff.IsKeyboardFocusWithin;
+                CommitInfoTabControl.SelectedItem = DiffTabPage;
+                revisionDiff.SwitchFocus(diffAlreadyContainedFocus);
+                break;
+            case Command.FocusFileTree:
+                bool fileTreeAlreadyContainedFocus = fileTree.IsKeyboardFocusWithin;
+                CommitInfoTabControl.SelectedItem = TreeTabPage;
+                fileTree.SwitchFocus(fileTreeAlreadyContainedFocus);
                 break;
             case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
             case Command.ToggleLeftPanel: ToggleLeftPanelClick(this, EventArgs.Empty); break;
@@ -754,6 +754,9 @@ public sealed partial class FormBrowse : GitModuleForm
     }
 
     protected override bool CloseOnEscape => false;
+
+    internal FileStatusList fileStatusList => revisionDiff.FileStatusList;
+    internal Editor.FileViewer fileViewer => revisionDiff.FileViewer;
 
     public override void AddTranslationItems(ITranslation translation)
     {
