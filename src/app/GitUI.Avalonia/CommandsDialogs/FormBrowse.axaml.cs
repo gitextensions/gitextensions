@@ -1,7 +1,8 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Gpg;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -20,11 +21,17 @@ namespace GitUI.CommandsDialogs;
 public sealed partial class FormBrowse : GitModuleForm
 {
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+    private readonly IGpgInfoProvider? _controller;
     private GridLength _commitInfoWidth = new(490);
+    private GpgInfo? _gpgInfo;
+    private GitRevision? _gpgInfoLoadingRevision;
+    private GitRevision? _gpgInfoRevision;
     private GridLength _leftPanelWidth = new(260);
     private GridLength _splitViewBottomHeight = new(2, GridUnitType.Star);
     private GridLength _splitViewTopHeight = new(3, GridUnitType.Star);
     private GitRevision? _fileTreeRevision;
+    private bool _gpgInfoLoaded;
+    private int _gpgInfoLoadVersion;
     private bool _updatingWorkingDirectories;
 
     public static readonly string HotkeySettingsName = "Browse";
@@ -36,6 +43,7 @@ public sealed partial class FormBrowse : GitModuleForm
         FocusCommitInfo = 4,
         FocusDiff = 5,
         FocusFileTree = 6,
+        FocusGpgInfo = 26,
         Commit = 7,
         CheckoutBranch = 10,
         FocusFilter = 18,
@@ -67,6 +75,11 @@ public sealed partial class FormBrowse : GitModuleForm
     }
 
     public FormBrowse(IGitUICommands commands)
+        : this(commands, gpgInfoProvider: null)
+    {
+    }
+
+    internal FormBrowse(IGitUICommands commands, IGpgInfoProvider? gpgInfoProvider)
         : base(commands, enablePositionRestore: true)
     {
         InitializeComponent();
@@ -74,6 +87,7 @@ public sealed partial class FormBrowse : GitModuleForm
         RevisionGrid.UICommandsSource = this;
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
+        _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
@@ -475,6 +489,7 @@ public sealed partial class FormBrowse : GitModuleForm
         revisionDiff.DisplayDiffTab(selectedRevisions);
         fileTree.Clear();
         _fileTreeRevision = null;
+        RefreshGpgInfo(RevisionGrid.SelectedRevision);
         RevisionInfo.Revision = RevisionGrid.SelectedRevision;
         rebaseToolStripMenuItem.IsEnabled =
             RevisionGrid.SelectedRevision is { IsArtificial: false }
@@ -513,6 +528,11 @@ public sealed partial class FormBrowse : GitModuleForm
         {
             revisionDiff.SwitchFocus(alreadyContainedFocus: false);
         }
+        else if (CommitInfoTabControl.SelectedItem == GpgInfoTabPage)
+        {
+            FillGpgInfo();
+            revisionGpgInfo1.FocusInfo();
+        }
     }
 
     private void FillFileTree()
@@ -525,6 +545,84 @@ public sealed partial class FormBrowse : GitModuleForm
 
         _fileTreeRevision = revision;
         fileTree.DisplayDiffTab([revision]);
+    }
+
+    internal void RefreshGpgInfo(GitRevision? revision)
+    {
+        _gpgInfoLoadVersion++;
+        _gpgInfo = null;
+        _gpgInfoLoadingRevision = null;
+        _gpgInfoRevision = revision;
+        _gpgInfoLoaded = false;
+        revisionGpgInfo1.DisplayGpgInfo(null);
+
+        bool showGpgInfoTab = revision?.IsArtificial is false && AppSettings.ShowGpgInformation.Value;
+        GpgInfoTabPage.IsVisible = showGpgInfoTab;
+        if (!showGpgInfoTab)
+        {
+            if (CommitInfoTabControl.SelectedItem == GpgInfoTabPage)
+            {
+                CommitInfoTabControl.SelectedItem = TreeTabPage;
+            }
+
+            return;
+        }
+
+        if (CommitInfoTabControl.SelectedItem == GpgInfoTabPage)
+        {
+            FillGpgInfo();
+        }
+    }
+
+    private void FillGpgInfo()
+    {
+        if (!GpgInfoTabPage.IsVisible
+            || CommitInfoTabControl.SelectedItem != GpgInfoTabPage
+            || RevisionGrid.SelectedRevision is not GitRevision revision
+            || revision.IsArtificial)
+        {
+            return;
+        }
+
+        if (_gpgInfoLoaded && ReferenceEquals(_gpgInfoRevision, revision))
+        {
+            revisionGpgInfo1.DisplayGpgInfo(_gpgInfo);
+            return;
+        }
+
+        if (ReferenceEquals(_gpgInfoLoadingRevision, revision) || _controller is null)
+        {
+            return;
+        }
+
+        _gpgInfoLoadingRevision = revision;
+        ThreadHelper.FileAndForget(() => FillGpgInfoAsync(revision));
+    }
+
+    private async Task FillGpgInfoAsync(GitRevision? revision)
+    {
+        if (revision is null || _controller is null)
+        {
+            return;
+        }
+
+        int loadVersion = _gpgInfoLoadVersion;
+        GpgInfo? info = await _controller.LoadGpgInfoAsync(revision);
+        await this.SwitchToMainThreadAsync();
+        if (loadVersion != _gpgInfoLoadVersion
+            || !ReferenceEquals(RevisionGrid.SelectedRevision, revision))
+        {
+            return;
+        }
+
+        _gpgInfo = info;
+        _gpgInfoLoadingRevision = null;
+        _gpgInfoRevision = revision;
+        _gpgInfoLoaded = true;
+        if (CommitInfoTabControl.SelectedItem == GpgInfoTabPage)
+        {
+            revisionGpgInfo1.DisplayGpgInfo(info);
+        }
     }
 
     private void UICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
@@ -693,6 +791,10 @@ public sealed partial class FormBrowse : GitModuleForm
                 bool fileTreeAlreadyContainedFocus = fileTree.IsKeyboardFocusWithin;
                 CommitInfoTabControl.SelectedItem = TreeTabPage;
                 fileTree.SwitchFocus(fileTreeAlreadyContainedFocus);
+                break;
+            case Command.FocusGpgInfo when GpgInfoTabPage.IsVisible:
+                CommitInfoTabControl.SelectedItem = GpgInfoTabPage;
+                revisionGpgInfo1.FocusInfo();
                 break;
             case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
             case Command.ToggleLeftPanel: ToggleLeftPanelClick(this, EventArgs.Empty); break;
