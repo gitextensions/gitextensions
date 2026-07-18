@@ -37,6 +37,7 @@ public sealed class PlainTextConsoleCommandRunner : UserControl, IPlainTextConso
     {
         _editbox = new TextBox
         {
+            Name = "ConsoleOutput",
             FontFamily = new FontFamily("monospace"),
             IsReadOnly = true,
             AcceptsReturn = true,
@@ -82,6 +83,7 @@ public sealed class PlainTextConsoleCommandRunner : UserControl, IPlainTextConso
     {
         Validates.NotNull(_input);
         _input.Write(text);
+        _input.Flush();
     }
 
     public void KillCommandProcess()
