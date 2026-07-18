@@ -185,6 +185,7 @@ public sealed class VisualParityTests
                 form.CommitInfoTabControl.Bounds.Height.Should().BeGreaterThan(0);
                 form.CommitInfoTabPage.Bounds.Height.Should().Be(23);
                 form.DiffTabPage.Bounds.Height.Should().Be(23);
+                form.TreeTabPage.Bounds.Height.Should().Be(23);
                 form.commitInfoBelowHost.Bounds.Height.Should().BeGreaterThan(0);
                 Point commitHostPosition = form.commitInfoBelowHost.TranslatePoint(new Point(), form.CommitInfoTabControl)
                     ?? throw new InvalidOperationException("The commit-info host position was not available.");
@@ -195,6 +196,10 @@ public sealed class VisualParityTests
                 Dispatcher.UIThread.RunJobs();
                 form.fileStatusList.Bounds.Height.Should().BeGreaterThan(0);
                 form.fileViewer.Bounds.Width.Should().BeGreaterThan(0);
+
+                form.CommitInfoTabControl.SelectedItem = form.TreeTabPage;
+                Dispatcher.UIThread.RunJobs();
+                form.fileTree.Bounds.Height.Should().BeGreaterThan(0);
 
                 GridSplitter[] splitters =
                 [

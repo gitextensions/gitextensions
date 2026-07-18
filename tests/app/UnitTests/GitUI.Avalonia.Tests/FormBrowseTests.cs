@@ -197,6 +197,64 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task FormBrowse_file_tree_should_load_lazily_and_follow_the_path_filter()
+    {
+        CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
+        try
+        {
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            Directory.CreateDirectory(Path.Combine(_workingDirectory, "src"));
+            Directory.CreateDirectory(Path.Combine(_workingDirectory, "docs"));
+            File.WriteAllText(Path.Combine(_workingDirectory, "src", "followed.txt"), "followed file");
+            File.WriteAllText(Path.Combine(_workingDirectory, "docs", "other.txt"), "other file");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "src/followed.txt", "docs/other.txt" });
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "add tree".Quote() });
+
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            try
+            {
+                form.Show();
+                TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+                await WaitUntilAsync(() => loadingStatus.Text == "2 revisions");
+
+                form.fileTree.DisplayedRevision.Should().BeNull("the hidden tab must not enumerate the repository tree");
+                form.fileTree.FileStatusList.GitItemStatuses.Should().BeEmpty();
+
+                form.RevisionGrid.SetAndApplyPathFilter("\"src/followed.txt\"");
+                await WaitUntilAsync(() =>
+                    loadingStatus.Text == "1 revisions"
+                    && form.RevisionGrid.SelectedRevision?.Subject == "add tree");
+
+                form.CommitInfoTabControl.SelectedItem = form.TreeTabPage;
+                Dispatcher.UIThread.RunJobs();
+                await WaitUntilAsync(() =>
+                    form.fileTree.DisplayedRevision?.Subject == "add tree"
+                    && form.fileTree.FileStatusList.GitItemStatuses.Count == 3
+                    && form.fileTree.FileStatusList.SelectedItem?.Name == "src/followed.txt"
+                    && form.fileTree.FileViewer.TextEditor.Text.Contains("followed file", StringComparison.Ordinal));
+
+                TreeView tree = form.fileTree.FileStatusList.FindControl<TreeView>("tvFiles")!;
+                ListBox list = form.fileTree.FileStatusList.FindControl<ListBox>("lstFiles")!;
+                tree.IsVisible.Should().BeTrue();
+                list.IsVisible.Should().BeFalse();
+                form.fileTree.FileStatusList.SelectedRelativePath.Should().Be(RelativePath.From("src/followed.txt"));
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
     public async Task Revision_grid_notes_provider_should_load_and_render_git_notes()
     {
         bool originalShowNotesColumn = AppSettings.ShowGitNotesColumn.Value;

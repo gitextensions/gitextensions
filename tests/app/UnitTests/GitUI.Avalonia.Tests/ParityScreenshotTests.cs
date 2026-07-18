@@ -177,7 +177,7 @@ public sealed partial class ParityScreenshotTests
             window.SetRenderScaling(scaleFactor);
             if (!isWindow)
             {
-                SeedStandaloneControl(view, context);
+                await SeedStandaloneControlAsync(view, context);
             }
 
             await WaitForAsyncViewsAsync(view);
@@ -368,8 +368,21 @@ public sealed partial class ParityScreenshotTests
         }
     }
 
-    private static void SeedStandaloneControl(Control root, CaptureContext context)
+    private static async Task SeedStandaloneControlAsync(Control root, CaptureContext context)
     {
+        if (root is RevisionDiffControl revisionFileTree)
+        {
+            IReadOnlyList<GitItemStatus> treeItems = context.Module.GetTreeFiles(context.HeadRevision.ObjectId, full: true);
+            revisionFileTree.FileStatusList.SetDiffs(
+                [new FileStatusWithDescription(null, context.HeadRevision, "File tree", treeItems)],
+                isFileTreeMode: true);
+            revisionFileTree.FileStatusList.SelectFileOrFolder(RelativePath.From(AppSourcePath));
+            GitItemStatus selectedItem = revisionFileTree.FileStatusList.SelectedItem!;
+            string text = context.Module.GetFileText(selectedItem.TreeId, context.Module.FilesEncoding, stripAnsiEscapeCodes: false) ?? string.Empty;
+            await revisionFileTree.FileViewer.ViewTextAsync(selectedItem.Name, text);
+            return;
+        }
+
         Control[] controls =
         [
             root,
