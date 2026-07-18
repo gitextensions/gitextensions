@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Threading;
 using AvaloniaEdit;
@@ -9,24 +10,28 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUI.Editor.Diff;
 using GitUI.UserControls;
-
 using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Editor;
 
 // Functional twin of GitUI/Editor/FileViewer.cs. It renders parsed patch, combined, word,
 // and range diffs and supports the file-to-file continuous scrolling used by FormStash,
-// plus the plain-text mode with line highlighting used by blame. Blob modes, search,
-// syntax highlighting, and line patching remain deferred.
+// plus the plain-text mode with line highlighting used by blame. Search/navigation uses
+// the original dialog and command boundaries. Blob modes, syntax highlighting, and line
+// patching remain deferred.
 public partial class FileViewer : GitModuleControl
 {
     private readonly DiffBackgroundRenderer _diffBackgroundRenderer;
     private readonly DiffTextColorizer _diffTextColorizer;
     private readonly DiffViewerLineNumberControl _diffViewerLineNumberControl;
+    private readonly FindAndReplaceForm _findAndReplaceForm;
     private readonly List<HighlightedLines> _lineHighlights = [];
     private DiffHighlightService? _diffHighlightService;
+    private bool _hotkeysLoaded;
     private int _lastCaretLine = -1;
 
     public FileViewer()
@@ -45,6 +50,17 @@ public partial class FileViewer : GitModuleControl
         TextEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
         TextEditor.KeyDown += TextEditor_KeyDown;
         TextEditor.PointerWheelChanged += TextEditor_PointerWheelChanged;
+
+        _findAndReplaceForm = new FindAndReplaceForm();
+
+        copyToolStripMenuItem.Click += CopyToolStripMenuItemClick;
+        findToolStripMenuItem.Click += FindToolStripMenuItemClick;
+        replaceToolStripMenuItem.Click += FindToolStripMenuItemClick;
+        goToLineToolStripMenuItem.Click += goToLineToolStripMenuItem_Click;
+        contextMenu.Opening += contextMenu_Opening;
+
+        HotkeysEnabled = true;
+        UICommandsSourceSet += (_, _) => ReloadHotkeys();
 
         InitializeComplete();
     }
@@ -130,6 +146,36 @@ public partial class FileViewer : GitModuleControl
         TextEditor.TextArea.TextView.Redraw();
     }
 
+    /// <summary>Shows the Find window for this editor.</summary>
+    public void Find(bool replace)
+    {
+        _findAndReplaceForm.ShowFor(TextEditor, replace && !TextEditor.IsReadOnly);
+    }
+
+    /// <summary>Finds the next or previous occurrence using the current Find settings.</summary>
+    public Task FindNextAsync(bool searchForwardOrOpenWithDifftool)
+    {
+        return _findAndReplaceForm.FindNextAsync(
+            viaF3: true,
+            searchBackward: !searchForwardOrOpenWithDifftool,
+            messageIfNotFound: "Text not found");
+    }
+
+    /// <summary>Reloads the configurable FileViewer hotkeys.</summary>
+    public void ReloadHotkeys()
+    {
+        IGitUICommands? commands = TryGetUICommandsDirect(out IGitUICommands? directCommands)
+            ? directCommands
+            : this.GetLogicalAncestors().OfType<IGitModuleForm>().FirstOrDefault()?.UICommands;
+        if (commands?.GetService(typeof(IHotkeySettingsLoader)) is not IHotkeySettingsLoader)
+        {
+            return;
+        }
+
+        LoadHotkeys(HotkeySettingsName);
+        _hotkeysLoaded = true;
+    }
+
     private void SetDiffText(string text, DiffHighlightService highlightService, bool showLeftColumn)
     {
         _diffHighlightService = highlightService;
@@ -185,6 +231,22 @@ public partial class FileViewer : GitModuleControl
         documentLine = Math.Clamp(documentLine, 1, document.LineCount);
         TextEditor.TextArea.Caret.Position = new TextViewPosition(documentLine, column: 1);
         TextEditor.ScrollToLine(documentLine);
+    }
+
+    private int MaxLineNumber
+    {
+        get
+        {
+            if (_diffHighlightService is null)
+            {
+                return TextEditor.Document?.LineCount ?? 1;
+            }
+
+            IEnumerable<int> mappedLines = _diffHighlightService.LinesInfo.DiffLines.Values
+                .SelectMany(line => new[] { line.LeftLineNumber, line.RightLineNumber })
+                .Where(line => line != DiffLineInfo.NotApplicableLineNum);
+            return mappedLines.DefaultIfEmpty(1).Max();
+        }
     }
 
     private int FindDocumentLine(int fileLine)
@@ -315,11 +377,107 @@ public partial class FileViewer : GitModuleControl
 
     private void TextEditor_KeyDown(object? sender, KeyEventArgs e)
     {
+        if (!_hotkeysLoaded)
+        {
+            ReloadHotkeys();
+        }
+
+        if (ProcessHotkey(KeysMapper.ToKeys(e)))
+        {
+            e.Handled = true;
+            return;
+        }
+
         if (e.Key == Key.Escape)
         {
             EscapePressed?.Invoke();
             e.Handled = true;
         }
+    }
+
+    private void contextMenu_Opening(object? sender, EventArgs e)
+    {
+        copyToolStripMenuItem.IsEnabled = TextEditor.SelectionLength > 0;
+        replaceToolStripMenuItem.IsVisible = !TextEditor.IsReadOnly;
+        goToLineToolStripMenuItem.IsEnabled = MaxLineNumber > 0;
+    }
+
+    private void CopyToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        TextEditor.Copy();
+    }
+
+    private void FindToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        Find(sender == replaceToolStripMenuItem);
+    }
+
+    private void goToLineToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        using FormGoToLine formGoToLine = new();
+        formGoToLine.SetMaxLineNumber(MaxLineNumber);
+        if (formGoToLine.ShowDialog(TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window) == WinFormsShims.DialogResult.OK)
+        {
+            GoToLine(formGoToLine.GetLineNumber());
+        }
+    }
+
+    /// <summary>Gets the persisted hotkey category name.</summary>
+    public static readonly string HotkeySettingsName = "FileViewer";
+
+    internal enum Command
+    {
+        Find = 0,
+        Replace = 16,
+        FindNextOrOpenWithDifftool = 8,
+        FindPrevious = 9,
+        GoToLine = 1,
+        IncreaseNumberOfVisibleLines = 2,
+        DecreaseNumberOfVisibleLines = 3,
+        ShowEntireFile = 4,
+        ShowSyntaxHighlighting = 17,
+        ShowGitWordColoring = 18,
+        ShowDifftastic = 19,
+        TreatFileAsText = 5,
+        NextChange = 6,
+        PreviousChange = 7,
+        NextOccurrence = 10,
+        PreviousOccurrence = 11,
+        StageLines = 12,
+        UnstageLines = 13,
+        ResetLines = 14,
+        IgnoreAllWhitespace = 15,
+    }
+
+    protected override bool ExecuteCommand(int cmd)
+    {
+        switch ((Command)cmd)
+        {
+            case Command.Find:
+                Find(replace: false);
+                break;
+            case Command.Replace:
+                if (TextEditor.IsReadOnly)
+                {
+                    return false;
+                }
+
+                Find(replace: true);
+                break;
+            case Command.FindNextOrOpenWithDifftool:
+                this.InvokeAndForget(() => FindNextAsync(searchForwardOrOpenWithDifftool: true));
+                break;
+            case Command.FindPrevious:
+                this.InvokeAndForget(() => FindNextAsync(searchForwardOrOpenWithDifftool: false));
+                break;
+            case Command.GoToLine:
+                goToLineToolStripMenuItem_Click(this, EventArgs.Empty);
+                break;
+            default:
+                return base.ExecuteCommand(cmd);
+        }
+
+        return true;
     }
 
     private void TextEditor_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
@@ -384,5 +542,19 @@ public partial class FileViewer : GitModuleControl
                 }
             }
         }
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly FileViewer _control;
+
+        public TestAccessor(FileViewer control)
+        {
+            _control = control;
+        }
+
+        public FindAndReplaceForm FindAndReplaceForm => _control._findAndReplaceForm;
     }
 }

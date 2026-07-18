@@ -443,7 +443,37 @@
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. Encodings, blob modes, search, and line patching remain deferred."
+    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. The original Find/Find previous/Go-to-line command IDs, persisted hotkeys, reusable FindAndReplaceForm, modal FormGoToLine, and functional Copy/Find/Go-to-line context actions are present; Replace stays hidden while the viewer is read-only. F3 performs Find-next after a search; its original no-search Open-with-difftool fallback waits for the shared custom-tool integration. Encodings, blob modes, syntax/display options, full context actions, and line patching remain deferred."
+  },
+  "src/app/GitUI/Editor/FileViewer.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "AvaloniaEdit surface with the currently functional original context-menu identities: Copy, Find, Replace (hidden while read-only), and Go to line. The remaining toolbar, image, encoding, diff-option, and line-patching chrome retains later owners."
+  },
+  "src/app/GitUI/Editor/FindAndReplaceForm.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FindAndReplaceForm.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named reusable modeless Find/Replace window with forward/backward wrapping, case and whole-word matching, selection scan regions, multi-file loader boundary, replace/replace-all, and framework-native highlight-all rendering. The current FileViewer exposes Find mode only because it remains read-only; scan-region shading and the optional editor filename in the title remain deferred."
+  },
+  "src/app/GitUI/Editor/FindAndReplaceForm.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FindAndReplaceForm.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Fixed-size layout preserves every original control identity, translation key, mode-dependent visibility, and action grouping."
+  },
+  "src/app/GitUI/Editor/FormGoToLine.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FormGoToLine.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "One-based bounded line selection, translated range label, initial selection/focus, and WinForms-shaped dialog result behavior."
+  },
+  "src/app/GitUI/Editor/FormGoToLine.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FormGoToLine.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact fixed dialog retains the original label, numeric input, OK, and Cancel identities; the native Fluent numeric spinner requires a slightly taller input and client area than WinForms."
   },
   "src/app/GitUI/Editor/Diff/DiffLineType.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLineType.cs",
