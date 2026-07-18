@@ -89,7 +89,7 @@ internal static class LinesMatcher
                 bestScore = score;
                 bestRemovedIndex = removedIndex;
                 bestAddedIndex = addedIndex;
-                if (score == 1)
+                if (score >= 1)
                 {
                     break;
                 }
