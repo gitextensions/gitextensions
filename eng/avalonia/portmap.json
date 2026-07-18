@@ -15,7 +15,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Functional repository shell: five browse panes plus the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer and terminal; it wraps rather than hiding commands at narrow widths. The original CommitInfoTabControl identities host the selection-driven Commit, Diff, lazily loaded File tree, and conditionally visible/lazily loaded GPG workflows; ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. Settings, scripts/plugins and worktrees/submodules remain absent until their owning phases. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer and terminal; it wraps rather than hiding commands at narrow widths. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, and shared Output history; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. Settings, scripts/plugins and worktrees/submodules remain absent until their owning phases. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs; Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
   },
   "src/app/GitUI/CommandsDialogs/RevisionDiffControl.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml.cs",
@@ -40,6 +40,42 @@
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "The original tableLayoutPanel1, commitSignPicture, tagSignPicture, txtCommitGpgInfo, and txtTagGpgInfo identities map to a two-row Avalonia grid; the tag row collapses when no tag exists and otherwise shares the available height equally."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named read-only monospace history surface with the original TextBox, copy, and clear identities. Clickable links remain deferred."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryControl.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControl.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The RichTextBox and ContextMenuStrip map to a read-only no-wrap Avalonia TextBox and ContextMenu using the existing translation identities."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryControllerBase.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControllerBase.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves shared-history subscription, copy/clear behavior, tail positioning, focus contract, and disposal. Link activation remains deferred with rich-text link rendering."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryTabController.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryTabController.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Creates the original OutputHistoryTab only when history is enabled and focuses its content through the upstream Ctrl+D9 command."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryPanelController.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryPanelController.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Maps the synchronized WinForms split panels to one lower cross-pane Avalonia row, preserving OutputHistoryPanelVisible toggling, focus, a six-DIP splitter target, and the last in-session height."
+  },
+  "src/app/GitUI/Models/OutputHistoryModel.cs": {
+    "twin": "src/app/GitUI.Avalonia/Models/OutputHistoryModel.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves the bounded process-wide history, formatting, ANSI removal, notifications, and clear behavior; ANSI stripping reuses the Avalonia diff parser because the WinForms model references ICSharpCode.TextEditor markers."
   },
   "src/app/GitUI/CommandsDialogs/FullBleedTabControl.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FullBleedTabControl.cs",
@@ -669,7 +705,7 @@
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Registers the plain text console emulation, reduced hotkey settings loader, and cross-platform external-terminal launcher; Linux honors the desktop default through xdg-terminal-exec before named fallbacks."
+    "notes": "Registers the plain-text command and embedded-shell emulation, shared Output history provider/recorder with trace forwarding, reduced hotkey settings loader, and cross-platform external-terminal launcher; Linux honors the desktop default through xdg-terminal-exec before named fallbacks."
   },
   "src/app/GitUI/MessageBoxes.cs": {
     "twin": "src/app/GitUI.Avalonia/MessageBoxes.cs",
@@ -723,7 +759,13 @@
     "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only TextBox output; Linux and macOS commands start through ProcessExtensions.StartInOwnProcessGroup so cancellation reaches re-parented group members; no clickable links yet."
+    "notes": "Read-only TextBox output with flushed redirected input; Linux and macOS commands start through ProcessExtensions.StartInOwnProcessGroup so cancellation reaches re-parented group members; no clickable links yet. The Avalonia-only PlainTextConsoleShellRunner composes this runner with one command input and the platform shell."
+  },
+  "src/app/GitUI/ConsoleEmulation/PlainText/PlainTextConsoleEmulatorsRegistry.cs": {
+    "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/PlainText/PlainTextConsoleEmulatorsRegistry.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains the plain-text command fallback and advertises one emulator only when the platform shell is usable. Its Avalonia-only emulator/shell-runner pair hosts COMSPEC on Windows and SHELL or /bin/sh on Unix without changing the WinForms registry."
   },
   "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs": {
     "twin": "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs",
