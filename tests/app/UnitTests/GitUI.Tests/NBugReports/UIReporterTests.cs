@@ -67,10 +67,10 @@ public sealed class UIReporterTests
             // MissingMethodException
             yield return new TestCaseData(
                 new MissingMethodException("ICSharpCode.TextEditor.TextAreaControl", "get_VScrollBar"),
-                "ICSharpCode.TextEditor.TextAreaControl");
+                "ICSharpCode.TextEditor.TextAreaControl.get_VScrollBar");
             yield return new TestCaseData(
                 new MissingMethodException("MyAssembly.MyType", "MyMethod"),
-                "MyAssembly.MyType");
+                "MyAssembly.MyType.MyMethod");
             yield return new TestCaseData(
                 new MissingMethodException(),
                 "unknown");
@@ -258,7 +258,7 @@ public sealed class UIReporterTests
 
         page.Icon.Should().Be(TaskDialogIcon.Warning);
         page.AllowCancel.Should().BeFalse();
-        page.Heading.Should().Contain("ICSharpCode.TextEditor.TextAreaControl");
+        page.Heading.Should().Contain("ICSharpCode.TextEditor.TextAreaControl.get_VScrollBar");
         // Report button should appear because ICSharpCode.TextEditor is not a .NET framework or VC runtime assembly
         page.Buttons.Should().HaveCount(2);
         page.Expander.Should().NotBeNull();

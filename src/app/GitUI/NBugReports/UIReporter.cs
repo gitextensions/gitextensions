@@ -290,9 +290,14 @@ internal sealed class UIReporter : IBugReporter
         }
         else if (exception is MissingMethodException missingMethodException)
         {
-            // ClassName is the fully-qualified name of the type that declares the missing method
-            // (e.g. "ICSharpCode.TextEditor.TextAreaControl"), set by the runtime for version-mismatch errors.
-            fileName = missingMethodException.ClassName ?? "unknown";
+            // Combine ClassName and MemberName so the heading names the exact missing method.
+            // Both are populated by the runtime when a version-mismatch triggers the exception
+            // (e.g. ClassName="ICSharpCode.TextEditor.TextAreaControl", MemberName="get_VScrollBar").
+            string? className = missingMethodException.ClassName;
+            string? memberName = missingMethodException.MemberName;
+            fileName = (!string.IsNullOrEmpty(className) && !string.IsNullOrEmpty(memberName))
+                ? $"{className}.{memberName}"
+                : className ?? memberName ?? "unknown";
         }
         else
         {

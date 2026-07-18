@@ -10416,7 +10416,7 @@ Select this commit to populate the full message.</source>
         <target />
       </trans-unit>
       <trans-unit id="_methodNotFoundInAssemblyFormat.Text">
-        <source>Method not found in assembly '{0}'.</source>
+        <source>Method not found: '{0}'.</source>
         <target />
       </trans-unit>
       <trans-unit id="_methodNotFoundInAssemblyText.Text">
