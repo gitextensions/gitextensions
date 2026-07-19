@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Selection;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -19,6 +20,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
     private IRevisionGridInfo? _revisionGridInfo;
     private IRevisionGridUpdate? _revisionGridUpdate;
     private RevisionDiffControl? _revisionFileTree;
+    private Action? _refreshGitStatus;
     private RelativePath? _fallbackFollowedFile;
     private RelativePath? _lastExplicitlySelectedItem;
     private RelativePath? _previousItem;
@@ -29,6 +31,8 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         InitializeComponent();
 
         _diffCalculator = new FileStatusDiffCalculator(() => Module);
+        DiffFiles.SelectionMode = SelectionMode.Multiple;
+        DiffFiles.Bind(RefreshArtificial);
         DiffFiles.SelectedIndexChanged += DiffFiles_SelectedIndexChanged;
         DiffFiles.DoubleClick += (_, _) => ShowSelectedFile();
         DiffText.TopScrollReached += (_, _) =>
@@ -74,8 +78,19 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         _revisionGridInfo = revisionGridInfo;
         _revisionGridUpdate = revisionGridUpdate;
         _revisionFileTree = revisionFileTree;
+        _refreshGitStatus = refreshGitStatus;
         _diffCalculator.DescribeRevision = objectId => DescribeRevision(objectId);
         _diffCalculator.GetActualRevision = revisionGridInfo.GetActualRevision;
+        DiffFiles.BindContextMenu(
+            blame: null,
+            cherryPickChanges: null,
+            filterFileInGrid: FilterFileInGrid,
+            refreshParent: RequestRefresh,
+            openInFileTreeTab_AsBlame: revisionFileTree is null ? null : OpenInFileTreeTab,
+            getCurrentRevision: () => DisplayedRevision,
+            getLineNumber: () => DiffText.CurrentFileLine,
+            getSelectedText: null,
+            getSupportLinePatching: () => DiffText.SupportLinePatching);
     }
 
     public void DisplayDiffTab(IReadOnlyList<GitRevision> revisions)
@@ -194,6 +209,39 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 
         GitRevision? revision = _revisionGridInfo.GetRevision(objectId);
         return revision is null ? objectId.ToShortString() : _revisionGridInfo.DescribeRevision(revision);
+    }
+
+    private void FilterFileInGrid()
+    {
+        string pathFilter = DiffFiles.SelectedFolder is RelativePath relativePath
+            ? relativePath.Value
+            : string.Join(" ", DiffFiles.SelectedItems.Select(item => item.Item.Name.ToPosixPath().QuoteNE()));
+        (TopLevel.GetTopLevel(this) as FormBrowse)?.SetPathFilter(pathFilter);
+    }
+
+    private void OpenInFileTreeTab(bool requestBlame)
+    {
+        if (_revisionFileTree is null)
+        {
+            return;
+        }
+
+        RelativePath? path = DiffFiles.SelectedFolder
+            ?? DiffFiles.SelectedItems.Select(item => RelativePath.From(item.Item.Name)).FirstOrDefault();
+        if (path is null)
+        {
+            return;
+        }
+
+        int line = DiffText.CurrentFileLine;
+        Action focusView = () => (TopLevel.GetTopLevel(this) as FormBrowse)?.ExecuteCommand(FormBrowse.Command.FocusFileTree);
+        _revisionFileTree.SelectFileOrFolder(focusView, path, line, requestBlame);
+    }
+
+    private void RequestRefresh()
+    {
+        _refreshGitStatus?.Invoke();
+        RefreshArtificial();
     }
 
     private void DiffFiles_SelectedIndexChanged(object? sender, EventArgs e)

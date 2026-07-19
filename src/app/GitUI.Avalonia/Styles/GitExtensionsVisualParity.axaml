@@ -56,6 +56,10 @@
                            Color="#808080" />
           <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
                            Color="#8A8A8A" />
+          <SolidColorBrush x:Key="GitExtensionsValidFilterBackgroundBrush"
+                           Color="#C8FFC8" />
+          <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
+                           Color="#FFC8C8" />
           <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#EBEBEB" />
@@ -98,6 +102,10 @@
                            Color="#CFB3B3" />
           <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
                            Color="#7A7A7A" />
+          <SolidColorBrush x:Key="GitExtensionsValidFilterBackgroundBrush"
+                           Color="#274439" />
+          <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
+                           Color="#453030" />
           <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#323232" />
           <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#F1F1F1" />
           <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#252526" />
@@ -138,6 +146,12 @@
 
   <Style Selector="TextBox">
     <Setter Property="MinHeight" Value="23" />
+  </Style>
+  <Style Selector="TextBox.file-filter-active">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsValidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.file-filter-invalid">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidFilterBackgroundBrush}" />
   </Style>
   <Style Selector="ComboBox">
     <Setter Property="MinHeight" Value="23" />
