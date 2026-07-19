@@ -108,16 +108,14 @@ public sealed partial class FormPull : GitExtensionsDialog
                 fetchTags: null,
                 isUnshallow: false);
 
-        bool success = FormProcess.ShowDialog(
-            owner,
-            UICommands,
-            arguments,
-            Module.WorkingDir,
-            input: null,
-            useDialogSettings: true);
-        ErrorOccurred = !success;
+        using FormRemoteProcess form = new(UICommands, arguments)
+        {
+            Remote = remote == AllRemotes ? string.Empty : remote,
+        };
+        form.ShowDialog(owner);
+        ErrorOccurred = form.ErrorOccurred();
         Module.InvalidateGitSettings();
-        return success ? WinFormsShims.DialogResult.OK : WinFormsShims.DialogResult.No;
+        return ErrorOccurred ? WinFormsShims.DialogResult.No : WinFormsShims.DialogResult.OK;
     }
 
     private void BindRemotes(string? defaultRemote)

@@ -14,10 +14,9 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormClone.cs. The clone runs in the existing process
-// dialog until FormRemoteProcess is ported, and the PuTTY pieces (Load SSH key button,
-// host-key/authentication recovery prompts) are not ported — the twin relies on
-// OpenSSH. The history combos hold the path strings rather than Repository objects,
+// Twin of GitUI/CommandsDialogs/FormClone.cs. The clone runs in FormRemoteProcess through
+// OpenSSH; the PuTTY pieces (Load SSH key button and registry/key-agent recovery prompts)
+// are not ported. The history combos hold the path strings rather than Repository objects,
 // and the "opened as dialog" check replaces the WinForms ShowInTaskbar test.
 public sealed partial class FormClone : GitExtensionsDialog
 {
@@ -274,9 +273,7 @@ public sealed partial class FormClone : GitExtensionsDialog
                 cbIntializeAllSubmodules.IsChecked == true,
                 branch, depth, isSingleBranch);
 
-            // The existing process dialog runs the clone until FormRemoteProcess (with
-            // its PuTTY host-key recovery) is ported.
-            bool success = FormProcess.ShowDialog(this, UICommands, cloneCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+            bool success = FormRemoteProcess.ShowDialog(this, UICommands, cloneCmd);
             if (!success || Module.InTheMiddleOfPatch())
             {
                 return;

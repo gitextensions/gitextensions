@@ -146,8 +146,8 @@
   "src/app/GitUI/CommandsDialogs/FormCreateTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateTag.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Creates lightweight, annotated, default-key-signed, or specific-key-signed tags through the shared GitTagController, with revision picking, force, and optional push. EditNetSpell is represented by the same-named multiline TextBox until Phase 3.21; push uses FormProcess until FormRemoteProcess and push event scripts are ported."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Creates lightweight, annotated, default-key-signed, or specific-key-signed tags through the shared GitTagController, with revision picking, force, and optional push through FormRemoteProcess. EditNetSpell is represented by the same-named multiline TextBox until Phase 3.21; push event scripts remain deferred."
   },
   "src/app/GitUI/CommandsDialogs/FormDeleteBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteBranch.axaml.cs",
@@ -164,8 +164,8 @@
   "src/app/GitUI/CommandsDialogs/FormClone.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormClone.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "URL/destination/subdirectory with live location info, clipboard URL suggestion, current-remote prefill, remote branch listing on dropdown (default remote-HEAD / no-checkout items), shallow-clone and submodule options, repository type, open-after-clone question, and history updates; the clone runs in the existing process dialog until FormRemoteProcess is ported. StartCloneDialog is live. Not ported: the PuTTY pieces (Load SSH key, host-key/authentication recovery), the busy cursor during branch loading, and the ShowInTaskbar test (replaced by the dialog invocation itself); history combos hold path strings rather than Repository objects."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "URL/destination/subdirectory with live location info, clipboard URL suggestion, current-remote prefill, remote branch listing on dropdown (default remote-HEAD / no-checkout items), shallow-clone and submodule options, repository type, open-after-clone question, and history updates; clone execution uses FormRemoteProcess with OpenSSH. StartCloneDialog is live. Not ported: the PuTTY pieces (Load SSH key and registry/key-agent recovery), the busy cursor during branch loading, and the ShowInTaskbar test (replaced by the dialog invocation itself); history combos hold path strings rather than Repository objects."
   },
   "src/app/GitUI/CommandsDialogs/FormRemotes.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRemotes.axaml.cs",
@@ -200,8 +200,8 @@
   "src/app/GitUI/CommandsDialogs/FormDeleteTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteTag.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Local deletion, optional deletion from one configured remote, the shared remote selector, and the shared manual link are functional. Remote deletion uses FormProcess until FormRemoteProcess is ported; before/after push event scripts remain deferred to the ScriptsEngine tranche."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Local deletion, optional deletion from one configured remote through FormRemoteProcess, the shared remote selector, and the shared manual link are functional. Before/after push event scripts remain deferred to the ScriptsEngine tranche."
   },
   "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
@@ -212,14 +212,14 @@
   "src/app/GitUI/CommandsDialogs/FormPush.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPush.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced flow: current branch to the same branch on the selected remote, optional force-with-lease, push-on-show, and commit-and-push. URL/tag/multiple-branch pushes, tracking prompts, remote management, scripts, submodule options, and rejected-push recovery remain deferred."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Reduced flow: current branch to the same branch on the selected remote through FormRemoteProcess, optional force-with-lease, push-on-show, and commit-and-push. URL/tag/multiple-branch pushes, tracking prompts, remote management, scripts, submodule options, and rejected-push recovery remain deferred."
   },
   "src/app/GitUI/CommandsDialogs/FormPull.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPull.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced flow: merge pull, rebase pull, and fetch-only from a selected configured remote; immediate execution and the browse entry point are functional. URL pulls, remote management, auto-stash, tag/prune/unshallow controls, scripts, submodule follow-up, and conflict recovery remain deferred."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Reduced flow: merge pull, rebase pull, and fetch-only from a selected configured remote through FormRemoteProcess; immediate execution and the browse entry point are functional. URL pulls, remote management, auto-stash, tag/prune/unshallow controls, scripts, submodule follow-up, and conflict recovery remain deferred."
   },
   "src/app/GitUI/UserControls/FilterToolBar.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml.cs",
@@ -752,8 +752,8 @@
   "src/app/GitUI/GitUICommands.cs": {
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Process, normal-commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, rename-branch, file-history, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal-commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, rename-branch, file-history, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
@@ -802,6 +802,18 @@
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Headless end-to-end success and failure tests pass; Escape now uses the shared dialog key handler instead of a form-specific override."
+  },
+  "src/app/GitUI/HelperDialogs/FormRemoteProcess.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormRemoteProcess.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named remote-command boundary reuses FormProcess progress, stdin authentication, cancellation, process-tree cleanup, and consumer HandleOnExitCallback/Retry behavior. OpenSSH is the portable path; PuTTY registry host-key caching, key-agent recovery, and their translation strings are intentionally absent."
+  },
+  "src/app/GitUI/HelperDialogs/FormRemoteProcess.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormRemoteProcess.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The original subclass designer adds no controls and is not invoked by its constructor; the Avalonia twin correctly inherits the FormStatus visual tree without a duplicate axaml."
   },
   "src/app/GitUI/UserControls/PasswordInput.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/PasswordInput.axaml.cs",

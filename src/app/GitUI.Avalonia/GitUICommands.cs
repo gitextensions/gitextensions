@@ -77,8 +77,9 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartCommandLineProcessDialog(IWin32Window? owner, IGitCommand command)
     {
-        // TODO(avalonia-port): use FormRemoteProcess for remote commands once it is ported.
-        bool success = FormProcess.ShowDialog(owner, this, arguments: command.Arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+        bool success = command.AccessesRemote
+            ? FormRemoteProcess.ShowDialog(owner, this, command.Arguments)
+            : FormProcess.ShowDialog(owner, this, arguments: command.Arguments, Module.WorkingDir, input: null, useDialogSettings: true);
 
         if (success && command.ChangesRepoState)
         {
