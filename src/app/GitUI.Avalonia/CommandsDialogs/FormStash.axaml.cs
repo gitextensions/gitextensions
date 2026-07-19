@@ -13,8 +13,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormStash.cs. The file list and viewer are intentionally
-// reduced to read-only stash inspection; line-patching context-menu actions remain deferred.
+// Twin of GitUI/CommandsDialogs/FormStash.cs. The file list and viewer retain the original
+// stash inspection and selected-patch application boundary.
 public sealed partial class FormStash : GitModuleForm
 {
     private readonly TranslationString _currentWorkingDirChanges = new("Current working directory changes");
@@ -43,7 +43,9 @@ public sealed partial class FormStash : GitModuleForm
             (stash, _) => new TextBlock { Text = stash?.Summary ?? string.Empty },
             supportsRecycling: false);
         Stashed.Bind(() => RefreshAll());
+        Stashed.BindContextMenu(View.CherryPickAllChanges, () => View.SupportLinePatching);
         Stashed.SelectedIndexChanged += StashedSelectedIndexChanged;
+        View.ExtraDiffArgumentsChanged += StashedSelectedIndexChanged;
         View.TopScrollReached += FileViewer_TopScrollReached;
         View.BottomScrollReached += FileViewer_BottomScrollReached;
         View.EscapePressed += Close;
