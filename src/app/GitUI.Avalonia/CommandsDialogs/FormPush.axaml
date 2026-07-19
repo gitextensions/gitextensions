@@ -2,62 +2,237 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:compat="using:GitUI.Compat"
         xmlns:properties="using:GitUI.Properties"
+        xmlns:usercontrols="using:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormPush"
-        Width="600"
-        Height="285"
-        MinWidth="500"
-        MinHeight="285"
+        Width="650"
+        Height="400"
+        MinWidth="600"
+        MinHeight="360"
         CanResize="True"
         Title="Push">
   <Grid Classes="gitextensions-dialog-main"
-        RowDefinitions="Auto,Auto,Auto,*">
+        RowDefinitions="Auto,*,Auto">
     <HeaderedContentControl x:Name="groupBox2"
                             Classes="gitextensions-group-box"
                             Header="Push to">
-      <Grid ColumnDefinitions="Auto,*"
-            RowDefinitions="Auto">
-        <TextBlock Classes="gitextensions-dialog-label"
-                   Margin="0,0,12,0"
-                   Text="Remote" />
+      <Grid ColumnDefinitions="Auto,*,Auto"
+            RowDefinitions="Auto,Auto">
+        <RadioButton x:Name="PushToRemote"
+                     Grid.Row="0"
+                     Margin="0,0,12,0"
+                     VerticalAlignment="Center"
+                     Content="_Remote"
+                     IsChecked="True" />
         <ComboBox x:Name="_NO_TRANSLATE_Remotes"
+                  Grid.Row="0"
                   Grid.Column="1"
                   MinWidth="280" />
+        <compat:IconButton x:Name="AddRemote"
+                           Grid.Row="0"
+                           Grid.Column="2"
+                           Margin="8,0,0,0"
+                           Icon="{x:Static properties:Images.Remotes}"
+                           Content="_Manage remotes" />
+
+        <RadioButton x:Name="PushToUrl"
+                     Grid.Row="1"
+                     Margin="0,8,12,0"
+                     VerticalAlignment="Center"
+                     Content="U_rl" />
+        <ComboBox x:Name="PushDestination"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Margin="0,8,0,0"
+                  IsEditable="True"
+                  IsEnabled="False" />
+        <usercontrols:FolderBrowserButton x:Name="folderBrowserButton1"
+                                          Grid.Row="1"
+                                          Grid.Column="2"
+                                          Margin="8,8,0,0"
+                                          IsEnabled="False" />
       </Grid>
     </HeaderedContentControl>
 
-    <Grid Grid.Row="1"
-          Margin="8,14,8,0"
-          ColumnDefinitions="Auto,*,Auto,*">
-      <TextBlock x:Name="labelFrom"
-                 Classes="gitextensions-dialog-label"
-                 Margin="0,0,12,0"
-                 Text="_Branch to push" />
-      <TextBox x:Name="_NO_TRANSLATE_Branch"
-               Grid.Column="1"
-               IsReadOnly="True" />
-      <TextBlock x:Name="labelTo"
-                 Classes="gitextensions-dialog-label"
-                 Grid.Column="2"
-                 Margin="12,0"
-                 Text="_to" />
-      <TextBox x:Name="RemoteBranch"
-               Grid.Column="3"
-               IsReadOnly="True" />
+    <TabControl x:Name="TabControlTagBranch"
+                Grid.Row="1"
+                Margin="8,12,8,0"
+                SelectedIndex="0">
+      <TabItem x:Name="BranchTab"
+               Classes="gitextensions-dialog-tab"
+               Header="Push branches">
+        <Grid Margin="8"
+              RowDefinitions="Auto,Auto,*">
+          <Grid x:Name="tableLayoutPanel1"
+                ColumnDefinitions="Auto,*,Auto,*">
+            <TextBlock x:Name="labelFrom"
+                       Classes="gitextensions-dialog-label"
+                       Margin="0,0,12,0"
+                       Text="_Branch to push" />
+            <ComboBox x:Name="_NO_TRANSLATE_Branch"
+                      Grid.Column="1"
+                      MinWidth="170"
+                      IsEditable="True" />
+            <TextBlock x:Name="labelTo"
+                       Classes="gitextensions-dialog-label"
+                       Grid.Column="2"
+                       Margin="10,0"
+                       Text="_to" />
+            <ComboBox x:Name="RemoteBranch"
+                      Grid.Column="3"
+                      MinWidth="170"
+                      IsEditable="True" />
+          </Grid>
+
+          <HyperlinkButton x:Name="ShowOptions"
+                           Grid.Row="1"
+                           Margin="0,6,0,0"
+                           Padding="0"
+                           HorizontalAlignment="Left"
+                           Content="Show options" />
+
+          <Border x:Name="PushOptionsPanel"
+                  Grid.Row="2"
+                  Margin="0,6,0,0"
+                  Padding="8"
+                  BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                  BorderThickness="1"
+                  IsVisible="False">
+            <Grid RowDefinitions="Auto,Auto"
+                  ColumnDefinitions="*,Auto">
+              <StackPanel x:Name="ForcePushOptionPanel"
+                          Orientation="Horizontal">
+                <CheckBox x:Name="ckForceWithLease"
+                          Content="_Force with lease" />
+                <CheckBox x:Name="ForcePushBranches"
+                          Margin="12,0,0,0"
+                          Content="F_orce push" />
+              </StackPanel>
+              <StackPanel x:Name="flowLayoutPanel1"
+                          Grid.Column="1"
+                          Margin="12,0,0,0"
+                          Orientation="Horizontal">
+                <TextBlock x:Name="label2"
+                           Classes="gitextensions-dialog-label"
+                           Margin="0,0,8,0"
+                           Text="Recursive _submodules" />
+                <ComboBox x:Name="RecursiveSubmodules"
+                          Width="120" />
+              </StackPanel>
+              <CheckBox x:Name="ReplaceTrackingReference"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="0,6,0,0"
+                        Content="R_eplace tracking reference" />
+            </Grid>
+          </Border>
+        </Grid>
+      </TabItem>
+
+      <TabItem x:Name="TagTab"
+               Classes="gitextensions-dialog-tab"
+               Header="Push tags">
+        <Grid Margin="8"
+              ColumnDefinitions="Auto,*"
+              RowDefinitions="Auto,Auto">
+          <TextBlock x:Name="label1"
+                     Classes="gitextensions-dialog-label"
+                     Margin="0,0,12,0"
+                     Text="_Tag to push" />
+          <ComboBox x:Name="TagComboBox"
+                    Grid.Column="1"
+                    MinWidth="260"
+                    IsEditable="True" />
+          <CheckBox x:Name="ForcePushTags"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,8,0,0"
+                    Content="_Force push" />
+        </Grid>
+      </TabItem>
+
+      <TabItem x:Name="MultipleBranchTab"
+               Classes="gitextensions-dialog-tab"
+               Header="Push multiple branches">
+        <Grid Margin="4"
+              RowDefinitions="Auto,*">
+          <Grid ColumnDefinitions="2*,2*,110,65,65,120">
+            <Border x:Name="LocalColumn"
+                    Padding="4,3"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="1">
+              <TextBlock Text="Local Branch" />
+            </Border>
+            <Border x:Name="RemoteColumn"
+                    Grid.Column="1"
+                    Padding="4,3"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,1,1">
+              <TextBlock Text="Remote Branch" />
+            </Border>
+            <Border x:Name="NewColumn"
+                    Grid.Column="2"
+                    Padding="4,3"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,1,1">
+              <TextBlock Text="Ahead/Behind" />
+            </Border>
+            <Border x:Name="PushColumn"
+                    Grid.Column="3"
+                    Padding="4,3"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,1,1">
+              <Border.ContextMenu>
+                <ContextMenu x:Name="menuPushSelection">
+                  <MenuItem x:Name="unselectAllToolStripMenuItem"
+                            Header="Unselect all" />
+                  <MenuItem x:Name="selectTrackedToolStripMenuItem"
+                            Header="Select tracked" />
+                  <MenuItem x:Name="selectAllToolStripMenuItem"
+                            Header="Select all" />
+                </ContextMenu>
+              </Border.ContextMenu>
+              <TextBlock Text="Push" />
+            </Border>
+            <Border x:Name="ForceColumn"
+                    Grid.Column="4"
+                    Padding="4,3"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,1,1">
+              <TextBlock Text="Force" />
+            </Border>
+            <Border x:Name="DeleteColumn"
+                    Grid.Column="5"
+                    Padding="4,3"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,1,1">
+              <TextBlock Text="Delete Remote Branch" />
+            </Border>
+          </Grid>
+          <ListBox x:Name="BranchGrid"
+                   Grid.Row="1">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+              </Style>
+            </ListBox.Styles>
+          </ListBox>
+        </Grid>
+      </TabItem>
+    </TabControl>
+
+    <Grid Grid.Row="2"
+          Margin="0,12,0,0"
+          ColumnDefinitions="Auto,*,Auto">
+      <compat:IconButton x:Name="Pull"
+                         Grid.Column="0"
+                         MinWidth="100"
+                         Content="P_ull" />
+      <compat:IconButton x:Name="Push"
+                         Classes="gitextensions-dialog-action"
+                         Grid.Column="2"
+                         MinWidth="100"
+                         Icon="{x:Static properties:Images.ArrowUp}"
+                         IsDefault="True" />
     </Grid>
-
-    <CheckBox x:Name="ckForceWithLease"
-              Grid.Row="2"
-              Margin="8,14,8,0"
-              Content="_Force with lease" />
-
-    <compat:IconButton x:Name="Push"
-                       Classes="gitextensions-dialog-action"
-                       Grid.Row="3"
-                       Margin="0,18,0,0"
-                       MinWidth="100"
-                       HorizontalAlignment="Right"
-                       VerticalAlignment="Bottom"
-                       Icon="{x:Static properties:Images.ArrowUp}"
-                       IsDefault="True" />
   </Grid>
 </Window>
