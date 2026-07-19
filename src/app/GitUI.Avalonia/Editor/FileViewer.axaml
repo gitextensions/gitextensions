@@ -1,20 +1,40 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+             xmlns:compat="using:GitUI.Compat"
              x:Class="GitUI.Editor.FileViewer">
   <Grid>
-    <avaloniaEdit:TextEditor x:Name="TextEditor"
-                             Classes="gitextensions-diff-editor"
-                             IsReadOnly="True"
-                             ShowLineNumbers="True"
-                             HorizontalScrollBarVisibility="Auto"
-                             VerticalScrollBarVisibility="Auto">
-      <avaloniaEdit:TextEditor.ContextMenu>
+    <compat:ThemeAwareTextEditor x:Name="TextEditor"
+                                 Classes="gitextensions-diff-editor"
+                                 IsReadOnly="True"
+                                 ShowLineNumbers="True"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 VerticalScrollBarVisibility="Auto">
+      <compat:ThemeAwareTextEditor.ContextMenu>
         <ContextMenu x:Name="contextMenu">
           <MenuItem x:Name="copyToolStripMenuItem"
                     Header="_Copy"
                     InputGesture="Ctrl+C" />
           <Separator x:Name="toolStripSeparator1" />
+          <MenuItem x:Name="showNonprintableCharactersToolStripMenuItem"
+                    Header="S_how nonprinting characters"
+                    ToggleType="CheckBox">
+            <MenuItem.Icon>
+              <TextBlock Width="16"
+                         Text="¶"
+                         TextAlignment="Center" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="showSyntaxHighlightingToolStripMenuItem"
+                    Header="Show synta_x highlighting"
+                    ToggleType="CheckBox">
+            <MenuItem.Icon>
+              <TextBlock Width="16"
+                         FontSize="8"
+                         Text="&lt;/&gt;"
+                         TextAlignment="Center" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <Separator x:Name="toolStripSeparator2" />
           <MenuItem x:Name="findToolStripMenuItem"
                     Header="_Find..."
                     InputGesture="Ctrl+F" />
@@ -26,8 +46,8 @@
                     Header="_Go to line"
                     InputGesture="Ctrl+G" />
         </ContextMenu>
-      </avaloniaEdit:TextEditor.ContextMenu>
-    </avaloniaEdit:TextEditor>
+      </compat:ThemeAwareTextEditor.ContextMenu>
+    </compat:ThemeAwareTextEditor>
 
     <Border x:Name="PictureBox"
             IsVisible="False"
@@ -53,10 +73,25 @@
             Margin="0,0,40,0"
             IsVisible="False"
             Background="{DynamicResource ThemeBackgroundBrush}">
-      <ComboBox x:Name="encodingToolStripComboBox"
-                Classes="gitextensions-toolbar-input"
-                Width="140"
-                Height="23" />
+      <StackPanel Orientation="Horizontal">
+        <Button x:Name="showNonPrintChars"
+                Classes="gitextensions-toolbar-button">
+          <TextBlock Width="16"
+                     Text="¶"
+                     TextAlignment="Center" />
+        </Button>
+        <Button x:Name="showSyntaxHighlighting"
+                Classes="gitextensions-toolbar-button">
+          <TextBlock Width="16"
+                     FontSize="8"
+                     Text="&lt;/&gt;"
+                     TextAlignment="Center" />
+        </Button>
+        <ComboBox x:Name="encodingToolStripComboBox"
+                  Classes="gitextensions-toolbar-input"
+                  Width="140"
+                  Height="23" />
+      </StackPanel>
     </Border>
   </Grid>
 </UserControl>
