@@ -41,6 +41,7 @@
     <Compile Include="..\GitUI\Models\IOutputHistoryRecorder.cs" Link="Models\IOutputHistoryRecorder.cs" />
     <Compile Include="..\GitUI\Models\IOutputHistoryProvider.cs" Link="Models\IOutputHistoryProvider.cs" />
     <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
+    <Compile Include="..\GitUI\RevisionDiffInfoProvider.cs" Link="RevisionDiffInfoProvider.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusDiffCalculator.cs" Link="UserControls\FileStatusDiffCalculator.cs" />

@@ -230,6 +230,19 @@ public sealed class GitUICommands : IGitUICommands
     private static NotImplementedException NotPorted(string member)
         => new($"{member} is not ported to the Avalonia UI yet.");
 
+    public void OpenWithDifftool(IWin32Window? owner, IReadOnlyList<GitRevision?> revisions, string fileName, string? oldFileName, RevisionDiffKind diffKind, bool isTracked, string? customTool = null)
+    {
+        // Note: Order in revisions is that first clicked is last in array.
+        if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out string? firstRevision, out string? secondRevision, out string? error))
+        {
+            MessageBoxes.Show(owner, error, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        else
+        {
+            Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, isTracked: isTracked, customTool: customTool);
+        }
+    }
+
     #region Not ported yet
 
     public void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex = false) => throw NotPorted(nameof(AddCommitTemplate));
@@ -237,7 +250,6 @@ public sealed class GitUICommands : IGitUICommands
     public IGitRemoteCommand CreateRemoteCommand() => throw NotPorted(nameof(CreateRemoteCommand));
     public bool DoActionOnRepo(Func<bool> action)
         => DoActionOnRepo(owner: null, action, requiresValidWorkingDir: false);
-    public void OpenWithDifftool(IWin32Window? owner, IReadOnlyList<GitRevision?> revisions, string fileName, string? oldFileName, RevisionDiffKind diffKind, bool isTracked, string? customTool = null) => throw NotPorted(nameof(OpenWithDifftool));
     public void RaisePostBrowseInitialize(IWin32Window? owner) => InvokeEvent(owner, PostBrowseInitialize);
     public void RaisePostRegisterPlugin(IWin32Window? owner) => InvokeEvent(owner, PostRegisterPlugin);
     public void RemoveCommitTemplate(string key) => throw NotPorted(nameof(RemoveCommitTemplate));
