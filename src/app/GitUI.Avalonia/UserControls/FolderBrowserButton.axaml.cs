@@ -11,6 +11,8 @@ namespace GitUI.UserControls;
 // property accepts any Control).
 public partial class FolderBrowserButton : GitExtensionsControl
 {
+    private string _text = "Bro&wse...";
+
     public FolderBrowserButton()
     {
         InitializeComponent();
@@ -23,6 +25,19 @@ public partial class FolderBrowserButton : GitExtensionsControl
     /// and the Text property is used as path to initialize the folder browser's default selection.
     /// </summary>
     public ComboBox? PathShowingControl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the host-form text using the original WinForms mnemonic syntax.
+    /// </summary>
+    public string Text
+    {
+        get => _text;
+        set
+        {
+            _text = value;
+            buttonBrowse.Content = GitUI.Compat.AvaloniaTranslationUtils.ToAvaloniaMnemonics(value);
+        }
+    }
 
     /// <summary>
     /// Opens a a folder picker dialog with the path in "getter" preselected and

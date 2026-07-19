@@ -189,7 +189,7 @@
                  Height="16"
                  Stretch="Uniform"
                  Source="{Binding $parent[compat:IconButton].Icon}" />
-          <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
         </StackPanel>
       </DataTemplate>
     </Setter>
@@ -212,7 +212,7 @@
                  Height="16"
                  Stretch="Uniform"
                  Source="{Binding $parent[compat:IconSplitButton].Icon}" />
-          <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
         </StackPanel>
       </DataTemplate>
     </Setter>
@@ -256,6 +256,15 @@
         </StackPanel>
       </DataTemplate>
     </Setter>
+  </Style>
+  <Style Selector="TabItem.gitextensions-dialog-tab">
+    <Setter Property="Height" Value="27" />
+    <Setter Property="MinHeight" Value="27" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="0" />
   </Style>
   <Style Selector="Button.gitextensions-toolbar-button,
                    compat|IconButton.gitextensions-toolbar-button,
