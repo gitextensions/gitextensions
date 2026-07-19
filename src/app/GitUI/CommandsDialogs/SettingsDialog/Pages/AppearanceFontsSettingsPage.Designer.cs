@@ -36,13 +36,16 @@ partial class AppearanceFontsSettingsPage
         diffFontChangeButton = new Button();
         ShowEolMarkerAsGlyph = new CheckBox();
         applicationFontChangeButton = new Button();
+        menuFontChangeButton = new Button();
         label36 = new Label();
         label34 = new Label();
         label26 = new Label();
+        labelMenu = new Label();
         diffFontDialog = new FontDialog();
         applicationDialog = new FontDialog();
         monospaceFontDialog = new FontDialog();
         commitFontDialog = new FontDialog();
+        menuFontDialog = new FontDialog();
         gbFonts.SuspendLayout();
         tableLayoutPanel1.SuspendLayout();
         SuspendLayout();
@@ -74,14 +77,17 @@ partial class AppearanceFontsSettingsPage
         tableLayoutPanel1.Controls.Add(ShowEolMarkerAsGlyph, 2, 0);
         tableLayoutPanel1.Controls.Add(label26, 0, 1);
         tableLayoutPanel1.Controls.Add(applicationFontChangeButton, 1, 1);
-        tableLayoutPanel1.Controls.Add(label34, 0, 2);
-        tableLayoutPanel1.Controls.Add(commitFontChangeButton, 1, 2);
-        tableLayoutPanel1.Controls.Add(label36, 0, 3);
-        tableLayoutPanel1.Controls.Add(monospaceFontChangeButton, 1, 3);
+        tableLayoutPanel1.Controls.Add(labelMenu, 0, 2);
+        tableLayoutPanel1.Controls.Add(menuFontChangeButton, 1, 2);
+        tableLayoutPanel1.Controls.Add(label34, 0, 3);
+        tableLayoutPanel1.Controls.Add(commitFontChangeButton, 1, 3);
+        tableLayoutPanel1.Controls.Add(label36, 0, 4);
+        tableLayoutPanel1.Controls.Add(monospaceFontChangeButton, 1, 4);
         tableLayoutPanel1.Dock = DockStyle.Fill;
         tableLayoutPanel1.Location = new Point(8, 22);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
-        tableLayoutPanel1.RowCount = 4;
+        tableLayoutPanel1.RowCount = 5;
+        tableLayoutPanel1.RowStyles.Add(new RowStyle());
         tableLayoutPanel1.RowStyles.Add(new RowStyle());
         tableLayoutPanel1.RowStyles.Add(new RowStyle());
         tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -149,9 +155,33 @@ partial class AppearanceFontsSettingsPage
         applicationFontChangeButton.Text = "font name";
         applicationFontChangeButton.UseVisualStyleBackColor = true;
         applicationFontChangeButton.Click += applicationFontChangeButton_Click;
-        // 
+        //
+        // labelMenu
+        //
+        labelMenu.AutoSize = true;
+        labelMenu.Dock = DockStyle.Fill;
+        labelMenu.Location = new Point(3, 58);
+        labelMenu.Name = "labelMenu";
+        labelMenu.Size = new Size(82, 29);
+        labelMenu.TabIndex = 6;
+        labelMenu.Text = "Menu font";
+        labelMenu.TextAlign = ContentAlignment.MiddleLeft;
+        //
+        // menuFontChangeButton
+        //
+        menuFontChangeButton.AutoSize = true;
+        menuFontChangeButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        menuFontChangeButton.Dock = DockStyle.Fill;
+        menuFontChangeButton.Location = new Point(91, 61);
+        menuFontChangeButton.Name = "menuFontChangeButton";
+        menuFontChangeButton.Size = new Size(66, 23);
+        menuFontChangeButton.TabIndex = 7;
+        menuFontChangeButton.Text = "font name";
+        menuFontChangeButton.UseVisualStyleBackColor = true;
+        menuFontChangeButton.Click += menuFontChangeButton_Click;
+        //
         // label34
-        // 
+        //
         label34.AutoSize = true;
         label34.Dock = DockStyle.Fill;
         label34.Location = new Point(3, 58);
@@ -211,11 +241,16 @@ partial class AppearanceFontsSettingsPage
         // 
         monospaceFontDialog.AllowVerticalFonts = false;
         monospaceFontDialog.Color = SystemColors.ControlText;
-        // 
+        //
         // commitFontDialog
-        // 
+        //
         commitFontDialog.AllowVerticalFonts = false;
         commitFontDialog.Color = SystemColors.ControlText;
+        //
+        // menuFontDialog
+        //
+        menuFontDialog.AllowVerticalFonts = false;
+        menuFontDialog.Color = SystemColors.ControlText;
         // 
         // AppearanceFontsSettingsPage
         // 
@@ -253,4 +288,7 @@ partial class AppearanceFontsSettingsPage
     private FontDialog commitFontDialog;
     private TableLayoutPanel tableLayoutPanel1;
     private CheckBox ShowEolMarkerAsGlyph;
+    private Button menuFontChangeButton;
+    private Label labelMenu;
+    private FontDialog menuFontDialog;
 }

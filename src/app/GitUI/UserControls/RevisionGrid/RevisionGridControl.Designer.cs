@@ -248,14 +248,16 @@ partial class RevisionGridControl
         checkoutBranchToolStripMenuItem.Size = new Size(264, 24);
         checkoutBranchToolStripMenuItem.Text = "Chec&kout branch...";
         checkoutBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
-        // 
+        checkoutBranchToolStripMenuItem.DropDownOpening += BranchDropDownOpening;
+        //
         // mergeBranchToolStripMenuItem
-        // 
+        //
         mergeBranchToolStripMenuItem.Image = Properties.Images.Merge;
         mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
         mergeBranchToolStripMenuItem.Size = new Size(264, 24);
         mergeBranchToolStripMenuItem.Text = "&Merge into current branch...";
         mergeBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
+        mergeBranchToolStripMenuItem.DropDownOpening += BranchDropDownOpening;
         // 
         // rebaseOnToolStripMenuItem
         // 
@@ -323,22 +325,25 @@ partial class RevisionGridControl
         tsmiPushBranch.Size = new Size(264, 24);
         tsmiPushBranch.Text = "Pus&h branch...";
         tsmiPushBranch.Click += PerformFirstDropdownItemClick;
-        // 
+        tsmiPushBranch.DropDownOpening += BranchDropDownOpening;
+        //
         // renameBranchToolStripMenuItem
-        // 
+        //
         renameBranchToolStripMenuItem.Image = Properties.Images.Renamed;
         renameBranchToolStripMenuItem.Name = "renameBranchToolStripMenuItem";
         renameBranchToolStripMenuItem.Size = new Size(223, 22);
         renameBranchToolStripMenuItem.Text = "R&ename branch...";
         renameBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
-        // 
+        renameBranchToolStripMenuItem.DropDownOpening += BranchDropDownOpening;
+        //
         // deleteBranchToolStripMenuItem
-        // 
+        //
         deleteBranchToolStripMenuItem.Image = Properties.Images.BranchDelete;
         deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
         deleteBranchToolStripMenuItem.Size = new Size(264, 24);
         deleteBranchToolStripMenuItem.Text = "&Delete branch...";
         deleteBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
+        deleteBranchToolStripMenuItem.DropDownOpening += BranchDropDownOpening;
         // 
         // sepBranchModification
         // 
@@ -439,6 +444,7 @@ partial class RevisionGridControl
         deleteTagToolStripMenuItem.Size = new Size(264, 24);
         deleteTagToolStripMenuItem.Text = "&Delete tag...";
         deleteTagToolStripMenuItem.Click += PerformFirstDropdownItemClick;
+        deleteTagToolStripMenuItem.DropDownOpening += BranchDropDownOpening;
         // 
         // sepCommit
         // 
@@ -531,6 +537,7 @@ partial class RevisionGridControl
         tsmiSelectInLeftPanel.Size = new Size(300, 22);
         tsmiSelectInLeftPanel.Text = "Se&lect in left panel";
         tsmiSelectInLeftPanel.Click += SelectInLeftPanel_Click;
+        tsmiSelectInLeftPanel.DropDownOpening += BranchDropDownOpening;
         // 
         // viewToolStripMenuItem
         // 

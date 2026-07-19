@@ -2,7 +2,7 @@
 
 namespace GitUI.UserControls;
 
-internal partial class FilterToolBar
+public partial class FilterToolBar
 {
     #region Windows Form Designer generated code
 
@@ -281,6 +281,7 @@ internal partial class FilterToolBar
         tstxtRevisionFilter,
         tsddbtnRevisionFilter,
         tsmiShowOnlyFirstParent});
+        GripStyle = ToolStripGripStyle.Visible;
         LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
         Location = new Point(584, 0);
         Name = "ToolStripFilters";

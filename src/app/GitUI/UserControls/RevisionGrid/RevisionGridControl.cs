@@ -152,6 +152,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private IDisposable? _revisionSubscription;
     private GitRevision? _baseCommitToCompare;
     private string? _rebaseOnTopOf;
+    private BranchDropDowns? _branchDropDowns;
     private bool _isRefreshingRevisions;
     private SuperProjectInfo? _superprojectCurrentCheckout;
     private int _latestSelectedRowIndex;
@@ -376,6 +377,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             //// _maximizedColumn not owned
             //// _revisionGraphColumnProvider not disposable
             //// _selectionTimer handled by this.components
+            _branchDropDowns?.Dispose();
             _buildServerWatcher?.Dispose();
             _customDiffToolsSequence.Dispose();
             _refreshRevisionsSequence.Dispose();
@@ -565,6 +567,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     }
 
     #endregion
+
+    public ContextMenuStrip MainContextMenu => mainContextMenu;
 
     public void DisableContextMenu()
     {
@@ -2254,38 +2258,100 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             : refNames => refNames.Where(r => r == clickedRef.Name || r == relatedBranch));
 
         bool inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
-        SetEnabled(markRevisionAsBadToolStripMenuItem, inTheMiddleOfBisect);
-        SetEnabled(markRevisionAsGoodToolStripMenuItem, inTheMiddleOfBisect);
-        SetEnabled(bisectSkipRevisionToolStripMenuItem, inTheMiddleOfBisect);
-        SetEnabled(stopBisectToolStripMenuItem, inTheMiddleOfBisect);
-        SetEnabled(sepBisect, inTheMiddleOfBisect);
-
-        ContextMenuStrip deleteTagDropDown = new();
-        ContextMenuStrip deleteBranchDropDown = new();
-        ContextMenuStrip checkoutBranchDropDown = new();
-        ContextMenuStrip mergeBranchDropDown = new();
-        ContextMenuStrip pushBranchDropDown = new();
-        ContextMenuStrip renameDropDown = new();
-        ContextMenuStrip selectInLeftPanelDropDown = new();
+        SetContextMenuItemEnabled(markRevisionAsBadToolStripMenuItem, inTheMiddleOfBisect);
+        SetContextMenuItemEnabled(markRevisionAsGoodToolStripMenuItem, inTheMiddleOfBisect);
+        SetContextMenuItemEnabled(bisectSkipRevisionToolStripMenuItem, inTheMiddleOfBisect);
+        SetContextMenuItemEnabled(stopBisectToolStripMenuItem, inTheMiddleOfBisect);
+        SetContextMenuItemEnabled(sepBisect, inTheMiddleOfBisect);
 
         GitRevision revision = LatestSelectedRevision;
+        PopulateBranchDropDowns(revision, filterRefs);
+
+        bool bareRepositoryOrArtificial = Module.IsBareRepository() || revision.IsArtificial;
+        SetContextMenuItemEnabled(rebaseOnToolStripMenuItem, !bareRepositoryOrArtificial);
+        SetContextMenuItemEnabled(checkoutRevisionToolStripMenuItem, !bareRepositoryOrArtificial);
+        SetContextMenuItemEnabled(revertCommitToolStripMenuItem, !bareRepositoryOrArtificial);
+        SetContextMenuItemEnabled(cherryPickCommitToolStripMenuItem, !bareRepositoryOrArtificial);
+        SetContextMenuItemEnabled(manipulateCommitToolStripMenuItem, !bareRepositoryOrArtificial);
+        SetContextMenuItemEnabled(amendCommitToolStripMenuItem, !bareRepositoryOrArtificial && Module.GitVersion.SupportAmendCommits);
+
+        SetContextMenuItemEnabled(copyToClipboardToolStripMenuItem, !revision.IsArtificial);
+        SetContextMenuItemEnabled(createNewBranchToolStripMenuItem, !bareRepositoryOrArtificial);
+        SetContextMenuItemEnabled(resetCurrentBranchToHereToolStripMenuItem, !bareRepositoryOrArtificial);
+        SetContextMenuItemEnabled(resetAnotherBranchToHereToolStripMenuItem, !bareRepositoryOrArtificial);
+        SetContextMenuItemEnabled(resetChangesToolStripMenuItem, revision.IsArtificial);
+        SetContextMenuItemEnabled(commitToolStripMenuItem, revision.IsArtificial);
+        SetContextMenuItemEnabled(archiveRevisionToolStripMenuItem, !revision.IsArtificial);
+        SetContextMenuItemEnabled(createTagToolStripMenuItem, !revision.IsArtificial);
+
+        bool showStash = !bareRepositoryOrArtificial && revision.IsStash;
+        SetContextMenuItemEnabled(applyStashToolStripMenuItem, showStash || (!bareRepositoryOrArtificial && revision.IsAutostash));
+        SetContextMenuItemEnabled(popStashToolStripMenuItem, showStash);
+        SetContextMenuItemEnabled(dropStashToolStripMenuItem, showStash);
+
+        SetContextMenuItemEnabled(openBuildReportToolStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url));
+        SetContextMenuItemEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
+
+        mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.AddToRevisionGridContextMenu, UICommands);
+
+        UpdateSeparators();
+    }
+
+    // Builds and assigns all branch/tag dropdowns for the given revision, filtered by filterRefs.
+    // Called from ContextMenuOpening (with optional ref filter) and from each item's DropDownOpening
+    // handler (with identity filter) so that ToolbarItemConverter can populate the dropdowns when
+    // the items are hosted on a custom toolbar.
+    private void PopulateBranchDropDowns(
+        GitRevision revision,
+        Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>>? filterRefs = null)
+    {
+        filterRefs ??= refs => refs;
+
+        // Reuse a single set of ContextMenuStrip instances rather than allocating new ones on every
+        // open: assigning ToolStripMenuItem.DropDown does not dispose the previous DropDown, so
+        // recreating them on each call leaked native menu handles and churned allocations on a hot path.
+        BranchDropDowns dd = _branchDropDowns ??= new();
+        dd.ClearItems();
         GitRefListsForRevision gitRefListsForRevision = new(revision);
         _rebaseOnTopOf = null;
-
-        foreach (IGitRef head in filterRefs(gitRefListsForRevision.AllTags))
-        {
-            AddBranchMenuItem(deleteTagDropDown, head, delegate { UICommands.StartDeleteTagDialog(ParentForm, head.Name); });
-            AddBranchMenuItem(selectInLeftPanelDropDown, head, SelectInLeftPanel_Click);
-
-            string refUnambiguousName = GetRefUnambiguousName(head);
-            ToolStripMenuItem mergeItem = AddBranchMenuItem(mergeBranchDropDown, head,
-                delegate { UICommands.StartMergeBranchDialog(ParentForm, refUnambiguousName); });
-            mergeItem.Tag = refUnambiguousName;
-        }
 
         // For now there is no action that could be done on currentBranch
         string currentBranchRef = GitRefName.RefsHeadsPrefix + CurrentBranch.Value;
 
+        PopulateTagItems(dd, filterRefs, gitRefListsForRevision);
+        PopulateMergeItems(dd, filterRefs, gitRefListsForRevision, revision, currentBranchRef);
+
+        IReadOnlyList<IGitRef> allBranches = [.. filterRefs(gitRefListsForRevision.AllBranches)];
+        bool isHeadOfCurrentBranch = PopulateBranchActionItems(dd, allBranches, currentBranchRef);
+        PopulateRemoteBranchDeleteItems(dd, allBranches);
+
+        AssignBranchDropDowns(dd, revision, isHeadOfCurrentBranch);
+    }
+
+    private void PopulateTagItems(
+        BranchDropDowns dd,
+        Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs,
+        GitRefListsForRevision gitRefListsForRevision)
+    {
+        foreach (IGitRef head in filterRefs(gitRefListsForRevision.AllTags))
+        {
+            AddBranchMenuItem(dd.DeleteTag, head, delegate { UICommands.StartDeleteTagDialog(ParentForm, head.Name); });
+            AddBranchMenuItem(dd.SelectInLeftPanel, head, SelectInLeftPanel_Click);
+
+            string refUnambiguousName = GetRefUnambiguousName(head);
+            ToolStripMenuItem mergeItem = AddBranchMenuItem(dd.MergeBranch, head,
+                delegate { UICommands.StartMergeBranchDialog(ParentForm, refUnambiguousName); });
+            mergeItem.Tag = refUnambiguousName;
+        }
+    }
+
+    private void PopulateMergeItems(
+        BranchDropDowns dd,
+        Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs,
+        GitRefListsForRevision gitRefListsForRevision,
+        GitRevision revision,
+        string currentBranchRef)
+    {
         bool currentBranchPointsToRevision = false;
         foreach (IGitRef head in filterRefs(gitRefListsForRevision.BranchesWithNoIdenticalRemotes))
         {
@@ -2295,7 +2361,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             }
             else
             {
-                ToolStripMenuItem toolStripItem = AddBranchMenuItem(mergeBranchDropDown, head,
+                ToolStripMenuItem toolStripItem = AddBranchMenuItem(dd.MergeBranch, head,
                     delegate { UICommands.StartMergeBranchDialog(ParentForm, GetRefUnambiguousName(head)); });
 
                 _rebaseOnTopOf ??= (string?)toolStripItem.Tag;
@@ -2309,63 +2375,79 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
 
         // if there is no branch to merge, then let user to merge selected commit into current branch
-        if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
+        if (dd.MergeBranch.Items.Count == 0 && !currentBranchPointsToRevision)
         {
             ToolStripMenuItem toolStripItem = new(revision.Guid);
             toolStripItem.Click += delegate { UICommands.StartMergeBranchDialog(ParentForm, revision.Guid); };
-            mergeBranchDropDown.Items.Add(toolStripItem);
+            dd.MergeBranch.Items.Add(toolStripItem);
             _rebaseOnTopOf ??= toolStripItem.Tag as string;
         }
+    }
 
-        IReadOnlyList<IGitRef> allBranches = [.. filterRefs(gitRefListsForRevision.AllBranches)];
+    // Returns whether one of the branches is the head of the current branch.
+    private bool PopulateBranchActionItems(BranchDropDowns dd, IReadOnlyList<IGitRef> allBranches, string currentBranchRef)
+    {
         bool isHeadOfCurrentBranch = false;
         bool firstRemoteBranchForCheckout = false;
         foreach (IGitRef head in allBranches)
         {
-            AddBranchMenuItem(selectInLeftPanelDropDown, head, SelectInLeftPanel_Click);
+            AddBranchMenuItem(dd.SelectInLeftPanel, head, SelectInLeftPanel_Click);
 
-            // skip remote branches - they can not be deleted this way
             if (!head.IsRemote)
             {
-                if (head.CompleteName == currentBranchRef)
-                {
-                    isHeadOfCurrentBranch = true;
-                }
-                else
-                {
-                    AddBranchMenuItem(deleteBranchDropDown, head, delegate { UICommands.StartDeleteBranchDialog(ParentForm, head.Name); });
-                }
-
-                AddBranchMenuItem(renameDropDown, head, delegate { UICommands.StartRenameDialog(ParentForm, head.Name); });
-                AddBranchMenuItem(pushBranchDropDown, head, (_, _) => UICommands.StartPushDialog(ParentForm, pushOnShow: false, forceWithLease: false, out _, head.Name));
+                isHeadOfCurrentBranch |= AddNonRemoteBranchItems(dd, head, currentBranchRef);
             }
 
             if (head.CompleteName != currentBranchRef)
             {
-                if (!head.IsRemote)
-                {
-                    firstRemoteBranchForCheckout = true;
-                }
-                else if (firstRemoteBranchForCheckout)
-                {
-                    checkoutBranchDropDown.Items.Add(new ToolStripSeparator());
-                    firstRemoteBranchForCheckout = false;
-                }
-
-                AddBranchMenuItem(checkoutBranchDropDown, head, delegate
-                {
-                    if (head.IsRemote)
-                    {
-                        UICommands.StartCheckoutRemoteBranch(ParentForm, head.Name);
-                    }
-                    else
-                    {
-                        UICommands.StartCheckoutBranch(ParentForm, head.Name);
-                    }
-                });
+                AddCheckoutBranchItem(dd, head, ref firstRemoteBranchForCheckout);
             }
         }
 
+        return isHeadOfCurrentBranch;
+    }
+
+    private bool AddNonRemoteBranchItems(BranchDropDowns dd, IGitRef head, string currentBranchRef)
+    {
+        // skip remote branches - they can not be deleted this way
+        bool isCurrentBranch = head.CompleteName == currentBranchRef;
+        if (!isCurrentBranch)
+        {
+            AddBranchMenuItem(dd.DeleteBranch, head, delegate { UICommands.StartDeleteBranchDialog(ParentForm, head.Name); });
+        }
+
+        AddBranchMenuItem(dd.Rename, head, delegate { UICommands.StartRenameDialog(ParentForm, head.Name); });
+        AddBranchMenuItem(dd.PushBranch, head, (_, _) => UICommands.StartPushDialog(ParentForm, pushOnShow: false, forceWithLease: false, out _, head.Name));
+        return isCurrentBranch;
+    }
+
+    private void AddCheckoutBranchItem(BranchDropDowns dd, IGitRef head, ref bool firstRemoteBranchForCheckout)
+    {
+        if (!head.IsRemote)
+        {
+            firstRemoteBranchForCheckout = true;
+        }
+        else if (firstRemoteBranchForCheckout)
+        {
+            dd.CheckoutBranch.Items.Add(new ToolStripSeparator());
+            firstRemoteBranchForCheckout = false;
+        }
+
+        AddBranchMenuItem(dd.CheckoutBranch, head, delegate
+        {
+            if (head.IsRemote)
+            {
+                UICommands.StartCheckoutRemoteBranch(ParentForm, head.Name);
+            }
+            else
+            {
+                UICommands.StartCheckoutBranch(ParentForm, head.Name);
+            }
+        });
+    }
+
+    private void PopulateRemoteBranchDeleteItems(BranchDropDowns dd, IReadOnlyList<IGitRef> allBranches)
+    {
         bool firstRemoteBranchForDelete = true;
         foreach (IGitRef head in allBranches)
         {
@@ -2374,120 +2456,141 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 if (firstRemoteBranchForDelete)
                 {
                     firstRemoteBranchForDelete = false;
-                    if (deleteBranchDropDown.Items.Count > 0)
+                    if (dd.DeleteBranch.Items.Count > 0)
                     {
-                        deleteBranchDropDown.Items.Add(new ToolStripSeparator());
+                        dd.DeleteBranch.Items.Add(new ToolStripSeparator());
                     }
                 }
 
-                AddBranchMenuItem(deleteBranchDropDown, head, delegate { UICommands.StartDeleteRemoteBranchDialog(ParentForm, head.Name); });
+                AddBranchMenuItem(dd.DeleteBranch, head, delegate { UICommands.StartDeleteRemoteBranchDialog(ParentForm, head.Name); });
             }
         }
+    }
 
+    private void AssignBranchDropDowns(BranchDropDowns dd, GitRevision revision, bool isHeadOfCurrentBranch)
+    {
         bool bareRepositoryOrArtificial = Module.IsBareRepository() || revision.IsArtificial;
-        deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
-        SetEnabled(deleteTagToolStripMenuItem, deleteTagDropDown.Items.Count > 0);
 
-        deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
-        SetEnabled(deleteBranchToolStripMenuItem, deleteBranchDropDown.Items.Count > 0 && !Module.IsBareRepository());
+        deleteTagToolStripMenuItem.DropDown = dd.DeleteTag;
+        SetContextMenuItemEnabled(deleteTagToolStripMenuItem, dd.DeleteTag.Items.Count > 0);
+
+        deleteBranchToolStripMenuItem.DropDown = dd.DeleteBranch;
+        SetContextMenuItemEnabled(deleteBranchToolStripMenuItem, dd.DeleteBranch.Items.Count > 0 && !Module.IsBareRepository());
         if (isHeadOfCurrentBranch)
         {
             deleteBranchToolStripMenuItem.Visible = true;
         }
 
-        checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-        SetEnabled(checkoutBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledItem(checkoutBranchDropDown));
+        checkoutBranchToolStripMenuItem.DropDown = dd.CheckoutBranch;
+        SetContextMenuItemEnabled(checkoutBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledDropDownItem(dd.CheckoutBranch));
 
-        mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-        SetEnabled(mergeBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledItem(mergeBranchDropDown));
+        mergeBranchToolStripMenuItem.DropDown = dd.MergeBranch;
+        SetContextMenuItemEnabled(mergeBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledDropDownItem(dd.MergeBranch));
 
-        tsmiPushBranch.DropDown = pushBranchDropDown;
-        SetEnabled(tsmiPushBranch, !bareRepositoryOrArtificial && HasEnabledItem(pushBranchDropDown));
+        tsmiPushBranch.DropDown = dd.PushBranch;
+        SetContextMenuItemEnabled(tsmiPushBranch, !bareRepositoryOrArtificial && HasEnabledDropDownItem(dd.PushBranch));
 
-        SetEnabled(rebaseOnToolStripMenuItem, !bareRepositoryOrArtificial);
+        renameBranchToolStripMenuItem.DropDown = dd.Rename;
+        SetContextMenuItemEnabled(renameBranchToolStripMenuItem, dd.Rename.Items.Count > 0);
 
-        renameBranchToolStripMenuItem.DropDown = renameDropDown;
-        SetEnabled(renameBranchToolStripMenuItem, renameDropDown.Items.Count > 0);
-
-        SetEnabled(checkoutRevisionToolStripMenuItem, !bareRepositoryOrArtificial);
-        SetEnabled(revertCommitToolStripMenuItem, !bareRepositoryOrArtificial);
-        SetEnabled(cherryPickCommitToolStripMenuItem, !bareRepositoryOrArtificial);
-        SetEnabled(manipulateCommitToolStripMenuItem, !bareRepositoryOrArtificial);
-        SetEnabled(amendCommitToolStripMenuItem, !bareRepositoryOrArtificial && Module.GitVersion.SupportAmendCommits);
-
-        SetEnabled(copyToClipboardToolStripMenuItem, !revision.IsArtificial);
-        SetEnabled(createNewBranchToolStripMenuItem, !bareRepositoryOrArtificial);
-        SetEnabled(resetCurrentBranchToHereToolStripMenuItem, !bareRepositoryOrArtificial);
-        SetEnabled(resetAnotherBranchToHereToolStripMenuItem, !bareRepositoryOrArtificial);
-        SetEnabled(resetChangesToolStripMenuItem, revision.IsArtificial);
-        SetEnabled(commitToolStripMenuItem, revision.IsArtificial);
-        SetEnabled(archiveRevisionToolStripMenuItem, !revision.IsArtificial);
-        SetEnabled(createTagToolStripMenuItem, !revision.IsArtificial);
-
-        bool showStash = !bareRepositoryOrArtificial && revision.IsStash;
-        SetEnabled(applyStashToolStripMenuItem, showStash || (!bareRepositoryOrArtificial && revision.IsAutostash));
-        SetEnabled(popStashToolStripMenuItem, showStash);
-        SetEnabled(dropStashToolStripMenuItem, showStash);
-
-        int selectInLeftPanelCount = selectInLeftPanelDropDown.Items.Count;
-        SetEnabled(tsmiSelectInLeftPanel, SelectInLeftPanel is not null && selectInLeftPanelCount > 0);
-        tsmiSelectInLeftPanel.DropDown = selectInLeftPanelCount > 1 ? selectInLeftPanelDropDown : null;
+        int selectInLeftPanelCount = dd.SelectInLeftPanel.Items.Count;
+        SetContextMenuItemEnabled(tsmiSelectInLeftPanel, SelectInLeftPanel is not null && selectInLeftPanelCount > 0);
+        tsmiSelectInLeftPanel.DropDown = selectInLeftPanelCount > 1 ? dd.SelectInLeftPanel : null;
         if (selectInLeftPanelCount > 0)
         {
-            tsmiSelectInLeftPanel.Tag = selectInLeftPanelDropDown.Items[0].Text;
+            tsmiSelectInLeftPanel.Tag = dd.SelectInLeftPanel.Items[0].Text;
         }
+    }
 
-        SetEnabled(openBuildReportToolStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url));
+    // Holds the seven branch/tag dropdown menus reused across calls to PopulateBranchDropDowns.
+    // Reusing these instances (instead of allocating new ones on every open) avoids leaking native
+    // menu handles, since assigning ToolStripMenuItem.DropDown does not dispose the previous DropDown.
+    private sealed class BranchDropDowns : IDisposable
+    {
+        public ContextMenuStrip DeleteTag { get; } = new();
+        public ContextMenuStrip DeleteBranch { get; } = new();
+        public ContextMenuStrip CheckoutBranch { get; } = new();
+        public ContextMenuStrip MergeBranch { get; } = new();
+        public ContextMenuStrip PushBranch { get; } = new();
+        public ContextMenuStrip Rename { get; } = new();
+        public ContextMenuStrip SelectInLeftPanel { get; } = new();
 
-        SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
+        private IEnumerable<ContextMenuStrip> AllMenus => [DeleteTag, DeleteBranch, CheckoutBranch, MergeBranch, PushBranch, Rename, SelectInLeftPanel];
 
-        mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.AddToRevisionGridContextMenu, UICommands);
-
-        UpdateSeparators();
-
-        return;
-
-        void SetEnabled(ToolStripItem item, bool isEnabled)
+        // Disposes and removes all items from every menu, ready for repopulation.
+        public void ClearItems()
         {
-            // NOTE we have to set 'enabled' in order to filter separators because
-            // setting 'visible' to true sets some internal flag, yet the property still returns
-            // false, presumably because the menu item is not actually yet visible on screen.
-            item.Visible = isEnabled;
-            item.Enabled = isEnabled;
-        }
-
-        bool HasEnabledItem(ToolStrip item)
-        {
-            return item.Items.Count != 0 && item.Items.Cast<ToolStripItem>().Any(i => i.Enabled);
-        }
-
-        void UpdateSeparators()
-        {
-            bool seenItem = false;
-            foreach (ToolStripItem item in mainContextMenu.Items.Cast<ToolStripItem>())
+            foreach (ContextMenuStrip menu in AllMenus)
             {
-                if (item is ToolStripSeparator separator)
+                foreach (ToolStripItem item in menu.Items.Cast<ToolStripItem>().ToArray())
                 {
-                    separator.Visible = seenItem;
-                    seenItem = false;
+                    item.Dispose();
                 }
-                else if (item.Enabled)
-                {
-                    seenItem = true;
-                }
+
+                menu.Items.Clear();
             }
         }
 
-        ToolStripMenuItem AddBranchMenuItem(ContextMenuStrip menu, IGitRef gitRef, EventHandler action)
+        public void Dispose()
         {
-            ToolStripMenuItem menuItem = new(gitRef.Name)
+            foreach (ContextMenuStrip menu in AllMenus)
             {
-                Image = gitRef.IsRemote ? Images.BranchRemote : Images.BranchLocal
-            };
-            menuItem.Click += action;
-            menu.Items.Add(menuItem);
-            return menuItem;
+                menu.Dispose();
+            }
         }
+    }
+
+    private void BranchDropDownOpening(object? sender, EventArgs e)
+    {
+        GitRevision? revision = LatestSelectedRevision;
+        if (revision is null)
+        {
+            return;
+        }
+
+        PopulateBranchDropDowns(revision);
+    }
+
+    private static void SetContextMenuItemEnabled(ToolStripItem item, bool isEnabled)
+    {
+        // NOTE we have to set 'enabled' in order to filter separators because
+        // setting 'visible' to true sets some internal flag, yet the property still returns
+        // false, presumably because the menu item is not actually yet visible on screen.
+        item.Visible = isEnabled;
+        item.Enabled = isEnabled;
+    }
+
+    private static bool HasEnabledDropDownItem(ToolStrip item)
+    {
+        return item.Items.Count != 0 && item.Items.Cast<ToolStripItem>().Any(i => i.Enabled);
+    }
+
+    private void UpdateSeparators()
+    {
+        bool seenItem = false;
+        foreach (ToolStripItem item in mainContextMenu.Items.Cast<ToolStripItem>())
+        {
+            if (item is ToolStripSeparator separator)
+            {
+                separator.Visible = seenItem;
+                seenItem = false;
+            }
+            else if (item.Enabled)
+            {
+                seenItem = true;
+            }
+        }
+    }
+
+    private static ToolStripMenuItem AddBranchMenuItem(ContextMenuStrip menu, IGitRef gitRef, EventHandler action)
+    {
+        ToolStripMenuItem menuItem = new(gitRef.Name)
+        {
+            Image = gitRef.IsRemote ? Images.BranchRemote : Images.BranchLocal
+        };
+        menuItem.Click += action;
+        menu.Items.Add(menuItem);
+        return menuItem;
     }
 
     private string GetRefUnambiguousName(IGitRef gitRef)
