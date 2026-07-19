@@ -225,7 +225,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPull.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Reduced flow: merge pull, rebase pull, and fetch-only from a selected configured remote through FormRemoteProcess; immediate execution and the browse entry point are functional. URL pulls, remote management, auto-stash, tag/prune/unshallow controls, scripts, submodule follow-up, and conflict recovery remain deferred."
+    "notes": "Portable pull/fetch workflows are functional through FormRemoteProcess: configured remote, all-remotes, and URL/native-path sources with history and folder browsing; remote management and branch selection; merge, rebase, and fetch-only actions; auto-stash/pop; reachable/no/all-tag, prune/prune-tags, and unshallow options; fetch-and-prune confirmation; submodule initialization/update follow-up; and stale-ref, merge-conflict, and rebase-conflict recovery. Git Extensions before/after fetch and pull event scripts remain owned by the later shared scripts-engine port, and PuTTY/Pageant controls are intentionally omitted in favor of OpenSSH."
   },
   "src/app/GitUI/UserControls/FilterToolBar.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml.cs",
