@@ -15,8 +15,7 @@
         <ListBox.ContextMenu>
           <ContextMenu x:Name="ConflictedFilesContextMenu">
             <MenuItem x:Name="OpenMergetool" Header="Open in mergetool" />
-            <!-- Custom merge tools need the CustomDiffMergeToolProvider port; hidden until then. -->
-            <MenuItem x:Name="customMergetool" Header="Open in _mergetool" IsVisible="False" />
+            <MenuItem x:Name="customMergetool" Header="Open in _mergetool" />
             <MenuItem x:Name="ContextMarkAsSolved" Header="Mark conflict as solved" />
             <Separator x:Name="toolStripSeparator3" />
             <MenuItem x:Name="ContextChooseLocal" Header="Choose local" InputGesture="Ctrl+1" />

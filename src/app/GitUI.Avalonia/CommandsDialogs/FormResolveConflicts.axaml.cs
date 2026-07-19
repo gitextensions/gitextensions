@@ -21,8 +21,7 @@ namespace GitUI.CommandsDialogs;
 
 // Twin of GitUI/CommandsDialogs/FormResolveConflicts.cs. The conflicted-files grid is a
 // ListBox showing the file names (the WinForms grid's hidden Author column had no data
-// source upstream either). Deferred with TODOs below: custom merge tools
-// (CustomDiffMergeToolProvider) and the submodule conflict dialog (FormMergeSubmodule).
+// source upstream either). The submodule conflict dialog (FormMergeSubmodule) is deferred.
 public partial class FormResolveConflicts : GitModuleForm
 {
     #region Translation
@@ -127,6 +126,7 @@ public partial class FormResolveConflicts : GitModuleForm
     }
 
     private readonly IFullPathResolver _fullPathResolver;
+    private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private ConflictResolutionPreference _solveMergeConflictDialogResult;
     private bool _solveMergeConflictApplyToAll;
     private string? _solveMergeConflictDialogCheckboxText;
@@ -162,6 +162,7 @@ public partial class FormResolveConflicts : GitModuleForm
         ConflictedFiles.KeyDown += ConflictedFiles_KeyDown;
         ConflictedFilesContextMenu.Opening += ConflictedFilesContextMenu_Opening;
         OpenMergetool.Click += OpenMergetool_Click;
+        customMergetool.Click += customMergetool_Click;
         ContextMarkAsSolved.Click += ContextMarkAsSolved_Click;
         ContextChooseLocal.Click += ContextChooseLocal_Click;
         ContextChooseRemote.Click += ContextChooseRemote_Click;
@@ -202,6 +203,12 @@ public partial class FormResolveConflicts : GitModuleForm
         // WinForms raises the Load event after OnRuntimeLoad; keep that order so
         // Initialize() sees _thereWhereMergeConflicts.
         FormResolveConflicts_Load(this, e);
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        _customDiffToolsSequence.Dispose();
+        base.OnClosed(e);
     }
 
     private void Mergetool_Click(object sender, EventArgs e)
@@ -306,8 +313,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 Close();
             }
 
-            // TODO(avalonia-port): LoadCustomMergetools() waits for a
-            // CustomDiffMergeToolProvider port (the customMergetool item is hidden).
+            LoadCustomMergetools();
         }
     }
 
@@ -375,6 +381,22 @@ public partial class FormResolveConflicts : GitModuleForm
     private static string FixPath(string? path)
     {
         return (path ?? "").ToNativePath();
+    }
+
+    private void LoadCustomMergetools()
+    {
+        List<CustomDiffMergeTool> menus =
+        [
+            new(customMergetool, customMergetool_Click),
+        ];
+
+        const int ToolDelay = 500;
+        new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(
+            Module,
+            menus,
+            isDiff: false,
+            ToolDelay,
+            cancellationToken: _customDiffToolsSequence.Next());
     }
 
     private readonly Dictionary<string, string> _mergeScripts = new()
@@ -1276,6 +1298,24 @@ public partial class FormResolveConflicts : GitModuleForm
     private void OpenMergetool_Click(object sender, EventArgs e)
     {
         OpenMergeTool();
+    }
+
+    private void customMergetool_Click(object? sender, EventArgs e)
+    {
+        this.InvokeAndForget(async () =>
+        {
+            using (FormBusyScope.Enter(this))
+            {
+                string? customTool = (sender as MenuItem)?.Tag as string;
+
+                foreach (ConflictData conflict in GetConflicts().conflicts)
+                {
+                    Directory.SetCurrentDirectory(Module.WorkingDir);
+                    await Task.Run(() => Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool));
+                    Initialize();
+                }
+            }
+        });
     }
 
     private void ContextOpenBaseWith_Click(object sender, EventArgs e)
