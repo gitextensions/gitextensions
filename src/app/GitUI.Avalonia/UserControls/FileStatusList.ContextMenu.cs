@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -14,6 +14,7 @@ partial class FileStatusList
     private Action? _blame;
     private Action? _cherryPickChanges;
     private Action? _filterFileInGrid;
+    private Func<bool>? _getSupportLinePatching;
     private Action<bool>? _openInFileTreeTab_AsBlame;
     private Action? _refreshParent;
     private Action? _stage;
@@ -35,7 +36,7 @@ partial class FileStatusList
     public void BindContextMenu(Action cherryPickChanges, Func<bool> getSupportLinePatching)
     {
         _cherryPickChanges = cherryPickChanges;
-        tsmiCherryPickChanges.IsVisible = true;
+        _getSupportLinePatching = getSupportLinePatching;
     }
 
     /// <summary>
@@ -54,6 +55,7 @@ partial class FileStatusList
     {
         _blame = blame;
         _cherryPickChanges = cherryPickChanges;
+        _getSupportLinePatching = getSupportLinePatching;
         _filterFileInGrid = filterFileInGrid;
         _openInFileTreeTab_AsBlame = openInFileTreeTab_AsBlame;
         _refreshParent = refreshParent;
@@ -135,7 +137,7 @@ partial class FileStatusList
         tsmiUnstageFile.IsVisible = _unstage is not null;
         tsmiUnstageFile.IsEnabled = _unstage is not null && hasItems;
         tsmiCherryPickChanges.IsVisible = _cherryPickChanges is not null;
-        tsmiCherryPickChanges.IsEnabled = hasItems;
+        tsmiCherryPickChanges.IsEnabled = hasSingleItem && (_getSupportLinePatching?.Invoke() ?? false);
         sepGit.IsVisible = tsmiStageFile.IsVisible || tsmiUnstageFile.IsVisible || tsmiCherryPickChanges.IsVisible;
 
         tsmiOpenWorkingDirectoryFile.IsVisible = workingFileExists;

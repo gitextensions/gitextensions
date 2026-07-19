@@ -414,6 +414,26 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         _fileLoader = fileLoader;
     }
 
+    internal void GoToOccurrence(TextEditor editor, bool searchBackward)
+    {
+        if (!_highlightGroups.TryGetValue(editor, out HighlightGroup? group) || group.Markers.Count == 0)
+        {
+            return;
+        }
+
+        int caretOffset = editor.TextArea.Caret.Offset;
+        TextRange? marker = searchBackward
+            ? group.Markers.LastOrDefault(candidate => candidate.Offset < caretOffset)
+            : group.Markers.FirstOrDefault(candidate => candidate.Offset > caretOffset);
+        if (marker is null)
+        {
+            return;
+        }
+
+        editor.TextArea.Caret.Offset = marker.Offset;
+        editor.ScrollToLine(editor.Document.GetLineByOffset(marker.Offset).LineNumber);
+    }
+
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor
@@ -667,6 +687,8 @@ public sealed class HighlightGroup : IDisposable
         _renderer = new SearchHighlightRenderer(editor);
         editor.TextArea.TextView.BackgroundRenderers.Add(_renderer);
     }
+
+    internal IReadOnlyList<TextRange> Markers => _renderer.Markers;
 
     public void Dispose()
     {

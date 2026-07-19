@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -12,11 +12,13 @@ using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Rendering;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Patches;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Editor.Diff;
 using GitUI.UserControls;
@@ -30,8 +32,9 @@ namespace GitUI.Editor;
 // plus the plain-text mode with line highlighting used by blame. Search/navigation uses
 // the original dialog and command boundaries. Blob, image, binary, large-file, and encoding
 // behavior follows the original loading boundary. Syntax and display options use AvaloniaEdit
-// while remaining independent from semantic diff rendering. Line patching remains deferred.
-public partial class FileViewer : GitModuleControl
+// while remaining independent from semantic diff rendering. Selected-line patching reuses the
+// shared PatchManager and keeps platform-specific UI at this Avalonia boundary.
+public partial class FileViewer : GitModuleControl, IFileViewer
 {
     private const long MaximumAutomaticPreviewLength = 5 * 1024 * 1024;
     private const string EndOfLineGlyph = "¶";
@@ -42,6 +45,7 @@ public partial class FileViewer : GitModuleControl
     private readonly TranslationString _bytes = new("bytes");
     private readonly TranslationString _binaryFile = new("Binary file: {0}");
     private readonly TranslationString _binaryFileDetected = new("Binary file: {0} (Detected)");
+    private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
 
     private readonly CancellationTokenSequence _viewSequence = new();
     private readonly DiffBackgroundRenderer _diffBackgroundRenderer;
@@ -54,6 +58,7 @@ public partial class FileViewer : GitModuleControl
     private Func<Task>? _deferShowFunc;
     private Encoding? _encoding;
     private CancellationTokenRegistration _externalCancellationRegistration;
+    private bool _allowLinePatching;
     private bool _hotkeysLoaded;
     private Bitmap? _image;
     private Action? _openWithDifftool;
@@ -95,14 +100,49 @@ public partial class FileViewer : GitModuleControl
         _findAndReplaceForm = new FindAndReplaceForm();
         _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
+        NumberOfContextLines = AppSettings.NumberOfContextLines;
+        IgnoreWhitespace = AppSettings.IgnoreWhitespaceKind.GetValue(
+            reload: !AppSettings.RememberIgnoreWhiteSpacePreference);
+        ShowEntireFile = AppSettings.ShowEntireFile.GetValue(
+            reload: !AppSettings.RememberShowEntireFilePreference);
+        _NO_TRANSLATE_resetSelectedLinesConfirmationDialog = new TaskDialogPage
+        {
+            Text = TranslatedStrings.ResetSelectedLinesConfirmation,
+            Caption = TranslatedStrings.ResetChangesCaption,
+            Icon = TaskDialogIcon.Warning,
+            Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+            DefaultButton = TaskDialogButton.Yes,
+            SizeToContent = true,
+        };
+
+        stageSelectedLinesToolStripMenuItem.Click += (_, _) => StageSelectedLines();
+        unstageSelectedLinesToolStripMenuItem.Click += (_, _) => UnstageSelectedLines();
+        resetSelectedLinesToolStripMenuItem.Click += (_, _) => ResetSelectedLines();
         copyToolStripMenuItem.Click += CopyToolStripMenuItemClick;
+        copyPatchToolStripMenuItem.Click += CopyPatchToolStripMenuItemClick;
+        copyNewVersionToolStripMenuItem.Click += (_, _) => CopyNotStartingWith('-');
+        copyOldVersionToolStripMenuItem.Click += (_, _) => CopyNotStartingWith('+');
+        increaseNumberOfLinesToolStripMenuItem.Click += IncreaseNumberOfLinesToolStripMenuItemClick;
+        decreaseNumberOfLinesToolStripMenuItem.Click += DecreaseNumberOfLinesToolStripMenuItemClick;
+        showEntireFileToolStripMenuItem.Click += ShowEntireFileToolStripMenuItemClick;
         showNonprintableCharactersToolStripMenuItem.Click += ShowNonprintableCharactersToolStripMenuItemClick;
         showSyntaxHighlightingToolStripMenuItem.Click += ShowSyntaxHighlighting_Click;
+        ignoreWhitespaceAtEolToolStripMenuItem.Click += IgnoreWhitespaceAtEolToolStripMenuItem_Click;
+        ignoreWhitespaceChangesToolStripMenuItem.Click += IgnoreWhitespaceChangesToolStripMenuItemClick;
+        ignoreAllWhitespaceChangesToolStripMenuItem.Click += IgnoreAllWhitespaceChangesToolStripMenuItem_Click;
         findToolStripMenuItem.Click += FindToolStripMenuItemClick;
         replaceToolStripMenuItem.Click += FindToolStripMenuItemClick;
         goToLineToolStripMenuItem.Click += goToLineToolStripMenuItem_Click;
         showNonPrintChars.Click += ShowNonprintableCharactersToolStripMenuItemClick;
         showSyntaxHighlighting.Click += ShowSyntaxHighlighting_Click;
+        nextChangeButton.Click += NextChangeButtonClick;
+        previousChangeButton.Click += PreviousChangeButtonClick;
+        increaseNumberOfLines.Click += IncreaseNumberOfLinesToolStripMenuItemClick;
+        decreaseNumberOfLines.Click += DecreaseNumberOfLinesToolStripMenuItemClick;
+        showEntireFileButton.Click += ShowEntireFileToolStripMenuItemClick;
+        ignoreWhitespaceAtEol.Click += IgnoreWhitespaceAtEolToolStripMenuItem_Click;
+        ignoreWhiteSpaces.Click += IgnoreWhitespaceChangesToolStripMenuItemClick;
+        ignoreAllWhitespaces.Click += IgnoreAllWhitespaceChangesToolStripMenuItem_Click;
         contextMenu.Opening += contextMenu_Opening;
         _NO_TRANSLATE_lblShowPreview.Click += llShowPreview_LinkClicked;
         encodingToolStripComboBox.SelectionChanged += encodingToolStripComboBox_SelectedIndexChanged;
@@ -129,6 +169,7 @@ public partial class FileViewer : GitModuleControl
             reload: !AppSettings.RememberShowSyntaxHighlightingInDiff);
         ToggleNonPrintingChars(_showNonPrintingChars);
         UpdateSyntaxHighlightingToggleState();
+        UpdateDiffOptionState();
         VRulerPosition = AppSettings.DiffVerticalRulerPosition;
 
         InitializeComplete();
@@ -155,6 +196,11 @@ public partial class FileViewer : GitModuleControl
     public event EventHandler<EventArgs>? ExtraDiffArgumentsChanged;
 
     /// <summary>
+    ///  Raised after a selected-line or whole-file patch has been applied.
+    /// </summary>
+    public event EventHandler? PatchApplied;
+
+    /// <summary>
     ///  Raised when scrolling above the first line.
     /// </summary>
     public event EventHandler? TopScrollReached;
@@ -167,7 +213,18 @@ public partial class FileViewer : GitModuleControl
     /// <summary>
     ///  Gets whether the current diff supports line patching.
     /// </summary>
-    public bool SupportLinePatching => false;
+    public bool SupportLinePatching { get; private set; }
+
+    /// <summary>
+    ///  Gets or sets whether another line patch is blocked until the consumer reloads the diff.
+    /// </summary>
+    public bool LinePatchingBlocksUntilReload { private get; set; }
+
+    private int NumberOfContextLines { get; set; }
+
+    private IgnoreWhitespaceKind IgnoreWhitespace { get; set; }
+
+    private bool ShowEntireFile { get; set; }
 
     /// <summary>
     ///  Gets the preamble detected while reading the current working-tree file.
@@ -204,7 +261,7 @@ public partial class FileViewer : GitModuleControl
 
     private bool ShowSyntaxHighlightingInDiff { get; set; }
 
-    private int VRulerPosition
+    public int VRulerPosition
     {
         get => TextEditor.Options.ShowColumnRulers
             ? TextEditor.Options.ColumnRulerPositions.FirstOrDefault()
@@ -214,6 +271,22 @@ public partial class FileViewer : GitModuleControl
             TextEditor.Options.ShowColumnRulers = value > 0;
             TextEditor.Options.ColumnRulerPositions = value > 0 ? [value] : [];
         }
+    }
+
+    /// <summary>
+    ///  Builds the user-selected context and whitespace arguments for Git diff.
+    /// </summary>
+    public ArgumentString GetExtraDiffArguments(bool isRangeDiff = false, bool isCombinedDiff = false)
+    {
+        return new ArgumentBuilder
+        {
+            { IgnoreWhitespace == IgnoreWhitespaceKind.AllSpace, "--ignore-all-space" },
+            { IgnoreWhitespace == IgnoreWhitespaceKind.Change, "--ignore-space-change" },
+            { IgnoreWhitespace == IgnoreWhitespaceKind.Eol, "--ignore-space-at-eol" },
+            { ShowEntireFile, "--inter-hunk-context=9000 --unified=9000", $"--unified={NumberOfContextLines}" },
+            { isRangeDiff && NumberOfContextLines == 0, "--no-patch" },
+            { !isCombinedDiff && AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff, "--word-diff=color" },
+        };
     }
 
     /// <summary>
@@ -248,6 +321,7 @@ public partial class FileViewer : GitModuleControl
         string parsedText = text;
         PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
         SetDiffText(parsedText, highlightService, showLeftColumn: true);
+        GoToFirstChange();
         TextLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -260,12 +334,13 @@ public partial class FileViewer : GitModuleControl
         FileStatusItem? item = null,
         Action? openWithDifftool = null)
     {
-        ResetView(isCombinedDiff ? ViewMode.CombinedDiff : ViewMode.Diff, fileName, item, openWithDifftool);
+        ResetView(isCombinedDiff ? ViewMode.CombinedDiff : ViewMode.Diff, fileName, item, openWithDifftool, text);
         string parsedText = text ?? string.Empty;
         DiffHighlightService highlightService = isCombinedDiff
             ? new CombinedDiffHighlightService(ref parsedText, useGitColoring)
             : new PatchHighlightService(ref parsedText, useGitColoring, isGitWordDiff);
         SetDiffText(parsedText, highlightService, showLeftColumn: true);
+        GoToFirstChange();
         TextLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -279,6 +354,7 @@ public partial class FileViewer : GitModuleControl
         string parsedText = text ?? string.Empty;
         RangeDiffHighlightService highlightService = new(ref parsedText);
         SetDiffText(parsedText, highlightService, showLeftColumn: false);
+        GoToFirstChange();
         TextLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -510,7 +586,7 @@ public partial class FileViewer : GitModuleControl
                         || FileHelper.IsBinaryFileAccordingToContent(text);
 
         await this.SwitchToMainThreadAsync(cancellationToken);
-        ResetView(ViewMode.Text, fileName, item, openWithDifftool);
+        ResetView(ViewMode.Text, fileName, item, openWithDifftool, text);
         if (isBinary)
         {
             try
@@ -527,6 +603,7 @@ public partial class FileViewer : GitModuleControl
             string parsedText = text;
             PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
             SetDiffText(parsedText, highlightService, showLeftColumn: true);
+            GoToFirstChange();
         }
         else
         {
@@ -720,7 +797,8 @@ public partial class FileViewer : GitModuleControl
         ViewMode viewMode,
         string? fileName,
         FileStatusItem? item = null,
-        Action? openWithDifftool = null)
+        Action? openWithDifftool = null,
+        string? text = null)
     {
         _viewMode = viewMode;
         _fileName = fileName;
@@ -736,6 +814,20 @@ public partial class FileViewer : GitModuleControl
         {
             _viewMode = ViewMode.FixedDiff;
         }
+
+        bool hasModule = TryGetUICommandsDirect(out _);
+        string? fullPath = hasModule ? _fullPathResolver.Resolve(fileName) : null;
+        SupportLinePatching =
+            ((_viewMode.IsNormalDiffView()
+                    && (text?.Contains("@@", StringComparison.Ordinal) ?? false)
+                    && AppSettings.DiffDisplayAppearance.Value != DiffDisplayAppearance.GitWordDiff
+                    && File.Exists(fullPath))
+                || ((item?.Item.IsNew ?? false)
+                    && (item.Item.Staged is StagedStatus.WorkTree or StagedStatus.Index
+                        || !File.Exists(fullPath))))
+            && hasModule
+            && !Module.IsBareRepository();
+        _allowLinePatching = SupportLinePatching;
 
         ClearImage();
         PictureBox.IsVisible = _viewMode == ViewMode.Image;
@@ -784,8 +876,60 @@ public partial class FileViewer : GitModuleControl
     private void UpdateDisplayOptionVisibility()
     {
         bool isPartialTextView = _viewMode.IsPartialTextView();
+        bool isIndex = ViewItemStagedStatus() == StagedStatus.Index;
+        stageSelectedLinesToolStripMenuItem.IsVisible = SupportLinePatching && !isIndex;
+        unstageSelectedLinesToolStripMenuItem.IsVisible = SupportLinePatching && isIndex;
+        resetSelectedLinesToolStripMenuItem.IsVisible = SupportLinePatching;
+
+        bool canCopyVersions = _viewMode.IsNormalDiffView()
+                               && AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.Patch;
+        copyPatchToolStripMenuItem.IsVisible = canCopyVersions;
+        copyNewVersionToolStripMenuItem.IsVisible = canCopyVersions;
+        copyOldVersionToolStripMenuItem.IsVisible = canCopyVersions;
+
+        bool diffCanBeModified = _viewMode.IsDiffView()
+                                 && _viewMode is not (ViewMode.FixedDiff or ViewMode.Difftastic);
+        increaseNumberOfLinesToolStripMenuItem.IsVisible = diffCanBeModified;
+        decreaseNumberOfLinesToolStripMenuItem.IsVisible = diffCanBeModified;
+        showEntireFileToolStripMenuItem.IsVisible = diffCanBeModified;
+        ignoreWhitespaceAtEolToolStripMenuItem.IsVisible = diffCanBeModified;
+        ignoreWhitespaceChangesToolStripMenuItem.IsVisible = diffCanBeModified;
+        ignoreAllWhitespaceChangesToolStripMenuItem.IsVisible = diffCanBeModified;
+
+        nextChangeButton.IsVisible = isPartialTextView;
+        previousChangeButton.IsVisible = isPartialTextView;
+        increaseNumberOfLines.IsVisible = diffCanBeModified;
+        decreaseNumberOfLines.IsVisible = diffCanBeModified;
+        showEntireFileButton.IsVisible = diffCanBeModified;
+        ignoreWhitespaceAtEol.IsVisible = diffCanBeModified;
+        ignoreWhiteSpaces.IsVisible = diffCanBeModified;
+        ignoreAllWhitespaces.IsVisible = diffCanBeModified;
         showSyntaxHighlightingToolStripMenuItem.IsVisible = isPartialTextView && _viewMode != ViewMode.FixedDiff;
         showSyntaxHighlighting.IsVisible = isPartialTextView;
+    }
+
+    private void UpdateDiffOptionState()
+    {
+        showEntireFileToolStripMenuItem.IsChecked = ShowEntireFile;
+        SetToolbarChecked(showEntireFileButton, ShowEntireFile);
+        increaseNumberOfLinesToolStripMenuItem.IsEnabled = !ShowEntireFile;
+        decreaseNumberOfLinesToolStripMenuItem.IsEnabled = !ShowEntireFile;
+        increaseNumberOfLines.IsEnabled = !ShowEntireFile;
+        decreaseNumberOfLines.IsEnabled = !ShowEntireFile;
+
+        bool ignoreEol = IgnoreWhitespace is IgnoreWhitespaceKind.Eol
+            or IgnoreWhitespaceKind.Change
+            or IgnoreWhitespaceKind.AllSpace;
+        bool ignoreChanges = IgnoreWhitespace is IgnoreWhitespaceKind.Change
+            or IgnoreWhitespaceKind.AllSpace;
+        bool ignoreAll = IgnoreWhitespace == IgnoreWhitespaceKind.AllSpace;
+        ignoreWhitespaceAtEolToolStripMenuItem.IsChecked = ignoreEol;
+        ignoreWhitespaceChangesToolStripMenuItem.IsChecked = ignoreChanges;
+        ignoreAllWhitespaceChangesToolStripMenuItem.IsChecked = ignoreAll;
+        SetToolbarChecked(ignoreWhitespaceAtEol, ignoreEol);
+        SetToolbarChecked(ignoreWhiteSpaces, ignoreChanges);
+        SetToolbarChecked(ignoreAllWhitespaces, ignoreAll);
+        AppSettings.IgnoreWhitespaceKind.Value = IgnoreWhitespace;
     }
 
     private void UpdateLineNumberVisibility()
@@ -1011,7 +1155,7 @@ public partial class FileViewer : GitModuleControl
         TextEditor.ScrollToLine(documentLine);
     }
 
-    private int MaxLineNumber
+    public int MaxLineNumber
     {
         get
         {
@@ -1132,17 +1276,19 @@ public partial class FileViewer : GitModuleControl
         }
 
         bool isTracked = item.Item.IsTracked || (!item.Item.TreeId.IsZero && !secondId.IsZero);
+        bool isGitWordDiff = AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.GitWordDiff;
+        bool useGitColoring = isGitWordDiff || AppSettings.UseGitColoring.Value;
 
         (Patch? patch, string? errorMessage) = await Module.GetSingleDiffAsync(
             firstId,
             secondId,
             item.Item.Name,
             item.Item.OldName,
-            extraDiffArguments: "",
+            extraDiffArguments: GetExtraDiffArguments().ToString(),
             Encoding,
             cacheResult: true,
             isTracked,
-            useGitColoring: false,
+            useGitColoring,
             GitCommandConfiguration.Default,
             viewToken);
 
@@ -1150,9 +1296,9 @@ public partial class FileViewer : GitModuleControl
         viewToken.ThrowIfCancellationRequested();
         ViewPatchCore(
             patch?.Text ?? errorMessage,
-            useGitColoring: false,
+            useGitColoring,
             isCombinedDiff: false,
-            isGitWordDiff: false,
+            isGitWordDiff,
             item.Item.Name,
             item,
             openWithDiffTool);
@@ -1189,6 +1335,396 @@ public partial class FileViewer : GitModuleControl
 
         return default;
     }
+
+    private StagedStatus ViewItemStagedStatus()
+    {
+        StagedStatus stagedStatus = _viewItem?.Item.Staged ?? StagedStatus.Unknown;
+        if (stagedStatus == StagedStatus.Unknown)
+        {
+            stagedStatus = GitModule.GetStagedStatus(
+                _viewItem?.FirstRevision?.ObjectId ?? default,
+                _viewItem?.SecondRevision.ObjectId ?? default,
+                _viewItem?.SecondRevision.FirstParentId ?? default);
+            if (_viewItem?.Item is not null)
+            {
+                _viewItem.Item.Staged = stagedStatus;
+            }
+        }
+
+        return stagedStatus;
+    }
+
+    /// <summary>Gets the full viewer text.</summary>
+    public string GetText() => TextEditor.Text;
+
+    /// <summary>Gets the selected viewer text.</summary>
+    public string GetSelectedText() => TextEditor.SelectedText;
+
+    /// <summary>Gets the selected range start.</summary>
+    public int GetSelectionPosition() => TextEditor.SelectionStart;
+
+    /// <summary>Gets the selected range length.</summary>
+    public int GetSelectionLength() => TextEditor.SelectionLength;
+
+    /// <summary>Gets the retained external-difftool action.</summary>
+    public Action? OpenWithDifftool => _openWithDifftool;
+
+    /// <summary>Gets or sets whether the editor can be changed.</summary>
+    public bool IsReadOnly
+    {
+        get => TextEditor.IsReadOnly;
+        set => TextEditor.IsReadOnly = value;
+    }
+
+    /// <summary>Gets the number of document lines.</summary>
+    public int TotalNumberOfLines => TextEditor.Document?.LineCount ?? 0;
+
+    /// <summary>Configures cross-file search navigation.</summary>
+    public void SetFileLoader(GetNextFileFnc fileLoader) => _findAndReplaceForm.SetFileLoader(fileLoader);
+
+    /// <summary>Moves to the next highlighted Find occurrence.</summary>
+    public void GoToNextOccurrence() => _findAndReplaceForm.GoToOccurrence(TextEditor, searchBackward: false);
+
+    /// <summary>Moves to the previous highlighted Find occurrence.</summary>
+    public void GoToPreviousOccurrence() => _findAndReplaceForm.GoToOccurrence(TextEditor, searchBackward: true);
+
+    /// <summary>Moves to the first changed block.</summary>
+    public void GoToFirstChange() => GoToChange(searchBackward: false, fromTop: true);
+
+    /// <summary>Moves to the next changed block.</summary>
+    public void GoToNextChange() => GoToChange(searchBackward: false, fromTop: false);
+
+    /// <summary>Moves to the previous changed block.</summary>
+    public void GoToPreviousChange() => GoToChange(searchBackward: true, fromTop: false);
+
+    private void GoToChange(bool searchBackward, bool fromTop)
+    {
+        if (_diffHighlightService is null)
+        {
+            return;
+        }
+
+        int[] changedLines =
+        [
+            .. _diffHighlightService.LinesInfo.DiffLines.Values
+                .Where(IsChangeLine)
+                .Select(info => info.LineNumInDiff)
+                .Order(),
+        ];
+        if (changedLines.Length == 0)
+        {
+            return;
+        }
+
+        List<int> blockStarts = [changedLines[0]];
+        for (int i = 1; i < changedLines.Length; i++)
+        {
+            if (changedLines[i] > changedLines[i - 1] + 1)
+            {
+                blockStarts.Add(changedLines[i]);
+            }
+        }
+
+        int caretLine = TextEditor.TextArea.Caret.Line;
+        int currentBlockStart = blockStarts.LastOrDefault(line => line <= caretLine);
+        bool caretIsInChangeBlock = changedLines.Contains(caretLine)
+                                    && currentBlockStart > 0;
+        int target = fromTop
+            ? blockStarts[0]
+            : searchBackward
+                ? blockStarts.LastOrDefault(line => line < (caretIsInChangeBlock ? currentBlockStart : caretLine))
+                : blockStarts.FirstOrDefault(line => line > caretLine);
+        if (target <= 0)
+        {
+            return;
+        }
+
+        TextEditor.TextArea.Caret.Position = new TextViewPosition(target, 1);
+        TextEditor.ScrollToLine(Math.Max(1, target - NumberOfContextLines - 1));
+
+        bool IsChangeLine(DiffLineInfo info)
+            => _viewMode == ViewMode.RangeDiff
+                ? info.LineType == DiffLineType.Header
+                : info.LineType is DiffLineType.Plus
+                    or DiffLineType.Minus
+                    or DiffLineType.MinusLeft
+                    or DiffLineType.PlusRight
+                    or DiffLineType.MinusPlus;
+    }
+
+    /// <summary>Applies every displayed change from a revision or stash to the worktree/index.</summary>
+    public void CherryPickAllChanges()
+    {
+        if (SupportLinePatching)
+        {
+            ApplySelectedLines(allFile: true, reverse: false);
+        }
+    }
+
+    private bool StageSelectedLines()
+    {
+        if (!SupportLinePatching)
+        {
+            return false;
+        }
+
+        if (ViewItemStagedStatus() == StagedStatus.WorkTree)
+        {
+            StageSelectedLines(stage: true);
+        }
+        else
+        {
+            ApplySelectedLines(allFile: false, reverse: false);
+        }
+
+        return true;
+    }
+
+    private bool UnstageSelectedLines()
+    {
+        if (!SupportLinePatching || ViewItemStagedStatus() != StagedStatus.Index)
+        {
+            return false;
+        }
+
+        StageSelectedLines(stage: false);
+        return true;
+    }
+
+    private bool ResetSelectedLines()
+    {
+        if (!SupportLinePatching)
+        {
+            return false;
+        }
+
+        if (ViewItemStagedStatus() is StagedStatus.WorkTree or StagedStatus.Index)
+        {
+            ResetNoncommittedSelectedLines();
+        }
+        else
+        {
+            ApplySelectedLines(allFile: false, reverse: true);
+        }
+
+        return true;
+    }
+
+    /// <summary>Stages worktree lines or unstages index lines.</summary>
+    public void StageSelectedLines(bool stage)
+    {
+        if (!_allowLinePatching || _viewItem is null)
+        {
+            return;
+        }
+
+        byte[]? patch;
+        if (_viewItem.Item.IsNew)
+        {
+            byte[] filePreamble = FilePreamble ?? throw new InvalidOperationException("The new file preamble was not loaded.");
+            ObjectId itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
+            patch = PatchManager.GetSelectedLinesAsNewPatch(
+                Module,
+                _viewItem.Item.Name,
+                GetText(),
+                GetSelectionPosition(),
+                GetSelectionLength(),
+                Encoding,
+                reset: false,
+                filePreamble,
+                itemBlobId.ToString());
+        }
+        else
+        {
+            patch = PatchManager.GetSelectedLinesAsPatch(
+                GetText(),
+                GetSelectionPosition(),
+                GetSelectionLength(),
+                isIndex: !stage,
+                Encoding,
+                reset: false,
+                _viewItem.Item.IsNew,
+                _viewItem.Item.IsRenamed);
+        }
+
+        if (patch?.Length is not > 0)
+        {
+            return;
+        }
+
+        GitArgumentBuilder args = new("apply")
+        {
+            "--cached",
+            "--index",
+            "--whitespace=nowarn",
+            { !stage, "--reverse" },
+        };
+        ProcessApplyOutput(args, patch, patchUpdateDiff: true);
+    }
+
+    /// <summary>Resets selected worktree or index lines after confirmation.</summary>
+    public void ResetNoncommittedSelectedLines()
+    {
+        if (!_allowLinePatching || _viewItem is null
+            || TaskDialog.ShowDialog(GetOwner(), _NO_TRANSLATE_resetSelectedLinesConfirmationDialog) != TaskDialogButton.Yes)
+        {
+            return;
+        }
+
+        byte[]? patch;
+        bool currentItemStaged = _viewItem.SecondRevision.ObjectId == ObjectId.IndexId;
+        if (_viewItem.Item.IsNew)
+        {
+            byte[] filePreamble = FilePreamble ?? throw new InvalidOperationException("The new file preamble was not loaded.");
+            ObjectId itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
+            patch = PatchManager.GetSelectedLinesAsNewPatch(
+                Module,
+                _viewItem.Item.Name,
+                GetText(),
+                GetSelectionPosition(),
+                GetSelectionLength(),
+                Encoding,
+                reset: true,
+                filePreamble,
+                itemBlobId.ToString());
+        }
+        else if (currentItemStaged)
+        {
+            patch = PatchManager.GetSelectedLinesAsPatch(
+                GetText(),
+                GetSelectionPosition(),
+                GetSelectionLength(),
+                isIndex: true,
+                Encoding,
+                reset: true,
+                _viewItem.Item.IsNew,
+                _viewItem.Item.IsRenamed);
+        }
+        else
+        {
+            patch = PatchManager.GetResetWorkTreeLinesAsPatch(
+                GetText(),
+                GetSelectionPosition(),
+                GetSelectionLength(),
+                Encoding);
+        }
+
+        if (patch?.Length is not > 0)
+        {
+            return;
+        }
+
+        GitArgumentBuilder args = new("apply")
+        {
+            "--whitespace=nowarn",
+            { currentItemStaged, "--reverse --index" },
+        };
+        ProcessApplyOutput(args, patch, patchUpdateDiff: true);
+    }
+
+    private void ApplySelectedLines(bool allFile, bool reverse)
+    {
+        if (!_allowLinePatching || _viewItem is null)
+        {
+            return;
+        }
+
+        int selectionStart = allFile ? 0 : GetSelectionPosition();
+        int selectionLength = allFile ? GetText().Length : GetSelectionLength();
+        if (selectionLength == 0)
+        {
+            return;
+        }
+
+        byte[]? patch;
+        if (_viewItem.Item.IsNew)
+        {
+            byte[] filePreamble = FilePreamble ?? throw new InvalidOperationException("The new file preamble was not loaded.");
+            ObjectId itemBlobId = reverse
+                ? GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId)
+                : default;
+            patch = PatchManager.GetSelectedLinesAsNewPatch(
+                Module,
+                _viewItem.Item.Name,
+                GetText(),
+                selectionStart,
+                selectionLength,
+                Encoding,
+                reset: reverse,
+                filePreamble,
+                itemBlobId.ToString());
+        }
+        else if (!reverse)
+        {
+            patch = PatchManager.GetSelectedLinesAsPatch(
+                GetText(),
+                selectionStart,
+                selectionLength,
+                isIndex: false,
+                Encoding,
+                reset: false,
+                _viewItem.Item.IsNew,
+                _viewItem.Item.IsRenamed);
+        }
+        else
+        {
+            patch = PatchManager.GetResetWorkTreeLinesAsPatch(
+                GetText(),
+                selectionStart,
+                selectionLength,
+                Encoding);
+        }
+
+        if (patch?.Length is not > 0)
+        {
+            return;
+        }
+
+        GitArgumentBuilder args = new("apply")
+        {
+            "--3way",
+            "--index",
+            "--whitespace=nowarn",
+        };
+        ProcessApplyOutput(args, patch);
+    }
+
+    private void ProcessApplyOutput(GitArgumentBuilder args, byte[] patch, bool patchUpdateDiff = false)
+    {
+        ExecutionResult result = Module.GitExecutable.Execute(
+            args,
+            inputWriter => inputWriter.BaseStream.Write(patch),
+            throwOnErrorExit: false);
+        string output = result.AllOutput.Trim();
+        if (!result.ExitedSuccessfully
+            && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, GetOwner(), false, false)))
+        {
+            MessageBoxes.Show(
+                GetOwner(),
+                $"{output}{Environment.NewLine}{Environment.NewLine}{Encoding.GetString(patch)}",
+                TranslatedStrings.Error,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error);
+        }
+        else if (!result.ExitedSuccessfully
+                 || output.StartsWith("error: ", StringComparison.Ordinal)
+                 || output.StartsWith("warning: ", StringComparison.Ordinal))
+        {
+            System.Diagnostics.Trace.WriteLineIf(
+                !string.IsNullOrWhiteSpace(output),
+                $"Patch output: {result.ExitCode}:{output} for: git {args}");
+        }
+
+        if (patchUpdateDiff && LinePatchingBlocksUntilReload)
+        {
+            _allowLinePatching = false;
+        }
+
+        PatchApplied?.Invoke(this, EventArgs.Empty);
+    }
+
+    private WinFormsShims.IWin32Window? GetOwner()
+        => TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window;
 
     /// <summary>
     ///  Scrolls to the first line.
@@ -1234,8 +1770,72 @@ public partial class FileViewer : GitModuleControl
     private void contextMenu_Opening(object? sender, EventArgs e)
     {
         copyToolStripMenuItem.IsEnabled = TextEditor.SelectionLength > 0;
+        stageSelectedLinesToolStripMenuItem.IsEnabled = _allowLinePatching;
+        unstageSelectedLinesToolStripMenuItem.IsEnabled = _allowLinePatching;
+        resetSelectedLinesToolStripMenuItem.IsEnabled = _allowLinePatching;
         replaceToolStripMenuItem.IsVisible = !TextEditor.IsReadOnly;
         goToLineToolStripMenuItem.IsEnabled = MaxLineNumber > 0;
+    }
+
+    private void IncreaseNumberOfLinesToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        NumberOfContextLines++;
+        AppSettings.NumberOfContextLines = NumberOfContextLines;
+        ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void DecreaseNumberOfLinesToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        NumberOfContextLines = Math.Max(0, NumberOfContextLines - 1);
+        AppSettings.NumberOfContextLines = NumberOfContextLines;
+        ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ShowEntireFileToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        ShowEntireFile = !ShowEntireFile;
+        AppSettings.ShowEntireFile.Value = ShowEntireFile;
+        UpdateDiffOptionState();
+        ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        IgnoreWhitespace = IgnoreWhitespace == IgnoreWhitespaceKind.Eol
+            ? IgnoreWhitespaceKind.None
+            : IgnoreWhitespaceKind.Eol;
+        UpdateDiffOptionState();
+        ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void IgnoreWhitespaceChangesToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        IgnoreWhitespace = IgnoreWhitespace == IgnoreWhitespaceKind.Change
+            ? IgnoreWhitespaceKind.None
+            : IgnoreWhitespaceKind.Change;
+        UpdateDiffOptionState();
+        ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void IgnoreAllWhitespaceChangesToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        IgnoreWhitespace = IgnoreWhitespace == IgnoreWhitespaceKind.AllSpace
+            ? IgnoreWhitespaceKind.None
+            : IgnoreWhitespaceKind.AllSpace;
+        UpdateDiffOptionState();
+        ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void NextChangeButtonClick(object? sender, EventArgs e)
+    {
+        FocusViewer();
+        GoToNextChange();
+    }
+
+    private void PreviousChangeButtonClick(object? sender, EventArgs e)
+    {
+        FocusViewer();
+        GoToPreviousChange();
     }
 
     private void ShowNonprintableCharactersToolStripMenuItemClick(object? sender, EventArgs e)
@@ -1358,7 +1958,80 @@ public partial class FileViewer : GitModuleControl
 
     private void CopyToolStripMenuItemClick(object? sender, EventArgs e)
     {
-        TextEditor.Copy();
+        string code = GetSelectedText();
+        if (string.IsNullOrEmpty(code))
+        {
+            return;
+        }
+
+        if (_viewMode.IsDiffView() && _viewMode != ViewMode.Difftastic)
+        {
+            int position = GetSelectionPosition();
+            string fileText = GetText();
+            int hunkPosition = fileText.IndexOf("\n@@", StringComparison.Ordinal);
+            if (hunkPosition <= position)
+            {
+                if (position > 0 && fileText[position - 1] != '\n')
+                {
+                    code = " " + code;
+                }
+
+                code = string.Join("\n", code.LazySplit('\n').Select(RemoveDiffPrefix));
+            }
+        }
+
+        ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.GetEffectiveSetting<AutoCRLFType>("core.autocrlf")));
+
+        static string RemoveDiffPrefix(string line)
+            => line.Length > 0 && line[0] is ' ' or '+' or '-' ? line[1..] : line;
+    }
+
+    private void CopyPatchToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        string text = GetSelectedText();
+        if (string.IsNullOrEmpty(text))
+        {
+            text = GetText();
+        }
+
+        if (!string.IsNullOrEmpty(text))
+        {
+            ClipboardUtil.TrySetText(text);
+        }
+    }
+
+    private void CopyNotStartingWith(char startChar)
+    {
+        string text = GetSelectedText();
+        bool noSelection = string.IsNullOrEmpty(text);
+        if (noSelection)
+        {
+            text = GetText();
+        }
+
+        if (_diffHighlightService is not null)
+        {
+            int position = noSelection ? 0 : GetSelectionPosition();
+            string fileText = GetText();
+            if (position > 0 && fileText[position - 1] != '\n')
+            {
+                text = " " + text;
+            }
+
+            IEnumerable<string> lines = text.LazySplit('\n')
+                .Where(line => line.Length == 0
+                               || line[0] != startChar
+                               || (line.Length > 2 && line[1] == line[0] && line[2] == line[0]));
+            int hunkPosition = fileText.IndexOf("\n@@", StringComparison.Ordinal);
+            if (hunkPosition <= position)
+            {
+                lines = lines.Select(line => line.Length > 0 && " -+".Contains(line[0]) ? line[1..] : line);
+            }
+
+            text = string.Join("\n", lines);
+        }
+
+        ClipboardUtil.TrySetText(text.AdjustLineEndings(Module.GetEffectiveSetting<AutoCRLFType>("core.autocrlf")));
     }
 
     private void FindToolStripMenuItemClick(object? sender, EventArgs e)
@@ -1379,6 +2052,11 @@ public partial class FileViewer : GitModuleControl
     public override void AddTranslationItems(ITranslation translation)
     {
         base.AddTranslationItems(translation);
+        AddToolTip(nameof(nextChangeButton), "Next change");
+        AddToolTip(nameof(previousChangeButton), "Previous change");
+        AddToolTip(nameof(increaseNumberOfLines), "Increase the number of lines of context");
+        AddToolTip(nameof(decreaseNumberOfLines), "Decrease the number of lines of context");
+        AddToolTip(nameof(showEntireFileButton), "Show entire file");
         translation.AddTranslationItem(
             nameof(FileViewer),
             nameof(showNonPrintChars),
@@ -1389,13 +2067,27 @@ public partial class FileViewer : GitModuleControl
             nameof(showSyntaxHighlighting),
             "ToolTipText",
             "Show syntax highlighting");
+        AddToolTip(nameof(ignoreWhitespaceAtEol), "Ignore whitespace changes at end of line");
+        AddToolTip(nameof(ignoreWhiteSpaces), "Ignore changes in amount of whitespace");
+        AddToolTip(nameof(ignoreAllWhitespaces), "Ignore all whitespace changes");
+
+        void AddToolTip(string name, string source)
+            => translation.AddTranslationItem(nameof(FileViewer), name, "ToolTipText", source);
     }
 
     public override void TranslateItems(ITranslation translation)
     {
         base.TranslateItems(translation);
+        SetTranslatedToolTip(nextChangeButton, nameof(nextChangeButton), "Next change");
+        SetTranslatedToolTip(previousChangeButton, nameof(previousChangeButton), "Previous change");
+        SetTranslatedToolTip(increaseNumberOfLines, nameof(increaseNumberOfLines), "Increase the number of lines of context");
+        SetTranslatedToolTip(decreaseNumberOfLines, nameof(decreaseNumberOfLines), "Decrease the number of lines of context");
+        SetTranslatedToolTip(showEntireFileButton, nameof(showEntireFileButton), "Show entire file");
         SetTranslatedToolTip(showNonPrintChars, nameof(showNonPrintChars), "Show nonprinting characters");
         SetTranslatedToolTip(showSyntaxHighlighting, nameof(showSyntaxHighlighting), "Show syntax highlighting");
+        SetTranslatedToolTip(ignoreWhitespaceAtEol, nameof(ignoreWhitespaceAtEol), "Ignore whitespace changes at end of line");
+        SetTranslatedToolTip(ignoreWhiteSpaces, nameof(ignoreWhiteSpaces), "Ignore changes in amount of whitespace");
+        SetTranslatedToolTip(ignoreAllWhitespaces, nameof(ignoreAllWhitespaces), "Ignore all whitespace changes");
 
         return;
 
@@ -1476,6 +2168,30 @@ public partial class FileViewer : GitModuleControl
             case Command.GoToLine:
                 goToLineToolStripMenuItem_Click(this, EventArgs.Empty);
                 break;
+            case Command.IncreaseNumberOfVisibleLines:
+                if (!increaseNumberOfLines.IsVisible || !increaseNumberOfLines.IsEnabled)
+                {
+                    return false;
+                }
+
+                IncreaseNumberOfLinesToolStripMenuItemClick(this, EventArgs.Empty);
+                break;
+            case Command.DecreaseNumberOfVisibleLines:
+                if (!decreaseNumberOfLines.IsVisible || !decreaseNumberOfLines.IsEnabled)
+                {
+                    return false;
+                }
+
+                DecreaseNumberOfLinesToolStripMenuItemClick(this, EventArgs.Empty);
+                break;
+            case Command.ShowEntireFile:
+                if (!showEntireFileButton.IsVisible)
+                {
+                    return false;
+                }
+
+                ShowEntireFileToolStripMenuItemClick(this, EventArgs.Empty);
+                break;
             case Command.ShowSyntaxHighlighting:
                 if (!showSyntaxHighlightingToolStripMenuItem.IsVisible)
                 {
@@ -1483,6 +2199,32 @@ public partial class FileViewer : GitModuleControl
                 }
 
                 ShowSyntaxHighlighting_Click(this, EventArgs.Empty);
+                break;
+            case Command.NextChange:
+                GoToNextChange();
+                break;
+            case Command.PreviousChange:
+                GoToPreviousChange();
+                break;
+            case Command.NextOccurrence:
+                GoToNextOccurrence();
+                break;
+            case Command.PreviousOccurrence:
+                GoToPreviousOccurrence();
+                break;
+            case Command.StageLines:
+                return StageSelectedLines();
+            case Command.UnstageLines:
+                return UnstageSelectedLines();
+            case Command.ResetLines:
+                return ResetSelectedLines();
+            case Command.IgnoreAllWhitespace:
+                if (!ignoreAllWhitespaces.IsVisible)
+                {
+                    return false;
+                }
+
+                IgnoreAllWhitespaceChangesToolStripMenuItem_Click(this, EventArgs.Empty);
                 break;
             default:
                 return base.ExecuteCommand(cmd);

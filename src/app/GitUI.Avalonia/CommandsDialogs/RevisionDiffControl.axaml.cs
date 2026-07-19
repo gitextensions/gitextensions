@@ -36,6 +36,9 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         DiffFiles.Bind(RefreshArtificial);
         DiffFiles.SelectedIndexChanged += DiffFiles_SelectedIndexChanged;
         DiffFiles.DoubleClick += (_, _) => ShowSelectedFile();
+        DiffText.LinePatchingBlocksUntilReload = true;
+        DiffText.ExtraDiffArgumentsChanged += (_, _) => ShowSelectedFile();
+        DiffText.PatchApplied += (_, _) => RequestRefresh();
         DiffText.TopScrollReached += (_, _) =>
         {
             DiffFiles.SelectPreviousVisibleItem();
@@ -84,7 +87,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         _diffCalculator.GetActualRevision = revisionGridInfo.GetActualRevision;
         DiffFiles.BindContextMenu(
             blame: null,
-            cherryPickChanges: null,
+            cherryPickChanges: DiffText.CherryPickAllChanges,
             filterFileInGrid: FilterFileInGrid,
             refreshParent: RequestRefresh,
             openInFileTreeTab_AsBlame: revisionFileTree is null ? null : OpenInFileTreeTab,
