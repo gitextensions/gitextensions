@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Controls.Selection;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -50,6 +51,10 @@ public sealed partial class FormCommit : GitModuleForm
     {
         InitializeComponent();
 
+        Unstaged.SelectionMode = SelectionMode.Multiple;
+        Staged.SelectionMode = SelectionMode.Multiple;
+        Unstaged.BindContextMenu(() => ReloadChanges(), canAutoRefresh: true, StageSelected, unstage: null);
+        Staged.BindContextMenu(() => ReloadChanges(), canAutoRefresh: false, stage: null, UnstageSelected);
         Unstaged.SelectedIndexChanged += Unstaged_SelectedIndexChanged;
         Staged.SelectedIndexChanged += Staged_SelectedIndexChanged;
         Unstaged.DoubleClick += Unstaged_DoubleClick;
@@ -149,31 +154,23 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void StageClick(object? sender, EventArgs e)
     {
-        if (Unstaged.SelectedItem is GitItemStatus { IsAssumeUnchanged: false, IsSkipWorktree: false } item)
-        {
-            Stage([item]);
-        }
+        StageSelected();
     }
 
     private void Unstaged_DoubleClick(object? sender, EventArgs e)
     {
-        if (Unstaged.SelectedItem is GitItemStatus item)
-        {
-            Stage([item]);
-        }
+        StageSelected();
     }
 
     private void toolStageAllItem_Click(object? sender, EventArgs e)
     {
-        Stage([.. Unstaged.GitItemStatuses.Where(item => !item.IsAssumeUnchanged && !item.IsSkipWorktree)]);
+        Stage([.. Unstaged.GitItemFilteredStatuses.Where(CanStage)]);
+        Unstaged.SetFilter(string.Empty);
     }
 
     private void UnstageFilesClick(object? sender, EventArgs e)
     {
-        if (Staged.SelectedItem is GitItemStatus item)
-        {
-            Unstage([item]);
-        }
+        UnstageSelected();
     }
 
     private void Staged_DoubleClick(object? sender, EventArgs e)
@@ -183,8 +180,18 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void toolUnstageAllItem_Click(object? sender, EventArgs e)
     {
-        Unstage(Staged.GitItemStatuses);
+        Unstage(Staged.GitItemFilteredStatuses);
+        Staged.SetFilter(string.Empty);
     }
+
+    private static bool CanStage(GitItemStatus item)
+        => !item.IsAssumeUnchanged && !item.IsSkipWorktree;
+
+    private void StageSelected()
+        => Stage([.. Unstaged.SelectedGitItems.Where(CanStage)]);
+
+    private void UnstageSelected()
+        => Unstage(Staged.SelectedGitItems);
 
     private void Stage(IReadOnlyList<GitItemStatus> items)
     {
@@ -255,13 +262,13 @@ public sealed partial class FormCommit : GitModuleForm
     {
         bool actionsEnabled = !_indexOperationInProgress && !_commitInProgress;
         bool canStage = actionsEnabled
-            && Unstaged.SelectedItem is { IsAssumeUnchanged: false, IsSkipWorktree: false };
-        bool canUnstage = actionsEnabled && Staged.SelectedItem is not null;
+            && Unstaged.SelectedGitItems.Any(CanStage);
+        bool canUnstage = actionsEnabled && Staged.SelectedGitItems.Count > 0;
         toolStageItem.IsEnabled = canStage;
         toolStageAllItem.IsEnabled = actionsEnabled
-            && Unstaged.GitItemStatuses.Any(item => !item.IsAssumeUnchanged && !item.IsSkipWorktree);
+            && Unstaged.GitItemFilteredStatuses.Any(CanStage);
         toolUnstageItem.IsEnabled = canUnstage;
-        toolUnstageAllItem.IsEnabled = actionsEnabled && Staged.GitItemStatuses.Count > 0;
+        toolUnstageAllItem.IsEnabled = actionsEnabled && Staged.GitItemFilteredStatuses.Count > 0;
         btnResetUnstagedChanges.IsEnabled = actionsEnabled && Unstaged.GitItemStatuses.Count > 0;
         btnResetAllChanges.IsEnabled = actionsEnabled
             && (Unstaged.GitItemStatuses.Count > 0 || Staged.GitItemStatuses.Count > 0);
