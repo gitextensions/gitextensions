@@ -29,6 +29,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private readonly IGpgInfoProvider? _controller;
+    private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
     private GridLength _commitInfoWidth = new(490);
     private GpgInfo? _gpgInfo;
     private GitRevision? _gpgInfoLoadingRevision;
@@ -210,7 +211,7 @@ public sealed partial class FormBrowse : GitModuleForm
             lblStatus.Text = $"git: {GitVersion.Current}";
             RevisionGrid.ReloadRevisions(module);
 
-            ThreadHelper.FileAndForget(async () =>
+            _loadOperations.FileAndForget(async () =>
             {
                 IReadOnlyList<IGitRef> refs = module.GetRefs(RefsFilter.NoFilter);
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -228,7 +229,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private void LoadWorkingDirectories()
     {
         string workingDirectory = Module.WorkingDir;
-        ThreadHelper.FileAndForget(async () =>
+        _loadOperations.FileAndForget(async () =>
         {
             IList<Repository> history = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
             string[] directories =
@@ -291,7 +292,7 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
         ChangeTerminalActiveFolder(normalizedPath);
         ReloadRepository();
-        ThreadHelper.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath));
+        _loadOperations.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath));
     }
 
     private void ToggleLeftPanelClick(object? sender, EventArgs e)
@@ -619,7 +620,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         _gpgInfoLoadingRevision = revision;
-        ThreadHelper.FileAndForget(() => FillGpgInfoAsync(revision));
+        _loadOperations.FileAndForget(() => FillGpgInfoAsync(revision));
     }
 
     private async Task FillGpgInfoAsync(GitRevision? revision)
@@ -995,6 +996,10 @@ public sealed partial class FormBrowse : GitModuleForm
             UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
         }
 
+        RevisionGrid.CancelBackgroundTasks();
+        revisionDiff.CancelBackgroundTasks();
+        fileTree.CancelBackgroundTasks();
+        _loadOperations.JoinPendingOperations();
         (_terminal as IDisposable)?.Dispose();
         _terminal = null;
         _outputHistoryController?.Dispose();

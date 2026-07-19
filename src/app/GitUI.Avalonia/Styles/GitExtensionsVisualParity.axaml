@@ -311,7 +311,7 @@
                  Height="16"
                  Stretch="Uniform"
                  Source="{Binding $parent[compat:IconRadioButton].Icon}" />
-          <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
         </StackPanel>
       </DataTemplate>
     </Setter>

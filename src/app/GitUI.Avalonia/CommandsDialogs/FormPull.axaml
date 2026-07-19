@@ -1,123 +1,188 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:compat="using:GitUI.Compat"
+        xmlns:help="using:GitUI.Help"
         xmlns:properties="using:GitUI.Properties"
+        xmlns:usercontrols="using:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormPull"
-        Width="680"
-        Height="440"
-        MinWidth="560"
-        MinHeight="400"
+        Width="690"
+        Height="564"
+        MinWidth="690"
+        MinHeight="564"
+        CanResize="True"
         Title="Pull">
-  <Grid x:Name="MainLayout"
-        Classes="gitextensions-dialog-main"
-        Margin="9"
-        RowDefinitions="Auto,Auto,Auto,*">
-    <Border x:Name="PanelLeftImage"
-            IsVisible="False" />
-    <Grid x:Name="PanelRight"
-          Grid.RowSpan="4">
-      <Grid x:Name="PanelRightInner"
-            RowDefinitions="Auto,Auto,Auto,*">
-        <HeaderedContentControl x:Name="GroupPullFrom"
-                                Classes="gitextensions-group-box"
-                                Header="Pull from">
-          <Grid ColumnDefinitions="Auto,*">
-            <RadioButton x:Name="PullFromRemote"
-                         VerticalAlignment="Center"
-                         Content="_Remote"
-                         IsChecked="True" />
-            <ComboBox x:Name="_NO_TRANSLATE_Remotes"
-                      Grid.Column="1"
-                      MinWidth="320" />
-          </Grid>
-        </HeaderedContentControl>
+  <Grid RowDefinitions="*,Auto">
+    <Grid x:Name="MainLayout"
+          Classes="gitextensions-dialog-main"
+          Margin="9"
+          ColumnDefinitions="Auto,*">
+      <help:HelpImageDisplayUserControl x:Name="PanelLeftImage"
+                                        Margin="0,0,6,0"
+                                        MaxWidth="289"
+                                        IsExpanded="True"
+                                        UniqueIsExpandedSettingsId="Pull" />
 
-        <HeaderedContentControl x:Name="GroupBranch"
-                                Classes="gitextensions-group-box"
-                                Grid.Row="1"
-                                Margin="0,12,0,0"
-                                Header="Branch">
-          <Grid ColumnDefinitions="Auto,*"
-                RowDefinitions="Auto,Auto">
-            <TextBlock x:Name="lblLocalBranch"
-                       Classes="gitextensions-dialog-label"
-                       Margin="0,0,12,0"
-                       Text="_Local branch" />
-            <TextBox x:Name="localBranch"
-                     Grid.Column="1"
-                     IsReadOnly="True" />
-            <TextBlock x:Name="lblRemoteBranch"
-                       Classes="gitextensions-dialog-label"
-                       Grid.Row="1"
-                       Margin="0,8,12,0"
-                       Text="Rem_ote branch" />
-            <TextBox x:Name="Branches"
-                     Grid.Row="1"
-                     Grid.Column="1"
-                     Margin="0,8,0,0" />
-          </Grid>
-        </HeaderedContentControl>
+      <Border x:Name="PanelRight"
+              Grid.Column="1">
+        <StackPanel x:Name="PanelRightInner"
+                    Spacing="6">
+          <HeaderedContentControl x:Name="GroupPullFrom"
+                                  Classes="gitextensions-group-box"
+                                  Header="Pull from">
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  RowDefinitions="Auto,Auto">
+              <RadioButton x:Name="PullFromRemote"
+                           Margin="0,0,12,0"
+                           VerticalAlignment="Center"
+                           Content="_Remote"
+                           IsChecked="True">
+                <ToolTip.Tip>Remote repository to pull from</ToolTip.Tip>
+              </RadioButton>
+              <ComboBox x:Name="_NO_TRANSLATE_Remotes"
+                        Grid.Column="1"
+                        MinWidth="288"
+                        IsEditable="True" />
+              <compat:IconButton x:Name="AddRemote"
+                                 Grid.Column="2"
+                                 Margin="6,0,0,0"
+                                 MinWidth="150"
+                                 Icon="{x:Static properties:Images.Remotes}"
+                                 Content="Mana_ge remotes" />
 
-        <HeaderedContentControl x:Name="GroupMergeOptions"
-                                Classes="gitextensions-group-box"
-                                Grid.Row="2"
-                                Margin="0,12,0,0"
-                                Header="Merge options">
-          <StackPanel x:Name="PanelMergeOptions"
-                      Spacing="6">
-            <compat:IconRadioButton x:Name="Merge"
-                                    GroupName="PullAction"
-                                    Icon="{x:Static properties:Images.Merge}"
-                                    Content="_Merge remote branch into current branch"
-                                    IsChecked="True" />
-            <compat:IconRadioButton x:Name="Rebase"
-                                    GroupName="PullAction"
-                                    Icon="{x:Static properties:Images.Rebase}"
-                                    Content="R_ebase current branch on top of remote branch, creates linear history (use with caution)" />
-            <RadioButton x:Name="Fetch"
-                         GroupName="PullAction"
-                         Content="Do not merge, only _fetch remote changes" />
-          </StackPanel>
-        </HeaderedContentControl>
+              <RadioButton x:Name="PullFromUrl"
+                           Grid.Row="1"
+                           Margin="0,6,12,0"
+                           VerticalAlignment="Center"
+                           Content="_URL">
+                <ToolTip.Tip>Url to pull from</ToolTip.Tip>
+              </RadioButton>
+              <ComboBox x:Name="comboBoxPullSource"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,6,0,0"
+                        IsEditable="True"
+                        IsEnabled="False" />
+              <usercontrols:FolderBrowserButton x:Name="folderBrowserButton1"
+                                                Grid.Row="1"
+                                                Grid.Column="2"
+                                                Margin="6,6,0,0"
+                                                IsEnabled="False" />
+            </Grid>
+          </HeaderedContentControl>
 
-        <compat:IconButton x:Name="Pull"
-                           Classes="gitextensions-dialog-action"
-                           Grid.Row="3"
-                           Margin="0,18,0,0"
-                           MinWidth="120"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Bottom"
-                           Icon="{x:Static properties:Images.ArrowDown}"
-                           IsDefault="True"
-                           Content="Pull" />
-      </Grid>
+          <HeaderedContentControl x:Name="GroupBranch"
+                                  Classes="gitextensions-group-box"
+                                  Header="Branch">
+            <Grid ColumnDefinitions="Auto,*"
+                  RowDefinitions="Auto,Auto">
+              <TextBlock x:Name="lblLocalBranch"
+                         Classes="gitextensions-dialog-label"
+                         Width="130"
+                         Text="_Local branch">
+                <ToolTip.Tip>Local branch to create or reset to the remote branch selected.</ToolTip.Tip>
+              </TextBlock>
+              <TextBox x:Name="localBranch"
+                       Grid.Column="1"
+                       Width="288"
+                       HorizontalAlignment="Left" />
+              <TextBlock x:Name="lblRemoteBranch"
+                         Classes="gitextensions-dialog-label"
+                         Grid.Row="1"
+                         Width="130"
+                         Margin="0,6,0,0"
+                         Text="Rem_ote branch">
+                <ToolTip.Tip>Remote branch to pull. Leave empty to pull all branches.</ToolTip.Tip>
+              </TextBlock>
+              <ComboBox x:Name="Branches"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,6,0,0"
+                        Width="288"
+                        HorizontalAlignment="Left"
+                        IsEditable="True" />
+            </Grid>
+          </HeaderedContentControl>
+
+          <HeaderedContentControl x:Name="GroupMergeOptions"
+                                  Classes="gitextensions-group-box"
+                                  Header="Merge options">
+            <StackPanel x:Name="PanelMergeOptions"
+                        Spacing="4">
+              <compat:IconRadioButton x:Name="Merge"
+                                      Icon="{x:Static properties:Images.Merge}"
+                                      Content="_Merge remote branch into current branch"
+                                      IsChecked="True" />
+              <compat:IconRadioButton x:Name="Rebase"
+                                      Icon="{x:Static properties:Images.Rebase}"
+                                      Content="R_ebase current branch on top of remote branch, creates linear history (use with caution)" />
+              <RadioButton x:Name="Fetch"
+                           Content="Do not merge, only _fetch remote changes" />
+            </StackPanel>
+          </HeaderedContentControl>
+
+          <HeaderedContentControl x:Name="GroupTagOptions"
+                                  Classes="gitextensions-group-box"
+                                  Header="Tag options">
+            <StackPanel x:Name="PanelTagOptions"
+                        Spacing="4">
+              <RadioButton x:Name="ReachableTags"
+                           Content="Follow _tagopt, if not specified, fetch tags reachable from remote HEAD"
+                           IsChecked="True" />
+              <RadioButton x:Name="NoTags"
+                           Content="Fetch _no tag" />
+              <RadioButton x:Name="AllTags"
+                           Content="Fetch _all tags" />
+            </StackPanel>
+          </HeaderedContentControl>
+
+          <CheckBox x:Name="Unshallow"
+                    Margin="4,0,0,0"
+                    Content="Do_wnload full history"
+                    IsVisible="False" />
+          <CheckBox x:Name="Prune"
+                    Margin="4,0,0,0"
+                    Content="_Prune remote branches">
+            <ToolTip.Tip>Removes remote tracking branches that no longer exist on the remote (e.g. if someone else deleted them).&#x0a;&#x0a;Actual command line (if checked): --prune --force&#x0a;</ToolTip.Tip>
+          </CheckBox>
+          <CheckBox x:Name="PruneTags"
+                    Margin="4,0,0,0"
+                    Content="Prune remote branches an_d tags"
+                    IsEnabled="False">
+            <ToolTip.Tip>Before fetching, remove any local tags that no longer exist on the remote if --prune is enabled.</ToolTip.Tip>
+          </CheckBox>
+        </StackPanel>
+      </Border>
     </Grid>
 
-    <!-- Original controls whose advanced flows are intentionally deferred. Keeping their
-         names makes later upstream logic ports mechanical and preserves translation keys. -->
-    <StackPanel IsVisible="False">
-      <RadioButton x:Name="PullFromUrl" Content="_URL" />
-      <ComboBox x:Name="comboBoxPullSource" />
-      <compat:IconButton x:Name="AddRemote"
-                         Icon="{x:Static properties:Images.Remotes}"
-                         Content="Mana_ge remotes" />
-      <Button x:Name="folderBrowserButton1" />
-      <Button x:Name="Stash" Content="Stash _changes" />
-      <Button x:Name="Mergetool" Content="_Solve conflicts" />
-      <CheckBox x:Name="AutoStash" Content="Auto stas_h" />
-      <HeaderedContentControl x:Name="GroupTagOptions"
-                              Classes="gitextensions-group-box"
-                              Header="Tag options">
-        <StackPanel x:Name="PanelTagOptions">
-          <RadioButton x:Name="ReachableTags" Content="Follow _tagopt, if not specified, fetch tags reachable from remote HEAD" />
-          <RadioButton x:Name="NoTags" Content="Fetch _no tag" />
-          <RadioButton x:Name="AllTags" Content="Fetch _all tags" />
-        </StackPanel>
-      </HeaderedContentControl>
-      <CheckBox x:Name="Unshallow" Content="Do_wnload full history" />
-      <CheckBox x:Name="Prune" Content="_Prune remote branches" />
-      <CheckBox x:Name="PruneTags" Content="Prune remote branches an_d tags" />
-      <TextBlock x:Name="lblSpacer" />
-    </StackPanel>
+    <Grid x:Name="ControlsPanel"
+          Grid.Row="1"
+          MinHeight="41"
+          Margin="5"
+          ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+      <Button x:Name="Mergetool"
+              Classes="gitextensions-dialog-action"
+              MinWidth="141"
+              Content="_Solve conflicts" />
+      <Button x:Name="Stash"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="1"
+              Margin="6,0,0,0"
+              MinWidth="132"
+              Content="Stash _changes" />
+      <CheckBox x:Name="AutoStash"
+                Grid.Column="2"
+                Margin="6,0,0,0"
+                VerticalAlignment="Center"
+                Content="Auto stas_h" />
+      <TextBlock x:Name="lblSpacer"
+                 Grid.Column="3" />
+      <compat:IconButton x:Name="Pull"
+                         Classes="gitextensions-dialog-action"
+                         Grid.Column="4"
+                         MinWidth="120"
+                         Icon="{x:Static properties:Images.ArrowDown}"
+                         IsDefault="True"
+                         Content="Pull" />
+    </Grid>
   </Grid>
 </Window>
