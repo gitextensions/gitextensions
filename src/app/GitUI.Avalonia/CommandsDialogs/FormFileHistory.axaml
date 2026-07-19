@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:gitui="clr-namespace:GitUI"
+        xmlns:properties="using:GitUI.Properties"
         xmlns:blame="clr-namespace:GitUI.Blame"
         xmlns:editor="clr-namespace:GitUI.Editor"
         x:Class="GitUI.CommandsDialogs.FormFileHistory"
@@ -9,7 +10,18 @@
         WindowStartupLocation="CenterOwner"
         Title="File History">
   <Grid RowDefinitions="*,5,2*" Margin="8">
-    <gitui:RevisionGridControl x:Name="RevisionGrid" />
+    <gitui:RevisionGridControl x:Name="RevisionGrid">
+      <gitui:RevisionGridControl.RevisionContextMenu>
+        <ContextMenu x:Name="FileHistoryContextMenu">
+          <MenuItem x:Name="openWithDifftoolToolStripMenuItem"
+                    Header="Open with difftool"
+                    InputGesture="F3">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Diff}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="diffToolRemoteLocalStripMenuItem" Header="Difftool selected &lt; - &gt; local" />
+        </ContextMenu>
+      </gitui:RevisionGridControl.RevisionContextMenu>
+    </gitui:RevisionGridControl>
 
     <GridSplitter Grid.Row="1"
                   Height="5"
