@@ -15,7 +15,7 @@ internal static class TestDirectory
             return;
         }
 
-        const int maximumAttempts = 20;
+        const int maximumAttempts = 30;
         for (int attempt = 1; ; attempt++)
         {
             try

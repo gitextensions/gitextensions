@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
@@ -15,16 +16,23 @@ using ResourceManager;
 
 namespace GitUI;
 
-// Reduced twin of GitUI/UserControls/FileStatusList.cs. It keeps the read-only API used by
-// FormBrowse/FormCommit, revision-aware diff entries, and the repository hierarchy required
-// by RevisionDiffControl's file-tree mode. Filtering, staging, and context menus remain deferred.
+// Twin of GitUI/UserControls/FileStatusList.cs. Avalonia's ListBox/TreeView templates replace
+// MultiSelectTreeView while preserving the original filtering, staging/context-menu, status,
+// revision grouping, and repository-hierarchy boundaries used by its consumers.
 public partial class FileStatusList : GitModuleControl
 {
+    private static readonly TimeSpan FilterThrottleDuration = TimeSpan.FromMilliseconds(250);
+
+    private readonly DispatcherTimer _filterTimer = new() { Interval = FilterThrottleDuration };
+    private IReadOnlyList<object> _allListItems = [];
+    private IReadOnlyList<FileStatusItem> _allTreeItems = [];
+    private IReadOnlyList<GitItemStatus> _gitItemFilteredStatuses = [];
     private IReadOnlyList<GitItemStatus> _gitItemStatuses = [];
     private Action? _refreshAction;
     private IGitUICommands? _boundCommands;
     private bool _isFileTreeMode;
     private bool _suppressSelectionChanged;
+    private Regex? _filter;
 
     public FileStatusList()
     {
@@ -34,10 +42,16 @@ public partial class FileStatusList : GitModuleControl
         tvFiles.ItemTemplate = new FuncTreeDataTemplate<FileTreeNode>(
             (node, _) => CreateTreeRow(node),
             node => node.Children);
+        lstFiles.ContextMenu = ItemContextMenu;
+        tvFiles.ContextMenu = ItemContextMenu;
         lstFiles.SelectionChanged += (_, _) => RaiseSelectedIndexChanged();
         tvFiles.SelectionChanged += (_, _) => RaiseSelectedIndexChanged();
         lstFiles.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
         tvFiles.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
+        cboFilterComboBox.TextChanged += cboFilterComboBox_TextChanged;
+        DeleteFilterButton.Click += DeleteFilterButton_Click;
+        _filterTimer.Tick += FilterTimer_Tick;
+        WireContextMenu();
         UICommandsSourceSet += (_, e) => BindCommands(e.GitUICommandsSource.UICommands);
         AttachedToLogicalTree += (_, _) =>
         {
@@ -46,7 +60,11 @@ public partial class FileStatusList : GitModuleControl
                 BindCommands(commands);
             }
         };
-        DetachedFromLogicalTree += (_, _) => UnbindCommands();
+        DetachedFromLogicalTree += (_, _) =>
+        {
+            _filterTimer.Stop();
+            UnbindCommands();
+        };
 
         InitializeComplete();
     }
@@ -60,6 +78,16 @@ public partial class FileStatusList : GitModuleControl
     ///  Occurs when a file is double-clicked (named like the WinForms event).
     /// </summary>
     public event EventHandler? DoubleClick;
+
+    /// <summary>
+    ///  Occurs when the displayed data source is replaced.
+    /// </summary>
+    public event EventHandler? DataSourceChanged;
+
+    /// <summary>
+    ///  Occurs when the filename filter changes.
+    /// </summary>
+    public event EventHandler? FilterChanged;
 
     /// <summary>
     ///  Gets the selected file status item, or <see langword="null"/>.
@@ -79,8 +107,15 @@ public partial class FileStatusList : GitModuleControl
     ///  Gets all selected revision-aware items.
     /// </summary>
     public IEnumerable<FileStatusItem> SelectedItems => _isFileTreeMode
-        ? SelectedFileStatusItem is FileStatusItem item ? [item] : []
+        ? tvFiles.SelectedItems?.OfType<FileTreeNode>().Select(node => node.Item).OfType<FileStatusItem>() ?? []
         : lstFiles.SelectedItems?.Cast<object>().Select(item => GetFileStatusItem(item)).OfType<FileStatusItem>() ?? [];
+
+    /// <summary>
+    ///  Gets the selected Git statuses, including worktree lists that do not carry revisions.
+    /// </summary>
+    public IReadOnlyList<GitItemStatus> SelectedGitItems => _isFileTreeMode
+        ? [.. tvFiles.SelectedItems?.OfType<FileTreeNode>().Select(node => node.Item?.Item).OfType<GitItemStatus>() ?? []]
+        : [.. lstFiles.SelectedItems?.Cast<object>().Select(GetGitItemStatus).OfType<GitItemStatus>() ?? []];
 
     /// <summary>
     ///  Gets the selected folder path in file-tree mode, or <see langword="null"/>.
@@ -104,12 +139,46 @@ public partial class FileStatusList : GitModuleControl
     public IReadOnlyList<GitItemStatus> GitItemStatuses => _gitItemStatuses;
 
     /// <summary>
+    ///  Gets the statuses currently visible after filtering.
+    /// </summary>
+    public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses => _gitItemFilteredStatuses;
+
+    /// <summary>
+    ///  Gets whether at least one item is selected.
+    /// </summary>
+    public bool HasSelection => SelectedGitItems.Count > 0 || SelectedFolder is not null;
+
+    /// <summary>
+    ///  Gets whether the unfiltered list is empty.
+    /// </summary>
+    public bool IsEmpty => _gitItemStatuses.Count == 0;
+
+    /// <summary>
+    ///  Gets the number of items before filtering.
+    /// </summary>
+    public int UnfilteredItemsCount => _gitItemStatuses.Count;
+
+    /// <summary>
+    ///  Gets whether a filename filter is active.
+    /// </summary>
+    public bool IsFilterActive => !string.IsNullOrEmpty(cboFilterComboBox.Text);
+
+    /// <summary>
+    ///  Gets whether the filename filter owns keyboard focus.
+    /// </summary>
+    public bool FilterFilesByNameRegexFocused => cboFilterComboBox.IsKeyboardFocusWithin;
+
+    /// <summary>
     ///  Gets or sets the selection mode of the underlying list.
     /// </summary>
     public SelectionMode SelectionMode
     {
         get => lstFiles.SelectionMode;
-        set => lstFiles.SelectionMode = value;
+        set
+        {
+            lstFiles.SelectionMode = value;
+            tvFiles.SelectionMode = value;
+        }
     }
 
     /// <summary>
@@ -117,15 +186,11 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SetDiffs(IReadOnlyList<GitItemStatus> items)
     {
+        SetFileTreeMode(false);
         _gitItemStatuses = items;
-        lstFiles.ItemsSource = items;
-        UpdateCount(items.Count);
-
-        // Like the WinForms FileStatusList, select the first file automatically.
-        if (items.Count > 0)
-        {
-            lstFiles.SelectedIndex = 0;
-        }
+        _allListItems = [.. items.Cast<object>()];
+        _allTreeItems = [];
+        ApplyFilter(selectFirstItem: true);
     }
 
     /// <summary>
@@ -195,10 +260,14 @@ public partial class FileStatusList : GitModuleControl
 
     public void Clear()
     {
+        _allListItems = [];
+        _allTreeItems = [];
+        _gitItemFilteredStatuses = [];
         _gitItemStatuses = [];
         lstFiles.ItemsSource = null;
         tvFiles.ItemsSource = null;
-        lblCount.Text = string.Empty;
+        UpdateCount(0);
+        UpdateEmptyState();
     }
 
     /// <summary>
@@ -218,8 +287,33 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void ClearSelected()
     {
-        lstFiles.SelectedItem = null;
-        tvFiles.SelectedItem = null;
+        lstFiles.Selection.Clear();
+        tvFiles.SelectedItems?.Clear();
+    }
+
+    /// <summary>
+    ///  Selects all visible files.
+    /// </summary>
+    public void SelectAll()
+    {
+        if (_isFileTreeMode)
+        {
+            tvFiles.SelectAll();
+        }
+        else
+        {
+            lstFiles.SelectAll();
+        }
+    }
+
+    /// <summary>
+    ///  Applies a case-insensitive regular-expression filter to file and old names.
+    /// </summary>
+    /// <returns>The number of visible files.</returns>
+    public int SetFilter(string value)
+    {
+        cboFilterComboBox.Text = value;
+        return ApplyFilter(selectFirstItem: true);
     }
 
     /// <summary>
@@ -363,19 +457,17 @@ public partial class FileStatusList : GitModuleControl
     {
         SetFileTreeMode(false);
         _gitItemStatuses = entries.Select(entry => entry.Item.Item).ToList();
-        lstFiles.ItemsSource = entries;
-        UpdateCount(entries.Count);
-        if (entries.Count > 0)
-        {
-            lstFiles.SelectedIndex = 0;
-        }
+        _allListItems = [.. entries.Cast<object>()];
+        _allTreeItems = [];
+        ApplyFilter(selectFirstItem: true);
     }
 
     private void SetTreeEntries(IReadOnlyList<FileStatusItem> items)
     {
         _gitItemStatuses = items.Select(item => item.Item).ToList();
-        tvFiles.ItemsSource = BuildFileTree(items);
-        UpdateCount(items.Count);
+        _allListItems = [];
+        _allTreeItems = items;
+        ApplyFilter(selectFirstItem: false);
     }
 
     private void SetFileTreeMode(bool isFileTreeMode)
@@ -391,6 +483,126 @@ public partial class FileStatusList : GitModuleControl
         {
             SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    private void cboFilterComboBox_TextChanged(object? sender, EventArgs e)
+    {
+        DeleteFilterButton.IsVisible = IsFilterActive;
+        _filterTimer.Stop();
+        _filterTimer.Start();
+    }
+
+    private void DeleteFilterButton_Click(object? sender, EventArgs e)
+    {
+        SetFilter(string.Empty);
+        cboFilterComboBox.Focus();
+    }
+
+    private void FilterTimer_Tick(object? sender, EventArgs e)
+    {
+        _filterTimer.Stop();
+        ApplyFilter(selectFirstItem: false);
+    }
+
+    private int ApplyFilter(bool selectFirstItem)
+    {
+        _filterTimer.Stop();
+        RelativePath? selectedPath = SelectedRelativePath;
+        string filterText = cboFilterComboBox.Text ?? string.Empty;
+        try
+        {
+            _filter = filterText.Length == 0
+                ? null
+                : new Regex(filterText, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            SetFilterState(filterText.Length == 0 ? FilterState.Empty : FilterState.Valid, toolTip: null);
+        }
+        catch (ArgumentException exception)
+        {
+            SetFilterState(FilterState.Invalid, exception.Message);
+            return _gitItemFilteredStatuses.Count;
+        }
+
+        if (_isFileTreeMode)
+        {
+            FileStatusItem[] visibleItems = [.. _allTreeItems.Where(item => IsFilterMatch(item.Item))];
+            _gitItemFilteredStatuses = [.. visibleItems.Select(item => item.Item)];
+            tvFiles.ItemsSource = BuildFileTree(visibleItems);
+        }
+        else
+        {
+            List<object> visibleItems = [];
+            string? currentGroupDescription = null;
+            bool groupDescriptionUsed = false;
+            foreach (object item in _allListItems)
+            {
+                if (item is FileStatusEntry { GroupDescription: not null } groupEntry)
+                {
+                    currentGroupDescription = groupEntry.GroupDescription;
+                    groupDescriptionUsed = false;
+                }
+
+                if (GetGitItemStatus(item) is not GitItemStatus status || !IsFilterMatch(status))
+                {
+                    continue;
+                }
+
+                if (item is FileStatusEntry entry)
+                {
+                    visibleItems.Add(entry with
+                    {
+                        GroupDescription = groupDescriptionUsed ? null : currentGroupDescription,
+                    });
+                    groupDescriptionUsed = true;
+                }
+                else
+                {
+                    visibleItems.Add(item);
+                }
+            }
+
+            _gitItemFilteredStatuses = [.. visibleItems.Select(GetGitItemStatus).OfType<GitItemStatus>()];
+            lstFiles.ItemsSource = visibleItems;
+        }
+
+        UpdateCount(_gitItemFilteredStatuses.Count);
+        UpdateEmptyState();
+        bool selectionRestored = selectedPath is not null && SelectFileOrFolder(selectedPath, notify: false);
+        if (!selectionRestored && selectFirstItem)
+        {
+            SelectFirstVisibleItem();
+        }
+
+        DataSourceChanged?.Invoke(this, EventArgs.Empty);
+        FilterChanged?.Invoke(this, EventArgs.Empty);
+        return _gitItemFilteredStatuses.Count;
+    }
+
+    private bool IsFilterMatch(GitItemStatus item)
+    {
+        if (item.IsRangeDiff || _filter is null)
+        {
+            return true;
+        }
+
+        string name = item.Name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
+        return _filter.IsMatch(name)
+               || (item.OldName is string oldName && _filter.IsMatch(oldName));
+    }
+
+    private void SetFilterState(FilterState state, string? toolTip)
+    {
+        cboFilterComboBox.Classes.Set("file-filter-active", state == FilterState.Valid);
+        cboFilterComboBox.Classes.Set("file-filter-invalid", state == FilterState.Invalid);
+        ToolTip.SetTip(cboFilterComboBox, toolTip);
+        DeleteFilterButton.IsVisible = IsFilterActive;
+    }
+
+    private void UpdateEmptyState()
+    {
+        bool hasItems = _gitItemFilteredStatuses.Count > 0;
+        NoFiles.IsVisible = !hasItems;
+        lstFiles.IsVisible = hasItems && !_isFileTreeMode;
+        tvFiles.IsVisible = hasItems && _isFileTreeMode;
     }
 
     private void SelectAdjacentTreeFile(int offset)
@@ -469,20 +681,27 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
-    private static Control CreateTreeRow(FileTreeNode node)
-        => new StackPanel
+    private Control CreateTreeRow(FileTreeNode node)
+    {
+        Image image = new()
+        {
+            Width = 16,
+            Height = 16,
+            Stretch = Stretch.Uniform,
+            Source = node.Item is null ? Images.FolderClosed : GetItemImage(node.Item.Item),
+            Margin = new Avalonia.Thickness(1, 0, 3, 0),
+        };
+        if (node.Item is not null)
+        {
+            UpdateSubmoduleImageWhenReady(image, node.Item.Item);
+        }
+
+        return new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal,
             Children =
             {
-                new Image
-                {
-                    Width = 16,
-                    Height = 16,
-                    Stretch = Stretch.Uniform,
-                    Source = node.Item is null ? Images.FolderClosed : GetItemImage(node.Item.Item),
-                    Margin = new Avalonia.Thickness(1, 0, 3, 0),
-                },
+                image,
                 new TextBlock
                 {
                     Text = node.Name,
@@ -491,10 +710,14 @@ public partial class FileStatusList : GitModuleControl
                 },
             },
         };
+    }
 
     private void UpdateCount(int count)
     {
-        lblCount.Text = $"{count} {(count == 1 ? "file" : "files")}";
+        string suffix = _gitItemStatuses.Count == 1 ? "file" : "files";
+        lblCount.Text = count == _gitItemStatuses.Count
+            ? $"{count} {suffix}"
+            : $"{count} / {_gitItemStatuses.Count} {suffix}";
     }
 
     private void BindCommands(IGitUICommands commands)
@@ -531,7 +754,10 @@ public partial class FileStatusList : GitModuleControl
             _ => null,
         };
 
-    private static Control CreateFileRow(object item, INameScope nameScope)
+    private static GitItemStatus? GetGitItemStatus(object? item)
+        => GetFileStatusItem(item)?.Item ?? item as GitItemStatus;
+
+    private Control CreateFileRow(object item, INameScope nameScope)
     {
         // Avalonia can briefly rebuild a recycled presenter with null while ItemsSource is
         // replaced after staging. The typed template annotation does not expose that state.
@@ -561,23 +787,27 @@ public partial class FileStatusList : GitModuleControl
             });
         }
 
+        Image image = new()
+        {
+            Width = 16,
+            Height = 16,
+            Stretch = Stretch.Uniform,
+            Source = GetItemImage(gitItemStatus),
+            Margin = new Avalonia.Thickness(3, 0, 3, 0),
+        };
+        UpdateSubmoduleImageWhenReady(image, gitItemStatus);
         row.Children.Add(
             new StackPanel
             {
                 Orientation = Avalonia.Layout.Orientation.Horizontal,
                 Children =
                 {
-                    new Image
-                    {
-                        Width = 16,
-                        Height = 16,
-                        Stretch = Stretch.Uniform,
-                        Source = GetItemImage(gitItemStatus),
-                        Margin = new Avalonia.Thickness(3, 0, 3, 0),
-                    },
+                    image,
                     new TextBlock
                     {
-                        Text = gitItemStatus.Name,
+                        Text = gitItemStatus.OldName is null
+                            ? gitItemStatus.Name
+                            : $"{gitItemStatus.Name} ({gitItemStatus.OldName})",
                         TextTrimming = TextTrimming.CharacterEllipsis,
                     },
                 },
@@ -603,6 +833,11 @@ public partial class FileStatusList : GitModuleControl
         if (item.IsRangeDiff)
         {
             return Images.DiffR;
+        }
+
+        if (!string.IsNullOrWhiteSpace(item.GrepString))
+        {
+            return Images.File;
         }
 
         if (item.IsNew || !item.IsTracked)
@@ -663,10 +898,81 @@ public partial class FileStatusList : GitModuleControl
             };
         }
 
-        return item.IsTracked && !item.TreeId.IsZero ? Images.File : Images.FileStatusUnknown;
+        return Images.FileStatusUnknown;
+    }
+
+    private static IImage GetSubmoduleImage(GitItemStatus item, GitSubmoduleStatus? status)
+    {
+        if (status is null)
+        {
+            return item.IsDirty ? Images.SubmoduleDirty : Images.SubmodulesManage;
+        }
+
+        return (status.Status, status.IsDirty) switch
+        {
+            (SubmoduleStatus.FastForward, true) => Images.SubmoduleRevisionUpDirty,
+            (SubmoduleStatus.FastForward, false) => Images.SubmoduleRevisionUp,
+            (SubmoduleStatus.Rewind, true) => Images.SubmoduleRevisionDownDirty,
+            (SubmoduleStatus.Rewind, false) => Images.SubmoduleRevisionDown,
+            (SubmoduleStatus.NewerTime, true) => Images.SubmoduleRevisionSemiUpDirty,
+            (SubmoduleStatus.NewerTime, false) => Images.SubmoduleRevisionSemiUp,
+            (SubmoduleStatus.OlderTime, true) => Images.SubmoduleRevisionSemiDownDirty,
+            (SubmoduleStatus.OlderTime, false) => Images.SubmoduleRevisionSemiDown,
+            (SubmoduleStatus.SameCommit, false) => Images.FolderSubmodule,
+            _ => Images.SubmoduleDirty,
+        };
+    }
+
+    private static void UpdateSubmoduleImageWhenReady(Image image, GitItemStatus item)
+    {
+        if (!item.IsSubmodule)
+        {
+            return;
+        }
+
+        Task<GitSubmoduleStatus?> task = item.GetSubmoduleStatusAsync();
+        ThreadHelper.FileAndForget(async () =>
+        {
+#pragma warning disable VSTHRD003 // GitItemStatus owns and starts the cached status task.
+            GitSubmoduleStatus? status = await task.ConfigureAwait(false);
+#pragma warning restore VSTHRD003
+            await Dispatcher.UIThread.InvokeAsync(() => image.Source = GetSubmoduleImage(item, status));
+        });
     }
 
     private sealed record FileStatusEntry(FileStatusItem Item, string? GroupDescription);
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor(FileStatusList control)
+    {
+        internal TextBox FilterComboBox => control.cboFilterComboBox;
+        internal TextBlock CountLabel => control.lblCount;
+        internal TextBlock NoFilesLabel => control.NoFiles;
+        internal ListBox List => control.lstFiles;
+        internal TreeView Tree => control.tvFiles;
+        internal ContextMenu ContextMenu => control.ItemContextMenu;
+        internal MenuItem StageMenuItem => control.tsmiStageFile;
+        internal MenuItem UnstageMenuItem => control.tsmiUnstageFile;
+        internal MenuItem CherryPickMenuItem => control.tsmiCherryPickChanges;
+
+        internal void UpdateContextMenu()
+            => control.ItemContextMenu_Opening(control.ItemContextMenu, EventArgs.Empty);
+
+        internal static IImage GetItemImage(GitItemStatus item)
+            => FileStatusList.GetItemImage(item);
+
+        internal static IImage GetSubmoduleImage(GitItemStatus item, GitSubmoduleStatus? status)
+            => FileStatusList.GetSubmoduleImage(item, status);
+    }
+
+    private enum FilterState
+    {
+        Empty,
+        Valid,
+        Invalid
+    }
 
     private sealed class FileTreeNode(string name, string fullPath, FileStatusItem? item, FileTreeNode? parent) : INotifyPropertyChanged
     {
