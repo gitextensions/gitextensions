@@ -233,6 +233,24 @@ public partial class FileViewer : GitModuleControl
         ViewPatchCore(text, useGitColoring, isCombinedDiff, isGitWordDiff);
     }
 
+    /// <summary>
+    ///  Shows a complete patch whose context and whitespace cannot be regenerated.
+    /// </summary>
+    public void ViewFixedPatch(
+        string? fileName,
+        string text,
+        Action? openWithDifftool = null,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        CancelPendingView();
+        ResetView(ViewMode.FixedDiff, fileName, item: null, openWithDifftool);
+        string parsedText = text;
+        PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
+        SetDiffText(parsedText, highlightService, showLeftColumn: true);
+        TextLoaded?.Invoke(this, EventArgs.Empty);
+    }
+
     private void ViewPatchCore(
         string? text,
         bool useGitColoring,

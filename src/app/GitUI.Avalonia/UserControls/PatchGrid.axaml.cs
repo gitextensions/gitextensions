@@ -35,6 +35,7 @@ public partial class PatchGrid : GitModuleControl
         Patches.ItemTemplate = new FuncDataTemplate<PatchFile>(
             (_, _) => new PatchRow(this),
             supportsRecycling: true);
+        Patches.DoubleTapped += Patches_DoubleClick;
         InitializeComplete();
     }
 
@@ -351,6 +352,33 @@ public partial class PatchGrid : GitModuleControl
             supportsRecycling: true);
     }
 
+    private void Patches_DoubleClick(object? sender, EventArgs e)
+    {
+        if (Patches.SelectedItem is not PatchFile patchFile)
+        {
+            return;
+        }
+
+        if (patchFile.ObjectId is { IsZeroOrArtificial: false } patchObjectId)
+        {
+            // Normal commit selected
+            UICommands.StartFormCommitDiff(patchObjectId);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(patchFile.FullName))
+        {
+            MessageBoxes.Show(
+                _unableToShowPatchDetails.Text,
+                TranslatedStrings.Error,
+                GitExtensions.Shims.WinForms.MessageBoxButtons.OK,
+                GitExtensions.Shims.WinForms.MessageBoxIcon.Error);
+            return;
+        }
+
+        UICommands.StartViewPatchDialog(patchFile.FullName);
+    }
+
     private static void AddHeaderTranslationItems(ITranslation translation, string fieldName, string text)
     {
         translation.AddTranslationItem(nameof(PatchGrid), fieldName, "HeaderText", text);
@@ -387,6 +415,8 @@ public partial class PatchGrid : GitModuleControl
 
         public IReadOnlyList<PatchFile> GetInteractiveRebasePatchFiles()
             => _control.GetInteractiveRebasePatchFiles();
+
+        public void OpenSelectedPatch() => _control.Patches_DoubleClick(_control.Patches, EventArgs.Empty);
     }
 
     private sealed class PatchRow : Grid

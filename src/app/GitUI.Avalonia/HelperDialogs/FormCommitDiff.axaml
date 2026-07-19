@@ -1,0 +1,12 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="using:GitUI.UserControls"
+        x:Class="GitUI.HelperDialogs.FormCommitDiff"
+        Width="717"
+        Height="529"
+        MinWidth="150"
+        MinHeight="148"
+        WindowStartupLocation="CenterOwner"
+        Title="Diff">
+  <usercontrols:CommitDiff x:Name="CommitDiff" />
+</Window>

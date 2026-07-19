@@ -50,7 +50,7 @@ public sealed class BlameControlTests
         control.BlameFile.TextEditor.TextArea.LeftMargins.Should().Contain(control.BlameAuthor,
             "the author gutter is a margin of the file editor, replacing the second WinForms editor");
         control.blameRevisionToolStripMenuItem.Should().NotBeNull("the context menu items keep their WinForms names");
-        control.showChangesToolStripMenuItem.IsVisible.Should().BeFalse("FormCommitDiff is not ported yet");
+        control.showChangesToolStripMenuItem.IsVisible.Should().BeTrue("FormCommitDiff is available");
         control.FindControl<GitUI.CommitInfo.CommitInfo>("CommitInfo").Should().NotBeNull();
     }
 
