@@ -9,6 +9,7 @@ using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Editor;
+using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -21,9 +22,8 @@ namespace GitUI.Blame;
 // Twin of GitUI/UserControls/BlameControl.cs. The author gutter is a BlameAuthorMargin
 // inside the file editor instead of a second scroll-synchronised editor, so the
 // scroll-position handlers of the original have no twin. Deferred: avatars in the gutter
-// (avatar subphase), "Show changes" (needs FormCommitDiff), the repository-hoster context
-// menu items (plugins phase), and the theme-adapted highlight/age colors (theming
-// subphase).
+// (avatar subphase), the repository-hoster context menu items (plugins phase), and the
+// theme-adapted highlight/age colors (theming subphase).
 public sealed partial class BlameControl : GitModuleControl
 {
     /// <summary>
@@ -73,6 +73,7 @@ public sealed partial class BlameControl : GitModuleControl
         contextMenu.Opening += contextMenu_Opened;
         blameRevisionToolStripMenuItem.Click += blameRevisionToolStripMenuItem_Click;
         blamePreviousRevisionToolStripMenuItem.Click += blamePreviousRevisionToolStripMenuItem_Click;
+        showChangesToolStripMenuItem.Click += showChangesToolStripMenuItem_Click;
         commitHashToolStripMenuItem.Click += copyCommitHashToClipboardToolStripMenuItem_Click;
         commitMessageToolStripMenuItem.Click += copyLogMessageToolStripMenuItem_Click;
         allCommitInfoToolStripMenuItem.Click += copyAllCommitInfoToClipboardToolStripMenuItem_Click;
@@ -586,8 +587,21 @@ public sealed partial class BlameControl : GitModuleControl
             return;
         }
 
-        // Without a hosting grid the WinForms control opens FormCommitDiff, which is
-        // not ported yet.
+        using FormCommitDiff frm = new(UICommands, commitId);
+        frm.ShowDialog(GetOwner());
+    }
+
+    private void showChangesToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        GitBlameCommit? commit = GetBlameCommit();
+
+        if (commit is null)
+        {
+            return;
+        }
+
+        using FormCommitDiff frm = new(UICommands, commit.ObjectId);
+        frm.ShowDialog(GetOwner());
     }
 
     private WinFormsShims.IWin32Window? GetOwner()
