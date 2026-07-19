@@ -6,6 +6,7 @@ using GitCommands.Git.Tag;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Shims.WinForms;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -124,10 +125,13 @@ public sealed partial class FormCreateTag : GitModuleForm
 
     private void PushTag(string tagName)
     {
-        // The existing process dialog performs the real remote push until the specialized
-        // remote-process window and push event-script host are available.
         ArgumentString pushCommand = Commands.PushTag(_currentRemote, tagName, false);
-        UICommands.StartGitCommandProcessDialog(this, pushCommand);
+        using FormRemoteProcess form = new(UICommands, pushCommand)
+        {
+            Remote = _currentRemote,
+            Text = string.Format(_pushToCaption.Text, _currentRemote),
+        };
+        form.ShowDialog(this);
     }
 
     private void AnnotateDropDownChanged(object? sender, EventArgs e)
