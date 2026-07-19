@@ -16,6 +16,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 {
     private readonly FileStatusDiffCalculator _diffCalculator;
     private readonly CancellationTokenSequence _setDiffSequence = new();
+    private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
     private IRevisionGridInfo? _revisionGridInfo;
     private IRevisionGridUpdate? _revisionGridUpdate;
@@ -107,7 +108,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         }
 
         CancellationToken cancellationToken = _setDiffSequence.Next();
-        ThreadHelper.FileAndForget(async () =>
+        _taskManager.FileAndForget(async () =>
         {
             await TaskScheduler.Default;
             cancellationToken.ThrowIfCancellationRequested();
@@ -150,6 +151,12 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         DisplayedRevision = null;
         DiffFiles.Clear();
         DiffText.ViewPatch(string.Empty);
+    }
+
+    internal void CancelBackgroundTasks()
+    {
+        Clear();
+        _taskManager.JoinPendingOperations();
     }
 
     public void RepositoryChanged()
@@ -260,7 +267,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
                 DiffFiles.GitItemStatuses
                     .Where(item => item.Name.StartsWith(prefix, StringComparison.Ordinal))
                     .Select(item => item.Name));
-            ThreadHelper.FileAndForget(() => DiffText.ViewTextAsync(selectedFolder.Value, description, cancellationToken));
+            _taskManager.FileAndForget(() => DiffText.ViewTextAsync(selectedFolder.Value, description, cancellationToken));
             return;
         }
 
@@ -270,7 +277,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
             return;
         }
 
-        ThreadHelper.FileAndForget(async () =>
+        _taskManager.FileAndForget(async () =>
         {
             if (IsFileTreeMode)
             {
