@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
@@ -103,6 +103,8 @@ public sealed partial class FormCommit : GitModuleForm
     private bool _assigningInitialMessage;
     private bool _messageEditedByUser;
     private bool _messageConsumed;
+    private FileStatusItem? _selectedDiffItem;
+    private bool _selectedDiffItemStaged;
     private bool _subscribedToRepositoryChanges;
     private bool _updatingCommitOptions;
 
@@ -128,6 +130,9 @@ public sealed partial class FormCommit : GitModuleForm
         Staged.SelectionMode = SelectionMode.Multiple;
         Unstaged.BindContextMenu(() => ReloadChanges(), canAutoRefresh: true, StageSelected, unstage: null);
         Staged.BindContextMenu(() => ReloadChanges(), canAutoRefresh: false, stage: null, UnstageSelected);
+        SelectedDiff.LinePatchingBlocksUntilReload = true;
+        SelectedDiff.ExtraDiffArgumentsChanged += (_, _) => ShowChanges(_selectedDiffItem, _selectedDiffItemStaged);
+        SelectedDiff.PatchApplied += (_, _) => ReloadChanges();
         Unstaged.SelectedIndexChanged += Unstaged_SelectedIndexChanged;
         Staged.SelectedIndexChanged += Staged_SelectedIndexChanged;
         Unstaged.DoubleClick += Unstaged_DoubleClick;
@@ -844,6 +849,8 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void ShowChanges(FileStatusItem? item, bool staged)
     {
+        _selectedDiffItem = item;
+        _selectedDiffItemStaged = staged;
         if (item is null)
         {
             SelectedDiff.ViewPatch(string.Empty);

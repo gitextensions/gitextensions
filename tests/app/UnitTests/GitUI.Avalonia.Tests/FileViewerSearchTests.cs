@@ -182,7 +182,7 @@ public sealed class FileViewerSearchTests
     }
 
     [AvaloniaTest]
-    public void FileViewer_should_expose_only_functional_context_actions()
+    public void FileViewer_should_expose_the_functional_context_actions()
     {
         FileViewer viewer = new();
         ITranslation translation = Substitute.For<ITranslation>();
@@ -190,6 +190,18 @@ public sealed class FileViewerSearchTests
         viewer.AddTranslationItems(translation);
 
         viewer.FindControl<MenuItem>("copyToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("stageSelectedLinesToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("unstageSelectedLinesToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("resetSelectedLinesToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("copyPatchToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("copyNewVersionToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("copyOldVersionToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("increaseNumberOfLinesToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("decreaseNumberOfLinesToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("showEntireFileToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("ignoreWhitespaceAtEolToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("ignoreWhitespaceChangesToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("ignoreAllWhitespaceChangesToolStripMenuItem").Should().NotBeNull();
         viewer.FindControl<MenuItem>("findToolStripMenuItem").Should().NotBeNull();
         viewer.FindControl<MenuItem>("goToLineToolStripMenuItem").Should().NotBeNull();
         viewer.FindControl<MenuItem>("replaceToolStripMenuItem")!.IsVisible.Should().BeFalse();
