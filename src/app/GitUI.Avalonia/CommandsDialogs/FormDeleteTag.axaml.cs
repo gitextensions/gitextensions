@@ -5,6 +5,7 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -13,6 +14,8 @@ namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormDeleteTag : GitModuleForm
 {
+    private readonly Action<ArgumentString>? _remoteProcessRunner;
+
     public FormDeleteTag()
     {
         InitializeComponent();
@@ -21,8 +24,14 @@ public sealed partial class FormDeleteTag : GitModuleForm
     }
 
     public FormDeleteTag(IGitUICommands commands, string? tag)
+        : this(commands, tag, remoteProcessRunner: null)
+    {
+    }
+
+    internal FormDeleteTag(IGitUICommands commands, string? tag, Action<ArgumentString>? remoteProcessRunner)
         : base(commands, enablePositionRestore: false)
     {
+        _remoteProcessRunner = remoteProcessRunner;
         InitializeComponent();
         remotesComboboxControl1.UICommandsSource = this;
         WireControls();
@@ -73,14 +82,23 @@ public sealed partial class FormDeleteTag : GitModuleForm
 
     private void RemoveRemoteTag(string tagName)
     {
-        // The existing process dialog performs the real remote push until the specialized
-        // remote-process window and before/after push event-script host are ported.
+        string remote = remotesComboboxControl1.SelectedRemote;
         ArgumentString pushCommand = new GitArgumentBuilder("push")
         {
-            remotesComboboxControl1.SelectedRemote.Quote(),
+            remote.Quote(),
             $":refs/tags/{tagName}",
         };
-        UICommands.StartGitCommandProcessDialog(this, pushCommand);
+        if (_remoteProcessRunner is not null)
+        {
+            _remoteProcessRunner(pushCommand);
+            return;
+        }
+
+        using FormRemoteProcess form = new(UICommands, pushCommand)
+        {
+            Remote = remote,
+        };
+        form.ShowDialog(this);
     }
 
     private void deleteTag_CheckedChanged(object? sender, EventArgs e)
