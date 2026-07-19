@@ -287,6 +287,18 @@ public sealed partial class ParityScreenshotTests
             return new FormFileHistory(context.Commands, AppSourcePath, context.HeadRevision);
         }
 
+        if (viewType == typeof(FormCommitDiff))
+        {
+            return new FormCommitDiff(context.Commands, context.HeadRevision.ObjectId);
+        }
+
+        if (viewType == typeof(FormViewPatch))
+        {
+            FormViewPatch form = new(context.Commands);
+            form.GetTestAccessor().LoadPatchText(context.SamplePatch);
+            return form;
+        }
+
         if (viewType == typeof(FormInit))
         {
             return new FormInit(context.Commands, context.WorkingDirectory, gitModuleChanged: null);
@@ -419,6 +431,13 @@ public sealed partial class ParityScreenshotTests
             return;
         }
 
+        if (root is CommitDiff commitDiff)
+        {
+            commitDiff.SetRevision(context.HeadRevision.ObjectId, AppSourcePath);
+            await WaitForCommitDiffAsync(commitDiff);
+            return;
+        }
+
         Control[] controls =
         [
             root,
@@ -530,6 +549,12 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task WaitForAsyncViewsAsync(Control root)
     {
+        CommitDiff? commitDiff = root as CommitDiff ?? root.GetLogicalDescendants().OfType<CommitDiff>().FirstOrDefault();
+        if (commitDiff is not null)
+        {
+            await WaitForCommitDiffAsync(commitDiff);
+        }
+
         TextBlock[] loadingStatuses =
         [
             .. new[] { root }
@@ -553,6 +578,20 @@ public sealed partial class ParityScreenshotTests
         }
 
         loadingStatuses.Should().OnlyContain(status => IsLoadingComplete(status.Text));
+    }
+
+    private static async Task WaitForCommitDiffAsync(CommitDiff commitDiff)
+    {
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        while (string.IsNullOrEmpty(commitDiff.FileViewer.TextEditor.Text)
+               && stopwatch.Elapsed < TimeSpan.FromSeconds(15))
+        {
+            Dispatcher.UIThread.RunJobs();
+            await Task.Delay(10);
+        }
+
+        commitDiff.FileStatusList.AllItems.Should().NotBeEmpty();
+        commitDiff.FileViewer.TextEditor.Text.Should().NotBeEmpty();
     }
 
     private static bool IsLoadingComplete(string? status)
@@ -593,6 +632,21 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(BlameControl))
         {
             return (1000, 650);
+        }
+
+        if (viewType == typeof(CommitDiff))
+        {
+            return (885, 578);
+        }
+
+        if (viewType == typeof(FormCommitDiff))
+        {
+            return (717, 529);
+        }
+
+        if (viewType == typeof(FormViewPatch))
+        {
+            return (689, 501);
         }
 
         if (viewType == typeof(FindAndReplaceForm))

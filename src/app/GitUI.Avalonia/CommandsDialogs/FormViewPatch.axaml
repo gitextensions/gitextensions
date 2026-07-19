@@ -1,0 +1,83 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:editor="using:GitUI.Editor"
+        x:Class="GitUI.CommandsDialogs.FormViewPatch"
+        Width="689"
+        Height="501"
+        MinWidth="420"
+        MinHeight="300"
+        WindowStartupLocation="CenterOwner"
+        Title="View patch file">
+  <Grid x:Name="tableLayoutPanel1"
+        Margin="3"
+        RowDefinitions="Auto,*">
+    <Grid x:Name="tableLayoutPanel2"
+          Margin="0,0,0,5"
+          ColumnDefinitions="Auto,*,100">
+      <TextBlock x:Name="labelPatch"
+                 Margin="3"
+                 VerticalAlignment="Center"
+                 Text="Patch" />
+      <TextBox x:Name="PatchFileNameEdit"
+               Grid.Column="1"
+               Margin="3"
+               VerticalContentAlignment="Center" />
+      <Button x:Name="BrowsePatch"
+              Grid.Column="2"
+              Margin="3"
+              MinHeight="25"
+              Content="Browse" />
+    </Grid>
+
+    <Grid x:Name="splitContainer1"
+          Grid.Row="1"
+          RowDefinitions="270,0,*">
+      <Border Classes="gitextensions-section">
+        <Grid RowDefinitions="Auto,*"
+              ColumnDefinitions="*,70,50">
+          <Border x:Name="FileNameA"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock Text="Filename" FontWeight="SemiBold" />
+          </Border>
+          <Border x:Name="typeDataGridViewTextBoxColumn"
+                  Grid.Column="1"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock Text="Change" FontWeight="SemiBold" />
+          </Border>
+          <Border x:Name="File"
+                  Grid.Column="2"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,0,1">
+            <TextBlock Text="Type" FontWeight="SemiBold" />
+          </Border>
+
+          <ListBox x:Name="GridChangedFiles"
+                   Grid.Row="1"
+                   Grid.ColumnSpan="3"
+                   SelectionMode="Single">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="MinHeight" Value="24" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+              </Style>
+            </ListBox.Styles>
+          </ListBox>
+        </Grid>
+      </Border>
+
+      <GridSplitter Grid.Row="1"
+                    Height="6"
+                    ResizeDirection="Rows" />
+
+      <Border Grid.Row="2" Classes="gitextensions-section">
+        <editor:FileViewer x:Name="ChangesList" />
+      </Border>
+    </Grid>
+  </Grid>
+</Window>
