@@ -33,6 +33,12 @@ internal static class AvaloniaTranslationUtils
         {
             bool hasText = TryGetAvaloniaText(item, out string? text, out bool convertMnemonics);
             bool hasToolTip = item is Control control && ToolTip.GetTip(control) is string;
+            if (item is TextBox { PlaceholderText: string placeholderText }
+                && placeholderText.Any(char.IsLetter))
+            {
+                translation.AddTranslationItem(category, name, "Watermark", placeholderText);
+            }
+
             if (!hasText && !hasToolTip)
             {
                 sharedItems.Add((name, item));
@@ -63,6 +69,19 @@ internal static class AvaloniaTranslationUtils
         {
             bool hasText = TryGetAvaloniaText(item, out string? text, out bool convertMnemonics);
             bool hasToolTip = item is Control control && ToolTip.GetTip(control) is string;
+            if (item is TextBox { PlaceholderText: string placeholderText })
+            {
+                string? translatedPlaceholder = translation.TranslateItem(
+                    category,
+                    name,
+                    "Watermark",
+                    () => placeholderText);
+                if (!string.IsNullOrEmpty(translatedPlaceholder))
+                {
+                    ((TextBox)item).PlaceholderText = translatedPlaceholder;
+                }
+            }
+
             if (!hasText && !hasToolTip)
             {
                 sharedItems.Add((name, item));

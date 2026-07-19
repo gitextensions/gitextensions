@@ -1,9 +1,91 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.FileStatusList">
+  <UserControl.ContextMenu>
+    <ContextMenu x:Name="ItemContextMenu">
+      <MenuItem x:Name="tsmiStageFile"
+                Header="_Stage selected"
+                IsVisible="False">
+        <MenuItem.Icon>
+          <Image Source="{x:Static properties:Images.Stage}" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem x:Name="tsmiUnstageFile"
+                Header="_Unstage selected"
+                IsVisible="False">
+        <MenuItem.Icon>
+          <Image Source="{x:Static properties:Images.Unstage}" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem x:Name="tsmiCherryPickChanges"
+                Header="Cherr_y pick changes"
+                IsVisible="False" />
+      <Separator x:Name="sepGit" />
+      <MenuItem x:Name="tsmiOpenWorkingDirectoryFile"
+                Header="_Open working directory file" />
+      <MenuItem x:Name="tsmiCopyPaths"
+                Header="Copy _path(s)">
+        <MenuItem.Icon>
+          <Image Source="{x:Static properties:Images.CopyToClipboard}" />
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem x:Name="tsmiShowInFolder"
+                Header="Show _in folder" />
+      <Separator x:Name="sepBrowse" />
+      <MenuItem x:Name="tsmiShowInFileTree"
+                Header="Show in File _tree"
+                IsVisible="False" />
+      <MenuItem x:Name="tsmiFilterFileInGrid"
+                Header="Filter file in _grid"
+                IsVisible="False" />
+      <MenuItem x:Name="tsmiFileHistory"
+                Header="File _history" />
+      <MenuItem x:Name="tsmiBlame"
+                Header="_Blame" />
+      <Separator x:Name="_treeContextMenuSeparator" />
+      <MenuItem x:Name="_collapseAll"
+                Header="C_ollapse all" />
+      <MenuItem x:Name="_collapseRootFolders"
+                Header="Collap_se root folders" />
+      <MenuItem x:Name="_expandAll"
+                Header="E_xpand all" />
+      <MenuItem x:Name="_selectAll"
+                Header="S_elect all" />
+    </ContextMenu>
+  </UserControl.ContextMenu>
   <DockPanel>
-    <TextBlock DockPanel.Dock="Top" x:Name="lblCount" Margin="4,2" Opacity="0.7" />
+    <Grid DockPanel.Dock="Top"
+          Height="25"
+          ColumnDefinitions="*,23,Auto">
+      <TextBox x:Name="cboFilterComboBox"
+               Grid.Column="0"
+               MinHeight="23"
+               Padding="4,1"
+               PlaceholderText="Filter files using a regular expression..." />
+      <Button x:Name="DeleteFilterButton"
+              Grid.Column="1"
+              Classes="gitextensions-toolbar-button gitextensions-icon-only"
+              Width="23"
+              Height="23"
+              IsVisible="False">
+        <Image Width="16"
+               Height="16"
+               Source="/Resources/Icons/DeleteText.png" />
+      </Button>
+      <TextBlock x:Name="lblCount"
+                 Grid.Column="2"
+                 Margin="6,0,4,0"
+                 MinWidth="44"
+                 Opacity="0.7"
+                 VerticalAlignment="Center" />
+    </Grid>
     <Grid>
+      <TextBlock x:Name="NoFiles"
+                 Margin="4,2"
+                 Opacity="0.7"
+                 Text="No changes"
+                 IsHitTestVisible="False" />
       <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" />
       <TreeView x:Name="tvFiles" IsVisible="False" Focusable="True" x:CompileBindings="False">
         <TreeView.Styles>

@@ -21,7 +21,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed blob/image viewing through FileViewer in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Blame, script options, context commands, and custom tools retain their later owners."
+    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed blob/image viewing through FileViewer in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Shared FileStatusList actions filter selected paths in the revision grid and navigate ordinary-diff selections to the paired File tree. Inline blame, line patching, script options, and custom tools retain their later owners."
   },
   "src/app/GitUI/CommandsDialogs/RevisionDiffControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml",
@@ -111,7 +111,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormStash.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Manage/create mode, worktree/index and stored-stash file lists, real diff preview, stash all/selected, apply/drop, persisted options, repository refresh binding, continuous file scrolling, and Ctrl+N/Ctrl+P/F5 hotkeys. The drop confirmation uses the Compat TaskDialog surrogate. The main divider uses the shared light/dark splitter brush. FileViewer line patching and FileStatusList context-menu actions remain deferred."
+    "notes": "Manage/create mode, worktree/index and stored-stash file lists, real diff preview, stash all/selected, apply/drop, persisted options, repository refresh binding, continuous file scrolling, and Ctrl+N/Ctrl+P/F5 hotkeys. The drop confirmation uses the Compat TaskDialog surrogate. The main divider uses the shared light/dark splitter brush. The shared FileStatusList now supplies filtering, status imagery, navigation, and non-mutating file context actions; stash cherry-pick remains absent until FileViewer line patching is functional."
   },
   "src/app/GitUI/CommandsDialogs/FormResolveConflicts.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResolveConflicts.axaml.cs",
@@ -206,8 +206,8 @@
   "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Normal whole-file commits are functional: staged/unstaged lists, diff preview, stage/unstage selected/all, message editing, shared CommitMessageManager, FormProcess execution, browse entry point, and commit-and-push. Amend/fixup/squash, templates/history, advanced validation, scripts/hooks UI, and signing/author options remain deferred."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Normal whole-file commits are functional: staged/unstaged multi-selection, filtered stage/unstage selected/all and matching FileStatusList context actions, diff preview, message editing, shared CommitMessageManager, FormProcess execution, browse entry point, and commit-and-push. Amend/fixup/squash, templates/history, advanced validation, scripts/hooks UI, and signing/author options remain deferred."
   },
   "src/app/GitUI/CommandsDialogs/FormPush.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPush.axaml.cs",
@@ -389,8 +389,20 @@
   "src/app/GitUI/UserControls/FileStatusList.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "List with the original cached status images for added/removed/modified/renamed/copied/unmerged/range-diff and basic submodule entries, exposed statuses, configurable multi-selection, revision-aware FileStatusItem entries, worktree/index grouping, repository refresh binding, selection navigation, and WinForms-shaped selection/double-click events. File-tree mode builds an ordinal, folders-first hierarchy from POSIX paths, expands followed-file ancestors, selects files or folders by RelativePath, and preserves the same status/icon source. Detailed asynchronous submodule variants, interactive filtering, staging interactions, and context menus remain deferred."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Reusable list/tree boundary with the original case-insensitive regex filter over current and old names, invalid-input retention/feedback, filtered counts, configurable multi-selection, revision-aware grouping, repository refresh binding, navigation, and WinForms-shaped events. The complete added/removed/modified/renamed/copied/unmerged/range-diff image matrix and asynchronously resolved submodule variants use the shared image cache. File-tree mode builds an ordinal folders-first hierarchy, restores followed selections, and supplies select/expand/collapse actions. FileViewer line/chunk commands and custom difftools remain deferred."
+  },
+  "src/app/GitUI/UserControls/FileStatusList.ContextMenu.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.ContextMenu.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named context-menu boundary with consumer-supplied stage/unstage callbacks plus portable open, copy paths, show folder, show in File tree, revision-grid path filtering, history/blame, and tree expansion. Stash cherry-pick and FileViewer line/chunk commands remain absent until the shared line-patching phase; ignore/custom-difftool actions retain their later owners."
+  },
+  "src/app/GitUI/UserControls/FileStatusList.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact filter/count row, empty-state label, status list, repository tree, and same-named context items preserve existing translation identities. The active/invalid filter backgrounds are semantic light/dark resources; later toolbar/search commands remain absent rather than inert."
   },
   "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs": {
     "twin": "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs",

@@ -189,6 +189,13 @@ public sealed partial class ParityScreenshotTests
                 formBrowse.commandsToolStripMenuItem.IsSubMenuOpen = true;
                 Dispatcher.UIThread.RunJobs();
             }
+            else if (view is FileStatusList fileStatusList)
+            {
+                FileStatusList.TestAccessor accessor = fileStatusList.GetTestAccessor();
+                accessor.UpdateContextMenu();
+                accessor.ContextMenu.Open(accessor.List);
+                Dispatcher.UIThread.RunJobs();
+            }
 
             WriteableBitmap? frame = window.CaptureRenderedFrame();
             frame.Should().NotBeNull($"{descriptor.ClassName} should render with headless Skia");
@@ -445,6 +452,11 @@ public sealed partial class ParityScreenshotTests
 
                 case FileStatusList fileStatusList:
                     fileStatusList.SetDiffs(context.ChangedFiles);
+                    if (ReferenceEquals(fileStatusList, root))
+                    {
+                        fileStatusList.SetFilter("src|CHANGELOG");
+                    }
+
                     break;
 
                 case RevisionGridControl revisionGrid:
