@@ -4,8 +4,9 @@ using GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/MergeConflictHandler.cs. The middle-of-patch and
-// middle-of-rebase follow-ups surface as "not ported" until their dialogs arrive.
+// Twin of GitUI/CommandsDialogs/MergeConflictHandler.cs. Merge and rebase recovery use
+// their same-named dialogs; middle-of-patch recovery remains unavailable until the
+// apply-patch workflow is ported.
 public static class MergeConflictHandler
 {
     public static bool HandleMergeConflicts(IGitUICommands commands, IWin32Window? owner, bool offerCommit = true, bool offerUpdateSubmodules = true)

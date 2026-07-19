@@ -59,6 +59,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     ];
 
     private readonly CancellationTokenSequence _refreshSequence = new();
+    private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
     private readonly FilterInfo _filterInfo = new();
     private readonly AuthorRevisionHighlighting _authorHighlighting = new();
     private readonly List<ColumnProvider> _columnProviders = [];
@@ -215,6 +216,12 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
 
     internal void SetAheadBehindDataProvider(IAheadBehindDataProvider? provider)
         => _messageColumnProvider.SetAheadBehindDataProvider(provider);
+
+    internal void CancelBackgroundTasks()
+    {
+        _refreshSequence.CancelCurrent();
+        _taskManager.JoinPendingOperations();
+    }
 
     /// <inheritdoc />
     public void ResetAllFiltersAndRefresh()
@@ -1101,7 +1108,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         lblLoadingStatus.Text = "Loading…";
 
         RevisionObserver observer = new(this, cancellationToken);
-        ThreadHelper.FileAndForget(async () =>
+        _taskManager.FileAndForget(async () =>
         {
             SuperProjectInfo? superProjectInfo = await GetSuperprojectCheckoutAsync(module).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
@@ -1113,7 +1120,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
             }
         });
 
-        ThreadHelper.FileAndForget(() =>
+        _taskManager.FileAndForget(() =>
         {
             // Like the WinForms grid: fetch the refs first so they can be attached to the
             // revisions as they stream in (ref labels; square graph nodes).
