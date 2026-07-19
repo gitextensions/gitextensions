@@ -125,6 +125,7 @@ public sealed partial class FormBrowse : GitModuleForm
         tagToolStripMenuItem.Click += TagToolStripMenuItemClick;
         deleteTagToolStripMenuItem.Click += DeleteTagToolStripMenuItemClick;
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
+        patchToolStripMenuItem.Click += PatchToolStripMenuItemClick;
         RefreshButton.Click += RefreshToolStripMenuItemClick;
         toggleLeftPanel.Click += ToggleLeftPanelClick;
         InitializeWorkspaceLayout();
@@ -746,6 +747,11 @@ public sealed partial class FormBrowse : GitModuleForm
     private void StashToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartStashDialog(this);
+    }
+
+    private void PatchToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartViewPatchDialog(this);
     }
 
     private void FileExplorerToolStripMenuItemClick(object? sender, EventArgs e)

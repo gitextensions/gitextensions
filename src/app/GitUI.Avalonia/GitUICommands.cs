@@ -406,7 +406,18 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartFixupCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartFixupCommitDialog));
-    public bool StartFormCommitDiff(ObjectId objectId) => throw NotPorted(nameof(StartFormCommitDiff));
+    public bool StartFormCommitDiff(ObjectId objectId)
+    {
+        bool Action()
+        {
+            using FormCommitDiff viewPatch = new(this, objectId);
+            viewPatch.ShowDialog(null);
+            return true;
+        }
+
+        return DoActionOnRepo(null, Action, requiresValidWorkingDir: false, changesRepo: false);
+    }
+
     public bool StartFormatPatchDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartFormatPatchDialog));
     public bool StartGeneralSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartGeneralSettingsDialog));
     public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null)
@@ -659,8 +670,28 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartVerifyDatabaseDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartVerifyDatabaseDialog));
-    public bool StartViewPatchDialog(IWin32Window? owner, string? patchFile = null) => throw NotPorted(nameof(StartViewPatchDialog));
-    public bool StartViewPatchDialog(string patchFile) => throw NotPorted(nameof(StartViewPatchDialog));
+    public bool StartViewPatchDialog(IWin32Window? owner, string? patchFile = null)
+    {
+        bool Action()
+        {
+            using FormViewPatch viewPatch = new(this);
+            if (!string.IsNullOrEmpty(patchFile))
+            {
+                viewPatch.LoadPatch(patchFile);
+            }
+
+            viewPatch.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, changesRepo: false);
+    }
+
+    public bool StartViewPatchDialog(string patchFile)
+    {
+        return StartViewPatchDialog(null, patchFile);
+    }
+
     public void UpdateSubmodules(IWin32Window? owner)
     {
         if (!Module.HasSubmodules())
