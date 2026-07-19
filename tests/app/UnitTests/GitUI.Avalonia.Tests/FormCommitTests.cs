@@ -1,5 +1,6 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Text;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -22,12 +23,15 @@ using GitUI.Editor;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
 [TestFixture]
 public sealed class FormCommitTests
 {
+    private const string FeatCommitTypeForTest = "feat";
+
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
 
@@ -48,6 +52,7 @@ public sealed class FormCommitTests
         _serviceContainer.AddService<IRepositoryDescriptionProvider>(repositoryDescriptionProvider);
         GitCommands.ServiceContainerRegistry.RegisterServices(_serviceContainer);
         GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
+        WinFormsShims.ShimHost.MessageBoxHost = new StubMessageBoxHost { Result = WinFormsShims.DialogResult.Yes };
 
         _workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.Tests-{Guid.NewGuid():N}");
         Directory.CreateDirectory(_workingDirectory);
@@ -83,6 +88,7 @@ public sealed class FormCommitTests
             "Text",
             "There are unresolved merge conflicts, solve merge conflicts before committing.");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "_mergeConflictsCaption", "Text", "Merge conflicts");
+        translation.Received(1).AddTranslationItem(nameof(FormCommit), "_formTitle", "Text", "Commit to {0} ({1})");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "_stageAll", "Text", "Stage all");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "_unstageAll", "Text", "Unstage all");
 
@@ -97,6 +103,15 @@ public sealed class FormCommitTests
         commitAndPush.Content.Should().Be("Commit & _push");
         commitAndPush.IsEnabled.Should().BeFalse("there are no staged changes in the construction-only form");
 
+        form.FindControl<DropDownButton>("commitMessageToolStripMenuItem").Should().NotBeNull();
+        form.FindControl<DropDownButton>("commitTemplatesToolStripMenuItem").Should().NotBeNull();
+        form.FindControl<DropDownButton>("tsmiOptions").Should().NotBeNull();
+        form.FindControl<CheckBox>("Amend").Should().NotBeNull();
+        form.FindControl<CheckBox>("ResetAuthor").Should().NotBeNull();
+        form.FindControl<CheckBox>("StageInSuperproject").Should().NotBeNull();
+        form.FindControl<Button>("ResetSoft").Should().NotBeNull();
+        form.FindControl<Button>("SolveMergeconflicts").Should().NotBeNull();
+
         string[] emittedKeys = translation.ReceivedCalls()
             .Where(call => call.GetMethodInfo().Name == nameof(ITranslation.AddTranslationItem))
             .Select(call => string.Join('.', call.GetArguments().Take(3)))
@@ -104,6 +119,177 @@ public sealed class FormCommitTests
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(
             emittedKeys.Length,
             "each field must be routed through exactly one translation path");
+    }
+
+    [AvaloniaTest]
+    public Task FormCommit_should_initialize_a_fixup_message_like_the_original()
+        => AssertCommitKindAsync(CommitKind.Fixup, "fixup! Target commit", editable: false);
+
+    [AvaloniaTest]
+    public Task FormCommit_should_initialize_a_squash_message_like_the_original()
+        => AssertCommitKindAsync(CommitKind.Squash, "squash! Target commit", editable: false);
+
+    [AvaloniaTest]
+    public Task FormCommit_should_initialize_an_amend_message_like_the_original()
+        => AssertCommitKindAsync(
+            CommitKind.Amend,
+            $"amend! Target commit{Environment.NewLine}{Environment.NewLine}Target body",
+            editable: true);
+
+    private async Task AssertCommitKindAsync(CommitKind kind, string expected, bool editable)
+    {
+        string gitDirectory = Path.Combine(_workingDirectory, ".git");
+        Directory.CreateDirectory(gitDirectory);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_workingDirectory);
+        module.WorkingDirGitDir.Returns(gitDirectory);
+        module.CommitEncoding.Returns(Encoding.UTF8);
+        module.FilesEncoding.Returns(Encoding.UTF8);
+        module.GetSelectedBranch().Returns("main");
+        module.GetAllChangedFilesWithSubmodulesStatus(Arg.Any<CancellationToken>()).Returns([]);
+        module.GetRefs(Arg.Any<RefsFilter>()).Returns([]);
+        module.GetRemoteNames().Returns([]);
+        GitUICommands commands = new(_serviceContainer, module);
+        GitRevision revision = new(ObjectId.Parse("0123456789012345678901234567890123456789"))
+        {
+            Subject = "Target commit",
+            Body = "Target body",
+        };
+
+        FormCommit form = new(commands, kind, revision);
+        try
+        {
+            form.Show();
+            TextBox message = form.FindControl<TextBox>("Message")
+                ?? throw new InvalidOperationException("Commit message editor was not created.");
+            Button modifyMessage = form.FindControl<Button>("modifyCommitMessageButton")
+                ?? throw new InvalidOperationException("Modify-message button was not created.");
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            while (string.IsNullOrEmpty(message.Text) && stopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            message.Text.Should().NotBeNullOrEmpty($"the {kind} initial message should be assigned");
+            message.Text!.Replace("\r\n", "\n", StringComparison.Ordinal).Should().Be(
+                expected.Replace("\r\n", "\n", StringComparison.Ordinal),
+                $"the {kind} mode should preserve the original autosquash message format");
+            message.IsEnabled.Should().Be(editable);
+            modifyMessage.IsVisible.Should().Be(!editable);
+        }
+        finally
+        {
+            form.Close();
+            await form.GetTestAccessor().ClosePersistenceTask;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormCommit_should_build_the_complete_commit_argument_contract()
+    {
+        bool useFormCommitMessage = AppSettings.UseFormCommitMessage;
+        AppSettings.UseFormCommitMessage = true;
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.FindControl<CheckBox>("signOffToolStripMenuItem")!.IsChecked = true;
+            form.FindControl<CheckBox>("noVerifyToolStripMenuItem")!.IsChecked = true;
+            form.FindControl<CheckBox>("ResetAuthor")!.IsChecked = true;
+            form.FindControl<TextBox>("toolAuthor")!.Text = "Custom Author <author@example.com>";
+            form.FindControl<ComboBox>("gpgSignCommitToolStripComboBox")!.SelectedIndex = 3;
+            form.FindControl<TextBox>("toolStripGpgKeyTextBox")!.Text = "ABC123";
+
+            string arguments = form.GetTestAccessor().CreateCommitArguments(amend: true, allowEmpty: true).ToString();
+
+            arguments.Should().Contain("--amend");
+            arguments.Should().Contain("--signoff");
+            arguments.Should().Contain("--no-verify");
+            arguments.Should().Contain("--author=\"Custom Author <author@example.com>\"");
+            arguments.Should().Contain("--gpg-sign=ABC123");
+            arguments.Should().Contain("--allow-empty");
+            arguments.Should().Contain("--reset-author");
+            arguments.Should().Contain("COMMITMESSAGE");
+        }
+        finally
+        {
+            AppSettings.UseFormCommitMessage = useFormCommitMessage;
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormCommit_should_load_message_history_and_saved_templates()
+    {
+        string lastCommitMessage = AppSettings.LastCommitMessage;
+        string commitTemplates = AppSettings.CommitTemplates;
+        bool showOnlyMyMessages = AppSettings.CommitDialogShowOnlyMyMessages;
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            AppSettings.LastCommitMessage = "Last message from another repository";
+            AppSettings.CommitDialogShowOnlyMyMessages = false;
+            CommitTemplateItem.SaveToSettings([new CommitTemplateItem("Saved template", "Template body", icon: null, isRegex: false)]);
+
+            FormCommit.TestAccessor accessor = form.GetTestAccessor();
+            accessor.PopulateCommitMessageHistory();
+            MenuItem lastMessage = accessor.CommitMessageFlyout.Items
+                .OfType<MenuItem>()
+                .First(item => Equals(item.Header, "Last message from another repository"));
+            lastMessage.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+            form.FindControl<TextBox>("Message")!.Text.Should().Be("Last message from another repository");
+
+            accessor.PopulateCommitTemplates();
+            MenuItem savedTemplate = accessor.CommitTemplatesFlyout.Items
+                .OfType<MenuItem>()
+                .First(item => Equals(item.Header, "Saved template"));
+            savedTemplate.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+            form.FindControl<TextBox>("Message")!.Text.Should().Be("Template body");
+
+            MenuItem conventional = accessor.CommitTemplatesFlyout.Items.OfType<MenuItem>().Last();
+            conventional.Items.OfType<MenuItem>().Select(item => item.Header).Should().Contain(FeatCommitTypeForTest);
+        }
+        finally
+        {
+            AppSettings.LastCommitMessage = lastCommitMessage;
+            AppSettings.CommitTemplates = commitTemplates;
+            AppSettings.CommitDialogShowOnlyMyMessages = showOnlyMyMessages;
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormCommit_should_apply_the_shared_commit_message_validation_settings()
+    {
+        int maxFirstLine = AppSettings.CommitValidationMaxCntCharsFirstLine;
+        int maxPerLine = AppSettings.CommitValidationMaxCntCharsPerLine;
+        bool secondLineEmpty = AppSettings.CommitValidationSecondLineMustBeEmpty;
+        string validationRegex = AppSettings.CommitValidationRegEx;
+        StubMessageBoxHost stub = new() { Result = WinFormsShims.DialogResult.No };
+        WinFormsShims.ShimHost.MessageBoxHost = stub;
+        FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithTwoUnstagedChanges()));
+        try
+        {
+            AppSettings.CommitValidationMaxCntCharsFirstLine = 5;
+            AppSettings.CommitValidationMaxCntCharsPerLine = 0;
+            AppSettings.CommitValidationSecondLineMustBeEmpty = false;
+            AppSettings.CommitValidationRegEx = string.Empty;
+
+            form.GetTestAccessor().IsCommitMessageValid("Too long").Should().BeFalse();
+            stub.Messages.Should().ContainSingle(message => message.Contains("too many characters", StringComparison.Ordinal));
+        }
+        finally
+        {
+            AppSettings.CommitValidationMaxCntCharsFirstLine = maxFirstLine;
+            AppSettings.CommitValidationMaxCntCharsPerLine = maxPerLine;
+            AppSettings.CommitValidationSecondLineMustBeEmpty = secondLineEmpty;
+            AppSettings.CommitValidationRegEx = validationRegex;
+            WinFormsShims.ShimHost.MessageBoxHost = new StubMessageBoxHost { Result = WinFormsShims.DialogResult.Yes };
+            form.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -152,6 +338,67 @@ public sealed class FormCommitTests
         finally
         {
             AppSettings.CloseProcessDialog = closeProcessDialog;
+            AppSettings.LastCommitMessage = lastCommitMessage;
+            if (form.IsVisible)
+            {
+                form.Close();
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_apply_author_signoff_and_no_verify_end_to_end()
+    {
+        bool closeProcessDialog = AppSettings.CloseProcessDialog;
+        bool closeCommitDialog = AppSettings.CloseCommitDialogAfterCommit;
+        bool useFormCommitMessage = AppSettings.UseFormCommitMessage;
+        string lastCommitMessage = AppSettings.LastCommitMessage;
+        AppSettings.CloseProcessDialog = true;
+        AppSettings.CloseCommitDialogAfterCommit = true;
+        AppSettings.UseFormCommitMessage = true;
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        ObjectId initialCommit = module.GetCurrentCheckout();
+        string hookPath = Path.Combine(_workingDirectory, ".git", "hooks", "pre-commit");
+        File.WriteAllText(hookPath, "#!/bin/sh\nexit 1\n", new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        if (!OperatingSystem.IsWindows())
+        {
+            File.SetUnixFileMode(
+                hookPath,
+                UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        }
+
+        FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")!;
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+
+            form.FindControl<Button>("toolStageAllItem")!
+                .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            await WaitForCountsAsync(unstaged, 0, staged, 2);
+
+            form.FindControl<TextBox>("Message")!.Text = "Commit with options";
+            form.FindControl<TextBox>("toolAuthor")!.Text = "Custom Author <author@example.com>";
+            form.FindControl<CheckBox>("signOffToolStripMenuItem")!.IsChecked = true;
+            form.FindControl<CheckBox>("noVerifyToolStripMenuItem")!.IsChecked = true;
+            form.FindControl<ComboBox>("gpgSignCommitToolStripComboBox")!.SelectedIndex = 1;
+            Button commit = form.FindControl<Button>("Commit")!;
+            await WaitUntilAsync(() => commit.IsEnabled);
+            commit.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+
+            await WaitUntilAsync(() => !form.IsVisible && module.GetCurrentCheckout() != initialCommit);
+            GitRevision revision = module.GetRevision(module.GetCurrentCheckout(), shortFormat: false, loadRefs: false);
+            revision.Author.Should().Be("Custom Author");
+            revision.AuthorEmail.Should().Be("author@example.com");
+            revision.Body.Should().Contain("Signed-off-by: Avalonia Test <avalonia@example.com>");
+        }
+        finally
+        {
+            AppSettings.CloseProcessDialog = closeProcessDialog;
+            AppSettings.CloseCommitDialogAfterCommit = closeCommitDialog;
+            AppSettings.UseFormCommitMessage = useFormCommitMessage;
             AppSettings.LastCommitMessage = lastCommitMessage;
             if (form.IsVisible)
             {
@@ -257,6 +504,8 @@ public sealed class FormCommitTests
                 && diffEditor.Document.Text.Contains("unstaged line", StringComparison.Ordinal) == false);
             staged.SelectedItem.Should().NotBeNull();
             unstaged.SelectedItem.Should().BeNull();
+            selectedDiff.GetTestAccessor().OpenWithDifftool.Should().NotBeNull(
+                "FormCommit should retain its external-difftool consumer action in FileViewer");
         }
         finally
         {
@@ -331,5 +580,26 @@ public sealed class FormCommitTests
         }
 
         condition().Should().BeTrue("the changed files and diff should load before the timeout");
+    }
+
+    private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
+    {
+        public List<string> Messages { get; } = [];
+
+        public WinFormsShims.DialogResult Result { get; set; }
+
+        public WinFormsShims.DialogResult Show(
+            WinFormsShims.IWin32Window? owner,
+            string? text,
+            string? caption,
+            WinFormsShims.MessageBoxButtons buttons,
+            WinFormsShims.MessageBoxIcon icon,
+            WinFormsShims.MessageBoxDefaultButton defaultButton)
+        {
+            Messages.Add(text ?? string.Empty);
+            return buttons is WinFormsShims.MessageBoxButtons.YesNo or WinFormsShims.MessageBoxButtons.YesNoCancel
+                ? Result
+                : WinFormsShims.DialogResult.OK;
+        }
     }
 }

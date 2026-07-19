@@ -257,9 +257,10 @@ public partial class FileViewer : GitModuleControl
         bool isCombinedDiff,
         bool isGitWordDiff,
         string? fileName = null,
-        FileStatusItem? item = null)
+        FileStatusItem? item = null,
+        Action? openWithDifftool = null)
     {
-        ResetView(isCombinedDiff ? ViewMode.CombinedDiff : ViewMode.Diff, fileName, item);
+        ResetView(isCombinedDiff ? ViewMode.CombinedDiff : ViewMode.Diff, fileName, item, openWithDifftool);
         string parsedText = text ?? string.Empty;
         DiffHighlightService highlightService = isCombinedDiff
             ? new CombinedDiffHighlightService(ref parsedText, useGitColoring)
@@ -1095,7 +1096,17 @@ public partial class FileViewer : GitModuleControl
     /// <summary>
     ///  Loads and displays the diff represented by a file-status entry.
     /// </summary>
-    public async Task ViewChangesAsync(FileStatusItem? item, CancellationToken cancellationToken)
+    public Task ViewChangesAsync(FileStatusItem? item, CancellationToken cancellationToken)
+        => ViewChangesAsync(item, openWithDiffTool: null, cancellationToken);
+
+    /// <summary>
+    ///  Loads and displays the diff represented by a file-status entry and retains the
+    ///  consumer's external-difftool action for the shared FileViewer hotkey.
+    /// </summary>
+    public async Task ViewChangesAsync(
+        FileStatusItem? item,
+        Action? openWithDiffTool = null,
+        CancellationToken cancellationToken = default)
     {
         CancellationToken viewToken = BeginView(cancellationToken);
         if (item?.Item is null)
@@ -1107,7 +1118,7 @@ public partial class FileViewer : GitModuleControl
 
         if (item.Item.IsStatusOnly)
         {
-            await ShowTextAsync(item.Item.Name, item.Item.ErrorMessage ?? string.Empty, item, line: null, openWithDifftool: null, checkGitAttributes: false, viewToken);
+            await ShowTextAsync(item.Item.Name, item.Item.ErrorMessage ?? string.Empty, item, line: null, openWithDiffTool, checkGitAttributes: false, viewToken);
             return;
         }
 
@@ -1116,7 +1127,7 @@ public partial class FileViewer : GitModuleControl
         if (!item.Item.IsSubmodule
             && (item.Item.IsNew || firstId.IsZero || (!item.Item.IsDeleted && FileHelper.IsImage(item.Item.Name))))
         {
-            await ViewGitItemCoreAsync(item.Item, secondId, item, line: null, openWithDifftool: null, viewToken);
+            await ViewGitItemCoreAsync(item.Item, secondId, item, line: null, openWithDiffTool, viewToken);
             return;
         }
 
@@ -1143,7 +1154,8 @@ public partial class FileViewer : GitModuleControl
             isCombinedDiff: false,
             isGitWordDiff: false,
             item.Item.Name,
-            item);
+            item,
+            openWithDiffTool);
     }
 
     /// <summary>
@@ -1448,7 +1460,15 @@ public partial class FileViewer : GitModuleControl
                 Find(replace: true);
                 break;
             case Command.FindNextOrOpenWithDifftool:
-                this.InvokeAndForget(() => FindNextAsync(searchForwardOrOpenWithDifftool: true));
+                if (_openWithDifftool is not null)
+                {
+                    _openWithDifftool();
+                }
+                else
+                {
+                    this.InvokeAndForget(() => FindNextAsync(searchForwardOrOpenWithDifftool: true));
+                }
+
                 break;
             case Command.FindPrevious:
                 this.InvokeAndForget(() => FindNextAsync(searchForwardOrOpenWithDifftool: false));
