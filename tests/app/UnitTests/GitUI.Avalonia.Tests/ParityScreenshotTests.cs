@@ -394,6 +394,13 @@ public sealed partial class ParityScreenshotTests
             processCallback.SetValue(formStatus, (Action<FormStatus>)(_ => { }));
         }
 
+        if (root is FormPush formPush)
+        {
+            HyperlinkButton showOptions = formPush.FindControl<HyperlinkButton>("ShowOptions")
+                ?? throw new InvalidOperationException("FormPush.ShowOptions could not be found.");
+            showOptions.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        }
+
         if (root is Window)
         {
             return;
