@@ -23,6 +23,7 @@ public partial class FileStatusList : GitModuleControl
 {
     private static readonly TimeSpan FilterThrottleDuration = TimeSpan.FromMilliseconds(250);
 
+    private readonly FileStatusDiffCalculator _diffCalculator;
     private readonly DispatcherTimer _filterTimer = new() { Interval = FilterThrottleDuration };
     private IReadOnlyList<object> _allListItems = [];
     private IReadOnlyList<FileStatusItem> _allTreeItems = [];
@@ -36,6 +37,7 @@ public partial class FileStatusList : GitModuleControl
 
     public FileStatusList()
     {
+        _diffCalculator = new FileStatusDiffCalculator(() => Module);
         InitializeComponent();
 
         lstFiles.ItemTemplate = new FuncDataTemplate<object>(CreateFileRow, supportsRecycling: false);
@@ -139,6 +141,30 @@ public partial class FileStatusList : GitModuleControl
     public IReadOnlyList<GitItemStatus> GitItemStatuses => _gitItemStatuses;
 
     /// <summary>
+    ///  Gets all displayed revision-aware items (named like the WinForms property).
+    /// </summary>
+    public IEnumerable<FileStatusItem> AllItems
+        => _allListItems.Select(GetFileStatusItem).OfType<FileStatusItem>();
+
+    /// <summary>
+    ///  Gets or sets the selected Git item (named like the WinForms property).
+    /// </summary>
+    public GitItemStatus? SelectedGitItem
+    {
+        get => SelectedItem;
+        set
+        {
+            if (value is null)
+            {
+                ClearSelected();
+                return;
+            }
+
+            SelectFileOrFolder(RelativePath.From(value.Name));
+        }
+    }
+
+    /// <summary>
     ///  Gets the statuses currently visible after filtering.
     /// </summary>
     public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses => _gitItemFilteredStatuses;
@@ -191,6 +217,20 @@ public partial class FileStatusList : GitModuleControl
         _allListItems = [.. items.Cast<object>()];
         _allTreeItems = [];
         ApplyFilter(selectFirstItem: true);
+    }
+
+    /// <summary>
+    ///  Calculates and shows files changed by the given revisions.
+    /// </summary>
+    public void SetDiffs(IReadOnlyList<GitRevision> revisions)
+    {
+        _diffCalculator.SetDiff(revisions, headId: default, allowMultiDiff: false);
+        IReadOnlyList<FileStatusWithDescription> groups = _diffCalculator.Calculate(
+            prevList: [],
+            refreshDiff: true,
+            refreshGrep: false,
+            CancellationToken.None);
+        SetDiffs(groups, isFileTreeMode: false);
     }
 
     /// <summary>

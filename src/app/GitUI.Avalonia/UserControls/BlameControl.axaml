@@ -18,8 +18,7 @@
         <ContextMenu x:Name="contextMenu">
           <MenuItem x:Name="blameRevisionToolStripMenuItem" Header="Blame _this revision" />
           <MenuItem x:Name="blamePreviousRevisionToolStripMenuItem" Header="Blame previous revision" />
-          <!-- Hidden until FormCommitDiff is ported. -->
-          <MenuItem x:Name="showChangesToolStripMenuItem" Header="_Show changes" IsVisible="False" />
+          <MenuItem x:Name="showChangesToolStripMenuItem" Header="_Show changes" />
           <Separator x:Name="toolStripSeparator1" />
           <MenuItem x:Name="copyToClipboardToolStripMenuItem" Header="_Copy to clipboard">
             <MenuItem x:Name="commitHashToolStripMenuItem" Header="Commit _hash" />
