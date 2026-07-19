@@ -928,6 +928,18 @@ public sealed partial class FormBrowse : GitModuleForm
         return true;
     }
 
+    internal bool ExecuteCommand(Command command)
+        => ExecuteCommand((int)command);
+
+    /// <summary>
+    /// Set the path filter.
+    /// </summary>
+    /// <param name="pathFilter">Zero or more quoted paths, separated by spaces.</param>
+    public void SetPathFilter(string pathFilter)
+    {
+        RevisionGrid.SetAndApplyPathFilter(pathFilter);
+    }
+
     private void FocusNextWorkspaceTab(bool forward)
     {
         Control[] tabs =
