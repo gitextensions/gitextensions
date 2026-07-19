@@ -6,11 +6,13 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
+using NSubstitute;
 
 namespace GitExtensionsTests;
 
@@ -105,6 +107,66 @@ public sealed class ProcessDialogTests
         using FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "version", Path.GetTempPath(), input: null, useDialogSettings: true);
         form.Title.Should().StartWith("Process");
         form.ProcessString.Should().NotBeNullOrEmpty();
+    }
+
+    [AvaloniaTest]
+    public void FormRemoteProcess_should_construct_with_the_existing_translation_boundary()
+    {
+        using FormRemoteProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "version", useDialogSettings: false);
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        form.AddTranslationItems(translation);
+
+        form.Should().BeAssignableTo<FormProcess>();
+        translation.Received(1).AddTranslationItem(nameof(FormRemoteProcess), "$this", "Text", Arg.Any<string>());
+        translation.Received(1).AddTranslationItem(nameof(FormRemoteProcess), "Abort", "Text", "&Abort");
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(FormRemoteProcess),
+            "_fingerprintNotRegistredText",
+            "Text",
+            Arg.Any<string>());
+    }
+
+    [AvaloniaTest]
+    public void FormRemoteProcess_should_allow_a_consumer_to_retry_a_failed_remote_command()
+    {
+        using FormRemoteProcess form = new(
+            CreateCommands(Path.GetTempPath()),
+            arguments: "definitely-not-a-git-command",
+            useDialogSettings: false);
+        int exitCallbacks = 0;
+        form.HandleOnExitCallback = (ref bool isError, FormProcess process) =>
+        {
+            exitCallbacks++;
+            if (isError && exitCallbacks == 1)
+            {
+                process.ProcessArguments = "version";
+                process.Retry();
+                return true;
+            }
+
+            return false;
+        };
+
+        form.Show();
+        try
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            while (!form.Ok.IsEnabled && stopwatch.ElapsedMilliseconds < 30_000)
+            {
+                Dispatcher.UIThread.RunJobs();
+                Thread.Sleep(25);
+            }
+
+            form.Ok.IsEnabled.Should().BeTrue("the retried git command should finish");
+            exitCallbacks.Should().Be(2);
+            form.ErrorOccurred().Should().BeFalse();
+            form.GetOutputString().Should().Contain("git version");
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]
