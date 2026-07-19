@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
@@ -18,6 +18,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.Editor;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -106,9 +107,110 @@ public sealed class FileViewerContentTests
         viewer.FindControl<Border>("PictureBox").Should().NotBeNull();
         viewer.FindControl<HyperlinkButton>("_NO_TRANSLATE_lblShowPreview").Should().NotBeNull();
         viewer.FindControl<ComboBox>("encodingToolStripComboBox").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("showNonprintableCharactersToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<MenuItem>("showSyntaxHighlightingToolStripMenuItem").Should().NotBeNull();
+        viewer.FindControl<Button>("showNonPrintChars").Should().NotBeNull();
+        viewer.FindControl<Button>("showSyntaxHighlighting").Should().NotBeNull();
         translation.Received(1).AddTranslationItem(nameof(FileViewer), "_largeFileSizeWarning", "Text", "This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
         translation.Received(1).AddTranslationItem(nameof(FileViewer), "_cannotViewImage", "Text", "Cannot view image {0}");
         translation.Received(1).AddTranslationItem(nameof(FileViewer), "_binaryFile", "Text", "Binary file: {0}");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "showNonprintableCharactersToolStripMenuItem", "Text", "S&how nonprinting characters");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "showSyntaxHighlightingToolStripMenuItem", "Text", "Show synta&x highlighting");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "showNonPrintChars", "ToolTipText", "Show nonprinting characters");
+        translation.Received(1).AddTranslationItem(nameof(FileViewer), "showSyntaxHighlighting", "ToolTipText", "Show syntax highlighting");
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Display_options_should_apply_file_syntax_settings_and_independent_diff_rendering()
+    {
+        bool originalRememberNonPrinting = AppSettings.RememberShowNonPrintingCharsPreference;
+        bool originalShowNonPrinting = AppSettings.ShowNonPrintingChars.Value;
+        bool originalRememberSyntax = AppSettings.RememberShowSyntaxHighlightingInDiff;
+        bool originalShowSyntax = AppSettings.ShowSyntaxHighlightingInDiff.Value;
+        bool originalEolGlyph = AppSettings.ShowEolMarkerAsGlyph;
+        int originalRuler = AppSettings.DiffVerticalRulerPosition;
+        try
+        {
+            AppSettings.RememberShowNonPrintingCharsPreference = true;
+            AppSettings.ShowNonPrintingChars.Value = false;
+            AppSettings.RememberShowSyntaxHighlightingInDiff = true;
+            AppSettings.ShowSyntaxHighlightingInDiff.Value = true;
+            AppSettings.ShowEolMarkerAsGlyph = false;
+            AppSettings.DiffVerticalRulerPosition = 88;
+
+            string filePath = Path.Combine(_workingDirectory, "Sample.cs");
+            File.WriteAllText(filePath, "internal class Sample { }\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "Sample.cs" });
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "first" });
+            ObjectId firstRevisionId = _module.GetCurrentCheckout();
+            File.WriteAllText(filePath, "internal class Sample\n{\n    // visible whitespace\n}\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "Sample.cs" });
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "second" });
+            ObjectId secondRevisionId = _module.GetCurrentCheckout();
+
+            GitRevision firstRevision = new(firstRevisionId);
+            GitRevision secondRevision = new(secondRevisionId) { ParentIds = [firstRevisionId] };
+            GitItemStatus status = new("Sample.cs") { IsTracked = true };
+            FileStatusItem item = new(firstRevision, secondRevision, status);
+            FileViewer viewer = CreateViewer();
+            FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+            int reloadRequests = 0;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => reloadRequests++;
+
+            await viewer.ViewChangesAsync(item, CancellationToken.None);
+
+            accessor.ViewMode.Should().Be(ViewMode.Diff);
+            viewer.TextEditor.SyntaxHighlighting.Should().NotBeNull();
+            viewer.TextEditor.SyntaxHighlighting!.Name.Should().Be("C#");
+            accessor.HasDiffHighlighting.Should().BeTrue();
+            viewer.TextEditor.ShowLineNumbers.Should().BeFalse();
+            accessor.ShowSyntaxHighlightingMenuItem.IsVisible.Should().BeTrue();
+            accessor.ShowSyntaxHighlightingMenuItem.IsChecked.Should().BeTrue();
+            accessor.ShowSyntaxHighlightingButton.Classes.Should().Contain("checked");
+            accessor.VRulerPosition.Should().Be(88);
+            viewer.TextEditor.Options.ShowColumnRulers.Should().BeTrue();
+
+            accessor.ShowNonprintingCharactersMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            viewer.TextEditor.Options.ShowSpaces.Should().BeTrue();
+            viewer.TextEditor.Options.ShowTabs.Should().BeTrue();
+            viewer.TextEditor.Options.ShowEndOfLine.Should().BeTrue();
+            viewer.TextEditor.Options.EndOfLineCRLFGlyph.Should().Be("\\r\\n");
+            accessor.ShowNonprintingCharactersButton.Classes.Should().Contain("checked");
+            AppSettings.ShowNonPrintingChars.Value.Should().BeTrue();
+
+            accessor.ShowSyntaxHighlightingMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            viewer.TextEditor.SyntaxHighlighting.Should().BeNull();
+            accessor.HasDiffHighlighting.Should().BeTrue();
+            AppSettings.ShowSyntaxHighlightingInDiff.Value.Should().BeFalse();
+            reloadRequests.Should().Be(1);
+
+            accessor.ShowSyntaxHighlightingMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            viewer.TextEditor.SyntaxHighlighting.Should().NotBeNull();
+            accessor.HasDiffHighlighting.Should().BeTrue();
+            reloadRequests.Should().Be(2);
+            accessor.FileViewerToolbar.IsVisible = true;
+            await CaptureModeIfRequestedAsync(viewer, "DisplayOptions");
+
+            viewer.ShowLineNumbers = false;
+            await viewer.ViewTextAsync("Sample.cs", "line one\nline two\n");
+            viewer.TextEditor.ShowLineNumbers.Should().BeFalse();
+            viewer.ShowLineNumbers = null;
+            viewer.TextEditor.ShowLineNumbers.Should().BeTrue();
+            accessor.ShowSyntaxHighlightingButton.IsVisible.Should().BeFalse();
+        }
+        finally
+        {
+            AppSettings.RememberShowNonPrintingCharsPreference = originalRememberNonPrinting;
+            AppSettings.ShowNonPrintingChars.Value = originalShowNonPrinting;
+            AppSettings.RememberShowSyntaxHighlightingInDiff = originalRememberSyntax;
+            AppSettings.ShowSyntaxHighlightingInDiff.Value = originalShowSyntax;
+            AppSettings.ShowEolMarkerAsGlyph = originalEolGlyph;
+            AppSettings.DiffVerticalRulerPosition = originalRuler;
+        }
     }
 
     [AvaloniaTest]
