@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -8,12 +8,14 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
+using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Rendering;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Compat;
 using GitUI.Editor.Diff;
@@ -27,11 +29,12 @@ namespace GitUI.Editor;
 // and range diffs and supports the file-to-file continuous scrolling used by FormStash,
 // plus the plain-text mode with line highlighting used by blame. Search/navigation uses
 // the original dialog and command boundaries. Blob, image, binary, large-file, and encoding
-// behavior follows the original loading boundary. Syntax/display options and line patching
-// remain deferred.
+// behavior follows the original loading boundary. Syntax and display options use AvaloniaEdit
+// while remaining independent from semantic diff rendering. Line patching remains deferred.
 public partial class FileViewer : GitModuleControl
 {
     private const long MaximumAutomaticPreviewLength = 5 * 1024 * 1024;
+    private const string EndOfLineGlyph = "¶";
 
     private readonly TranslationString _largeFileSizeWarning = new("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
     private readonly TranslationString _cannotViewImage = new("Cannot view image {0}");
@@ -54,6 +57,10 @@ public partial class FileViewer : GitModuleControl
     private bool _hotkeysLoaded;
     private Bitmap? _image;
     private Action? _openWithDifftool;
+    private string? _fileName;
+    private bool? _showLineNumbers;
+    private bool _showNonPrintingChars;
+    private IGitUICommands? _settingsCommands;
     private bool _updatingEncoding;
     private int _lastCaretLine = -1;
     private FileStatusItem? _viewItem;
@@ -80,6 +87,7 @@ public partial class FileViewer : GitModuleControl
         PictureBox.PointerWheelChanged += PictureBox_PointerWheelChanged;
         DetachedFromLogicalTree += (_, _) =>
         {
+            BindSettingsCommands(commands: null);
             CancelPendingView();
             ClearImage();
         };
@@ -88,21 +96,40 @@ public partial class FileViewer : GitModuleControl
         _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
         copyToolStripMenuItem.Click += CopyToolStripMenuItemClick;
+        showNonprintableCharactersToolStripMenuItem.Click += ShowNonprintableCharactersToolStripMenuItemClick;
+        showSyntaxHighlightingToolStripMenuItem.Click += ShowSyntaxHighlighting_Click;
         findToolStripMenuItem.Click += FindToolStripMenuItemClick;
         replaceToolStripMenuItem.Click += FindToolStripMenuItemClick;
         goToLineToolStripMenuItem.Click += goToLineToolStripMenuItem_Click;
+        showNonPrintChars.Click += ShowNonprintableCharactersToolStripMenuItemClick;
+        showSyntaxHighlighting.Click += ShowSyntaxHighlighting_Click;
         contextMenu.Opening += contextMenu_Opening;
         _NO_TRANSLATE_lblShowPreview.Click += llShowPreview_LinkClicked;
         encodingToolStripComboBox.SelectionChanged += encodingToolStripComboBox_SelectedIndexChanged;
 
         HotkeysEnabled = true;
-        UICommandsSourceSet += (_, _) =>
+        UICommandsSourceSet += (_, e) =>
         {
+            BindSettingsCommands(e.GitUICommandsSource.UICommands);
             ReloadHotkeys();
             Encoding = null;
         };
+        AttachedToLogicalTree += (_, _) =>
+        {
+            if (TryGetUICommandsDirect(out IGitUICommands? commands))
+            {
+                BindSettingsCommands(commands);
+            }
+        };
 
         PopulateEncodings();
+        _showNonPrintingChars = AppSettings.ShowNonPrintingChars.GetValue(
+            reload: !AppSettings.RememberShowNonPrintingCharsPreference);
+        ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff.GetValue(
+            reload: !AppSettings.RememberShowSyntaxHighlightingInDiff);
+        ToggleNonPrintingChars(_showNonPrintingChars);
+        UpdateSyntaxHighlightingToggleState();
+        VRulerPosition = AppSettings.DiffVerticalRulerPosition;
 
         InitializeComplete();
     }
@@ -162,6 +189,34 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
+    ///  Gets or sets whether ordinary document line numbers are shown. A <see langword="null" />
+    ///  value keeps the original mode-dependent behavior.
+    /// </summary>
+    public bool? ShowLineNumbers
+    {
+        get => _showLineNumbers;
+        set
+        {
+            _showLineNumbers = value;
+            UpdateLineNumberVisibility();
+        }
+    }
+
+    private bool ShowSyntaxHighlightingInDiff { get; set; }
+
+    private int VRulerPosition
+    {
+        get => TextEditor.Options.ShowColumnRulers
+            ? TextEditor.Options.ColumnRulerPositions.FirstOrDefault()
+            : 0;
+        set
+        {
+            TextEditor.Options.ShowColumnRulers = value > 0;
+            TextEditor.Options.ColumnRulerPositions = value > 0 ? [value] : [];
+        }
+    }
+
+    /// <summary>
     ///  Shows a unified diff (patch) text.
     /// </summary>
     public void ViewPatch(string? text)
@@ -178,9 +233,15 @@ public partial class FileViewer : GitModuleControl
         ViewPatchCore(text, useGitColoring, isCombinedDiff, isGitWordDiff);
     }
 
-    private void ViewPatchCore(string? text, bool useGitColoring, bool isCombinedDiff, bool isGitWordDiff)
+    private void ViewPatchCore(
+        string? text,
+        bool useGitColoring,
+        bool isCombinedDiff,
+        bool isGitWordDiff,
+        string? fileName = null,
+        FileStatusItem? item = null)
     {
-        ResetView(isCombinedDiff ? ViewMode.CombinedDiff : ViewMode.Diff, fileName: null);
+        ResetView(isCombinedDiff ? ViewMode.CombinedDiff : ViewMode.Diff, fileName, item);
         string parsedText = text ?? string.Empty;
         DiffHighlightService highlightService = isCombinedDiff
             ? new CombinedDiffHighlightService(ref parsedText, useGitColoring)
@@ -643,6 +704,7 @@ public partial class FileViewer : GitModuleControl
         Action? openWithDifftool = null)
     {
         _viewMode = viewMode;
+        _fileName = fileName;
         _viewItem = item;
         _openWithDifftool = openWithDifftool;
         _deferShowFunc = null;
@@ -660,6 +722,91 @@ public partial class FileViewer : GitModuleControl
         PictureBox.IsVisible = _viewMode == ViewMode.Image;
         TextEditor.IsVisible = _viewMode != ViewMode.Image;
         ClearDiffHighlighting();
+        UpdateDisplayOptionVisibility();
+        ApplySyntaxHighlighting();
+    }
+
+    private void ApplySyntaxHighlighting()
+    {
+        bool shouldHighlight = !string.IsNullOrEmpty(_fileName)
+                               && (_viewMode == ViewMode.Text
+                                   || (ShowSyntaxHighlightingInDiff && _viewMode.IsPartialTextView()));
+        string? extension = shouldHighlight ? Path.GetExtension(_fileName) : string.Empty;
+        TextEditor.SyntaxHighlighting = string.IsNullOrEmpty(extension)
+            ? null
+            : HighlightingManager.Instance.GetDefinitionByExtension(extension);
+        TextEditor.TextArea.TextView.Redraw();
+    }
+
+    private void BindSettingsCommands(IGitUICommands? commands)
+    {
+        if (ReferenceEquals(_settingsCommands, commands))
+        {
+            return;
+        }
+
+        if (_settingsCommands is not null)
+        {
+            _settingsCommands.PostSettings -= UICommands_PostSettings;
+        }
+
+        _settingsCommands = commands;
+        if (_settingsCommands is not null)
+        {
+            _settingsCommands.PostSettings += UICommands_PostSettings;
+        }
+    }
+
+    private void UICommands_PostSettings(object? sender, GitUIPostActionEventArgs? e)
+    {
+        Dispatcher.UIThread.Post(() => VRulerPosition = AppSettings.DiffVerticalRulerPosition);
+    }
+
+    private void UpdateDisplayOptionVisibility()
+    {
+        bool isPartialTextView = _viewMode.IsPartialTextView();
+        showSyntaxHighlightingToolStripMenuItem.IsVisible = isPartialTextView && _viewMode != ViewMode.FixedDiff;
+        showSyntaxHighlighting.IsVisible = isPartialTextView;
+    }
+
+    private void UpdateLineNumberVisibility()
+    {
+        bool hasDiffLineNumbers = _diffHighlightService is not null;
+        TextEditor.ShowLineNumbers = ShowLineNumbers ?? !hasDiffLineNumbers;
+    }
+
+    private void UpdateSyntaxHighlightingToggleState()
+    {
+        showSyntaxHighlightingToolStripMenuItem.IsChecked = ShowSyntaxHighlightingInDiff;
+        SetToolbarChecked(showSyntaxHighlighting, ShowSyntaxHighlightingInDiff);
+    }
+
+    private static void SetToolbarChecked(Button button, bool isChecked)
+    {
+        if (isChecked)
+        {
+            if (!button.Classes.Contains("checked"))
+            {
+                button.Classes.Add("checked");
+            }
+        }
+        else
+        {
+            button.Classes.Remove("checked");
+        }
+    }
+
+    private void ToggleNonPrintingChars(bool show)
+    {
+        _showNonPrintingChars = show;
+        TextEditor.Options.ShowSpaces = show;
+        TextEditor.Options.ShowTabs = show;
+        TextEditor.Options.ShowEndOfLine = show;
+        TextEditor.Options.EndOfLineCRLFGlyph = AppSettings.ShowEolMarkerAsGlyph ? EndOfLineGlyph : "\\r\\n";
+        TextEditor.Options.EndOfLineCRGlyph = AppSettings.ShowEolMarkerAsGlyph ? EndOfLineGlyph : "\\r";
+        TextEditor.Options.EndOfLineLFGlyph = AppSettings.ShowEolMarkerAsGlyph ? EndOfLineGlyph : "\\n";
+        showNonprintableCharactersToolStripMenuItem.IsChecked = show;
+        SetToolbarChecked(showNonPrintChars, show);
     }
 
     private void ClearImage()
@@ -794,7 +941,7 @@ public partial class FileViewer : GitModuleControl
         _diffBackgroundRenderer.SetHighlightService(highlightService);
         _diffTextColorizer.SetHighlightService(highlightService);
         _diffViewerLineNumberControl.DisplayLineNum(highlightService.LinesInfo, showLeftColumn);
-        TextEditor.ShowLineNumbers = false;
+        UpdateLineNumberVisibility();
         SetText(text);
     }
 
@@ -804,7 +951,7 @@ public partial class FileViewer : GitModuleControl
         _diffBackgroundRenderer.SetHighlightService(null);
         _diffTextColorizer.SetHighlightService(null);
         _diffViewerLineNumberControl.Clear();
-        TextEditor.ShowLineNumbers = true;
+        UpdateLineNumberVisibility();
     }
 
     /// <summary>
@@ -972,7 +1119,13 @@ public partial class FileViewer : GitModuleControl
 
         await this.SwitchToMainThreadAsync(viewToken);
         viewToken.ThrowIfCancellationRequested();
-        ViewPatchCore(patch?.Text ?? errorMessage, useGitColoring: false, isCombinedDiff: false, isGitWordDiff: false);
+        ViewPatchCore(
+            patch?.Text ?? errorMessage,
+            useGitColoring: false,
+            isCombinedDiff: false,
+            isGitWordDiff: false,
+            item.Item.Name,
+            item);
     }
 
     /// <summary>
@@ -1053,6 +1206,21 @@ public partial class FileViewer : GitModuleControl
         copyToolStripMenuItem.IsEnabled = TextEditor.SelectionLength > 0;
         replaceToolStripMenuItem.IsVisible = !TextEditor.IsReadOnly;
         goToLineToolStripMenuItem.IsEnabled = MaxLineNumber > 0;
+    }
+
+    private void ShowNonprintableCharactersToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        ToggleNonPrintingChars(!_showNonPrintingChars);
+        AppSettings.ShowNonPrintingChars.Value = _showNonPrintingChars;
+    }
+
+    private void ShowSyntaxHighlighting_Click(object? sender, EventArgs e)
+    {
+        ShowSyntaxHighlightingInDiff = !ShowSyntaxHighlightingInDiff;
+        UpdateSyntaxHighlightingToggleState();
+        AppSettings.ShowSyntaxHighlightingInDiff.Value = ShowSyntaxHighlightingInDiff;
+        ApplySyntaxHighlighting();
+        ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void PopulateEncodings()
@@ -1178,6 +1346,47 @@ public partial class FileViewer : GitModuleControl
         }
     }
 
+    public override void AddTranslationItems(ITranslation translation)
+    {
+        base.AddTranslationItems(translation);
+        translation.AddTranslationItem(
+            nameof(FileViewer),
+            nameof(showNonPrintChars),
+            "ToolTipText",
+            "Show nonprinting characters");
+        translation.AddTranslationItem(
+            nameof(FileViewer),
+            nameof(showSyntaxHighlighting),
+            "ToolTipText",
+            "Show syntax highlighting");
+    }
+
+    public override void TranslateItems(ITranslation translation)
+    {
+        base.TranslateItems(translation);
+        SetTranslatedToolTip(showNonPrintChars, nameof(showNonPrintChars), "Show nonprinting characters");
+        SetTranslatedToolTip(showSyntaxHighlighting, nameof(showSyntaxHighlighting), "Show syntax highlighting");
+
+        return;
+
+        void SetTranslatedToolTip(Control control, string name, string source)
+        {
+            string text = translation.TranslateItem(
+                nameof(FileViewer),
+                name,
+                "ToolTipText",
+                () => source) ?? source;
+            if (ToolTip.GetTip(control) is TextBlock textBlock)
+            {
+                textBlock.Text = text;
+            }
+            else
+            {
+                ToolTip.SetTip(control, new TextBlock { Text = text });
+            }
+        }
+    }
+
     /// <summary>Gets the persisted hotkey category name.</summary>
     public static readonly string HotkeySettingsName = "FileViewer";
 
@@ -1228,6 +1437,14 @@ public partial class FileViewer : GitModuleControl
                 break;
             case Command.GoToLine:
                 goToLineToolStripMenuItem_Click(this, EventArgs.Empty);
+                break;
+            case Command.ShowSyntaxHighlighting:
+                if (!showSyntaxHighlightingToolStripMenuItem.IsVisible)
+                {
+                    return false;
+                }
+
+                ShowSyntaxHighlighting_Click(this, EventArgs.Empty);
                 break;
             default:
                 return base.ExecuteCommand(cmd);
@@ -1330,6 +1547,20 @@ public partial class FileViewer : GitModuleControl
         public ComboBox EncodingToolStripComboBox => _control.encodingToolStripComboBox;
 
         public Border FileViewerToolbar => _control.fileviewerToolbar;
+
+        public MenuItem ShowNonprintingCharactersMenuItem => _control.showNonprintableCharactersToolStripMenuItem;
+
+        public Button ShowNonprintingCharactersButton => _control.showNonPrintChars;
+
+        public MenuItem ShowSyntaxHighlightingMenuItem => _control.showSyntaxHighlightingToolStripMenuItem;
+
+        public Button ShowSyntaxHighlightingButton => _control.showSyntaxHighlighting;
+
+        public bool ShowSyntaxHighlightingInDiff => _control.ShowSyntaxHighlightingInDiff;
+
+        public int VRulerPosition => _control.VRulerPosition;
+
+        public bool HasDiffHighlighting => _control._diffHighlightService is not null;
 
         public HyperlinkButton ShowPreviewLink => _control._NO_TRANSLATE_lblShowPreview;
 
