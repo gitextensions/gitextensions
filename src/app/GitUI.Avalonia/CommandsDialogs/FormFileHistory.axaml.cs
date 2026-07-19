@@ -13,11 +13,13 @@ namespace GitUI.CommandsDialogs;
 // grid filtered to one path plus the Diff and Blame tabs. Deferred: the View/Commit
 // tabs, the browse menus and filter toolbar (including the blame display options),
 // rename following (--follow and FilePathByObjectId), full-history/simplify-merges
-// options, custom diff tools, and the build report. The history always loads on show
+// options and the build report. The history always loads on show
 // (there is no menu yet to load it later).
 public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUpdate
 {
+    private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
+    private readonly IFullPathResolver _fullPathResolver;
     private readonly ObjectId _initialSelectedId = default;
 
     private string FileName { get; init; } = string.Empty;
@@ -27,6 +29,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         InitializeComponent();
         WireControls();
         InitializeComplete();
+        _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
     }
 
     public FormFileHistory(IGitUICommands commands, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
@@ -34,9 +37,9 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     {
         InitializeComponent();
         WireControls();
-        RevisionGrid.DisableContextMenu();
 
         InitializeComplete();
+        _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
         _initialSelectedId = revision?.ObjectId ?? default;
 
@@ -55,6 +58,9 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         RevisionGrid.SelectionChanged += FileChangesSelectionChanged;
         tabControl1.SelectionChanged += TabControl1SelectedIndexChanged;
         Blame.EscapePressed += Close;
+        FileHistoryContextMenu.Opening += FileHistoryContextMenuOpening;
+        openWithDifftoolToolStripMenuItem.Click += OpenWithDifftoolToolStripMenuItem_Click;
+        diffToolRemoteLocalStripMenuItem.Click += diffToolRemoteLocalStripMenuItem_Click;
     }
 
     private void TabControl1SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
@@ -72,12 +78,29 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         base.OnRuntimeLoad(e);
 
         LoadFileHistory();
+        LoadCustomDifftools();
     }
 
     protected override void OnClosed(EventArgs e)
     {
+        _customDiffToolsSequence.Dispose();
         _viewChangesSequence.Dispose();
         base.OnClosed(e);
+    }
+
+    public void LoadCustomDifftools()
+    {
+        List<CustomDiffMergeTool> menus =
+        [
+            new(openWithDifftoolToolStripMenuItem, OpenWithDifftoolToolStripMenuItem_Click),
+            new(diffToolRemoteLocalStripMenuItem, diffToolRemoteLocalStripMenuItem_Click),
+        ];
+
+        new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(
+            Module,
+            menus,
+            isDiff: true,
+            cancellationToken: _customDiffToolsSequence.Next());
     }
 
     private void LoadFileHistory()
@@ -93,6 +116,35 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     private void FileChangesSelectionChanged(object? sender, EventArgs e)
     {
         UpdateSelectedFileViewers();
+    }
+
+    private void OpenWithDifftoolToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        OpenFilesWithDiffTool(RevisionDiffKind.DiffAB, sender);
+    }
+
+    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
+    {
+        string? toolName = (sender as MenuItem)?.Tag as string;
+        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+
+        // Rename following supplies the historical name when it lands in 3.15a.
+        UICommands.OpenWithDifftool(this, selectedRevisions, FileName, oldFileName: null, diffKind, isTracked: true, customTool: toolName);
+    }
+
+    private void FileHistoryContextMenuOpening(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+        openWithDifftoolToolStripMenuItem.IsEnabled = selectedRevisions.Count is >= 1 and <= 2;
+        diffToolRemoteLocalStripMenuItem.IsEnabled =
+            selectedRevisions.Count == 1
+            && selectedRevisions[0].ObjectId != ObjectId.WorkTreeId
+            && File.Exists(_fullPathResolver.Resolve(FileName));
+    }
+
+    private void diffToolRemoteLocalStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal, sender);
     }
 
     private void SetTitle(string? alternativeFileName = null)

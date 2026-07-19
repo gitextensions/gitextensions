@@ -379,6 +379,13 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         lstRevisions.ContextMenu = null;
     }
 
+    /// <summary>Gets or replaces the context menu attached to revision rows.</summary>
+    public ContextMenu? RevisionContextMenu
+    {
+        get => lstRevisions.ContextMenu;
+        set => lstRevisions.ContextMenu = value;
+    }
+
     /// <summary>Selects and scrolls to the given revision if it is loaded.</summary>
     public bool SetSelectedRevision(ObjectId objectId)
     {
