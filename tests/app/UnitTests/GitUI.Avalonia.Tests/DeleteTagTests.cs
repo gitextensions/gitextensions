@@ -146,12 +146,7 @@ public sealed class DeleteTagTests
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands("v1.0");
         ArgumentString? remoteDeleteArguments = null;
-        commands.StartGitCommandProcessDialog(
-                Arg.Any<WinFormsShims.IWin32Window>(),
-                Arg.Do<ArgumentString>(arguments => remoteDeleteArguments = arguments))
-            .Returns(true);
-
-        FormDeleteTag form = new(commands, "v1.0");
+        FormDeleteTag form = new(commands, "v1.0", arguments => remoteDeleteArguments = arguments);
         form.Show();
         Dispatcher.UIThread.RunJobs();
 

@@ -110,16 +110,15 @@ public sealed partial class FormPush : GitModuleForm
             track: false,
             recursiveSubmodules: 0);
 
-        bool success = FormProcess.ShowDialog(
-            owner,
-            UICommands,
-            pushArguments,
-            Module.WorkingDir,
-            input: null,
-            useDialogSettings: true);
-        ErrorOccurred = !success;
+        using FormRemoteProcess form = new(UICommands, pushArguments)
+        {
+            Remote = remote,
+            Text = string.Format(_pushToCaption.Text, remote),
+        };
+        form.ShowDialog(owner);
+        ErrorOccurred = form.ErrorOccurred();
         Module.InvalidateGitSettings();
-        return success;
+        return !ErrorOccurred;
     }
 
     private void UpdatePushButton()
