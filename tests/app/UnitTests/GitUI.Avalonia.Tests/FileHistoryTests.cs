@@ -14,6 +14,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
@@ -76,6 +77,8 @@ public sealed class FileHistoryTests
         form.TranslateItems(translation);
 
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "$this", "Text", "File History");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "openWithDifftoolToolStripMenuItem", "Text", "Open with difftool");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "diffToolRemoteLocalStripMenuItem", "Text", "Difftool selected < - > local");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "DiffTab", "Text", "Diff");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "BlameTab", "Text", "Blame");
 
@@ -155,6 +158,45 @@ public sealed class FileHistoryTests
 
             form.CaptureRenderedFrame().Should().NotBeNull("the blame view should render headlessly");
             blame.BlameAuthor.Bounds.Width.Should().BeGreaterThan(0, "the author margin shows the author lines");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Custom_difftool_item_should_route_the_selected_revision_and_tool()
+    {
+        GitModule module = CreateRepositoryWithFileHistory();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+
+        FormFileHistory form = new(commands, "tracked.txt");
+        form.Show();
+        try
+        {
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
+                ?? throw new InvalidOperationException("Revision grid was not created.");
+            FileViewer diff = form.FindControl<FileViewer>("Diff")
+                ?? throw new InvalidOperationException("Diff viewer was not created.");
+            await WaitUntilAsync(() => revisionGrid.SelectedRevision is not null);
+            await WaitUntilAsync(() => diff.TextEditor.Text.Contains("+second line", StringComparison.Ordinal));
+
+            MenuItem openWithDifftool = form.FindControl<MenuItem>("openWithDifftoolToolStripMenuItem")
+                ?? throw new InvalidOperationException("Difftool menu item was not created.");
+            openWithDifftool.Tag = "meld";
+            openWithDifftool.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+
+            commands.Received(1).OpenWithDifftool(
+                form,
+                Arg.Is<IReadOnlyList<GitRevision?>>(revisions => revisions.Count == 1 && revisions[0] == revisionGrid.SelectedRevision),
+                "tracked.txt",
+                null,
+                RevisionDiffKind.DiffAB,
+                true,
+                "meld");
         }
         finally
         {

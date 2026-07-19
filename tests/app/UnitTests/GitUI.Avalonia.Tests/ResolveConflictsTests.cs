@@ -37,7 +37,7 @@ public sealed class ResolveConflictsTests
         form.ConflictedFiles.Should().NotBeNull();
         form.merge.IsDefault.Should().BeTrue("Merge is the dialog's accept button");
         form.ContextChooseLocal.Should().NotBeNull("the context menu items keep their WinForms names");
-        form.customMergetool.IsVisible.Should().BeFalse("custom merge tools are not ported yet");
+        form.customMergetool.IsVisible.Should().BeTrue("custom merge tools share the portable provider");
         form.fileHistoryToolStripMenuItem.IsVisible.Should().BeTrue("the file history shell is ported");
         form.progressBar.IsVisible.Should().BeFalse();
         form.FindControl<GitUI.UserControls.GotoUserManualControl>("gotoUserManualControl1").Should().NotBeNull();
@@ -131,6 +131,31 @@ public sealed class ResolveConflictsTests
         }
     }
 
+    [AvaloniaTest]
+    public async Task Custom_mergetool_item_should_launch_the_selected_tool_for_the_conflict()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetConflictsAsync(Arg.Any<string?>()).Returns(
+        [
+            CreateConflict("a.txt", hasBase: true, hasLocal: true, hasRemote: true),
+        ]);
+
+        FormResolveConflicts form = new(commands);
+        form.Show();
+        try
+        {
+            form.customMergetool.Tag = "meld";
+            form.customMergetool.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+
+            await WaitUntilAsync(() => module.ReceivedCalls().Any(call => call.GetMethodInfo().Name == nameof(IGitModule.RunMergeTool)));
+            module.Received(1).RunMergeTool("a.txt", "meld");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
     [Test]
     public void HandleMergeConflicts_should_open_the_resolve_dialog_for_a_conflicted_merge()
     {
@@ -200,6 +225,18 @@ public sealed class ResolveConflictsTests
             new ConflictedFileData(ObjectId.WorkTreeId, hasBase ? filename : null!),
             new ConflictedFileData(ObjectId.WorkTreeId, hasLocal ? filename : null!),
             new ConflictedFileData(ObjectId.WorkTreeId, hasRemote ? filename : null!));
+    }
+
+    private static async Task WaitUntilAsync(Func<bool> condition)
+    {
+        DateTime timeout = DateTime.UtcNow.AddSeconds(5);
+        while (!condition() && DateTime.UtcNow < timeout)
+        {
+            Dispatcher.UIThread.RunJobs();
+            await Task.Delay(10);
+        }
+
+        condition().Should().BeTrue("the asynchronous command should complete within the timeout");
     }
 
     /// <summary>Answers every message box with its default-affirmative result.</summary>
