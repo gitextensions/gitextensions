@@ -268,7 +268,18 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartAddToGitIgnoreDialog(IWin32Window? owner, bool localExclude, params string[] filePattern) => throw NotPorted(nameof(StartAddToGitIgnoreDialog));
-    public bool StartAmendCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartAmendCommitDialog));
+    public bool StartAmendCommitDialog(IWin32Window? owner, GitRevision revision)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormCommit form = new(this, CommandsDialogs.CommitKind.Amend, revision);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartApplyPatchDialog(IWin32Window? owner, string? patchFile = null) => throw NotPorted(nameof(StartApplyPatchDialog));
     public bool StartArchiveDialog(IWin32Window? owner = null, GitRevision? revision = null, GitRevision? revision2 = null, string? path = null) => throw NotPorted(nameof(StartArchiveDialog));
     public void StartBatchFileProcessDialog(string batchFile) => throw NotPorted(nameof(StartBatchFileProcessDialog));
@@ -417,7 +428,18 @@ public sealed class GitUICommands : IGitUICommands
         }, changesRepo: false);
     }
 
-    public bool StartFixupCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartFixupCommitDialog));
+    public bool StartFixupCommitDialog(IWin32Window? owner, GitRevision revision)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormCommit form = new(this, CommandsDialogs.CommitKind.Fixup, revision);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartFormCommitDiff(ObjectId objectId)
     {
         bool Action()
@@ -644,7 +666,18 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartSettingsDialog(IWin32Window? owner, SettingsPageReference? initialPage = null) => throw NotPorted(nameof(StartSettingsDialog));
     public bool StartSettingsDialog(Type pageType) => throw NotPorted(nameof(StartSettingsDialog));
     public bool StartSparseWorkingCopyDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSparseWorkingCopyDialog));
-    public bool StartSquashCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartSquashCommitDialog));
+    public bool StartSquashCommitDialog(IWin32Window? owner, GitRevision revision)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormCommit form = new(this, CommandsDialogs.CommitKind.Squash, revision);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string? initialStash = null)
     {
         bool Action()
