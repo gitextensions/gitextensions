@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
@@ -11,6 +11,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Settings;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -302,6 +303,83 @@ public sealed class FileViewerContentTests
 
         viewer.TextEditor.Text.Should().Be("café!");
         viewer.FilePreamble.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task Selected_lines_should_stage_and_unstage_through_the_shared_patch_manager()
+    {
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        try
+        {
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            string filePath = Path.Combine(_workingDirectory, "selected-lines.txt");
+            File.WriteAllText(filePath, "one\ntwo\nthree\n");
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "selected-lines.txt" }).Should().BeTrue();
+            _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "selected lines".Quote() }).Should().BeTrue();
+            ObjectId headId = _module.GetCurrentCheckout();
+            File.WriteAllText(filePath, "ONE\ntwo\nTHREE\n");
+
+            GitRevision indexRevision = new(ObjectId.IndexId) { ParentIds = [headId] };
+            GitRevision workTreeRevision = new(ObjectId.WorkTreeId) { ParentIds = [ObjectId.IndexId] };
+            FileStatusItem workTreeItem = new(
+                indexRevision,
+                workTreeRevision,
+                new GitItemStatus("selected-lines.txt") { IsTracked = true, Staged = StagedStatus.WorkTree });
+            FileViewer viewer = CreateViewer();
+            int patchApplied = 0;
+            viewer.PatchApplied += (_, _) => patchApplied++;
+
+            await viewer.ViewChangesAsync(workTreeItem, CancellationToken.None);
+
+            viewer.SupportLinePatching.Should().BeTrue();
+            int selectedLine = viewer.GetText().IndexOf("+ONE", StringComparison.Ordinal);
+            selectedLine.Should().BeGreaterThanOrEqualTo(0);
+            viewer.TextEditor.Select(selectedLine, "+ONE".Length);
+            viewer.StageSelectedLines(stage: true);
+
+            string stagedDiff = _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff") { "--cached" });
+            string workTreeDiff = _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff"));
+            stagedDiff.Should().Contain("+ONE").And.NotContain("+THREE");
+            workTreeDiff.Should().Contain("+THREE").And.NotContain("+ONE");
+            patchApplied.Should().Be(1);
+
+            FileStatusItem indexItem = new(
+                new GitRevision(headId),
+                new GitRevision(ObjectId.IndexId) { ParentIds = [headId] },
+                new GitItemStatus("selected-lines.txt") { IsTracked = true, Staged = StagedStatus.Index });
+            await viewer.ViewChangesAsync(indexItem, CancellationToken.None);
+            int stagedLine = viewer.GetText().IndexOf("+ONE", StringComparison.Ordinal);
+            viewer.TextEditor.Select(stagedLine, "+ONE".Length);
+            viewer.StageSelectedLines(stage: false);
+
+            _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff") { "--cached" }).Should().BeEmpty();
+            _module.GitExecutable.GetOutput(new GitArgumentBuilder("diff")).Should().Contain("+ONE").And.Contain("+THREE");
+            patchApplied.Should().Be(2);
+        }
+        finally
+        {
+            AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_expose_portable_contract_and_navigate_change_blocks()
+    {
+        FileViewer viewer = new();
+        IFileViewer contract = viewer;
+        viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1,4 +1,4 @@\n-old\n+new\n context\n@@ -8,2 +8,2 @@\n-before\n+after\n");
+
+        contract.GetText().Should().Contain("+after");
+        viewer.GoToFirstChange();
+        int firstBlock = viewer.TextEditor.TextArea.Caret.Line;
+        viewer.GoToNextChange();
+
+        firstBlock.Should().Be(5);
+        viewer.TextEditor.TextArea.Caret.Line.Should().Be(9);
+        viewer.GoToPreviousChange();
+        viewer.TextEditor.TextArea.Caret.Line.Should().Be(5);
+        contract.TotalNumberOfLines.Should().BeGreaterThan(9);
     }
 
     private FileViewer CreateViewer()
