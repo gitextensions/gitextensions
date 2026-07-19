@@ -219,7 +219,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPush.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Reduced flow: current branch to the same branch on the selected remote through FormRemoteProcess, optional force-with-lease, push-on-show, and commit-and-push. URL/tag/multiple-branch pushes, tracking prompts, remote management, scripts, submodule options, and rejected-push recovery remain deferred."
+    "notes": "Portable push workflows are functional through FormRemoteProcess: configured remote or URL/native-path destinations with history and folder browsing; editable single-branch, all-branch, tag/all-tag, and multi-branch push/force/delete modes; new-branch and tracking-reference prompts; remote management; force-with-lease/force safety; recursive-submodule options; push-on-show and commit-and-push; and rejected-push recovery through pull-merge/rebase or force-with-lease retry. Git Extensions before/after push event scripts remain owned by the later shared scripts-engine port, plugin-host pull-request creation remains owned by plugin activation, and PuTTY/Pageant controls are intentionally omitted in favor of OpenSSH."
   },
   "src/app/GitUI/CommandsDialogs/FormPull.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPull.axaml.cs",
