@@ -123,7 +123,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResolveConflicts.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Ported at the post-97cfa7b44 shape (FormBusyScope keeps the UI thread free while the merge tool runs). The conflicted-files grid is a multi-select ListBox showing file names (the hidden Author column had no data source upstream); SortableBindingList header-sort is dropped, while the shared go-to-manual control is functional. Solve-conflict choices (keep local/remote/base, apply-to-all) use the Compat TaskDialog surrogate. SaveFileDialog becomes the Avalonia storage provider; \"open with\"/\"show in folder\" fall back to the default application/folder outside Windows. Context-menu Ctrl+1..3 shortcuts are dispatched in OnKeyDown. The shared CustomDiffMergeToolProvider populates the original customMergetool menu and launches the selected native tool for every selected conflict. FormMergeSubmodule remains deferred (a message box explains until then; new string recorded in AGENTS §9). The file-history item is live since 3.8."
+    "notes": "Ported at the post-97cfa7b44 shape (FormBusyScope keeps the UI thread free while the merge tool runs). The conflicted-files grid is a multi-select ListBox showing file names (the hidden Author column had no data source upstream); SortableBindingList header-sort is dropped, while the shared go-to-manual control is functional. Solve-conflict choices (keep local/remote/base, apply-to-all) use the Compat TaskDialog surrogate. SaveFileDialog becomes the Avalonia storage provider; \"open with\"/\"show in folder\" fall back to the default application/folder outside Windows. Context-menu Ctrl+1..3 shortcuts are dispatched in OnKeyDown. The shared CustomDiffMergeToolProvider populates the original customMergetool menu and launches the selected native tool for every selected conflict. Submodule conflicts use the real same-named FormMergeSubmodule workflow. The file-history item is live since 3.8."
+  },
+  "src/app/GitUI/CommandsDialogs/FormMergeSubmodule.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMergeSubmodule.axaml.cs",
+    "status": "functional",
+    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
+    "notes": "Same-named submodule conflict controller showing base/local/remote/current revisions, refreshing and staging the current checkout, offering local/remote revision checkout through the submodule command service, and opening an in-process Avalonia browser for the submodule. FormResolveConflicts preserves the original dialog-result staging follow-up."
   },
   "src/app/GitUI/CustomDiffMergeToolProvider.cs": {
     "twin": "src/app/GitUI.Avalonia/CustomDiffMergeToolProvider.cs",
