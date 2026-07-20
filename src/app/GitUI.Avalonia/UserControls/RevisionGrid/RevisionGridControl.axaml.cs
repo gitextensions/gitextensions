@@ -37,6 +37,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     public static readonly string HotkeySettingsName = "RevisionGrid";
 
     private const int RowHeight = 24;
+    private const string ObjectIdPrefix = "????";
     private const string RevisionGridTranslationCategory = "RevisionGrid";
 
     private static readonly (string Name, string Text)[] MenuCommandTranslations =
@@ -150,6 +151,16 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     /// </summary>
     public GitRevision? SelectedRevision => lstRevisions.SelectedItem as GitRevision;
 
+    internal Dictionary<ObjectId, string>? FilePathByObjectId { get; set; }
+
+    internal bool MultiSelect
+    {
+        get => lstRevisions.SelectionMode == SelectionMode.Multiple;
+        set => lstRevisions.SelectionMode = value ? SelectionMode.Multiple : SelectionMode.Single;
+    }
+
+    internal bool HasRevisionSource => _lastModule is not null;
+
     /// <summary>
     ///  Occurs when the selected revision changes.
     /// </summary>
@@ -179,6 +190,10 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     private MenuItem ShowAuthorNameColumnMenuItem => GetMenuItem(viewToolStripMenuItem, "showAuthorNameColumnToolStripMenuItem");
     private MenuItem ShowDateColumnMenuItem => GetMenuItem(viewToolStripMenuItem, "showDateColumnToolStripMenuItem");
     private MenuItem ShowIdColumnMenuItem => GetMenuItem(viewToolStripMenuItem, "showIdColumnToolStripMenuItem");
+
+    internal MenuItem NavigateMenuItem => navigateToolStripMenuItem;
+
+    internal MenuItem ViewMenuItem => viewToolStripMenuItem;
 
     public override void AddTranslationItems(ITranslation translation)
     {
@@ -316,7 +331,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         ReloadRevisions(
             _lastModule,
             _lastRevisionFilter,
-            SelectedRevision?.ObjectId ?? default,
+            SelectedId,
             _lastPathFilter);
     }
 
@@ -451,7 +466,46 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     }
 
     public IReadOnlyList<GitRevision> GetSelectedRevisions()
-        => SelectedRevision is GitRevision selectedRevision ? [selectedRevision] : [];
+        => lstRevisions.SelectedItems is { } selectedItems
+            ? [.. selectedItems.OfType<GitRevision>()]
+            : [];
+
+    /// <summary>
+    /// Returns the historical name of a file in a revision, following renames and merge commits.
+    /// </summary>
+    public string? GetRevisionFileName(string path, ObjectId objectId)
+    {
+        if (objectId.IsZero)
+        {
+            return null;
+        }
+
+        if (FilePathByObjectId?.TryGetValue(objectId, out string? fileName) is true)
+        {
+            return fileName;
+        }
+
+        GitArgumentBuilder args = new("log")
+        {
+            $"--format=\"{ObjectIdPrefix}%H\"",
+            "--name-only",
+            "--follow",
+            "--diff-merges=separate",
+            FindRenamesAndCopiesOpts(),
+            objectId.ToString(),
+            "--max-count=1",
+            "--",
+            path.QuoteIfNotQuotedAndNE(),
+        };
+
+        return ParseFileNames(Module, args, cancellationToken: default).FirstOrDefault();
+    }
+
+    public ObjectId SelectedId
+    {
+        get => SelectedRevision?.ObjectId ?? _pendingSelectedObjectId;
+        set => _pendingSelectedObjectId = value;
+    }
 
     public string DescribeRevision(GitRevision revision, int maxLength = 0)
     {
@@ -1144,8 +1198,121 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
 
             RevisionReader reader = new(module);
             bool hasNotes = AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes;
-            reader.GetLog(observer, revisionFilter, pathFilter, hasNotes, autostashLabel: "autostash", cancellationToken);
+            string effectivePathFilter = BuildPathFilter(module, pathFilter, cancellationToken);
+            reader.GetLog(observer, revisionFilter, effectivePathFilter, hasNotes, autostashLabel: "autostash", cancellationToken);
         });
+    }
+
+    private static ArgumentString FindRenamesAndCopiesOpts()
+        => AppSettings.FollowRenamesInFileHistoryExactOnly
+            ? " --find-renames=\"100%\" --find-copies=\"100%\""
+            : " --find-renames --find-copies";
+
+    private string BuildPathFilter(IGitModule module, string? path, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        FilePathByObjectId?.Clear();
+
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return string.Empty;
+        }
+
+        path = path.Trim();
+        bool multipleArgs = false;
+        if (!path.Any(c => c == '"') && !path.Any(c => c == '\''))
+        {
+            if (!path.Any(c => c == ' '))
+            {
+                path = path.Quote();
+            }
+            else
+            {
+                multipleArgs = true;
+            }
+        }
+        else if (path.Count(c => c == '"') + path.Count(c => c == '\'') > 2)
+        {
+            multipleArgs = true;
+        }
+
+        if (!AppSettings.FollowRenamesInFileHistory
+            || path.EndsWith('/')
+            || path.EndsWith("/\"")
+            || multipleArgs)
+        {
+            return path;
+        }
+
+        GitArgumentBuilder args = new("log")
+        {
+            $"--format=\"{ObjectIdPrefix}%H\"",
+            "--name-only",
+            "--follow",
+            FindRenamesAndCopiesOpts(),
+            "--",
+            path.QuoteIfNotQuotedAndNE(),
+        };
+
+        HashSet<string> fileNames = [];
+        foreach (string fileName in ParseFileNames(module, args, cancellationToken))
+        {
+            fileNames.Add(fileName);
+        }
+
+        string pathFilter = fileNames.Count == 0
+            ? path
+            : string.Join(string.Empty, fileNames.Select(fileName => @$" ""{fileName}"""));
+        if (pathFilter.Length <= 31000)
+        {
+            return pathFilter;
+        }
+
+        this.InvokeAndForget(() => MessageBoxes.ShowError(
+            GetOwner(),
+            $"Ignoring too long pathfilter ({pathFilter.Length}). (Are you trying to filter a folder?)",
+            "Cannot follow file renames"));
+        return path;
+    }
+
+    private IEnumerable<string> ParseFileNames(IGitModule module, GitArgumentBuilder args, CancellationToken cancellationToken)
+    {
+        ExecutionResult result = module.GitExecutable.Execute(
+            args,
+            outputEncoding: GitModule.LosslessEncoding,
+            throwOnErrorExit: false,
+            cancellationToken: cancellationToken);
+        if (!result.ExitedSuccessfully)
+        {
+            yield break;
+        }
+
+        ObjectId currentObjectId = default;
+        foreach (string? line in result.StandardOutput.LazySplit('\n').Select(GitModule.ReEncodeFileNameFromLossless))
+        {
+            if (string.IsNullOrEmpty(line))
+            {
+                continue;
+            }
+
+            if (line.StartsWith(ObjectIdPrefix))
+            {
+                currentObjectId = line.Length >= ObjectId.Sha1CharCount + ObjectIdPrefix.Length
+                    && ObjectId.TryParse(line, offset: ObjectIdPrefix.Length, out ObjectId parsedId)
+                        ? parsedId
+                        : default;
+                continue;
+            }
+
+            if (currentObjectId.IsZero)
+            {
+                continue;
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            FilePathByObjectId?.TryAdd(currentObjectId, line);
+            yield return line;
+        }
     }
 
     private static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(IGitModule module)
