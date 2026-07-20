@@ -9,28 +9,38 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Compat;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
+using MediaColor = Avalonia.Media.Color;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormRemotes.cs. Not ported: the PuTTY SSH panel and
-// connection test (the twin relies on OpenSSH, per the platform matrix), the remote
-// color button (needs a color picker; an existing color is preserved on save), the
-// Active/Inactive list group headers (inactive remotes render gray instead), and the
-// in-grid editing of the default pull behaviors (the detail fields below the list are
-// the editing - and persistence - path, like the WinForms detail fields). The URL
-// history combos hold path strings rather than Repository objects.
+// Twin of GitUI/CommandsDialogs/FormRemotes.cs. The PuTTY SSH panel and connection test
+// remain intentionally absent because the portable application uses OpenSSH. Active and
+// inactive remotes retain the original grouping, remote colors use Avalonia's native color
+// picker, and the original detail controls edit each branch's pull behavior. The URL history
+// combos hold path strings rather than Repository objects.
 public sealed partial class FormRemotes : GitModuleForm
 {
+    private const string BtnRemoteColorText = "Set &color";
+
+    private sealed record RemoteListItem(string? Header, ConfigFileRemote? Remote);
+
     private readonly FormRemotesController _formRemotesController = new();
     private IConfigFileRemoteSettingsManager? _remotesManager;
     private IGitBranchNameNormaliser _branchNameNormaliser = null!;
     private ConfigFileRemote? _selectedRemote;
+    private IGitRef? _selectedPullBehaviorHead;
     private IList<Repository>? _repositoryHistory;
+    private object? _btnRemoteColorText;
+    private MediaColor? _remoteColor;
+    private bool _settingRemoteColor;
+    private bool _updatingPullBehaviorControls;
 
     private string[] _genericRemotesNames = ["origin", "upstream", "fork", "remote", "internal", .. AppSettings.CustomGenericRemoteNames];
 
@@ -76,6 +86,12 @@ public sealed partial class FormRemotes : GitModuleForm
         new(@"Deactivate the selected remote.
 Inactive remote is completely invisible to git.");
 
+    private readonly TranslationString _lvgEnabledHeader =
+        new("Active");
+
+    private readonly TranslationString _lvgDisabledHeader =
+        new("Inactive");
+
     private readonly TranslationString _enabledRemoteAlreadyExists =
         new("An active remote named \"{0}\" already exists.");
 
@@ -88,6 +104,7 @@ Inactive remote is completely invisible to git.");
         InitializeComponent();
         WireControls();
         InitializeComplete();
+        _btnRemoteColorText = btnRemoteColor.Content;
     }
 
     public FormRemotes(IGitUICommands commands)
@@ -96,6 +113,7 @@ Inactive remote is completely invisible to git.");
         InitializeComponent();
         WireControls();
         InitializeComplete();
+        _btnRemoteColorText = btnRemoteColor.Content;
 
         _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
         GitBranchNameOptions options = new(replacementToken: AppSettings.AutoNormaliseSymbol, allowTrailingSlash: true);
@@ -107,11 +125,25 @@ Inactive remote is completely invisible to git.");
 
     private void WireControls()
     {
-        Remotes.ItemTemplate = new FuncDataTemplate<ConfigFileRemote>(
-            (remote, _) =>
+        Remotes.ItemTemplate = new FuncDataTemplate<RemoteListItem>(
+            (entry, _) =>
             {
-                TextBlock item = new() { Text = remote?.Name ?? string.Empty };
-                if (remote?.Disabled is true)
+                if (entry?.Remote is null)
+                {
+                    return new TextBlock
+                    {
+                        Text = entry?.Header ?? string.Empty,
+                        FontWeight = FontWeight.SemiBold,
+                        Margin = new Avalonia.Thickness(4, 4, 4, 2),
+                    };
+                }
+
+                TextBlock item = new()
+                {
+                    Text = entry.Remote.Name ?? string.Empty,
+                    Margin = new Avalonia.Thickness(12, 1, 4, 1),
+                };
+                if (entry.Remote.Disabled)
                 {
                     item.Foreground = Brushes.Gray;
                 }
@@ -124,6 +156,7 @@ Inactive remote is completely invisible to git.");
             supportsRecycling: false);
 
         Remotes.SelectionChanged += Remotes_SelectedIndexChanged;
+        Remotes.ContainerPrepared += Remotes_ContainerPrepared;
         New.Click += NewClick;
         Delete.Click += DeleteClick;
         btnToggleState.Click += btnToggleState_Click;
@@ -135,6 +168,8 @@ Inactive remote is completely invisible to git.");
         checkBoxSepPushUrl.IsCheckedChanged += checkBoxSepPushUrl_CheckedChanged;
         folderBrowserButtonUrl.PathShowingControl = Url;
         folderBrowserButtonPushUrl.PathShowingControl = comboBoxPushUrl;
+        btnRemoteColor.ColorChanged += btnRemoteColor_ColorChanged;
+        btnRemoteColorReset.Click += btnRemoteColorReset_Click;
 
         RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
         RemoteRepositoryCombo.LostFocus += RemoteRepositoryComboValidated;
@@ -192,6 +227,8 @@ Inactive remote is completely invisible to git.");
 
         if (!AppSettings.AlwaysShowAdvOpt)
         {
+            lblRemoteColor.IsVisible = false;
+            flpnlRemoteColors.IsVisible = false;
             lblRemotePrefix.IsVisible = false;
             txtRemotePrefix.IsVisible = false;
         }
@@ -212,19 +249,31 @@ Inactive remote is completely invisible to git.");
     {
         Validates.NotNull(UserGitRemotes);
 
-        // The WinForms list shows Active/Inactive groups; the twin orders the enabled
-        // remotes first and renders the disabled ones gray.
-        List<ConfigFileRemote> ordered = [.. UserGitRemotes.Where(r => !r.Disabled), .. UserGitRemotes.Where(r => r.Disabled)];
-        Remotes.ItemsSource = ordered;
+        List<RemoteListItem> items = [];
+        ConfigFileRemote[] enabled = [.. UserGitRemotes.Where(remote => !remote.Disabled)];
+        ConfigFileRemote[] disabled = [.. UserGitRemotes.Where(remote => remote.Disabled)];
+        if (enabled.Length > 0)
+        {
+            items.Add(new RemoteListItem(_lvgEnabledHeader.Text, Remote: null));
+            items.AddRange(enabled.Select(remote => new RemoteListItem(Header: null, Remote: remote)));
+        }
+
+        if (disabled.Length > 0)
+        {
+            items.Add(new RemoteListItem(_lvgDisabledHeader.Text, Remote: null));
+            items.AddRange(disabled.Select(remote => new RemoteListItem(Header: null, Remote: remote)));
+        }
+
+        Remotes.ItemsSource = items;
 
         if (UserGitRemotes.Count != 0)
         {
-            ConfigFileRemote? preselected = !string.IsNullOrEmpty(preselectRemote)
-                ? ordered.FirstOrDefault(r => r.Name == preselectRemote)
+            RemoteListItem? preselected = !string.IsNullOrEmpty(preselectRemote)
+                ? items.FirstOrDefault(item => item.Remote?.Name == preselectRemote)
                 : null;
 
             // default fallback - if the preselection didn't work select the first available one
-            Remotes.SelectedItem = preselected ?? ordered[0];
+            Remotes.SelectedItem = preselected ?? items.First(item => item.Remote is not null);
             Remotes.Focus();
         }
         else
@@ -233,6 +282,16 @@ Inactive remote is completely invisible to git.");
             btnToggleState.IsEnabled = false;
             RemoteName.Focus();
         }
+    }
+
+    private void Remotes_ContainerPrepared(object? sender, ContainerPreparedEventArgs e)
+    {
+        bool isHeader = e.Index >= 0
+            && e.Index < Remotes.ItemCount
+            && Remotes.Items[e.Index] is RemoteListItem { Remote: null };
+        e.Container.IsEnabled = !isHeader;
+        e.Container.Focusable = !isHeader;
+        e.Container.IsHitTestVisible = !isHeader;
     }
 
     private void BindBtnToggleState(bool disabled)
@@ -292,6 +351,7 @@ Inactive remote is completely invisible to git.");
         RemoteRepositoryCombo.ItemsSource = new[] { string.Empty }.Concat(UserGitRemotes!.Select(remote => remote.Name ?? string.Empty)).ToList();
 
         RemoteBranches.SelectionChanged -= RemoteBranchesSelectionChanged;
+        _selectedPullBehaviorHead = null;
         RemoteBranches.ItemsSource = heads;
         RemoteBranches.SelectedItem = null;
         RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
@@ -306,6 +366,49 @@ Inactive remote is completely invisible to git.");
             RemoteBranches.SelectedItem = heads[0];
         }
     }
+
+    private void SetRemoteColor(MediaColor? color)
+    {
+        _settingRemoteColor = true;
+        try
+        {
+            _remoteColor = color;
+            MediaColor pickerColor = color ?? GetDefaultRemoteColor();
+            btnRemoteColor.Color = pickerColor;
+            btnRemoteColor.Content = color is null
+                ? _btnRemoteColorText
+                : new Border
+                {
+                    Width = 32,
+                    Height = 14,
+                    Background = new SolidColorBrush(pickerColor),
+                    BorderBrush = Brushes.Gray,
+                    BorderThickness = new Avalonia.Thickness(1),
+                };
+            btnRemoteColorReset.IsVisible = color is not null;
+        }
+        finally
+        {
+            _settingRemoteColor = false;
+        }
+    }
+
+    private static MediaColor GetDefaultRemoteColor()
+    {
+        System.Drawing.Color color = AppColor.RemoteBranch.GetThemeColor();
+        return MediaColor.FromArgb(color.A, color.R, color.G, color.B);
+    }
+
+    private void btnRemoteColor_ColorChanged(object? sender, ColorChangedEventArgs e)
+    {
+        if (!_settingRemoteColor)
+        {
+            SetRemoteColor(e.NewColor);
+        }
+    }
+
+    private void btnRemoteColorReset_Click(object? sender, EventArgs e)
+        => SetRemoteColor(color: null);
 
     private void btnToggleState_Click(object sender, EventArgs e)
     {
@@ -360,8 +463,9 @@ Inactive remote is completely invisible to git.");
         bool creatingNew = _selectedRemote is null;
         string remotePrefix = txtRemotePrefix.Text ?? string.Empty;
 
-        // The color button is not ported; keep an existing color.
-        string? color = _selectedRemote?.Color;
+        string? color = _remoteColor is MediaColor remoteColor
+            ? $"#{remoteColor.R:X2}{remoteColor.G:X2}{remoteColor.B:X2}"
+            : null;
 
         try
         {
@@ -480,20 +584,32 @@ Inactive remote is completely invisible to git.");
 
     private void RemoteBranchesSelectionChanged(object? sender, EventArgs e)
     {
+        CommitPullBehaviorEdits();
+
         IGitRef? head = GetHeadForSelectedRemoteBranch();
         if (head is null)
         {
+            _selectedPullBehaviorHead = null;
             return;
         }
 
-        LocalBranchNameEdit.Text = head.Name;
-        RemoteRepositoryCombo.SelectedItem = UserGitRemotes!.FirstOrDefault(x => StringComparer.OrdinalIgnoreCase.Equals(x.Name, head.TrackingRemote))?.Name;
-        if (RemoteRepositoryCombo.SelectedItem is null)
+        _selectedPullBehaviorHead = head;
+        _updatingPullBehaviorControls = true;
+        try
         {
-            RemoteRepositoryCombo.SelectedIndex = 0;
-        }
+            LocalBranchNameEdit.Text = head.Name;
+            RemoteRepositoryCombo.SelectedItem = UserGitRemotes!.FirstOrDefault(x => StringComparer.OrdinalIgnoreCase.Equals(x.Name, head.TrackingRemote))?.Name;
+            if (RemoteRepositoryCombo.SelectedItem is null)
+            {
+                RemoteRepositoryCombo.SelectedIndex = 0;
+            }
 
-        DefaultMergeWithCombo.Text = head.MergeWith;
+            DefaultMergeWithCombo.Text = head.MergeWith;
+        }
+        finally
+        {
+            _updatingPullBehaviorControls = false;
+        }
     }
 
     private void DefaultMergeWithComboDropDown(object sender, EventArgs e)
@@ -527,29 +643,25 @@ Inactive remote is completely invisible to git.");
     }
 
     private void RemoteRepositoryComboValidated(object sender, EventArgs e)
-    {
-        IGitRef? head = GetHeadForSelectedRemoteBranch();
-        if (head is null)
-        {
-            return;
-        }
-
-        head.TrackingRemote = RemoteRepositoryCombo.SelectedItem as string ?? string.Empty;
-    }
+        => CommitPullBehaviorEdits();
 
     private void DefaultMergeWithComboValidated(object sender, EventArgs e)
+        => CommitPullBehaviorEdits();
+
+    private void CommitPullBehaviorEdits()
     {
-        IGitRef? head = GetHeadForSelectedRemoteBranch();
-        if (head is null)
+        if (_updatingPullBehaviorControls || _selectedPullBehaviorHead is null)
         {
             return;
         }
 
-        head.MergeWith = DefaultMergeWithCombo.Text ?? string.Empty;
+        _selectedPullBehaviorHead.TrackingRemote = RemoteRepositoryCombo.SelectedItem as string ?? string.Empty;
+        _selectedPullBehaviorHead.MergeWith = DefaultMergeWithCombo.Text ?? string.Empty;
     }
 
     private void SaveDefaultPushPullClick(object sender, EventArgs e)
     {
+        CommitPullBehaviorEdits();
         Initialize();
     }
 
@@ -560,7 +672,8 @@ Inactive remote is completely invisible to git.");
 
     private void Remotes_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        if (Remotes.SelectedItem is not null && _selectedRemote == Remotes.SelectedItem)
+        ConfigFileRemote? selectedRemote = (Remotes.SelectedItem as RemoteListItem)?.Remote;
+        if (selectedRemote is not null && _selectedRemote == selectedRemote)
         {
             return;
         }
@@ -572,8 +685,9 @@ Inactive remote is completely invisible to git.");
         checkBoxSepPushUrl.IsChecked = false;
         gbMgtPanel.Header = _gbMgtPanelHeaderNew.Text;
         txtRemotePrefix.Text = string.Empty;
+        SetRemoteColor(color: null);
 
-        if (Remotes.SelectedItem is null)
+        if (selectedRemote is null)
         {
             _selectedRemote = null;
             flpnlRemoteManagement.IsEnabled = true;
@@ -581,11 +695,7 @@ Inactive remote is completely invisible to git.");
         }
 
         // reset all controls and disable all buttons until we have a selection
-        _selectedRemote = Remotes.SelectedItem as ConfigFileRemote;
-        if (_selectedRemote is null)
-        {
-            return;
-        }
+        _selectedRemote = selectedRemote;
 
         Delete.IsEnabled = btnToggleState.IsEnabled = true;
         RemoteName.Text = _selectedRemote.Name;
@@ -597,6 +707,10 @@ Inactive remote is completely invisible to git.");
         btnToggleState.IsVisible = true;
         flpnlRemoteManagement.IsEnabled = !_selectedRemote.Disabled;
         txtRemotePrefix.Text = _selectedRemote.Prefix;
+
+        SetRemoteColor(MediaColor.TryParse(_selectedRemote.Color, out MediaColor color)
+            ? color
+            : null);
     }
 
     private void checkBoxSepPushUrl_CheckedChanged(object sender, EventArgs e)
@@ -706,6 +820,7 @@ Inactive remote is completely invisible to git.");
     public override void AddTranslationItems(GitExtensions.Extensibility.Translations.ITranslation translation)
     {
         base.AddTranslationItems(translation);
+        translation.AddTranslationItem(nameof(FormRemotes), nameof(btnRemoteColor), "Text", BtnRemoteColorText);
 
         // The WinForms columns of the default-pull grid store their captions as HeaderText.
         translation.AddTranslationItem(nameof(FormRemotes), nameof(BranchName), "HeaderText", "Local branch name");
@@ -716,6 +831,20 @@ Inactive remote is completely invisible to git.");
     public override void TranslateItems(GitExtensions.Extensibility.Translations.ITranslation translation)
     {
         base.TranslateItems(translation);
+
+        string? remoteColorText = translation.TranslateItem(
+            nameof(FormRemotes),
+            nameof(btnRemoteColor),
+            "Text",
+            () => BtnRemoteColorText);
+        if (!string.IsNullOrEmpty(remoteColorText))
+        {
+            _btnRemoteColorText = AvaloniaTranslationUtils.ToAvaloniaMnemonics(remoteColorText);
+            if (_remoteColor is null)
+            {
+                btnRemoteColor.Content = _btnRemoteColorText;
+            }
+        }
 
         TranslateHeader(translation, nameof(BranchName), BranchName, "Local branch name");
         TranslateHeader(translation, nameof(RemoteCombo), RemoteCombo, "Remote repository");
@@ -743,8 +872,15 @@ Inactive remote is completely invisible to git.");
         }
 
         public Button Delete => _form.Delete;
+        public ColorPicker RemoteColor => _form.btnRemoteColor;
+        public Button RemoteColorReset => _form.btnRemoteColorReset;
         public TextBox RemoteName => _form.RemoteName;
         public TextBox RemotePrefix => _form.txtRemotePrefix;
+        public int RemoteCount => _form.Remotes.Items.OfType<RemoteListItem>().Count(item => item.Remote is not null);
+        public IReadOnlyList<string> RemoteGroupHeaders => [.. _form.Remotes.Items
+            .OfType<RemoteListItem>()
+            .Where(item => item.Header is not null)
+            .Select(item => item.Header!)];
         public Button Save => _form.Save;
         public TabControl TabControl => _form.tabControl1;
         public Button ToggleState => _form.btnToggleState;
