@@ -464,7 +464,15 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         Encoding encoding = Diff.Encoding ?? Module.FilesEncoding;
         if (ReferenceEquals(tabControl1.SelectedItem, BlameTab))
         {
-            TrackViewTask(Blame.LoadBlameAsync(revision, fileName, RevisionGrid, this, encoding, force: force, cancellationTokenSequence: _viewChangesSequence));
+            TrackViewTask(Blame.LoadBlameAsync(
+                revision,
+                fileName,
+                RevisionGrid,
+                this,
+                encoding,
+                force: force,
+                cancellationTokenSequence: _viewChangesSequence,
+                joinableTaskFactory: _taskManager.JoinableTaskFactory));
         }
         else if (ReferenceEquals(tabControl1.SelectedItem, ViewTab))
         {

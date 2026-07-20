@@ -78,6 +78,15 @@
           <SolidColorBrush x:Key="GitExtensionsDiffAddedDimForegroundBrush" Color="#C5E4BF" />
           <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedForegroundBrush" Color="#B148C6" />
           <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedForegroundBrush" Color="#005DFF" />
+          <SolidColorBrush x:Key="GitExtensionsBlameHighlightBrush" Color="#E3E3E3" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAuthorBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge0Brush" Color="#F7FCF5" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge1Brush" Color="#C7E9C0" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge2Brush" Color="#A1D99B" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge3Brush" Color="#74C476" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge4Brush" Color="#41AB5D" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge5Brush" Color="#238B45" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge6Brush" Color="#00441B" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
           <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
@@ -124,6 +133,15 @@
           <SolidColorBrush x:Key="GitExtensionsDiffAddedDimForegroundBrush" Color="#2B544A" />
           <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedForegroundBrush" Color="#D670D6" />
           <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedForegroundBrush" Color="#65A4FF" />
+          <SolidColorBrush x:Key="GitExtensionsBlameHighlightBrush" Color="#414141" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAuthorBrush" Color="#B8B8B8" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge0Brush" Color="#263A2C" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge1Brush" Color="#315B3C" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge2Brush" Color="#347A47" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge3Brush" Color="#2F9952" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge4Brush" Color="#29B35B" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge5Brush" Color="#46CA70" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge6Brush" Color="#78E391" />
         </ResourceDictionary>
       </ResourceDictionary.ThemeDictionaries>
     </ResourceDictionary>

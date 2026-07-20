@@ -47,6 +47,7 @@ public sealed partial class ParityScreenshotTests
 {
     private const string CaptureCategory = "VisualParityCapture";
     private const string CaptureEnvironmentVariable = "GITEXT_CAPTURE_PARITY_SHOTS";
+    private const string CaptureViewEnvironmentVariable = "GITEXT_CAPTURE_PARITY_VIEW";
     private const string AxamlExtension = ".axaml";
     private const string AppSourcePath = "src/App.cs";
     private const string FeatureBranchName = "feature/visual-parity";
@@ -83,18 +84,32 @@ public sealed partial class ParityScreenshotTests
         WinFormsShims.ShimHost.MessageBoxHost = new StubMessageBoxHost();
 
         string outputDirectory = GetOutputDirectory();
-        foreach (string themeName in new[] { "Light", "Dark" })
+        string? viewFilter = Environment.GetEnvironmentVariable(CaptureViewEnvironmentVariable);
+        if (string.IsNullOrWhiteSpace(viewFilter))
         {
-            string themeDirectory = Path.Combine(outputDirectory, themeName);
-            if (Directory.Exists(themeDirectory))
+            foreach (string themeName in new[] { "Light", "Dark" })
             {
-                TestDirectory.Delete(themeDirectory);
+                string themeDirectory = Path.Combine(outputDirectory, themeName);
+                if (Directory.Exists(themeDirectory))
+                {
+                    TestDirectory.Delete(themeDirectory);
+                }
             }
         }
 
         Directory.CreateDirectory(outputDirectory);
-        File.Delete(Path.Combine(outputDirectory, "manifest.json"));
+        string manifestFileName = string.IsNullOrWhiteSpace(viewFilter) ? "manifest.json" : "manifest-targeted.json";
+        File.Delete(Path.Combine(outputDirectory, manifestFileName));
         IReadOnlyList<ViewDescriptor> views = GetViewDescriptors();
+        if (!string.IsNullOrWhiteSpace(viewFilter))
+        {
+            views = views
+                .Where(view => view.ClassName.Contains(viewFilter, StringComparison.OrdinalIgnoreCase)
+                               || view.RelativePath.Contains(viewFilter, StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+            views.Should().NotBeEmpty($"{CaptureViewEnvironmentVariable} should match at least one ported view");
+        }
+
         List<ManifestEntry> manifest = [];
 
         using CaptureContext context = new();
@@ -130,7 +145,7 @@ public sealed partial class ParityScreenshotTests
             }
         }
 
-        string manifestPath = Path.Combine(outputDirectory, "manifest.json");
+        string manifestPath = Path.Combine(outputDirectory, manifestFileName);
         File.WriteAllText(
             manifestPath,
             JsonSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true }));
@@ -476,6 +491,12 @@ public sealed partial class ParityScreenshotTests
             return;
         }
 
+        if (root is BlameControl blame)
+        {
+            await SeedBlameControlAsync(blame, context);
+            return;
+        }
+
         Control[] controls =
         [
             root,
@@ -537,13 +558,31 @@ public sealed partial class ParityScreenshotTests
                     comboBox.ItemsSource = new[] { RemoteName, "upstream" };
                     comboBox.SelectedIndex = 0;
                     break;
-
-                case BlameControl blame:
-                    FileViewer? blameFile = blame.FindControl<FileViewer>("BlameFile");
-                    blameFile?.ViewPatch(context.SampleBlame);
-                    break;
             }
         }
+    }
+
+    private static async Task SeedBlameControlAsync(BlameControl blame, CaptureContext context)
+    {
+        string[] lines = context.SampleBlame
+            .ReplaceLineEndings("\n")
+            .TrimEnd('\n')
+            .Split('\n');
+        BlameControl.TestAccessor accessor = blame.GetTestAccessor();
+        IReadOnlyList<System.Drawing.Color> colors = accessor.GetAgeBucketGradientColors();
+        GitBlameEntry[] entries = lines
+            .Select((_, index) => new GitBlameEntry
+            {
+                AgeBucketIndex = index % colors.Count,
+                AgeBucketColor = colors[index % colors.Count],
+            })
+            .ToArray();
+        string gutter = string.Join(
+            '\n',
+            lines.Select((_, index) => index % 4 == 0 ? $"2026-07-{20 - (index % 7):00} - Avalonia Contributor" : string.Empty));
+
+        await accessor.BlameFile.ViewTextAsync(AppSourcePath, context.SampleBlame);
+        blame.BlameAuthor.Initialize(gutter, entries);
     }
 
     private static void SeedPatchGrid(PatchGrid patchGrid, CaptureContext context)
