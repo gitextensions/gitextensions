@@ -41,9 +41,32 @@ public partial class CommitPickerSmallControl : GitModuleControl
 
         bool isArtificialCommitForEmptyRepo = commitHash == "HEAD";
         lbCommits.Text = string.Empty;
-        textBoxCommitHash.Text = SelectedObjectId.IsZero || isArtificialCommitForEmptyRepo
-            ? string.Empty
-            : SelectedObjectId.ToShortString();
+
+        if (SelectedObjectId.IsZero || isArtificialCommitForEmptyRepo)
+        {
+            textBoxCommitHash.Text = string.Empty;
+        }
+        else
+        {
+            ObjectId selectedObjectId = SelectedObjectId;
+            textBoxCommitHash.Text = selectedObjectId.ToShortString();
+            ThreadHelper.FileAndForget(async () =>
+            {
+                ObjectId currentCheckout = Module.GetCurrentCheckout();
+                if (currentCheckout.IsZero)
+                {
+                    return;
+                }
+
+                string toRef = selectedObjectId.IsArtificial ? "HEAD" : selectedObjectId.ToString();
+                string text = Module.GetCommitCountString(currentCheckout, toRef);
+                await this.SwitchToMainThreadAsync();
+                if (SelectedObjectId == selectedObjectId)
+                {
+                    lbCommits.Text = text;
+                }
+            });
+        }
     }
 
     private void textBoxCommitHash_TextLeave(object? sender, EventArgs e)

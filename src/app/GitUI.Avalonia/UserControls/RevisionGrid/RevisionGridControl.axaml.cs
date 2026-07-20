@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -158,6 +159,8 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         get => lstRevisions.SelectionMode == SelectionMode.Multiple;
         set => lstRevisions.SelectionMode = value ? SelectionMode.Multiple : SelectionMode.Single;
     }
+
+    internal bool ShowUncommittedChangesIfPossible { get; set; }
 
     internal bool HasRevisionSource => _lastModule is not null;
 
@@ -1397,11 +1400,19 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         SelectPendingRevision();
     }
 
-    private void OnLoadingCompleted(CancellationToken cancellationToken)
+    private void OnLoadingCompleted(CancellationToken cancellationToken, IReadOnlyList<GitRevision> artificialRevisions)
     {
         if (cancellationToken.IsCancellationRequested)
         {
             return;
+        }
+
+        if (artificialRevisions.Count > 0)
+        {
+            int insertIndex = _headId is ObjectId headId
+                ? _revisions.FindIndex(revision => revision.ObjectId == headId)
+                : -1;
+            _revisions.InsertRange(insertIndex < 0 ? 0 : insertIndex, artificialRevisions);
         }
 
         // The graph rows straightened after the final CacheTo become visible only when the
@@ -1417,6 +1428,50 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         {
             lstRevisions.SelectedIndex = 0;
         }
+    }
+
+    private IReadOnlyList<GitRevision> AddArtificialRevisions(CancellationToken cancellationToken)
+    {
+        if (cancellationToken.IsCancellationRequested
+            || !ShowUncommittedChangesIfPossible
+            || !AppSettings.RevisionGraphShowArtificialCommits
+            || _lastModule is null
+            || _lastModule.IsBareRepository())
+        {
+            return [];
+        }
+
+        string userName = _lastModule.GetEffectiveSetting(SettingKeyString.UserName);
+        string userEmail = _lastModule.GetEffectiveSetting(SettingKeyString.UserEmail);
+        GitRevision workTreeRevision = new(ObjectId.WorkTreeId)
+        {
+            Author = userName,
+            AuthorEmail = userEmail,
+            AuthorUnixTime = 0,
+            Committer = userName,
+            CommitterEmail = userEmail,
+            CommitUnixTime = 0,
+            Notes = string.Empty,
+            ParentIds = [ObjectId.IndexId],
+            Subject = ResourceManager.TranslatedStrings.Workspace,
+        };
+        GitRevision indexRevision = new(ObjectId.IndexId)
+        {
+            Author = userName,
+            AuthorEmail = userEmail,
+            AuthorUnixTime = 0,
+            Committer = userName,
+            CommitterEmail = userEmail,
+            CommitUnixTime = 0,
+            Notes = string.Empty,
+            ParentIds = _headId is ObjectId { IsZero: false } headId ? [headId] : null,
+            Subject = ResourceManager.TranslatedStrings.Index,
+        };
+        IReadOnlyList<ObjectId> insertionParents = _headId is ObjectId { IsZero: false } currentCheckout
+            ? [currentCheckout]
+            : [];
+        _revisionGraph.Insert(workTreeRevision, indexRevision, insertionParents);
+        return [workTreeRevision, indexRevision];
     }
 
     private void SelectPendingRevision()
@@ -1503,6 +1558,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
 
         public void OnCompleted()
         {
+            IReadOnlyList<GitRevision> artificialRevisions = owner.AddArtificialRevisions(cancellationToken);
             owner._revisionGraph.LoadingCompleted();
 
             // Finish the row cache (including segment straightening); before this final pass
@@ -1510,7 +1566,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
             int lastRowIndex = owner._revisionGraph.Count - 1;
             owner._revisionGraph.CacheTo(lastRowIndex, lastRowIndex, cancellationToken);
 
-            Dispatcher.UIThread.Post(() => owner.OnLoadingCompleted(cancellationToken));
+            Dispatcher.UIThread.Post(() => owner.OnLoadingCompleted(cancellationToken, artificialRevisions));
         }
 
         public void OnError(Exception error)
