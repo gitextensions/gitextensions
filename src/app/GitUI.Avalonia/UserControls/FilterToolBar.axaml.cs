@@ -100,6 +100,20 @@ public sealed partial class FilterToolBar : TranslatedControl
         RefreshBranches(getRefs);
     }
 
+    /// <summary>
+    /// Sets and applies the text revision filter, matching the WinForms toolbar contract.
+    /// </summary>
+    public void SetRevisionFilter(string? filter)
+    {
+        if (string.IsNullOrEmpty(tstxtRevisionFilter.Text) && string.IsNullOrEmpty(filter))
+        {
+            return;
+        }
+
+        tstxtRevisionFilter.Text = filter;
+        ApplyRevisionFilter();
+    }
+
     public void SetFocus()
         => tstxtRevisionFilter.Focus();
 

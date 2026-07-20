@@ -2,6 +2,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:gitui="clr-namespace:GitUI"
         xmlns:properties="using:GitUI.Properties"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        xmlns:revisionGrid="clr-namespace:GitUI.UserControls.RevisionGrid"
         xmlns:blame="clr-namespace:GitUI.Blame"
         xmlns:editor="clr-namespace:GitUI.Editor"
         x:Class="GitUI.CommandsDialogs.FormFileHistory"
@@ -9,30 +12,145 @@
         MinWidth="600" MinHeight="400"
         WindowStartupLocation="CenterOwner"
         Title="File History">
-  <Grid RowDefinitions="*,5,2*" Margin="8">
-    <gitui:RevisionGridControl x:Name="RevisionGrid">
-      <gitui:RevisionGridControl.RevisionContextMenu>
-        <ContextMenu x:Name="FileHistoryContextMenu">
-          <MenuItem x:Name="openWithDifftoolToolStripMenuItem"
-                    Header="Open with difftool"
-                    InputGesture="F3">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Diff}" /></MenuItem.Icon>
-          </MenuItem>
-          <MenuItem x:Name="diffToolRemoteLocalStripMenuItem" Header="Difftool selected &lt; - &gt; local" />
-        </ContextMenu>
-      </gitui:RevisionGridControl.RevisionContextMenu>
-    </gitui:RevisionGridControl>
+  <Grid x:Name="MainPanel"
+        RowDefinitions="Auto,*,5,3*"
+        Margin="8">
+    <Grid.ContextMenu>
+      <ContextMenu x:Name="FileHistoryContextMenu">
+        <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" />
+        <Separator />
+        <MenuItem x:Name="openWithDifftoolToolStripMenuItem"
+                  Header="Open with difftool"
+                  InputGesture="F3">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Diff}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="diffToolRemoteLocalStripMenuItem" Header="Difftool selected &lt; - &gt; local" />
+        <MenuItem x:Name="saveAsToolStripMenuItem" Header="Save as">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="followFileHistoryToolStripMenuItem"
+                  Header="Detect and follow renames"
+                  ToggleType="CheckBox" />
+        <MenuItem x:Name="followFileHistoryRenamesToolStripMenuItem"
+                  Header="Detect and follow - exact renames and copies only"
+                  ToggleType="CheckBox" />
+        <Separator x:Name="toolStripSeparator4" />
+      </ContextMenu>
+    </Grid.ContextMenu>
 
-    <GridSplitter Grid.Row="1"
+    <StackPanel Height="25" Orientation="Horizontal" Spacing="1">
+      <usercontrols:FilterToolBar x:Name="ToolStripFilters" />
+      <Border Classes="gitextensions-toolbar-separator" />
+      <compat:IconSplitButton x:Name="toolStripSplitLoad"
+                              Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                              Icon="{x:Static properties:Images.ReloadRevisions}"
+                              ToolTip.Tip="Load file history"
+                              compat:TranslationCompat.UseToolTipText="True">
+        <compat:IconSplitButton.Flyout>
+          <MenuFlyout>
+            <MenuItem x:Name="loadHistoryOnShowToolStripMenuItem"
+                      Header="Load history on show"
+                      ToggleType="CheckBox" />
+            <MenuItem x:Name="loadBlameOnShowToolStripMenuItem"
+                      Header="Load blame on show"
+                      ToggleType="CheckBox" />
+          </MenuFlyout>
+        </compat:IconSplitButton.Flyout>
+      </compat:IconSplitButton>
+      <compat:IconDropDownButton x:Name="ShowFullHistory"
+                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                 Icon="{x:Static properties:Images.FileHistory}"
+                                 ToolTip.Tip="Show Full History"
+                                 compat:TranslationCompat.UseToolTipText="True">
+        <compat:IconDropDownButton.Flyout>
+          <MenuFlyout>
+            <MenuItem x:Name="showFullHistoryToolStripMenuItem"
+                      Header="Show full history"
+                      ToggleType="CheckBox" />
+            <MenuItem x:Name="simplifyMergesToolStripMenuItem"
+                      Header="Simplify merges"
+                      ToggleType="CheckBox" />
+          </MenuFlyout>
+        </compat:IconDropDownButton.Flyout>
+      </compat:IconDropDownButton>
+      <compat:IconDropDownButton x:Name="toolStripBlameOptions"
+                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                 Content="Blame options"
+                                 Icon="{x:Static properties:Images.Blame}">
+        <compat:IconDropDownButton.Flyout>
+          <MenuFlyout>
+            <MenuItem x:Name="blameSettingsToolStripMenuItem"
+                      Header="Blame settings:"
+                      IsEnabled="False" />
+            <MenuItem x:Name="ignoreWhitespaceToolStripMenuItem"
+                      Header="Ignore whitespace"
+                      ToggleType="CheckBox" />
+            <MenuItem x:Name="detectMoveAndCopyInThisFileToolStripMenuItem"
+                      Header="Detect move and copy in this file"
+                      ToggleType="CheckBox" />
+            <MenuItem x:Name="detectMoveAndCopyInAllFilesToolStripMenuItem"
+                      Header="Detect move and copy in all files"
+                      ToggleType="CheckBox" />
+            <Separator />
+            <MenuItem x:Name="displaySettingsToolStripMenuItem"
+                      Header="Display result settings:"
+                      IsEnabled="False" />
+            <MenuItem x:Name="displayAuthorFirstToolStripMenuItem"
+                      Header="Display author first"
+                      ToggleType="CheckBox" />
+            <MenuItem x:Name="showAuthorToolStripMenuItem"
+                      Header="Show author"
+                      ToggleType="CheckBox" />
+            <MenuItem x:Name="showAuthorDateToolStripMenuItem"
+                      Header="Show author date"
+                      ToggleType="CheckBox" />
+            <MenuItem x:Name="showAuthorTimeToolStripMenuItem"
+                      Header="Show author time"
+                      ToggleType="CheckBox" />
+            <MenuItem x:Name="showLineNumbersToolStripMenuItem"
+                      Header="Show line numbers"
+                      ToggleType="CheckBox" />
+            <MenuItem x:Name="showOriginalFilePathToolStripMenuItem"
+                      Header="Show original file path"
+                      ToggleType="CheckBox" />
+          </MenuFlyout>
+        </compat:IconDropDownButton.Flyout>
+      </compat:IconDropDownButton>
+    </StackPanel>
+
+    <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="1" />
+
+    <GridSplitter Grid.Row="2"
                   Height="5"
                   ResizeDirection="Rows" />
 
-    <!-- The View and Commit tabs join this shell in later subphases. -->
-    <TabControl x:Name="tabControl1" Grid.Row="2">
-      <TabItem x:Name="DiffTab" Header="Diff">
+    <TabControl x:Name="tabControl1"
+                Grid.Row="3"
+                Padding="0"
+                Classes="gitextensions-workspace-tabs">
+      <TabItem x:Name="CommitInfoTabPage"
+               Classes="gitextensions-workspace-tab"
+               Header="Commit"
+               Icon="{x:Static properties:Images.CommitSummary}">
+        <usercontrols:CommitDiff x:Name="CommitDiff" />
+      </TabItem>
+      <TabItem x:Name="DiffTab"
+               Classes="gitextensions-workspace-tab"
+               Header="Diff"
+               Icon="{x:Static properties:Images.Diff}">
         <editor:FileViewer x:Name="Diff" />
       </TabItem>
-      <TabItem x:Name="BlameTab" Header="Blame">
+      <TabItem x:Name="ViewTab"
+               Classes="gitextensions-workspace-tab"
+               Header="View"
+               Icon="{x:Static properties:Images.ViewFile}">
+        <editor:FileViewer x:Name="View" />
+      </TabItem>
+      <TabItem x:Name="BlameTab"
+               Classes="gitextensions-workspace-tab"
+               Header="Blame"
+               Icon="{x:Static properties:Images.Blame}">
         <blame:BlameControl x:Name="Blame" />
       </TabItem>
     </TabControl>
