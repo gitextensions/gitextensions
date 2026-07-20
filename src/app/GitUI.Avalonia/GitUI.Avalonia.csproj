@@ -28,6 +28,9 @@
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridFileUpdate.cs" Link="CommandsDialogs\IRevisionGridFileUpdate.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridInfo.cs" Link="CommandsDialogs\IRevisionGridInfo.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridUpdate.cs" Link="CommandsDialogs\IRevisionGridUpdate.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\DistributedSettingsSet.cs" Link="CommandsDialogs\SettingsDialog\DistributedSettingsSet.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\GitConfigSettingsSet.cs" Link="CommandsDialogs\SettingsDialog\GitConfigSettingsSet.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\SettingsPageReference.cs" Link="CommandsDialogs\SettingsDialog\SettingsPageReference.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\ConsoleOutputEventArgs.cs" Link="ConsoleEmulation\ConsoleOutputEventArgs.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\ConsoleProcessExitEventArgs.cs" Link="ConsoleEmulation\ConsoleProcessExitEventArgs.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\IConsoleEmulatorsRegistry.cs" Link="ConsoleEmulation\IConsoleEmulatorsRegistry.cs" />
