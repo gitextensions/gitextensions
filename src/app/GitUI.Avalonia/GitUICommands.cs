@@ -472,7 +472,8 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartFormatPatchDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartFormatPatchDialog));
-    public bool StartGeneralSettingsDialog(IWin32Window? owner) => StartSettingsDialog(owner);
+    public bool StartGeneralSettingsDialog(IWin32Window? owner)
+        => StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.Pages.GeneralSettingsPage.GetPageReference());
     public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null)
     {
         bool Action()

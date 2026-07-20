@@ -6,6 +6,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitUI.CommandsDialogs.SettingsDialog;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Properties;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -132,6 +133,10 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             GitExtensionsSettingsGroup.GetPageReference(),
             icon: null,
             asRoot: true);
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<GeneralSettingsPage>(this, serviceProvider),
+            GitExtensionsSettingsGroup.GetPageReference(),
+            Images.GeneralSettings);
     }
 
     private void OnSettingsPageSelected(object? sender, SettingsPageSelectedEventArgs e)

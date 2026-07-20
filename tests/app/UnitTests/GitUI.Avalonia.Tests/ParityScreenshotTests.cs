@@ -23,6 +23,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.Help;
@@ -263,6 +264,11 @@ public sealed partial class ParityScreenshotTests
 
     private static Control CreateView(CaptureContext context, Type viewType)
     {
+        if (viewType == typeof(FormSettings))
+        {
+            return new FormSettings(context.Commands, GeneralSettingsPage.GetPageReference());
+        }
+
         if (viewType == typeof(FormBrowse))
         {
             return new FormBrowse(context.Commands);
