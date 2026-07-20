@@ -179,6 +179,10 @@
         <Button x:Name="userShell" Classes="gitextensions-toolbar-button">
           <Image Width="16" Height="16" Source="{x:Static properties:Images.GitForWindows}" />
         </Button>
+        <compat:IconButton x:Name="EditSettings"
+                           Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                           Content="Settings"
+                           Icon="{x:Static properties:Images.Settings}" />
       </StackPanel>
       <controls:FilterToolBar x:Name="ToolStripFilters" />
       <StackPanel x:Name="ToolStripScripts" IsVisible="False" />

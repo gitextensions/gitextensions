@@ -65,6 +65,7 @@ public sealed partial class FormBrowse : GitModuleForm
         Commit = 7,
         CheckoutBranch = 10,
         FocusFilter = 18,
+        OpenSettings = 20,
         ToggleLeftPanel = 21,
         FocusNextTab = 31,
         FocusPrevTab = 32,
@@ -148,6 +149,7 @@ public sealed partial class FormBrowse : GitModuleForm
         toolStripSplitStash.Click += StashToolStripMenuItemClick;
         toolStripFileExplorer.Click += FileExplorerToolStripMenuItemClick;
         userShell.Click += userShell_Click;
+        EditSettings.Click += OnShowSettingsClick;
         UserShellToolStripMenuItem.Click += userShell_Click;
         pullToolStripMenuItem1.Click += (_, _) => DoPull(AppSettings.FormPullAction, isSilent: false);
         mergeToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.Merge, isSilent: true);
@@ -941,6 +943,7 @@ public sealed partial class FormBrowse : GitModuleForm
                 return _outputHistoryController?.FocusAndToggleIfPanel() ?? false;
             case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
             case Command.ToggleLeftPanel: ToggleLeftPanelClick(this, EventArgs.Empty); break;
+            case Command.OpenSettings: OnShowSettingsClick(this, EventArgs.Empty); break;
             case Command.FocusNextTab: FocusNextWorkspaceTab(forward: true); break;
             case Command.FocusPrevTab: FocusNextWorkspaceTab(forward: false); break;
             case Command.Refresh: RefreshToolStripMenuItemClick(this, EventArgs.Empty); break;
@@ -960,6 +963,30 @@ public sealed partial class FormBrowse : GitModuleForm
 
     internal bool ExecuteCommand(Command command)
         => ExecuteCommand((int)command);
+
+    private void OnShowSettingsClick(object? sender, EventArgs e)
+    {
+        string translation = AppSettings.Translation;
+        CommitInfoPosition commitInfoPosition = AppSettings.CommitInfoPosition;
+
+        _loadOperations.JoinPendingOperations();
+        UICommands.StartSettingsDialog(this);
+        Module.InvalidateGitSettings();
+
+        if (translation != AppSettings.Translation)
+        {
+            Translator.Translate(this, AppSettings.CurrentTranslation);
+            AvaloniaTranslationUtils.RemoveTextBlockMnemonicMarkers(this);
+        }
+
+        if (commitInfoPosition != AppSettings.CommitInfoPosition)
+        {
+            RefreshWorkspaceLayout(refreshCommitInfoPositionToolTip: true);
+        }
+
+        LoadHotkeys(HotkeySettingsName);
+        RefreshDefaultPullAction();
+    }
 
     /// <summary>
     /// Set the path filter.
