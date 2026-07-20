@@ -159,7 +159,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateBranch.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Creates and optionally checks out normal or orphan branches. Commit selection accepts a revision/SHA as text or the shared FormChooseCommit dialog. Submodule update after checkout is deferred."
+    "notes": "Creates and optionally checks out normal or orphan branches. Commit selection accepts a revision/SHA as text or the shared FormChooseCommit dialog. A successful checkout to a different commit reuses the same UICommands.UpdateSubmodules confirmation and update path as FormCheckoutBranch."
   },
   "src/app/GitUI/CommandsDialogs/FormCreateTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateTag.axaml.cs",
