@@ -1,0 +1,111 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="using:GitUI"
+        x:Class="GitUI.CommandsDialogs.FormApplyPatch"
+        Width="720"
+        Height="436"
+        MinWidth="720"
+        MinHeight="410"
+        WindowStartupLocation="CenterOwner"
+        Title="Apply patch">
+  <Grid Margin="9"
+        ColumnDefinitions="*,Auto"
+        RowDefinitions="Auto,*"
+        ColumnSpacing="6"
+        RowSpacing="6">
+    <Grid x:Name="PanelTL"
+          ColumnDefinitions="145,*,100"
+          RowDefinitions="Auto,Auto"
+          ColumnSpacing="6"
+          RowSpacing="4">
+      <RadioButton x:Name="PatchFileMode"
+                   GroupName="PatchSource"
+                   Content="Patch _file"
+                   IsChecked="True" />
+      <TextBox x:Name="PatchFile"
+               Grid.Column="1" />
+      <Button x:Name="BrowsePatch"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="2"
+              Content="B_rowse" />
+
+      <RadioButton x:Name="PatchDirMode"
+                   Grid.Row="1"
+                   GroupName="PatchSource"
+                   Content="Patch _directory" />
+      <TextBox x:Name="PatchDir"
+               Grid.Row="1"
+               Grid.Column="1"
+               IsEnabled="False" />
+      <Button x:Name="BrowseDir"
+              Classes="gitextensions-dialog-action"
+              Grid.Row="1"
+              Grid.Column="2"
+              Content="Bro_wse"
+              IsEnabled="False" />
+    </Grid>
+
+    <StackPanel x:Name="PanelTR"
+                Grid.Column="1"
+                Width="131"
+                Spacing="4">
+      <Button x:Name="Apply"
+              Classes="gitextensions-dialog-action"
+              MinWidth="125"
+              Content="Apply patch"
+              IsDefault="True" />
+      <CheckBox x:Name="IgnoreWhitespace"
+                Content="_Ignore Wh.spc." />
+      <CheckBox x:Name="SignOff"
+                Content="Sign-_Off" />
+    </StackPanel>
+
+    <gitui:PatchGrid x:Name="PatchGrid"
+                     Grid.Row="1"
+                     MinHeight="300" />
+
+    <StackPanel x:Name="PanelBR"
+                Grid.Row="1"
+                Grid.Column="1"
+                Width="131"
+                Spacing="6">
+      <Border x:Name="MergeToolPanel">
+        <Button x:Name="Mergetool"
+                Classes="gitextensions-dialog-action"
+                MinWidth="125"
+                Content="_Solve conflicts"
+                IsEnabled="False" />
+      </Border>
+      <Button x:Name="AddFiles"
+              Classes="gitextensions-dialog-action"
+              MinWidth="125"
+              Margin="0,9,0,0"
+              Content="_Add files"
+              IsEnabled="False" />
+      <Border x:Name="ContinuePanel"
+              Margin="0,9,0,0">
+        <Button x:Name="Resolved"
+                Classes="gitextensions-dialog-action"
+                MinWidth="125"
+                Content="Conflicts resolved"
+                IsEnabled="False" />
+      </Border>
+      <Button x:Name="Skip"
+              Classes="gitextensions-dialog-action"
+              MinWidth="125"
+              Content="S_kip patch"
+              IsEnabled="False" />
+      <Button x:Name="Abort"
+              Classes="gitextensions-dialog-action"
+              MinWidth="125"
+              Content="A_bort patch"
+              IsEnabled="False" />
+      <Button x:Name="SolveMergeConflicts"
+              Classes="gitextensions-dialog-action"
+              MinWidth="125"
+              MinHeight="78"
+              Content="There are unresolved merge conflicts"
+              IsVisible="False" />
+    </StackPanel>
+  </Grid>
+</Window>
