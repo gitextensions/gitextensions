@@ -1,4 +1,6 @@
 using System.Globalization;
+using Avalonia;
+using Avalonia.Input;
 using Avalonia.Media;
 using AvaloniaEdit.Editing;
 using AvaloniaEdit.Rendering;
@@ -15,12 +17,14 @@ namespace GitUI.Editor;
 /// which replaces that second editor and its scroll synchronisation. Avatars arrive
 /// with the avatar subphase.
 /// </remarks>
-public class BlameAuthorMargin : AbstractMargin
+public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
 {
     private const int AgeBucketMarkerWidth = 4;
+    private const double MinimumWidth = 24;
+    private const double ResizeGripWidth = 5;
     private const double TextPadding = 3;
 
-    private static readonly IBrush _textBrush = new SolidColorBrush(Colors.Gray).ToImmutable();
+    private static readonly Cursor ResizeCursor = new(StandardCursorType.SizeWestEast);
 
     private readonly Typeface _typeface;
     private readonly double _fontSize;
@@ -28,12 +32,17 @@ public class BlameAuthorMargin : AbstractMargin
     private readonly List<(int StartLine, int EndLine, IBrush Brush)> _highlights = [];
     private string[] _authorLines = [];
     private GitBlameEntry[] _blameLines = [];
+    private bool _isResizing;
+    private double _resizeStartPointerX;
+    private double _resizeStartWidth;
+    private double? _userWidth;
     private double _width;
 
     public BlameAuthorMargin(Typeface typeface, double fontSize)
     {
         _typeface = typeface;
         _fontSize = fontSize;
+        ActualThemeVariantChanged += (_, _) => InvalidateVisual();
     }
 
     /// <summary>
@@ -123,7 +132,51 @@ public class BlameAuthorMargin : AbstractMargin
 
     protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
     {
-        return new Avalonia.Size(_authorLines.Length == 0 ? 0 : _width, 0);
+        return new Avalonia.Size(_authorLines.Length == 0 ? 0 : _userWidth ?? _width, 0);
+    }
+
+    protected override void OnPointerMoved(PointerEventArgs e)
+    {
+        base.OnPointerMoved(e);
+
+        double pointerX = e.GetPosition(this).X;
+        if (_isResizing)
+        {
+            _userWidth = Math.Max(MinimumWidth, _resizeStartWidth + pointerX - _resizeStartPointerX);
+            InvalidateMeasure();
+            InvalidateVisual();
+            e.Handled = true;
+            return;
+        }
+
+        Cursor = pointerX >= Bounds.Width - ResizeGripWidth ? ResizeCursor : null;
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+
+        PointerPoint point = e.GetCurrentPoint(this);
+        if (point.Properties.IsLeftButtonPressed && point.Position.X >= Bounds.Width - ResizeGripWidth)
+        {
+            _isResizing = true;
+            _resizeStartPointerX = point.Position.X;
+            _resizeStartWidth = Bounds.Width;
+            e.Pointer.Capture(this);
+            e.Handled = true;
+        }
+    }
+
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        base.OnPointerReleased(e);
+
+        if (_isResizing)
+        {
+            _isResizing = false;
+            e.Pointer.Capture(null);
+            e.Handled = true;
+        }
     }
 
     protected override void OnTextViewChanged(TextView oldTextView, TextView newTextView)
@@ -192,8 +245,33 @@ public class BlameAuthorMargin : AbstractMargin
     }
 
     private FormattedText CreateFormattedText(string text)
-        => new(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, _typeface, _fontSize, _textBrush);
+        => new(
+            text,
+            CultureInfo.CurrentUICulture,
+            FlowDirection.LeftToRight,
+            _typeface,
+            _fontSize,
+            GetResourceBrush("GitExtensionsBlameAuthorBrush", Brushes.Gray));
+
+    private IBrush GetResourceBrush(string resourceKey, IBrush fallback)
+        => Application.Current?.TryGetResource(resourceKey, ActualThemeVariant, out object? resource) == true
+            && resource is IBrush brush
+                ? brush
+                : fallback;
 
     private static IBrush ToBrush(System.Drawing.Color color)
         => new SolidColorBrush(Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B)).ToImmutable();
+
+    double GitUI.IPersistedSplitter.SplitterSize => TextView?.Bounds.Width ?? Bounds.Width;
+
+    double GitUI.IPersistedSplitter.SplitterDistance
+    {
+        get => Bounds.Width > 0 ? Bounds.Width : _userWidth ?? _width;
+        set
+        {
+            _userWidth = Math.Max(MinimumWidth, value);
+            InvalidateMeasure();
+            InvalidateVisual();
+        }
+    }
 }
