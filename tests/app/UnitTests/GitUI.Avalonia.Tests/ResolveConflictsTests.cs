@@ -180,6 +180,31 @@ public sealed class ResolveConflictsTests
     }
 
     [Test]
+    public void HandleMergeConflicts_should_continue_a_conflicted_patch_after_resolution()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.InTheMiddleOfConflictedMerge().Returns(true);
+        module.InTheMiddleOfPatch().Returns(true);
+
+        bool original = AppSettings.DontConfirmResolveConflicts;
+        try
+        {
+            AppSettings.DontConfirmResolveConflicts = true;
+
+            bool result = MergeConflictHandler.HandleMergeConflicts(commands, owner: null, offerCommit: false, offerUpdateSubmodules: false);
+
+            result.Should().BeTrue();
+            commands.Received(1).StartResolveConflictsDialog(null, false);
+            commands.Received(1).StartApplyPatchDialog(null);
+            _messageBoxes.Messages.Should().Contain("You are in the middle of a patch apply, continue patch apply?");
+        }
+        finally
+        {
+            AppSettings.DontConfirmResolveConflicts = original;
+        }
+    }
+
+    [Test]
     public void HandleMergeConflicts_should_do_nothing_for_a_clean_working_tree()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands();

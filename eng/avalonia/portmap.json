@@ -99,7 +99,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRebase.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Plain and interactive rebase support heads/remotes/tags, immediate and advanced-option entry points, autosquash/preserve-merges/auto-stash/date/update-refs/specific-range options, real process execution, repository notification, Browse menu, and Ctrl+Shift+E. The in-progress controller supports PatchGrid visualization/skipped state, add-files, commit, edit-todo, continue, skip, abort, and conflict resolution. Patch-row double-click commit/patch detail remains deferred until those detail dialogs are ported."
+    "notes": "Plain and interactive rebase support heads/remotes/tags, immediate and advanced-option entry points, autosquash/preserve-merges/auto-stash/date/update-refs/specific-range options, real process execution, repository notification, Browse menu, and Ctrl+Shift+E. The in-progress controller supports PatchGrid visualization/skipped state, add-files, commit, edit-todo, continue, skip, abort, conflict resolution, and commit/patch detail on row double-click."
+  },
+  "src/app/GitUI/CommandsDialogs/FormApplyPatch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormApplyPatch.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Same-named file/directory patch source surface with persisted whitespace/sign-off options, raw-diff and mailbox application, PatchGrid state, add-files/conflict resolution, continue, skip, abort, repository notification, and portable file/folder pickers. This completes middle-of-patch recovery through GitUICommands and MergeConflictHandler."
   },
   "src/app/GitUI/CommandsDialogs/FormAddFiles.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddFiles.axaml.cs",
@@ -129,7 +135,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/MergeConflictHandler.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Verbatim; the middle-of-rebase follow-up now reaches the functional FormRebase controller. The middle-of-patch follow-up remains deferred."
+    "notes": "Verbatim; middle-of-rebase and middle-of-patch follow-ups reach the functional same-named FormRebase and FormApplyPatch controllers."
   },
   "src/app/GitUI/FormBusyScope.cs": {
     "twin": "src/app/GitUI.Avalonia/FormBusyScope.cs",
@@ -777,7 +783,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, rename-branch, file-history, resolve-conflicts, submodule-update, and revision-range difftool members are real; unported members throw NotImplementedException."
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule-update, and revision-range difftool members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/RevisionDiffInfoProvider.cs": {
     "twin": "src/app/GitUI/RevisionDiffInfoProvider.cs",
