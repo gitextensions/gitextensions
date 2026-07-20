@@ -12,8 +12,10 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.UserControls.RevisionGrid;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using MediaColor = Avalonia.Media.Color;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -84,9 +86,12 @@ public sealed class RemotesTests
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "label1", "Text", "&Name");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "label2", "Text", "&Url");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "labelPushUrl", "Text", "&Push Url");
+        translation.Received(1).AddTranslationItem(nameof(FormRemotes), "lblRemoteColor", "Text", "Color");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "checkBoxSepPushUrl", "Text", "Sep&arate Push Url");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "gbMgtPanel", "Text", "Create New Remote");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "Save", "Text", "&Save changes");
+        translation.Received(1).AddTranslationItem(nameof(FormRemotes), "btnRemoteColor", "Text", "Set &color");
+        translation.Received(1).AddTranslationItem(nameof(FormRemotes), "btnRemoteColorReset", "Text", "Default color");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "SaveDefaultPushPull", "Text", "&Save changes");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "label4", "Text", "&Local branch name");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "label5", "Text", "&Remote repository");
@@ -95,6 +100,8 @@ public sealed class RemotesTests
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "BranchName", "HeaderText", "Local branch name");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "RemoteCombo", "HeaderText", "Remote repository");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "MergeWith", "HeaderText", "Default merge with");
+        translation.Received(1).AddTranslationItem(nameof(FormRemotes), "_lvgEnabledHeader", "Text", "Active");
+        translation.Received(1).AddTranslationItem(nameof(FormRemotes), "_lvgDisabledHeader", "Text", "Inactive");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "_questionDeleteRemote", "Text", "Are you sure you want to delete this remote?");
 
         string[] emittedKeys = translation.ReceivedCalls()
@@ -130,13 +137,15 @@ public sealed class RemotesTests
             accessor.Save.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
             module.GetRemoteNames().Should().Contain("origin");
-            form.FindControl<ListBox>("Remotes")!.ItemCount.Should().Be(1);
+            accessor.RemoteCount.Should().Be(1);
+            accessor.RemoteGroupHeaders.Should().Equal("Active");
             accessor.Delete.IsEnabled.Should().BeTrue("the saved remote is selected again");
 
             // Deactivate: the remote becomes invisible to git.
             accessor.ToggleState.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             module.GetRemoteNames().Should().NotContain("origin");
-            form.FindControl<ListBox>("Remotes")!.ItemCount.Should().Be(1, "the inactive remote stays listed");
+            accessor.RemoteCount.Should().Be(1, "the inactive remote stays listed");
+            accessor.RemoteGroupHeaders.Should().Equal("Inactive");
 
             // Activate again.
             accessor.ToggleState.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
@@ -179,18 +188,58 @@ public sealed class RemotesTests
 
             ComboBox remoteRepositoryCombo = form.FindControl<ComboBox>("RemoteRepositoryCombo")!;
             remoteRepositoryCombo.SelectedItem = "origin";
+            form.FindControl<ComboBox>("DefaultMergeWithCombo")!.Text = "integration";
 
             // Committing happens when the combo loses focus, like the WinForms Validated event.
             remoteRepositoryCombo.Focus();
             form.FindControl<TextBox>("LocalBranchNameEdit")!.Focus();
             await WaitUntilAsync(() => module.GetSetting("branch.main.remote") == "origin");
 
-            module.GetSetting("branch.main.merge").Should().Be("refs/heads/main",
-                "setting the tracking remote defaults the merge ref to the branch itself");
+            module.GetSetting("branch.main.merge").Should().Be("refs/heads/integration");
         }
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormRemotes_should_save_and_render_a_remote_color()
+    {
+        GitModule module = CreateRepositoryWithCommit();
+        string url = Path.Combine(_workingDirectory, "other");
+        Directory.CreateDirectory(url);
+        module.AddRemote("origin", url).Should().BeEmpty();
+
+        FormRemotes form = new(CreateCommands(module));
+        form.Show();
+        try
+        {
+            FormRemotes.TestAccessor accessor = form.GetTestAccessor();
+            accessor.RemoteColor.Color = MediaColor.Parse("#123456");
+            accessor.Save.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            module.GetSetting("remote.origin.color").Should().Be("#123456");
+            accessor.RemoteColor.Content.Should().BeOfType<Border>()
+                .Which.Background.Should().BeAssignableTo<Avalonia.Media.ISolidColorBrush>()
+                .Which.Color.Should().Be(MediaColor.Parse("#123456"));
+
+            module.ResetRemoteColors();
+            GitRef remoteRef = new(module, ObjectId.Random(), "refs/remotes/origin/main", remote: "origin");
+            RevisionGridRefRenderer.RefLabelControl label = RevisionGridRefRenderer.CreateLabels([remoteRef])
+                .Should().ContainSingle()
+                .Which.Should().BeOfType<RevisionGridRefRenderer.RefLabelControl>().Subject;
+            label.RefBrush.Should().BeAssignableTo<Avalonia.Media.ISolidColorBrush>()
+                .Which.Color.Should().Be(MediaColor.Parse("#123456"));
+
+            accessor.RemoteColorReset.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            accessor.Save.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            module.GetSetting("remote.origin.color").Should().BeEmpty();
+        }
+        finally
+        {
+            form.Close();
+            await RepositoryHistoryManager.Remotes.RemoveRecentAsync(url);
         }
     }
 

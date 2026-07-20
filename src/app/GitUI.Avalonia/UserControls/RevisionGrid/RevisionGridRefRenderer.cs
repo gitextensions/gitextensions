@@ -5,6 +5,8 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
+using DrawingColor = System.Drawing.Color;
+using MediaColor = Avalonia.Media.Color;
 using Point = Avalonia.Point;
 using Size = Avalonia.Size;
 
@@ -193,7 +195,8 @@ internal static class RevisionGridRefRenderer
                     : RefLabelIcon.None,
             shape,
             fill,
-            dashed)
+            dashed,
+            GetRemoteRefBrush(gitRef))
         {
             FontWeight = gitRef.IsSelected ? FontWeight.Bold : FontWeight.Normal,
             VerticalAlignment = VerticalAlignment.Center,
@@ -211,6 +214,20 @@ internal static class RevisionGridRefRenderer
             RefLabelShape.Rect,
             fill: false,
             dashed);
+
+    private static IBrush? GetRemoteRefBrush(IGitRef gitRef)
+    {
+        IGitModule? module = gitRef.Module;
+        if (!gitRef.IsRemote
+            || string.IsNullOrEmpty(gitRef.Remote)
+            || module?.GetRemoteColors() is not { } remoteColors
+            || !remoteColors.TryGetValue(gitRef.Remote, out DrawingColor color))
+        {
+            return null;
+        }
+
+        return new SolidColorBrush(MediaColor.FromArgb(color.A, color.R, color.G, color.B));
+    }
 
     private static string GetBrushResourceKey(IGitRef gitRef)
     {
@@ -285,6 +302,7 @@ internal static class RevisionGridRefRenderer
     {
         private static readonly DashStyle DashedLine = new([4, 4], 0);
         private readonly string _brushResourceKey;
+        private readonly IBrush? _refBrush;
         private double _backgroundHeight;
         private bool _isHighlighted;
         private double _labelWidth;
@@ -297,11 +315,13 @@ internal static class RevisionGridRefRenderer
             RefLabelIcon icon,
             RefLabelShape shape,
             bool fill,
-            bool dashed)
+            bool dashed,
+            IBrush? refBrush = null)
         {
             GitRef = gitRef;
             Label = label;
             _brushResourceKey = brushResourceKey;
+            _refBrush = refBrush;
             Icon = icon;
             Shape = shape;
             Fill = fill;
@@ -338,7 +358,7 @@ internal static class RevisionGridRefRenderer
 
         public double PointWidth => _backgroundHeight / 2;
 
-        public IBrush RefBrush => GetResourceBrush(_brushResourceKey, Brushes.Gray);
+        public IBrush RefBrush => _refBrush ?? GetResourceBrush(_brushResourceKey, Brushes.Gray);
 
         public IBrush CapsuleBackgroundBrush
             => GetResourceBrush("GitExtensionsRefLabelBackgroundBrush", Brushes.White);

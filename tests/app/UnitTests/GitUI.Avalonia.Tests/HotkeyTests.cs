@@ -12,6 +12,7 @@ using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.Hotkey;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -22,6 +23,10 @@ namespace GitExtensionsTests;
 [NonParallelizable]
 public sealed class HotkeyTests
 {
+    [SetUp]
+    public void SetUp()
+        => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+
     [TestCase(Key.F5, KeyModifiers.None, WinFormsShims.Keys.F5)]
     [TestCase(Key.B, KeyModifiers.Control | KeyModifiers.Shift, WinFormsShims.Keys.B | WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift)]
     [TestCase(Key.OemComma, KeyModifiers.Meta, WinFormsShims.Keys.Oemcomma | WinFormsShims.Keys.Control)]
@@ -303,8 +308,10 @@ public sealed class HotkeyTests
     public void FormBrowse_workspace_hotkeys_should_select_and_cycle_functional_tabs()
     {
         CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalShowGpgInformation = AppSettings.ShowGpgInformation.Value;
         bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
         AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+        AppSettings.ShowGpgInformation.Value = true;
         AppSettings.ShowSplitViewLayout = true;
         (FormBrowse form, _, _) = CreateBrowseForm(
             new HotkeyCommand((int)FormBrowse.Command.FocusDiff, nameof(FormBrowse.Command.FocusDiff))
@@ -358,6 +365,7 @@ public sealed class HotkeyTests
         {
             form.Close();
             AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowGpgInformation.Value = originalShowGpgInformation;
             AppSettings.ShowSplitViewLayout = originalShowSplitView;
         }
     }

@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:colorPicker="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.ColorPicker"
         xmlns:compat="using:GitUI.Compat"
         xmlns:properties="using:GitUI.Properties"
         xmlns:usercontrols="clr-namespace:GitUI.UserControls"
@@ -39,7 +40,7 @@
                                 Header="Create New Remote">
           <Grid x:Name="flpnlRemoteManagement"
                 ColumnDefinitions="Auto,*,110"
-                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                 ColumnSpacing="8" RowSpacing="6"
                 VerticalAlignment="Top">
             <TextBlock x:Name="label1"
@@ -77,16 +78,33 @@
                                               Grid.Row="3" Grid.Column="2"
                                               IsVisible="False" />
 
-            <TextBlock x:Name="lblRemotePrefix"
+            <TextBlock x:Name="lblRemoteColor"
                        Grid.Row="4"
+                       Text="Color"
+                       VerticalAlignment="Center" />
+            <StackPanel x:Name="flpnlRemoteColors"
+                        Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        Spacing="6">
+              <colorPicker:ColorPicker x:Name="btnRemoteColor"
+                                       MinWidth="80"
+                                       Content="Set _color"
+                                       IsAlphaEnabled="False" />
+              <Button x:Name="btnRemoteColorReset"
+                      Content="Default color"
+                      IsVisible="False" />
+            </StackPanel>
+
+            <TextBlock x:Name="lblRemotePrefix"
+                       Grid.Row="5"
                        Text="Prefix"
                        VerticalAlignment="Center" />
             <TextBox x:Name="txtRemotePrefix"
-                     Grid.Row="4" Grid.Column="1" />
+                     Grid.Row="5" Grid.Column="1" />
 
             <compat:IconButton x:Name="Save"
                                Classes="gitextensions-dialog-action"
-                               Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
+                               Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
                                MinWidth="120"
                                HorizontalAlignment="Right"
                                Icon="{x:Static properties:Images.Save}"
