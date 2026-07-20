@@ -118,6 +118,7 @@ public sealed class FormBrowseTests
         finally
         {
             form.Close();
+            await ThreadHelper.JoinPendingOperationsAsync(CancellationToken.None);
         }
     }
 

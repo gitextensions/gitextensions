@@ -220,6 +220,37 @@ public sealed class CloneAndInitTests
     }
 
     [AvaloniaTest]
+    public async Task FormClone_should_show_busy_state_and_report_native_branch_loading_errors()
+    {
+        const string error = "ssh: Could not resolve hostname example.invalid";
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetRemoteServerRefs(
+                Arg.Any<string>(),
+                tags: false,
+                branches: true,
+                out Arg.Any<string?>(),
+                Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                callInfo[3] = error;
+                return Array.Empty<IGitRef>();
+            });
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+
+        FormClone form = new(commands, url: null, openedFromProtocolHandler: false, gitModuleChanged: null);
+        FormClone.TestAccessor accessor = form.GetTestAccessor();
+        accessor.Source.Text = "ssh://example.invalid/repository.git";
+
+        accessor.LoadBranches();
+
+        form.Cursor.Should().NotBeNull("remote branch discovery should expose the original busy state");
+        await WaitUntilAsync(() => _messageBoxes.Messages.Contains(error));
+        form.Cursor.Should().BeNull();
+        accessor.Branches.ItemCount.Should().Be(2, "an error must leave the default clone choices intact");
+    }
+
+    [AvaloniaTest]
     public async Task FormClone_should_clone_a_local_repository()
     {
         string sourcePath = CreateSourceRepository();
@@ -240,6 +271,11 @@ public sealed class CloneAndInitTests
 
             from.Text = sourcePath;
             to.Text = destination;
+
+            FormClone.TestAccessor accessor = form.GetTestAccessor();
+            accessor.LoadBranches();
+            await WaitUntilAsync(() => accessor.Branches.Items.Cast<object?>().Any(item => Equals(item, "main")));
+            form.Cursor.Should().BeNull();
 
             // Typing the source fills the subdirectory with the repository name.
             newDirectory.Text.Should().Be("source");
