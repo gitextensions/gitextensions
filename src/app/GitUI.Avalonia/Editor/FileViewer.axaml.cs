@@ -22,6 +22,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Editor.Diff;
 using GitUI.UserControls;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -70,6 +71,8 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     private int _lastCaretLine = -1;
     private FileStatusItem? _viewItem;
     private ViewMode _viewMode;
+
+    internal JoinableTaskFactory? MainThreadFactory { get; set; }
 
     public FileViewer()
     {
@@ -585,7 +588,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         bool isBinary = (checkGitAttributes && FileHelper.IsBinaryFileName(Module, fileName))
                         || FileHelper.IsBinaryFileAccordingToContent(text);
 
-        await this.SwitchToMainThreadAsync(cancellationToken);
+        await SwitchToOwnerMainThreadAsync(cancellationToken);
         ResetView(ViewMode.Text, fileName, item, openWithDifftool, text);
         if (isBinary)
         {
@@ -625,7 +628,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         Action? openWithDifftool,
         CancellationToken cancellationToken)
     {
-        await this.SwitchToMainThreadAsync(cancellationToken);
+        await SwitchToOwnerMainThreadAsync(cancellationToken);
         ResetView(ViewMode.Text, fileName, item: null, openWithDifftool);
         DisplayAsHexDump(fileNameFormat, fileName, text);
         TextLoaded?.Invoke(this, EventArgs.Empty);
@@ -641,7 +644,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         Bitmap? imageToDispose = image;
         try
         {
-            await this.SwitchToMainThreadAsync(cancellationToken);
+            await SwitchToOwnerMainThreadAsync(cancellationToken);
             ResetView(ViewMode.Image, fileName, item, openWithDifftool);
             SetText(string.Empty);
             _image = imageToDispose;
@@ -729,7 +732,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     private async Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc, CancellationToken cancellationToken)
     {
-        await this.SwitchToMainThreadAsync(cancellationToken);
+        await SwitchToOwnerMainThreadAsync(cancellationToken);
         if (contentLength > MaximumAutomaticPreviewLength)
         {
             ResetView(ViewMode.Text, fileName: null);
@@ -763,7 +766,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
                 return;
             }
 
-            await this.SwitchToMainThreadAsync();
+            await SwitchToOwnerMainThreadAsync();
             if (cancellationToken.IsCancellationRequested)
             {
                 return;
@@ -1255,7 +1258,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         CancellationToken viewToken = BeginView(cancellationToken);
         if (item?.Item is null)
         {
-            await this.SwitchToMainThreadAsync(viewToken);
+            await SwitchToOwnerMainThreadAsync(viewToken);
             ViewPatchCore(null, useGitColoring: false, isCombinedDiff: false, isGitWordDiff: false);
             return;
         }
@@ -1292,7 +1295,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
             GitCommandConfiguration.Default,
             viewToken);
 
-        await this.SwitchToMainThreadAsync(viewToken);
+        await SwitchToOwnerMainThreadAsync(viewToken);
         viewToken.ThrowIfCancellationRequested();
         ViewPatchCore(
             patch?.Text ?? errorMessage,
@@ -1334,6 +1337,18 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         }
 
         return default;
+    }
+
+    private async Task SwitchToOwnerMainThreadAsync(CancellationToken cancellationToken = default)
+    {
+        if (MainThreadFactory is not null)
+        {
+            await MainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
+        }
+        else
+        {
+            await this.SwitchToMainThreadAsync(cancellationToken);
+        }
     }
 
     private StagedStatus ViewItemStagedStatus()

@@ -1,9 +1,14 @@
+using System.Drawing;
 using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Styling;
 using Avalonia.Threading;
+using GitCommands.Settings;
+using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.Blame;
@@ -140,6 +145,92 @@ public sealed class BlameControlTests
         List<GitBlameEntry> blameEntries = accessor.CalculateBlameGutterData([line]);
 
         blameEntries[0].AgeBucketIndex.Should().Be(0);
+    }
+
+    [AvaloniaTest]
+    public void BlameControl_should_resolve_age_and_highlight_colors_per_theme()
+    {
+        (IReadOnlyList<Color> Ages, Color Highlight) light = GetThemeColors(ThemeVariant.Light);
+        (IReadOnlyList<Color> Ages, Color Highlight) dark = GetThemeColors(ThemeVariant.Dark);
+
+        light.Ages.Should().HaveCount(7);
+        dark.Ages.Should().HaveCount(7);
+        light.Ages[0].Should().Be(Color.FromArgb(247, 252, 245));
+        light.Ages[6].Should().Be(Color.FromArgb(0, 68, 27));
+        dark.Ages[0].Should().Be(Color.FromArgb(38, 58, 44));
+        dark.Ages[6].Should().Be(Color.FromArgb(120, 227, 145));
+        light.Highlight.Should().Be(Color.FromArgb(227, 227, 227));
+        dark.Highlight.Should().Be(Color.FromArgb(65, 65, 65));
+    }
+
+    [AvaloniaTest]
+    public void BlameControl_splitters_should_restore_the_commit_height_and_resizable_author_width()
+    {
+        Dictionary<string, string?> values = [];
+        IConfigValueStore store = Substitute.For<IConfigValueStore>();
+        store.GetValue(Arg.Any<string>()).Returns(call => values.GetValueOrDefault(call.Arg<string>()));
+        store.When(config => config.SetValue(Arg.Any<string>(), Arg.Any<string?>()))
+            .Do(call => values[call.ArgAt<string>(0)] = call.ArgAt<string?>(1));
+        SettingsSource settings = new SettingsSource<IConfigValueStore>(store);
+
+        BlameControl first = new() { Name = nameof(BlameControl) };
+        Window firstWindow = new() { Width = 800, Height = 600, Content = first };
+        firstWindow.Show();
+        try
+        {
+            SplitterManager manager = new(settings);
+            first.InitSplitterManager(new NestedSplitterManager(manager, "revisionDiff"));
+            manager.RestoreSplitters();
+            first.GetTestAccessor().SplitContainer.RowDefinitions[0].Height = new GridLength(120);
+            first.GetTestAccessor().AuthorMarginWidth = 140;
+            Dispatcher.UIThread.RunJobs();
+            manager.SaveSplitters();
+        }
+        finally
+        {
+            firstWindow.Close();
+        }
+
+        values["revisionDiff.BlameControl.splitContainer1_Distance"].Should().Be("120");
+        values["revisionDiff.BlameControl.splitContainer2_Distance"].Should().Be("140");
+
+        BlameControl restored = new() { Name = nameof(BlameControl) };
+        SplitterManager restoredManager = new(settings);
+        restored.InitSplitterManager(new NestedSplitterManager(restoredManager, "revisionDiff"));
+        restoredManager.RestoreSplitters();
+
+        restored.GetTestAccessor().SplitContainer.RowDefinitions[0].Height.Should().Be(new GridLength(120));
+        restored.GetTestAccessor().AuthorMarginWidth.Should().Be(140);
+
+        BlameControl embedded = new() { Name = nameof(BlameControl) };
+        embedded.HideCommitInfo();
+        SplitterManager embeddedManager = new(settings);
+        embedded.InitSplitterManager(new NestedSplitterManager(embeddedManager, "revisionDiff"));
+        embeddedManager.RestoreSplitters();
+
+        embedded.GetTestAccessor().SplitContainer.RowDefinitions[0].Height.Should().Be(new GridLength(0),
+            "restoring a standalone Blame splitter must not reveal blank commit-info space in RevisionDiffControl");
+    }
+
+    private static (IReadOnlyList<Color> Ages, Color Highlight) GetThemeColors(ThemeVariant theme)
+    {
+        BlameControl control = new();
+        Window window = new()
+        {
+            RequestedThemeVariant = theme,
+            Content = control,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            BlameControl.TestAccessor accessor = control.GetTestAccessor();
+            return (accessor.GetAgeBucketGradientColors(), accessor.GetCommitHighlightColor());
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     private static GitBlameCommit CreateCommitWithAuthorTime(DateTime authorTime)

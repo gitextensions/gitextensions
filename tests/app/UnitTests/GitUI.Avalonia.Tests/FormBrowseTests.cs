@@ -19,6 +19,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
+using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -253,6 +254,106 @@ public sealed class FormBrowseTests
         {
             AppSettings.CommitInfoPosition = originalPosition;
             AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormBrowse_diff_should_toggle_blame_in_the_existing_viewer()
+    {
+        bool originalUseDiffViewerForBlame = AppSettings.UseDiffViewerForBlame.Value;
+        try
+        {
+            AppSettings.UseDiffViewerForBlame.Value = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "\nsecond");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
+
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            try
+            {
+                form.Show();
+                TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+                await WaitUntilAsync(() =>
+                    loadingStatus.Text == "2 revisions"
+                    && form.fileStatusList.SelectedItem?.Name == "tracked.txt"
+                    && form.fileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
+
+                form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+                Dispatcher.UIThread.RunJobs();
+                MenuItem blameMenu = form.fileStatusList.FindControl<MenuItem>("tsmiBlame")!;
+                BlameControl blame = form.revisionDiff.FindControl<BlameControl>("BlameControl")!;
+
+                blameMenu.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+                await WaitUntilAsync(() =>
+                    blame.IsVisible
+                    && blame.BlameFile.TextEditor.Text.Contains("second", StringComparison.Ordinal));
+                blameMenu.IsChecked.Should().BeTrue();
+                form.fileViewer.IsVisible.Should().BeFalse();
+
+                blameMenu.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+                await WaitUntilAsync(() =>
+                    form.fileViewer.IsVisible
+                    && form.fileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
+                blame.IsVisible.Should().BeFalse();
+                blameMenu.IsChecked.Should().BeFalse();
+            }
+            finally
+            {
+                Stopwatch closeStopwatch = Stopwatch.StartNew();
+                form.Close();
+                closeStopwatch.Stop();
+                closeStopwatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(5),
+                    "switching away from Blame must not leave an owner task waiting on the unpumped Avalonia dispatcher");
+            }
+        }
+        finally
+        {
+            AppSettings.UseDiffViewerForBlame.Value = originalUseDiffViewerForBlame;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormBrowse_diff_should_open_file_tree_in_blame_mode_when_configured()
+    {
+        bool originalUseDiffViewerForBlame = AppSettings.UseDiffViewerForBlame.Value;
+        try
+        {
+            AppSettings.UseDiffViewerForBlame.Value = false;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "\nsecond");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
+
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            try
+            {
+                form.Show();
+                TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+                await WaitUntilAsync(() =>
+                    loadingStatus.Text == "2 revisions"
+                    && form.fileStatusList.SelectedItem?.Name == "tracked.txt");
+
+                form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+                Dispatcher.UIThread.RunJobs();
+                form.fileStatusList.FindControl<MenuItem>("tsmiBlame")!
+                    .RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+                BlameControl blame = form.fileTree.FindControl<BlameControl>("BlameControl")!;
+                await WaitUntilAsync(() =>
+                    ReferenceEquals(form.CommitInfoTabControl.SelectedItem, form.TreeTabPage)
+                    && form.fileTree.FileStatusList.SelectedItem?.Name == "tracked.txt"
+                    && blame.IsVisible
+                    && blame.BlameFile.TextEditor.Text.Contains("second", StringComparison.Ordinal));
+                form.fileTree.FileStatusList.FindControl<MenuItem>("tsmiBlame")!.IsChecked.Should().BeTrue();
+                form.fileTree.FileViewer.IsVisible.Should().BeFalse();
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.UseDiffViewerForBlame.Value = originalUseDiffViewerForBlame;
         }
     }
 
