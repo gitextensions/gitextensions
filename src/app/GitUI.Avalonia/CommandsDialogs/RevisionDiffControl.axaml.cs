@@ -129,7 +129,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
                 groups = _diffCalculator.Calculate([], refreshDiff: true, refreshGrep: false, cancellationToken);
             }
 
-            await this.SwitchToMainThreadAsync(cancellationToken);
+            await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (!_displayedRevisions.SequenceEqual(revisions))
             {
@@ -293,7 +293,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 
             if (line is > 0)
             {
-                await this.SwitchToMainThreadAsync(cancellationToken);
+                await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
                 DiffText.GoToLine(line.Value);
             }
         });
