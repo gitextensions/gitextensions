@@ -587,7 +587,24 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task WaitForAsyncViewsAsync(Control root)
     {
-        CommitDiff? commitDiff = root as CommitDiff ?? root.GetLogicalDescendants().OfType<CommitDiff>().FirstOrDefault();
+        if (root is FormFileHistory fileHistory)
+        {
+            FileViewer diff = GetRequiredControl<FileViewer>(fileHistory, "Diff");
+            Stopwatch diffStopwatch = Stopwatch.StartNew();
+            while (string.IsNullOrEmpty(diff.TextEditor.Text)
+                   && diffStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            diff.TextEditor.Text.Should().NotBeEmpty();
+        }
+
+        CommitDiff? commitDiff = root as CommitDiff
+            ?? root.GetLogicalDescendants()
+                .OfType<CommitDiff>()
+                .FirstOrDefault(control => TopLevel.GetTopLevel(control) is not null);
         if (commitDiff is not null)
         {
             await WaitForCommitDiffAsync(commitDiff);

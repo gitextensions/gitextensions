@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI;
 
@@ -14,7 +15,7 @@ public sealed class CustomDiffMergeToolProvider
     /// Time to wait before loading custom diff tools in FormBrowse.
     /// Avoid loading while git-log and git-diff run.
     /// </summary>
-    private const int FormBrowseToolDelay = 8000;
+    internal const int FormBrowseToolDelay = 8000;
 
     /// <summary>Clear the existing caches.</summary>
     /// <param name="isDiff">True if diff, false if merge.</param>
@@ -45,14 +46,30 @@ public sealed class CustomDiffMergeToolProvider
             return;
         }
 
-        ThreadHelper.FileAndForget(() => LoadCustomDiffMergeToolsAsync(module, menus, isDiff, delay, cancellationToken));
+        ThreadHelper.FileAndForget(() => LoadCustomDiffMergeToolsCoreAsync(module, menus, isDiff, delay, joinableTaskFactory: null, cancellationToken));
     }
 
-    private static async Task LoadCustomDiffMergeToolsAsync(
+    /// <summary>Loads tools as owner-managed work that can be joined during view shutdown.</summary>
+    internal Task LoadCustomDiffMergeToolsAsync(
         IGitModule module,
         IList<CustomDiffMergeTool> menus,
         bool isDiff,
         int delay,
+        JoinableTaskFactory joinableTaskFactory,
+        CancellationToken cancellationToken)
+    {
+        InitMenus(menus);
+        return isDiff && !AppSettings.ShowAvailableDiffTools
+            ? Task.CompletedTask
+            : LoadCustomDiffMergeToolsCoreAsync(module, menus, isDiff, delay, joinableTaskFactory, cancellationToken);
+    }
+
+    private static async Task LoadCustomDiffMergeToolsCoreAsync(
+        IGitModule module,
+        IList<CustomDiffMergeTool> menus,
+        bool isDiff,
+        int delay,
+        JoinableTaskFactory? joinableTaskFactory,
         CancellationToken cancellationToken)
     {
         List<string> tools = [.. await (isDiff ? CustomDiffMergeToolCache.DiffToolCache : CustomDiffMergeToolCache.MergeToolCache)
@@ -63,7 +80,15 @@ public sealed class CustomDiffMergeToolProvider
             return;
         }
 
-        await Dispatcher.UIThread.InvokeAsync(() => PopulateMenus(menus, tools, isDiff));
+        if (joinableTaskFactory is null)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() => PopulateMenus(menus, tools, isDiff));
+        }
+        else
+        {
+            await joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            PopulateMenus(menus, tools, isDiff);
+        }
     }
 
     private static void PopulateMenus(IList<CustomDiffMergeTool> menus, IReadOnlyList<string> tools, bool isDiff)
@@ -129,7 +154,7 @@ public sealed class CustomDiffMergeToolProvider
             bool isDiff,
             int delay = 0,
             CancellationToken cancellationToken = default)
-            => CustomDiffMergeToolProvider.LoadCustomDiffMergeToolsAsync(module, menus, isDiff, delay, cancellationToken);
+            => CustomDiffMergeToolProvider.LoadCustomDiffMergeToolsCoreAsync(module, menus, isDiff, delay, joinableTaskFactory: null, cancellationToken);
     }
 }
 
