@@ -154,6 +154,8 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
 
         try
         {
+            ObjectId originalHash = Module.GetCurrentCheckout();
+
             ArgumentString command = chkCreateOrphan.IsChecked == true
                 ? Commands.CreateOrphan(branchName, objectId)
                 : Commands.Branch(branchName, objectId, chkCheckoutAfterCreate.IsChecked == true);
@@ -162,6 +164,11 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
             if (chkCreateOrphan.IsChecked == true && success && chkClearOrphan.IsChecked == true)
             {
                 UICommands.StartGitCommandProcessDialog(this, Commands.Remove());
+            }
+
+            if (success && chkCheckoutAfterCreate.IsChecked == true && objectId != originalHash)
+            {
+                UICommands.UpdateSubmodules(this);
             }
 
             DialogResult = success ? DialogResult.OK : DialogResult.None;
