@@ -11,6 +11,18 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "All file-backed images are deterministically generated as same-named cached Avalonia Bitmap properties and packaged from their existing tracked files; the setup logo also supplies the shared application WindowIcon. The generator/completeness test detects Images.resx drift, missing package resources, decode failures, and exceptional property-to-filename mappings."
   },
+  "src/app/GitUI/SplitterManager.cs": {
+    "twin": "src/app/GitUI.Avalonia/SplitterManager.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named settings boundary for Avalonia GridSplitters and custom persisted splitter targets. Distances retain the original _Size/_Distance setting shape; FormBrowse uses an Avalonia-specific settings path so DIP values cannot overwrite the WinForms pixel/DPI values."
+  },
+  "src/app/GitUI/NestedSplitterManager.cs": {
+    "twin": "src/app/GitUI.Avalonia/NestedSplitterManager.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named nested setting-key composition over the Avalonia SplitterManager."
+  },
   "src/app/GitUI/CommandsDialogs/FormBrowse.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
@@ -21,13 +33,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed blob/image viewing through FileViewer in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Owner-managed loaders switch through their JoinableTaskFactory so close-time joins cannot deadlock behind the Avalonia dispatcher. Shared FileStatusList actions filter selected paths in the revision grid, navigate ordinary-diff selections to the paired File tree, and apply supported selected/whole revision patches through FileViewer; diff-option changes reload the selection and applied patches request a repository refresh. Inline blame, script options, and custom tools retain their later owners."
+    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed blob/image viewing through FileViewer in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Owner-managed loaders switch through their JoinableTaskFactory so close-time joins cannot deadlock behind the Avalonia dispatcher. Shared FileStatusList actions filter selected paths in the revision grid, navigate ordinary-diff selections to the paired File tree, and apply supported selected/whole revision patches through FileViewer; diff-option changes reload the selection and applied patches request a repository refresh. The original Blame action either toggles an in-pane BlameControl or redirects ordinary diff selections to the File tree according to the shared setting. Script options and custom tools retain their later owners."
   },
   "src/app/GitUI/CommandsDialogs/RevisionDiffControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "The original DiffSplitContainer, DiffFiles, and DiffText identities map to a bordered two-pane Avalonia grid with an invisible six-DIP splitter hit target. BlameControl remains deferred."
+    "notes": "The original DiffSplitContainer, DiffFiles, DiffText, and overlaid BlameControl identities map to a bordered two-pane Avalonia grid with an invisible six-DIP splitter hit target."
   },
   "src/app/GitUI/CommandsDialogs/RevisionGpgInfoControl.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionGpgInfoControl.axaml.cs",
@@ -473,7 +485,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range/fixed diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. FormViewPatch uses the original ViewFixedPatch boundary so loaded patch context cannot be regenerated. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. The original Find/Find previous/Go-to-line, context-line, entire-file, whitespace, change/occurrence navigation, and selected-line stage/unstage/reset command IDs and persisted hotkeys are functional. Copy, Copy patch/new/old version, Find and Go-to-line context actions are present; Replace stays hidden while the viewer is read-only. The shared PatchManager produces selected/new/reset patches without duplicate UI-specific patch logic, Git apply runs through the repository executable, reset is confirmed through the Avalonia TaskDialog adapter, and PatchApplied lets Commit/RevisionDiff reload safely. Revision and stash views can apply selected or whole patches with conflict recovery. The original cancellation/latest-load boundary covers working-tree files and committed blobs; text, binary detection with bounded hex output, image preview/fallback, submodules, 5 MB deferred preview, file preambles, encoding selection/reload notification, and error display are functional. AvaloniaEdit built-in definitions provide filename-extension syntax highlighting; remembered syntax/nonprinting/context/whitespace/entire-file settings, line-number override, text/glyph EOL markers, and settings-backed vertical ruler are functional. Dark syntax foregrounds remain independent of semantic diff rendering. Revision-aware consumers retain their external-difftool callback and F3 invokes it when present."
+    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range/fixed diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. FormViewPatch uses the original ViewFixedPatch boundary so loaded patch context cannot be regenerated. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. The original Find/Find previous/Go-to-line, context-line, entire-file, whitespace, change/occurrence navigation, and selected-line stage/unstage/reset command IDs and persisted hotkeys are functional. Copy, Copy patch/new/old version, Find and Go-to-line context actions are present; Replace stays hidden while the viewer is read-only. The shared PatchManager produces selected/new/reset patches without duplicate UI-specific patch logic, Git apply runs through the repository executable, reset is confirmed through the Avalonia TaskDialog adapter, and PatchApplied lets Commit/RevisionDiff reload safely. Revision and stash views can apply selected or whole patches with conflict recovery. The original cancellation/latest-load boundary covers working-tree files and committed blobs; text, binary detection with bounded hex output, image preview/fallback, submodules, 5 MB deferred preview, file preambles, encoding selection/reload notification, and error display are functional. Owner-managed viewers can route UI continuations through their JoinableTaskFactory, preventing close-time joins from waiting behind an unpumped Avalonia dispatcher. AvaloniaEdit built-in definitions provide filename-extension syntax highlighting; remembered syntax/nonprinting/context/whitespace/entire-file settings, line-number override, text/glyph EOL markers, and settings-backed vertical ruler are functional. Dark syntax foregrounds remain independent of semantic diff rendering. Revision-aware consumers retain their external-difftool callback and F3 invokes it when present."
   },
   "src/app/GitUI/Editor/FileViewer.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml",
@@ -588,13 +600,13 @@
     "twin": "src/app/GitUI.Avalonia/Editor/BlameAuthorMargin.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Extended role: an AvaloniaEdit margin that renders the age-bucket markers and the author line text itself, replacing the second scroll-synchronised author editor of the WinForms BlameControl. Avatars wait for the avatar subphase."
+    "notes": "Extended role: an AvaloniaEdit margin that renders theme-aware age-bucket markers and author text itself, replacing the second scroll-synchronised author editor of the WinForms BlameControl. Its transparent right-edge resize grip participates in Blame splitter persistence. Avatars wait for the avatar subphase."
   },
   "src/app/GitUI/UserControls/BlameControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/BlameControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Commit info over the blamed file with the author margin; hover highlights the hovered commit's lines and shows the summary tooltip; caret movement drives the commit info; the context menu blames this/the previous revision (via IRevisionGridInfo/IRevisionGridFileUpdate), opens FormCommitDiff through Show changes, and copies hash/message/info; double-click blames the clicked line's revision. When no revision grid hosts the control, blame navigation opens FormCommitDiff like WinForms. Deferred: avatars, repository-hoster menu items (plugins), splitter persistence, and theme-adapted highlight/age colors."
+    "notes": "Commit info over the blamed file with the author margin; hover highlights the hovered commit's lines and shows the summary tooltip; caret movement drives the commit info; the context menu blames this/the previous revision (via IRevisionGridInfo/IRevisionGridFileUpdate), opens FormCommitDiff through Show changes, and copies hash/message/info; double-click blames the clicked line's revision. When no revision grid hosts the control, blame navigation opens FormCommitDiff like WinForms. Theme-aware age/highlight resources update live, both nested splitter distances persist, and owner-managed loading completes before close-time joins. Deferred: avatars (3.22) and repository-hoster menu items (4.3)."
   },
   "src/app/GitUI/UserControls/GitBlameParser.cs": {
     "twin": "src/app/GitUI/UserControls/GitBlameParser.cs",

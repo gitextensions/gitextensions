@@ -21,9 +21,8 @@ namespace GitUI.Blame;
 
 // Twin of GitUI/UserControls/BlameControl.cs. The author gutter is a BlameAuthorMargin
 // inside the file editor instead of a second scroll-synchronised editor, so the
-// scroll-position handlers of the original have no twin. Deferred: avatars in the gutter
-// (avatar subphase), the repository-hoster context menu items (plugins phase), and the
-// theme-adapted highlight/age colors (theming subphase).
+// scroll-position handlers of the original have no twin. Avatars and repository-hoster
+// context-menu items remain owned by their provider phases.
 public sealed partial class BlameControl : GitModuleControl
 {
     /// <summary>
@@ -31,7 +30,7 @@ public sealed partial class BlameControl : GitModuleControl
     /// </summary>
     public event Action? EscapePressed;
 
-    private readonly AsyncLoader _blameLoader = new();
+    private readonly CancellationTokenSequence _blameLoadSequence = new();
     private int _lineIndex = -1;
     private GitBlameLine? _lastBlameLine;
     private GitBlameLine? _clickedBlameLine;
@@ -43,10 +42,8 @@ public sealed partial class BlameControl : GitModuleControl
     private string? _fileName;
     private Encoding? _encoding;
     private GitBlameCommit? _tooltipCommit;
-    private static readonly Color[] AgeBucketGradientColors = GetAgeBucketGradientColors();
     private static readonly TranslationString _blameActualPreviousRevision = new("&Blame previous revision");
     private static readonly TranslationString _blameVisiblePreviousRevision = new("&Blame previous visible revision");
-    private readonly Color _commitHighlightColor;
     private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
     private readonly IGitBlameParser _gitBlameParser;
     private bool _loading;
@@ -77,14 +74,34 @@ public sealed partial class BlameControl : GitModuleControl
         commitHashToolStripMenuItem.Click += copyCommitHashToClipboardToolStripMenuItem_Click;
         commitMessageToolStripMenuItem.Click += copyLogMessageToolStripMenuItem_Click;
         allCommitInfoToolStripMenuItem.Click += copyAllCommitInfoToClipboardToolStripMenuItem_Click;
+        ActualThemeVariantChanged += (_, _) => RefreshThemeResources();
 
         InitializeComplete();
 
-        // The WinForms control adapts this color to dark mode; theming is a later subphase.
-        _commitHighlightColor = SystemColors.ControlLight;
         _gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
         _gitBlameParser = new GitBlameParser(() => UICommands.Module);
     }
+
+    public void InitSplitterManager(NestedSplitterManager splitterManager)
+    {
+        NestedSplitterManager nested = new(splitterManager, Name ?? nameof(BlameControl));
+        if (CommitInfo.IsVisible)
+        {
+            nested.AddSplitter(splitContainer1, defaultDistance: 26);
+        }
+
+        nested.AddSplitter(BlameAuthor, "splitContainer2", defaultDistance: 26);
+    }
+
+    public void HideCommitInfo()
+    {
+        CommitInfo.IsVisible = false;
+        splitContainer1.RowDefinitions[0].Height = new GridLength(0);
+        splitContainer1.RowDefinitions[1].Height = new GridLength(0);
+    }
+
+    internal void CancelBackgroundTasks()
+        => _blameLoadSequence.CancelCurrent();
 
     public void UpdateShowLineNumbers()
     {
@@ -93,7 +110,16 @@ public sealed partial class BlameControl : GitModuleControl
 
     public int CurrentFileLine => BlameFile.CurrentFileLine;
 
-    public async Task LoadBlameAsync(GitRevision revision, string fileName, IRevisionGridInfo? revisionGridInfo, IRevisionGridFileUpdate? revisionGridFileUpdate, Encoding encoding, int? initialLine = null, bool force = false, CancellationTokenSequence? cancellationTokenSequence = null)
+    public async Task LoadBlameAsync(
+        GitRevision revision,
+        string fileName,
+        IRevisionGridInfo? revisionGridInfo,
+        IRevisionGridFileUpdate? revisionGridFileUpdate,
+        Encoding encoding,
+        int? initialLine = null,
+        bool force = false,
+        CancellationTokenSequence? cancellationTokenSequence = null,
+        JoinableTaskFactory? joinableTaskFactory = null)
     {
         ObjectId objectId = revision.ObjectId;
 
@@ -108,7 +134,14 @@ public sealed partial class BlameControl : GitModuleControl
             return;
         }
 
-        CancellationToken cancellationToken = cancellationTokenSequence?.Next() ?? default;
+        CancellationToken ownerCancellationToken = cancellationTokenSequence?.Next() ?? default;
+        CancellationToken loadCancellationToken = _blameLoadSequence.Next();
+        using CancellationTokenSource linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+            ownerCancellationToken,
+            loadCancellationToken);
+        CancellationToken cancellationToken = linkedCancellation.Token;
+        JoinableTaskFactory mainThreadFactory = joinableTaskFactory ?? ThreadHelper.JoinableTaskFactory;
+        BlameFile.MainThreadFactory = joinableTaskFactory;
         _loading = true;
 
         int line = _clickedBlameLine?.OriginLineNumber ?? initialLine ?? (fileName == _fileName ? BlameFile.CurrentFileLine : 1);
@@ -123,17 +156,30 @@ public sealed partial class BlameControl : GitModuleControl
 
         try
         {
-            await _blameLoader.LoadAsync(
-                loaderCancellationToken => _blame = Module.Blame(fileName, objectId.ToString(), encoding, lines: null, cancellationToken: loaderCancellationToken.CombineWith(cancellationToken).Token),
-                () => ProcessBlame(fileName, revision, line, cancellationToken));
+            await TaskScheduler.Default;
+            cancellationToken.ThrowIfCancellationRequested();
+            _blame = Module.Blame(fileName, objectId.ToString(), encoding, lines: null, cancellationToken: cancellationToken);
+            await mainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
+            await ProcessBlameAsync(fileName, revision, line, cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
         }
         catch (ExternalOperationException ex)
         {
-            _blame = null;
-            await BlameFile.ViewTextAsync(fileName, ex.Message, cancellationToken);
-        }
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
 
-        _loading = false;
+            await mainThreadFactory.SwitchToMainThreadAsync();
+            _blame = null;
+            await BlameFile.ViewTextAsync(fileName, ex.Message);
+        }
+        finally
+        {
+            _loading = false;
+        }
     }
 
     private void BlameAuthor_MouseLeave(object? sender, PointerEventArgs e)
@@ -208,6 +254,7 @@ public sealed partial class BlameControl : GitModuleControl
         }
 
         Validates.NotNull(_blame);
+        Color commitHighlightColor = GetThemeColor("GitExtensionsBlameHighlightBrush", SystemColors.ControlLight);
 
         int startLine = -1;
         int prevLine = -1;
@@ -217,8 +264,8 @@ public sealed partial class BlameControl : GitModuleControl
             {
                 if (prevLine != i - 1 && startLine != -1)
                 {
-                    BlameAuthor.HighlightLines(startLine, prevLine, _commitHighlightColor);
-                    BlameFile.HighlightLines(startLine, prevLine, _commitHighlightColor);
+                    BlameAuthor.HighlightLines(startLine, prevLine, commitHighlightColor);
+                    BlameFile.HighlightLines(startLine, prevLine, commitHighlightColor);
                     startLine = -1;
                 }
 
@@ -232,8 +279,8 @@ public sealed partial class BlameControl : GitModuleControl
 
         if (startLine != -1)
         {
-            BlameAuthor.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
-            BlameFile.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
+            BlameAuthor.HighlightLines(startLine, prevLine, commitHighlightColor);
+            BlameFile.HighlightLines(startLine, prevLine, commitHighlightColor);
         }
 
         BlameAuthor.Refresh();
@@ -261,7 +308,7 @@ public sealed partial class BlameControl : GitModuleControl
         CommitInfo.Revision = _revisionGridInfo is null ? Module.GetRevision(objectId) : _revisionGridInfo.GetActualRevision(objectId);
     }
 
-    private void ProcessBlame(string? filename, GitRevision revision, int lineNumber, CancellationToken cancellationToken = default)
+    private async Task ProcessBlameAsync(string? filename, GitRevision revision, int lineNumber, CancellationToken cancellationToken = default)
     {
         (string gutter, string body, List<GitBlameEntry> gitBlameEntries) = BuildBlameContents(filename);
         cancellationToken.ThrowIfCancellationRequested();
@@ -269,18 +316,12 @@ public sealed partial class BlameControl : GitModuleControl
         BlameAuthor.Initialize(gutter, gitBlameEntries);
 
         Validates.NotNull(_fileName);
+        await BlameFile.ViewTextAsync(_fileName, body, cancellationToken);
+        BlameFile.GoToLine(Math.Min(lineNumber, _blame!.Lines.Count));
+        _clickedBlameLine = null;
 
-        this.InvokeAndForget(
-            async () =>
-            {
-                await BlameFile.ViewTextAsync(_fileName, body, cancellationToken);
-                BlameFile.GoToLine(Math.Min(lineNumber, _blame!.Lines.Count));
-                _clickedBlameLine = null;
-
-                _blameId = revision.ObjectId;
-                CommitInfo.Revision = revision;
-            },
-            cancellationToken);
+        _blameId = revision.ObjectId;
+        CommitInfo.Revision = revision;
     }
 
     private (string gutter, string body, List<GitBlameEntry> gitBlameDisplays) BuildBlameContents(string? filename)
@@ -382,11 +423,9 @@ public sealed partial class BlameControl : GitModuleControl
         return authorLineBuilder.ToString();
     }
 
-    private static Color[] GetAgeBucketGradientColors()
+    private Color[] GetAgeBucketGradientColors()
     {
-        // Color chosen from: https://colorbrewer2.org/#type=sequential&scheme=Greens&n=7
-        // (The WinForms control adapts these to the theme; theming is a later subphase.)
-        return
+        Color[] fallbacks =
         [
             Color.FromArgb(247, 252, 245),
             Color.FromArgb(199, 233, 192),
@@ -394,8 +433,9 @@ public sealed partial class BlameControl : GitModuleControl
             Color.FromArgb(116, 196, 118),
             Color.FromArgb(65, 171, 93),
             Color.FromArgb(35, 139, 69),
-            Color.FromArgb(0, 68, 27)
+            Color.FromArgb(0, 68, 27),
         ];
+        return [.. fallbacks.Select((fallback, index) => GetThemeColor($"GitExtensionsBlameAge{index}Brush", fallback))];
     }
 
     public DateTime ArtificialOldBoundary => DateTime.Now.AddYears(-3);
@@ -412,15 +452,16 @@ public sealed partial class BlameControl : GitModuleControl
                                                 .DefaultIfEmpty(artificialOldBoundary)
                                                 .Min()
                                                 .Ticks);
-        long intervalSize = (mostRecentDate - lessRecentDate + 1) / AgeBucketGradientColors.Length;
+        Color[] ageBucketGradientColors = GetAgeBucketGradientColors();
+        long intervalSize = (mostRecentDate - lessRecentDate + 1) / ageBucketGradientColors.Length;
         foreach (GitBlameLine blame in blameLines)
         {
             long relativeTicks = Math.Max(0, blame.Commit.AuthorTime.Ticks - lessRecentDate);
-            int ageBucketIndex = Math.Min((int)(relativeTicks / intervalSize), AgeBucketGradientColors.Length - 1);
+            int ageBucketIndex = Math.Min((int)(relativeTicks / intervalSize), ageBucketGradientColors.Length - 1);
             GitBlameEntry gitBlameDisplay = new()
             {
                 AgeBucketIndex = ageBucketIndex,
-                AgeBucketColor = AgeBucketGradientColors[ageBucketIndex]
+                AgeBucketColor = ageBucketGradientColors[ageBucketIndex]
             };
             gitBlameDisplays.Add(gitBlameDisplay);
         }
@@ -607,6 +648,31 @@ public sealed partial class BlameControl : GitModuleControl
     private WinFormsShims.IWin32Window? GetOwner()
         => TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window;
 
+    private Color GetThemeColor(string resourceKey, Color fallback)
+    {
+        if (Avalonia.Application.Current?.TryGetResource(resourceKey, ActualThemeVariant, out object? resource) == true
+            && resource is Avalonia.Media.ISolidColorBrush brush)
+        {
+            Avalonia.Media.Color color = brush.Color;
+            return Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
+        return fallback;
+    }
+
+    private void RefreshThemeResources()
+    {
+        if (_blame is not null)
+        {
+            (string gutter, _, List<GitBlameEntry> entries) = BuildBlameContents(_fileName);
+            BlameAuthor.Initialize(gutter, entries);
+        }
+
+        GitBlameCommit? highlightedCommit = _highlightedCommit;
+        _highlightedCommit = null;
+        HighlightLinesForCommit(highlightedCommit);
+    }
+
     internal TestAccessor GetTestAccessor()
         => new(this);
 
@@ -627,6 +693,14 @@ public sealed partial class BlameControl : GitModuleControl
 
         public FileViewer BlameFile => _control.BlameFile;
 
+        public Grid SplitContainer => _control.splitContainer1;
+
+        public double AuthorMarginWidth
+        {
+            get => ((IPersistedSplitter)_control.BlameAuthor).SplitterDistance;
+            set => ((IPersistedSplitter)_control.BlameAuthor).SplitterDistance = value;
+        }
+
         public DateTime ArtificialOldBoundary => _control.ArtificialOldBoundary;
 
         public void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, int lineLength, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
@@ -636,5 +710,11 @@ public sealed partial class BlameControl : GitModuleControl
 
         public List<GitBlameEntry> CalculateBlameGutterData(IReadOnlyList<GitBlameLine> blameLines)
             => _control.CalculateBlameGutterData(blameLines);
+
+        public IReadOnlyList<Color> GetAgeBucketGradientColors()
+            => _control.GetAgeBucketGradientColors();
+
+        public Color GetCommitHighlightColor()
+            => _control.GetThemeColor("GitExtensionsBlameHighlightBrush", SystemColors.ControlLight);
     }
 }
