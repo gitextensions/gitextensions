@@ -40,7 +40,7 @@ internal sealed class OutputHistoryTabController : OutputHistoryControllerBase
         }
 
         parent.SelectedItem = _tabPage;
-        Dispatcher.UIThread.Post(() => _textBox.Focus(), DispatcherPriority.Input);
+        Dispatcher.UIThread.Post(() => _textBox.TextArea.Focus(), DispatcherPriority.Input);
         return true;
     }
 }

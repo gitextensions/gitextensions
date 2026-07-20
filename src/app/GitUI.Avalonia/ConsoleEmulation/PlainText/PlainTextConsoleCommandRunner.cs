@@ -3,25 +3,27 @@ using System.Text;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
+using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
 using GitExtUtils;
+using GitUI.Compat;
 using Microsoft;
 
 namespace GitUI.ConsoleEmulation.PlainText;
 
 // Twin of GitUI/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs: the RichTextBox
-// becomes a read-only monospace TextBox (clickable links arrive later), the WinForms timer a
-// DispatcherTimer. The process handling is identical.
+// becomes a read-only AvaloniaEdit control and the WinForms timer a DispatcherTimer. The
+// process handling is identical.
 
 /// <summary>
 ///  Displays redirected process output in an edit box when no embedded terminal is being used.
 /// </summary>
 public sealed class PlainTextConsoleCommandRunner : UserControl, IPlainTextConsoleCommandRunner, IDisposable
 {
-    private readonly TextBox _editbox;
+    private readonly TextEditor _editbox;
 
     private Process? _process;
 
@@ -35,14 +37,17 @@ public sealed class PlainTextConsoleCommandRunner : UserControl, IPlainTextConso
 
     public PlainTextConsoleCommandRunner()
     {
-        _editbox = new TextBox
+        _editbox = new ThemeAwareTextEditor
         {
             Name = "ConsoleOutput",
             FontFamily = new FontFamily("monospace"),
             IsReadOnly = true,
-            AcceptsReturn = true,
-            TextWrapping = TextWrapping.NoWrap,
+            ShowLineNumbers = false,
+            WordWrap = false,
         };
+        _editbox.Options.EnableHyperlinks = true;
+        _editbox.Options.EnableEmailHyperlinks = true;
+        _editbox.Options.RequireControlModifierForHyperlinkClick = false;
         Content = _editbox;
 
         _outputThrottle = new ProcessOutputThrottle(AppendMessage);
@@ -59,7 +64,8 @@ public sealed class PlainTextConsoleCommandRunner : UserControl, IPlainTextConso
 
             _editbox.IsVisible = true;
             _editbox.Text += text;
-            _editbox.CaretIndex = _editbox.Text!.Length;
+            _editbox.CaretOffset = _editbox.Text.Length;
+            _editbox.ScrollToEnd();
         }
     }
 

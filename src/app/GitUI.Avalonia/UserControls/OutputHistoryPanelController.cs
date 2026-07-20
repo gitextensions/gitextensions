@@ -40,7 +40,7 @@ internal sealed class OutputHistoryPanelController : OutputHistoryControllerBase
         SetVisible(show);
         if (show)
         {
-            Dispatcher.UIThread.Post(() => _textBox.Focus(), DispatcherPriority.Input);
+            Dispatcher.UIThread.Post(() => _textBox.TextArea.Focus(), DispatcherPriority.Input);
         }
 
         return true;
