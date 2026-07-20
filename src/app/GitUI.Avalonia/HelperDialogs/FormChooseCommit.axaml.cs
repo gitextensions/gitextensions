@@ -27,11 +27,6 @@ public partial class FormChooseCommit : GitModuleForm
         string? lastRevisionToDisplayHash = null)
         : base(commands, enablePositionRestore: false)
     {
-        if (showArtificial)
-        {
-            throw new NotSupportedException("Artificial worktree/index revisions are not available in the Avalonia revision grid yet.");
-        }
-
         _preselectCommit = preselectCommit;
         _showCurrentBranchOnly = showCurrentBranchOnly;
         _lastRevisionToDisplayHash = lastRevisionToDisplayHash;
@@ -40,6 +35,8 @@ public partial class FormChooseCommit : GitModuleForm
         InitializeStaticContent();
 
         revisionGrid.UICommandsSource = this;
+        revisionGrid.MultiSelect = false;
+        revisionGrid.ShowUncommittedChangesIfPossible = showArtificial;
         revisionGrid.SelectionChanged += revisionGrid_SelectionChanged;
         revisionGrid.DoubleClickRevision += revisionGrid_DoubleClickRevision;
         btnOK.Click += btnOK_Click;
