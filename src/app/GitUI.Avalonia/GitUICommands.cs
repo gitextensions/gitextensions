@@ -7,6 +7,7 @@ using GitExtensions.Extensibility.Settings;
 using GitExtensions.Shims.WinForms;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 
@@ -471,7 +472,7 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartFormatPatchDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartFormatPatchDialog));
-    public bool StartGeneralSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartGeneralSettingsDialog));
+    public bool StartGeneralSettingsDialog(IWin32Window? owner) => StartSettingsDialog(owner);
     public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null)
     {
         bool Action()
@@ -510,7 +511,7 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, changesRepo: false);
     }
 
-    public bool StartPluginSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartPluginSettingsDialog));
+    public bool StartPluginSettingsDialog(IWin32Window? owner) => StartSettingsDialog(owner);
     public bool StartPullDialog(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
         => StartPullDialogInternal(owner, pullOnShow: false, out _, remoteBranch, remote, pullAction);
 
@@ -647,7 +648,7 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action);
     }
 
-    public bool StartRepoSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartRepoSettingsDialog));
+    public bool StartRepoSettingsDialog(IWin32Window? owner) => StartSettingsDialog(owner);
     public bool StartResetChangesDialog(IWin32Window? owner, IReadOnlyCollection<GitItemStatus> workTreeFiles, bool onlyWorkTree)
     {
         // Show a form asking the user if they want to reset the changes.
@@ -680,9 +681,19 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartRevertCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartRevertCommitDialog));
-    public bool StartSettingsDialog(IGitPlugin gitPlugin) => throw NotPorted(nameof(StartSettingsDialog));
-    public bool StartSettingsDialog(IWin32Window? owner, SettingsPageReference? initialPage = null) => throw NotPorted(nameof(StartSettingsDialog));
-    public bool StartSettingsDialog(Type pageType) => throw NotPorted(nameof(StartSettingsDialog));
+    public bool StartSettingsDialog(IGitPlugin gitPlugin)
+        => StartSettingsDialog(owner: null, new SettingsPageReferenceByPlugin(gitPlugin));
+
+    public bool StartSettingsDialog(IWin32Window? owner, SettingsPageReference? initialPage = null)
+    {
+        bool Action()
+            => FormSettings.ShowSettingsDialog(this, owner, initialPage) is DialogResult.OK;
+
+        return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, postEvent: PostSettings);
+    }
+
+    public bool StartSettingsDialog(Type pageType)
+        => StartSettingsDialog(owner: null, new SettingsPageReferenceByType(pageType));
     public bool StartSparseWorkingCopyDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSparseWorkingCopyDialog));
     public bool StartSquashCommitDialog(IWin32Window? owner, GitRevision revision)
     {
