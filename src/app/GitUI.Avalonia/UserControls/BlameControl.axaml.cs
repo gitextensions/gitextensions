@@ -141,7 +141,6 @@ public sealed partial class BlameControl : GitModuleControl
             loadCancellationToken);
         CancellationToken cancellationToken = linkedCancellation.Token;
         JoinableTaskFactory mainThreadFactory = joinableTaskFactory ?? ThreadHelper.JoinableTaskFactory;
-        BlameFile.MainThreadFactory = joinableTaskFactory;
         _loading = true;
 
         int line = _clickedBlameLine?.OriginLineNumber ?? initialLine ?? (fileName == _fileName ? BlameFile.CurrentFileLine : 1);
