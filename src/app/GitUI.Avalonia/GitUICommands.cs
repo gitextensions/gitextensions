@@ -280,7 +280,25 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action);
     }
 
-    public bool StartApplyPatchDialog(IWin32Window? owner, string? patchFile = null) => throw NotPorted(nameof(StartApplyPatchDialog));
+    public bool StartApplyPatchDialog(IWin32Window? owner, string? patchFile = null)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using CommandsDialogs.FormApplyPatch form = new(this);
+            if (Directory.Exists(patchFile!))
+            {
+                form.SetPatchDir(patchFile!);
+            }
+            else
+            {
+                form.SetPatchFile(patchFile ?? string.Empty);
+            }
+
+            form.ShowDialog(owner);
+            return true;
+        }, changesRepo: false);
+    }
+
     public bool StartArchiveDialog(IWin32Window? owner = null, GitRevision? revision = null, GitRevision? revision2 = null, string? path = null) => throw NotPorted(nameof(StartArchiveDialog));
     public void StartBatchFileProcessDialog(string batchFile) => throw NotPorted(nameof(StartBatchFileProcessDialog));
     public bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null) => throw NotPorted(nameof(StartBrowseDialog));

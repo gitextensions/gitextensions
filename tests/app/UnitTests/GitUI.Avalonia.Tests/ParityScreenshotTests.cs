@@ -324,6 +324,11 @@ public sealed partial class ParityScreenshotTests
             return new FormRebase(context.Commands, FeatureBranchName);
         }
 
+        if (viewType == typeof(FormApplyPatch))
+        {
+            return new FormApplyPatch(context.Commands);
+        }
+
         if (viewType == typeof(FormRemotes))
         {
             return new FormRemotes(context.Commands) { PreselectRemoteOnLoad = RemoteName };
