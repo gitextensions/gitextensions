@@ -96,6 +96,8 @@ public sealed class CreateBranchTests
     public void CreateClick_should_run_checkout_branch_command()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands();
+        ObjectId originalId = ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd");
+        module.GetCurrentCheckout().Returns(originalId);
         ArgumentString? executedArguments = null;
         commands.StartGitCommandProcessDialog(
                 Arg.Any<WinFormsShims.IWin32Window>(),
@@ -118,6 +120,28 @@ public sealed class CreateBranchTests
         executedArguments!.Value.ToString().Should().Be($"checkout -b \"feature/new\" {RevisionId}");
         form.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
         module.Received(1).CheckBranchFormat("feature/new");
+        commands.Received(1).UpdateSubmodules(form);
+    }
+
+    [AvaloniaTest]
+    public void CreateClick_should_not_update_submodules_when_checkout_does_not_move_head()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetCurrentCheckout().Returns(RevisionId);
+        commands.StartGitCommandProcessDialog(
+                Arg.Any<WinFormsShims.IWin32Window>(),
+                Arg.Any<ArgumentString>())
+            .Returns(true);
+
+        FormCreateBranch form = new(commands, RevisionId, newBranchNamePrefix: "feature");
+        TextBox branchName = form.FindControl<TextBox>("BranchNameTextBox")!;
+        Button create = form.FindControl<Button>("cmdOk")!;
+
+        branchName.Text = "feature/current";
+        create.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+        form.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
+        commands.DidNotReceive().UpdateSubmodules(Arg.Any<WinFormsShims.IWin32Window>());
     }
 
     [AvaloniaTest]
