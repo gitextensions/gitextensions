@@ -98,6 +98,28 @@ public sealed class FileViewerContentTests
     }
 
     [AvaloniaTest]
+    public async Task ViewChangesAsync_should_marshal_rendering_from_a_worker_thread()
+    {
+        string filePath = Path.Combine(_workingDirectory, "worker-thread.txt");
+        File.WriteAllText(filePath, "before\n");
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "worker-thread.txt" });
+        _module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" });
+        ObjectId head = _module.GetCurrentCheckout();
+        File.WriteAllText(filePath, "after\n");
+
+        FileStatusItem item = new(
+            new GitRevision(head),
+            new GitRevision(ObjectId.WorkTreeId) { ParentIds = [head] },
+            new GitItemStatus("worker-thread.txt") { IsTracked = true, Staged = StagedStatus.WorkTree });
+        FileViewer viewer = CreateViewer();
+
+        await Task.Run(() => viewer.ViewChangesAsync(item, CancellationToken.None));
+
+        viewer.GetTestAccessor().ViewMode.Should().Be(ViewMode.Diff);
+        viewer.TextEditor.Text.Should().Contain("+after");
+    }
+
+    [AvaloniaTest]
     public void FileViewer_should_preserve_blob_control_and_translation_identities()
     {
         FileViewer viewer = CreateViewer();
