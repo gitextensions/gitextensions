@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs;
 
 // Twin of GitUI/CommandsDialogs/FormResolveConflicts.cs. The conflicted-files grid is a
 // ListBox showing the file names (the WinForms grid's hidden Author column had no data
-// source upstream either). The submodule conflict dialog (FormMergeSubmodule) is deferred.
+// source upstream either).
 public partial class FormResolveConflicts : GitModuleForm
 {
     #region Translation
@@ -111,10 +111,6 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _failureWhileOpenFile = new("Open temporary file failed.");
     private readonly TranslationString _failureWhileSaveFile = new("Save file failed.");
 
-    // Not in the WinForms original: shown until FormMergeSubmodule is ported.
-    private readonly TranslationString _solveSubmoduleConflictNotSupported =
-        new("Resolving a submodule conflict ('{0}') is not supported here yet." + Environment.NewLine +
-            "Resolve it on the command line, then mark the conflict as solved.");
     #endregion
 
     private enum ConflictResolutionPreference
@@ -569,8 +565,11 @@ public partial class FormResolveConflicts : GitModuleForm
         ItemType itemType = GetItemType(item.Filename);
         if (itemType == ItemType.Submodule)
         {
-            // TODO(avalonia-port): open FormMergeSubmodule once it is ported.
-            MessageBoxes.ShowError(this, string.Format(_solveSubmoduleConflictNotSupported.Text, item.Filename));
+            using FormMergeSubmodule form = new(UICommands, item.Filename);
+            if (form.ShowDialog(this) == WinFormsShims.DialogResult.OK)
+            {
+                StageFile(item.Filename);
+            }
         }
         else if (itemType == ItemType.File)
         {
