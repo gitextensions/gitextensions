@@ -118,7 +118,6 @@ public sealed class FormBrowseTests
         finally
         {
             form.Close();
-            await ThreadHelper.JoinPendingOperationsAsync(CancellationToken.None);
         }
     }
 
@@ -344,6 +343,52 @@ public sealed class FormBrowseTests
             AppSettings.ShowGpgInformation.Value = originalShowGpgInformation;
             AppSettings.CommitInfoPosition = originalPosition;
             AppSettings.ShowSplitViewLayout = originalShowSplitView;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormBrowse_should_cancel_an_unfinished_gpg_load_when_closed()
+    {
+        bool originalShowGpgInformation = AppSettings.ShowGpgInformation.Value;
+        try
+        {
+            AppSettings.ShowGpgInformation.Value = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            TaskCompletionSource<GpgInfo?> unfinishedLoad = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            IGpgInfoProvider provider = Substitute.For<IGpgInfoProvider>();
+            provider.LoadGpgInfoAsync(Arg.Any<GitRevision?>()).Returns(unfinishedLoad.Task);
+
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module), provider);
+            try
+            {
+                form.Show();
+                TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+                await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
+
+                form.CommitInfoTabControl.SelectedItem = form.GpgInfoTabPage;
+                Dispatcher.UIThread.RunJobs();
+                await WaitUntilAsync(() => provider.ReceivedCalls().Any());
+                form.RefreshGpgInfo(new GitRevision(ObjectId.WorkTreeId));
+                Dispatcher.UIThread.RunJobs();
+
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                form.Close();
+                stopwatch.Stop();
+
+                stopwatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(5),
+                    "closing the browser must cancel its pending GPG wait instead of blocking for the task-manager timeout");
+            }
+            finally
+            {
+                if (form.IsVisible)
+                {
+                    form.Close();
+                }
+            }
+        }
+        finally
+        {
+            AppSettings.ShowGpgInformation.Value = originalShowGpgInformation;
         }
     }
 

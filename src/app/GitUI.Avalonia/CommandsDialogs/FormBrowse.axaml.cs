@@ -29,6 +29,8 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private readonly IGpgInfoProvider? _controller;
+    private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
+    private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
     private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
     private GridLength _commitInfoWidth = new(490);
     private GpgInfo? _gpgInfo;
@@ -211,10 +213,12 @@ public sealed partial class FormBrowse : GitModuleForm
             lblStatus.Text = $"git: {GitVersion.Current}";
             RevisionGrid.ReloadRevisions(module);
 
+            CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
             _loadOperations.FileAndForget(async () =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 IReadOnlyList<IGitRef> refs = module.GetRefs(RefsFilter.NoFilter);
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
                 repoObjectsTree.SetRefs(refs);
             });
         }
@@ -229,9 +233,10 @@ public sealed partial class FormBrowse : GitModuleForm
     private void LoadWorkingDirectories()
     {
         string workingDirectory = Module.WorkingDir;
+        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(async () =>
         {
-            IList<Repository> history = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
+            IList<Repository> history = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync().WaitAsync(cancellationToken);
             string[] directories =
             [
                 workingDirectory,
@@ -240,7 +245,7 @@ public sealed partial class FormBrowse : GitModuleForm
                     .Distinct(StringComparer.OrdinalIgnoreCase),
             ];
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             if (!string.Equals(Module.WorkingDir, workingDirectory, StringComparison.OrdinalIgnoreCase))
             {
                 return;
@@ -292,7 +297,8 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
         ChangeTerminalActiveFolder(normalizedPath);
         ReloadRepository();
-        _loadOperations.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath));
+        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
+        _loadOperations.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath).WaitAsync(cancellationToken));
     }
 
     private void ToggleLeftPanelClick(object? sender, EventArgs e)
@@ -573,6 +579,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
     internal void RefreshGpgInfo(GitRevision? revision)
     {
+        _gpgInfoLoadSequence.CancelCurrent();
         _gpgInfoLoadVersion++;
         _gpgInfo = null;
         _gpgInfoLoadingRevision = null;
@@ -620,10 +627,11 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         _gpgInfoLoadingRevision = revision;
-        _loadOperations.FileAndForget(() => FillGpgInfoAsync(revision));
+        CancellationToken cancellationToken = _gpgInfoLoadSequence.Next();
+        _loadOperations.FileAndForget(() => FillGpgInfoAsync(revision, cancellationToken));
     }
 
-    private async Task FillGpgInfoAsync(GitRevision? revision)
+    private async Task FillGpgInfoAsync(GitRevision? revision, CancellationToken cancellationToken)
     {
         if (revision is null || _controller is null)
         {
@@ -631,8 +639,12 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         int loadVersion = _gpgInfoLoadVersion;
-        GpgInfo? info = await _controller.LoadGpgInfoAsync(revision);
-        await this.SwitchToMainThreadAsync();
+        using CancellationTokenSource linkedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
+            cancellationToken,
+            _loadOperationsCancellationTokenSource.Token);
+        CancellationToken linkedCancellationToken = linkedCancellationTokenSource.Token;
+        GpgInfo? info = await _controller.LoadGpgInfoAsync(revision).WaitAsync(linkedCancellationToken);
+        await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(linkedCancellationToken);
         if (loadVersion != _gpgInfoLoadVersion
             || !ReferenceEquals(RevisionGrid.SelectedRevision, revision))
         {
@@ -651,7 +663,12 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void UICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
     {
-        this.InvokeAndForget(ReloadRepository);
+        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
+        _loadOperations.FileAndForget(async () =>
+        {
+            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            ReloadRepository();
+        });
     }
 
     private void RefreshToolStripMenuItemClick(object? sender, EventArgs e)
@@ -996,10 +1013,13 @@ public sealed partial class FormBrowse : GitModuleForm
             UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
         }
 
+        _loadOperationsCancellationTokenSource.Cancel();
+        _gpgInfoLoadSequence.Dispose();
         RevisionGrid.CancelBackgroundTasks();
         revisionDiff.CancelBackgroundTasks();
         fileTree.CancelBackgroundTasks();
         _loadOperations.JoinPendingOperations();
+        _loadOperationsCancellationTokenSource.Dispose();
         (_terminal as IDisposable)?.Dispose();
         _terminal = null;
         _outputHistoryController?.Dispose();

@@ -1115,7 +1115,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
             _superprojectCurrentCheckout = superProjectInfo;
             if (superProjectInfo is not null)
             {
-                await this.SwitchToMainThreadAsync(cancellationToken);
+                await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
                 RefreshRealizedRows();
             }
         });
