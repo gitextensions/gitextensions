@@ -7,14 +7,23 @@ using GitExtUtils;
 using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.PlainText;
 using GitUI.Models;
+using GitUI.Properties;
 using GitUI.UserControls;
 
 namespace GitUI.HelperDialogs;
 
-// Twin of GitUI/HelperDialogs/FormStatus.cs. Windows-only taskbar progress and the status
-// badge window icons are not ported; the console is always the plain text emulator.
+// Twin of GitUI/HelperDialogs/FormStatus.cs. Platform taskbar progress is not portable; the
+// status badge window icons are, and the console is always the plain text emulator.
 public partial class FormStatus : GitExtensionsDialog
 {
+    private static readonly Lazy<IReadOnlyDictionary<Avalonia.Media.Imaging.Bitmap, Avalonia.Controls.WindowIcon>> _statusIcons = new(
+        () => new Dictionary<Avalonia.Media.Imaging.Bitmap, Avalonia.Controls.WindowIcon>(ReferenceEqualityComparer.Instance)
+        {
+            [Images.StatusBadgeWaiting] = new(Images.StatusBadgeWaiting),
+            [Images.StatusBadgeSuccess] = new(Images.StatusBadgeSuccess),
+            [Images.StatusBadgeError] = new(Images.StatusBadgeError),
+        });
+
     private readonly bool _useDialogSettings;
     private bool _errorOccurred;
 
@@ -46,6 +55,7 @@ public partial class FormStatus : GitExtensionsDialog
         };
 
         InitializeComponent();
+        SetIcon(Images.StatusBadgeWaiting);
 
         // Event hookups, like the Designer file does in WinForms (Avalonia's compiled XAML
         // requires exact RoutedEventArgs handler signatures, which the ported handlers keep
@@ -163,6 +173,7 @@ public partial class FormStatus : GitExtensionsDialog
         Ok.Focus();
         AcceptButton = Ok;
         Abort.IsEnabled = false;
+        SetIcon(isSuccess ? Images.StatusBadgeSuccess : Images.StatusBadgeError);
 
         if (isSuccess && (_useDialogSettings && AppSettings.CloseProcessDialog))
         {
@@ -172,6 +183,7 @@ public partial class FormStatus : GitExtensionsDialog
 
     private protected void Reset()
     {
+        SetIcon(Images.StatusBadgeWaiting);
         ConsoleCommandRunner.ResetConsole();
         OutputLog.Clear();
         ShowPassword.IsVisible = true;
@@ -179,6 +191,11 @@ public partial class FormStatus : GitExtensionsDialog
         ProgressBar.IsVisible = true;
         Ok.IsEnabled = false;
         ActiveControl = PasswordInput.IsVisible ? PasswordInput : null;
+    }
+
+    private void SetIcon(Avalonia.Media.Imaging.Bitmap image)
+    {
+        Icon = _statusIcons.Value[image];
     }
 
     private protected async Task SetProgressAsync(string text)

@@ -55,21 +55,21 @@
   },
   "src/app/GitUI/UserControls/OutputHistoryControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControl.axaml.cs",
-    "status": "functional",
+    "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named read-only monospace history surface with the original TextBox, copy, and clear identities. Clickable links remain deferred."
+    "notes": "Same-named read-only monospace history surface with the original TextBox, copy, and clear identities. AvaloniaEdit supplies selectable automatically styled web/email links without requiring a modifier key."
   },
   "src/app/GitUI/UserControls/OutputHistoryControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControl.axaml",
-    "status": "functional",
+    "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "The RichTextBox and ContextMenuStrip map to a read-only no-wrap Avalonia TextBox and ContextMenu using the existing translation identities."
+    "notes": "The RichTextBox and ContextMenuStrip map to a read-only no-wrap AvaloniaEdit surface and ContextMenu using the existing translation identities, selection, horizontal/vertical scrolling, and link activation."
   },
   "src/app/GitUI/UserControls/OutputHistoryControllerBase.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControllerBase.cs",
-    "status": "functional",
+    "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves shared-history subscription, copy/clear behavior, tail positioning, focus contract, and disposal. Link activation remains deferred with rich-text link rendering."
+    "notes": "Preserves shared-history subscription, copy/clear behavior, tail positioning and scrolling, text-area focus contract, link activation, and disposal."
   },
   "src/app/GitUI/UserControls/OutputHistoryTabController.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryTabController.cs",
@@ -848,8 +848,8 @@
   "src/app/GitUI/HelperDialogs/FormStatus.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormStatus.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Plain text console only; no taskbar progress or status badge icons."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses the portable plain-text console and preserves waiting/success/error status badge window icons, including retry transitions. Windows taskbar progress remains intentionally platform-specific and absent."
   },
   "src/app/GitUI/HelperDialogs/FormProcess.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormProcess.cs",
@@ -878,8 +878,8 @@
   "src/app/GitUI/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs": {
     "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only TextBox output with flushed redirected input; Linux and macOS commands start through ProcessExtensions.StartInOwnProcessGroup so cancellation reaches re-parented group members; no clickable links yet. The Avalonia-only PlainTextConsoleShellRunner composes this runner with one command input and the platform shell."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Read-only selectable AvaloniaEdit output with automatically styled clickable web/email links and flushed redirected input; Linux and macOS commands start through ProcessExtensions.StartInOwnProcessGroup so cancellation reaches re-parented group members. The Avalonia-only PlainTextConsoleShellRunner composes this runner with one command input and the platform shell."
   },
   "src/app/GitUI/ConsoleEmulation/PlainText/PlainTextConsoleEmulatorsRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/PlainText/PlainTextConsoleEmulatorsRegistry.cs",

@@ -1,5 +1,7 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Reflection;
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -70,6 +72,24 @@ public sealed class ProcessDialogTests
     }
 
     [AvaloniaTest]
+    public void FormStatus_should_show_waiting_success_and_error_window_icons()
+    {
+        using FormStatus form = new(CreateCommands(Path.GetTempPath()), GitUI.ConsoleEmulation.PlainText.PlainTextConsoleEmulatorsRegistry.Instance, useDialogSettings: false);
+        WindowIcon waiting = form.Icon ?? throw new InvalidOperationException("FormStatus has no waiting icon.");
+
+        InvokeFormStatusMethod(form, "Done", false);
+        WindowIcon error = form.Icon ?? throw new InvalidOperationException("FormStatus has no error icon.");
+        error.Should().NotBeSameAs(waiting);
+
+        InvokeFormStatusMethod(form, "Reset");
+        form.Icon.Should().BeSameAs(waiting);
+
+        InvokeFormStatusMethod(form, "Done", true);
+        WindowIcon success = form.Icon ?? throw new InvalidOperationException("FormStatus has no success icon.");
+        success.Should().NotBeSameAs(waiting).And.NotBeSameAs(error);
+    }
+
+    [AvaloniaTest]
     public void FormStatus_should_construct_with_the_designer_constructor()
     {
         // The XAML loader needs this constructor. It builds the dialog exactly like the
@@ -99,6 +119,13 @@ public sealed class ProcessDialogTests
         {
             AppSettings.CurrentTranslation = original;
         }
+    }
+
+    private static void InvokeFormStatusMethod(FormStatus form, string name, params object[] arguments)
+    {
+        MethodInfo method = typeof(FormStatus).GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException($"FormStatus.{name} could not be found.");
+        method.Invoke(form, arguments);
     }
 
     [AvaloniaTest]
