@@ -72,8 +72,6 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     private FileStatusItem? _viewItem;
     private ViewMode _viewMode;
 
-    internal JoinableTaskFactory? MainThreadFactory { get; set; }
-
     public FileViewer()
     {
         InitializeComponent();
@@ -588,37 +586,39 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         bool isBinary = (checkGitAttributes && FileHelper.IsBinaryFileName(Module, fileName))
                         || FileHelper.IsBinaryFileAccordingToContent(text);
 
-        await SwitchToOwnerMainThreadAsync(cancellationToken);
-        ResetView(ViewMode.Text, fileName, item, openWithDifftool, text);
-        if (isBinary)
+        await InvokeOnOwnerMainThreadAsync(() =>
         {
-            try
+            ResetView(ViewMode.Text, fileName, item, openWithDifftool, text);
+            if (isBinary)
             {
-                DisplayAsHexDump(_binaryFile.Text, fileName ?? string.Empty, text);
+                try
+                {
+                    DisplayAsHexDump(_binaryFile.Text, fileName ?? string.Empty, text);
+                }
+                catch
+                {
+                    SetText(string.Format(_binaryFileDetected.Text, fileName));
+                }
             }
-            catch
+            else if (_viewMode == ViewMode.FixedDiff)
             {
-                SetText(string.Format(_binaryFileDetected.Text, fileName));
+                string parsedText = text;
+                PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
+                SetDiffText(parsedText, highlightService, showLeftColumn: true);
+                GoToFirstChange();
             }
-        }
-        else if (_viewMode == ViewMode.FixedDiff)
-        {
-            string parsedText = text;
-            PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
-            SetDiffText(parsedText, highlightService, showLeftColumn: true);
-            GoToFirstChange();
-        }
-        else
-        {
-            SetText(text);
-        }
+            else
+            {
+                SetText(text);
+            }
 
-        if (line is not null)
-        {
-            GoToLine(line.Value);
-        }
+            if (line is not null)
+            {
+                GoToLine(line.Value);
+            }
 
-        TextLoaded?.Invoke(this, EventArgs.Empty);
+            TextLoaded?.Invoke(this, EventArgs.Empty);
+        }, cancellationToken);
     }
 
     private async Task ShowHexDumpAsync(
@@ -628,10 +628,12 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         Action? openWithDifftool,
         CancellationToken cancellationToken)
     {
-        await SwitchToOwnerMainThreadAsync(cancellationToken);
-        ResetView(ViewMode.Text, fileName, item: null, openWithDifftool);
-        DisplayAsHexDump(fileNameFormat, fileName, text);
-        TextLoaded?.Invoke(this, EventArgs.Empty);
+        await InvokeOnOwnerMainThreadAsync(() =>
+        {
+            ResetView(ViewMode.Text, fileName, item: null, openWithDifftool);
+            DisplayAsHexDump(fileNameFormat, fileName, text);
+            TextLoaded?.Invoke(this, EventArgs.Empty);
+        }, cancellationToken);
     }
 
     private async Task ShowImageAsync(
@@ -644,12 +646,14 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         Bitmap? imageToDispose = image;
         try
         {
-            await SwitchToOwnerMainThreadAsync(cancellationToken);
-            ResetView(ViewMode.Image, fileName, item, openWithDifftool);
-            SetText(string.Empty);
-            _image = imageToDispose;
-            ImagePreview.Source = imageToDispose;
-            imageToDispose = null;
+            await InvokeOnOwnerMainThreadAsync(() =>
+            {
+                ResetView(ViewMode.Image, fileName, item, openWithDifftool);
+                SetText(string.Empty);
+                _image = imageToDispose;
+                ImagePreview.Source = imageToDispose;
+                imageToDispose = null;
+            }, cancellationToken);
         }
         finally
         {
@@ -732,21 +736,26 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     private async Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc, CancellationToken cancellationToken)
     {
-        await SwitchToOwnerMainThreadAsync(cancellationToken);
         if (contentLength > MaximumAutomaticPreviewLength)
         {
-            ResetView(ViewMode.Text, fileName: null);
-            SetText(string.Empty);
-            _NO_TRANSLATE_lblShowPreview.Content = string.Format(
-                _largeFileSizeWarning.Text,
-                contentLength / (1024d * 1024));
-            _NO_TRANSLATE_lblShowPreview.IsVisible = true;
-            _deferShowFunc = showFunc;
+            await InvokeOnOwnerMainThreadAsync(() =>
+            {
+                ResetView(ViewMode.Text, fileName: null);
+                SetText(string.Empty);
+                _NO_TRANSLATE_lblShowPreview.Content = string.Format(
+                    _largeFileSizeWarning.Text,
+                    contentLength / (1024d * 1024));
+                _NO_TRANSLATE_lblShowPreview.IsVisible = true;
+                _deferShowFunc = showFunc;
+            }, cancellationToken);
             return;
         }
 
-        _NO_TRANSLATE_lblShowPreview.IsVisible = false;
-        _deferShowFunc = null;
+        await InvokeOnOwnerMainThreadAsync(() =>
+        {
+            _NO_TRANSLATE_lblShowPreview.IsVisible = false;
+            _deferShowFunc = null;
+        }, cancellationToken);
         await showFunc();
     }
 
@@ -766,15 +775,17 @@ public partial class FileViewer : GitModuleControl, IFileViewer
                 return;
             }
 
-            await SwitchToOwnerMainThreadAsync();
-            if (cancellationToken.IsCancellationRequested)
+            await InvokeOnOwnerMainThreadAsync(() =>
             {
-                return;
-            }
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
 
-            ResetView(ViewMode.Text, fileName: null);
-            SetText("Unsupported file: \n\n" + exception);
-            TextLoaded?.Invoke(this, EventArgs.Empty);
+                ResetView(ViewMode.Text, fileName: null);
+                SetText("Unsupported file: \n\n" + exception);
+                TextLoaded?.Invoke(this, EventArgs.Empty);
+            }, cancellationToken);
         }
     }
 
@@ -1258,8 +1269,9 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         CancellationToken viewToken = BeginView(cancellationToken);
         if (item?.Item is null)
         {
-            await SwitchToOwnerMainThreadAsync(viewToken);
-            ViewPatchCore(null, useGitColoring: false, isCombinedDiff: false, isGitWordDiff: false);
+            await InvokeOnOwnerMainThreadAsync(
+                () => ViewPatchCore(null, useGitColoring: false, isCombinedDiff: false, isGitWordDiff: false),
+                viewToken);
             return;
         }
 
@@ -1295,16 +1307,18 @@ public partial class FileViewer : GitModuleControl, IFileViewer
             GitCommandConfiguration.Default,
             viewToken);
 
-        await SwitchToOwnerMainThreadAsync(viewToken);
-        viewToken.ThrowIfCancellationRequested();
-        ViewPatchCore(
-            patch?.Text ?? errorMessage,
-            useGitColoring,
-            isCombinedDiff: false,
-            isGitWordDiff,
-            item.Item.Name,
-            item,
-            openWithDiffTool);
+        await InvokeOnOwnerMainThreadAsync(() =>
+        {
+            viewToken.ThrowIfCancellationRequested();
+            ViewPatchCore(
+                patch?.Text ?? errorMessage,
+                useGitColoring,
+                isCombinedDiff: false,
+                isGitWordDiff,
+                item.Item.Name,
+                item,
+                openWithDiffTool);
+        }, viewToken);
     }
 
     /// <summary>
@@ -1339,15 +1353,16 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         return default;
     }
 
-    private async Task SwitchToOwnerMainThreadAsync(CancellationToken cancellationToken = default)
+    private async Task InvokeOnOwnerMainThreadAsync(Action action, CancellationToken cancellationToken = default)
     {
-        if (MainThreadFactory is not null)
+        cancellationToken.ThrowIfCancellationRequested();
+        if (Dispatcher.CheckAccess())
         {
-            await MainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
+            action();
         }
         else
         {
-            await this.SwitchToMainThreadAsync(cancellationToken);
+            await Dispatcher.InvokeAsync(action, DispatcherPriority.Normal, cancellationToken);
         }
     }
 
