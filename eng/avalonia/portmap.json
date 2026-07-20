@@ -33,7 +33,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and a temporary root placeholder. Individual built-in and plugin pages remain in 3.17+ and phase 4."
+    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and the root placeholder. GeneralSettingsPage is registered under Git Extensions; remaining built-in and plugin pages land incrementally in 3.17+ and phase 4."
   },
   "src/app/GitUI/CommandsDialogs/FormSettings.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml",
@@ -64,6 +64,36 @@
     "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "The empty WinForms designer surface and component ToolTip map to the code-only Avalonia base and SettingsToolTip adapter."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageWithHeader.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageWithHeader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves the lazy same-named source-selector wrapper, global settings container, repository save eligibility, and read-only delegation with Avalonia Control replacing WinForms Control."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageHeader.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageHeader.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same global/local/effective/distributed/system page contracts and source-selection behavior. Global-only pages collapse the unavailable choices; local settings pages can reuse the complete selector as they land."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageHeader.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageHeader.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact translated source-selector row, directional markers, separator, and hosted page surface retain the original control identities."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "All General settings load/save mappings are preserved, including nullable submodule checkout, commit-limit zero semantics, translated pull-action values, clone history and folder browsing, telemetry privacy, and dependent submodule-status enablement."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Performance, Behaviour, and Telemetry groups and same-named controls in a compact scrollable Avalonia layout; wider native spinners keep the full numeric values visible."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageReference.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageReference.cs",
