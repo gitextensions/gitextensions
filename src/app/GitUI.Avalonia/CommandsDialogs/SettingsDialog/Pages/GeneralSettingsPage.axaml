@@ -1,0 +1,89 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.GeneralSettingsPage"
+                                 Text="General">
+  <settings:SettingsPageWithHeader.Styles>
+    <Style Selector="CheckBox">
+      <Setter Property="Margin" Value="0,-4" />
+    </Style>
+  </settings:SettingsPageWithHeader.Styles>
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="tlpnlMain"
+                Margin="8"
+                Spacing="6">
+      <GroupBox x:Name="groupBoxPerformance" Header="Performance">
+        <Grid x:Name="tlpnlPerformance"
+              Margin="8,4,8,8"
+              ColumnDefinitions="Auto,*"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+              RowSpacing="1">
+          <CheckBox x:Name="chkShowGitStatusInToolbar" Grid.ColumnSpan="2" Content="Show number of changed files on commit button" />
+          <CheckBox x:Name="chkShowGitStatusForArtificialCommits" Grid.Row="1" Grid.ColumnSpan="2" Content="Show number of changed files for artificial commits" />
+          <CheckBox x:Name="chkShowSubmoduleStatusInBrowse" Grid.Row="2" Grid.ColumnSpan="2" Content="Show submodule status in browse menu" />
+          <CheckBox x:Name="chkShowStashCountInBrowseWindow" Grid.Row="3" Grid.ColumnSpan="2" Content="Show stash count on status bar in browse window" />
+          <CheckBox x:Name="chkShowAheadBehindDataInBrowseWindow" Grid.Row="4" Grid.ColumnSpan="2" Content="Show ahead and behind information on status bar in browse window" />
+          <CheckBox x:Name="chkCheckForUncommittedChangesInCheckoutBranch" Grid.Row="5" Grid.ColumnSpan="2" Content="Check for uncommitted changes in checkout branch dialog" />
+          <CheckBox x:Name="lblCommitsLimit" Grid.Row="6" VerticalAlignment="Center" Content="Limit number of commits to be loaded" />
+          <NumericUpDown x:Name="_NO_TRANSLATE_MaxCommits"
+                         Grid.Row="6"
+                         Grid.Column="1"
+                         Width="118"
+                         Margin="8,1,0,1"
+                         HorizontalAlignment="Left"
+                         Increment="10000"
+                         Maximum="1000000"
+                         Minimum="0"
+                         Value="1000" />
+        </Grid>
+      </GroupBox>
+
+      <GroupBox x:Name="groupBoxBehaviour" Header="Behaviour">
+        <Grid x:Name="tlpnlBehaviour"
+              Margin="8,4,8,8"
+              ColumnDefinitions="Auto,*,Auto"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+              RowSpacing="1">
+          <CheckBox x:Name="chkCloseProcessDialog" Grid.ColumnSpan="3" Content="Close Process dialog when process succeeds" />
+          <CheckBox x:Name="chkShowGitCommandLine" Grid.Row="1" Grid.ColumnSpan="3" Content="Show console window when executing git process" />
+          <CheckBox x:Name="chkUseHistogramDiffAlgorithm" Grid.Row="2" Grid.ColumnSpan="3" Content="Use histogram diff algorithm" />
+          <CheckBox x:Name="chkStashUntrackedFiles" Grid.Row="3" Grid.ColumnSpan="3" Content="Include untracked files in autostash" />
+          <CheckBox x:Name="chkUpdateModules" Grid.Row="4" Grid.ColumnSpan="3" IsThreeState="True" Content="Update submodules on checkout" />
+          <CheckBox x:Name="chkFollowRenamesInFileHistory" Grid.Row="5" Grid.ColumnSpan="3" Content="Follow renames in file history" />
+          <CheckBox x:Name="chkFollowRenamesInFileHistoryExact" Grid.Row="6" Grid.ColumnSpan="3" Content="Follow exact renames and copies only" />
+          <CheckBox x:Name="chkStartWithRecentWorkingDir" Grid.Row="7" Grid.ColumnSpan="3" Content="Open last working directory on startup" />
+
+          <TextBlock x:Name="lblDefaultCloneDestination" Grid.Row="8" Margin="3,4,12,4" VerticalAlignment="Center" Text="Default clone destination" />
+          <ComboBox x:Name="cbDefaultCloneDestination" Grid.Row="8" Grid.Column="1" MinWidth="260" Margin="0,1,6,1" IsEditable="True" />
+          <Button x:Name="btnDefaultDestinationBrowse" Grid.Row="8" Grid.Column="2" Content="Browse" />
+
+          <Grid Grid.Row="9" Grid.ColumnSpan="3" ColumnDefinitions="Auto,Auto,Auto,*" Margin="0,1,0,0">
+            <TextBlock x:Name="lblDefaultPullAction" Margin="3,4,12,4" VerticalAlignment="Center" Text="Default pull action" />
+            <ComboBox x:Name="cboDefaultPullAction" Grid.Column="1" MinWidth="170" Margin="0,1,24,1" />
+            <TextBlock x:Name="lblQuickSearchTimeout" Grid.Column="2" Margin="3,4,8,4" VerticalAlignment="Center" Text="Revision grid quick search timeout [ms]" />
+            <NumericUpDown x:Name="RevisionGridQuickSearchTimeout"
+                           Grid.Column="3"
+                           Width="118"
+                           HorizontalAlignment="Left"
+                           Increment="100"
+                           Maximum="1000000"
+                           Minimum="100"
+                           Value="1000" />
+          </Grid>
+        </Grid>
+      </GroupBox>
+
+      <GroupBox x:Name="groupBoxTelemetry" Header="Telemetry">
+        <StackPanel x:Name="tlpnlTelemetry"
+                    Margin="8,4,8,8"
+                    Orientation="Horizontal"
+                    Spacing="8">
+          <CheckBox x:Name="chkTelemetry" Content="Yes, I allow telemetry!" />
+          <HyperlinkButton x:Name="llblTelemetryPrivacyLink"
+                           Content="Why and what is captured?" />
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

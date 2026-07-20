@@ -2,9 +2,12 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
+using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using Microsoft.VisualStudio.Threading;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -44,6 +47,91 @@ public sealed class SettingsDialogTests
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_register_and_navigate_to_the_general_page()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+
+        GeneralSettingsPage page = accessor.SettingsTreeView.SettingsPages
+            .OfType<GeneralSettingsPage>()
+            .Single();
+        form.GotoPage(GeneralSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        SettingsPageHeader.TestAccessor headerAccessor = header.GetTestAccessor();
+        headerAccessor.Page.Should().BeSameAs(page);
+        headerAccessor.Global.IsChecked.Should().BeTrue();
+        headerAccessor.Effective.IsVisible.Should().BeFalse();
+        page.GetTitle().Should().Be("General");
+    }
+
+    [AvaloniaTest]
+    public void General_settings_should_preserve_special_load_and_save_mappings()
+    {
+        int originalMaxCommits = AppSettings.MaxRevisionGraphCommits;
+        bool originalToolbarStatus = AppSettings.ShowGitStatusInBrowseToolbar;
+        bool originalArtificialStatus = AppSettings.ShowGitStatusForArtificialCommits;
+        bool originalSubmoduleStatus = AppSettings.ShowSubmoduleStatus;
+        bool? originalUpdateModules = AppSettings.UpdateSubmodulesOnCheckout;
+        GitPullAction originalPullAction = AppSettings.DefaultPullAction;
+        string originalCloneDestination = AppSettings.DefaultCloneDestinationPath;
+        try
+        {
+            AppSettings.MaxRevisionGraphCommits = 42000;
+            AppSettings.ShowGitStatusInBrowseToolbar = false;
+            AppSettings.ShowGitStatusForArtificialCommits = false;
+            AppSettings.ShowSubmoduleStatus = true;
+            AppSettings.UpdateSubmodulesOnCheckout = null;
+            AppSettings.DefaultPullAction = GitPullAction.FetchAll;
+            AppSettings.DefaultCloneDestinationPath = @"D:\Repositories";
+
+            FormSettings form = new();
+            FormSettings.TestAccessor formAccessor = form.GetTestAccessor();
+            formAccessor.InitializePages();
+            GeneralSettingsPage page = formAccessor.SettingsTreeView.SettingsPages
+                .OfType<GeneralSettingsPage>()
+                .Single();
+            page.LoadSettings();
+
+            GeneralSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+            accessor.LimitCommits.IsChecked.Should().BeTrue();
+            accessor.MaxCommits.Value.Should().Be(42000);
+            accessor.UpdateModules.IsChecked.Should().BeNull();
+            accessor.ShowSubmoduleStatusInBrowse.IsEnabled.Should().BeFalse();
+            accessor.ShowSubmoduleStatusInBrowse.IsChecked.Should().BeFalse();
+            accessor.DefaultPullAction.SelectedItem!.ToString().Should().Be("Fetch all");
+            accessor.DefaultCloneDestination.Text.Should().Be(@"D:\Repositories");
+
+            accessor.ShowGitStatusInToolbar.IsChecked = true;
+            accessor.ShowSubmoduleStatusInBrowse.IsChecked = true;
+            accessor.LimitCommits.IsChecked = false;
+            accessor.UpdateModules.IsChecked = false;
+            accessor.DefaultPullAction.SelectedItem = accessor.DefaultPullAction.Items
+                .Cast<object>()
+                .Single(item => item.ToString() == "Pull - rebase");
+            accessor.DefaultCloneDestination.Text = @"C:\Source";
+            page.SaveSettings();
+
+            AppSettings.ShowSubmoduleStatus.Should().BeTrue();
+            AppSettings.MaxRevisionGraphCommits.Should().Be(0);
+            AppSettings.UpdateSubmodulesOnCheckout.Should().BeFalse();
+            AppSettings.DefaultPullAction.Should().Be(GitPullAction.Rebase);
+            AppSettings.DefaultCloneDestinationPath.Should().Be(@"C:\Source");
+        }
+        finally
+        {
+            AppSettings.MaxRevisionGraphCommits = originalMaxCommits;
+            AppSettings.ShowGitStatusInBrowseToolbar = originalToolbarStatus;
+            AppSettings.ShowGitStatusForArtificialCommits = originalArtificialStatus;
+            AppSettings.ShowSubmoduleStatus = originalSubmoduleStatus;
+            AppSettings.UpdateSubmodulesOnCheckout = originalUpdateModules;
+            AppSettings.DefaultPullAction = originalPullAction;
+            AppSettings.DefaultCloneDestinationPath = originalCloneDestination;
         }
     }
 
