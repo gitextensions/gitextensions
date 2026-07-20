@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
 using GitCommands;
 using GitCommands.Config;
@@ -16,8 +17,9 @@ namespace GitUI.CommandsDialogs;
 
 // Twin of GitUI/CommandsDialogs/FormClone.cs. The clone runs in FormRemoteProcess through
 // OpenSSH; the PuTTY pieces (Load SSH key button and registry/key-agent recovery prompts)
-// are not ported. The history combos hold the path strings rather than Repository objects,
-// and the "opened as dialog" check replaces the WinForms ShowInTaskbar test.
+// are not ported. Remote-branch discovery keeps the original busy cursor and reports native
+// Git/OpenSSH errors directly. The history combos hold the path strings rather than Repository
+// objects, and the "opened as dialog" check replaces the WinForms ShowInTaskbar test.
 public sealed partial class FormClone : GitExtensionsDialog
 {
     private readonly TranslationString _infoNewRepositoryLocation = new("The repository will be cloned to a new directory located here:" + Environment.NewLine + "{0}");
@@ -197,6 +199,7 @@ public sealed partial class FormClone : GitExtensionsDialog
 
     protected override void OnClosed(EventArgs e)
     {
+        Cursor = null;
         _branchLoaderSequence.Dispose();
         base.OnClosed(e);
     }
@@ -211,6 +214,7 @@ public sealed partial class FormClone : GitExtensionsDialog
     {
         try
         {
+            Cursor = null;
             _branchLoaderSequence.CancelCurrent();
 
             // validate if destination path is supplied
@@ -398,13 +402,6 @@ public sealed partial class FormClone : GitExtensionsDialog
 
     private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>> branchList)
     {
-        if (branchList.HostKeyFail || branchList.AuthenticationFail)
-        {
-            // The WinForms dialog offers PuTTY host-key caching / key loading here;
-            // the twin relies on OpenSSH, whose errors surface in the message itself.
-            return;
-        }
-
         string text = GetBranchText();
         List<string> names = [.. _defaultBranchItems, .. branchList.Result!.Select(o => o.LocalName!)];
         _NO_TRANSLATE_Branches.ItemsSource = names;
@@ -417,37 +414,43 @@ public sealed partial class FormClone : GitExtensionsDialog
     private void LoadBranches()
     {
         string from = GetFromText();
+        Cursor = new Cursor(StandardCursorType.Wait);
 
         CancellationToken cancellationToken = _branchLoaderSequence.Next();
         ThreadHelper.FileAndForget(async () =>
         {
-            RemoteActionResult<IReadOnlyList<IGitRef>> branchList;
-
-            IReadOnlyList<IGitRef> refs = Module.GetRemoteServerRefs(from, false, true, out string? errorOutput, cancellationToken);
-
-            if (string.IsNullOrEmpty(errorOutput))
+            IReadOnlyList<IGitRef> refs = [];
+            string? errorOutput;
+            try
             {
-                branchList = new(result: refs, authenticationFail: false, hostKeyFail: false);
+                refs = Module.GetRemoteServerRefs(from, false, true, out errorOutput, cancellationToken);
             }
-            else if (errorOutput.Contains("FATAL ERROR") && errorOutput.Contains("authentication"))
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
-                // If the authentication failed because of a missing key, ask the user to supply one.
-                branchList = new(result: null, authenticationFail: true, hostKeyFail: false);
+                return;
             }
-            else if (errorOutput.Contains("the server's host key is not cached in the registry", StringComparison.InvariantCultureIgnoreCase))
+            catch (Exception ex)
             {
-                branchList = new(result: null, authenticationFail: false, hostKeyFail: true);
-            }
-            else
-            {
-                throw new ExternalOperationException(workingDirectory: Module.WorkingDir, innerException: new Exception(errorOutput));
+                errorOutput = ex.Message;
             }
 
-            await this.SwitchToMainThreadAsync(cancellationToken);
-            if (!cancellationToken.IsCancellationRequested)
+            await this.SwitchToMainThreadAsync();
+            if (cancellationToken.IsCancellationRequested)
             {
-                UpdateBranches(branchList);
+                return;
             }
+
+            Cursor = null;
+            if (!string.IsNullOrWhiteSpace(errorOutput))
+            {
+                MessageBoxes.ShowError(this, errorOutput);
+                return;
+            }
+
+            UpdateBranches(new RemoteActionResult<IReadOnlyList<IGitRef>>(
+                result: refs,
+                authenticationFail: false,
+                hostKeyFail: false));
         });
     }
 
@@ -522,6 +525,12 @@ public sealed partial class FormClone : GitExtensionsDialog
         {
             _form = form;
         }
+
+        public ComboBox Branches => _form._NO_TRANSLATE_Branches;
+
+        public ComboBox Source => _form._NO_TRANSLATE_From;
+
+        public void LoadBranches() => _form.LoadBranches();
 
         public bool TryExtractUrl(string text, out string url) => FormClone.TryExtractUrl(text, out url);
     }
