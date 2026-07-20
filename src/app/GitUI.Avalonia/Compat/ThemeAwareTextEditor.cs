@@ -14,13 +14,26 @@ public sealed class ThemeAwareTextEditor : TextEditor
 {
     public ThemeAwareTextEditor()
     {
-        ActualThemeVariantChanged += (_, _) => TextArea.TextView.Redraw();
+        UpdateLinkForeground();
+        ActualThemeVariantChanged += (_, _) =>
+        {
+            UpdateLinkForeground();
+            TextArea.TextView.Redraw();
+        };
     }
 
     protected override Type StyleKeyOverride => typeof(TextEditor);
 
     protected override IVisualLineTransformer CreateColorizer(IHighlightingDefinition highlightingDefinition)
         => new ThemeAwareHighlightingColorizer(highlightingDefinition, this);
+
+    private void UpdateLinkForeground()
+    {
+        TextArea.TextView.LinkTextForegroundBrush = new SolidColorBrush(
+            ActualThemeVariant == ThemeVariant.Dark
+                ? MediaColor.Parse("#4DA3FF")
+                : MediaColor.Parse("#0563C1"));
+    }
 
     private sealed class ThemeAwareHighlightingColorizer : HighlightingColorizer
     {
