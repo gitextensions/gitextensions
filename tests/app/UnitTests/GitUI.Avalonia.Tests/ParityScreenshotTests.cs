@@ -31,6 +31,7 @@ using GitUI.LeftPanel;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
+using NSubstitute;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -342,6 +343,23 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormResolveConflicts))
         {
             return new FormResolveConflicts(context.Commands);
+        }
+
+        if (viewType == typeof(FormMergeSubmodule))
+        {
+            const string filename = "submodule";
+            ObjectId remoteId = ObjectId.Parse("3333333333333333333333333333333333333333");
+            IGitModule module = Substitute.For<IGitModule>();
+            IGitModule submodule = Substitute.For<IGitModule>();
+            module.GetConflictAsync(filename).Returns(new ConflictData(
+                new ConflictedFileData(context.ParentRevision.ObjectId, filename),
+                new ConflictedFileData(context.HeadRevision.ObjectId, filename),
+                new ConflictedFileData(remoteId, filename)));
+            module.GetSubmodule(filename).Returns(submodule);
+            submodule.GetCurrentCheckout().Returns(context.HeadRevision.ObjectId);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            return new FormMergeSubmodule(commands, filename);
         }
 
         if (viewType == typeof(FormStash))
@@ -659,6 +677,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormViewPatch))
         {
             return (689, 501);
+        }
+
+        if (viewType == typeof(FormMergeSubmodule))
+        {
+            return (595, 254);
         }
 
         if (viewType == typeof(FindAndReplaceForm))
