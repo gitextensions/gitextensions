@@ -27,7 +27,97 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer and terminal; it wraps rather than hiding commands at narrow widths. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, and shared Output history; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. Settings, scripts/plugins and worktrees/submodules remain absent until their owning phases. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs; Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. Repository reload, refs/history, and GPG work use one form-owned lifetime boundary, so queued notifications and unfinished providers cannot outlive shutdown. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer, terminal, and the live Settings host; it wraps rather than hiding commands at narrow widths. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, and shared Output history; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. Scripts/plugins and worktrees/submodules remain absent until their owning phases. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs; Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. Repository reload, refs/history, and GPG work use one form-owned lifetime boundary, so queued notifications and unfinished providers cannot outlive shutdown. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+  },
+  "src/app/GitUI/CommandsDialogs/FormSettings.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and a temporary root placeholder. Individual built-in and plugin pages remain in 3.17+ and phase 4."
+  },
+  "src/app/GitUI/CommandsDialogs/FormSettings.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Two-column resizable settings layout with the original 200px navigation width, hosted page surface, instant-save notice, and compact dialog actions."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/ISettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/ISettingsPage.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same page contract with Avalonia Control replacing WinForms Control."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/ISettingsPageHost.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/ISettingsPageHost.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same navigation, save/load-all, validation host contract and test mock."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageBase.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves the same type-created page lifecycle, host/services/settings access, load/save state, extensibility ISettingControlBinding reuse, title/reference contract, search-keyword extraction, and an Avalonia ComboBox binding. Future pages can add Avalonia-native bindings without duplicating the extensibility settings model."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageBase.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The empty WinForms designer surface and component ToolTip map to the code-only Avalonia base and SettingsToolTip adapter."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageReference.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageReference.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/GroupSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/GroupSettingsPage.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same non-visual translated grouping page with Avalonia Control in the interface boundary."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsGroupPages.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsGroupPages.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Git Extensions, Git, and Plugins group identities and page references."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same root replacement, hierarchy, initial/programmatic navigation, selected-page event, AND-keyword search, cycling foundation, and page enumeration over native Avalonia TreeViewItems. Unknown references fall back to the first root while their pages are incrementally ported."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact filter and scrollable tree preserve the original 200px navigation surface and reuse the established dotted NativeTreeView-style hierarchy template."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/CommonLogic.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CommonLogic.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves construction of distributed and Git-config setting stores plus editor resolution. WinForms picker/registry/ComboBox helpers remain deferred to the pages that consume them, where they will receive portable UI implementations."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable Git/editor/install-directory checks required by the host and first pages; remaining Windows-specific auto-repair behavior is deferred with its consuming checklist pages."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/DistributedSettingsSet.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/DistributedSettingsSet.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/GitConfigSettingsSet.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/GitConfigSettingsSet.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/RevisionDiffControl.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml.cs",
@@ -801,7 +891,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule-update, and revision-range difftool members are real; unported members throw NotImplementedException."
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule-update, revision-range difftool, and Settings host members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/RevisionDiffInfoProvider.cs": {
     "twin": "src/app/GitUI/RevisionDiffInfoProvider.cs",
