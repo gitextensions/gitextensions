@@ -6,6 +6,7 @@ using GitCommands.Git.Gpg;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Compat;
@@ -32,6 +33,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
     private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
+    private readonly SplitterManager? _splitterManager;
     private GridLength _commitInfoWidth = new(490);
     private GpgInfo? _gpgInfo;
     private GitRevision? _gpgInfoLoadingRevision;
@@ -113,6 +115,10 @@ public sealed partial class FormBrowse : GitModuleForm
         ToolStripFilters.Bind(() => Module, RevisionGrid);
         revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => string.Empty, refreshGitStatus: null);
         fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => string.Empty, refreshGitStatus: null);
+        _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse.Avalonia"));
+        revisionDiff.InitSplitterManager(_splitterManager);
+        fileTree.InitSplitterManager(_splitterManager);
+        _splitterManager.RestoreSplitters();
         RevisionGrid.FilterChanged += RevisionGrid_FilterChanged;
         CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectionChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
@@ -1014,6 +1020,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         _loadOperationsCancellationTokenSource.Cancel();
+        _splitterManager?.SaveSplitters();
         _gpgInfoLoadSequence.Dispose();
         RevisionGrid.CancelBackgroundTasks();
         revisionDiff.CancelBackgroundTasks();

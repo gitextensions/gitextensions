@@ -6,7 +6,7 @@
   <!-- Upstream splitContainer1 (commit info above, fixed 160) / splitContainer2 (author
        gutter | file). The author gutter is an editor margin here, so a single row hosts
        the file viewer. -->
-  <Grid RowDefinitions="160,5,*">
+  <Grid x:Name="splitContainer1" RowDefinitions="160,5,*">
     <commitinfo:CommitInfo x:Name="CommitInfo" />
 
     <GridSplitter Grid.Row="1"
