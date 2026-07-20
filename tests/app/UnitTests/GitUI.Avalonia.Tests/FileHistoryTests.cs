@@ -26,6 +26,21 @@ public sealed class FileHistoryTests
 {
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
+    private bool _detectCopyInAllOnBlame;
+    private bool _detectCopyInFileOnBlame;
+    private bool _displayAuthorFirst;
+    private bool _followRenames;
+    private bool _followRenamesExactOnly;
+    private bool _fullHistory;
+    private bool _ignoreWhitespaceOnBlame;
+    private bool _loadBlameOnShow;
+    private bool _loadHistoryOnShow;
+    private bool _showAuthor;
+    private bool _showAuthorDate;
+    private bool _showAuthorTime;
+    private bool _showLineNumbers;
+    private bool _showOriginalFilePath;
+    private bool _simplifyMerges;
 
     [SetUp]
     public void SetUp()
@@ -47,11 +62,46 @@ public sealed class FileHistoryTests
 
         _workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.FileHistoryTests-{Guid.NewGuid():N}");
         Directory.CreateDirectory(_workingDirectory);
+
+        _detectCopyInAllOnBlame = AppSettings.DetectCopyInAllOnBlame;
+        _detectCopyInFileOnBlame = AppSettings.DetectCopyInFileOnBlame;
+        _displayAuthorFirst = AppSettings.BlameDisplayAuthorFirst;
+        _followRenames = AppSettings.FollowRenamesInFileHistory;
+        _followRenamesExactOnly = AppSettings.FollowRenamesInFileHistoryExactOnly;
+        _fullHistory = AppSettings.FullHistoryInFileHistory;
+        _ignoreWhitespaceOnBlame = AppSettings.IgnoreWhitespaceOnBlame;
+        _loadBlameOnShow = AppSettings.LoadBlameOnShow;
+        _loadHistoryOnShow = AppSettings.LoadFileHistoryOnShow;
+        _showAuthor = AppSettings.BlameShowAuthor;
+        _showAuthorDate = AppSettings.BlameShowAuthorDate;
+        _showAuthorTime = AppSettings.BlameShowAuthorTime;
+        _showLineNumbers = AppSettings.BlameShowLineNumbers;
+        _showOriginalFilePath = AppSettings.BlameShowOriginalFilePath;
+        _simplifyMerges = AppSettings.SimplifyMergesInFileHistory;
+
+        AppSettings.FollowRenamesInFileHistory = true;
+        AppSettings.LoadBlameOnShow = true;
+        AppSettings.LoadFileHistoryOnShow = true;
     }
 
     [TearDown]
     public void TearDown()
     {
+        AppSettings.DetectCopyInAllOnBlame = _detectCopyInAllOnBlame;
+        AppSettings.DetectCopyInFileOnBlame = _detectCopyInFileOnBlame;
+        AppSettings.BlameDisplayAuthorFirst = _displayAuthorFirst;
+        AppSettings.FollowRenamesInFileHistory = _followRenames;
+        AppSettings.FollowRenamesInFileHistoryExactOnly = _followRenamesExactOnly;
+        AppSettings.FullHistoryInFileHistory = _fullHistory;
+        AppSettings.IgnoreWhitespaceOnBlame = _ignoreWhitespaceOnBlame;
+        AppSettings.LoadBlameOnShow = _loadBlameOnShow;
+        AppSettings.LoadFileHistoryOnShow = _loadHistoryOnShow;
+        AppSettings.BlameShowAuthor = _showAuthor;
+        AppSettings.BlameShowAuthorDate = _showAuthorDate;
+        AppSettings.BlameShowAuthorTime = _showAuthorTime;
+        AppSettings.BlameShowLineNumbers = _showLineNumbers;
+        AppSettings.BlameShowOriginalFilePath = _showOriginalFilePath;
+        AppSettings.SimplifyMergesInFileHistory = _simplifyMerges;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
@@ -63,7 +113,10 @@ public sealed class FileHistoryTests
 
         form.FindControl<RevisionGridControl>("RevisionGrid").Should().NotBeNull();
         form.FindControl<TabControl>("tabControl1").Should().NotBeNull();
+        form.FindControl<GitUI.UserControls.FilterToolBar>("ToolStripFilters").Should().NotBeNull();
+        form.FindControl<GitUI.UserControls.CommitDiff>("CommitDiff").Should().NotBeNull();
         form.FindControl<FileViewer>("Diff").Should().NotBeNull();
+        form.FindControl<FileViewer>("View").Should().NotBeNull();
         form.FindControl<GitUI.Blame.BlameControl>("Blame").Should().NotBeNull();
     }
 
@@ -79,8 +132,17 @@ public sealed class FileHistoryTests
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "$this", "Text", "File History");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "openWithDifftoolToolStripMenuItem", "Text", "Open with difftool");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "diffToolRemoteLocalStripMenuItem", "Text", "Difftool selected < - > local");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "saveAsToolStripMenuItem", "Text", "Save as");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "followFileHistoryToolStripMenuItem", "Text", "Detect and follow renames");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "showFullHistoryToolStripMenuItem", "Text", "Show full history");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "toolStripSplitLoad", "ToolTipText", "Load file history");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "ShowFullHistory", "ToolTipText", "Show Full History");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "CommitInfoTabPage", "Text", "Commit");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "DiffTab", "Text", "Diff");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "ViewTab", "Text", "View");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "BlameTab", "Text", "Blame");
+        translation.DidNotReceive().AddTranslationItem(nameof(FormFileHistory), "ShowFullHistory", "toolTip", Arg.Any<string>());
+        translation.DidNotReceive().AddTranslationItem(nameof(FormFileHistory), "toolStripSplitLoad", "toolTip", Arg.Any<string>());
 
         string[] emittedKeys = translation.ReceivedCalls()
             .Where(call => call.GetMethodInfo().Name == nameof(ITranslation.AddTranslationItem))
@@ -121,6 +183,151 @@ public sealed class FileHistoryTests
         {
             form.Close();
         }
+    }
+
+    [AvaloniaTest]
+    public async Task FormFileHistory_should_show_the_selected_blob_and_commit_tabs()
+    {
+        GitModule module = CreateRepositoryWithFileHistory();
+        FormFileHistory form = new(CreateCommands(module), "tracked.txt");
+        form.Show();
+        try
+        {
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
+            TabControl tabs = form.FindControl<TabControl>("tabControl1")!;
+            TabItem viewTab = form.FindControl<TabItem>("ViewTab")!;
+            TabItem commitTab = form.FindControl<TabItem>("CommitInfoTabPage")!;
+            FileViewer view = form.FindControl<FileViewer>("View")!;
+            GitUI.UserControls.CommitDiff commitDiff = form.FindControl<GitUI.UserControls.CommitDiff>("CommitDiff")!;
+
+            await WaitUntilAsync(() => revisionGrid.SelectedRevision is not null);
+
+            tabs.SelectedItem = viewTab;
+            await WaitUntilAsync(() => view.TextEditor.Text.Contains("second line", StringComparison.Ordinal));
+
+            tabs.SelectedItem = commitTab;
+            await WaitUntilAsync(() => commitDiff.CommitInformation.Revision?.ObjectId == revisionGrid.SelectedRevision!.ObjectId);
+        }
+        finally
+        {
+            form.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormFileHistory_should_allow_two_revisions_for_comparison()
+    {
+        GitModule module = CreateRepositoryWithFileHistory();
+        FormFileHistory form = new(CreateCommands(module), "tracked.txt");
+        form.Show();
+        try
+        {
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
+            TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")!;
+
+            await WaitUntilAsync(() => loadingStatus.Text == "2 revisions");
+            GitRevision[] items = [.. revisions.ItemsSource!.OfType<GitRevision>()];
+            revisions.SelectedItems!.Clear();
+            revisions.SelectedItems.Add(items[0]);
+            revisions.SelectedItems.Add(items[1]);
+
+            revisionGrid.GetSelectedRevisions().Should().Equal(items);
+        }
+        finally
+        {
+            form.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormFileHistory_should_follow_renames_and_use_the_historical_file_name()
+    {
+        GitModule module = CreateRepositoryWithRenamedFileHistory();
+        FormFileHistory form = new(CreateCommands(module), "tracked.txt");
+        form.Show();
+        try
+        {
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
+            TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            TabControl tabs = form.FindControl<TabControl>("tabControl1")!;
+            TabItem viewTab = form.FindControl<TabItem>("ViewTab")!;
+            FileViewer view = form.FindControl<FileViewer>("View")!;
+            ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")!;
+
+            await WaitUntilAsync(() => loadingStatus.Text == "3 revisions");
+            GitRevision originalRevision = revisions.ItemsSource!
+                .OfType<GitRevision>()
+                .Single(revision => revision.Subject == "initial");
+
+            revisionGrid.SetSelectedRevision(originalRevision.ObjectId).Should().BeTrue();
+            revisionGrid.GetRevisionFileName("tracked.txt", originalRevision.ObjectId).Should().Be("old.txt");
+
+            tabs.SelectedItem = viewTab;
+            await WaitUntilAsync(() => view.TextEditor.Text.Contains("initial line", StringComparison.Ordinal));
+            form.Text.Should().Contain("(old.txt)");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormFileHistory_should_wait_for_explicit_load_when_auto_load_is_disabled()
+    {
+        AppSettings.LoadFileHistoryOnShow = false;
+        GitModule module = CreateRepositoryWithFileHistory();
+        FormFileHistory form = new(CreateCommands(module), "tracked.txt");
+        form.Show();
+        try
+        {
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
+            TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            FileViewer diff = form.FindControl<FileViewer>("Diff")!;
+            GitUI.Compat.IconSplitButton loadButton = form.FindControl<GitUI.Compat.IconSplitButton>("toolStripSplitLoad")!;
+
+            revisionGrid.IsVisible.Should().BeFalse();
+            loadButton.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(SplitButton.ClickEvent));
+
+            await WaitUntilAsync(() =>
+                revisionGrid.IsVisible
+                && loadingStatus.Text == "2 revisions"
+                && diff.TextEditor.Text.Contains("+second line", StringComparison.Ordinal));
+        }
+        finally
+        {
+            form.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormFileHistory_history_and_blame_options_should_update_shared_settings()
+    {
+        AppSettings.FullHistoryInFileHistory = false;
+        AppSettings.SimplifyMergesInFileHistory = true;
+        bool previousIgnoreWhitespace = AppSettings.IgnoreWhitespaceOnBlame;
+        FormFileHistory form = new();
+
+        MenuItem fullHistory = form.FindControl<MenuItem>("showFullHistoryToolStripMenuItem")!;
+        MenuItem simplifyMerges = form.FindControl<MenuItem>("simplifyMergesToolStripMenuItem")!;
+        MenuItem ignoreWhitespace = form.FindControl<MenuItem>("ignoreWhitespaceToolStripMenuItem")!;
+
+        fullHistory.IsChecked.Should().BeFalse();
+        simplifyMerges.IsEnabled.Should().BeFalse();
+
+        fullHistory.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+        AppSettings.FullHistoryInFileHistory.Should().BeTrue();
+        simplifyMerges.IsEnabled.Should().BeTrue();
+
+        simplifyMerges.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+        AppSettings.SimplifyMergesInFileHistory.Should().BeFalse();
+
+        ignoreWhitespace.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+        AppSettings.IgnoreWhitespaceOnBlame.Should().Be(!previousIgnoreWhitespace);
     }
 
     [AvaloniaTest]
@@ -193,7 +400,7 @@ public sealed class FileHistoryTests
                 form,
                 Arg.Is<IReadOnlyList<GitRevision?>>(revisions => revisions.Count == 1 && revisions[0] == revisionGrid.SelectedRevision),
                 "tracked.txt",
-                null,
+                "tracked.txt",
                 RevisionDiffKind.DiffAB,
                 true,
                 "meld");
@@ -202,6 +409,14 @@ public sealed class FileHistoryTests
         {
             form.Close();
         }
+    }
+
+    private IGitUICommands CreateCommands(GitModule module)
+    {
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+        return commands;
     }
 
     private GitModule CreateRepositoryWithFileHistory()
@@ -223,6 +438,25 @@ public sealed class FileHistoryTests
         File.AppendAllText(trackedFile, "second line\n");
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" }).Should().BeTrue();
 
+        return module;
+    }
+
+    private GitModule CreateRepositoryWithRenamedFileHistory()
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet", "-b", "main" }).Should().BeTrue();
+        module.SetSetting("user.name", "Avalonia Test");
+        module.SetSetting("user.email", "avalonia@example.com");
+
+        File.WriteAllText(Path.Combine(_workingDirectory, "old.txt"), "initial line\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "old.txt" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
+
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("mv") { "old.txt", "tracked.txt" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "rename" }).Should().BeTrue();
+
+        File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second line\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" }).Should().BeTrue();
         return module;
     }
 
