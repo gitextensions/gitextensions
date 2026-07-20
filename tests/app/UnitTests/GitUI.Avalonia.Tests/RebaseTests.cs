@@ -16,6 +16,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.HelperDialogs;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -32,6 +33,7 @@ public sealed class RebaseTests
     private bool _closeProcessDialog;
     private bool _dontShowHelpImages;
     private bool _rebaseAutoStash;
+    private bool _revisionGraphShowArtificialCommits;
 
     [SetUp]
     public void SetUp()
@@ -43,6 +45,7 @@ public sealed class RebaseTests
         _closeProcessDialog = AppSettings.CloseProcessDialog;
         _dontShowHelpImages = AppSettings.DontShowHelpImages;
         _rebaseAutoStash = AppSettings.RebaseAutoStash;
+        _revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
         AppSettings.AlwaysShowAdvOpt = false;
         AppSettings.DontShowHelpImages = false;
         AppSettings.RebaseAutoStash = false;
@@ -70,6 +73,7 @@ public sealed class RebaseTests
         AppSettings.CloseProcessDialog = _closeProcessDialog;
         AppSettings.DontShowHelpImages = _dontShowHelpImages;
         AppSettings.RebaseAutoStash = _rebaseAutoStash;
+        AppSettings.RevisionGraphShowArtificialCommits = _revisionGraphShowArtificialCommits;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
@@ -381,13 +385,18 @@ public sealed class RebaseTests
     [AvaloniaTest]
     public async Task FormChooseCommit_should_preselect_a_real_revision()
     {
+        AppSettings.RevisionGraphShowArtificialCommits = true;
         GitModule module = CreateLinearRepository(out _, out ObjectId selectedId, out _);
         GitUICommands commands = new(_serviceContainer, module);
         FormChooseCommit form = new(commands, selectedId.ToString(), showCurrentBranchOnly: true);
         try
         {
             form.Show();
-            await WaitUntilAsync(() => form.SelectedRevision?.ObjectId == selectedId);
+            TextBlock loadingStatus = form.FindControl<RevisionGridControl>("revisionGrid")!
+                .FindControl<TextBlock>("lblLoadingStatus")!;
+            await WaitUntilAsync(() =>
+                form.SelectedRevision?.ObjectId == selectedId
+                && loadingStatus.Text == "3 revisions");
 
             form.SelectedRevision!.ObjectId.Should().Be(selectedId);
             form.flowLayoutPanelParents.IsVisible.Should().BeTrue();
@@ -395,6 +404,65 @@ public sealed class RebaseTests
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormChooseCommit_should_offer_and_select_artificial_revisions_when_requested()
+    {
+        AppSettings.RevisionGraphShowArtificialCommits = true;
+        GitModule module = CreateLinearRepository(out _, out _, out _);
+        File.AppendAllText(Path.Combine(_workingDirectory, "history.txt"), "worktree change");
+        GitUICommands commands = new(_serviceContainer, module);
+        FormChooseCommit form = new(
+            commands,
+            ObjectId.WorkTreeId.ToString(),
+            showArtificial: true,
+            showCurrentBranchOnly: true);
+        try
+        {
+            form.Show();
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("revisionGrid")!;
+            TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            await WaitUntilAsync(() =>
+                loadingStatus.Text == "5 revisions"
+                && form.SelectedRevision?.ObjectId == ObjectId.WorkTreeId);
+
+            GitRevision workTree = revisionGrid.GetRevision(ObjectId.WorkTreeId);
+            GitRevision index = revisionGrid.GetRevision(ObjectId.IndexId);
+            workTree.Subject.Should().Be(ResourceManager.TranslatedStrings.Workspace);
+            workTree.ParentIds.Should().Equal(ObjectId.IndexId);
+            index.Subject.Should().Be(ResourceManager.TranslatedStrings.Index);
+            index.ParentIds.Should().Equal(module.GetCurrentCheckout());
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task CommitPickerSmallControl_should_show_commit_count_relative_to_HEAD()
+    {
+        GitModule module = CreateLinearRepository(out ObjectId firstId, out _, out _);
+        GitUICommands commands = new(_serviceContainer, module);
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        CommitPickerSmallControl picker = new() { UICommandsSource = source };
+        Window window = new() { Width = 500, Height = 80, Content = picker };
+        try
+        {
+            window.Show();
+            picker.SetSelectedCommitHash(firstId.ToString());
+            TextBlock commitCount = picker.FindControl<TextBlock>("lbCommits")!;
+            string expected = module.GetCommitCountString(module.GetCurrentCheckout(), firstId.ToString());
+            await WaitUntilAsync(() => commitCount.Text == expected);
+
+            commitCount.Text.Should().Be("(+2-0)");
+        }
+        finally
+        {
+            window.Close();
         }
     }
 

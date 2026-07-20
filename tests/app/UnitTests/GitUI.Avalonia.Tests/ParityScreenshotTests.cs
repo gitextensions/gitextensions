@@ -165,6 +165,7 @@ public sealed partial class ParityScreenshotTests
         string outputDirectory)
     {
         bool originalAlwaysShowAdvancedOptions = AppSettings.AlwaysShowAdvOpt;
+        bool originalRevisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
         Control view = CreateView(context, descriptor.ViewType);
         (double width, double height) = GetCaptureSize(descriptor.ViewType);
         Window window;
@@ -192,6 +193,10 @@ public sealed partial class ParityScreenshotTests
         if (descriptor.ViewType == typeof(FormRemotes))
         {
             AppSettings.AlwaysShowAdvOpt = true;
+        }
+        else if (descriptor.ViewType == typeof(FormChooseCommit))
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = true;
         }
 
         try
@@ -252,6 +257,7 @@ public sealed partial class ParityScreenshotTests
             }
 
             AppSettings.AlwaysShowAdvOpt = originalAlwaysShowAdvancedOptions;
+            AppSettings.RevisionGraphShowArtificialCommits = originalRevisionGraphShowArtificialCommits;
         }
     }
 
@@ -392,7 +398,10 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormChooseCommit))
         {
-            return new FormChooseCommit(context.Commands, context.HeadRevision.ObjectId.ToString());
+            return new FormChooseCommit(
+                context.Commands,
+                ObjectId.WorkTreeId.ToString(),
+                showArtificial: true);
         }
 
         if (viewType == typeof(FormSelectMultipleBranches))
@@ -616,7 +625,7 @@ public sealed partial class ParityScreenshotTests
     private static void SeedCommitPicker(CommitPickerSmallControl commitPicker, CaptureContext context)
     {
         GetRequiredControl<TextBox>(commitPicker, "textBoxCommitHash").Text = context.HeadRevision.ObjectId.ToShortString();
-        GetRequiredControl<TextBlock>(commitPicker, "lbCommits").Text = MainBranchName;
+        GetRequiredControl<TextBlock>(commitPicker, "lbCommits").Text = "(+2-0)";
     }
 
     private static T GetRequiredControl<T>(Control root, string name)
