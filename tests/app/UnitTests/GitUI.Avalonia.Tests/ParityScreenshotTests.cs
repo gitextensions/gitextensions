@@ -149,6 +149,7 @@ public sealed partial class ParityScreenshotTests
         double scaleFactor,
         string outputDirectory)
     {
+        bool originalAlwaysShowAdvancedOptions = AppSettings.AlwaysShowAdvOpt;
         Control view = CreateView(context, descriptor.ViewType);
         (double width, double height) = GetCaptureSize(descriptor.ViewType);
         Window window;
@@ -173,6 +174,11 @@ public sealed partial class ParityScreenshotTests
         }
 
         window.RequestedThemeVariant = themeVariant;
+        if (descriptor.ViewType == typeof(FormRemotes))
+        {
+            AppSettings.AlwaysShowAdvOpt = true;
+        }
+
         try
         {
             PrepareView(view, context);
@@ -229,6 +235,8 @@ public sealed partial class ParityScreenshotTests
             {
                 disposableWindow.Dispose();
             }
+
+            AppSettings.AlwaysShowAdvOpt = originalAlwaysShowAdvancedOptions;
         }
     }
 
@@ -888,6 +896,7 @@ public sealed partial class ParityScreenshotTests
             Module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { FeatureBranchName, "HEAD~1" });
             Module.GitExecutable.RunCommand(new GitArgumentBuilder("tag") { "v1.0", "HEAD~1" });
             Module.GitExecutable.RunCommand(new GitArgumentBuilder("remote") { "add", RemoteName, "https://example.com/gitextensions/parity.git" });
+            Module.SetSetting($"remote.{RemoteName}.color", "#7B3FB2");
             Module.GitExecutable.RunCommand(new GitArgumentBuilder("update-ref") { $"refs/remotes/{RemoteName}/{MainBranchName}", "HEAD" });
 
             File.AppendAllText(Path.Combine(sourceDirectory, "App.cs"), "// Unstaged visual parity adjustment\n");
