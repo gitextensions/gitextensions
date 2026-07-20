@@ -441,6 +441,16 @@ public sealed partial class ParityScreenshotTests
 
     private static void PrepareView(Control root, CaptureContext context)
     {
+        if (root is OutputHistoryControl outputHistory)
+        {
+            outputHistory.TextBox.Text =
+                $"12:34 git fetch --all{Environment.NewLine}" +
+                $"See https://gitextensions.github.io/ for details.{Environment.NewLine}{Environment.NewLine}" +
+                $"12:35 git push origin main{Environment.NewLine}" +
+                $"Remote: https://github.com/gitextensions/gitextensions{Environment.NewLine}{Environment.NewLine}" +
+                $"###{Environment.NewLine}";
+        }
+
         if (root is FormStatus formStatus)
         {
             FieldInfo processCallback = typeof(FormStatus)

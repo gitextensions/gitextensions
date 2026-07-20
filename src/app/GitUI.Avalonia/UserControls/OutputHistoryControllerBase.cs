@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+using AvaloniaEdit;
 using GitExtUtils;
 using GitUI.Models;
 
@@ -7,7 +7,7 @@ namespace GitUI.UserControls;
 internal abstract class OutputHistoryControllerBase : IDisposable
 {
     protected IOutputHistoryProvider _outputHistoryProvider;
-    protected TextBox _textBox;
+    protected TextEditor _textBox;
 
     internal OutputHistoryControllerBase(IOutputHistoryProvider outputHistoryProvider, OutputHistoryControl outputHistoryControl)
     {
@@ -34,7 +34,8 @@ internal abstract class OutputHistoryControllerBase : IDisposable
         _textBox.InvokeAndForget(() =>
         {
             _textBox.Text = history;
-            _textBox.CaretIndex = history.Length;
+            _textBox.CaretOffset = history.Length;
+            _textBox.ScrollToEnd();
         });
     }
 

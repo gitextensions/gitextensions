@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using AvaloniaEdit;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -79,7 +80,10 @@ public sealed class ConsoleAndOutputTests
             Dispatcher.UIThread.RunJobs();
             shell.StartShell(Path.GetTempPath());
             TextBox input = shell.Control.GetVisualDescendants().OfType<TextBox>().Single(control => control.Name == "ConsoleInput");
-            TextBox output = shell.Control.GetVisualDescendants().OfType<TextBox>().Single(control => control.Name == "ConsoleOutput");
+            TextEditor output = shell.Control.GetVisualDescendants().OfType<TextEditor>().Single(control => control.Name == "ConsoleOutput");
+            output.Options.EnableHyperlinks.Should().BeTrue();
+            output.Options.EnableEmailHyperlinks.Should().BeTrue();
+            output.Options.RequireControlModifierForHyperlinkClick.Should().BeFalse();
             input.Text = "echo gitextensions-console-ready";
             input.RaiseEvent(new KeyEventArgs
             {
@@ -140,6 +144,9 @@ public sealed class ConsoleAndOutputTests
         translation.Received(1).AddTranslationItem(nameof(OutputHistoryControl), "tsmiCopy", "Text", "&Copy");
         translation.Received(1).AddTranslationItem(nameof(OutputHistoryControl), "tsmiClear", "Text", "C&lear");
         control.tsmiCopy.Header.Should().Be("_Copy translated");
+        control.TextBox.Options.EnableHyperlinks.Should().BeTrue();
+        control.TextBox.Options.EnableEmailHyperlinks.Should().BeTrue();
+        control.TextBox.Options.RequireControlModifierForHyperlinkClick.Should().BeFalse();
     }
 
     [AvaloniaTest]
@@ -164,11 +171,44 @@ public sealed class ConsoleAndOutputTests
             serviceContainer.GetRequiredService<IOutputHistoryRecorder>().RecordHistory("recorded output");
             Dispatcher.UIThread.RunJobs();
             outputControl.TextBox.Text.Should().Contain("recorded output");
+            outputControl.TextBox.CaretOffset.Should().Be(outputControl.TextBox.Text.Length);
 
             form.ProcessHotkey(WinFormsShims.Keys.Control | WinFormsShims.Keys.D9).Should().BeTrue();
             Dispatcher.UIThread.RunJobs();
             form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(outputTab);
-            outputControl.TextBox.IsKeyboardFocusWithin.Should().BeTrue();
+            outputControl.TextBox.TextArea.IsKeyboardFocusWithin.Should().BeTrue();
+
+            outputControl.tsmiClear.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            outputControl.TextBox.Text.Should().Be($"###{Environment.NewLine}");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_console_hotkey_should_create_the_shell_lazily_and_focus_its_input()
+    {
+        using ServiceContainer serviceContainer = CreateServiceContainer();
+        FormBrowse form = CreateForm(serviceContainer);
+        try
+        {
+            form.Show();
+            TabItem consoleTab = form.CommitInfoTabControl.Items
+                .OfType<TabItem>()
+                .Single(tab => Equals(tab.Header, "Console"));
+            consoleTab.Content.Should().BeNull();
+
+            form.ProcessHotkey(WinFormsShims.Keys.Control | WinFormsShims.Keys.D6).Should().BeTrue();
+            Dispatcher.UIThread.RunJobs();
+
+            form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(consoleTab);
+            TextBox input = ((Control)consoleTab.Content!).GetVisualDescendants()
+                .OfType<TextBox>()
+                .Single(control => control.Name == "ConsoleInput");
+            input.IsKeyboardFocusWithin.Should().BeTrue();
         }
         finally
         {
