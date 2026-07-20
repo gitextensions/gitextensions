@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using GitExtensions.Extensibility.Translations;
@@ -55,7 +56,7 @@ internal static class AvaloniaTranslationUtils
                 && ToolTip.GetTip((Control)item) is string toolTip
                 && toolTip.Any(char.IsLetter))
             {
-                translation.AddTranslationItem(category, name, "toolTip", toolTip);
+                translation.AddTranslationItem(category, name, GetToolTipPropertyName((Control)item), toolTip);
             }
         }
 
@@ -106,7 +107,11 @@ internal static class AvaloniaTranslationUtils
 
             if (hasToolTip && ToolTip.GetTip((Control)item) is string toolTip)
             {
-                string? translatedToolTip = translation.TranslateItem(category, name, "toolTip", () => toolTip);
+                string? translatedToolTip = translation.TranslateItem(
+                    category,
+                    name,
+                    GetToolTipPropertyName((Control)item),
+                    () => toolTip);
                 if (!string.IsNullOrEmpty(translatedToolTip))
                 {
                     ToolTip.SetTip((Control)item, translatedToolTip);
@@ -227,4 +232,23 @@ internal static class AvaloniaTranslationUtils
         => TextBlockSources.GetValue(textBlock, _ => new TextBlockSource(text));
 
     private sealed record TextBlockSource(string Text);
+
+    private static string GetToolTipPropertyName(Control control)
+        => TranslationCompat.GetUseToolTipText(control) ? "ToolTipText" : "toolTip";
+}
+
+/// <summary>
+/// Marks controls whose WinForms translation uses a ToolStripItem.ToolTipText key rather
+/// than a ToolTip component's toolTip key.
+/// </summary>
+public sealed class TranslationCompat : AvaloniaObject
+{
+    public static readonly AttachedProperty<bool> UseToolTipTextProperty =
+        AvaloniaProperty.RegisterAttached<TranslationCompat, Control, bool>("UseToolTipText");
+
+    public static bool GetUseToolTipText(Control control)
+        => control.GetValue(UseToolTipTextProperty);
+
+    public static void SetUseToolTipText(Control control, bool value)
+        => control.SetValue(UseToolTipTextProperty, value);
 }
