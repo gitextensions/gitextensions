@@ -35,7 +35,6 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         InitializeComponent();
 
         _diffCalculator = new FileStatusDiffCalculator(() => Module);
-        DiffText.MainThreadFactory = _taskManager.JoinableTaskFactory;
         DiffFiles.SelectionMode = SelectionMode.Multiple;
         DiffFiles.Bind(RefreshArtificial);
         DiffFiles.SelectedIndexChanged += DiffFiles_SelectedIndexChanged;
