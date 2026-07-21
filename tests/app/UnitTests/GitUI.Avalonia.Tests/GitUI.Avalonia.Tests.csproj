@@ -23,8 +23,18 @@
     <Compile Include="..\GitUI.Tests\Theming\ThemePersistenceTests.cs" Link="Theming\ThemePersistenceTests.cs" />
     <Compile Include="..\GitUI.Tests\SpellChecker\WordAtCursorExtractorTests.cs"
              Link="SpellChecker\WordAtCursorExtractorTests.cs" />
+    <Compile Include="..\GitUI.Tests\Script\ScriptOptionsParserTests.cs"
+             Link="Script\ScriptOptionsParserTests.cs" />
+    <Compile Include="..\GitUI.Tests\Script\ScriptsManagerScriptRunnerTests.cs"
+             Link="Script\ScriptsManagerScriptRunnerTests.cs" />
     <Compile Include="..\GitUI.Tests\CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs"
              Link="CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Exact WinForms-shaped aliases required by the unchanged shared script tests. -->
+    <Using Include="GitExtensions.Shims.WinForms.IWin32Window" Alias="IWin32Window" />
+    <Using Include="GitExtensions.Shims.WinForms.DialogResult" Alias="DialogResult" />
   </ItemGroup>
 
   <ItemGroup>
