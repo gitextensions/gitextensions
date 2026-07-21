@@ -1,14 +1,17 @@
 using System.Diagnostics.CodeAnalysis;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
+using GitUI.ScriptsEngine;
 
 namespace GitUI;
 
 // Twin of GitUI/GitModuleForm.cs (reduced): access to IGitUICommands and the GitModule,
-// including the command-service bridge used by the shared hotkey dispatcher. Scripts remain deferred.
+// including the command-service bridge used by hotkeys and user scripts.
 
 /// <summary>Base window that provides access to the module and <see cref="IGitUICommands"/>.</summary>
-public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceManager.IGitModuleForm
+public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceManager.IGitModuleForm, IScriptOptionsForm
 {
+    private IScriptsRunner? _scriptsRunner;
     private IGitUICommands? _uiCommands;
 
     public event EventHandler<GitUICommandsChangedEventArgs>? UICommandsChanged;
@@ -20,7 +23,10 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
 
     protected GitModuleForm(IGitUICommands? commands, bool enablePositionRestore)
     {
-        _uiCommands = commands;
+        if (commands is not null)
+        {
+            UICommands = commands;
+        }
     }
 
     public IGitUICommands UICommands
@@ -32,12 +38,28 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
             ArgumentNullException.ThrowIfNull(value);
             IGitUICommands? oldCommands = _uiCommands;
             _uiCommands = value;
+            _scriptsRunner = null;
             UICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
         }
     }
 
     /// <summary>Gets the module of the currently set <see cref="UICommands"/>.</summary>
     public IGitModule Module => UICommands.Module;
+
+    public IScriptsRunner ScriptsRunner
+        => _scriptsRunner ??= UICommands.GetRequiredService<IScriptsRunner>();
+
+    public virtual IScriptOptionsProvider GetScriptOptionsProvider()
+        => ScriptOptionsProviderBase.Default;
+
+    protected override bool ExecuteCommand(int command)
+    {
+        IScriptsManager scriptsManager = UICommands.GetRequiredService<IScriptsManager>();
+        ScriptInfo? script = scriptsManager.GetScript(command);
+        return script is not null
+            ? ScriptsRunner.RunScript(script, this, UICommands, GetScriptOptionsProvider())
+            : base.ExecuteCommand(command);
+    }
 
     public override bool TryGetUICommands([NotNullWhen(true)] out IGitUICommands? commands)
     {

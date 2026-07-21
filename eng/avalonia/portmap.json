@@ -677,6 +677,126 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Framework-neutral extraction logic is linked unchanged; the original test fixture is also linked into GitUI.Avalonia.Tests so both UIs share one behavior specification."
   },
+  "src/app/GitUI/ScriptsEngine/FilePromptCreator.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/FilePromptCreator.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral prompt factory is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/ScriptsEngine/IScriptOptionsForm.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IScriptOptionsForm.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/IScriptOptionsProvider.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IScriptOptionsProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/IScriptsManager.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IScriptsManager.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/IScriptsRunner.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IScriptsRunner.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/IUserInputPrompt.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IUserInputPrompt.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/PowerShellHelper.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/PowerShellHelper.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves the original detached execution contract and uses powershell.exe on Windows or the cross-platform pwsh executable elsewhere."
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptEvent.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/ScriptEvent.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptInfo.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/ScriptInfo.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The serialized XML contract is identical. Packaged resource names and image files produce Avalonia images; extracting an associated icon from arbitrary executables has no portable desktop API and is omitted."
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptOptionsParser.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/ScriptOptionsParser.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral parser is linked unchanged and covered by the same 102-case fixture as WinForms."
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptOptionsProviderBase.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/ScriptOptionsProviderBase.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptsManager.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/ScriptsManager.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Serialization, defaults, event iteration, command lookup and hotkey identifier repair are linked unchanged."
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptsManager.ScriptRunner.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/ScriptsManager.ScriptRunner.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains prompts, argument expansion, confirmation, foreground process dialog, background launch, URL opening, navigation and repository notification. GitExtensions resolves to the side-by-side process path; plugin commands return the original not-found result until PluginRegistry activation in Phase 4."
+  },
+  "src/app/GitUI/ScriptsEngine/SimplePromptCreator.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/SimplePromptCreator.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral prompt factory is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/ScriptsEngine/SimplePrompt.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/SimplePrompt.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves dynamic caption/label/default value, focused input, OK result and Escape selection-clearing/cancel behavior."
+  },
+  "src/app/GitUI/ScriptsEngine/SimplePrompt.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/SimplePrompt.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/FormFilePrompt.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/FormFilePrompt.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses the native Avalonia multi-file picker and returns the same space-separated quoted local paths through the original prompt interface."
+  },
+  "src/app/GitUI/ScriptsEngine/FormFilePrompt.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/FormFilePrompt.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormQuickItemSelector.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickItemSelector.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves sorting consumers, first-item selection, eight-row scroll threshold, measured bounded width, manual location, double-click acceptance and Escape cancellation."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormQuickItemSelector.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickItemSelector.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormQuickGitRefSelector.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickGitRefSelector.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormQuickStringSelector.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickStringSelector.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
   "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
     "status": "functional",
