@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -24,10 +24,15 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class SettingsDialogTests
 {
+    [SetUp]
+    public void SetUp()
+    {
+        GitUI.ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+    }
+
     [AvaloniaTest]
     public void FormBrowse_should_expose_the_live_settings_toolbar_action()
     {
-        GitUI.ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
         FormBrowse form = new();
 
         Button settings = form.FindControl<Button>("EditSettings")
@@ -565,7 +570,7 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
-    public void Appearance_settings_should_map_supported_values_without_touching_deferred_avatar_settings()
+    public void Appearance_settings_should_map_general_and_avatar_values()
     {
         bool originalRelativeDate = AppSettings.RelativeDate;
         bool originalRepositoryBranch = AppSettings.ShowRepoCurrentBranch;
@@ -577,6 +582,9 @@ public sealed class SettingsDialogTests
         AvatarProvider originalAvatarProvider = AppSettings.AvatarProvider;
         AvatarFallbackType originalFallback = AppSettings.AvatarFallbackType;
         string originalAvatarTemplate = AppSettings.CustomAvatarTemplate;
+        bool originalShowAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
+        bool originalShowAvatarInCommitInfo = AppSettings.ShowAuthorAvatarInCommitInfo;
+        int originalAvatarCacheDays = AppSettings.AvatarImageCacheDays;
         try
         {
             AppSettings.RelativeDate = true;
@@ -586,6 +594,9 @@ public sealed class SettingsDialogTests
             AppSettings.TruncatePathMethod = TruncatePathMethod.TrimStart;
             AppSettings.Translation = "English";
             AppSettings.Dictionary = "none";
+            AppSettings.ShowAuthorAvatarColumn = true;
+            AppSettings.ShowAuthorAvatarInCommitInfo = false;
+            AppSettings.AvatarImageCacheDays = 23;
 
             AppearanceSettingsPage page = new();
             page.LoadSettings();
@@ -596,20 +607,31 @@ public sealed class SettingsDialogTests
             accessor.ShowVisualStudioBranch.IsVisible.Should().Be(OperatingSystem.IsWindows());
             accessor.EnableAutoScale.IsChecked.Should().BeFalse();
             accessor.TruncatePathMethod.SelectedIndex.Should().Be(2);
-            accessor.AuthorImages.IsVisible.Should().BeFalse();
+            accessor.AuthorImages.IsVisible.Should().BeTrue();
+            accessor.ShowAvatarInCommitGraph.IsChecked.Should().BeTrue();
+            accessor.ShowAvatarInCommitInfo.IsChecked.Should().BeFalse();
+            accessor.CacheDays.Value.Should().Be(23);
 
             accessor.ShowRelativeDate.IsChecked = false;
             accessor.ShowRepositoryBranch.IsChecked = true;
             accessor.EnableAutoScale.IsChecked = true;
             accessor.TruncatePathMethod.SelectedIndex = 3;
+            accessor.ShowAvatarInCommitGraph.IsChecked = false;
+            accessor.ShowAvatarInCommitInfo.IsChecked = true;
+            accessor.CacheDays.Value = 41;
+            accessor.AvatarProvider.SelectedIndex = Array.IndexOf(Enum.GetValues<AvatarProvider>(), AvatarProvider.None);
+            accessor.AvatarFallback.SelectedIndex = Array.IndexOf(Enum.GetValues<AvatarFallbackType>(), AvatarFallbackType.Retro);
             page.SaveSettings();
 
             AppSettings.RelativeDate.Should().BeFalse();
             AppSettings.ShowRepoCurrentBranch.Should().BeTrue();
             AppSettings.EnableAutoScale.Should().BeTrue();
             AppSettings.TruncatePathMethod.Should().Be(TruncatePathMethod.FileNameOnly);
-            AppSettings.AvatarProvider.Should().Be(originalAvatarProvider);
-            AppSettings.AvatarFallbackType.Should().Be(originalFallback);
+            AppSettings.ShowAuthorAvatarColumn.Should().BeFalse();
+            AppSettings.ShowAuthorAvatarInCommitInfo.Should().BeTrue();
+            AppSettings.AvatarImageCacheDays.Should().Be(41);
+            AppSettings.AvatarProvider.Should().Be(AvatarProvider.None);
+            AppSettings.AvatarFallbackType.Should().Be(AvatarFallbackType.Retro);
             AppSettings.CustomAvatarTemplate.Should().Be(originalAvatarTemplate);
         }
         finally
@@ -624,6 +646,9 @@ public sealed class SettingsDialogTests
             AppSettings.AvatarProvider = originalAvatarProvider;
             AppSettings.AvatarFallbackType = originalFallback;
             AppSettings.CustomAvatarTemplate = originalAvatarTemplate;
+            AppSettings.ShowAuthorAvatarColumn = originalShowAvatarColumn;
+            AppSettings.ShowAuthorAvatarInCommitInfo = originalShowAvatarInCommitInfo;
+            AppSettings.AvatarImageCacheDays = originalAvatarCacheDays;
         }
     }
 

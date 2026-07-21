@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -11,6 +11,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitUI.Avatars;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.UserControls;
@@ -95,7 +96,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         _messageColumnProvider = new MessageColumnProvider(this);
         AddColumn(_messageColumnProvider);
         AddColumn(new NotesColumnProvider());
-        AddColumn(new AvatarColumnProvider());
+        AddColumn(new AvatarColumnProvider(this, AvatarService.DefaultProvider, AvatarService.CacheCleaner));
         AddColumn(new AuthorNameColumnProvider(_authorHighlighting));
         AddColumn(new DateColumnProvider());
         AddColumn(new CommitIdColumnProvider());
@@ -382,7 +383,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         }
     }
 
-    private void RefreshRealizedRows()
+    internal void RefreshRealizedRows()
     {
         foreach (RevisionRowControl row in lstRevisions.GetVisualDescendants().OfType<RevisionRowControl>())
         {
