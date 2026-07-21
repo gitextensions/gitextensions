@@ -447,6 +447,11 @@ public sealed partial class ParityScreenshotTests
 
     private static void PrepareView(Control root, CaptureContext context)
     {
+        if (root is ColorsSettingsPage colorsSettingsPage)
+        {
+            colorsSettingsPage.LoadSettings();
+        }
+
         if (root is OutputHistoryControl outputHistory)
         {
             outputHistory.TextBox.Text =
