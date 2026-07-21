@@ -142,6 +142,10 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             GitExtensionsSettingsGroup.GetPageReference(),
             Images.Appearance);
         settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<SortingSettingsPage>(this, serviceProvider),
+            AppearanceSettingsPage.GetPageReference(),
+            Images.SortBy);
+        settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<ColorsSettingsPage>(this, serviceProvider),
             AppearanceSettingsPage.GetPageReference(),
             Images.Colors);
