@@ -1,3 +1,7 @@
+using System.Text;
+using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Configurations;
@@ -67,5 +71,13 @@ public sealed class CommonLogic : Translate
             yield return Environment.GetEnvironmentVariable("VISUAL");
             yield return Environment.GetEnvironmentVariable(AmbientGitEditorEnvVariableName);
         }
+    }
+
+    public static void FillEncodings(ComboBox combo)
+    {
+        combo.ItemsSource = AppSettings.AvailableEncodings.Values.ToArray();
+        combo.ItemTemplate = new FuncDataTemplate<Encoding>(
+            (encoding, _) => new TextBlock { Text = encoding?.EncodingName },
+            supportsRecycling: true);
     }
 }
