@@ -23,6 +23,11 @@
     <!-- Framework-free GitUI sources compiled unchanged (update
          eng/avalonia/portmap.json when this list changes). -->
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
+    <Compile Include="..\GitUI\Avatars\CustomAvatarProvider.UriTemplateData.cs" Link="Avatars\CustomAvatarProvider.UriTemplateData.cs" />
+    <Compile Include="..\GitUI\Avatars\HexString.cs" Link="Avatars\HexString.cs" />
+    <Compile Include="..\GitUI\Avatars\IAvatarCacheCleaner.cs" Link="Avatars\IAvatarCacheCleaner.cs" />
+    <Compile Include="..\GitUI\Avatars\MultiCacheCleaner.cs" Link="Avatars\MultiCacheCleaner.cs" />
+    <Compile Include="..\GitUI\Avatars\TemplateFormatter.cs" Link="Avatars\TemplateFormatter.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\FormClone.RemoteActionResult.cs" Link="CommandsDialogs\FormClone.RemoteActionResult.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\FormRemotesController.cs" Link="CommandsDialogs\FormRemotesController.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridFileUpdate.cs" Link="CommandsDialogs\IRevisionGridFileUpdate.cs" />

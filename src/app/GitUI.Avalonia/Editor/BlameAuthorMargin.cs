@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -14,8 +14,8 @@ namespace GitUI.Editor;
 /// Twin of GitUI/Editor/BlameAuthorMargin.cs with an extended role: the WinForms margin
 /// renders only the avatars while the author text is a second, scroll-synchronised
 /// editor. This AvaloniaEdit margin renders the age marker and the author line itself,
-/// which replaces that second editor and its scroll synchronisation. Avatars arrive
-/// with the avatar subphase.
+/// which replaces that second editor and its scroll synchronisation. Blame-avatar loading
+/// remains separate so this margin does not take ownership of asynchronous image requests.
 /// </remarks>
 public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
 {

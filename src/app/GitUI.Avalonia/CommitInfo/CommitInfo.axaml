@@ -1,14 +1,20 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:GitUI"
              x:Class="GitUI.CommitInfo.CommitInfo">
   <ScrollViewer>
-    <StackPanel Margin="8,4" Spacing="8">
-      <SelectableTextBlock x:Name="RevisionHeader"
-                           Classes="gitextensions-commit-header"
-                           Opacity="0.85" />
-      <SelectableTextBlock x:Name="rtbxCommitMessage"
-                           Classes="gitextensions-commit-message"
-                           TextWrapping="Wrap" />
-    </StackPanel>
+    <Grid Margin="8,4" ColumnDefinitions="Auto,*">
+      <local:AvatarControl x:Name="avatarControl"
+                           Margin="0,0,8,0"
+                           VerticalAlignment="Top" />
+      <StackPanel Grid.Column="1" Spacing="8">
+        <SelectableTextBlock x:Name="RevisionHeader"
+                             Classes="gitextensions-commit-header"
+                             Opacity="0.85" />
+        <SelectableTextBlock x:Name="rtbxCommitMessage"
+                             Classes="gitextensions-commit-message"
+                             TextWrapping="Wrap" />
+      </StackPanel>
+    </Grid>
   </ScrollViewer>
 </UserControl>

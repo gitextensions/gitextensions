@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using GitCommands;
 using GitCommands.Git;
@@ -9,6 +9,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitUI.Avatars;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
 using GitUI.Models;
@@ -985,6 +986,10 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         LoadHotkeys(HotkeySettingsName);
+        AvatarService.UpdateAvatarInitialFontsSettings();
+        RevisionGrid.ApplyColumnSettings();
+        RevisionGrid.RefreshRealizedRows();
+        RevisionInfo.Revision = RevisionGrid.SelectedRevision;
         RefreshDefaultPullAction();
     }
 
