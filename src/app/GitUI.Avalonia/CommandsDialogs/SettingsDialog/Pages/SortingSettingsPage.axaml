@@ -1,0 +1,92 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:properties="using:GitUI.Properties"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.SortingSettingsPage"
+                                 Text="Sorting">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="tlpnlMain"
+                Margin="8">
+      <GroupBox x:Name="gbGeneral" Header="Sorting">
+        <Grid x:Name="tlpnlGeneral"
+              Margin="8,4,8,8"
+              ColumnDefinitions="Auto,322,Auto,*"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+              RowSpacing="5">
+          <TextBlock x:Name="lblRevisionsSortBy"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Sort revisions by" />
+          <ComboBox x:Name="_NO_TRANSLATE_cmbRevisionsSortBy"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+          <Image x:Name="RevisionSortOrderHelp"
+                 Grid.Column="2"
+                 Width="16"
+                 Height="16"
+                 Margin="6,0,0,0"
+                 VerticalAlignment="Center"
+                 Cursor="Hand"
+                 Source="{x:Static properties:Images.Information}" />
+
+          <TextBlock x:Name="lblBranchesSortBy"
+                     Grid.Row="1"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Sort branches by" />
+          <ComboBox x:Name="_NO_TRANSLATE_cmbBranchesSortBy"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+
+          <TextBlock x:Name="lblBranchesOrder"
+                     Grid.Row="2"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Order branches" />
+          <ComboBox x:Name="_NO_TRANSLATE_cmbBranchesOrder"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+
+          <TextBlock x:Name="lblPrioBranchNames"
+                     Grid.Row="3"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Prioritized branches" />
+          <TextBox x:Name="txtPrioBranchNames"
+                   Grid.Row="3"
+                   Grid.Column="1" />
+          <Image x:Name="PrioBranchNamesHelp"
+                 Grid.Row="3"
+                 Grid.Column="2"
+                 Width="16"
+                 Height="16"
+                 Margin="6,0,0,0"
+                 VerticalAlignment="Center"
+                 Cursor="Hand"
+                 Source="{x:Static properties:Images.Information}" />
+
+          <TextBlock x:Name="lblPrioRemoteNames"
+                     Grid.Row="4"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Prioritized remotes" />
+          <TextBox x:Name="txtPrioRemoteNames"
+                   Grid.Row="4"
+                   Grid.Column="1" />
+          <Image x:Name="PrioRemoteNamesHelp"
+                 Grid.Row="4"
+                 Grid.Column="2"
+                 Width="16"
+                 Height="16"
+                 Margin="6,0,0,0"
+                 VerticalAlignment="Center"
+                 Cursor="Hand"
+                 Source="{x:Static properties:Images.Information}" />
+        </Grid>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>
