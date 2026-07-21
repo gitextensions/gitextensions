@@ -25,6 +25,7 @@ using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
+using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.Help;
 using GitUI.HelperDialogs;
@@ -467,6 +468,11 @@ public sealed partial class ParityScreenshotTests
             sortingSettingsPage.LoadSettings();
         }
 
+        if (root is AppearanceFontsSettingsPage appearanceFontsSettingsPage)
+        {
+            appearanceFontsSettingsPage.LoadSettings();
+        }
+
         if (root is OutputHistoryControl outputHistory)
         {
             outputHistory.TextBox.Text =
@@ -801,6 +807,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormGoToLine))
         {
             return (237, 100);
+        }
+
+        if (viewType == typeof(FontDialogWindow))
+        {
+            return (520, 300);
         }
 
         if (typeof(Window).IsAssignableFrom(viewType))
