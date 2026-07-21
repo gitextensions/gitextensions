@@ -13,8 +13,8 @@ internal sealed class PlainTextConsoleEmulator : IConsoleEmulator
     public string? DefaultTheme => null;
 
     public IConsoleCommandRunner CreateCommandRunner(ConsoleEmulatorSettings settings)
-        => new PlainTextConsoleCommandRunner();
+        => new PlainTextConsoleCommandRunner(settings);
 
     public IConsoleShellRunner CreateShellRunner(ConsoleEmulatorSettings settings)
-        => new PlainTextConsoleShellRunner();
+        => new PlainTextConsoleShellRunner(settings);
 }

@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaEdit;
@@ -34,6 +35,7 @@ public sealed class ConsoleAndOutputTests
     private bool _originalShowConsoleTab;
     private bool _originalShowOutputHistoryAsTab;
     private string? _originalSerializedHotkeys;
+    private WinFormsShims.Font? _originalConsoleFont;
 
     [SetUp]
     public void SetUp()
@@ -46,6 +48,7 @@ public sealed class ConsoleAndOutputTests
         _originalShowConsoleTab = AppSettings.ShowConEmuTab.Value;
         _originalShowOutputHistoryAsTab = AppSettings.ShowOutputHistoryAsTab.Value;
         _originalSerializedHotkeys = AppSettings.SerializedHotkeys;
+        _originalConsoleFont = AppSettings.ConEmuConsoleFont;
 
         AppSettings.OutputHistoryDepth.Value = 3;
         AppSettings.OutputHistoryPanelVisible.Value = false;
@@ -62,11 +65,16 @@ public sealed class ConsoleAndOutputTests
         AppSettings.ShowConEmuTab.Value = _originalShowConsoleTab;
         AppSettings.ShowOutputHistoryAsTab.Value = _originalShowOutputHistoryAsTab;
         AppSettings.SerializedHotkeys = _originalSerializedHotkeys!;
+        AppSettings.ConEmuConsoleFont = _originalConsoleFont;
     }
 
     [AvaloniaTest]
     public async Task Plain_text_console_should_run_the_platform_shell_and_accept_input()
     {
+        AppSettings.ConEmuConsoleFont = new WinFormsShims.Font(
+            "Courier New",
+            13,
+            WinFormsShims.FontStyle.Bold | WinFormsShims.FontStyle.Italic);
         using ServiceContainer serviceContainer = CreateServiceContainer();
         IConsoleEmulatorsRegistry registry = serviceContainer.GetRequiredService<IConsoleEmulatorsRegistry>();
         registry.AvailableConsoleEmulators.Should().ContainSingle();
@@ -84,6 +92,14 @@ public sealed class ConsoleAndOutputTests
             output.Options.EnableHyperlinks.Should().BeTrue();
             output.Options.EnableEmailHyperlinks.Should().BeTrue();
             output.Options.RequireControlModifierForHyperlinkClick.Should().BeFalse();
+            output.FontFamily.Name.Should().Be("Courier New");
+            output.FontSize.Should().BeApproximately(13 * 96d / 72d, 0.001d);
+            output.FontWeight.Should().Be(FontWeight.Bold);
+            output.FontStyle.Should().Be(FontStyle.Italic);
+            input.FontFamily.Name.Should().Be("Courier New");
+            input.FontSize.Should().BeApproximately(13 * 96d / 72d, 0.001d);
+            input.FontWeight.Should().Be(FontWeight.Bold);
+            input.FontStyle.Should().Be(FontStyle.Italic);
             input.Text = "echo gitextensions-console-ready";
             input.RaiseEvent(new KeyEventArgs
             {
