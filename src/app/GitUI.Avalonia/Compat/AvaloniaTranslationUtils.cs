@@ -234,7 +234,8 @@ internal static class AvaloniaTranslationUtils
     private sealed record TextBlockSource(string Text);
 
     private static string GetToolTipPropertyName(Control control)
-        => TranslationCompat.GetUseToolTipText(control) ? "ToolTipText" : "toolTip";
+        => TranslationCompat.GetToolTipPropertyName(control)
+            ?? (TranslationCompat.GetUseToolTipText(control) ? "ToolTipText" : "toolTip");
 }
 
 /// <summary>
@@ -246,9 +247,18 @@ public sealed class TranslationCompat : AvaloniaObject
     public static readonly AttachedProperty<bool> UseToolTipTextProperty =
         AvaloniaProperty.RegisterAttached<TranslationCompat, Control, bool>("UseToolTipText");
 
+    public static readonly AttachedProperty<string?> ToolTipPropertyNameProperty =
+        AvaloniaProperty.RegisterAttached<TranslationCompat, Control, string?>("ToolTipPropertyName");
+
     public static bool GetUseToolTipText(Control control)
         => control.GetValue(UseToolTipTextProperty);
 
     public static void SetUseToolTipText(Control control, bool value)
         => control.SetValue(UseToolTipTextProperty, value);
+
+    public static string? GetToolTipPropertyName(Control control)
+        => control.GetValue(ToolTipPropertyNameProperty);
+
+    public static void SetToolTipPropertyName(Control control, string? value)
+        => control.SetValue(ToolTipPropertyNameProperty, value);
 }
