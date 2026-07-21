@@ -38,6 +38,7 @@ public static class AvaloniaThemeSettings
                 : ThemeVariant.Light;
 
         UpdateSystemColorMode(application);
+        AvaloniaThemeResources.Apply(application, ThemeModule.Settings);
         SubscribeToThemeChanges(application);
     }
 
@@ -59,16 +60,26 @@ public static class AvaloniaThemeSettings
 
     private static void Application_ActualThemeVariantChanged(object? sender, EventArgs e)
     {
-        if (sender is Application application)
+        if (sender is Application application
+            && UpdateSystemColorMode(application)
+            && AppSettings.ThemeId == ThemeId.WindowsAppColorModeId)
         {
-            UpdateSystemColorMode(application);
+            ThemeModule.Load();
+            AvaloniaThemeResources.Apply(application, ThemeModule.Settings);
         }
     }
 
-    private static void UpdateSystemColorMode(Application application)
+    private static bool UpdateSystemColorMode(Application application)
     {
-        WinFormsApplication.SystemColorMode = application.ActualThemeVariant == ThemeVariant.Dark
+        WinFormsSystemColorMode colorMode = application.ActualThemeVariant == ThemeVariant.Dark
             ? WinFormsSystemColorMode.Dark
             : WinFormsSystemColorMode.Classic;
+        if (WinFormsApplication.SystemColorMode == colorMode)
+        {
+            return false;
+        }
+
+        WinFormsApplication.SystemColorMode = colorMode;
+        return true;
     }
 }
