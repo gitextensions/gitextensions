@@ -20,6 +20,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
@@ -128,23 +129,37 @@ public sealed partial class ParityScreenshotTests
             ("200", 2),
         ];
 
-        foreach ((string themeName, ThemeVariant themeVariant) in themes)
+        ThemeId originalTheme = AppSettings.ThemeId;
+        try
         {
-            foreach ((string scaleName, double scaleFactor) in scales)
+            foreach ((string themeName, ThemeVariant themeVariant) in themes)
             {
-                foreach (ViewDescriptor view in views)
+                AppSettings.ThemeId = themeVariant == ThemeVariant.Dark
+                    ? ThemeId.DefaultDark
+                    : ThemeId.DefaultLight;
+                AvaloniaThemeSettings.ApplyAppSettings();
+
+                foreach ((string scaleName, double scaleFactor) in scales)
                 {
-                    ManifestEntry entry = await CaptureViewAsync(
-                        context,
-                        view,
-                        themeName,
-                        themeVariant,
-                        scaleName,
-                        scaleFactor,
-                        outputDirectory);
-                    manifest.Add(entry);
+                    foreach (ViewDescriptor view in views)
+                    {
+                        ManifestEntry entry = await CaptureViewAsync(
+                            context,
+                            view,
+                            themeName,
+                            themeVariant,
+                            scaleName,
+                            scaleFactor,
+                            outputDirectory);
+                        manifest.Add(entry);
+                    }
                 }
             }
+        }
+        finally
+        {
+            AppSettings.ThemeId = originalTheme;
+            AvaloniaThemeSettings.ApplyAppSettings();
         }
 
         string manifestPath = Path.Combine(outputDirectory, manifestFileName);
