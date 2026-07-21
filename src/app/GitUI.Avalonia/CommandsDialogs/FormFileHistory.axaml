@@ -99,6 +99,9 @@
             <MenuItem x:Name="displayAuthorFirstToolStripMenuItem"
                       Header="Display author first"
                       ToggleType="CheckBox" />
+            <MenuItem x:Name="showAuthorAvatarToolStripMenuItem"
+                      Header="Show author avatar"
+                      ToggleType="CheckBox" />
             <MenuItem x:Name="showAuthorToolStripMenuItem"
                       Header="Show author"
                       ToggleType="CheckBox" />
