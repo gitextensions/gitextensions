@@ -1,7 +1,7 @@
-namespace GitUI.Editor;
+﻿namespace GitUI.Editor;
 
-// Twin of GitUI/Editor/GitBlameEntry.cs without the Avatar image; avatars arrive with
-// the avatar subphase.
+// Twin of GitUI/Editor/GitBlameEntry.cs without the Avatar image. Loading avatars without
+// blocking blame parsing or making the author margin own disposable bitmaps remains separate.
 public class GitBlameEntry
 {
     public int AgeBucketIndex { get; set; }
