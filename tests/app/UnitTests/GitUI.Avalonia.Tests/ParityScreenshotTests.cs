@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -32,8 +32,10 @@ using GitUI.Editor;
 using GitUI.Help;
 using GitUI.HelperDialogs;
 using GitUI.LeftPanel;
+using GitUI.ScriptsEngine;
 using GitUI.SpellChecker;
 using GitUI.UserControls;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -288,6 +290,25 @@ public sealed partial class ParityScreenshotTests
 
     private static Control CreateView(CaptureContext context, Type viewType)
     {
+        if (viewType == typeof(SimplePrompt))
+        {
+            return new SimplePrompt("Script input", "Branch name", FeatureBranchName);
+        }
+
+        if (viewType == typeof(FormFilePrompt))
+        {
+            FormFilePrompt prompt = new();
+            prompt.FindControl<TextBox>("txtFilePath")!.Text = @"C:\source\first.txt C:\source\second.txt";
+            return prompt;
+        }
+
+        if (viewType == typeof(FormQuickItemSelector))
+        {
+            FormQuickStringSelector selector = new();
+            selector.Init([MainBranchName, FeatureBranchName, "release/5.0", "support/legacy"]);
+            return selector;
+        }
+
         if (viewType == typeof(FormSettings))
         {
             return new FormSettings(context.Commands, GeneralSettingsPage.GetPageReference());
@@ -789,6 +810,21 @@ public sealed partial class ParityScreenshotTests
 
     private static (double Width, double Height) GetCaptureSize(Type viewType)
     {
+        if (viewType == typeof(SimplePrompt))
+        {
+            return (334, 104);
+        }
+
+        if (viewType == typeof(FormFilePrompt))
+        {
+            return (549, 94);
+        }
+
+        if (viewType == typeof(FormQuickItemSelector))
+        {
+            return (190, 134);
+        }
+
         if (viewType == typeof(FormBrowse))
         {
             return (1400, 850);
