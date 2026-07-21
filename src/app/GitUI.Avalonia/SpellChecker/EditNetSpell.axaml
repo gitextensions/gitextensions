@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:GitUI.SpellChecker"
+             x:Class="GitUI.SpellChecker.EditNetSpell">
+  <Grid>
+    <TextBox x:Name="TextBox"
+             AcceptsReturn="True"
+             AcceptsTab="True"
+             BorderThickness="0"
+             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+             ScrollViewer.VerticalScrollBarVisibility="Auto">
+      <TextBox.ContextMenu>
+        <ContextMenu x:Name="SpellCheckContextMenu" />
+      </TextBox.ContextMenu>
+    </TextBox>
+    <local:SpellCheckAdorner x:Name="SpellCheckAdorner"
+                             IsHitTestVisible="False" />
+  </Grid>
+</UserControl>

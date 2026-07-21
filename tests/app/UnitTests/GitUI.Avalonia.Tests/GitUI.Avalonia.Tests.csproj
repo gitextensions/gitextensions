@@ -21,6 +21,8 @@
     <Compile Include="..\GitUI.Tests\Theming\CssUrlResolverTests.cs" Link="Theming\CssUrlResolverTests.cs" />
     <Compile Include="..\GitUI.Tests\Theming\ThemeLoaderTests.cs" Link="Theming\ThemeLoaderTests.cs" />
     <Compile Include="..\GitUI.Tests\Theming\ThemePersistenceTests.cs" Link="Theming\ThemePersistenceTests.cs" />
+    <Compile Include="..\GitUI.Tests\SpellChecker\WordAtCursorExtractorTests.cs"
+             Link="SpellChecker\WordAtCursorExtractorTests.cs" />
     <Compile Include="..\GitUI.Tests\CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs"
              Link="CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs" />
   </ItemGroup>
