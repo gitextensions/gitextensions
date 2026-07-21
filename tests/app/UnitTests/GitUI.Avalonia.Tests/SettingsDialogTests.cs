@@ -1,3 +1,4 @@
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -379,6 +380,112 @@ public sealed class SettingsDialogTests
             nameof(FormFixHome), "groupBox8", "Text", "Environment");
         translation.Received(1).AddTranslationItem(
             nameof(FormFixHome), "otherHome", "Text", "&Other");
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_register_and_navigate_to_both_git_config_pages()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+
+        GitConfigSettingsPage configPage = accessor.SettingsTreeView.SettingsPages
+            .OfType<GitConfigSettingsPage>()
+            .Single();
+        GitConfigAdvancedSettingsPage advancedPage = accessor.SettingsTreeView.SettingsPages
+            .OfType<GitConfigAdvancedSettingsPage>()
+            .Single();
+
+        form.GotoPage(GitConfigSettingsPage.GetPageReference());
+        SettingsPageHeader configHeader = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        configHeader.GetTestAccessor().Page.Should().BeSameAs(configPage);
+        configPage.GetTitle().Should().Be("Git config");
+
+        form.GotoPage(new SettingsPageReferenceByType(typeof(GitConfigAdvancedSettingsPage)));
+        SettingsPageHeader advancedHeader = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        advancedHeader.GetTestAccessor().Page.Should().BeSameAs(advancedPage);
+        advancedPage.GetTitle().Should().Be("Advanced");
+    }
+
+    [AvaloniaTest]
+    public void Git_config_pages_should_expose_the_original_editable_fields_and_tri_state_options()
+    {
+        GitConfigSettingsPage configPage = new();
+        GitConfigSettingsPage.TestAccessor config = configPage.GetTestAccessor();
+        GitConfigAdvancedSettingsPage advancedPage = new();
+
+        config.Editor.IsEditable.Should().BeTrue();
+        config.CredentialHelper.IsEditable.Should().BeTrue();
+        config.MergeTool.IsEditable.Should().BeTrue();
+        config.DiffTool.IsEditable.Should().BeTrue();
+        config.AutoCrlfOptions.Should().HaveCount(4);
+        config.MergeTool.Items.Should().NotBeEmpty();
+        config.DiffTool.Items.Should().NotBeEmpty();
+
+        IReadOnlyList<CheckBox> advancedSettings = advancedPage.GetTestAccessor().Settings;
+        advancedSettings.Should().HaveCount(8);
+        advancedSettings.Should().OnlyContain(checkBox => checkBox.IsThreeState);
+    }
+
+    [AvaloniaTest]
+    public void Available_encodings_dialog_should_partition_encodings_without_duplicates()
+    {
+        FormAvailableEncodings form = new();
+        FormAvailableEncodings.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.Included.Select(encoding => encoding.WebName)
+            .Should().OnlyHaveUniqueItems();
+        accessor.Available.Select(encoding => encoding.WebName)
+            .Should().OnlyHaveUniqueItems();
+        accessor.Included.Select(encoding => encoding.WebName)
+            .Intersect(accessor.Available.Select(encoding => encoding.WebName))
+            .Should().BeEmpty();
+
+        Encoding? available = accessor.Available.FirstOrDefault();
+        if (available is not null)
+        {
+            form.FindControl<ListBox>("ListAvailableEncodings")!.SelectedItem = available;
+            accessor.Add.IsEnabled.Should().BeTrue();
+        }
+    }
+
+    [Test]
+    public void Git_config_controller_should_prefer_an_existing_supplied_location()
+    {
+        GitConfigSettingsPageController controller = new();
+        string temporaryDirectory = Path.GetTempPath();
+        string temporaryFile = Path.GetTempFileName();
+        try
+        {
+            controller.GetInitialDirectory(temporaryFile, string.Empty)
+                .Should().Be(temporaryDirectory);
+        }
+        finally
+        {
+            File.Delete(temporaryFile);
+        }
+    }
+
+    [AvaloniaTest]
+    public void Git_config_surfaces_should_preserve_original_translation_keys()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        GitConfigSettingsPage config = new();
+        GitConfigAdvancedSettingsPage advanced = new();
+        FormAvailableEncodings encodings = new();
+
+        config.AddTranslationItems(translation);
+        advanced.AddTranslationItems(translation);
+        encodings.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(GitConfigSettingsPage), "label3", "Text", "User name");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitConfigSettingsPage), "globalAutoCrlfNotSet", "Text", "Not set");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitConfigAdvancedSettingsPage), "checkBoxPullRebase", "Text", "Rebase local branch when pulling (instead of merge)");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormAvailableEncodings), "lAvaolableEncodings", "Text", "Available:");
     }
 
     [AvaloniaTest]
