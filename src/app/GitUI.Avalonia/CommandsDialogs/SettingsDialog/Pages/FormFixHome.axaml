@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.FormFixHome"
+        Width="620"
+        Height="240"
+        MinWidth="620"
+        MinHeight="240"
+        CanResize="False"
+        CanMinimize="False"
+        CanMaximize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Home">
+  <Grid RowDefinitions="*,Auto" Margin="8">
+    <GroupBox x:Name="groupBox8" Header="Environment">
+      <Grid Margin="8,4,8,8"
+            ColumnDefinitions="Auto,*,Auto"
+            RowDefinitions="Auto,Auto,Auto,Auto"
+            RowSpacing="4">
+        <TextBlock x:Name="label51"
+                   Grid.ColumnSpan="3"
+                   Margin="0,0,0,4"
+                   TextWrapping="Wrap"
+                   Text="The global config file located in the location stored environment variable %HOME%.&#10;By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty.&#10;Change the default behaviour only if you experience problems." />
+        <TextBlock x:Name="_NO_TRANSLATE_portableHomeDescription"
+                   Grid.ColumnSpan="3"
+                   Margin="0,0,0,4"
+                   TextWrapping="Wrap"
+                   IsVisible="False" />
+        <RadioButton x:Name="defaultHome"
+                     Grid.Row="1"
+                     Grid.ColumnSpan="3"
+                     Content="_Use default for HOME" />
+        <RadioButton x:Name="userprofileHome"
+                     Grid.Row="2"
+                     Grid.ColumnSpan="3"
+                     Content="_Set HOME to USERPROFILE" />
+        <RadioButton x:Name="otherHome"
+                     Grid.Row="3"
+                     VerticalAlignment="Center"
+                     Content="_Other" />
+        <TextBox x:Name="otherHomeDir"
+                 Grid.Row="3"
+                 Grid.Column="1"
+                 MinWidth="290"
+                 Margin="8,0,6,0"
+                 MaxLength="250" />
+        <Button x:Name="otherHomeBrowse"
+                Grid.Row="3"
+                Grid.Column="2"
+                MinWidth="130"
+                Content="Browse..." />
+      </Grid>
+    </GroupBox>
+    <StackPanel x:Name="flowLayoutPanel1"
+                Grid.Row="1"
+                Margin="0,6,0,0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+      <Button x:Name="ok"
+              Classes="gitextensions-dialog-action"
+              Width="130"
+              Content="OK" />
+    </StackPanel>
+  </Grid>
+</Window>
