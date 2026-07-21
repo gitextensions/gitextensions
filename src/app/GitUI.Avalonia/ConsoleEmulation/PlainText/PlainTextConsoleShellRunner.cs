@@ -1,5 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
+using GitUI.Compat;
 
 namespace GitUI.ConsoleEmulation.PlainText;
 
@@ -14,16 +16,28 @@ internal sealed class PlainTextConsoleShellRunner : IConsoleShellRunner, IDispos
     private bool _isDisposed;
 
     public PlainTextConsoleShellRunner()
+        : this(new ConsoleEmulatorSettings(Theme: null, Font: null))
     {
-        _commandRunner = new PlainTextConsoleCommandRunner();
+    }
+
+    internal PlainTextConsoleShellRunner(ConsoleEmulatorSettings settings)
+    {
+        _commandRunner = new PlainTextConsoleCommandRunner(settings);
         _commandRunner.CommandOutputReceived += CommandRunner_CommandOutputReceived;
         _commandRunner.CommandProcessExited += CommandRunner_CommandProcessExited;
         _commandInput = new TextBox
         {
             Name = "ConsoleInput",
-            FontFamily = new Avalonia.Media.FontFamily("monospace"),
+            FontFamily = new FontFamily(settings.Font?.Name ?? "monospace"),
             Margin = new Avalonia.Thickness(0),
         };
+        if (settings.Font is not null)
+        {
+            _commandInput.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(settings.Font.Size);
+            _commandInput.FontStyle = settings.Font.Italic ? FontStyle.Italic : FontStyle.Normal;
+            _commandInput.FontWeight = settings.Font.Bold ? FontWeight.Bold : FontWeight.Normal;
+        }
+
         _commandInput.KeyDown += CommandInput_KeyDown;
 
         _control = new Grid
