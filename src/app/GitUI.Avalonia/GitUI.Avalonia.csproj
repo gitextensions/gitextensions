@@ -52,6 +52,9 @@
     <Compile Include="..\GitUI\Theming\ThemeLoader.cs" Link="Theming\ThemeLoader.cs" />
     <Compile Include="..\GitUI\Theming\ThemePersistence.cs" Link="Theming\ThemePersistence.cs" />
     <Compile Include="..\GitUI\Theming\ThemeRepository.cs" Link="Theming\ThemeRepository.cs" />
+    <Compile Include="..\GitUI\SpellChecker\SpellCheckerHelper.cs" Link="SpellChecker\SpellCheckerHelper.cs" />
+    <Compile Include="..\GitUI\SpellChecker\TextPos.cs" Link="SpellChecker\TextPos.cs" />
+    <Compile Include="..\GitUI\SpellChecker\WordAtCursorExtractor.cs" Link="SpellChecker\WordAtCursorExtractor.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusDiffCalculator.cs" Link="UserControls\FileStatusDiffCalculator.cs" />
@@ -91,6 +94,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\externals\NetSpell.SpellChecker\SpellChecker.csproj"
+                      AdditionalProperties="BuildAvalonia=true" />
     <!-- The language files are shared with the WinForms application; translation keys are
          identical, so all existing translations apply to the Avalonia twins unchanged. -->
     <None Include="..\GitUI\Translation\*.xlf" Link="Translation\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
