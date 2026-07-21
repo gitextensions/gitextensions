@@ -13,6 +13,7 @@ using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
+using GitUI.ConsoleEmulation;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -880,6 +881,139 @@ public sealed class SettingsDialogTests
         fixedPitchFonts
             .Select(name => new FontFamily(name))
             .Should().OnlyContain(fontFamily => FontDialog.IsFixedPitch(fontFamily));
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_register_console_style_after_fonts_beneath_appearance_and_navigate_to_it()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        ConsoleStyleSettingsPage consoleStyle = accessor.SettingsTreeView.SettingsPages
+            .OfType<ConsoleStyleSettingsPage>()
+            .Single();
+
+        TreeView tree = accessor.SettingsTreeView.FindControl<TreeView>("treeView1")
+            ?? throw new InvalidOperationException("The settings tree was not created.");
+        TreeViewItem appearanceNode = tree.Items
+            .OfType<TreeViewItem>()
+            .SelectMany(node => node.Items.OfType<TreeViewItem>())
+            .Single(node => node.Tag is AppearanceSettingsPage);
+        appearanceNode.Items
+            .OfType<TreeViewItem>()
+            .Select(node => node.Tag)
+            .Should().ContainInOrder(
+                accessor.SettingsTreeView.SettingsPages.OfType<SortingSettingsPage>().Single(),
+                accessor.SettingsTreeView.SettingsPages.OfType<ColorsSettingsPage>().Single(),
+                accessor.SettingsTreeView.SettingsPages.OfType<AppearanceFontsSettingsPage>().Single(),
+                consoleStyle);
+
+        form.GotoPage(ConsoleStyleSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(consoleStyle);
+        consoleStyle.GetTitle().Should().Be("Console style");
+    }
+
+    [AvaloniaTest]
+    public void Console_style_settings_should_map_emulator_theme_and_font_with_original_fallbacks()
+    {
+        string originalEmulator = AppSettings.ConsoleEmulatorName.Value;
+        string originalStyle = AppSettings.ConEmuStyle.Value;
+        WinFormsShims.Font? originalFont = AppSettings.ConEmuConsoleFont;
+        try
+        {
+            IConsoleEmulator plainText = CreateConsoleEmulator("PlainText", "Plain text", []);
+            IConsoleEmulator themed = CreateConsoleEmulator("Themed", "Themed console", ["Dark", "Light"]);
+            IConsoleEmulatorsRegistry registry = Substitute.For<IConsoleEmulatorsRegistry>();
+            registry.AvailableConsoleEmulators.Returns([plainText, themed]);
+            IServiceProvider serviceProvider = Substitute.For<IServiceProvider>();
+            serviceProvider.GetService(typeof(IConsoleEmulatorsRegistry)).Returns(registry);
+
+            AppSettings.ConsoleEmulatorName.Value = "themed";
+            AppSettings.ConEmuStyle.Value = "dark";
+            AppSettings.ConEmuConsoleFont = new WinFormsShims.Font(
+                "Courier New",
+                11,
+                WinFormsShims.FontStyle.Bold | WinFormsShims.FontStyle.Italic);
+
+            ConsoleStyleSettingsPage page = new(serviceProvider);
+            page.LoadSettings();
+            ConsoleStyleSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+            accessor.ConsoleEmulator.SelectedItem.Should().BeSameAs(themed);
+            accessor.ConsoleStyle.Items.Cast<string>().Should().Equal("Default", "Dark", "Light");
+            accessor.ConsoleStyle.SelectedItem.Should().Be("Dark");
+            accessor.ConsoleStyle.IsEnabled.Should().BeTrue();
+            accessor.ConsoleFont.Content.Should().Be("Courier New, 11");
+            accessor.ConsoleFont.FontWeight.Should().Be(FontWeight.Bold);
+            accessor.ConsoleFont.FontStyle.Should().Be(FontStyle.Italic);
+            accessor.ConsoleFontReset.IsVisible.Should().BeTrue();
+
+            accessor.ConsoleEmulator.SelectedItem = plainText;
+            accessor.ConsoleStyle.Items.Cast<string>().Should().Equal("Default");
+            accessor.ConsoleStyle.SelectedIndex.Should().Be(0);
+            accessor.ConsoleStyle.IsEnabled.Should().BeFalse();
+            WinFormsShims.Font savedFont = new("Cascadia Mono", 13.5F, WinFormsShims.FontStyle.Bold);
+            accessor.SetConsoleFont(savedFont);
+            page.SaveSettings();
+
+            AppSettings.ConsoleEmulatorName.Value.Should().Be("PlainText");
+            AppSettings.ConEmuStyle.Value.Should().Be("Default");
+            AppSettings.ConEmuConsoleFont.Should().NotBeNull();
+            AppSettings.ConEmuConsoleFont!.Name.Should().Be(savedFont.Name);
+            AppSettings.ConEmuConsoleFont.Size.Should().Be(savedFont.Size);
+            AppSettings.ConEmuConsoleFont.Style.Should().Be(savedFont.Style);
+
+            accessor.SetConsoleFont(null);
+            accessor.ConsoleFont.Content.Should().Be("Console Default");
+            accessor.ConsoleFontReset.IsVisible.Should().BeFalse();
+            page.SaveSettings();
+            AppSettings.ConEmuConsoleFont.Should().BeNull();
+        }
+        finally
+        {
+            AppSettings.ConsoleEmulatorName.Value = originalEmulator;
+            AppSettings.ConEmuStyle.Value = originalStyle;
+            AppSettings.ConEmuConsoleFont = originalFont;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Console_style_settings_should_preserve_original_translation_keys()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        ConsoleStyleSettingsPage page = new();
+
+        page.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(ConsoleStyleSettingsPage), "groupBoxConsoleSettings", "Text", "Console settings (restart required)");
+        translation.Received(1).AddTranslationItem(
+            nameof(ConsoleStyleSettingsPage), "lblConsoleEmulator", "Text", "Console emulator");
+        translation.Received(1).AddTranslationItem(
+            nameof(ConsoleStyleSettingsPage), "consoleFontChangeButton", "Text", "font name");
+        translation.Received(1).AddTranslationItem(
+            nameof(ConsoleStyleSettingsPage), "_defaultThemeDisplayName", "Text", "Default");
+        translation.Received(1).AddTranslationItem(
+            nameof(ConsoleStyleSettingsPage), "_consoleDefaultFontText", "Text", "Console Default");
+        translation.Received(1).AddTranslationItem(
+            nameof(ConsoleStyleSettingsPage), "consoleFontResetButton", "consoleFontToolTip", "Reset to default");
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(ConsoleStyleSettingsPage), "consoleFontResetButton", "toolTip", Arg.Any<string>());
+        Avalonia.Controls.ToolTip.GetTip(page.GetTestAccessor().ConsoleFontReset)
+            .Should().Be("Reset to default");
+    }
+
+    private static IConsoleEmulator CreateConsoleEmulator(
+        string name,
+        string displayName,
+        IReadOnlyCollection<string> themes)
+    {
+        IConsoleEmulator emulator = Substitute.For<IConsoleEmulator>();
+        emulator.Name.Returns(name);
+        emulator.DisplayName.Returns(displayName);
+        emulator.AvailableThemes.Returns(themes);
+        return emulator;
     }
 
     [AvaloniaTest]

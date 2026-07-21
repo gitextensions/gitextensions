@@ -153,6 +153,10 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             SettingsPageBase.Create<AppearanceFontsSettingsPage>(this, serviceProvider),
             AppearanceSettingsPage.GetPageReference(),
             Images.Font);
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<ConsoleStyleSettingsPage>(this, serviceProvider),
+            AppearanceSettingsPage.GetPageReference(),
+            Images.Console);
 
         GitSettingsGroup gitSettingsGroup = new();
         settingsTreeView.AddSettingsPage(gitSettingsGroup, parentPageReference: null, Images.GitLogo16);
