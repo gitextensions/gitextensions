@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -22,6 +22,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
+using GitUI.Avatars;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -654,9 +655,14 @@ public sealed partial class ParityScreenshotTests
             .Split('\n');
         BlameControl.TestAccessor accessor = blame.GetTestAccessor();
         IReadOnlyList<System.Drawing.Color> colors = accessor.GetAgeBucketGradientColors();
+        byte[] avatar = (await new InitialsAvatarProvider().GetAvatarAsync(
+            "avalonia.contributor@example.com",
+            "Avalonia Contributor",
+            blame.BlameAuthor.AvatarSize))!;
         GitBlameEntry[] entries = lines
             .Select((_, index) => new GitBlameEntry
             {
+                Avatar = index % 4 == 0 ? avatar : null,
                 AgeBucketIndex = index % colors.Count,
                 AgeBucketColor = colors[index % colors.Count],
             })
@@ -666,7 +672,7 @@ public sealed partial class ParityScreenshotTests
             lines.Select((_, index) => index % 4 == 0 ? $"2026-07-{20 - (index % 7):00} - Avalonia Contributor" : string.Empty));
 
         await accessor.BlameFile.ViewTextAsync(AppSourcePath, context.SampleBlame);
-        blame.BlameAuthor.Initialize(gutter, entries);
+        blame.BlameAuthor.Initialize(gutter, entries, showAvatars: true);
     }
 
     private static void SeedPatchGrid(PatchGrid patchGrid, CaptureContext context)
