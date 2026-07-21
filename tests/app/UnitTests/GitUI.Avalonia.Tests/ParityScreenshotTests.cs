@@ -457,6 +457,11 @@ public sealed partial class ParityScreenshotTests
             gitSettingsPage.LoadSettings();
         }
 
+        if (root is AppearanceSettingsPage appearanceSettingsPage)
+        {
+            appearanceSettingsPage.LoadSettings();
+        }
+
         if (root is OutputHistoryControl outputHistory)
         {
             outputHistory.TextBox.Text =

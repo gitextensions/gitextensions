@@ -517,6 +517,105 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
+    public void FormSettings_should_register_appearance_and_keep_colors_beneath_its_page_reference()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        AppearanceSettingsPage appearance = accessor.SettingsTreeView.SettingsPages
+            .OfType<AppearanceSettingsPage>()
+            .Single();
+
+        form.GotoPage(AppearanceSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(appearance);
+        accessor.SettingsTreeView.SettingsPages.OfType<ColorsSettingsPage>().Should().ContainSingle();
+        appearance.GetTitle().Should().Be("Appearance");
+    }
+
+    [AvaloniaTest]
+    public void Appearance_settings_should_map_supported_values_without_touching_deferred_avatar_settings()
+    {
+        bool originalRelativeDate = AppSettings.RelativeDate;
+        bool originalRepositoryBranch = AppSettings.ShowRepoCurrentBranch;
+        bool originalVisualStudioBranch = AppSettings.ShowCurrentBranchInVisualStudio;
+        bool originalAutoScale = AppSettings.EnableAutoScale;
+        TruncatePathMethod originalTruncation = AppSettings.TruncatePathMethod;
+        string originalTranslation = AppSettings.Translation;
+        string originalDictionary = AppSettings.Dictionary;
+        AvatarProvider originalAvatarProvider = AppSettings.AvatarProvider;
+        AvatarFallbackType originalFallback = AppSettings.AvatarFallbackType;
+        string originalAvatarTemplate = AppSettings.CustomAvatarTemplate;
+        try
+        {
+            AppSettings.RelativeDate = true;
+            AppSettings.ShowRepoCurrentBranch = false;
+            AppSettings.ShowCurrentBranchInVisualStudio = true;
+            AppSettings.EnableAutoScale = false;
+            AppSettings.TruncatePathMethod = TruncatePathMethod.TrimStart;
+            AppSettings.Translation = "English";
+            AppSettings.Dictionary = "none";
+
+            AppearanceSettingsPage page = new();
+            page.LoadSettings();
+            AppearanceSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+            accessor.ShowRelativeDate.IsChecked.Should().BeTrue();
+            accessor.ShowRepositoryBranch.IsChecked.Should().BeFalse();
+            accessor.ShowVisualStudioBranch.IsChecked.Should().BeTrue();
+            accessor.ShowVisualStudioBranch.IsVisible.Should().Be(OperatingSystem.IsWindows());
+            accessor.EnableAutoScale.IsChecked.Should().BeFalse();
+            accessor.TruncatePathMethod.SelectedIndex.Should().Be(2);
+            accessor.AuthorImages.IsVisible.Should().BeFalse();
+
+            accessor.ShowRelativeDate.IsChecked = false;
+            accessor.ShowRepositoryBranch.IsChecked = true;
+            accessor.EnableAutoScale.IsChecked = true;
+            accessor.TruncatePathMethod.SelectedIndex = 3;
+            page.SaveSettings();
+
+            AppSettings.RelativeDate.Should().BeFalse();
+            AppSettings.ShowRepoCurrentBranch.Should().BeTrue();
+            AppSettings.EnableAutoScale.Should().BeTrue();
+            AppSettings.TruncatePathMethod.Should().Be(TruncatePathMethod.FileNameOnly);
+            AppSettings.AvatarProvider.Should().Be(originalAvatarProvider);
+            AppSettings.AvatarFallbackType.Should().Be(originalFallback);
+            AppSettings.CustomAvatarTemplate.Should().Be(originalAvatarTemplate);
+        }
+        finally
+        {
+            AppSettings.RelativeDate = originalRelativeDate;
+            AppSettings.ShowRepoCurrentBranch = originalRepositoryBranch;
+            AppSettings.ShowCurrentBranchInVisualStudio = originalVisualStudioBranch;
+            AppSettings.EnableAutoScale = originalAutoScale;
+            AppSettings.TruncatePathMethod = originalTruncation;
+            AppSettings.Translation = originalTranslation;
+            AppSettings.Dictionary = originalDictionary;
+            AppSettings.AvatarProvider = originalAvatarProvider;
+            AppSettings.AvatarFallbackType = originalFallback;
+            AppSettings.CustomAvatarTemplate = originalAvatarTemplate;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Appearance_settings_should_preserve_original_translation_keys()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        AppearanceSettingsPage page = new();
+
+        page.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(AppearanceSettingsPage), "gbGeneral", "Text", "&General");
+        translation.Received(1).AddTranslationItem(
+            nameof(AppearanceSettingsPage), "truncatePathMethod", "Item0", "None");
+        translation.Received(1).AddTranslationItem(
+            nameof(AppearanceSettingsPage), "lblLanguage", "Text", "Language (restart required)");
+        translation.Received(1).AddTranslationItem(
+            nameof(AppearanceSettingsPage), "ShowAuthorAvatarInCommitGraph", "Text", "Show author's avatar column in the commit graph");
+    }
+
+    [AvaloniaTest]
     public void Settings_tree_should_preserve_root_replacement_navigation_and_search()
     {
         SettingsTreeViewUserControl tree = new();
