@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -27,7 +28,7 @@ public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColors
         : base(serviceProvider)
     {
         InitializeComponent();
-        _controller = new ColorsSettingsPageController(this);
+        _controller = new ColorsSettingsPageController(this, new ThemeRepository(), new ThemePathProvider());
         WireEvents();
         InitializeComplete();
     }
@@ -39,7 +40,20 @@ public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColors
         set
         {
             int index = _themeIds.FindIndex(item => item.ThemeId == value);
-            _NO_TRANSLATE_cbSelectTheme.SelectedIndex = index >= 0 ? index : 0;
+            if (index < 0)
+            {
+                FormattedThemeId formattedThemeId = new(value);
+                string theme = formattedThemeId.ToString();
+                if (!string.IsNullOrWhiteSpace(theme))
+                {
+                    WinFormsShims.IWin32Window? owner = TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window;
+                    MessageBoxes.ShowError(owner, $"Theme not found: {theme}");
+                }
+
+                index = 0;
+            }
+
+            _NO_TRANSLATE_cbSelectTheme.SelectedIndex = index;
         }
     }
 
@@ -74,8 +88,11 @@ public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColors
     {
         Trace.WriteLine($"Failed to load theme {themeId.Name}: {ex}");
         string variationsText = string.Concat(variations.Select(variation => "." + variation));
+        string identifier = new FormattedThemeId(themeId).ToString();
+        AppSettings.ThemeId = ThemeId.DefaultLight;
         WinFormsShims.IWin32Window? owner = TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window;
-        MessageBoxes.ShowError(owner, $"Failed to load theme {themeId.Name}{variationsText}: {ex.Message}");
+        MessageBoxes.ShowError(owner, $"Failed to load theme {identifier}{variationsText}: {ex.Message}"
+            + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
     }
 
     public void PopulateThemeMenu(IEnumerable<ThemeId> themeIds)
@@ -117,6 +134,9 @@ public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColors
         _NO_TRANSLATE_cbSelectTheme.SelectionChanged += (_, _) => _controller.HandleSelectedThemeChanged();
         chkUseSystemVisualStyle.IsCheckedChanged += (_, _) => _controller.HandleUseSystemVisualStyleChanged();
         chkColorblind.IsCheckedChanged += (_, _) => _controller.HandleUseColorblindVariationChanged();
+        sbOpenThemeFolder.Click += (_, _) => sbOpenThemeFolder.Flyout?.ShowAt(sbOpenThemeFolder);
+        tsmiApplicationFolder.Click += (_, _) => _controller.ShowAppThemesDirectory();
+        tsmiUserFolder.Click += (_, _) => _controller.ShowUserThemesDirectory();
     }
 
     internal TestAccessor GetTestAccessor() => new(this);
@@ -136,6 +156,10 @@ public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColors
         public CheckBox FillRefLabels => page.chkFillRefLabels;
 
         public ComboBox SelectTheme => page._NO_TRANSLATE_cbSelectTheme;
+
+        public SplitButton OpenThemeFolder => page.sbOpenThemeFolder;
+
+        public MenuFlyout OpenThemeFolders => page.cmsOpenThemeFolders;
 
         public Control RestartNeeded => page._NO_TRANSLATE_restartNeededPanel;
 

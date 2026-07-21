@@ -52,8 +52,7 @@
                                   Grid.Column="1"
                                   Margin="6,0,0,0"
                                   Icon="{x:Static properties:Images.BrowseFileExplorer}"
-                                  Content="Open theme folder"
-                                  IsVisible="False">
+                                  Content="Open theme folder">
             <compat:IconSplitButton.Flyout>
               <MenuFlyout>
                 <MenuItem x:Name="tsmiApplicationFolder" Header="Application folder" />
@@ -64,13 +63,11 @@
           <CheckBox x:Name="chkColorblind"
                     Grid.Row="2"
                     Grid.ColumnSpan="3"
-                    Content="Colorblind"
-                    IsVisible="False" />
+                    Content="Colorblind" />
           <CheckBox x:Name="chkUseSystemVisualStyle"
                     Grid.Row="3"
                     Grid.ColumnSpan="3"
-                    Content="Use system-defined visual style (looks bad with dark colors)"
-                    IsVisible="False" />
+                    Content="Use system-defined visual style (looks bad with dark colors)" />
         </Grid>
       </GroupBox>
     </StackPanel>
