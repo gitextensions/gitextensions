@@ -31,6 +31,7 @@ using GitUI.Editor;
 using GitUI.Help;
 using GitUI.HelperDialogs;
 using GitUI.LeftPanel;
+using GitUI.SpellChecker;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -130,8 +131,12 @@ public sealed partial class ParityScreenshotTests
         ];
 
         ThemeId originalTheme = AppSettings.ThemeId;
+        string originalDictionary = AppSettings.Dictionary;
+        bool originalMarkIllFormedLines = AppSettings.MarkIllFormedLinesInCommitMsg;
         try
         {
+            AppSettings.Dictionary = "en-US";
+            AppSettings.MarkIllFormedLinesInCommitMsg = true;
             foreach ((string themeName, ThemeVariant themeVariant) in themes)
             {
                 AppSettings.ThemeId = themeVariant == ThemeVariant.Dark
@@ -159,6 +164,8 @@ public sealed partial class ParityScreenshotTests
         finally
         {
             AppSettings.ThemeId = originalTheme;
+            AppSettings.Dictionary = originalDictionary;
+            AppSettings.MarkIllFormedLinesInCommitMsg = originalMarkIllFormedLines;
             AvaloniaThemeSettings.ApplyAppSettings();
         }
 
@@ -463,6 +470,12 @@ public sealed partial class ParityScreenshotTests
 
     private static void PrepareView(Control root, CaptureContext context)
     {
+        if (root is EditNetSpell editNetSpell)
+        {
+            editNetSpell.Text = $"Describe the Avalonia spell-checking changes.{Environment.NewLine}{Environment.NewLine}This sentnce contains a deliberate misspeling and an overlong commit-message body line for visual verification.";
+            editNetSpell.CheckSpelling();
+        }
+
         if (root is ColorsSettingsPage colorsSettingsPage)
         {
             colorsSettingsPage.LoadSettings();
@@ -697,6 +710,12 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task WaitForAsyncViewsAsync(Control root)
     {
+        if (root is EditNetSpell)
+        {
+            await Task.Delay(300);
+            Dispatcher.UIThread.RunJobs();
+        }
+
         if (root is FormFileHistory fileHistory)
         {
             FileViewer diff = GetRequiredControl<FileViewer>(fileHistory, "Diff");
