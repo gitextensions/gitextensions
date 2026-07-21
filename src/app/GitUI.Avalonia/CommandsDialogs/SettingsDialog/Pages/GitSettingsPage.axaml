@@ -1,0 +1,83 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.GitSettingsPage"
+                                 Text="Paths">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="tlpnlMain"
+                Margin="8"
+                Spacing="6">
+      <GroupBox x:Name="gbPaths" Header="Paths">
+        <Grid x:Name="tlpnlGitPaths"
+              Margin="8,4,8,8"
+              ColumnDefinitions="Auto,*,Auto"
+              RowDefinitions="Auto,Auto,Auto,Auto"
+              RowSpacing="5">
+          <TextBlock x:Name="label50"
+                     Grid.ColumnSpan="3"
+                     TextWrapping="Wrap"
+                     Text="Set the correct paths to Git for Windows. (WSL Git will automatically be used for WSL repositories.)" />
+          <TextBlock x:Name="lblGitCommand"
+                     Grid.Row="1"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Command used to run git (git.cmd or git.exe)" />
+          <TextBlock x:Name="_NO_TRANSLATE_lblPortableGitCommand"
+                     Grid.Row="1"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     IsVisible="False" />
+          <TextBox x:Name="GitPath"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   MinWidth="260"
+                   MaxLength="300" />
+          <Button x:Name="BrowseGitPath"
+                  Grid.Row="1"
+                  Grid.Column="2"
+                  Margin="6,0,0,0"
+                  Content="Browse" />
+          <TextBlock x:Name="lblShPath"
+                     Grid.Row="2"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Path to linux tools (sh). Leave empty when it is in the path." />
+          <TextBox x:Name="LinuxToolsDir"
+                   Grid.Row="2"
+                   Grid.Column="1"
+                   MaxLength="300" />
+          <Button x:Name="BrowseLinuxToolsDir"
+                  Grid.Row="2"
+                  Grid.Column="2"
+                  Margin="6,0,0,0"
+                  Content="Browse" />
+          <HyperlinkButton x:Name="downloadGitForWindows"
+                           Grid.Row="3"
+                           Grid.ColumnSpan="3"
+                           HorizontalAlignment="Left"
+                           Content="Download Git" />
+        </Grid>
+      </GroupBox>
+
+      <GroupBox x:Name="gbEnvironment" Header="Environment">
+        <StackPanel x:Name="tlpnlEnvironment"
+                    Margin="8,4,8,8"
+                    Spacing="10">
+          <TextBlock x:Name="lblGlobalConfigPath"
+                     TextWrapping="Wrap"
+                     Text="By default, the global config file is located in the location stored in the environment variable %HOME%.&#10;(This can be overridden by setting %GIT_CONFIG_GLOBAL%.)" />
+          <TextBlock x:Name="_NO_TRANSLATE_lblPortableGlobalConfigPath"
+                     TextWrapping="Wrap"
+                     IsVisible="False" />
+          <TextBlock x:Name="homeIsSetToLabel"
+                     TextWrapping="Wrap"
+                     Text="HOME is set to: {0}" />
+          <Button x:Name="ChangeHomeButton"
+                  HorizontalAlignment="Left"
+                  Content="Change HOME" />
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>
