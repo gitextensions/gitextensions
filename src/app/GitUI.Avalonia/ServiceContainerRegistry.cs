@@ -6,6 +6,7 @@ using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.PlainText;
 using GitUI.Hotkey;
 using GitUI.Models;
+using GitUI.ScriptsEngine;
 using ResourceManager;
 
 namespace GitUI;
@@ -17,6 +18,7 @@ public static class ServiceContainerRegistry
 {
     public static void RegisterServices(ServiceContainer serviceContainer)
     {
+        ScriptsManager scriptsManager = new();
         OutputHistoryModel outputHistoryModel = new(AppSettings.OutputHistoryDepth.Value);
         serviceContainer.GetRequiredService<ISubscribableTraceListener>().TraceReceived += (in string message) =>
         {
@@ -30,6 +32,10 @@ public static class ServiceContainerRegistry
         };
 
         serviceContainer.AddService<IConsoleEmulatorsRegistry>(PlainTextConsoleEmulatorsRegistry.Instance);
+        serviceContainer.AddService<IScriptsManager>(scriptsManager);
+        serviceContainer.AddService<IScriptsRunner>(scriptsManager);
+        serviceContainer.AddService<ISimplePromptCreator>(new SimplePromptCreator());
+        serviceContainer.AddService<IFilePromptCreator>(new FilePromptCreator());
         serviceContainer.AddService<IHotkeySettingsLoader>(new HotkeySettingsManager());
         serviceContainer.AddService<IOutputHistoryProvider>(outputHistoryModel);
         serviceContainer.AddService<IOutputHistoryRecorder>(outputHistoryModel);
