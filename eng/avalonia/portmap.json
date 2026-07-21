@@ -633,7 +633,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormFileHistory.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "File-history workflow with the original Commit/Diff/View/Blame tabs, shared browse/filter toolbar, optional explicit loading, full-history/simplify-merges settings, blame parsing/display options, Save As, copy/navigation/view context actions, and custom difftools. Rename following uses the revision grid's FilePathByObjectId/GetRevisionFileName contract so viewers, titles, Save As, and difftools receive the historical path. Artificial or unavailable files hide inapplicable tabs, and all owned grid/view tasks are cancelled and joined on close. StartFileHistoryDialog opens the window in-process and non-modal. Build-report content remains intentionally absent until a build-server provider exists in Phase 4.2; avatars, commit manipulation, and the Git command log remain owned by their dedicated later phases."
+    "notes": "File-history workflow with the original Commit/Diff/View/Blame tabs, shared browse/filter toolbar, optional explicit loading, full-history/simplify-merges settings, blame parsing/display options including the live Show author avatar toggle, Save As, copy/navigation/view context actions, and custom difftools. Rename following uses the revision grid's FilePathByObjectId/GetRevisionFileName contract so viewers, titles, Save As, and difftools receive the historical path. Artificial or unavailable files hide inapplicable tabs, and all owned grid/view/avatar tasks are cancelled and joined on close. StartFileHistoryDialog opens the window in-process and non-modal. Build-report content remains intentionally absent until a build-server provider exists in Phase 4.2; commit manipulation and the Git command log remain owned by their dedicated later phases."
   },
   "src/app/GitUI/CommandsDialogs/FormDeleteTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteTag.axaml.cs",
@@ -1039,19 +1039,19 @@
     "twin": "src/app/GitUI.Avalonia/Editor/GitBlameEntry.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Age-bucket index and color; the Avatar image property waits for the dedicated blame-avatar follow-up so blame parsing stays byte/image independent."
+    "notes": "Age-bucket index/color plus encoded Avatar bytes. The Avalonia twin deliberately keeps disposable Bitmap ownership out of this data record."
   },
   "src/app/GitUI/Editor/BlameAuthorMargin.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/BlameAuthorMargin.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Extended role: an AvaloniaEdit margin that renders theme-aware age-bucket markers and author text itself, replacing the second scroll-synchronised author editor of the WinForms BlameControl. Its transparent right-edge resize grip participates in Blame splitter persistence. Asynchronous disposable avatar ownership waits for the dedicated blame-avatar follow-up."
+    "notes": "Extended role: an AvaloniaEdit margin that renders theme-aware age-bucket markers, line-height avatars, and author text itself, replacing the second scroll-synchronised author editor of the WinForms BlameControl. It alone decodes/owns/disposes Avalonia Bitmaps, rejects stale content generations, preserves in-flight avatars across theme-color refreshes, and keeps a transparent right-edge resize grip participating in Blame splitter persistence."
   },
   "src/app/GitUI/UserControls/BlameControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/BlameControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Commit info over the blamed file with the author margin; hover highlights the hovered commit's lines and shows the summary tooltip; caret movement drives the commit info; the context menu blames this/the previous revision (via IRevisionGridInfo/IRevisionGridFileUpdate), opens FormCommitDiff through Show changes, and copies hash/message/info; double-click blames the clicked line's revision. When no revision grid hosts the control, blame navigation opens FormCommitDiff like WinForms. Theme-aware age/highlight resources update live, both nested splitter distances persist, and owner-managed loading completes before close-time joins. Deferred: avatars (3.22) and repository-hoster menu items (4.3)."
+    "notes": "Commit info over the blamed file with the combined author/avatar margin; hover highlights the hovered commit's lines and shows the summary tooltip; caret movement drives the commit info; the context menu blames this/the previous revision (via IRevisionGridInfo/IRevisionGridFileUpdate), opens FormCommitDiff through Show changes, and copies hash/message/info; double-click blames the clicked line's revision. Avatar requests start only after blame text is visible, deduplicate by email, retain empty continuation-line slots, use the original unknown-author fallback, and remain cancellation/stale-generation safe under the owner-managed load. When no revision grid hosts the control, blame navigation opens FormCommitDiff like WinForms. Theme-aware age/highlight resources update live, both nested splitter distances persist, and owner-managed loading completes before close-time joins. Deferred: repository-hoster menu items (4.3)."
   },
   "src/app/GitUI/UserControls/GitBlameParser.cs": {
     "twin": "src/app/GitUI/UserControls/GitBlameParser.cs",
