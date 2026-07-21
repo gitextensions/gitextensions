@@ -1,0 +1,70 @@
+using GitCommands;
+using GitExtUtils.GitUI.Theming;
+
+namespace GitUI.Theming;
+
+public interface IThemePathProvider
+{
+    string GetThemePath(ThemeId id);
+
+    string AppThemesDirectory { get; }
+
+    string? UserThemesDirectory { get; }
+
+    string ThemeExtension { get; }
+}
+
+public class ThemePathProvider : IThemePathProvider
+{
+    private const string Subdirectory = "Themes";
+
+    public ThemePathProvider()
+    {
+        // The WinForms provider resolves its install directory through GitExtensions.exe.
+        // This side-by-side executable has a different name, so use the runtime application
+        // base while retaining the original theme-directory contract.
+        string appDirectory = Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory);
+        AppThemesDirectory = Path.Join(appDirectory, Subdirectory);
+
+        string? userDirectory = AppSettings.ApplicationDataPath.Value;
+
+        // in portable version appDirectory and userDirectory are same,
+        // hence we don't have a separate directory for user themes
+        UserThemesDirectory = string.Equals(appDirectory, userDirectory, StringComparison.OrdinalIgnoreCase)
+            ? null
+            : Path.Join(userDirectory!, Subdirectory);
+
+        ThemeExtension = ".css";
+    }
+
+    public string AppThemesDirectory { get; }
+
+    public string? UserThemesDirectory { get; }
+
+    public string ThemeExtension { get; }
+
+    /// <exception cref="InvalidOperationException">
+    /// Attempt to resolve a custom theme from a %UserAppData% folder in a portable version.
+    /// </exception>
+    /// <exception cref="FileNotFoundException">Theme does not exist.</exception>
+    public string GetThemePath(ThemeId id)
+    {
+        string path;
+        if (id.IsBuiltin)
+        {
+            string name = id == ThemeId.DefaultLight ? ThemeId.InvariantThemeFileName : id.Name;
+            path = Path.Join(AppThemesDirectory, name + ThemeExtension);
+        }
+        else
+        {
+            if (UserThemesDirectory is null)
+            {
+                throw new InvalidOperationException("Portable mode only supports local themes");
+            }
+
+            path = Path.Join(UserThemesDirectory, id.Name + ThemeExtension);
+        }
+
+        return path;
+    }
+}
