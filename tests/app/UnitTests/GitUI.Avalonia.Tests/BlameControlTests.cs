@@ -1,16 +1,18 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
+using GitUI.Avatars;
 using GitUI.Blame;
 using GitUI.Editor;
 using Microsoft.VisualStudio.Threading;
@@ -145,6 +147,93 @@ public sealed class BlameControlTests
         List<GitBlameEntry> blameEntries = accessor.CalculateBlameGutterData([line]);
 
         blameEntries[0].AgeBucketIndex.Should().Be(0);
+    }
+
+    [AvaloniaTest]
+    public async Task BlameControl_should_load_one_avatar_request_per_email_and_render_each_commit_run()
+    {
+        bool originalShowAvatar = AppSettings.BlameShowAuthorAvatar;
+        BlameControl? control = null;
+        try
+        {
+            AppSettings.BlameShowAuthorAvatar = true;
+            InitialsAvatarProvider imageProvider = new();
+            IAvatarProvider provider = Substitute.For<IAvatarProvider>();
+            provider.GetAvatarAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<int>())
+                .Returns(call => imageProvider.GetAvatarAsync(
+                    call.ArgAt<string>(0),
+                    call.ArgAt<string?>(1),
+                    call.ArgAt<int>(2)));
+
+            control = new BlameControl(provider);
+            GitBlameCommit firstCommit = _gitBlameLine.Commit;
+            GitBlameCommit secondCommit = CreateCommitWithAuthorTime(DateTime.Now);
+            BlameControl.TestAccessor accessor = control.GetTestAccessor();
+            accessor.Blame = new GitBlame(
+            [
+                _gitBlameLine,
+                new GitBlameLine(firstCommit, 2, 2, "line2"),
+                new GitBlameLine(secondCommit, 3, 3, "line3"),
+            ]);
+
+            (string gutter, _, List<GitBlameEntry> entries) = accessor.BuildBlameContents("fileName.txt");
+            int contentVersion = control.BlameAuthor.Initialize(gutter, entries, showAvatars: true);
+            await accessor.LoadAvatarsAsync(entries, contentVersion);
+
+            _ = provider.Received(1).GetAvatarAsync("author1@mail.fake", "author1", control.BlameAuthor.AvatarSize);
+            control.BlameAuthor.GetAvatarPixelSize(0).Should().Be(new Avalonia.PixelSize(control.BlameAuthor.AvatarSize, control.BlameAuthor.AvatarSize));
+            control.BlameAuthor.GetAvatarPixelSize(1).Should().BeNull("continuation lines keep the original empty avatar slot");
+            control.BlameAuthor.GetAvatarPixelSize(2).Should().Be(new Avalonia.PixelSize(control.BlameAuthor.AvatarSize, control.BlameAuthor.AvatarSize));
+        }
+        finally
+        {
+            control?.CancelBackgroundTasks();
+            AppSettings.BlameShowAuthorAvatar = originalShowAvatar;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task BlameAuthorMargin_should_reject_stale_avatars_and_clear_owned_images()
+    {
+        BlameControl control = new();
+        BlameAuthorMargin margin = control.BlameAuthor;
+        byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync("author1@mail.fake", "author1", margin.AvatarSize))!;
+        GitBlameEntry entry = new() { AgeBucketColor = Color.Green };
+
+        int staleVersion = margin.Initialize("first", [entry], showAvatars: true);
+        int currentVersion = margin.Initialize("second", [new GitBlameEntry { AgeBucketColor = Color.Green }], showAvatars: true);
+
+        margin.SetAvatar(0, imageData, staleVersion);
+        margin.GetAvatarPixelSize(0).Should().BeNull();
+
+        margin.SetAvatar(0, imageData, currentVersion);
+        margin.GetAvatarPixelSize(0).Should().Be(new Avalonia.PixelSize(margin.AvatarSize, margin.AvatarSize));
+
+        margin.Clear();
+        margin.GetAvatarPixelSize(0).Should().BeNull();
+    }
+
+    [AvaloniaTest]
+    public void BuildBlameContents_should_omit_avatar_and_age_entries_when_avatars_are_disabled()
+    {
+        bool originalShowAvatar = AppSettings.BlameShowAuthorAvatar;
+        try
+        {
+            AppSettings.BlameShowAuthorAvatar = false;
+            BlameControl control = new();
+            BlameControl.TestAccessor accessor = control.GetTestAccessor();
+            accessor.Blame = new GitBlame([_gitBlameLine]);
+
+            (string gutter, string body, List<GitBlameEntry> entries) = accessor.BuildBlameContents("fileName.txt");
+
+            gutter.Should().NotBeEmpty("the combined author text margin remains visible");
+            body.Should().Contain("line1");
+            entries.Should().BeEmpty("WinForms hides the avatar margin and its age marker together");
+        }
+        finally
+        {
+            AppSettings.BlameShowAuthorAvatar = originalShowAvatar;
+        }
     }
 
     [AvaloniaTest]
