@@ -762,9 +762,11 @@ public sealed class VisualParityTests
         Application application = Application.Current
             ?? throw new InvalidOperationException("The Avalonia application was not created.");
         ThemeId originalTheme = AppSettings.ThemeId;
+        string[] originalThemeVariations = AppSettings.ThemeVariations;
         ThemeVariant? originalVariant = application.RequestedThemeVariant;
         try
         {
+            AppSettings.ThemeVariations = ThemeVariations.None;
             AppSettings.ThemeId = ThemeId.DefaultLight;
             AvaloniaThemeSettings.ApplyAppSettings();
             application.RequestedThemeVariant.Should().Be(ThemeVariant.Light);
@@ -819,9 +821,22 @@ public sealed class VisualParityTests
         finally
         {
             AppSettings.ThemeId = originalTheme;
+            AppSettings.ThemeVariations = originalThemeVariations;
             AvaloniaThemeSettings.ApplyAppSettings();
             application.RequestedThemeVariant = originalVariant;
         }
+    }
+
+    [Test]
+    public void Theme_paths_should_be_resolved_from_the_Avalonia_application_directory()
+    {
+        ThemePathProvider provider = new();
+        string applicationDirectory = Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory);
+
+        provider.AppThemesDirectory.Should().Be(Path.Combine(applicationDirectory, "Themes"));
+        provider.GetThemePath(ThemeId.DefaultLight).Should().Be(
+            Path.Combine(applicationDirectory, "Themes", ThemeId.InvariantThemeFileName + provider.ThemeExtension));
+        File.Exists(provider.GetThemePath(ThemeId.DefaultLight)).Should().BeTrue();
     }
 
     private static void AssertListAndTreeStyles(
