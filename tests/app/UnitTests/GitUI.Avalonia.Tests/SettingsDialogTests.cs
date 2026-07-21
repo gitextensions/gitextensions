@@ -64,6 +64,18 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
+    public void FormSettings_modal_close_after_save_should_return_ok_without_reentering_close()
+    {
+        FormSettings form = new();
+        form.GetTestAccessor().MarkSaved();
+        Dispatcher.UIThread.Post(form.Close);
+
+        WinFormsShims.DialogResult result = form.ShowDialog(owner: null);
+
+        result.Should().Be(WinFormsShims.DialogResult.OK);
+    }
+
+    [AvaloniaTest]
     public void FormSettings_should_register_and_navigate_to_the_general_page()
     {
         FormSettings form = new();
