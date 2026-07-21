@@ -515,11 +515,47 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Local deletion, optional deletion from one configured remote through FormRemoteProcess, the shared remote selector, and the shared manual link are functional. Before/after push event scripts remain deferred to the ScriptsEngine tranche."
   },
+  "src/app/GitUI/SpellChecker/EditNetSpell.cs": {
+    "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named multiline commit-message editor with the original text, selection, caret, line, watermark, and enabled-state boundary. NetSpell dictionary selection, debounced checking, red misspelling waves, ill-formed-line marks, correction/add/ignore/remove context actions, and editing commands are functional. The separate typing-completion popup remains deferred; spelling suggestions are available from the context menu."
+  },
+  "src/app/GitUI/SpellChecker/EditNetSpell.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Multiline Avalonia TextBox and non-interactive overlay retain the original editor and context-menu field boundary."
+  },
+  "src/app/GitUI/SpellChecker/SpellCheckEditControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/SpellChecker/SpellCheckAdorner.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Avalonia DrawingContext twin renders wrapped-range spelling waves and commit-message length highlights over the native text presenter without platform window handles. WinForms IME composition suppression has no direct Avalonia hook and remains a focused macOS/Linux validation item."
+  },
+  "src/app/GitUI/SpellChecker/SpellCheckerHelper.cs": {
+    "twin": "src/app/GitUI/SpellChecker/SpellCheckerHelper.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral separator logic is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/SpellChecker/TextPos.cs": {
+    "twin": "src/app/GitUI/SpellChecker/TextPos.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral text-range value is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/SpellChecker/WordAtCursorExtractor.cs": {
+    "twin": "src/app/GitUI/SpellChecker/WordAtCursorExtractor.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral extraction logic is linked unchanged; the original test fixture is also linked into GitUI.Avalonia.Tests so both UIs share one behavior specification."
+  },
   "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Whole-file commit workflows are functional: staged/unstaged multi-selection and context actions, revision-aware FileViewer preview with the consumer-owned external-difftool action, selected-line stage/unstage/reset with reload blocking, normal/amend/empty commits, fixup/squash/amend autosquash messages, soft reset, commit-message persistence/history/templates and conventional prefixes, shared validation settings, custom author/sign-off/no-verify/GPG/reset-author arguments, merge-conflict and detached-HEAD recovery, commit-and-push including force-with-lease after amend, optional superproject staging, compact original-named toolbar/options/status controls, and the original close/refresh preferences. Git hook bypass is functional through No verify. Git Extensions before/after event scripts remain owned by the later shared scripts-engine port; template-settings editing remains owned by the settings host."
+    "notes": "Whole-file commit workflows are functional: staged/unstaged multi-selection and context actions, revision-aware FileViewer preview with the consumer-owned external-difftool action, selected-line stage/unstage/reset with reload blocking, normal/amend/empty commits, fixup/squash/amend autosquash messages, soft reset, commit-message persistence/history/templates and conventional prefixes, shared validation settings, custom author/sign-off/no-verify/GPG/reset-author arguments, merge-conflict and detached-HEAD recovery, commit-and-push including force-with-lease after amend, optional superproject staging, compact original-named toolbar/options/status controls, and the original close/refresh preferences. The same-named EditNetSpell editor now supplies deployed dictionaries, spell/line marks, and correction context actions. Git hook bypass is functional through No verify. Git Extensions before/after event scripts remain owned by the later shared scripts-engine port; template-settings editing remains owned by the settings host."
   },
   "src/app/GitUI/CommandsDialogs/FormPush.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPush.axaml.cs",

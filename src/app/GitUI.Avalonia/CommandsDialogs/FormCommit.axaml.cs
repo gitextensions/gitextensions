@@ -147,7 +147,7 @@ public sealed partial class FormCommit : GitModuleForm
         CommitAndPush.Click += CommitAndPushClick;
         Message.TextChanged += Message_TextChanged;
         Message.KeyDown += Message_KeyDown;
-        Message.PropertyChanged += Message_PropertyChanged;
+        Message.SelectionChanged += Message_SelectionChanged;
         Amend.IsCheckedChanged += Amend_CheckedChanged;
         ResetSoft.Click += ResetSoftClick;
         StageInSuperproject.IsCheckedChanged += StageInSuperproject_CheckedChanged;
@@ -480,13 +480,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
     }
 
-    private void Message_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.Property == TextBox.CaretIndexProperty)
-        {
-            UpdateCursorPosition();
-        }
-    }
+    private void Message_SelectionChanged(object? sender, EventArgs e) => UpdateCursorPosition();
 
     private void UpdateCursorPosition()
     {
@@ -1227,6 +1221,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     internal readonly struct TestAccessor(FormCommit form)
     {
+        internal SpellChecker.EditNetSpell Message => form.Message;
         internal MenuFlyout CommitMessageFlyout => (MenuFlyout)form.commitMessageToolStripMenuItem.Flyout!;
         internal MenuFlyout CommitTemplatesFlyout => (MenuFlyout)form.commitTemplatesToolStripMenuItem.Flyout!;
         internal Task ClosePersistenceTask => form._closePersistenceTask;
