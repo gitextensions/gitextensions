@@ -15,6 +15,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Reuse the framework-neutral theme tests verbatim so the CSS implementation has one
+         behavioral specification across WinForms and Avalonia. -->
+    <Compile Include="..\GitUI.Tests\Theming\CssUrlResolverTests.cs" Link="Theming\CssUrlResolverTests.cs" />
+    <Compile Include="..\GitUI.Tests\Theming\ThemeLoaderTests.cs" Link="Theming\ThemeLoaderTests.cs" />
+    <Compile Include="..\GitUI.Tests\Theming\ThemePersistenceTests.cs" Link="Theming\ThemePersistenceTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Avalonia.Headless.NUnit" />
     <!-- Skia renderer for graph golden images and the opt-in all-view parity captures. -->
     <PackageReference Include="Avalonia.Skia" />
