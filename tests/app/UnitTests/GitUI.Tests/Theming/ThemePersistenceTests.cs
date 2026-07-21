@@ -1,4 +1,5 @@
-﻿using GitUI.Theming;
+using System.Drawing;
+using GitUI.Theming;
 
 namespace GitUITests.Theming;
 public class ThemePersistenceTests
