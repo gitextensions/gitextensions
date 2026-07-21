@@ -426,6 +426,18 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
+    public void FormSettings_should_offer_only_supported_editor_commands()
+    {
+        string[] editors = EditorHelper.GetEditors();
+        editors.Should().Contain(EditorHelper.GetDefaultEditor());
+        editors.Should().NotContain(editor => editor.Contains("fileeditor", StringComparison.OrdinalIgnoreCase));
+
+        FormSettings form = new();
+        Action initializePages = () => form.GetTestAccessor().InitializePages();
+        initializePages.Should().NotThrow();
+    }
+
+    [AvaloniaTest]
     public void Git_config_pages_should_expose_the_original_editable_fields_and_tri_state_options()
     {
         GitConfigSettingsPage configPage = new();
