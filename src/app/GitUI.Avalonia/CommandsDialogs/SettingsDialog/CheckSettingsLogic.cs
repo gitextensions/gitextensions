@@ -12,7 +12,7 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
     {
         if (string.IsNullOrEmpty(commonLogic.GetGlobalEditor()))
         {
-            Environment.SetEnvironmentVariable(CommonLogic.AmbientGitEditorEnvVariableName, AppSettings.FileEditorCommand);
+            Environment.SetEnvironmentVariable(CommonLogic.AmbientGitEditorEnvVariableName, EditorHelper.GetDefaultEditor());
         }
 
         return true;
@@ -20,7 +20,7 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
 
     public static bool SolveGitExtensionsDir()
     {
-        string? directory = AppSettings.GetGitExtensionsDirectory();
+        string directory = Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory);
         if (!Directory.Exists(directory))
         {
             return false;

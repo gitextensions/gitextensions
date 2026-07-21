@@ -10,7 +10,6 @@ public static class EditorHelper
         {
             return
             [
-                AppSettings.FileEditorCommand,
                 "vi",
                 "vim",
                 "nano",
@@ -21,7 +20,6 @@ public static class EditorHelper
 
         return
         [
-            AppSettings.FileEditorCommand,
             "vi",
             "notepad",
             GetNotepadPlusPlus(),
@@ -30,6 +28,8 @@ public static class EditorHelper
             GetZed(),
         ];
     }
+
+    internal static string GetDefaultEditor() => "vi";
 
     private static string GetNotepadPlusPlus()
         => GetEditorCommandLine("notepad++.exe", "-multiInst -nosession", "notepad++");

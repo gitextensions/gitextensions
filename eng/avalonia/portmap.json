@@ -115,9 +115,9 @@
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/EditorHelper.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/EditorHelper.cs",
-    "status": "parity",
+    "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same editor suggestion boundary. Windows retains the original discovered editors; Linux/macOS receive native vi, vim, nano, VS Code, and Zed command suggestions."
+    "notes": "Same editor suggestion boundary. Windows retains the original discovered external editors; Linux/macOS receive native vi, vim, nano, VS Code, and Zed command suggestions. The built-in GitExtensions.exe fileeditor suggestion is omitted and vi is the portable fallback until the Avalonia command-line file editor is ported; reading the WinForms-only AppSettings.FileEditorCommand from the side-by-side executable would assert in Debug and advertise a command the Avalonia entry point cannot yet handle."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.axaml.cs",
