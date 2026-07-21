@@ -33,7 +33,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and the root placeholder. GeneralSettingsPage and the reduced ColorsSettingsPage are registered under Git Extensions; Colors moves beneath Appearance when that parent page lands. GitSettingsPage is registered beneath the original Git group. Remaining built-in and plugin pages land incrementally in 3.17+ and phase 4."
+    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and the root placeholder. GeneralSettingsPage and the reduced ColorsSettingsPage are registered under Git Extensions; Colors moves beneath Appearance when that parent page lands. Git paths, Git config, and advanced Git config are registered beneath the original Git group. Remaining built-in and plugin pages land incrementally in 3.17+ and phase 4."
   },
   "src/app/GitUI/CommandsDialogs/FormSettings.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml",
@@ -107,6 +107,60 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same Paths and Environment groups and same-named controls in a compact scrollable Avalonia layout. Git-for-Windows-only controls are hidden on native Unix systems."
   },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/GitConfigBaseSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/GitConfigBaseSettingsPage.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves effective, local, global, and system Git-config source switching plus save-before-switch behavior. Parameterless design/test construction remains inert until a real settings host is attached."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/EditorHelper.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/EditorHelper.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same editor suggestion boundary. Windows retains the original discovered editors; Linux/macOS receive native vi, vim, nano, VS Code, and Zed command suggestions."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves identity, editor, credential helper, diff/merge tool, commit-template, line-ending, and file-encoding mappings over the original GitConfigSettingsSet. Native storage pickers replace OpenFileDialog; WSL command adaptation and registered-tool command suggestions remain intact."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named fields in a compact scrollable grid, including the invalid-Git notice, editable editor/tool controls, line-ending group, and encoding controls."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPageController.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPageController.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same platform-neutral initial-directory selection logic."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigAdvancedSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigAdvancedSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves all eight tri-state Git boolean mappings, Git-version-gated update-refs visibility, and translated labels with appended config keys."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigAdvancedSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigAdvancedSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact same-named tri-state checkbox list matching the original order."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/FormAvailableEncodings.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/FormAvailableEncodings.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves selected/available encoding partitioning, required-encoding protection, add/remove behavior, sorted available values, and AppSettings persistence."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/FormAvailableEncodings.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/FormAvailableEncodings.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same two-list encoding chooser, directional actions, and modal OK/Cancel controls."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormFixHome.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormFixHome.axaml.cs",
     "status": "functional",
@@ -177,7 +231,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CommonLogic.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves construction of distributed and Git-config setting stores plus editor resolution. WinForms picker/registry/ComboBox helpers remain deferred to the pages that consume them, where they will receive portable UI implementations."
+    "notes": "Preserves construction of distributed and Git-config setting stores plus editor resolution. Available encodings populate a native Avalonia ComboBox with the original Encoding objects/display names; file pickers remain owned by their consuming pages."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs",
