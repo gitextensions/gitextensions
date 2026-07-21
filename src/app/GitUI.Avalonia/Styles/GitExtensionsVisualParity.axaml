@@ -35,11 +35,11 @@
       <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
           <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
-                           Color="#0078D4" />
+                           Color="#C3C3FF" />
           <SolidColorBrush x:Key="GitExtensionsSelectionPointerOverBackgroundBrush"
-                           Color="#106EBE" />
+                           Color="#B3B3EB" />
           <SolidColorBrush x:Key="GitExtensionsSelectionForegroundBrush"
-                           Color="#FFFFFF" />
+                           Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
                            Color="#E6E6E6" />
           <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
@@ -96,11 +96,11 @@
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
           <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
-                           Color="#0067C0" />
+                           Color="#00009B" />
           <SolidColorBrush x:Key="GitExtensionsSelectionPointerOverBackgroundBrush"
-                           Color="#1473E6" />
+                           Color="#1313A2" />
           <SolidColorBrush x:Key="GitExtensionsSelectionForegroundBrush"
-                           Color="#FFFFFF" />
+                           Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
                            Color="#3A3A3A" />
           <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
@@ -160,8 +160,7 @@
   </Styles.Resources>
 
   <!-- Runtime values come from the shared Git Extensions CSS theme. These light/dark values
-       remain as designer and pre-startup fallbacks. Active selection intentionally stays the
-       accepted fixed blue instead of following the desktop accent in isolation. -->
+       remain as designer and pre-startup fallbacks. -->
   <Style Selector="Window">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
@@ -415,6 +414,10 @@
     <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsFixedWidthFontWeight}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsDiffEditorBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDiffTextBrush}" />
+  </Style>
+  <Style Selector="avaloniaEdit|TextEditor.gitextensions-diff-editor avaloniaEdit|TextArea">
+    <Setter Property="SelectionBrush" Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
+    <Setter Property="SelectionForeground" Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
   </Style>
   <Style Selector="SelectableTextBlock.gitextensions-commit-header">
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsMonospaceFontFamily}" />
