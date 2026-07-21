@@ -259,6 +259,129 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
+    public void FormSettings_should_register_and_navigate_to_the_git_paths_page()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+
+        accessor.SettingsTreeView.SettingsPages.OfType<GitSettingsGroup>().Should().ContainSingle();
+        GitSettingsPage page = accessor.SettingsTreeView.SettingsPages.OfType<GitSettingsPage>().Single();
+        form.GotoPage(GitSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(page);
+        page.GetTitle().Should().Be("Paths");
+    }
+
+    [AvaloniaTest]
+    public void Git_settings_should_load_save_and_hide_windows_only_tools_on_native_unix()
+    {
+        string originalGitCommand = AppSettings.GitCommandValue;
+        string originalLinuxToolsDirectory = AppSettings.LinuxToolsDir;
+        string? originalPath = Environment.GetEnvironmentVariable("PATH");
+        string temporaryDirectory = Path.Combine(Path.GetTempPath(), $"gitext-git-settings-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(temporaryDirectory);
+        File.WriteAllText(Path.Join(temporaryDirectory, OperatingSystem.IsWindows() ? "sh.exe" : "sh"), string.Empty);
+        try
+        {
+            string gitExecutableName = OperatingSystem.IsWindows() ? "git.exe" : "git";
+            PathUtil.TryFindFullPath(gitExecutableName, out string? gitPath).Should().BeTrue();
+            AppSettings.GitCommandValue = gitPath!;
+            if (OperatingSystem.IsWindows())
+            {
+                AppSettings.LinuxToolsDir = temporaryDirectory;
+            }
+
+            FormSettings form = new();
+            FormSettings.TestAccessor formAccessor = form.GetTestAccessor();
+            formAccessor.InitializePages();
+            GitSettingsPage page = formAccessor.SettingsTreeView.SettingsPages.OfType<GitSettingsPage>().Single();
+            page.LoadSettings();
+
+            GitSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+            accessor.GitPath.Text.Should().Be(gitPath);
+            accessor.EnvironmentStatus.Text.Should().Contain(OperatingSystem.IsWindows() ? "%HOME%" : "$HOME");
+            accessor.LinuxToolsDir.IsVisible.Should().Be(OperatingSystem.IsWindows());
+            accessor.LinuxToolsLabel.IsVisible.Should().Be(OperatingSystem.IsWindows());
+            accessor.DownloadGit.IsVisible.Should().Be(OperatingSystem.IsWindows());
+
+            accessor.GitPath.Text = "git";
+            if (OperatingSystem.IsWindows())
+            {
+                accessor.LinuxToolsDir.Text = temporaryDirectory;
+            }
+
+            page.SaveSettings();
+            AppSettings.GitCommandValue.Should().Be("git");
+            if (OperatingSystem.IsWindows())
+            {
+                Path.TrimEndingDirectorySeparator(AppSettings.LinuxToolsDir).Should().Be(temporaryDirectory);
+            }
+        }
+        finally
+        {
+            AppSettings.GitCommandValue = originalGitCommand;
+            AppSettings.LinuxToolsDir = originalLinuxToolsDirectory;
+            Environment.SetEnvironmentVariable("PATH", originalPath);
+            Directory.Delete(temporaryDirectory, recursive: true);
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormFixHome_should_apply_a_readable_custom_home()
+    {
+        string originalCustomHome = AppSettings.CustomHomeDir;
+        bool originalUserProfileHome = AppSettings.UserProfileHomeDir;
+        string? originalHome = Environment.GetEnvironmentVariable("HOME");
+        string temporaryDirectory = Path.Combine(Path.GetTempPath(), $"gitext-home-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(temporaryDirectory);
+        File.WriteAllText(Path.Join(temporaryDirectory, ".gitconfig"), "[user]");
+        try
+        {
+            FormFixHome form = new();
+            FormFixHome.TestAccessor accessor = form.GetTestAccessor();
+            accessor.LoadSettings();
+            accessor.OtherHome.IsChecked = true;
+            accessor.OtherHomeDirectory.Text = temporaryDirectory;
+
+            accessor.ApplySettings().Should().BeTrue();
+
+            AppSettings.CustomHomeDir.Should().Be(temporaryDirectory);
+            AppSettings.UserProfileHomeDir.Should().BeFalse();
+            EnvironmentConfiguration.GetHomeDir().Should().Be(temporaryDirectory);
+            FormFixHome.TestAccessor.HasGlobalGitConfig(temporaryDirectory).Should().BeTrue();
+        }
+        finally
+        {
+            AppSettings.CustomHomeDir = originalCustomHome;
+            AppSettings.UserProfileHomeDir = originalUserProfileHome;
+            Environment.SetEnvironmentVariable("HOME", originalHome);
+            Directory.Delete(temporaryDirectory, recursive: true);
+        }
+    }
+
+    [AvaloniaTest]
+    public void Git_and_home_settings_should_preserve_original_translation_keys()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        GitSettingsPage page = new();
+        FormFixHome home = new();
+
+        page.AddTranslationItems(translation);
+        home.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(GitSettingsPage), "lblGitCommand", "Text", "Command used to run git (git.cmd or git.exe)");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitSettingsPage), "ChangeHomeButton", "Text", "Change HOME");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormFixHome), "groupBox8", "Text", "Environment");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormFixHome), "otherHome", "Text", "&Other");
+    }
+
+    [AvaloniaTest]
     public void Settings_tree_should_preserve_root_replacement_navigation_and_search()
     {
         SettingsTreeViewUserControl tree = new();

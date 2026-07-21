@@ -34,7 +34,7 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
     {
         IEnumerable<string> candidates = OperatingSystem.IsWindows()
             ? GetWindowsCommandLocations(possibleNewPath)
-            : ["git"];
+            : GetPortableCommandLocations(possibleNewPath);
 
         foreach (string command in candidates)
         {
@@ -58,6 +58,51 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
         }
 
         return false;
+    }
+
+    public static bool SolveLinuxToolsDir(string? possibleNewPath = null)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            AppSettings.LinuxToolsDir = string.Empty;
+            return true;
+        }
+
+        string candidate = string.IsNullOrWhiteSpace(possibleNewPath)
+            ? AppSettings.LinuxToolsDir
+            : possibleNewPath.Trim();
+        if (ContainsShell(candidate))
+        {
+            AppSettings.LinuxToolsDir = candidate;
+            return true;
+        }
+
+        string gitCommand = AppSettings.GitCommandValue;
+        string[] derivedCandidates =
+        [
+            gitCommand.Replace(@"\cmd\git.exe", @"\usr\bin\", StringComparison.OrdinalIgnoreCase)
+                .Replace(@"\cmd\git.cmd", @"\usr\bin\", StringComparison.OrdinalIgnoreCase),
+            gitCommand.Replace(@"\cmd\git.exe", @"\bin\", StringComparison.OrdinalIgnoreCase)
+                .Replace(@"\cmd\git.cmd", @"\bin\", StringComparison.OrdinalIgnoreCase),
+        ];
+        string? detected = derivedCandidates.FirstOrDefault(ContainsShell);
+        if (detected is not null)
+        {
+            AppSettings.LinuxToolsDir = detected;
+            return true;
+        }
+
+        if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
+        {
+            AppSettings.LinuxToolsDir = string.Empty;
+            return true;
+        }
+
+        return false;
+
+        static bool ContainsShell(string path)
+            => Directory.Exists(path)
+                && (File.Exists(Path.Join(path, "sh.exe")) || File.Exists(Path.Join(path, "sh")));
     }
 
     public static bool CheckIfFileIsInPath(string fileName)
@@ -88,5 +133,20 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
 
         yield return "git";
         yield return "git.cmd";
+    }
+
+    private static IEnumerable<string> GetPortableCommandLocations(string? possibleNewPath)
+    {
+        if (!string.IsNullOrWhiteSpace(possibleNewPath))
+        {
+            yield return possibleNewPath.Trim();
+        }
+
+        if (!string.IsNullOrWhiteSpace(AppSettings.GitCommandValue))
+        {
+            yield return AppSettings.GitCommandValue;
+        }
+
+        yield return "git";
     }
 }
