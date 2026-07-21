@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -7,10 +7,12 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitUI;
+using GitUI.Avatars;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
 
@@ -19,6 +21,12 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class RevisionGridColumnProviderTests
 {
+    [SetUp]
+    public void SetUp()
+    {
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+    }
+
     [Test]
     public void Revision_grid_should_register_the_WinForms_column_provider_order()
     {
@@ -43,7 +51,7 @@ public sealed class RevisionGridColumnProviderTests
             "Commit ID",
             "Build Status");
         control.ColumnProviders.Select(provider => provider.Index).Should().Equal(Enumerable.Range(0, 8));
-        control.ColumnProviders[3].Column.IsAvailable.Should().BeFalse();
+        control.ColumnProviders[3].Column.IsAvailable.Should().BeTrue();
         control.ColumnProviders[7].Column.IsAvailable.Should().BeFalse();
     }
 
@@ -51,6 +59,8 @@ public sealed class RevisionGridColumnProviderTests
     public void Revision_grid_should_apply_column_visibility_and_width_settings()
     {
         ColumnSettings original = ColumnSettings.Capture();
+        AvatarProvider originalAvatarProvider = AppSettings.AvatarProvider;
+        AvatarFallbackType originalAvatarFallback = AppSettings.AvatarFallbackType;
         try
         {
             AppSettings.ShowRevisionGridGraphColumn = true;
@@ -59,6 +69,9 @@ public sealed class RevisionGridColumnProviderTests
             AppSettings.ShowAuthorNameColumn = false;
             AppSettings.ShowDateColumn = true;
             AppSettings.ShowObjectIdColumn = true;
+            AppSettings.AvatarProvider = AvatarProvider.None;
+            AppSettings.AvatarFallbackType = AvatarFallbackType.AuthorInitials;
+            AvatarService.UpdateAvatarProvider();
 
             RevisionGridControl control = new();
             ListBox revisions = control.FindControl<ListBox>("lstRevisions")
@@ -82,14 +95,14 @@ public sealed class RevisionGridColumnProviderTests
                     new GridLength(22),
                     new GridLength(1, GridUnitType.Star),
                     new GridLength(50),
-                    new GridLength(0),
+                    new GridLength(32),
                     new GridLength(0),
                     new GridLength(130),
                     new GridLength(60),
                     new GridLength(0));
                 control.GetVisualDescendants().OfType<Control>()
                     .Single(cell => cell.Classes.Contains("revision-avatar-cell"))
-                    .IsVisible.Should().BeFalse();
+                    .IsVisible.Should().BeTrue();
                 control.GetVisualDescendants().OfType<Control>()
                     .Single(cell => cell.Classes.Contains("revision-author-cell"))
                     .IsVisible.Should().BeFalse();
@@ -115,6 +128,9 @@ public sealed class RevisionGridColumnProviderTests
         finally
         {
             original.Restore();
+            AppSettings.AvatarProvider = originalAvatarProvider;
+            AppSettings.AvatarFallbackType = originalAvatarFallback;
+            AvatarService.UpdateAvatarProvider();
         }
     }
 
