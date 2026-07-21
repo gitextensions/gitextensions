@@ -50,7 +50,6 @@
     <Compile Include="..\GitUI\Theming\ThemeException.cs" Link="Theming\ThemeException.cs" />
     <Compile Include="..\GitUI\Theming\ThemeFileReader.cs" Link="Theming\ThemeFileReader.cs" />
     <Compile Include="..\GitUI\Theming\ThemeLoader.cs" Link="Theming\ThemeLoader.cs" />
-    <Compile Include="..\GitUI\Theming\ThemePathProvider.cs" Link="Theming\ThemePathProvider.cs" />
     <Compile Include="..\GitUI\Theming\ThemePersistence.cs" Link="Theming\ThemePersistence.cs" />
     <Compile Include="..\GitUI\Theming\ThemeRepository.cs" Link="Theming\ThemeRepository.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />

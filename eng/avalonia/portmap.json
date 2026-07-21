@@ -1207,10 +1207,10 @@
     "notes": "Framework-neutral ExCSS parser linked unchanged into GitUI.Avalonia and covered there by the same test source as WinForms."
   },
   "src/app/GitUI/Theming/ThemePathProvider.cs": {
-    "twin": "src/app/GitUI/Theming/ThemePathProvider.cs",
+    "twin": "src/app/GitUI.Avalonia/Theming/ThemePathProvider.cs",
     "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+    "notes": "Same path and user/portable theme contract. The Avalonia twin obtains its application themes directory from AppContext.BaseDirectory because the side-by-side executable is intentionally named GitExtensions.Avalonia rather than GitExtensions.exe; the WinForms provider and executable-name assertion remain unchanged."
   },
   "src/app/GitUI/Theming/ThemePersistence.cs": {
     "twin": "src/app/GitUI/Theming/ThemePersistence.cs",
