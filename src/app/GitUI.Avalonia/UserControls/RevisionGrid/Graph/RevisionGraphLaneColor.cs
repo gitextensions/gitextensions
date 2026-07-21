@@ -10,43 +10,81 @@ namespace GitUI.UserControls.RevisionGrid.Graph;
 // brushes instead of GDI brushes. Keep the lane-color selection logic in sync with upstream.
 public static class RevisionGraphLaneColor
 {
-    public static int GetColorForLane(int seed)
-    {
-        return Math.Abs(seed) % PresetGraphBrushes.Count;
-    }
-
-    public static Color NonRelativeColor { get; } = AppColor.GraphNonRelativeBranch.GetThemeColor();
-
-    internal static IBrush NonRelativeBrush { get; }
+    private static readonly object ThemeLock = new();
+    private static ThemeSettings? _loadedThemeSettings;
+    private static Color _nonRelativeColor;
+    private static IBrush _nonRelativeBrush = Brushes.LightGray;
 
     internal static readonly List<IBrush> PresetGraphBrushes = [];
 
-    static RevisionGraphLaneColor()
+    public static int GetColorForLane(int seed)
     {
-        Color[] branchColors = [.. Enum.GetNames<AppColor>()
-            .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
-            .Select(name => Enum.Parse<AppColor>(name).GetThemeColor())
-            .Where(color => !color.IsEmpty)
-            .Distinct()];
+        EnsureThemeColors();
+        return Math.Abs(seed) % PresetGraphBrushes.Count;
+    }
 
-        const int minBranchColors = 4;
-        if (branchColors.Length < minBranchColors)
+    public static Color NonRelativeColor
+    {
+        get
         {
-            Trace.WriteLine(@"At least {minBranchColors} different graph colors must be configured - using crying fallback");
-            branchColors = [Color.Cyan, Color.Magenta, Color.Yellow, Color.Lime];
+            EnsureThemeColors();
+            return _nonRelativeColor;
         }
+    }
 
-        foreach (Color color in branchColors)
+    internal static IBrush NonRelativeBrush
+    {
+        get
         {
-            PresetGraphBrushes.Add(CreateBrush(color));
+            EnsureThemeColors();
+            return _nonRelativeBrush;
         }
-
-        NonRelativeBrush = CreateBrush(NonRelativeColor);
     }
 
     public static IBrush GetBrushForLane(int laneColor)
     {
+        EnsureThemeColors();
         return PresetGraphBrushes[laneColor];
+    }
+
+    private static void EnsureThemeColors()
+    {
+        ThemeSettings settings = ThemeModule.Settings;
+        if (ReferenceEquals(_loadedThemeSettings, settings))
+        {
+            return;
+        }
+
+        lock (ThemeLock)
+        {
+            if (ReferenceEquals(_loadedThemeSettings, settings))
+            {
+                return;
+            }
+
+            Color[] branchColors = [.. Enum.GetNames<AppColor>()
+                .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
+                .Select(name => Enum.Parse<AppColor>(name).GetThemeColor())
+                .Where(color => !color.IsEmpty)
+                .Distinct()];
+
+            const int minBranchColors = 4;
+            if (branchColors.Length < minBranchColors)
+            {
+                Trace.WriteLine(@"At least {minBranchColors} different graph colors must be configured - using crying fallback");
+                branchColors = [Color.Cyan, Color.Magenta, Color.Yellow, Color.Lime];
+            }
+
+            PresetGraphBrushes.Clear();
+            foreach (Color color in branchColors)
+            {
+                PresetGraphBrushes.Add(CreateBrush(color));
+            }
+
+            _nonRelativeColor = AppColor.GraphNonRelativeBranch.GetThemeColor();
+            _nonRelativeBrush = CreateBrush(_nonRelativeColor);
+            _loadedThemeSettings = settings;
+        }
     }
 
     private static IBrush CreateBrush(Color color)

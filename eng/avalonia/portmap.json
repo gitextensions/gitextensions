@@ -680,7 +680,8 @@
   "src/app/GitUI/UserControls/RevisionGrid/Graph/RevisionGraphLaneColor.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/RevisionGraphLaneColor.cs",
     "status": "parity",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Preserves the upstream lane-color selection while rebuilding Avalonia brushes when the loaded ThemeSettings instance changes."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Graph/Rendering/GraphRenderer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/Rendering/GraphRenderer.cs",
@@ -1227,7 +1228,7 @@
     "twin": "src/app/GitUI.Avalonia/Theming/ThemeModule.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves CSS repository loading, invariant fallback, default migration, platform color-mode selection, variations, and invalid-theme recovery. Avalonia owns the framework-specific variant and resource application; WinForms system-color and legacy editor mutation are intentionally absent."
+    "notes": "Preserves CSS repository loading, invariant fallback, default migration, platform color-mode selection, variations, and invalid-theme recovery. Avalonia projects the loaded colors through its Compat resource adapter; WinForms system-color and legacy editor mutation are intentionally absent."
   },
   "src/app/GitUI/Theming/AppColorExtension.cs": {
     "twin": "src/app/GitUI.Avalonia/Theming/AppColorExtension.cs",
@@ -1245,6 +1246,6 @@
     "twin": "src/app/GitExtensions.Avalonia/Program.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Entry point twin (with App.axaml.cs); browse command and repo detection only. Startup maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources, loads the shared CSS theme repository through the ThemeModule twin, maps loaded light/dark themes to Avalonia variants, and keeps Windows app color mode synchronized with the actual platform variant."
+    "notes": "Entry point twin (with App.axaml.cs); browse command and repo detection only. Startup maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources, loads the shared CSS theme repository through the ThemeModule twin, projects AppColor/KnownColor and semantic brushes into variant dictionaries, and reloads Windows app color mode when the actual platform variant changes."
   }
 }
