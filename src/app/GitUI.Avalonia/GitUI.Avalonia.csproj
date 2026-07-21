@@ -45,6 +45,14 @@
     <Compile Include="..\GitUI\Models\IOutputHistoryProvider.cs" Link="Models\IOutputHistoryProvider.cs" />
     <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
     <Compile Include="..\GitUI\RevisionDiffInfoProvider.cs" Link="RevisionDiffInfoProvider.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeCssUrlResolver.cs" Link="Theming\ThemeCssUrlResolver.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeCssUrlResolverException.cs" Link="Theming\ThemeCssUrlResolverException.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeException.cs" Link="Theming\ThemeException.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeFileReader.cs" Link="Theming\ThemeFileReader.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeLoader.cs" Link="Theming\ThemeLoader.cs" />
+    <Compile Include="..\GitUI\Theming\ThemePathProvider.cs" Link="Theming\ThemePathProvider.cs" />
+    <Compile Include="..\GitUI\Theming\ThemePersistence.cs" Link="Theming\ThemePersistence.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeRepository.cs" Link="Theming\ThemeRepository.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusDiffCalculator.cs" Link="UserControls\FileStatusDiffCalculator.cs" />
@@ -87,6 +95,9 @@
     <!-- The language files are shared with the WinForms application; translation keys are
          identical, so all existing translations apply to the Avalonia twins unchanged. -->
     <None Include="..\GitUI\Translation\*.xlf" Link="Translation\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Compile and deploy the same CSS theme files as the WinForms application. -->
+    <Content Include="..\GitUI\Themes\*.css" Link="Themes\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\GitUI\Themes\README.md" Link="Themes\README.md" CopyToOutputDirectory="PreserveNewest" />
     <!-- Images.resx's existing file-backed assets. Properties/Images.g.cs exposes the same
          property names as the WinForms resource designer and loads these packaged PNGs. -->
     <AvaloniaResource Include="..\GitUI\Resources\Backgrounds\*.png" Link="Resources\Backgrounds\%(Filename)%(Extension)" />
@@ -102,6 +113,7 @@
     <PackageReference Include="Avalonia.Controls.ColorPicker" />
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="ExCSS" />
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
 
