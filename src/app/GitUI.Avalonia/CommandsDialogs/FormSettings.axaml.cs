@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using GitCommands;
 using GitCommands.Settings;
@@ -107,7 +107,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
     {
         if (_saved)
         {
-            DialogResult = WinFormsShims.DialogResult.OK;
+            SetDialogResultOnClose(WinFormsShims.DialogResult.OK);
         }
 
         base.OnClosing(e);
@@ -273,6 +273,8 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         public Button CancelButton => form.buttonCancel;
 
         public void InitializePages() => form.InitializeSettingsPages();
+
+        public void MarkSaved() => form._saved = true;
     }
 }
 

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using GitCommands;
@@ -50,6 +50,15 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
             }
         }
     }
+
+    /// <summary>Records the result while a window close is already in progress.</summary>
+    /// <remarks>
+    ///  Use this from an <c>OnClosing</c> override. Assigning
+    ///  <see cref="DialogResult"/> there would request another close and re-enter Avalonia's
+    ///  closing pipeline.
+    /// </remarks>
+    protected void SetDialogResultOnClose(WinFormsShims.DialogResult value)
+        => _dialogResult = value;
 
     /// <summary>The button activated by Enter; mapped to Avalonia's <see cref="Button.IsDefault"/>.</summary>
     public Button? AcceptButton
