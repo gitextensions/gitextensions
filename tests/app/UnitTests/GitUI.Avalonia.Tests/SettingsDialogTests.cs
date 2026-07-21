@@ -5,10 +5,13 @@ using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
+using GitExtensions.Extensibility.Translations;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using Microsoft.VisualStudio.Threading;
+using NSubstitute;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -133,6 +136,126 @@ public sealed class SettingsDialogTests
             AppSettings.DefaultPullAction = originalPullAction;
             AppSettings.DefaultCloneDestinationPath = originalCloneDestination;
         }
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_register_and_navigate_to_the_colors_page()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+
+        ColorsSettingsPage page = accessor.SettingsTreeView.SettingsPages
+            .OfType<ColorsSettingsPage>()
+            .Single();
+        form.GotoPage(ColorsSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(page);
+        page.GetTitle().Should().Be("Colors");
+    }
+
+    [AvaloniaTest]
+    public void Colors_settings_should_map_graph_options_and_supported_themes()
+    {
+        bool originalMulticolorBranches = AppSettings.MulticolorBranches;
+        bool originalAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
+        bool originalNonRelativesGray = AppSettings.RevisionGraphDrawNonRelativesGray;
+        bool originalNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
+        bool originalHighlightAuthored = AppSettings.HighlightAuthoredRevisions;
+        bool originalFillRefLabels = AppSettings.FillRefLabels;
+        ThemeId originalThemeId = AppSettings.ThemeId;
+        string[] originalThemeVariations = AppSettings.ThemeVariations;
+        bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        try
+        {
+            ThemeId customTheme = new("custom-review-theme");
+            AppSettings.MulticolorBranches = true;
+            AppSettings.RevisionGraphDrawAlternateBackColor = false;
+            AppSettings.RevisionGraphDrawNonRelativesGray = true;
+            AppSettings.RevisionGraphDrawNonRelativesTextGray = false;
+            AppSettings.HighlightAuthoredRevisions = true;
+            AppSettings.FillRefLabels = false;
+            AppSettings.ThemeId = customTheme;
+            AppSettings.ThemeVariations = [ThemeVariations.Colorblind];
+            AppSettings.UseSystemVisualStyle = false;
+
+            FormSettings form = new();
+            FormSettings.TestAccessor formAccessor = form.GetTestAccessor();
+            formAccessor.InitializePages();
+            ColorsSettingsPage page = formAccessor.SettingsTreeView.SettingsPages
+                .OfType<ColorsSettingsPage>()
+                .Single();
+            page.LoadSettings();
+
+            ColorsSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+            accessor.MulticolorBranches.IsChecked.Should().BeTrue();
+            accessor.DrawAlternateBackColor.IsChecked.Should().BeFalse();
+            accessor.DrawNonRelativesGray.IsChecked.Should().BeTrue();
+            accessor.DrawNonRelativesTextGray.IsChecked.Should().BeFalse();
+            accessor.HighlightAuthored.IsChecked.Should().BeTrue();
+            accessor.FillRefLabels.IsChecked.Should().BeFalse();
+            page.SelectedThemeId.Should().Be(customTheme);
+            accessor.Colorblind.IsChecked.Should().BeTrue();
+            accessor.Colorblind.IsVisible.Should().BeFalse();
+            accessor.UseSystemVisualStyle.IsVisible.Should().BeFalse();
+            accessor.RestartNeeded.IsVisible.Should().BeFalse();
+
+            page.SaveSettings();
+            AppSettings.ThemeId.Should().Be(customTheme);
+
+            accessor.MulticolorBranches.IsChecked = false;
+            accessor.DrawAlternateBackColor.IsChecked = true;
+            accessor.DrawNonRelativesGray.IsChecked = false;
+            accessor.DrawNonRelativesTextGray.IsChecked = true;
+            accessor.HighlightAuthored.IsChecked = false;
+            accessor.FillRefLabels.IsChecked = true;
+            page.SelectedThemeId = ThemeId.DefaultLight;
+
+            accessor.RestartNeeded.IsVisible.Should().BeTrue();
+            accessor.Colorblind.IsChecked.Should().BeFalse();
+            page.SaveSettings();
+
+            AppSettings.MulticolorBranches.Should().BeFalse();
+            AppSettings.RevisionGraphDrawAlternateBackColor.Should().BeTrue();
+            AppSettings.RevisionGraphDrawNonRelativesGray.Should().BeFalse();
+            AppSettings.RevisionGraphDrawNonRelativesTextGray.Should().BeTrue();
+            AppSettings.HighlightAuthoredRevisions.Should().BeFalse();
+            AppSettings.FillRefLabels.Should().BeTrue();
+            AppSettings.ThemeId.Should().Be(ThemeId.DefaultLight);
+            AppSettings.ThemeVariations.Should().BeEmpty();
+            AppSettings.UseSystemVisualStyle.Should().BeFalse();
+        }
+        finally
+        {
+            AppSettings.MulticolorBranches = originalMulticolorBranches;
+            AppSettings.RevisionGraphDrawAlternateBackColor = originalAlternateBackColor;
+            AppSettings.RevisionGraphDrawNonRelativesGray = originalNonRelativesGray;
+            AppSettings.RevisionGraphDrawNonRelativesTextGray = originalNonRelativesTextGray;
+            AppSettings.HighlightAuthoredRevisions = originalHighlightAuthored;
+            AppSettings.FillRefLabels = originalFillRefLabels;
+            AppSettings.ThemeId = originalThemeId;
+            AppSettings.ThemeVariations = originalThemeVariations;
+            AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Colors_settings_should_preserve_original_translation_keys()
+    {
+        ColorsSettingsPage page = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        page.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(ColorsSettingsPage), "gbRevisionGraph", "Text", "Revision graph");
+        translation.Received(1).AddTranslationItem(
+            nameof(ColorsSettingsPage), "MulticolorBranches", "Text", "Multicolor branches");
+        translation.Received(1).AddTranslationItem(
+            nameof(ColorsSettingsPage), "lblRestartNeeded", "Text", "Restart required to apply changes");
+        translation.Received(1).AddTranslationItem(
+            nameof(ColorsSettingsPage), "chkUseSystemVisualStyle", "Text", "Use system-defined visual style (looks bad with dark colors)");
     }
 
     [AvaloniaTest]
