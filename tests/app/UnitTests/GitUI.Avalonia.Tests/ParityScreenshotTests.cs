@@ -462,6 +462,11 @@ public sealed partial class ParityScreenshotTests
             appearanceSettingsPage.LoadSettings();
         }
 
+        if (root is SortingSettingsPage sortingSettingsPage)
+        {
+            sortingSettingsPage.LoadSettings();
+        }
+
         if (root is OutputHistoryControl outputHistory)
         {
             outputHistory.TextBox.Text =
