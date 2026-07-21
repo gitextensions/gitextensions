@@ -19,6 +19,7 @@ using GitUI.LeftPanel;
 using GitUI.Theming;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
+using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -769,6 +770,13 @@ public sealed class VisualParityTests
             application.RequestedThemeVariant.Should().Be(ThemeVariant.Light);
             ThemeModule.Settings.Theme.Id.Should().Be(ThemeId.DefaultLight);
             WinFormsShims.Application.SystemColorMode.Should().Be(WinFormsShims.SystemColorMode.Classic);
+            GetResourceBrushColor(application, "GitExtensionsPanelBackgroundBrush", ThemeVariant.Light).Should().Be(Color.Parse("#FFFFFF"));
+            GetResourceBrushColor(application, "GitExtensionsAppColorBranchBrush", ThemeVariant.Light).Should().Be(Color.Parse("#008000"));
+            GetResourceBrushColor(application, "GitExtensionsKnownColorWindowTextBrush", ThemeVariant.Light).Should().Be(Colors.Black);
+            GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Light).Should().Be(Color.Parse("#0078D4"));
+            AssertPublishedThemeColors(application, ThemeVariant.Light);
+            RevisionGraphLaneColor.NonRelativeColor.ToArgb().Should().Be(
+                System.Drawing.ColorTranslator.FromHtml("#D3D3D3").ToArgb());
 
             AppSettings.ThemeId = ThemeId.DefaultDark;
             AvaloniaThemeSettings.ApplyAppSettings();
@@ -778,6 +786,14 @@ public sealed class VisualParityTests
             ThemeModule.Settings.Theme.GetColor(AppColor.PanelBackground).IsEmpty.Should().BeFalse();
             AppColor.PanelBackground.GetThemeColor().Should().Be(
                 ThemeModule.Settings.Theme.GetColor(AppColor.PanelBackground));
+            GetResourceBrushColor(application, "GitExtensionsPanelBackgroundBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#323232"));
+            GetResourceBrushColor(application, "GitExtensionsBranchRefBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#7FE28A"));
+            GetResourceBrushColor(application, "GitExtensionsDiffRemovedBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#6E1919"));
+            GetResourceBrushColor(application, "GitExtensionsKnownColorWindowTextBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#F0F0F0"));
+            GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#0067C0"));
+            AssertPublishedThemeColors(application, ThemeVariant.Dark);
+            RevisionGraphLaneColor.NonRelativeColor.ToArgb().Should().Be(
+                System.Drawing.ColorTranslator.FromHtml("#707070").ToArgb());
 
             AppSettings.ThemeId = ThemeId.WindowsAppColorModeId;
             AvaloniaThemeSettings.ApplyAppSettings();
@@ -787,6 +803,18 @@ public sealed class VisualParityTests
                 application.ActualThemeVariant == ThemeVariant.Dark
                     ? WinFormsShims.SystemColorMode.Dark
                     : WinFormsShims.SystemColorMode.Classic);
+
+            ThemeVariant simulatedPlatformVariant = application.ActualThemeVariant == ThemeVariant.Dark
+                ? ThemeVariant.Light
+                : ThemeVariant.Dark;
+            application.RequestedThemeVariant = simulatedPlatformVariant;
+            Dispatcher.UIThread.RunJobs();
+            ThemeModule.Settings.Theme.SystemColorMode.Should().Be(
+                simulatedPlatformVariant == ThemeVariant.Dark
+                    ? WinFormsShims.SystemColorMode.Dark
+                    : WinFormsShims.SystemColorMode.Classic);
+            GetResourceBrushColor(application, "GitExtensionsPanelBackgroundBrush", simulatedPlatformVariant).Should().Be(
+                simulatedPlatformVariant == ThemeVariant.Dark ? Color.Parse("#323232") : Colors.White);
         }
         finally
         {
@@ -944,5 +972,49 @@ public sealed class VisualParityTests
     {
         application.TryGetResource(key, theme: null, out object? resource).Should().BeTrue();
         return resource.Should().BeOfType<T>().Subject;
+    }
+
+    private static Color GetResourceBrushColor(Application application, string key, ThemeVariant themeVariant)
+    {
+        application.TryGetResource(key, themeVariant, out object? resource).Should().BeTrue();
+        return resource.Should().BeOfType<SolidColorBrush>().Which.Color;
+    }
+
+    private static void AssertPublishedThemeColors(Application application, ThemeVariant themeVariant)
+    {
+        foreach (AppColor name in Enum.GetValues<AppColor>())
+        {
+            System.Drawing.Color expected = ThemeModule.Settings.Theme.GetColor(name);
+            if (expected.IsEmpty)
+            {
+                expected = ThemeModule.Settings.InvariantTheme.GetColor(name);
+            }
+
+            if (expected.IsEmpty)
+            {
+                application.TryGetResource(
+                    AvaloniaThemeResources.AppColorPrefix + name + "Brush",
+                    themeVariant,
+                    out _).Should().BeFalse();
+                continue;
+            }
+
+            GetResourceBrushColor(application, AvaloniaThemeResources.AppColorPrefix + name + "Brush", themeVariant)
+                .Should().Be(Color.FromArgb(expected.A, expected.R, expected.G, expected.B));
+        }
+
+        foreach (System.Drawing.KnownColor name in Enum.GetValues<System.Drawing.KnownColor>())
+        {
+            if (!System.Drawing.Color.FromKnownColor(name).IsSystemColor)
+            {
+                continue;
+            }
+
+            application.TryGetResource(
+                AvaloniaThemeResources.KnownColorPrefix + name + "Brush",
+                themeVariant,
+                out object? resource).Should().BeTrue();
+            resource.Should().BeOfType<SolidColorBrush>();
+        }
     }
 }
