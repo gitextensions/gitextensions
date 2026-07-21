@@ -4,6 +4,7 @@
         xmlns:gitui="using:GitUI"
         xmlns:compat="using:GitUI.Compat"
         xmlns:properties="using:GitUI.Properties"
+        xmlns:spellChecker="using:GitUI.SpellChecker"
         x:Class="GitUI.CommandsDialogs.FormCommit"
         Width="1100"
         Height="720"
@@ -155,10 +156,7 @@
           </StackPanel>
 
           <Grid Grid.Row="1">
-            <TextBox x:Name="Message"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            <spellChecker:EditNetSpell x:Name="Message" />
             <Button x:Name="modifyCommitMessageButton"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
