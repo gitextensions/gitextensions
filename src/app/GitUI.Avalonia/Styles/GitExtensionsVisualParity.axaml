@@ -42,6 +42,12 @@
                            Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
                            Color="#E6E6E6" />
+          <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
+                           Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsPaneBorderBrush"
+                           Color="#D2D2D2" />
           <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
                            Color="#D2D2D2" />
           <SolidColorBrush x:Key="GitExtensionsRefLabelBackgroundBrush"
@@ -97,6 +103,12 @@
                            Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
                            Color="#3A3A3A" />
+          <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
+                           Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
+                           Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsPaneBorderBrush"
+                           Color="#4C4C4C" />
           <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
                            Color="#4C4C4C" />
           <SolidColorBrush x:Key="GitExtensionsRefLabelBackgroundBrush"
@@ -147,9 +159,12 @@
     </ResourceDictionary>
   </Styles.Resources>
 
-  <!-- Keep these colors behind semantic resources. A future theme service can derive the
-       palette from the desktop accent while preserving contrast for graph and ref colors. -->
+  <!-- Runtime values come from the shared Git Extensions CSS theme. These light/dark values
+       remain as designer and pre-startup fallbacks. Active selection intentionally stays the
+       accepted fixed blue instead of following the desktop accent in isolation. -->
   <Style Selector="Window">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
