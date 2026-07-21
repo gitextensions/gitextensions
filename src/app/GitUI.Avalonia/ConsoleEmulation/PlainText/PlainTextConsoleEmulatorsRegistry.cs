@@ -1,3 +1,6 @@
+using GitCommands;
+using WinFormsShims = GitExtensions.Shims.WinForms;
+
 namespace GitUI.ConsoleEmulation.PlainText;
 
 // Avalonia twin of PlainTextConsoleEmulatorsRegistry. Unlike the WinForms fallback, the
@@ -5,11 +8,13 @@ namespace GitUI.ConsoleEmulation.PlainText;
 internal sealed class PlainTextConsoleEmulatorsRegistry : IConsoleEmulatorsRegistry
 {
     private static readonly PlainTextConsoleEmulator _emulator = new();
+    private readonly Func<WinFormsShims.Font?> _consoleFont;
 
-    public static PlainTextConsoleEmulatorsRegistry Instance { get; } = new();
+    public static PlainTextConsoleEmulatorsRegistry Instance { get; } = new(() => AppSettings.ConEmuConsoleFont);
 
-    private PlainTextConsoleEmulatorsRegistry()
+    private PlainTextConsoleEmulatorsRegistry(Func<WinFormsShims.Font?> consoleFont)
     {
+        _consoleFont = consoleFont;
     }
 
     public IReadOnlyCollection<IConsoleEmulator> AvailableConsoleEmulators
@@ -17,11 +22,14 @@ internal sealed class PlainTextConsoleEmulatorsRegistry : IConsoleEmulatorsRegis
 
     public IConsoleCommandRunner CreateCommandController()
     {
-        return new PlainTextConsoleCommandRunner();
+        return _emulator.CreateCommandRunner(GetSettings());
     }
 
     public IConsoleShellRunner? CreateShellRunner()
         => _emulator.IsSupportedInCurrentEnvironment
-            ? _emulator.CreateShellRunner(new ConsoleEmulatorSettings(Theme: null, Font: null))
+            ? _emulator.CreateShellRunner(GetSettings())
             : null;
+
+    private ConsoleEmulatorSettings GetSettings()
+        => new(Theme: null, Font: _consoleFont());
 }

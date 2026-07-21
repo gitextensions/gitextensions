@@ -473,6 +473,11 @@ public sealed partial class ParityScreenshotTests
             appearanceFontsSettingsPage.LoadSettings();
         }
 
+        if (root is ConsoleStyleSettingsPage consoleStyleSettingsPage)
+        {
+            consoleStyleSettingsPage.LoadSettings();
+        }
+
         if (root is OutputHistoryControl outputHistory)
         {
             outputHistory.TextBox.Text =

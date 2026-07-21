@@ -36,15 +36,27 @@ public sealed class PlainTextConsoleCommandRunner : UserControl, IPlainTextConso
     private bool _isDisposed;
 
     public PlainTextConsoleCommandRunner()
+        : this(new ConsoleEmulatorSettings(Theme: null, Font: null))
+    {
+    }
+
+    internal PlainTextConsoleCommandRunner(ConsoleEmulatorSettings settings)
     {
         _editbox = new ThemeAwareTextEditor
         {
             Name = "ConsoleOutput",
-            FontFamily = new FontFamily("monospace"),
+            FontFamily = new FontFamily(settings.Font?.Name ?? "monospace"),
             IsReadOnly = true,
             ShowLineNumbers = false,
             WordWrap = false,
         };
+        if (settings.Font is not null)
+        {
+            _editbox.FontSize = AvaloniaFontSettings.ToDeviceIndependentPixels(settings.Font.Size);
+            _editbox.FontStyle = settings.Font.Italic ? FontStyle.Italic : FontStyle.Normal;
+            _editbox.FontWeight = settings.Font.Bold ? FontWeight.Bold : FontWeight.Normal;
+        }
+
         _editbox.Options.EnableHyperlinks = true;
         _editbox.Options.EnableEmailHyperlinks = true;
         _editbox.Options.RequireControlModifierForHyperlinkClick = false;
