@@ -1,0 +1,62 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.SettingsDialog.FormAvailableEncodings"
+        Width="605"
+        Height="350"
+        MinWidth="520"
+        MinHeight="300"
+        CanMinimize="False"
+        CanMaximize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Configure available encodings">
+  <Grid x:Name="tableLayoutPanel1"
+        Margin="8"
+        ColumnDefinitions="*,40,*"
+        RowDefinitions="Auto,*,Auto"
+        RowSpacing="4">
+    <TextBlock x:Name="lSelectedEncodings"
+               Margin="2,0"
+               Text="Selected:" />
+    <TextBlock x:Name="lAvaolableEncodings"
+               Grid.Column="2"
+               Margin="2,0"
+               Text="Available:" />
+
+    <ListBox x:Name="ListIncludedEncodings"
+             Grid.Row="1" />
+    <Grid x:Name="tableLayoutPanel2"
+          Grid.Row="1"
+          Grid.Column="1"
+          RowDefinitions="*,30,30,*">
+      <Button x:Name="ToRight"
+              Grid.Row="1"
+              Margin="3"
+              IsEnabled="False"
+              Content="&gt;" />
+      <Button x:Name="ToLeft"
+              Grid.Row="2"
+              Margin="3"
+              IsEnabled="False"
+              Content="&lt;" />
+    </Grid>
+    <ListBox x:Name="ListAvailableEncodings"
+             Grid.Row="1"
+             Grid.Column="2" />
+
+    <StackPanel x:Name="tableLayoutPanel3"
+                Grid.Row="2"
+                Grid.Column="2"
+                Margin="0,4,0,0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="6">
+      <Button x:Name="ButtonCancel"
+              Classes="gitextensions-dialog-action"
+              IsCancel="True"
+              Content="Cancel" />
+      <Button x:Name="ButtonOk"
+              Classes="gitextensions-dialog-action"
+              Content="OK" />
+    </StackPanel>
+  </Grid>
+</Window>
