@@ -235,21 +235,21 @@
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.axaml.cs",
-    "status": "functional",
+    "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "All revision-graph color settings and built-in/system theme selection load and save through the original member boundary. Existing custom ThemeId and variation values are preserved without requiring the deferred CSS theme loader; custom theme discovery, validation, folder actions, colorblind application, and system-visual-style UI join in Phase 3.20."
+    "notes": "All revision-graph settings plus repository-backed built-in and user-defined theme discovery, validation, colorblind variation, system-visual-style selection, restart indication, and theme-folder actions retain the original member and controller contracts. Folder actions use the portable platform shell instead of the WinForms Explorer-only helper."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.axaml",
-    "status": "functional",
+    "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same Revision graph and Theme groups and same-named controls in a compact scrollable layout. Controls owned by the deferred custom-theme subsystem retain their identities but remain hidden until functional."
+    "notes": "Same Revision graph and Theme groups and same-named controls in a compact scrollable layout. The theme selector, whole-button folder flyout, colorblind variation, system visual style, and restart notice are functional and visible under the original conditions."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPageController.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPageController.cs",
-    "status": "functional",
+    "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Reduced same-named controller owns supported theme population, nested-update suppression, restart detection, and non-destructive persistence. Phase 3.20 reconnects the original repository/path-provider validation and folder actions when custom CSS themes can actually render."
+    "notes": "Same repository/path-provider controller owns theme population, validation, nested-update suppression, visual-style derivation, restart detection, persistence, and folder actions. Only directory opening is adapted from the Windows Explorer helper to the portable platform shell. The framework-neutral original controller tests are linked into the Avalonia suite."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/IColorsSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/IColorsSettingsPage.cs",

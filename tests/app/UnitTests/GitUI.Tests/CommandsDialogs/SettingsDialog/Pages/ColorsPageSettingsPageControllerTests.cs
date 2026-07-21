@@ -3,6 +3,11 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Theming;
 using NSubstitute;
+#if GITEXTENSIONS_AVALONIA
+using System.Drawing;
+using Application = GitExtensions.Shims.WinForms.Application;
+using SystemColorMode = GitExtensions.Shims.WinForms.SystemColorMode;
+#endif
 
 namespace GitUITests.CommandsDialogs.SettingsDialog.Pages;
 public class ColorsPageSettingsPageControllerTests
@@ -31,6 +36,19 @@ public class ColorsPageSettingsPageControllerTests
 
         _context.Controller.ShowThemeSettings();
         _context.Page.IsChoosingVisualStyleEnabled.Should().BeFalse();
+    }
+
+    [Test]
+    public void ShowThemeSettings_should_include_builtin_and_user_defined_themes()
+    {
+        ThemeId builtinTheme = new("custom-builtin", isBuiltin: true);
+        ThemeId userTheme = new("custom-user");
+        _context.ThemeRepository.GetThemeIds().Returns([builtinTheme, userTheme]);
+
+        _context.Controller.ShowThemeSettings();
+
+        ((MockColorsSettingsPage)_context.Page).ThemeIds.Should()
+            .Equal(ThemeId.WindowsAppColorModeId, builtinTheme, userTheme);
     }
 
     [Test]
@@ -206,6 +224,8 @@ public class ColorsPageSettingsPageControllerTests
 
     private class MockColorsSettingsPage : IColorsSettingsPage
     {
+        public List<ThemeId> ThemeIds { get; } = [];
+
         public ThemeId SelectedThemeId { get; set; }
         public string[] SelectedThemeVariations { get; set; } = null!;
         public bool UseSystemVisualStyle { get; set; }
@@ -217,6 +237,8 @@ public class ColorsPageSettingsPageControllerTests
 
         public void PopulateThemeMenu(IEnumerable<ThemeId> themeIds)
         {
+            ThemeIds.Clear();
+            ThemeIds.AddRange(themeIds);
         }
     }
 
