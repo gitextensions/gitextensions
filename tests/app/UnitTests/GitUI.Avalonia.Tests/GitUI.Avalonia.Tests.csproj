@@ -5,6 +5,7 @@
          Windows Forms solution and its pipelines are unaffected. -->
     <TargetFramework>net10.0</TargetFramework>
     <UseWindowsForms>false</UseWindowsForms>
+    <DefineConstants>$(DefineConstants);GITEXTENSIONS_AVALONIA</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,8 @@
     <Compile Include="..\GitUI.Tests\Theming\CssUrlResolverTests.cs" Link="Theming\CssUrlResolverTests.cs" />
     <Compile Include="..\GitUI.Tests\Theming\ThemeLoaderTests.cs" Link="Theming\ThemeLoaderTests.cs" />
     <Compile Include="..\GitUI.Tests\Theming\ThemePersistenceTests.cs" Link="Theming\ThemePersistenceTests.cs" />
+    <Compile Include="..\GitUI.Tests\CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs"
+             Link="CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
