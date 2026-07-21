@@ -2,6 +2,7 @@ using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -11,6 +12,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUI.Compat;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -729,6 +731,155 @@ public sealed class SettingsDialogTests
             .Should().BeOfType<TextBlock>().Which.Text.Should().Contain("prioritize branch names");
         ToolTip.GetTip(accessor.PrioRemoteNamesHelp)
             .Should().BeOfType<TextBlock>().Which.Text.Should().Contain("prioritize remote names");
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_register_fonts_after_colors_beneath_appearance_and_navigate_to_it()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        AppearanceFontsSettingsPage fonts = accessor.SettingsTreeView.SettingsPages
+            .OfType<AppearanceFontsSettingsPage>()
+            .Single();
+
+        TreeView tree = accessor.SettingsTreeView.FindControl<TreeView>("treeView1")
+            ?? throw new InvalidOperationException("The settings tree was not created.");
+        TreeViewItem appearanceNode = tree.Items
+            .OfType<TreeViewItem>()
+            .SelectMany(node => node.Items.OfType<TreeViewItem>())
+            .Single(node => node.Tag is AppearanceSettingsPage);
+        appearanceNode.Items
+            .OfType<TreeViewItem>()
+            .Select(node => node.Tag)
+            .Should().ContainInOrder(
+                accessor.SettingsTreeView.SettingsPages.OfType<SortingSettingsPage>().Single(),
+                accessor.SettingsTreeView.SettingsPages.OfType<ColorsSettingsPage>().Single(),
+                fonts);
+
+        form.GotoPage(AppearanceFontsSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(fonts);
+        fonts.GetTitle().Should().Be("Fonts");
+    }
+
+    [AvaloniaTest]
+    public void Appearance_font_settings_should_roundtrip_fonts_and_end_of_line_marker_style()
+    {
+        WinFormsShims.Font originalDiffFont = AppSettings.FixedWidthFont;
+        WinFormsShims.Font originalApplicationFont = AppSettings.Font;
+        WinFormsShims.Font originalCommitFont = AppSettings.CommitFont;
+        WinFormsShims.Font originalMonospaceFont = AppSettings.MonospaceFont;
+        bool originalShowEolMarkerAsGlyph = AppSettings.ShowEolMarkerAsGlyph;
+        try
+        {
+            AppSettings.FixedWidthFont = new WinFormsShims.Font("Consolas", 10, WinFormsShims.FontStyle.Bold);
+            AppSettings.Font = new WinFormsShims.Font("Segoe UI", 9);
+            AppSettings.CommitFont = new WinFormsShims.Font("Arial", 11, WinFormsShims.FontStyle.Italic);
+            AppSettings.MonospaceFont = new WinFormsShims.Font("Courier New", 12);
+            AppSettings.ShowEolMarkerAsGlyph = true;
+
+            AppearanceFontsSettingsPage page = new();
+            page.LoadSettings();
+            AppearanceFontsSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+            accessor.DiffFont.Content.Should().Be("Consolas, 10");
+            accessor.DiffFont.FontWeight.Should().Be(FontWeight.Bold);
+            accessor.ApplicationFont.Content.Should().Be("Segoe UI, 9");
+            accessor.CommitFont.Content.Should().Be("Arial, 11");
+            accessor.CommitFont.FontStyle.Should().Be(FontStyle.Italic);
+            accessor.MonospaceFont.Content.Should().Be("Courier New, 12");
+            accessor.ShowEolMarkerAsGlyph.IsChecked.Should().BeTrue();
+            accessor.DiffDialogFixedPitchOnly.Should().BeTrue();
+
+            WinFormsShims.Font savedDiff = new("Cascadia Mono", 13, WinFormsShims.FontStyle.Italic);
+            WinFormsShims.Font savedApplication = new("Tahoma", 10, WinFormsShims.FontStyle.Bold);
+            WinFormsShims.Font savedCommit = new("Verdana", 14);
+            WinFormsShims.Font savedMonospace = new(
+                "Lucida Console",
+                15,
+                WinFormsShims.FontStyle.Bold | WinFormsShims.FontStyle.Italic);
+            accessor.SetFonts(savedDiff, savedApplication, savedCommit, savedMonospace);
+            accessor.ShowEolMarkerAsGlyph.IsChecked = false;
+            page.SaveSettings();
+
+            AppSettings.FixedWidthFont.Name.Should().Be(savedDiff.Name);
+            AppSettings.FixedWidthFont.Size.Should().Be(savedDiff.Size);
+            AppSettings.FixedWidthFont.Style.Should().Be(savedDiff.Style);
+            AppSettings.Font.Name.Should().Be(savedApplication.Name);
+            AppSettings.Font.Size.Should().Be(savedApplication.Size);
+            AppSettings.Font.Style.Should().Be(savedApplication.Style);
+            AppSettings.CommitFont.Name.Should().Be(savedCommit.Name);
+            AppSettings.CommitFont.Size.Should().Be(savedCommit.Size);
+            AppSettings.CommitFont.Style.Should().Be(savedCommit.Style);
+            AppSettings.MonospaceFont.Name.Should().Be(savedMonospace.Name);
+            AppSettings.MonospaceFont.Size.Should().Be(savedMonospace.Size);
+            AppSettings.MonospaceFont.Style.Should().Be(savedMonospace.Style);
+            AppSettings.ShowEolMarkerAsGlyph.Should().BeFalse();
+        }
+        finally
+        {
+            AppSettings.FixedWidthFont = originalDiffFont;
+            AppSettings.Font = originalApplicationFont;
+            AppSettings.CommitFont = originalCommitFont;
+            AppSettings.MonospaceFont = originalMonospaceFont;
+            AppSettings.ShowEolMarkerAsGlyph = originalShowEolMarkerAsGlyph;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Appearance_font_settings_should_preserve_original_translation_keys()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        AppearanceFontsSettingsPage page = new();
+
+        page.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(AppearanceFontsSettingsPage), "gbFonts", "Text", "Fonts (restart required)");
+        translation.Received(1).AddTranslationItem(
+            nameof(AppearanceFontsSettingsPage), "label56", "Text", "Code font");
+        translation.Received(1).AddTranslationItem(
+            nameof(AppearanceFontsSettingsPage), "diffFontChangeButton", "Text", "font name");
+        translation.Received(1).AddTranslationItem(
+            nameof(AppearanceFontsSettingsPage), "ShowEolMarkerAsGlyph", "Text", "Show end-of-line markers as glyph instead of \"\\r\\n\" etc.");
+        translation.Received(1).AddTranslationItem(
+            nameof(AppearanceFontsSettingsPage), "label36", "Text", "Monospace font");
+    }
+
+    [AvaloniaTest]
+    public void Font_dialog_should_build_the_selected_font_and_refresh_its_preview()
+    {
+        WinFormsShims.Font original = new("Arial", 9);
+        FontDialogWindow dialog = new(original, fixedPitchOnly: false);
+        FontDialogWindow.TestAccessor accessor = dialog.GetTestAccessor();
+
+        accessor.FontFamily.Text = "Courier New";
+        accessor.FontSize.Value = 13.5m;
+        accessor.Bold.IsChecked = true;
+        accessor.Italic.IsChecked = true;
+        accessor.Accept();
+
+        dialog.SelectedFont.Name.Should().Be("Courier New");
+        dialog.SelectedFont.Size.Should().Be(13.5F);
+        dialog.SelectedFont.Style.Should().Be(
+            WinFormsShims.FontStyle.Bold | WinFormsShims.FontStyle.Italic);
+        accessor.Preview.FontFamily.Name.Should().Be("Courier New");
+        accessor.Preview.FontWeight.Should().Be(FontWeight.Bold);
+        accessor.Preview.FontStyle.Should().Be(FontStyle.Italic);
+        dialog.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
+    }
+
+    [AvaloniaTest]
+    public void Font_dialog_fixed_pitch_list_should_only_include_fixed_pitch_system_fonts()
+    {
+        IReadOnlyList<string> allFonts = FontDialog.GetSystemFontNames(fixedPitchOnly: false);
+        IReadOnlyList<string> fixedPitchFonts = FontDialog.GetSystemFontNames(fixedPitchOnly: true);
+
+        fixedPitchFonts.Should().OnlyContain(name => allFonts.Contains(name));
+        fixedPitchFonts
+            .Select(name => new FontFamily(name))
+            .Should().OnlyContain(fontFamily => FontDialog.IsFixedPitch(fontFamily));
     }
 
     [AvaloniaTest]

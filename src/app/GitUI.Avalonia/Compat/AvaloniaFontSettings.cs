@@ -69,6 +69,9 @@ public static class AvaloniaFontSettings
     private static bool IsMonospaceResource(string resourcePrefix)
         => resourcePrefix is "GitExtensionsFixedWidth" or "GitExtensionsMonospace";
 
+    internal static double ToDeviceIndependentPixels(float points)
+        => points * DeviceIndependentPixelsPerPoint;
+
     private static string GetPlatformMonospaceFontName()
         => OperatingSystem.IsMacOS() ? "Menlo" : "DejaVu Sans Mono";
 }

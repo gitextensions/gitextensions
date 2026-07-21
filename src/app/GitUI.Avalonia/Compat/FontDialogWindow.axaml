@@ -1,0 +1,59 @@
+<base:GitExtensionsFormBase xmlns="https://github.com/avaloniaui"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:base="using:ResourceManager"
+                            x:Class="GitUI.Compat.FontDialogWindow"
+                            Width="520"
+                            Height="300"
+                            MinWidth="420"
+                            MinHeight="260"
+                            CanResize="True"
+                            WindowStartupLocation="CenterOwner">
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*,Auto"
+        RowSpacing="8">
+    <Grid ColumnDefinitions="*,110,32,32"
+          ColumnSpacing="6">
+      <ComboBox x:Name="cbxFontFamily"
+                IsEditable="True"
+                HorizontalAlignment="Stretch" />
+      <NumericUpDown x:Name="nudFontSize"
+                     Grid.Column="1"
+                     Minimum="6"
+                     Maximum="72"
+                     Increment="0.5"
+                     FormatString="0.#" />
+      <ToggleButton x:Name="chkBold"
+                    Grid.Column="2"
+                    Content="B"
+                    FontWeight="Bold" />
+      <ToggleButton x:Name="chkItalic"
+                    Grid.Column="3"
+                    Content="I"
+                    FontStyle="Italic" />
+    </Grid>
+
+    <Border Grid.Row="2"
+            Padding="12"
+            BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+            BorderThickness="1">
+      <TextBlock x:Name="txtPreview"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"
+                 Text="AaBbYyZz 0123456789"
+                 TextWrapping="Wrap" />
+    </Border>
+
+    <StackPanel Grid.Row="3"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="6">
+      <Button x:Name="btnOk"
+              MinWidth="75"
+              Classes="gitextensions-dialog-action" />
+      <Button x:Name="btnCancel"
+              MinWidth="75"
+              IsCancel="True"
+              Classes="gitextensions-dialog-action" />
+    </StackPanel>
+  </Grid>
+</base:GitExtensionsFormBase>
