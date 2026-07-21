@@ -33,7 +33,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and the root placeholder. GeneralSettingsPage and the reduced ColorsSettingsPage are registered under Git Extensions; Colors moves beneath Appearance when that parent page lands. Git paths, Git config, and advanced Git config are registered beneath the original Git group. Remaining built-in and plugin pages land incrementally in 3.17+ and phase 4."
+    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and the root placeholder. GeneralSettingsPage and the reduced ColorsSettingsPage are registered under Git Extensions; Colors moves beneath Appearance when that parent page lands. Git paths, Git config, advanced Git config, and the Git root introduction are registered beneath the original Git group. Remaining built-in and plugin pages land incrementally in 3.17+ and phase 4."
   },
   "src/app/GitUI/CommandsDialogs/FormSettings.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml",
@@ -148,6 +148,18 @@
     "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Compact same-named tri-state checkbox list matching the original order."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitRootIntroductionPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitRootIntroductionPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same inert settings-page boundary; replacing the Git group node's Tag restores the original root-selection behavior without introducing settings reads or writes."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitRootIntroductionPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitRootIntroductionPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same translated 284-by-132 introduction label at the original top-left inset."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/FormAvailableEncodings.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/FormAvailableEncodings.axaml.cs",

@@ -489,6 +489,34 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
+    public void FormSettings_should_show_the_git_introduction_when_the_git_root_is_selected()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        GitRootIntroductionPage introduction = accessor.SettingsTreeView.SettingsPages
+            .OfType<GitRootIntroductionPage>()
+            .Single();
+
+        form.GotoPage(GitSettingsGroup.GetPageReference());
+
+        accessor.CurrentPage.Should().BeSameAs(introduction);
+        introduction.GetTitle().Should().Be("Git Settings");
+    }
+
+    [AvaloniaTest]
+    public void Git_root_introduction_should_preserve_original_translation_keys()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        GitRootIntroductionPage page = new();
+
+        page.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(GitRootIntroductionPage), "label1", "Text", "Select one of the subnodes to view or edit the Git settings");
+    }
+
+    [AvaloniaTest]
     public void Settings_tree_should_preserve_root_replacement_navigation_and_search()
     {
         SettingsTreeViewUserControl tree = new();
