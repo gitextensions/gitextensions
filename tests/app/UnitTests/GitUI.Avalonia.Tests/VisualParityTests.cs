@@ -128,7 +128,7 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
-    public void Selection_palette_should_use_Git_Extensions_blue_in_both_theme_variants()
+    public void Selection_palette_should_follow_the_configurable_Git_Extensions_colors()
     {
         Application application = Application.Current
             ?? throw new InvalidOperationException("The Avalonia application was not created.");
@@ -143,16 +143,16 @@ public sealed class VisualParityTests
             out object? darkSelection).Should().BeTrue();
 
         lightSelection.Should().BeOfType<SolidColorBrush>()
-            .Which.Color.Should().Be(Color.Parse("#0078D4"));
+            .Which.Color.Should().Be(Color.Parse("#C3C3FF"));
         darkSelection.Should().BeOfType<SolidColorBrush>()
-            .Which.Color.Should().Be(Color.Parse("#0067C0"));
+            .Which.Color.Should().Be(Color.Parse("#00009B"));
     }
 
     [AvaloniaTest]
     public void List_and_tree_selection_should_use_shared_dense_metrics_in_both_theme_variants()
     {
-        AssertListAndTreeStyles(ThemeVariant.Light, Color.Parse("#0078D4"));
-        AssertListAndTreeStyles(ThemeVariant.Dark, Color.Parse("#0067C0"));
+        AssertListAndTreeStyles(ThemeVariant.Light, Color.Parse("#C3C3FF"), Colors.Black);
+        AssertListAndTreeStyles(ThemeVariant.Dark, Color.Parse("#00009B"), Color.Parse("#F0F0F0"));
     }
 
     [AvaloniaTest]
@@ -773,7 +773,7 @@ public sealed class VisualParityTests
             GetResourceBrushColor(application, "GitExtensionsPanelBackgroundBrush", ThemeVariant.Light).Should().Be(Color.Parse("#FFFFFF"));
             GetResourceBrushColor(application, "GitExtensionsAppColorBranchBrush", ThemeVariant.Light).Should().Be(Color.Parse("#008000"));
             GetResourceBrushColor(application, "GitExtensionsKnownColorWindowTextBrush", ThemeVariant.Light).Should().Be(Colors.Black);
-            GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Light).Should().Be(Color.Parse("#0078D4"));
+            GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Light).Should().Be(Color.Parse("#C3C3FF"));
             AssertPublishedThemeColors(application, ThemeVariant.Light);
             RevisionGraphLaneColor.NonRelativeColor.ToArgb().Should().Be(
                 System.Drawing.ColorTranslator.FromHtml("#D3D3D3").ToArgb());
@@ -790,7 +790,7 @@ public sealed class VisualParityTests
             GetResourceBrushColor(application, "GitExtensionsBranchRefBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#7FE28A"));
             GetResourceBrushColor(application, "GitExtensionsDiffRemovedBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#6E1919"));
             GetResourceBrushColor(application, "GitExtensionsKnownColorWindowTextBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#F0F0F0"));
-            GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#0067C0"));
+            GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#00009B"));
             AssertPublishedThemeColors(application, ThemeVariant.Dark);
             RevisionGraphLaneColor.NonRelativeColor.ToArgb().Should().Be(
                 System.Drawing.ColorTranslator.FromHtml("#707070").ToArgb());
@@ -824,7 +824,10 @@ public sealed class VisualParityTests
         }
     }
 
-    private static void AssertListAndTreeStyles(ThemeVariant themeVariant, Color selectionColor)
+    private static void AssertListAndTreeStyles(
+        ThemeVariant themeVariant,
+        Color selectionColor,
+        Color selectionForegroundColor)
     {
         ListBox list = new()
         {
@@ -836,16 +839,25 @@ public sealed class VisualParityTests
             Header = "main",
             IsSelected = true,
         };
+        ThemeAwareTextEditor editor = new()
+        {
+            Text = "selected text",
+            SelectionStart = 0,
+            SelectionLength = 8,
+            Classes = { "gitextensions-diff-editor" },
+        };
         Grid content = new()
         {
-            RowDefinitions = new RowDefinitions("*,*"),
+            RowDefinitions = new RowDefinitions("*,*,*"),
             Children =
             {
                 list,
                 treeItem,
+                editor,
             },
         };
         Grid.SetRow(treeItem, 1);
+        Grid.SetRow(editor, 2);
 
         Window window = new()
         {
@@ -873,6 +885,8 @@ public sealed class VisualParityTests
             GetColor(listPresenter.Background).Should().Be(selectionColor);
             treeItem.MinHeight.Should().Be(24);
             GetColor(treeLayoutRoot.Background).Should().Be(selectionColor);
+            GetColor(editor.TextArea.SelectionBrush).Should().Be(selectionColor);
+            GetColor(editor.TextArea.SelectionForeground).Should().Be(selectionForegroundColor);
         }
         finally
         {

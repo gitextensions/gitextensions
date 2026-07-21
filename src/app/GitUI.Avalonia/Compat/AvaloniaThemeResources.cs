@@ -39,6 +39,7 @@ internal static class AvaloniaThemeResources
 
         DrawingColor panel = GetAppColor(settings, AppColor.PanelBackground);
         DrawingColor editor = GetAppColor(settings, AppColor.EditorBackground);
+        DrawingColor selection = GetAppColor(settings, AppColor.Selection);
         DrawingColor windowText = GetKnownColor(settings, KnownColor.WindowText, isDark);
         DrawingColor grayText = GetKnownColor(settings, KnownColor.GrayText, isDark);
         DrawingColor sectionBorder = Lerp(panel, windowText, isDark ? 0.14f : 0.18f);
@@ -68,11 +69,9 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsTreeConnectorBrush", treeConnector);
         SetBrush(resources, "GitExtensionsInactiveSelectionBackgroundBrush", GetAppColor(settings, AppColor.InactiveSelectionHighlight));
 
-        // Active list/tree selection deliberately remains the accepted Git Extensions blue.
-        // AppColor.Selection is the editor-selection color and must not be reused here.
-        SetBrush(resources, "GitExtensionsSelectionBackgroundBrush", MediaColor.Parse(isDark ? "#0067C0" : "#0078D4"));
-        SetBrush(resources, "GitExtensionsSelectionPointerOverBackgroundBrush", MediaColor.Parse(isDark ? "#1473E6" : "#106EBE"));
-        SetBrush(resources, "GitExtensionsSelectionForegroundBrush", MediaColor.Parse("#FFFFFF"));
+        SetBrush(resources, "GitExtensionsSelectionBackgroundBrush", selection);
+        SetBrush(resources, "GitExtensionsSelectionPointerOverBackgroundBrush", Lerp(selection, windowText, 0.08f));
+        SetBrush(resources, "GitExtensionsSelectionForegroundBrush", windowText);
 
         SetBrush(resources, "GitExtensionsValidFilterBackgroundBrush", isDark ? dimmedAddedBackground : addedBackground);
         SetBrush(resources, "GitExtensionsInvalidFilterBackgroundBrush", isDark ? dimmedRemovedBackground : removedBackground);
