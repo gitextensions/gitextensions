@@ -137,6 +137,10 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             SettingsPageBase.Create<GeneralSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
             Images.GeneralSettings);
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<ColorsSettingsPage>(this, serviceProvider),
+            GitExtensionsSettingsGroup.GetPageReference(),
+            Images.Colors);
     }
 
     private void OnSettingsPageSelected(object? sender, SettingsPageSelectedEventArgs e)
