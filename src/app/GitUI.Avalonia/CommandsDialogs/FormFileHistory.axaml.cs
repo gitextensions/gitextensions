@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
@@ -102,6 +102,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         detectMoveAndCopyInThisFileToolStripMenuItem.Click += detectMoveAndCopyInThisFileToolStripMenuItem_Click;
         detectMoveAndCopyInAllFilesToolStripMenuItem.Click += detectMoveAndCopyInAllFilesToolStripMenuItem_Click;
         displayAuthorFirstToolStripMenuItem.Click += displayAuthorFirstToolStripMenuItem_Click;
+        showAuthorAvatarToolStripMenuItem.Click += showAuthorAvatarToolStripMenuItem_Click;
         showAuthorToolStripMenuItem.Click += showAuthorToolStripMenuItem_Click;
         showAuthorDateToolStripMenuItem.Click += showAuthorDateToolStripMenuItem_Click;
         showAuthorTimeToolStripMenuItem.Click += showAuthorTimeToolStripMenuItem_Click;
@@ -135,6 +136,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     protected override void OnClosed(EventArgs e)
     {
         RevisionGrid.CancelBackgroundTasks();
+        Blame.CancelBackgroundTasks();
         _customDiffToolsSequence.CancelCurrent();
         _taskManager.JoinPendingOperations();
         _viewChangesSequence.CancelCurrent();
@@ -356,6 +358,13 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         UpdateSelectedFileViewers(force: true);
     }
 
+    private void showAuthorAvatarToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.BlameShowAuthorAvatar = !AppSettings.BlameShowAuthorAvatar;
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
     private void showAuthorToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         AppSettings.BlameShowAuthor = !AppSettings.BlameShowAuthor;
@@ -408,6 +417,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         detectMoveAndCopyInThisFileToolStripMenuItem.IsChecked = AppSettings.DetectCopyInFileOnBlame;
         detectMoveAndCopyInAllFilesToolStripMenuItem.IsChecked = AppSettings.DetectCopyInAllOnBlame;
         displayAuthorFirstToolStripMenuItem.IsChecked = AppSettings.BlameDisplayAuthorFirst;
+        showAuthorAvatarToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthorAvatar;
         showAuthorToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthor;
         showAuthorDateToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthorDate;
         showAuthorTimeToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthorTime;

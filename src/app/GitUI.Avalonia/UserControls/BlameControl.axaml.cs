@@ -6,10 +6,12 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.Avatars;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
+using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -21,8 +23,8 @@ namespace GitUI.Blame;
 
 // Twin of GitUI/UserControls/BlameControl.cs. The author gutter is a BlameAuthorMargin
 // inside the file editor instead of a second scroll-synchronised editor, so the
-// scroll-position handlers of the original have no twin. Avatars and repository-hoster
-// context-menu items remain owned by their provider phases.
+// scroll-position handlers of the original have no twin. Repository-hoster context-menu
+// items remain owned by their provider phase.
 public sealed partial class BlameControl : GitModuleControl
 {
     /// <summary>
@@ -31,6 +33,8 @@ public sealed partial class BlameControl : GitModuleControl
     public event Action? EscapePressed;
 
     private readonly CancellationTokenSequence _blameLoadSequence = new();
+    private static readonly IAvatarProvider _noAuthorAvatarProvider = new StaticImageAvatarProvider(AvatarImage.Encode(Images.User80));
+    private readonly IAvatarProvider _avatarProvider;
     private int _lineIndex = -1;
     private GitBlameLine? _lastBlameLine;
     private GitBlameLine? _clickedBlameLine;
@@ -51,7 +55,13 @@ public sealed partial class BlameControl : GitModuleControl
     internal BlameAuthorMargin BlameAuthor { get; }
 
     public BlameControl()
+        : this(AvatarService.DefaultProvider)
     {
+    }
+
+    internal BlameControl(IAvatarProvider avatarProvider)
+    {
+        _avatarProvider = avatarProvider ?? throw new ArgumentNullException(nameof(avatarProvider));
         InitializeComponent();
 
         BlameAuthor = new BlameAuthorMargin(
@@ -101,7 +111,10 @@ public sealed partial class BlameControl : GitModuleControl
     }
 
     internal void CancelBackgroundTasks()
-        => _blameLoadSequence.CancelCurrent();
+    {
+        _blameLoadSequence.CancelCurrent();
+        BlameAuthor.Clear();
+    }
 
     public void UpdateShowLineNumbers()
     {
@@ -159,7 +172,7 @@ public sealed partial class BlameControl : GitModuleControl
             cancellationToken.ThrowIfCancellationRequested();
             _blame = Module.Blame(fileName, objectId.ToString(), encoding, lines: null, cancellationToken: cancellationToken);
             await mainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
-            await ProcessBlameAsync(fileName, revision, line, cancellationToken);
+            await ProcessBlameAsync(fileName, revision, line, mainThreadFactory, cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -307,12 +320,18 @@ public sealed partial class BlameControl : GitModuleControl
         CommitInfo.Revision = _revisionGridInfo is null ? Module.GetRevision(objectId) : _revisionGridInfo.GetActualRevision(objectId);
     }
 
-    private async Task ProcessBlameAsync(string? filename, GitRevision revision, int lineNumber, CancellationToken cancellationToken = default)
+    private async Task ProcessBlameAsync(
+        string? filename,
+        GitRevision revision,
+        int lineNumber,
+        JoinableTaskFactory mainThreadFactory,
+        CancellationToken cancellationToken = default)
     {
         (string gutter, string body, List<GitBlameEntry> gitBlameEntries) = BuildBlameContents(filename);
         cancellationToken.ThrowIfCancellationRequested();
 
-        BlameAuthor.Initialize(gutter, gitBlameEntries);
+        bool showAuthorAvatar = AppSettings.BlameShowAuthorAvatar;
+        int contentVersion = BlameAuthor.Initialize(gutter, gitBlameEntries, showAuthorAvatar);
 
         Validates.NotNull(_fileName);
         await BlameFile.ViewTextAsync(_fileName, body, cancellationToken);
@@ -321,6 +340,65 @@ public sealed partial class BlameControl : GitModuleControl
 
         _blameId = revision.ObjectId;
         CommitInfo.Revision = revision;
+
+        if (showAuthorAvatar)
+        {
+            await LoadAvatarsAsync(gitBlameEntries, contentVersion, mainThreadFactory, cancellationToken);
+        }
+    }
+
+    private async Task LoadAvatarsAsync(
+        IReadOnlyList<GitBlameEntry> gitBlameEntries,
+        int contentVersion,
+        JoinableTaskFactory mainThreadFactory,
+        CancellationToken cancellationToken)
+    {
+        Validates.NotNull(_blame);
+
+        int avatarSize = BlameAuthor.AvatarSize;
+        GitBlameCommit? lastCommit = null;
+        Dictionary<string, Task<byte[]?>> avatarRequests = new(StringComparer.OrdinalIgnoreCase);
+        List<Task> updates = [];
+
+        for (int index = 0; index < _blame.Lines.Count; index++)
+        {
+            GitBlameLine line = _blame.Lines[index];
+            if (line.Commit == lastCommit)
+            {
+                continue;
+            }
+
+            string? authorEmail = line.Commit.AuthorMail?.Trim('<', '>');
+            Task<byte[]?> request;
+            if (authorEmail is null)
+            {
+                request = _noAuthorAvatarProvider.GetAvatarAsync(string.Empty, line.Commit.Author, avatarSize);
+            }
+            else if (avatarRequests.TryGetValue(authorEmail, out Task<byte[]?>? cachedRequest))
+            {
+                request = cachedRequest;
+            }
+            else
+            {
+                request = _avatarProvider.GetAvatarAsync(authorEmail, line.Commit.Author, avatarSize);
+                avatarRequests.Add(authorEmail, request);
+            }
+
+            updates.Add(ApplyAvatarAsync(index, request));
+            lastCommit = line.Commit;
+        }
+
+        await Task.WhenAll(updates);
+
+        async Task ApplyAvatarAsync(int lineIndex, Task<byte[]?> request)
+        {
+            byte[]? imageData = await request.WaitAsync(cancellationToken);
+            await mainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
+            if (lineIndex < gitBlameEntries.Count)
+            {
+                BlameAuthor.SetAvatar(lineIndex, imageData, contentVersion);
+            }
+        }
     }
 
     private (string gutter, string body, List<GitBlameEntry> gitBlameDisplays) BuildBlameContents(string? filename)
@@ -336,9 +414,8 @@ public sealed partial class BlameControl : GitModuleControl
 
         GitBlameCommit? lastCommit = null;
 
-        // Avatar loading remains separate; the gutter data currently supplies age-bucket markers only.
-        bool showAgeMarkers = AppSettings.BlameShowAuthorAvatar;
-        List<GitBlameEntry> gitBlameDisplays = showAgeMarkers ? CalculateBlameGutterData(_blame.Lines) : [];
+        bool showAuthorAvatar = AppSettings.BlameShowAuthorAvatar;
+        List<GitBlameEntry> gitBlameDisplays = showAuthorAvatar ? CalculateBlameGutterData(_blame.Lines) : [];
 
         string dateTimeFormat = AppSettings.BlameShowAuthorTime
             ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " +
@@ -663,8 +740,8 @@ public sealed partial class BlameControl : GitModuleControl
     {
         if (_blame is not null)
         {
-            (string gutter, _, List<GitBlameEntry> entries) = BuildBlameContents(_fileName);
-            BlameAuthor.Initialize(gutter, entries);
+            (_, _, List<GitBlameEntry> entries) = BuildBlameContents(_fileName);
+            BlameAuthor.UpdateAgeBuckets(entries);
         }
 
         GitBlameCommit? highlightedCommit = _highlightedCommit;
@@ -706,6 +783,9 @@ public sealed partial class BlameControl : GitModuleControl
             => BlameControl.BuildAuthorLine(line, lineBuilder, lineLength, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
 
         public (string gutter, string body, List<GitBlameEntry> gitBlameDisplays) BuildBlameContents(string filename) => _control.BuildBlameContents(filename);
+
+        public Task LoadAvatarsAsync(IReadOnlyList<GitBlameEntry> entries, int contentVersion, CancellationToken cancellationToken = default)
+            => _control.LoadAvatarsAsync(entries, contentVersion, ThreadHelper.JoinableTaskFactory, cancellationToken);
 
         public List<GitBlameEntry> CalculateBlameGutterData(IReadOnlyList<GitBlameLine> blameLines)
             => _control.CalculateBlameGutterData(blameLines);

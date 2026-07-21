@@ -1,8 +1,9 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
@@ -36,6 +37,7 @@ public sealed class FileHistoryTests
     private bool _loadBlameOnShow;
     private bool _loadHistoryOnShow;
     private bool _showAuthor;
+    private bool _showAuthorAvatar;
     private bool _showAuthorDate;
     private bool _showAuthorTime;
     private bool _showLineNumbers;
@@ -73,6 +75,7 @@ public sealed class FileHistoryTests
         _loadBlameOnShow = AppSettings.LoadBlameOnShow;
         _loadHistoryOnShow = AppSettings.LoadFileHistoryOnShow;
         _showAuthor = AppSettings.BlameShowAuthor;
+        _showAuthorAvatar = AppSettings.BlameShowAuthorAvatar;
         _showAuthorDate = AppSettings.BlameShowAuthorDate;
         _showAuthorTime = AppSettings.BlameShowAuthorTime;
         _showLineNumbers = AppSettings.BlameShowLineNumbers;
@@ -97,6 +100,7 @@ public sealed class FileHistoryTests
         AppSettings.LoadBlameOnShow = _loadBlameOnShow;
         AppSettings.LoadFileHistoryOnShow = _loadHistoryOnShow;
         AppSettings.BlameShowAuthor = _showAuthor;
+        AppSettings.BlameShowAuthorAvatar = _showAuthorAvatar;
         AppSettings.BlameShowAuthorDate = _showAuthorDate;
         AppSettings.BlameShowAuthorTime = _showAuthorTime;
         AppSettings.BlameShowLineNumbers = _showLineNumbers;
@@ -134,6 +138,7 @@ public sealed class FileHistoryTests
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "diffToolRemoteLocalStripMenuItem", "Text", "Difftool selected < - > local");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "saveAsToolStripMenuItem", "Text", "Save as");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "followFileHistoryToolStripMenuItem", "Text", "Detect and follow renames");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "showAuthorAvatarToolStripMenuItem", "Text", "Show author avatar");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "showFullHistoryToolStripMenuItem", "Text", "Show full history");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "toolStripSplitLoad", "ToolTipText", "Load file history");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "ShowFullHistory", "ToolTipText", "Show Full History");
@@ -149,6 +154,21 @@ public sealed class FileHistoryTests
             .Select(call => string.Join('.', call.GetArguments().Take(3)))
             .ToArray();
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(emittedKeys.Length);
+    }
+
+    [AvaloniaTest]
+    public void FormFileHistory_should_toggle_author_avatars_from_blame_options()
+    {
+        FormFileHistory form = new();
+        MenuItem showAvatars = form.FindControl<MenuItem>("showAuthorAvatarToolStripMenuItem")
+            ?? throw new InvalidOperationException("The author-avatar blame option was not created.");
+        bool original = AppSettings.BlameShowAuthorAvatar;
+
+        showAvatars.IsChecked.Should().Be(original);
+        showAvatars.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        AppSettings.BlameShowAuthorAvatar.Should().Be(!original);
+        showAvatars.IsChecked.Should().Be(!original);
     }
 
     [AvaloniaTest]

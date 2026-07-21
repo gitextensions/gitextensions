@@ -2,8 +2,10 @@
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using AvaloniaEdit.Editing;
 using AvaloniaEdit.Rendering;
+using GitUI.Avatars;
 
 namespace GitUI.Editor;
 
@@ -14,8 +16,8 @@ namespace GitUI.Editor;
 /// Twin of GitUI/Editor/BlameAuthorMargin.cs with an extended role: the WinForms margin
 /// renders only the avatars while the author text is a second, scroll-synchronised
 /// editor. This AvaloniaEdit margin renders the age marker and the author line itself,
-/// which replaces that second editor and its scroll synchronisation. Blame-avatar loading
-/// remains separate so this margin does not take ownership of asynchronous image requests.
+/// which replaces that second editor and its scroll synchronisation. Encoded avatar bytes
+/// remain owned by the entries; this margin owns and disposes the decoded Avalonia bitmaps.
 /// </remarks>
 public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
 {
@@ -31,8 +33,11 @@ public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
     private readonly Dictionary<int, IBrush> _brushs = [];
     private readonly List<(int StartLine, int EndLine, IBrush Brush)> _highlights = [];
     private string[] _authorLines = [];
+    private Bitmap?[] _avatars = [];
     private GitBlameEntry[] _blameLines = [];
+    private int _contentVersion;
     private bool _isResizing;
+    private bool _showAvatars;
     private double _resizeStartPointerX;
     private double _resizeStartWidth;
     private double? _userWidth;
@@ -45,23 +50,21 @@ public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
         ActualThemeVariantChanged += (_, _) => InvalidateVisual();
     }
 
+    public int AvatarSize => Math.Max(1, (int)Math.Ceiling(CreateFormattedText("Ag").Height));
+
     /// <summary>
     ///  Shows the author gutter built by the blame control: one line of text per file
     ///  line (empty for continuation lines of the same commit) plus age-bucket markers.
     /// </summary>
-    public void Initialize(string gutter, IEnumerable<GitBlameEntry> blameLines)
+    public int Initialize(string gutter, IEnumerable<GitBlameEntry> blameLines, bool showAvatars = false)
     {
+        _contentVersion++;
         _authorLines = gutter.Split('\n').Select(line => line.TrimEnd('\r', ' ')).ToArray();
         _blameLines = [.. blameLines];
+        _showAvatars = showAvatars;
+        ReplaceAvatars([.. _blameLines.Select(entry => AvatarImage.Decode(entry.Avatar))]);
 
-        _brushs.Clear();
-        foreach (GitBlameEntry blameLine in _blameLines)
-        {
-            if (!_brushs.ContainsKey(blameLine.AgeBucketIndex))
-            {
-                _brushs.Add(blameLine.AgeBucketIndex, ToBrush(blameLine.AgeBucketColor));
-            }
-        }
+        RebuildAgeBrushes();
 
         double maxTextWidth = 0;
         foreach (string line in _authorLines)
@@ -72,8 +75,38 @@ public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
             }
         }
 
-        _width = AgeBucketMarkerWidth + TextPadding + maxTextWidth + TextPadding;
+        double avatarWidth = _showAvatars ? AvatarSize + TextPadding : 0;
+        _width = AgeBucketMarkerWidth + avatarWidth + TextPadding + maxTextWidth + TextPadding;
         InvalidateMeasure();
+        InvalidateVisual();
+        return _contentVersion;
+    }
+
+    public void UpdateAgeBuckets(IEnumerable<GitBlameEntry> blameLines)
+    {
+        GitBlameEntry[] updatedLines = [.. blameLines];
+        for (int index = 0; index < Math.Min(_blameLines.Length, updatedLines.Length); index++)
+        {
+            _blameLines[index].AgeBucketIndex = updatedLines[index].AgeBucketIndex;
+            _blameLines[index].AgeBucketColor = updatedLines[index].AgeBucketColor;
+        }
+
+        RebuildAgeBrushes();
+        InvalidateVisual();
+    }
+
+    internal void SetAvatar(int lineIndex, byte[]? imageData, int contentVersion)
+    {
+        if (contentVersion != _contentVersion || lineIndex < 0 || lineIndex >= _avatars.Length)
+        {
+            return;
+        }
+
+        Bitmap? avatar = AvatarImage.Decode(imageData);
+        Bitmap? previous = _avatars[lineIndex];
+        _avatars[lineIndex] = avatar;
+        _blameLines[lineIndex].Avatar = imageData;
+        previous?.Dispose();
         InvalidateVisual();
     }
 
@@ -82,8 +115,11 @@ public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
     /// </summary>
     public void Clear()
     {
+        _contentVersion++;
         _authorLines = [];
         _blameLines = [];
+        _showAvatars = false;
+        ReplaceAvatars([]);
         _highlights.Clear();
         InvalidateMeasure();
         InvalidateVisual();
@@ -236,13 +272,54 @@ public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
                     new Avalonia.Rect(0, y, AgeBucketMarkerWidth, visualLine.Height));
             }
 
+            double textX = AgeBucketMarkerWidth + TextPadding;
+            if (_showAvatars)
+            {
+                double avatarSize = Math.Min(AvatarSize, visualLine.Height);
+                if (index < _avatars.Length && _avatars[index] is Bitmap avatar)
+                {
+                    double imageY = y + ((visualLine.Height - avatarSize) / 2);
+                    context.DrawImage(
+                        avatar,
+                        new Avalonia.Rect(avatar.Size),
+                        new Avalonia.Rect(AgeBucketMarkerWidth, imageY, avatarSize, avatarSize));
+                }
+
+                textX += AvatarSize + TextPadding;
+            }
+
             string text = _authorLines[index];
             if (!string.IsNullOrEmpty(text))
             {
-                context.DrawText(CreateFormattedText(text), new Avalonia.Point(AgeBucketMarkerWidth + TextPadding, y));
+                context.DrawText(CreateFormattedText(text), new Avalonia.Point(textX, y));
             }
         }
     }
+
+    private void ReplaceAvatars(Bitmap?[] avatars)
+    {
+        foreach (Bitmap? avatar in _avatars)
+        {
+            avatar?.Dispose();
+        }
+
+        _avatars = avatars;
+    }
+
+    private void RebuildAgeBrushes()
+    {
+        _brushs.Clear();
+        foreach (GitBlameEntry blameLine in _blameLines)
+        {
+            if (!_brushs.ContainsKey(blameLine.AgeBucketIndex))
+            {
+                _brushs.Add(blameLine.AgeBucketIndex, ToBrush(blameLine.AgeBucketColor));
+            }
+        }
+    }
+
+    internal PixelSize? GetAvatarPixelSize(int lineIndex)
+        => lineIndex >= 0 && lineIndex < _avatars.Length ? _avatars[lineIndex]?.PixelSize : null;
 
     private FormattedText CreateFormattedText(string text)
         => new(
