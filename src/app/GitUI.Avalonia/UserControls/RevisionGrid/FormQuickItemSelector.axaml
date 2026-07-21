@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.UserControls.RevisionGrid.FormQuickItemSelector"
+        SizeToContent="WidthAndHeight"
+        MinWidth="160" CanResize="False"
+        WindowDecorations="None"
+        ShowInTaskbar="False">
+  <Border BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+          BorderThickness="1"
+          Padding="2">
+    <Grid RowDefinitions="Auto,Auto">
+      <ListBox x:Name="lbxRefs"
+               MinWidth="150"
+               DoubleTapped="lbxRefs_DoubleTapped" />
+      <StackPanel x:Name="flowLayoutPanel1"
+                  Grid.Row="1"
+                  HorizontalAlignment="Right"
+                  Margin="0,4,0,0">
+        <Button x:Name="btnAction"
+                Classes="gitextensions-dialog-action"
+                MinWidth="75"
+                Content="Action"
+                IsDefault="True" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</Window>

@@ -17,6 +17,12 @@
          so portable GitUI files can be linked below without source changes. Files that also
          use Avalonia's Point/Size alias per file. -->
     <Using Include="System.Drawing" />
+    <!-- Exact aliases used by linked WinForms-shaped script contracts. Importing the whole
+         shim namespace would also introduce Button/Control and collide with Avalonia. -->
+    <Using Include="GitExtensions.Shims.WinForms.IWin32Window" Alias="IWin32Window" />
+    <Using Include="GitExtensions.Shims.WinForms.DialogResult" Alias="DialogResult" />
+    <Using Include="GitExtensions.Shims.WinForms.MessageBoxButtons" Alias="MessageBoxButtons" />
+    <Using Include="GitExtensions.Shims.WinForms.MessageBoxIcon" Alias="MessageBoxIcon" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +56,17 @@
     <Compile Include="..\GitUI\Models\IOutputHistoryProvider.cs" Link="Models\IOutputHistoryProvider.cs" />
     <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
     <Compile Include="..\GitUI\RevisionDiffInfoProvider.cs" Link="RevisionDiffInfoProvider.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\FilePromptCreator.cs" Link="ScriptsEngine\FilePromptCreator.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IScriptOptionsForm.cs" Link="ScriptsEngine\IScriptOptionsForm.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IScriptOptionsProvider.cs" Link="ScriptsEngine\IScriptOptionsProvider.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IScriptsManager.cs" Link="ScriptsEngine\IScriptsManager.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IScriptsRunner.cs" Link="ScriptsEngine\IScriptsRunner.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IUserInputPrompt.cs" Link="ScriptsEngine\IUserInputPrompt.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\ScriptEvent.cs" Link="ScriptsEngine\ScriptEvent.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\ScriptOptionsParser.cs" Link="ScriptsEngine\ScriptOptionsParser.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\ScriptOptionsProviderBase.cs" Link="ScriptsEngine\ScriptOptionsProviderBase.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\ScriptsManager.cs" Link="ScriptsEngine\ScriptsManager.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\SimplePromptCreator.cs" Link="ScriptsEngine\SimplePromptCreator.cs" />
     <Compile Include="..\GitUI\Theming\ThemeCssUrlResolver.cs" Link="Theming\ThemeCssUrlResolver.cs" />
     <Compile Include="..\GitUI\Theming\ThemeCssUrlResolverException.cs" Link="Theming\ThemeCssUrlResolverException.cs" />
     <Compile Include="..\GitUI\Theming\ThemeException.cs" Link="Theming\ThemeException.cs" />
