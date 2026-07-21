@@ -5,6 +5,132 @@
     "basedOn: the upstream commit the twin was last synchronized with.",
     "eng/avalonia/upstream-drift.sh joins upstream diffs against this map; keep it accurate when porting or syncing."
   ],
+  "src/app/GitUI/Avatars/AvatarDownloader.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/AvatarDownloader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains concurrent request de-duplication, retry, expiry and proxy credentials while returning validated encoded bytes; the HTTP request itself replaces the Windows-only InternetGetConnectedState pre-check."
+  },
+  "src/app/GitUI/Avatars/AvatarMemoryCache.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/AvatarMemoryCache.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same MRU and concurrent-request coordination over encoded image bytes, so cached objects carry no UI-framework ownership."
+  },
+  "src/app/GitUI/Avatars/AvatarService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/AvatarService.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same provider/fallback composition, hot swap, memory/disk caches and user-image safety net over the encoded-byte contract."
+  },
+  "src/app/GitUI/Avatars/ChainedAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/ChainedAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/CustomAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/CustomAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/CustomAvatarProvider.UriTemplateData.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/CustomAvatarProvider.UriTemplateData.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/Avatars/CustomAvatarProvider.UriTemplateResolver.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/CustomAvatarProvider.UriTemplateResolver.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/FileSystemAvatarCache.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/FileSystemAvatarCache.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same path, expiry, provider-none and cache-clear behavior; encoded bytes are read and written directly instead of round-tripping through GDI."
+  },
+  "src/app/GitUI/Avatars/GithubAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/GithubAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same normal/noreply/bot resolution and 420px identicon rejection. Bot profile lookup uses the portable GitHub JSON endpoint directly because the legacy Git.hub project is Windows-targeted."
+  },
+  "src/app/GitUI/Avatars/GravatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/GravatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/HexString.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/HexString.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/Avatars/HotSwapAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/HotSwapAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/IAvatarCacheCleaner.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/IAvatarCacheCleaner.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/Avatars/IAvatarDownloader.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/IAvatarDownloader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same interface role with encoded byte arrays replacing System.Drawing.Image."
+  },
+  "src/app/GitUI/Avatars/IAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/IAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same provider contract and PerformsIo semantics with encoded byte arrays replacing System.Drawing.Image until the Avalonia rendering edge."
+  },
+  "src/app/GitUI/Avatars/InitialsAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/InitialsAvatarProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same deterministic initials, color selection, contrast threshold and font-setting refresh rendered through Avalonia into encoded PNG bytes."
+  },
+  "src/app/GitUI/Avatars/MultiCacheCleaner.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/MultiCacheCleaner.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/Avatars/SafetynetAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/SafetynetAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/StaticImageAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/StaticImageAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same per-size cache with Avalonia bitmap resizing at the encoded-image boundary."
+  },
+  "src/app/GitUI/Avatars/TemplateFormatter.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/TemplateFormatter.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/UserControls/AvatarControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/AvatarControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same latest-request avatar loading, configured commit-info size, cache/provider/fallback context actions and Gravatar link over native Avalonia Bitmap decoding."
+  },
+  "src/app/GitUI/UserControls/AvatarControl.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/AvatarControl.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named image and context-menu controls with the original translation keys."
+  },
   "src/app/GitUI/Properties/Images.resx": {
     "twin": "src/app/GitUI.Avalonia/Properties/Images.g.cs",
     "status": "parity",
@@ -189,13 +315,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "General appearance and language/dictionary settings retain the original load/save and translation contracts. The Visual Studio-only option is hidden off Windows. Author-image controls retain their names and translation identities but remain hidden and do not mutate avatar settings until the portable avatar pipeline lands."
+    "notes": "General appearance, avatar, and language/dictionary settings retain the original load/save and translation contracts. The Visual Studio-only option is hidden off Windows. Provider/fallback/template changes rebuild and clear the portable avatar cache, while both avatar visibility settings and cache duration apply through their original AppSettings keys."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same General, Author images, and Language group boundaries and same-named controls in a compact scrollable layout. The deferred Author images group is present but hidden; Appearance is the original tree parent of Sorting, Colors, Fonts, and Console style."
+    "notes": "Same visible General, Author images, and Language group boundaries and same-named controls in a compact scrollable layout. Appearance is the original tree parent of Sorting, Colors, Fonts, and Console style."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.axaml.cs",
@@ -661,9 +787,9 @@
   },
   "src/app/GitUI/UserControls/RevisionGrid/Columns/AvatarColumnProvider.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/AvatarColumnProvider.cs",
-    "status": "scaffolded",
+    "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Correct ordered slot, width and visibility setting; deliberately unavailable until the real Avalonia avatar service lands in Phase 3.22, so no placeholder data is displayed."
+    "notes": "Correct ordered slot, 32px width and visibility setting; realized 20px avatars load asynchronously from the shared provider and recycled cells reject stale completions. Cache clears refresh realized rows and artificial revisions remain empty."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Columns/AuthorNameColumnProvider.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/AuthorNameColumnProvider.cs",
@@ -913,13 +1039,13 @@
     "twin": "src/app/GitUI.Avalonia/Editor/GitBlameEntry.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Age-bucket index and color; the Avatar image property waits for the avatar subphase."
+    "notes": "Age-bucket index and color; the Avatar image property waits for the dedicated blame-avatar follow-up so blame parsing stays byte/image independent."
   },
   "src/app/GitUI/Editor/BlameAuthorMargin.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/BlameAuthorMargin.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Extended role: an AvaloniaEdit margin that renders theme-aware age-bucket markers and author text itself, replacing the second scroll-synchronised author editor of the WinForms BlameControl. Its transparent right-edge resize grip participates in Blame splitter persistence. Avatars wait for the avatar subphase."
+    "notes": "Extended role: an AvaloniaEdit margin that renders theme-aware age-bucket markers and author text itself, replacing the second scroll-synchronised author editor of the WinForms BlameControl. Its transparent right-edge resize grip participates in Blame splitter persistence. Asynchronous disposable avatar ownership waits for the dedicated blame-avatar follow-up."
   },
   "src/app/GitUI/UserControls/BlameControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/BlameControl.axaml.cs",
@@ -994,7 +1120,7 @@
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfo.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Simplified header + message; no links, avatars, or branch/tag expansion yet."
+    "notes": "Simplified header + message with the configured same-named AvatarControl. Links and branch/tag expansion remain deferred."
   },
   "src/app/GitUI/UserControls/CommitPickerSmallControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/CommitPickerSmallControl.axaml.cs",

@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -336,7 +336,7 @@ public sealed partial class BlameControl : GitModuleControl
 
         GitBlameCommit? lastCommit = null;
 
-        // Avatars are not ported yet; the gutter data supplies the age-bucket markers only.
+        // Avatar loading remains separate; the gutter data currently supplies age-bucket markers only.
         bool showAgeMarkers = AppSettings.BlameShowAuthorAvatar;
         List<GitBlameEntry> gitBlameDisplays = showAgeMarkers ? CalculateBlameGutterData(_blame.Lines) : [];
 

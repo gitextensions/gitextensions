@@ -38,8 +38,7 @@
       </GroupBox>
 
       <GroupBox x:Name="gbAuthorImages"
-                Header="_Author images"
-                IsVisible="False">
+                Header="_Author images">
         <Grid x:Name="tlpnlAuthor"
               Margin="8,4,8,8"
               ColumnDefinitions="Auto,180,Auto,*"
@@ -60,7 +59,7 @@
           <NumericUpDown x:Name="_NO_TRANSLATE_DaysToCacheImages"
                          Grid.Row="2"
                          Grid.Column="1"
-                         Width="72"
+                         Width="96"
                          HorizontalAlignment="Left"
                          Maximum="400" />
           <TextBlock x:Name="lblAvatarProvider"

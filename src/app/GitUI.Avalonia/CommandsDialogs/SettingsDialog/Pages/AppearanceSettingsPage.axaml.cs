@@ -1,9 +1,10 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
+using GitUI.Avatars;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -58,6 +59,14 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
             _ => 0,
         };
 
+        _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
+        ShowAuthorAvatarInCommitInfo.IsChecked = AppSettings.ShowAuthorAvatarInCommitInfo;
+        ShowAuthorAvatarInCommitGraph.IsChecked = AppSettings.ShowAuthorAvatarColumn;
+        SelectEnumValue(AvatarProvider, AppSettings.AvatarProvider);
+        SelectEnumValue(_NO_TRANSLATE_NoImageService, AppSettings.AvatarFallbackType);
+        txtCustomAvatarTemplate.Text = AppSettings.CustomAvatarTemplate;
+        ManageAvatarOptionsDisplay();
+
         PopulateLanguages();
         PopulateSelectedDictionary();
         base.SettingsToPage();
@@ -76,6 +85,26 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
             3 => TruncatePathMethod.FileNameOnly,
             _ => TruncatePathMethod.None,
         };
+
+        GitCommands.AvatarProvider avatarProvider = GetSelectedEnumValue(AvatarProvider, AppSettings.AvatarProvider);
+        AvatarFallbackType fallbackType = GetSelectedEnumValue(_NO_TRANSLATE_NoImageService, AppSettings.AvatarFallbackType);
+        string customTemplate = txtCustomAvatarTemplate.Text ?? string.Empty;
+        bool shouldClearCache = AppSettings.AvatarProvider != avatarProvider
+            || AppSettings.AvatarFallbackType != fallbackType
+            || AppSettings.CustomAvatarTemplate != customTemplate;
+
+        AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.IsChecked == true;
+        AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.IsChecked == true;
+        AppSettings.AvatarImageCacheDays = (int)(_NO_TRANSLATE_DaysToCacheImages.Value ?? AppSettings.AvatarImageCacheDays);
+        AppSettings.CustomAvatarTemplate = customTemplate;
+        AppSettings.AvatarProvider = avatarProvider;
+        AppSettings.AvatarFallbackType = fallbackType;
+
+        if (shouldClearCache)
+        {
+            AvatarService.UpdateAvatarProvider();
+            ThreadHelper.FileAndForget(AvatarService.CacheCleaner.ClearCacheAsync);
+        }
 
         AppSettings.Translation = Language.SelectedItem as string ?? Language.Text ?? "English";
         ResourceManager.TranslatedStrings.Reinitialize();
@@ -122,14 +151,15 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         Dictionary.DropDownOpened += Dictionary_DropDown;
         helpTranslate.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(_translationsWikiURL);
         downloadDictionary.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(_spellingWikiURL);
+        ClearImageCache.Click += (_, _) => ThreadHelper.FileAndForget(AvatarService.CacheCleaner.ClearCacheAsync);
+        pictureAvatarHelp.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "author-images-avatar-fallback"));
+        avatarProviderHelp.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "author-images-avatar-provider"));
+        AvatarProvider.SelectionChanged += (_, _) => ManageAvatarOptionsDisplay();
     }
 
     private void ConfigurePlatformControls()
     {
         chkShowCurrentBranchInVisualStudio.IsVisible = OperatingSystem.IsWindows();
-
-        // Avatar rendering and cache ownership arrive with the portable avatar pipeline.
-        gbAuthorImages.IsVisible = false;
     }
 
     private void ConfigureToolTips()
@@ -210,6 +240,24 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         truncatePathMethod.SelectedIndex = selectedIndex;
     }
 
+    private static T GetSelectedEnumValue<T>(ComboBox comboBox, T fallback) where T : struct, Enum
+        => comboBox.SelectedItem is ComboBoxItem<T> item ? item.Value : fallback;
+
+    private void ManageAvatarOptionsDisplay()
+    {
+        bool showCustomTemplate = GetSelectedEnumValue(AvatarProvider, GitCommands.AvatarProvider.Default)
+            == GitCommands.AvatarProvider.Custom;
+        lblCustomAvatarTemplate.IsVisible = showCustomTemplate;
+        txtCustomAvatarTemplate.IsVisible = showCustomTemplate;
+    }
+
+    private static void SelectEnumValue<T>(ComboBox comboBox, T value) where T : struct, Enum
+    {
+        comboBox.SelectedItem = comboBox.ItemsSource?
+            .OfType<ComboBoxItem<T>>()
+            .FirstOrDefault(item => EqualityComparer<T>.Default.Equals(item.Value, value));
+    }
+
     private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : struct, Enum
     {
         ComboBoxItem<T>[] items = EnumHelper.GetValues<T>()
@@ -242,5 +290,19 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         public ComboBox Dictionary => page.Dictionary;
 
         public Control AuthorImages => page.gbAuthorImages;
+
+        public CheckBox ShowAvatarInCommitGraph => page.ShowAuthorAvatarInCommitGraph;
+
+        public CheckBox ShowAvatarInCommitInfo => page.ShowAuthorAvatarInCommitInfo;
+
+        public NumericUpDown CacheDays => page._NO_TRANSLATE_DaysToCacheImages;
+
+        public ComboBox AvatarProvider => page.AvatarProvider;
+
+        public ComboBox AvatarFallback => page._NO_TRANSLATE_NoImageService;
+
+        public TextBox CustomAvatarTemplate => page.txtCustomAvatarTemplate;
+
+        public Button ClearAvatarCache => page.ClearImageCache;
     }
 }
