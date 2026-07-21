@@ -33,7 +33,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and the root placeholder. GeneralSettingsPage and AppearanceSettingsPage are registered under Git Extensions, with Sorting and Colors nested beneath Appearance in their original order. Git paths, Git config, advanced Git config, and the Git root introduction are registered beneath the original Git group. Remaining built-in and plugin pages land incrementally in 3.17+ and phase 4."
+    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and the root placeholder. GeneralSettingsPage and AppearanceSettingsPage are registered under Git Extensions, with Sorting, Colors, and Fonts nested beneath Appearance in their original order. Git paths, Git config, advanced Git config, and the Git root introduction are registered beneath the original Git group. Remaining built-in and plugin pages land incrementally in 3.17+ and phase 4."
   },
   "src/app/GitUI/CommandsDialogs/FormSettings.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml",
@@ -195,7 +195,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same General, Author images, and Language group boundaries and same-named controls in a compact scrollable layout. The deferred Author images group is present but hidden; Appearance is the original tree parent of Sorting and Colors."
+    "notes": "Same General, Author images, and Language group boundaries and same-named controls in a compact scrollable layout. The deferred Author images group is present but hidden; Appearance is the original tree parent of Sorting, Colors, and Fonts."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.axaml.cs",
@@ -208,6 +208,18 @@
     "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same five-row Sorting group and same-named controls, with fixed-width selectors and text inputs plus bare 16-DIP information images matching the original PictureBox presentation."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "All four font settings and the end-of-line glyph option retain the original load/save, point-size rounding, button-preview, field-name, and translation contracts. A reusable Avalonia font dialog enumerates installed families, supports fractional point sizes and bold/italic styles, previews the result, and restricts the code-font chooser to fixed-pitch families."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Fonts group, four same-named font-preview buttons, labels, and end-of-line marker option in the original compact row order."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.axaml.cs",
