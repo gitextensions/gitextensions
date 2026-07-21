@@ -1175,6 +1175,66 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Retains the plain-text command fallback and advertises one emulator only when the platform shell is usable. Its Avalonia-only emulator/shell-runner pair hosts COMSPEC on Windows and SHELL or /bin/sh on Unix, resolving the configured console font for each newly created command or shell without changing the WinForms registry."
   },
+  "src/app/GitUI/Theming/ThemeCssUrlResolver.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeCssUrlResolver.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeCssUrlResolverException.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeCssUrlResolverException.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeException.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeException.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeFileReader.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeFileReader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeLoader.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeLoader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral ExCSS parser linked unchanged into GitUI.Avalonia and covered there by the same test source as WinForms."
+  },
+  "src/app/GitUI/Theming/ThemePathProvider.cs": {
+    "twin": "src/app/GitUI/Theming/ThemePathProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemePersistence.cs": {
+    "twin": "src/app/GitUI/Theming/ThemePersistence.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia and covered there by the same test source as WinForms."
+  },
+  "src/app/GitUI/Theming/ThemeRepository.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeRepository.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeModule.cs": {
+    "twin": "src/app/GitUI.Avalonia/Theming/ThemeModule.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves CSS repository loading, invariant fallback, default migration, platform color-mode selection, variations, and invalid-theme recovery. Avalonia owns the framework-specific variant and resource application; WinForms system-color and legacy editor mutation are intentionally absent."
+  },
+  "src/app/GitUI/Theming/AppColorExtension.cs": {
+    "twin": "src/app/GitUI.Avalonia/Theming/AppColorExtension.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses the active CSS theme value with the same invariant-theme fallback as WinForms."
+  },
   "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs": {
     "twin": "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs",
     "status": "parity",
@@ -1185,6 +1245,6 @@
     "twin": "src/app/GitExtensions.Avalonia/Program.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Entry point twin (with App.axaml.cs); browse command and repo detection only. Startup maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources, and maps the built-in Git Extensions light/dark setting to the matching Avalonia variant while Windows app color mode and future custom themes retain platform-default behavior."
+    "notes": "Entry point twin (with App.axaml.cs); browse command and repo detection only. Startup maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources, loads the shared CSS theme repository through the ThemeModule twin, maps loaded light/dark themes to Avalonia variants, and keeps Windows app color mode synchronized with the actual platform variant."
   }
 }
