@@ -11,6 +11,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -613,6 +614,121 @@ public sealed class SettingsDialogTests
             nameof(AppearanceSettingsPage), "lblLanguage", "Text", "Language (restart required)");
         translation.Received(1).AddTranslationItem(
             nameof(AppearanceSettingsPage), "ShowAuthorAvatarInCommitGraph", "Text", "Show author's avatar column in the commit graph");
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_register_sorting_beneath_appearance_and_navigate_to_it()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        SortingSettingsPage sorting = accessor.SettingsTreeView.SettingsPages
+            .OfType<SortingSettingsPage>()
+            .Single();
+
+        TreeView tree = accessor.SettingsTreeView.FindControl<TreeView>("treeView1")
+            ?? throw new InvalidOperationException("The settings tree was not created.");
+        TreeViewItem appearanceNode = tree.Items
+            .OfType<TreeViewItem>()
+            .SelectMany(node => node.Items.OfType<TreeViewItem>())
+            .Single(node => node.Tag is AppearanceSettingsPage);
+        appearanceNode.Items
+            .OfType<TreeViewItem>()
+            .Select(node => node.Tag)
+            .Should().ContainInOrder(sorting, accessor.SettingsTreeView.SettingsPages.OfType<ColorsSettingsPage>().Single());
+
+        form.GotoPage(SortingSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(sorting);
+        sorting.GetTitle().Should().Be("Sorting");
+    }
+
+    [AvaloniaTest]
+    public void Sorting_settings_should_preserve_enum_order_and_roundtrip_all_values()
+    {
+        RevisionSortOrder originalRevisionSort = AppSettings.RevisionSortOrder.Value;
+        GitRefsSortBy originalRefsSortBy = AppSettings.RefsSortBy;
+        GitRefsSortOrder originalRefsSortOrder = AppSettings.RefsSortOrder;
+        string originalPrioritizedBranches = AppSettings.PrioritizedBranchNames;
+        string originalPrioritizedRemotes = AppSettings.PrioritizedRemoteNames;
+        try
+        {
+            AppSettings.RevisionSortOrder.Value = RevisionSortOrder.AuthorDate;
+            AppSettings.RefsSortBy = GitRefsSortBy.refname;
+            AppSettings.RefsSortOrder = GitRefsSortOrder.Ascending;
+            AppSettings.PrioritizedBranchNames = "main;release/.*";
+            AppSettings.PrioritizedRemoteNames = "upstream;origin";
+
+            SortingSettingsPage page = new();
+            page.LoadSettings();
+            SortingSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+            accessor.RevisionsSortBy.SelectedIndex.Should().Be((int)RevisionSortOrder.AuthorDate);
+            accessor.BranchesSortBy.SelectedIndex.Should().Be((int)GitRefsSortBy.refname);
+            accessor.BranchesOrder.SelectedIndex.Should().Be((int)GitRefsSortOrder.Ascending);
+            accessor.PrioritizedBranchNames.Text.Should().Be("main;release/.*");
+            accessor.PrioritizedRemoteNames.Text.Should().Be("upstream;origin");
+            accessor.RevisionSortItems.Should().Equal("GitDefault", "AuthorDate", "Topology");
+            accessor.BranchSortItems.Should().Equal(
+                "Git default",
+                "Author date",
+                "Committer date",
+                "Creator date",
+                "Tagger date",
+                "Alpha-numeric",
+                "Version",
+                "Object size",
+                "Originating remote");
+            accessor.BranchOrderItems.Should().Equal("A ↓ Z", "Z ↑ A");
+
+            accessor.RevisionsSortBy.SelectedIndex = (int)RevisionSortOrder.Topology;
+            accessor.BranchesSortBy.SelectedIndex = (int)GitRefsSortBy.upstream;
+            accessor.BranchesOrder.SelectedIndex = (int)GitRefsSortOrder.Descending;
+            accessor.PrioritizedBranchNames.Text = "develop;feature/.*";
+            accessor.PrioritizedRemoteNames.Text = "origin;company";
+            page.SaveSettings();
+
+            AppSettings.RevisionSortOrder.Value.Should().Be(RevisionSortOrder.Topology);
+            AppSettings.RefsSortBy.Should().Be(GitRefsSortBy.upstream);
+            AppSettings.RefsSortOrder.Should().Be(GitRefsSortOrder.Descending);
+            AppSettings.PrioritizedBranchNames.Should().Be("develop;feature/.*");
+            AppSettings.PrioritizedRemoteNames.Should().Be("origin;company");
+        }
+        finally
+        {
+            AppSettings.RevisionSortOrder.Value = originalRevisionSort;
+            AppSettings.RevisionSortOrder.Save();
+            AppSettings.RefsSortBy = originalRefsSortBy;
+            AppSettings.RefsSortOrder = originalRefsSortOrder;
+            AppSettings.PrioritizedBranchNames = originalPrioritizedBranches;
+            AppSettings.PrioritizedRemoteNames = originalPrioritizedRemotes;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Sorting_settings_should_preserve_original_translation_keys_and_help_text()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        SortingSettingsPage page = new();
+
+        page.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(SortingSettingsPage), "gbGeneral", "Text", "Sorting");
+        translation.Received(1).AddTranslationItem(
+            nameof(SortingSettingsPage), "lblBranchesSortBy", "Text", "Sort branches by");
+        translation.Received(1).AddTranslationItem(
+            nameof(SortingSettingsPage), "_revisionSortWarningTooltip", "Text", "Sorting revisions may delay rendering of the revision graph.");
+        translation.Received(1).AddTranslationItem(
+            nameof(SortingSettingsPage), "_prioRemoteNamesTooltip", "Text", "Regex to prioritize remote names in the left panel and commit info.\nThe remotes matching the pattern will be shown before the others.\nSeparate the priorities with ';'.");
+
+        SortingSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+        ToolTip.GetTip(accessor.RevisionSortOrderHelp)
+            .Should().BeOfType<TextBlock>().Which.Text.Should().Be("Sorting revisions may delay rendering of the revision graph.");
+        ToolTip.GetTip(accessor.PrioBranchNamesHelp)
+            .Should().BeOfType<TextBlock>().Which.Text.Should().Contain("prioritize branch names");
+        ToolTip.GetTip(accessor.PrioRemoteNamesHelp)
+            .Should().BeOfType<TextBlock>().Which.Text.Should().Contain("prioritize remote names");
     }
 
     [AvaloniaTest]
