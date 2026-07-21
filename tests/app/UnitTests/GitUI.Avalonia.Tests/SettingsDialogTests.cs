@@ -174,16 +174,17 @@ public sealed class SettingsDialogTests
         bool originalUseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
         try
         {
-            ThemeId customTheme = new("custom-review-theme");
+            ThemeId selectedTheme = ThemeId.DefaultDark;
             AppSettings.MulticolorBranches = true;
             AppSettings.RevisionGraphDrawAlternateBackColor = false;
             AppSettings.RevisionGraphDrawNonRelativesGray = true;
             AppSettings.RevisionGraphDrawNonRelativesTextGray = false;
             AppSettings.HighlightAuthoredRevisions = true;
             AppSettings.FillRefLabels = false;
-            AppSettings.ThemeId = customTheme;
+            AppSettings.ThemeId = selectedTheme;
             AppSettings.ThemeVariations = [ThemeVariations.Colorblind];
             AppSettings.UseSystemVisualStyle = false;
+            AvaloniaThemeSettings.ApplyAppSettings();
 
             FormSettings form = new();
             FormSettings.TestAccessor formAccessor = form.GetTestAccessor();
@@ -200,14 +201,18 @@ public sealed class SettingsDialogTests
             accessor.DrawNonRelativesTextGray.IsChecked.Should().BeFalse();
             accessor.HighlightAuthored.IsChecked.Should().BeTrue();
             accessor.FillRefLabels.IsChecked.Should().BeFalse();
-            page.SelectedThemeId.Should().Be(customTheme);
+            page.SelectedThemeId.Should().Be(selectedTheme);
             accessor.Colorblind.IsChecked.Should().BeTrue();
-            accessor.Colorblind.IsVisible.Should().BeFalse();
-            accessor.UseSystemVisualStyle.IsVisible.Should().BeFalse();
+            accessor.Colorblind.IsVisible.Should().BeTrue();
+            accessor.UseSystemVisualStyle.IsVisible.Should().BeTrue();
+            accessor.OpenThemeFolder.IsVisible.Should().BeTrue();
+            accessor.OpenThemeFolders.Items.Should().HaveCount(2);
+            accessor.OpenThemeFolders.Items.OfType<MenuItem>().Select(item => item.Header)
+                .Should().Equal("Application folder", "User folder");
             accessor.RestartNeeded.IsVisible.Should().BeFalse();
 
             page.SaveSettings();
-            AppSettings.ThemeId.Should().Be(customTheme);
+            AppSettings.ThemeId.Should().Be(selectedTheme);
 
             accessor.MulticolorBranches.IsChecked = false;
             accessor.DrawAlternateBackColor.IsChecked = true;
@@ -242,6 +247,7 @@ public sealed class SettingsDialogTests
             AppSettings.ThemeId = originalThemeId;
             AppSettings.ThemeVariations = originalThemeVariations;
             AppSettings.UseSystemVisualStyle = originalUseSystemVisualStyle;
+            AvaloniaThemeSettings.ApplyAppSettings();
         }
     }
 
@@ -261,6 +267,14 @@ public sealed class SettingsDialogTests
             nameof(ColorsSettingsPage), "lblRestartNeeded", "Text", "Restart required to apply changes");
         translation.Received(1).AddTranslationItem(
             nameof(ColorsSettingsPage), "chkUseSystemVisualStyle", "Text", "Use system-defined visual style (looks bad with dark colors)");
+        translation.Received(1).AddTranslationItem(
+            nameof(ColorsSettingsPage), "sbOpenThemeFolder", "Text", "Open theme folder");
+        translation.Received(1).AddTranslationItem(
+            nameof(ColorsSettingsPage), "chkColorblind", "Text", "Colorblind");
+        translation.Received(1).AddTranslationItem(
+            nameof(ColorsSettingsPage), "tsmiApplicationFolder", "Text", "Application folder");
+        translation.Received(1).AddTranslationItem(
+            nameof(ColorsSettingsPage), "tsmiUserFolder", "Text", "User folder");
     }
 
     [AvaloniaTest]
