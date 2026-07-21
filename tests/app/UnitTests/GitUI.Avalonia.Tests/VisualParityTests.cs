@@ -16,6 +16,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.LeftPanel;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -766,18 +767,31 @@ public sealed class VisualParityTests
             AppSettings.ThemeId = ThemeId.DefaultLight;
             AvaloniaThemeSettings.ApplyAppSettings();
             application.RequestedThemeVariant.Should().Be(ThemeVariant.Light);
+            ThemeModule.Settings.Theme.Id.Should().Be(ThemeId.DefaultLight);
+            WinFormsShims.Application.SystemColorMode.Should().Be(WinFormsShims.SystemColorMode.Classic);
 
             AppSettings.ThemeId = ThemeId.DefaultDark;
             AvaloniaThemeSettings.ApplyAppSettings();
             application.RequestedThemeVariant.Should().Be(ThemeVariant.Dark);
+            ThemeModule.Settings.Theme.Id.Should().Be(ThemeId.DefaultDark);
+            WinFormsShims.Application.SystemColorMode.Should().Be(WinFormsShims.SystemColorMode.Dark);
+            ThemeModule.Settings.Theme.GetColor(AppColor.PanelBackground).IsEmpty.Should().BeFalse();
+            AppColor.PanelBackground.GetThemeColor().Should().Be(
+                ThemeModule.Settings.Theme.GetColor(AppColor.PanelBackground));
 
             AppSettings.ThemeId = ThemeId.WindowsAppColorModeId;
             AvaloniaThemeSettings.ApplyAppSettings();
             application.RequestedThemeVariant.Should().Be(ThemeVariant.Default);
+            ThemeModule.Settings.Theme.Id.Should().Be(ThemeId.ColorModeThemeId);
+            WinFormsShims.Application.SystemColorMode.Should().Be(
+                application.ActualThemeVariant == ThemeVariant.Dark
+                    ? WinFormsShims.SystemColorMode.Dark
+                    : WinFormsShims.SystemColorMode.Classic);
         }
         finally
         {
             AppSettings.ThemeId = originalTheme;
+            AvaloniaThemeSettings.ApplyAppSettings();
             application.RequestedThemeVariant = originalVariant;
         }
     }
