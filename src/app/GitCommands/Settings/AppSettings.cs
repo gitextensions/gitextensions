@@ -1927,8 +1927,9 @@ public static partial class AppSettings
         {
             bool isExpectedExe =
 
-                // The app's entry point is GitExtensions.exe
+                // The app entry points are GitExtensions.exe and its side-by-side Avalonia port.
                 _applicationExecutablePath.EndsWith("GitExtensions.exe", StringComparison.InvariantCultureIgnoreCase) ||
+                _applicationExecutablePath.EndsWith("GitExtensions.Avalonia.exe", StringComparison.InvariantCultureIgnoreCase) ||
 
                 // Tests are run by testhost.exe
                 _applicationExecutablePath.EndsWith("testhost.exe", StringComparison.InvariantCultureIgnoreCase) ||
@@ -1940,7 +1941,7 @@ public static partial class AppSettings
                 // Translations
                 _applicationExecutablePath.EndsWith("TranslationApp.exe", StringComparison.InvariantCultureIgnoreCase);
 
-            DebugHelpers.Assert(isExpectedExe, $"{_applicationExecutablePath} must point to GitExtensions.exe");
+            DebugHelpers.Assert(isExpectedExe, $"{_applicationExecutablePath} must point to a Git Extensions executable");
         }
 #endif
 
