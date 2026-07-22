@@ -1,3 +1,4 @@
+using System.Text;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -75,6 +76,38 @@ public sealed class GitUICommands : IGitUICommands
 
     public IGitUICommands WithWorkingDirectory(string? workingDirectory)
         => new GitUICommands(_serviceProvider, new GitModule(this.GetRequiredService<IGitExecutorProvider>(), workingDirectory));
+
+    /// <summary>Launches a new Git Extensions Avalonia process.</summary>
+    public static IProcess Launch(string arguments, string workingDir = "")
+        => new Executable(Application.ExecutablePath, workingDir).Start(arguments);
+
+    /// <summary>Launches the repository browser in a new process.</summary>
+    internal static void LaunchBrowse(string workingDir = "", ObjectId selectedId = default, ObjectId firstId = default)
+    {
+        if (!Directory.Exists(workingDir))
+        {
+            MessageBoxes.GitExtensionsDirectoryDoesNotExist(owner: null, workingDir);
+            return;
+        }
+
+        StringBuilder arguments = new("browse");
+        if (selectedId.IsZero)
+        {
+            selectedId = firstId;
+            firstId = default;
+        }
+
+        if (!selectedId.IsZero)
+        {
+            arguments.Append(" -commit=").Append(selectedId);
+            if (!firstId.IsZero)
+            {
+                arguments.Append(',').Append(firstId);
+            }
+        }
+
+        Launch(arguments.ToString(), workingDir);
+    }
 
     public bool StartCommandLineProcessDialog(IWin32Window? owner, IGitCommand command)
     {
