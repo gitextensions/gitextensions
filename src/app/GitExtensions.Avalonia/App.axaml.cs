@@ -9,6 +9,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.Compat;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ShutdownMode = Avalonia.Controls.ShutdownMode;
 
@@ -36,6 +37,7 @@ public partial class App : Application
                 => GitUI.MessageBoxes.ShowError(owner: null, e.Exception.ToString(), "Unhandled exception");
 
             AvaloniaFontSettings.InstallSystemDefaults();
+            ManagedExtensibility.Initialise(userPluginsPath: AppSettings.UserPluginsPath);
             AppSettings.LoadSettings();
             AvaloniaThemeSettings.ApplyAppSettings();
             AvaloniaFontSettings.ApplyAppSettings();
