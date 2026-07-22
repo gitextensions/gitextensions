@@ -154,6 +154,7 @@ public sealed partial class FormBrowse : GitModuleForm
         tagToolStripMenuItem.Click += TagToolStripMenuItemClick;
         deleteTagToolStripMenuItem.Click += DeleteTagToolStripMenuItemClick;
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
+        toolStripMenuItemReflog.Click += toolStripMenuItemReflog_Click;
         patchToolStripMenuItem.Click += PatchToolStripMenuItemClick;
         RefreshButton.Click += RefreshToolStripMenuItemClick;
         toggleLeftPanel.Click += ToggleLeftPanelClick;
@@ -256,6 +257,7 @@ public sealed partial class FormBrowse : GitModuleForm
         tagToolStripMenuItem.IsEnabled = isValidWorkingDir;
         deleteTagToolStripMenuItem.IsEnabled = isValidWorkingDir;
         stashToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
+        toolStripMenuItemReflog.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         manageWorktreeToolStripMenuItem.IsEnabled = isValidWorkingDir;
         RefreshButton.IsEnabled = isValidWorkingDir;
         branchSelect.IsEnabled = isValidWorkingDir;
@@ -1029,6 +1031,12 @@ public sealed partial class FormBrowse : GitModuleForm
     private void StashToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartStashDialog(this);
+    }
+
+    private void toolStripMenuItemReflog_Click(object? sender, EventArgs e)
+    {
+        using FormReflog formReflog = new(UICommands);
+        formReflog.ShowDialog(this);
     }
 
     private void PatchToolStripMenuItemClick(object? sender, EventArgs e)

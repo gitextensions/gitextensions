@@ -647,6 +647,12 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Creates and optionally checks out normal or orphan branches. Commit selection accepts a revision/SHA as text or the shared FormChooseCommit dialog. A successful checkout to a different commit reuses the same UICommands.UpdateSubmodules confirmation and update path as FormCheckoutBranch."
   },
+  "src/app/GitUI/CommandsDialogs/FormReflog.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormReflog.axaml.cs",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Displays HEAD, local-branch, and remote-branch reflogs through native repository Git; preserves full object IDs, action text, sortable columns, current-branch/HEAD shortcuts, copy, and create-branch behavior. Loads are latest-selection-wins and owned by the dialog. The original reset contribution and dirty-worktree warning remain hidden until the real same-named FormResetCurrentBranch twin is available. FormBrowse Commands -> Show reflog is live."
+  },
   "src/app/GitUI/CommandsDialogs/FormCreateTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateTag.axaml.cs",
     "status": "functional",
