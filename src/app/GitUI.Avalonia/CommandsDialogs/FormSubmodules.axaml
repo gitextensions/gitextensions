@@ -1,0 +1,117 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormSubmodules"
+        Width="782" Height="372"
+        MinWidth="710" MinHeight="350"
+        WindowStartupLocation="CenterOwner"
+        Title="Submodules">
+  <Grid x:Name="splitContainer1" ColumnDefinitions="222,5,*">
+    <Grid x:Name="tableLayoutPanel2" RowDefinitions="Auto,*,Auto">
+      <Grid ColumnDefinitions="*,100">
+        <Border x:Name="nameDataGridViewTextBoxColumn"
+                Padding="6,4"
+                BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                BorderThickness="0,0,1,1">
+          <TextBlock Text="Name" FontWeight="SemiBold" />
+        </Border>
+        <Border x:Name="Status"
+                Grid.Column="1"
+                Padding="6,4"
+                BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                BorderThickness="0,0,0,1">
+          <TextBlock Text="Status" FontWeight="SemiBold" />
+        </Border>
+      </Grid>
+
+      <ListBox x:Name="Submodules" Grid.Row="1">
+        <ListBox.Styles>
+          <Style Selector="ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+          </Style>
+        </ListBox.Styles>
+      </ListBox>
+
+      <Button x:Name="AddSubmodule"
+              Classes="gitextensions-dialog-action"
+              Grid.Row="2"
+              Margin="4"
+              Width="202"
+              HorizontalAlignment="Left"
+              Content="Add submodule" />
+    </Grid>
+
+    <GridSplitter Grid.Column="1"
+                  Width="5"
+                  ResizeDirection="Columns" />
+
+    <Grid x:Name="tableLayoutPanel3"
+          Grid.Column="2"
+          RowDefinitions="*,Auto">
+      <HeaderedContentControl x:Name="groupBox1"
+                              Classes="gitextensions-group-box"
+                              Margin="4"
+                              Header="Details">
+        <Grid x:Name="tableLayoutPanel1"
+              ColumnDefinitions="Auto,*"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
+              ColumnSpacing="8"
+              RowSpacing="6">
+          <TextBlock x:Name="label1" Text="Name" VerticalAlignment="Center" />
+          <TextBox x:Name="SubModuleName" Grid.Column="1" IsReadOnly="True" />
+
+          <TextBlock x:Name="label2" Grid.Row="1" Text="Remote path" VerticalAlignment="Center" />
+          <TextBox x:Name="SubModuleRemotePath" Grid.Row="1" Grid.Column="1" IsReadOnly="True" />
+
+          <TextBlock x:Name="label3" Grid.Row="2" Text="Local path" VerticalAlignment="Center" />
+          <TextBox x:Name="SubModuleLocalPath" Grid.Row="2" Grid.Column="1" IsReadOnly="True" />
+
+          <TextBlock x:Name="label4" Grid.Row="3" Text="Commit" VerticalAlignment="Center" />
+          <TextBox x:Name="SubModuleCommit" Grid.Row="3" Grid.Column="1" IsReadOnly="True" />
+
+          <TextBlock x:Name="label5" Grid.Row="4" Text="Branch" VerticalAlignment="Center" />
+          <Grid x:Name="tableLayoutPanel4"
+                Grid.Row="4" Grid.Column="1"
+                ColumnDefinitions="*,Auto"
+                ColumnSpacing="4">
+            <TextBox x:Name="SubModuleBranch" IsReadOnly="True" />
+            <StackPanel x:Name="flowLayoutPanel2" Grid.Column="1">
+              <compat:IconButton x:Name="Pull"
+                                 Classes="gitextensions-icon-only"
+                                 Width="24" Height="24"
+                                 MinWidth="24" MinHeight="24"
+                                 Padding="3"
+                                 Icon="{x:Static properties:Images.Pull}" />
+            </StackPanel>
+          </Grid>
+
+          <TextBlock x:Name="label6" Grid.Row="5" Text="Status" VerticalAlignment="Center" />
+          <TextBox x:Name="SubModuleStatus" Grid.Row="5" Grid.Column="1" IsReadOnly="True" />
+        </Grid>
+      </HeaderedContentControl>
+
+      <StackPanel x:Name="flowLayoutPanel1"
+                  Grid.Row="1"
+                  Margin="4"
+                  HorizontalAlignment="Right"
+                  Orientation="Horizontal"
+                  Spacing="8">
+        <compat:IconButton x:Name="SynchronizeSubmodule"
+                           Classes="gitextensions-dialog-action"
+                           MinWidth="144"
+                           Icon="{x:Static properties:Images.SubmodulesSync}"
+                           Content="Synchronize" />
+        <compat:IconButton x:Name="UpdateSubmodule"
+                           Classes="gitextensions-dialog-action"
+                           MinWidth="144"
+                           Icon="{x:Static properties:Images.SubmodulesUpdate}"
+                           Content="Update" />
+        <Button x:Name="RemoveSubmodule"
+                Classes="gitextensions-dialog-action"
+                MinWidth="144"
+                Content="Remove" />
+      </StackPanel>
+    </Grid>
+  </Grid>
+</Window>

@@ -27,6 +27,7 @@ using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUI.CommandsDialogs.SubmodulesDialog;
 using GitUI.CommitInfo;
 using GitUI.Compat;
 using GitUI.Editor;
@@ -579,6 +580,36 @@ public sealed partial class ParityScreenshotTests
             showOptions.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
         }
 
+        if (root is FormSubmodules formSubmodules)
+        {
+            formSubmodules.GetTestAccessor().SetModules(
+            [
+                new GitSubmoduleInfo(
+                    "avalonia",
+                    "externals/avalonia",
+                    "https://github.com/AvaloniaUI/Avalonia.git",
+                    context.HeadRevision.ObjectId,
+                    MainBranchName,
+                    isInitialized: true,
+                    isUpToDate: true),
+                new GitSubmoduleInfo(
+                    "documentation",
+                    "docs",
+                    "https://github.com/gitextensions/gitextensionsdoc.git",
+                    context.ParentRevision.ObjectId,
+                    "stable",
+                    isInitialized: true,
+                    isUpToDate: false),
+            ]);
+        }
+
+        if (root is FormAddSubmodule formAddSubmodule)
+        {
+            FormAddSubmodule.TestAccessor accessor = formAddSubmodule.GetTestAccessor();
+            accessor.Directory.Text = "https://github.com/AvaloniaUI/Avalonia.git";
+            accessor.Branch.Text = "master";
+        }
+
         if (root is Window)
         {
             return;
@@ -909,6 +940,16 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormMergeSubmodule))
         {
             return (595, 254);
+        }
+
+        if (viewType == typeof(FormSubmodules))
+        {
+            return (782, 372);
+        }
+
+        if (viewType == typeof(FormAddSubmodule))
+        {
+            return (492, 150);
         }
 
         if (viewType == typeof(FindAndReplaceForm))

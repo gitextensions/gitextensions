@@ -29,6 +29,8 @@
              Link="Script\ScriptsManagerScriptRunnerTests.cs" />
     <Compile Include="..\GitUI.Tests\CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs"
              Link="CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs" />
+    <Compile Include="..\GitUI.Tests\CommandsDialogs\FormAddSubmoduleTests.cs"
+             Link="CommandsDialogs\FormAddSubmoduleTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +47,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eng\tools\ImagesResxToAvalonia\ImagesResxToAvalonia.csproj" />
+    <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
     <ProjectReference Include="..\..\..\..\src\app\GitExtensions.Avalonia\GitExtensions.Avalonia.csproj" />
   </ItemGroup>
 
