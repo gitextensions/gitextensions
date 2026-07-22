@@ -1,0 +1,90 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.WorktreeDialog.FormManageWorktree"
+        Width="710" Height="361"
+        MinWidth="710" MinHeight="200"
+        WindowStartupLocation="CenterOwner"
+        Title="Existing worktrees">
+  <DockPanel>
+    <Grid x:Name="ControlsPanel"
+          Classes="gitextensions-dialog-controls"
+          DockPanel.Dock="Bottom"
+          Margin="8"
+          ColumnDefinitions="Auto,*">
+      <Button x:Name="buttonPruneWorktrees"
+              Classes="gitextensions-dialog-action"
+              MinWidth="144"
+              Content="_Prune deleted worktrees" />
+      <compat:IconButton x:Name="buttonCreateNewWorktree"
+                         Classes="gitextensions-dialog-action"
+                         Grid.Column="1"
+                         HorizontalAlignment="Right"
+                         Icon="{x:Static properties:Images.FileStatusAdded}"
+                         Content="_Create..." />
+    </Grid>
+
+    <Border x:Name="MainPanel" Classes="gitextensions-dialog-main" Padding="9">
+      <Grid x:Name="tableLayoutPanel1"
+            RowDefinitions="*,Auto"
+            RowSpacing="6">
+        <Grid RowDefinitions="Auto,*">
+          <Grid ColumnDefinitions="2*,100,140,*">
+            <Border x:Name="Path"
+                    Padding="6,4"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,1,1">
+              <TextBlock Text="Path" FontWeight="SemiBold" />
+            </Border>
+            <Border x:Name="Type"
+                    Grid.Column="1"
+                    Padding="6,4"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,1,1">
+              <TextBlock Text="Type" FontWeight="SemiBold" />
+            </Border>
+            <Border x:Name="Branch"
+                    Grid.Column="2"
+                    Padding="6,4"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,1,1">
+              <TextBlock Text="Branch" FontWeight="SemiBold" />
+            </Border>
+            <Border x:Name="Sha1"
+                    Grid.Column="3"
+                    Padding="6,4"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,0,1">
+              <TextBlock Text="SHA-1" FontWeight="SemiBold" />
+            </Border>
+          </Grid>
+
+          <ListBox x:Name="Worktrees" Grid.Row="1">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+              </Style>
+            </ListBox.Styles>
+          </ListBox>
+        </Grid>
+
+        <StackPanel x:Name="flowLayoutPanel1"
+                    Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Spacing="6">
+          <compat:IconButton x:Name="buttonDeleteSelectedWorktree"
+                             Classes="gitextensions-dialog-action"
+                             Icon="{x:Static properties:Images.DeleteFile}"
+                             Content="_Delete selected" />
+          <compat:IconButton x:Name="buttonOpenSelectedWorktree"
+                             Classes="gitextensions-dialog-action"
+                             Icon="{x:Static properties:Images.BrowseFileExplorer}"
+                             Content="_Open selected"
+                             IsDefault="True" />
+        </StackPanel>
+      </Grid>
+    </Border>
+  </DockPanel>
+</Window>
