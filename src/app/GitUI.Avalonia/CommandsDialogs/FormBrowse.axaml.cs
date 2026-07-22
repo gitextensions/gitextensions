@@ -9,6 +9,7 @@ using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
@@ -169,6 +170,7 @@ public sealed partial class FormBrowse : GitModuleForm
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
         toolStripMenuItemReflog.Click += toolStripMenuItemReflog_Click;
         patchToolStripMenuItem.Click += PatchToolStripMenuItemClick;
+        pluginSettingsToolStripMenuItem.Click += PluginSettingsToolStripMenuItemClick;
         RefreshButton.Click += RefreshToolStripMenuItemClick;
         toggleLeftPanel.Click += ToggleLeftPanelClick;
         InitializeWorkspaceLayout();
@@ -296,6 +298,8 @@ public sealed partial class FormBrowse : GitModuleForm
         userShell.IsEnabled = Directory.Exists(module.WorkingDir);
         ToolStripFilters.IsEnabled = isValidWorkingDir;
         branchSelect.Content = string.IsNullOrEmpty(branchName) ? "Branch" : branchName;
+        pluginsToolStripMenuItem.IsVisible = isValidWorkingDir;
+        UpdatePluginMenu(isValidWorkingDir);
         RefreshDefaultPullAction();
 
         if (isValidWorkingDir)
@@ -423,7 +427,72 @@ public sealed partial class FormBrowse : GitModuleForm
         {
             UICommands.RaisePostRegisterPlugin(this);
         }
+
+        PopulatePluginMenu();
+        UpdatePluginMenu(Module.IsValidGitWorkingDir());
     }
+
+    private void PopulatePluginMenu()
+    {
+        lock (PluginRegistry.Plugins)
+        {
+            if (PluginRegistry.Plugins.Count == 0)
+            {
+                return;
+            }
+
+            pluginsToolStripMenuItem.Items.Remove(pluginsLoadingToolStripMenuItem);
+            MenuItem[] existingPluginItems = pluginsToolStripMenuItem.Items
+                .OfType<MenuItem>()
+                .Where(item => item.Tag is IGitPlugin)
+                .ToArray();
+            foreach (MenuItem existingPluginItem in existingPluginItems)
+            {
+                pluginsToolStripMenuItem.Items.Remove(existingPluginItem);
+            }
+
+            int insertIndex = 0;
+            foreach (IGitPlugin plugin in PluginRegistry.Plugins
+                         .OrderBy(item => item.Name, StringComparer.CurrentCultureIgnoreCase))
+            {
+                MenuItem item = new()
+                {
+                    Header = plugin.Name,
+                    Tag = plugin,
+                };
+                Avalonia.Media.IImage? icon = PluginIconProvider.GetIcon(plugin);
+                if (icon is not null)
+                {
+                    item.Icon = new Image { Width = 16, Height = 16, Source = icon };
+                }
+
+                item.Click += (_, _) =>
+                {
+                    if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
+                    {
+                        UICommands.RepoChangedNotifier.Notify();
+                    }
+                };
+                pluginsToolStripMenuItem.Items.Insert(insertIndex++, item);
+            }
+        }
+    }
+
+    private void UpdatePluginMenu(bool validWorkingDir)
+    {
+        foreach (MenuItem item in pluginsToolStripMenuItem.Items.OfType<MenuItem>())
+        {
+            if (item == pluginsLoadingToolStripMenuItem)
+            {
+                continue;
+            }
+
+            item.IsEnabled = item.Tag is not IGitPluginForRepository || validWorkingDir;
+        }
+    }
+
+    private void PluginSettingsToolStripMenuItemClick(object? sender, EventArgs e)
+        => UICommands.StartPluginSettingsDialog(this);
 
     public void SetWorkingDir(string? path, ObjectId selectedId = default, ObjectId firstId = default)
     {
@@ -1433,6 +1502,8 @@ public sealed partial class FormBrowse : GitModuleForm
         _outputHistoryController = null;
         base.OnClosed(e);
     }
+
+    internal void PopulatePluginMenuForTest() => PopulatePluginMenu();
 
     internal FileStatusList fileStatusList => revisionDiff.FileStatusList;
     internal Editor.FileViewer fileViewer => revisionDiff.FileViewer;
