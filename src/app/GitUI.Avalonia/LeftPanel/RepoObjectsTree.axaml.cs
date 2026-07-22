@@ -1,7 +1,8 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
@@ -10,16 +11,25 @@ using ResourceManager;
 
 namespace GitUI.LeftPanel;
 
-// TODO(avalonia-port): milestone M1.4b — a read-only branches/remotes/tags panel.
-// The WinForms RepoObjectsTree's nested branch folders, submodules, stashes, favorites,
-// filtering, and context menus arrive in later milestones.
-public partial class RepoObjectsTree : GitExtensionsControl
+// TODO(avalonia-port): nested branch folders, submodules, worktrees, favorites, filtering,
+// and their context menus arrive in later browse-feature subphases.
+public partial class RepoObjectsTree : GitModuleControl
 {
+    private StashTree? _stashTree;
+
     public RepoObjectsTree()
     {
         InitializeComponent();
 
         treeMain.SelectionChanged += (_, _) => SelectionChanged?.Invoke(this, EventArgs.Empty);
+        repoObjectsContextMenu.Opening += RepoObjectsContextMenuOpening;
+        mnubtnStashAllFromRootNode.Click += (_, _) => _stashTree?.StashAll(this);
+        mnubtnStashStagedFromRootNode.Click += (_, _) => _stashTree?.StashStaged(this);
+        mnubtnManageStashFromRootNode.Click += (_, _) => _stashTree?.OpenStash(this);
+        mnubtnOpenStash.Click += (_, _) => SelectedStashNode?.OpenStash(this);
+        mnubtnApplyStash.Click += (_, _) => SelectedStashNode?.ApplyStash(this);
+        mnubtnPopStash.Click += (_, _) => SelectedStashNode?.PopStash(this);
+        mnubtnDropStash.Click += (_, _) => SelectedStashNode?.DropStash(this);
 
         InitializeComplete();
     }
@@ -35,9 +45,34 @@ public partial class RepoObjectsTree : GitExtensionsControl
     public IGitRef? SelectedRef => (treeMain.SelectedItem as TreeViewItem)?.Tag as IGitRef;
 
     /// <summary>
+    ///  Gets the object id represented by the selected ref or stash node.
+    /// </summary>
+    public ObjectId? SelectedRevisionObjectId
+        => (treeMain.SelectedItem as TreeViewItem)?.Tag switch
+        {
+            IGitRef gitRef => gitRef.ObjectId,
+            StashNode stashNode => stashNode.ObjectId,
+            _ => null,
+        };
+
+    private StashNode? SelectedStashNode => (treeMain.SelectedItem as TreeViewItem)?.Tag as StashNode;
+
+    /// <summary>
     ///  Fills the tree from the repository refs.
     /// </summary>
     public void SetRefs(IReadOnlyList<IGitRef> refs)
+        => SetRefs(refs, [], includeStashes: false);
+
+    /// <summary>
+    ///  Fills the tree from the repository refs and stash revisions.
+    /// </summary>
+    public void SetRefs(IReadOnlyList<IGitRef> refs, IReadOnlyCollection<GitRevision> stashes)
+        => SetRefs(refs, stashes, includeStashes: true);
+
+    private void SetRefs(
+        IReadOnlyList<IGitRef> refs,
+        IReadOnlyCollection<GitRevision> stashes,
+        bool includeStashes)
     {
         TreeViewItem branchesNode = CreateGroupNode(
             "Branches",
@@ -51,9 +86,13 @@ public partial class RepoObjectsTree : GitExtensionsControl
             "Tags",
             Images.TagHorizontal,
             refs.Where(gitRef => gitRef.IsTag));
+        _stashTree = new StashTree(this, stashes);
         branchesNode.IsExpanded = true;
 
-        treeMain.ItemsSource = new[] { branchesNode, remotesNode, tagsNode };
+        TreeViewItem[] roots = includeStashes && AppSettings.RepoObjectsTreeShowStashes
+            ? [branchesNode, remotesNode, tagsNode, _stashTree.TreeViewNode]
+            : [branchesNode, remotesNode, tagsNode];
+        treeMain.ItemsSource = roots;
 
         return;
 
@@ -83,28 +122,87 @@ public partial class RepoObjectsTree : GitExtensionsControl
                 ItemsSource = children,
             };
         }
+    }
 
-        static Control CreateHeader(string caption, IImage icon)
-            => new StackPanel
+    internal static Control CreateHeader(string caption, IImage icon)
+        => new StackPanel
+        {
+            Orientation = Avalonia.Layout.Orientation.Horizontal,
+            Spacing = 2,
+            Children =
             {
-                Orientation = Avalonia.Layout.Orientation.Horizontal,
-                Spacing = 2,
-                Children =
+                new Image
                 {
-                    new Image
-                    {
-                        Width = 16,
-                        Height = 16,
-                        Stretch = Stretch.Uniform,
-                        Source = icon,
-                    },
-                    new TextBlock
-                    {
-                        VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                        Text = caption,
-                    },
+                    Width = 16,
+                    Height = 16,
+                    Stretch = Stretch.Uniform,
+                    Source = icon,
                 },
-            };
+                new TextBlock
+                {
+                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                    Text = caption,
+                },
+            },
+        };
+
+    private void RepoObjectsContextMenuOpening(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        bool stashTreeSelected = (treeMain.SelectedItem as TreeViewItem)?.Tag is StashTree;
+        bool stashSelected = SelectedStashNode is not null;
+        bool canRunCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
+        bool canChangeWorkingTree = canRunCommands && !commands!.Module.IsBareRepository();
+
+        mnubtnStashAllFromRootNode.IsVisible = stashTreeSelected;
+        mnubtnStashStagedFromRootNode.IsVisible = stashTreeSelected;
+        mnubtnManageStashFromRootNode.IsVisible = stashTreeSelected;
+        mnubtnOpenStash.IsVisible = stashSelected;
+        mnubtnApplyStash.IsVisible = stashSelected;
+        mnubtnPopStash.IsVisible = stashSelected;
+        mnubtnDropStash.IsVisible = stashSelected;
+
+        mnubtnStashAllFromRootNode.IsEnabled = canRunCommands;
+        mnubtnStashStagedFromRootNode.IsEnabled = canRunCommands;
+        mnubtnManageStashFromRootNode.IsEnabled = canRunCommands;
+        mnubtnOpenStash.IsEnabled = canChangeWorkingTree;
+        mnubtnApplyStash.IsEnabled = canChangeWorkingTree;
+        mnubtnPopStash.IsEnabled = canChangeWorkingTree;
+        mnubtnDropStash.IsEnabled = canChangeWorkingTree;
+        e.Cancel = !stashTreeSelected && !stashSelected;
+    }
+
+    internal void SelectTreeViewItem(TreeViewItem item)
+        => treeMain.SelectedItem = item;
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor(RepoObjectsTree control)
+    {
+        internal TreeView Tree => control.treeMain;
+
+        internal ContextMenu ContextMenu => control.repoObjectsContextMenu;
+
+        internal MenuItem StashAllMenuItem => control.mnubtnStashAllFromRootNode;
+
+        internal MenuItem StashStagedMenuItem => control.mnubtnStashStagedFromRootNode;
+
+        internal MenuItem ManageStashesMenuItem => control.mnubtnManageStashFromRootNode;
+
+        internal MenuItem OpenStashMenuItem => control.mnubtnOpenStash;
+
+        internal MenuItem ApplyStashMenuItem => control.mnubtnApplyStash;
+
+        internal MenuItem PopStashMenuItem => control.mnubtnPopStash;
+
+        internal MenuItem DropStashMenuItem => control.mnubtnDropStash;
+
+        internal bool UpdateContextMenu()
+        {
+            System.ComponentModel.CancelEventArgs eventArgs = new();
+            control.RepoObjectsContextMenuOpening(control.repoObjectsContextMenu, eventArgs);
+            return !eventArgs.Cancel;
+        }
     }
 }
 

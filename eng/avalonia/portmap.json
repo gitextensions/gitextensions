@@ -897,7 +897,13 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Read-only graph/ref labels plus WinForms-shaped single/multi-selection, preselection, double-click notification and the shared IRevisionGridFilter contract. Default reloads use the unchanged FilterInfo argument builder, so branch/current/reflog, message/committer/author/diff, first-parent and path filters match WinForms and persist through AppSettings; explicit caller-supplied revision filters remain supported. Opt-in ShowUncommittedChangesIfPossible injects the same workspace/index revisions before HEAD after loading, honoring the shared artificial-commit setting and bare-repository exclusion. File-history rename following expands one path through git log --follow and preserves FilePathByObjectId/GetRevisionFileName, including exact-only rename/copy settings and merge commits. The context menu routes copy details, stash apply/pop/drop, local/remote checkout, local push, merge and rebase variants, artificial-row reset/commit, branch/tag creation, local rename/delete, tag delete, parent/child/current navigation, provider visibility toggles, and direct/nested user scripts through real Avalonia workflows; RevisionContextMenu lets specialized hosts such as File History compose that menu. Persisted upstream RevisionGrid command IDs/default hotkeys dispatch from FormBrowse. Recycled rows use the same ordered ColumnProvider boundary; settings control graph, notes, author, date and object-ID visibility, while visible lanes determine graph width. Refs mark the checked-out branch/tracking remote. Selection drives shared author highlighting; related refs and superproject data are functional. Owner-managed superproject loading returns through its JoinableTaskFactory for cancellation-safe shutdown."
+    "notes": "Read-only graph/ref labels plus WinForms-shaped single/multi-selection, preselection, double-click notification and the shared IRevisionGridFilter contract. Default reloads use the unchanged FilterInfo argument builder, so branch/current/reflog, message/committer/author/diff, first-parent and path filters match WinForms and persist through AppSettings; explicit caller-supplied revision filters remain supported. Stored stash revisions retain their reflog selectors, older stashes are inserted before their base commit, and the shared RevisionsLoading/RevisionsLoaded payload feeds the left panel from the same lazy refs/stash reads. Opt-in ShowUncommittedChangesIfPossible injects the same workspace/index revisions before HEAD after loading, honoring the shared artificial-commit setting and bare-repository exclusion. File-history rename following expands one path through git log --follow and preserves FilePathByObjectId/GetRevisionFileName, including exact-only rename/copy settings and merge commits. The context menu routes copy details, stash apply/pop/drop, local/remote checkout, local push, merge and rebase variants, artificial-row reset/commit, branch/tag creation, local rename/delete, tag delete, parent/child/current navigation, provider visibility toggles, and direct/nested user scripts through real Avalonia workflows; RevisionContextMenu lets specialized hosts such as File History compose that menu. Persisted upstream RevisionGrid command IDs/default hotkeys dispatch from FormBrowse. Recycled rows use the same ordered ColumnProvider boundary; settings control graph, notes, author, date and object-ID visibility, while visible lanes determine graph width. Refs mark the checked-out branch/tracking remote. Selection drives shared author highlighting; related refs and superproject data are functional. Owner-managed superproject loading returns through its JoinableTaskFactory for cancellation-safe shutdown."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionLoadEventArgs.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionLoadEventArgs.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free refs/stash reload payload linked unchanged."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs": {
     "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
@@ -1329,8 +1335,20 @@
   "src/app/GitUI/LeftPanel/RepoObjectsTree.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Flat Branches/Remotes/Tags lists with the original group/ref images, the native tree's compact 18px rows, and dotted hierarchy lines continuing through root nodes, expanders, and expanded descendants. Auto-hidden overlay scrollbars are disabled so simultaneous horizontal/vertical scrolling does not cover the last expanded item. No nested folders, stashes, or submodules yet."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Flat Branches/Remotes/Tags lists plus the functional Stashes tree, with original group/ref images, compact 18px rows, and dotted hierarchy lines through root nodes, expanders, and expanded descendants. Stash selection targets the corresponding revision; root and leaf context actions route through the real stash workflows and retain existing XLF identities. Auto-hidden overlay scrollbars are disabled so simultaneous horizontal/vertical scrolling does not cover the last expanded item. Nested branch folders, submodules, worktrees, filtering, reordering, and their context actions remain deferred."
+  },
+  "src/app/GitUI/LeftPanel/StashNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/StashNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same reflog selector/object-id/display boundary and open/apply/pop/confirmed-drop actions over the Avalonia tree item host."
+  },
+  "src/app/GitUI/LeftPanel/StashTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/StashTree.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same stored-stash root and stash-all/staged/manage actions, populated from the revision grid's shared lazy stash read."
   },
   "src/app/GitUI/GitExtensionsForm.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsForm.cs",
