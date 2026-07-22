@@ -66,6 +66,12 @@
                            Color="#C8FFC8" />
           <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
                            Color="#FFC8C8" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftBackgroundBrush" Color="#80FF80" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedBackgroundBrush" Color="#FFFF80" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardBackgroundBrush" Color="#FF8080" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardForegroundBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#EBEBEB" />
@@ -127,6 +133,12 @@
                            Color="#274439" />
           <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
                            Color="#453030" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftBackgroundBrush" Color="#63BE63" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedBackgroundBrush" Color="#BEBE63" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardBackgroundBrush" Color="#BE6363" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardForegroundBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#323232" />
           <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#F1F1F1" />
           <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#252526" />

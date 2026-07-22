@@ -14,6 +14,7 @@ using GitExtUtils;
 using GitUI.Avatars;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
+using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
@@ -129,6 +130,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         rebaseToolStripMenuItem.Click += RebaseToolStripMenuItemClick;
         rebaseInteractivelyToolStripMenuItem.Click += RebaseInteractivelyToolStripMenuItemClick;
         rebaseWithAdvOptionsToolStripMenuItem.Click += RebaseWithAdvOptionsToolStripMenuItemClick;
+        resetCurrentBranchToHereToolStripMenuItem.Click += ResetCurrentBranchToHereToolStripMenuItemClick;
         resetChangesToolStripMenuItem.Click += ResetChangesToolStripMenuItemClick;
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
@@ -622,6 +624,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         SetVisible(tsmiPushBranch, tsmiPushBranch.Items.Count > 0);
         SetVisible(mergeBranchToolStripMenuItem, mergeBranchToolStripMenuItem.Items.Count > 0);
         SetVisible(rebaseOnToolStripMenuItem, regularRevision && _rebaseOnTopOf is not null);
+        SetVisible(resetCurrentBranchToHereToolStripMenuItem, regularRevision);
         SetVisible(resetChangesToolStripMenuItem, revision is { IsArtificial: true } && hasCommands && !isBareRepository);
         SetVisible(commitToolStripMenuItem, revision is { IsArtificial: true } && hasCommands && !isBareRepository);
         SetVisible(createNewBranchToolStripMenuItem, regularRevision);
@@ -652,7 +655,8 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         sepBranch.IsVisible = checkoutBranchToolStripMenuItem.IsVisible
             || tsmiPushBranch.IsVisible
             || mergeBranchToolStripMenuItem.IsVisible
-            || rebaseOnToolStripMenuItem.IsVisible;
+            || rebaseOnToolStripMenuItem.IsVisible
+            || resetCurrentBranchToHereToolStripMenuItem.IsVisible;
         sepBranchModification.IsVisible = createNewBranchToolStripMenuItem.IsVisible
             || renameBranchToolStripMenuItem.IsVisible
             || deleteBranchToolStripMenuItem.IsVisible;
@@ -838,6 +842,20 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     {
         IReadOnlyList<GitRevision> revisions = GetSelectedRevisions(SortDirection.Descending);
         UICommands.StartCherryPickDialog(GetOwner(), revisions);
+    }
+
+    private void ResetCurrentBranchToHereToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        if (SelectedRevision is not GitRevision revision)
+        {
+            return;
+        }
+
+        UICommands.DoActionOnRepo(() =>
+        {
+            using FormResetCurrentBranch form = FormResetCurrentBranch.Create(UICommands, revision);
+            return form.ShowDialog(GetOwner()) == WinFormsShims.DialogResult.OK;
+        });
     }
 
     private void ResetChangesToolStripMenuItemClick(object? sender, EventArgs e)

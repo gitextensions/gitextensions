@@ -11,9 +11,11 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -57,7 +59,8 @@ public sealed class ReflogTests
         accessor.Reflog.Should().NotBeNull();
         accessor.Copy.IsEnabled.Should().BeFalse();
         accessor.CreateBranch.IsEnabled.Should().BeFalse();
-        accessor.Reset.IsVisible.Should().BeFalse("its same-named dialog has not landed yet");
+        accessor.Reset.IsVisible.Should().BeTrue();
+        accessor.Reset.IsEnabled.Should().BeFalse();
     }
 
     [AvaloniaTest]
@@ -99,6 +102,49 @@ public sealed class ReflogTests
         accessor.Copy.IsEnabled.Should().BeTrue();
         accessor.CreateBranch.IsEnabled.Should().BeTrue();
         commands.Received(1).StartCreateBranchDialog(form, second, null);
+    }
+
+    [AvaloniaTest]
+    public void FormReflog_should_warn_before_resetting_a_dirty_checked_out_branch()
+    {
+        StubMessageBoxHost messageBoxes = new() { Result = WinFormsShims.DialogResult.No };
+        WinFormsShims.ShimHost.MessageBoxHost = messageBoxes;
+        ObjectId objectId = ObjectId.Parse("1111111111111111111111111111111111111111");
+        IGitModule module = Substitute.For<IGitModule>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        FormReflog form = new(commands);
+        FormReflog.TestAccessor accessor = form.GetTestAccessor();
+        RefLine refLine = new(objectId, "HEAD@{0}", "commit: second");
+        accessor.SetRefLines([refLine], refLine);
+        accessor.SetRepositoryState(isDirtyDir: true, "main");
+
+        accessor.Reset.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        accessor.DirtyWorkingDirectory.IsVisible.Should().BeTrue();
+        accessor.Reset.IsEnabled.Should().BeTrue();
+        accessor.ResetType.Should().Be(FormResetCurrentBranch.ResetType.Soft);
+        messageBoxes.Messages.Should().ContainSingle().Which.Should().Be(
+            "You have changes in your working directory that could be lost.\n\nDo you want to continue?");
+        commands.DidNotReceive().DoActionOnRepo(Arg.Any<Func<bool>>());
+    }
+
+    [AvaloniaTest]
+    public void FormReflog_should_default_a_clean_reset_to_hard_and_disable_detached_head()
+    {
+        FormReflog form = new();
+        FormReflog.TestAccessor accessor = form.GetTestAccessor();
+        RefLine refLine = new(ObjectId.Random(), "HEAD@{0}", "commit: second");
+        accessor.SetRefLines([refLine], refLine);
+
+        accessor.SetRepositoryState(isDirtyDir: false, "main");
+
+        accessor.DirtyWorkingDirectory.IsVisible.Should().BeFalse();
+        accessor.Reset.IsEnabled.Should().BeTrue();
+        accessor.ResetType.Should().Be(FormResetCurrentBranch.ResetType.Hard);
+
+        accessor.SetRepositoryState(isDirtyDir: false, DetachedHeadParser.DetachedBranch);
+        accessor.Reset.IsEnabled.Should().BeFalse();
     }
 
     [AvaloniaTest]
@@ -214,5 +260,23 @@ public sealed class ReflogTests
         }
 
         Assert.Fail("Timed out waiting for the reflog dialog to load.");
+    }
+
+    private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
+    {
+        public List<string> Messages { get; } = [];
+        public WinFormsShims.DialogResult Result { get; set; }
+
+        public WinFormsShims.DialogResult Show(
+            WinFormsShims.IWin32Window? owner,
+            string? text,
+            string? caption,
+            WinFormsShims.MessageBoxButtons buttons,
+            WinFormsShims.MessageBoxIcon icon,
+            WinFormsShims.MessageBoxDefaultButton defaultButton)
+        {
+            Messages.Add(text ?? string.Empty);
+            return Result;
+        }
     }
 }

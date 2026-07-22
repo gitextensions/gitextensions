@@ -765,6 +765,8 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Push-branch menu item was not created.");
             MenuItem mergeBranch = revisionGrid.FindControl<MenuItem>("mergeBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Merge-branch menu item was not created.");
+            MenuItem resetCurrentBranch = revisionGrid.FindControl<MenuItem>("resetCurrentBranchToHereToolStripMenuItem")
+                ?? throw new InvalidOperationException("Reset-current-branch menu item was not created.");
             MenuItem createBranch = revisionGrid.FindControl<MenuItem>("createNewBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Create-branch menu item was not created.");
             MenuItem renameBranch = revisionGrid.FindControl<MenuItem>("renameBranchToolStripMenuItem")
@@ -827,6 +829,7 @@ public sealed class FormBrowseTests
             checkoutBranch.IsEnabled.Should().BeTrue();
             pushBranch.IsEnabled.Should().BeTrue();
             mergeBranch.IsEnabled.Should().BeTrue();
+            resetCurrentBranch.IsVisible.Should().BeTrue();
             createBranch.IsEnabled.Should().BeTrue();
             renameBranch.IsEnabled.Should().BeTrue();
             deleteBranch.IsEnabled.Should().BeTrue();
