@@ -7,6 +7,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Shims.WinForms;
 using GitUI.HelperDialogs;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -126,12 +127,23 @@ public sealed partial class FormCreateTag : GitModuleForm
     private void PushTag(string tagName)
     {
         ArgumentString pushCommand = Commands.PushTag(_currentRemote, tagName, false);
+        bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
+        if (!success)
+        {
+            return;
+        }
+
         using FormRemoteProcess form = new(UICommands, pushCommand)
         {
             Remote = _currentRemote,
             Text = string.Format(_pushToCaption.Text, _currentRemote),
         };
         form.ShowDialog(this);
+
+        if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
+        {
+            ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
+        }
     }
 
     private void AnnotateDropDownChanged(object? sender, EventArgs e)

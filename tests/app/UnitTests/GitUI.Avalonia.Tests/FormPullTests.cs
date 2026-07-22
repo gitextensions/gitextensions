@@ -15,6 +15,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.HelperDialogs;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -244,6 +245,7 @@ public sealed class FormPullTests
     {
         bool closeProcessDialog = AppSettings.CloseProcessDialog;
         AppSettings.CloseProcessDialog = true;
+        TestScriptEventRecorder scriptEvents = TestScriptEventRecorder.Install(_serviceContainer);
         try
         {
             GitModule module = CreateRepositoryWithNewRemoteCommit(out ObjectId remoteCommit);
@@ -273,6 +275,7 @@ public sealed class FormPullTests
             fetchCompleted.Should().BeTrue();
             module.GetCurrentCheckout().Should().Be(localCommit);
             module.RevParse($"refs/remotes/origin/{branch}").Should().Be(remoteCommit);
+            scriptEvents.Events.Should().Equal(ScriptEvent.BeforeFetch, ScriptEvent.AfterFetch);
         }
         finally
         {
@@ -346,6 +349,7 @@ public sealed class FormPullTests
     public void FormPull_should_pull_from_a_portable_local_path_without_a_configured_remote()
     {
         AppSettings.CloseProcessDialog = true;
+        TestScriptEventRecorder scriptEvents = TestScriptEventRecorder.Install(_serviceContainer);
         GitModule module = CreateRepositoryWithNewRemoteCommit(out ObjectId remoteCommit);
         string branch = module.GetSelectedBranch();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("remote") { "remove", "origin" });
@@ -359,6 +363,11 @@ public sealed class FormPullTests
             form.PullChanges(form).Should().Be(WinFormsShims.DialogResult.OK);
             form.ErrorOccurred.Should().BeFalse();
             module.GetCurrentCheckout().Should().Be(remoteCommit);
+            scriptEvents.Events.Should().Equal(
+                ScriptEvent.BeforePull,
+                ScriptEvent.BeforeFetch,
+                ScriptEvent.AfterFetch,
+                ScriptEvent.AfterPull);
         }
         finally
         {

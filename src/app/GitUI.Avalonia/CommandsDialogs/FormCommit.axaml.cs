@@ -14,6 +14,7 @@ using GitExtUtils;
 using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -629,12 +630,14 @@ public sealed partial class FormCommit : GitModuleForm
                     cancellationToken);
             }
 
-            ArgumentString commitArguments = CreateCommitArguments(createAmendCommit, allowEmpty);
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCommit, this);
+            if (!success)
+            {
+                return;
+            }
 
-            // Git hooks remain active here and are bypassed only by the explicit No verify
-            // option. Git Extensions before/after event scripts join when their shared engine
-            // is available to the Avalonia application.
-            bool success = FormProcess.ShowDialog(
+            ArgumentString commitArguments = CreateCommitArguments(createAmendCommit, allowEmpty);
+            success = FormProcess.ShowDialog(
                 this,
                 UICommands,
                 arguments: commitArguments,
@@ -647,6 +650,8 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 return;
             }
+
+            ScriptsRunner.RunEventScripts(ScriptEvent.AfterCommit, this);
 
             await _commitMessageManager.ResetCommitMessageAsync();
             _commitTemplate = null;
