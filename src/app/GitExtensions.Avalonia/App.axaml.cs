@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -17,6 +17,8 @@ namespace GitExtensions;
 
 public partial class App : Application
 {
+    private const string AvaloniaUserPluginsDirectoryName = "UserPlugins.Avalonia";
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -33,11 +35,11 @@ public partial class App : Application
             ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
             ShimServices.Install(desktop);
-            Shims.WinForms.Application.ThreadException += (_, e)
-                => GitUI.MessageBoxes.ShowError(owner: null, e.Exception.ToString(), "Unhandled exception");
+            Shims.WinForms.Application.ThreadException += (_, e) => ReportUnhandledException(e.Exception);
 
             AvaloniaFontSettings.InstallSystemDefaults();
-            ManagedExtensibility.Initialise(userPluginsPath: AppSettings.UserPluginsPath);
+            string userPluginsPath = Path.Join(AppSettings.LocalApplicationDataPath.Value!, AvaloniaUserPluginsDirectoryName);
+            ManagedExtensibility.Initialise(userPluginsPath: userPluginsPath);
             AppSettings.LoadSettings();
             AvaloniaThemeSettings.ApplyAppSettings();
             AvaloniaFontSettings.ApplyAppSettings();
@@ -74,6 +76,7 @@ public partial class App : Application
         }
         catch (Exception exception)
         {
+            Console.Error.WriteLine(exception);
             GitUI.MessageBoxes.ShowError(
                 owner: null,
                 $"Invalid Git Extensions command line:{Environment.NewLine}{Environment.NewLine}{exception}",
@@ -84,6 +87,12 @@ public partial class App : Application
         {
             desktop.Shutdown(exitCode);
         }
+    }
+
+    private static void ReportUnhandledException(Exception exception)
+    {
+        Console.Error.WriteLine(exception);
+        GitUI.MessageBoxes.ShowError(owner: null, exception.ToString(), "Unhandled exception");
     }
 
     // Twin of GitExtensions/Program.cs GetWorkingDir (keep in sync on upstream drift).
