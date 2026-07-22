@@ -6,6 +6,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.HelperDialogs;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -14,7 +15,7 @@ namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormDeleteTag : GitModuleForm
 {
-    private readonly Action<ArgumentString>? _remoteProcessRunner;
+    private readonly Func<ArgumentString, bool>? _remoteProcessRunner;
 
     public FormDeleteTag()
     {
@@ -28,7 +29,7 @@ public sealed partial class FormDeleteTag : GitModuleForm
     {
     }
 
-    internal FormDeleteTag(IGitUICommands commands, string? tag, Action<ArgumentString>? remoteProcessRunner)
+    internal FormDeleteTag(IGitUICommands commands, string? tag, Func<ArgumentString, bool>? remoteProcessRunner)
         : base(commands, enablePositionRestore: false)
     {
         _remoteProcessRunner = remoteProcessRunner;
@@ -88,9 +89,21 @@ public sealed partial class FormDeleteTag : GitModuleForm
             remote.Quote(),
             $":refs/tags/{tagName}",
         };
+
+        bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
+        if (!success)
+        {
+            return;
+        }
+
         if (_remoteProcessRunner is not null)
         {
-            _remoteProcessRunner(pushCommand);
+            success = _remoteProcessRunner(pushCommand);
+            if (success && !Module.InTheMiddleOfAction())
+            {
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
+            }
+
             return;
         }
 
@@ -99,6 +112,11 @@ public sealed partial class FormDeleteTag : GitModuleForm
             Remote = remote,
         };
         form.ShowDialog(this);
+
+        if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
+        {
+            ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
+        }
     }
 
     private void deleteTag_CheckedChanged(object? sender, EventArgs e)

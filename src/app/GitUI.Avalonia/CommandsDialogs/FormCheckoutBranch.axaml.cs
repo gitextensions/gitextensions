@@ -5,14 +5,14 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Shims.WinForms;
 using GitExtUtils;
 using GitUI.Compat;
+using GitUI.ScriptsEngine;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
 
 // Twin of GitUI/CommandsDialogs/FormCheckoutBranch.cs with the full local and remote flow.
 // Deviations: the WinForms ErrorProvider validation becomes an on-checkout message box,
-// Avalonia's SizeToContent replaces the ApplyLayout/RecalculateSizeConstraints row math,
-// and the before/after-checkout event scripts wait for the ScriptsEngine phase (3.23).
+// and Avalonia's SizeToContent replaces the ApplyLayout/RecalculateSizeConstraints row math.
 public partial class FormCheckoutBranch : GitExtensionsDialog
 {
     #region Translation
@@ -333,8 +333,11 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
         ObjectId originalId = Module.GetCurrentCheckout();
 
-        // TODO(avalonia-port): the BeforeCheckout/AfterCheckout event scripts arrive with
-        // the ScriptsEngine port.
+        bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCheckout, this);
+        if (!success)
+        {
+            return DialogResult.Cancel;
+        }
 
         if (UICommands.StartCommandLineProcessDialog(owner, Commands.CheckoutBranch(branchName, isRemote, localChanges, newBranchMode, newBranchName)))
         {
@@ -376,6 +379,8 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
             {
                 UICommands.UpdateSubmodules(this);
             }
+
+            ScriptsRunner.RunEventScripts(ScriptEvent.AfterCheckout, this);
 
             return DialogResult.OK;
         }

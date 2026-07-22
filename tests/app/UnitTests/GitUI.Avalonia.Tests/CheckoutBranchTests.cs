@@ -10,6 +10,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.ScriptsEngine;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -78,6 +79,7 @@ public sealed class CheckoutBranchTests
     public void OkClick_should_run_checkout_for_the_selected_local_branch()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands("main", "feature");
+        TestScriptEventRecorder scriptEvents = (TestScriptEventRecorder)commands.GetRequiredService<IScriptsRunner>();
         module.IsDirtyDir().Returns(true);
         IGitCommand? checkoutCommand = null;
         commands.StartCommandLineProcessDialog(
@@ -103,6 +105,7 @@ public sealed class CheckoutBranchTests
             checkoutCommand.Should().NotBeNull();
             checkoutCommand!.ChangesRepoState.Should().BeTrue();
             checkoutCommand.Arguments.ToString().Should().Be("checkout --merge \"feature\"");
+            scriptEvents.Events.Should().Equal(ScriptEvent.BeforeCheckout, ScriptEvent.AfterCheckout);
             form.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
             module.Received().GetRefs(RefsFilter.Heads);
         }
@@ -362,6 +365,7 @@ public sealed class CheckoutBranchTests
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
         commands.GetService(typeof(IGitBranchNameNormaliser)).Returns(Substitute.For<IGitBranchNameNormaliser>());
+        commands.GetService(typeof(IScriptsRunner)).Returns(new TestScriptEventRecorder());
         return (commands, module);
 
         static IGitRef CreateBranch(string name)

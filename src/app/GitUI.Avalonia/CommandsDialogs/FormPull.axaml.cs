@@ -11,6 +11,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
+using GitUI.ScriptsEngine;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -340,8 +341,11 @@ public sealed partial class FormPull : GitExtensionsDialog
             return WinFormsShims.DialogResult.No;
         }
 
-        // Native Git hooks continue to run. Git Extensions before/after fetch and pull
-        // event scripts join when the shared scripts engine is available.
+        if (!ExecuteBeforeScripts())
+        {
+            return WinFormsShims.DialogResult.No;
+        }
+
         bool stashed = CalculateStashedValue(owner);
         using FormProcess form = CreateFormProcess(source, curLocalBranch, curRemoteBranch);
         if (!IsPullAll())
@@ -352,9 +356,11 @@ public sealed partial class FormPull : GitExtensionsDialog
         form.ShowDialog(owner);
         ErrorOccurred = form.ErrorOccurred();
         Module.InvalidateGitSettings();
+        bool executeScripts = false;
         try
         {
             bool aborted = form.DialogResult == WinFormsShims.DialogResult.Abort;
+            executeScripts = !aborted && !ErrorOccurred;
             if (!aborted && Fetch.IsChecked != true)
             {
                 if (!ErrorOccurred)
@@ -366,7 +372,7 @@ public sealed partial class FormPull : GitExtensionsDialog
                 }
                 else
                 {
-                    CheckMergeConflictsOnError(owner);
+                    executeScripts |= CheckMergeConflictsOnError(owner);
                 }
             }
         }
@@ -376,9 +382,34 @@ public sealed partial class FormPull : GitExtensionsDialog
             {
                 PopStash(owner);
             }
+
+            if (executeScripts)
+            {
+                ExecuteAfterScripts();
+            }
         }
 
         return WinFormsShims.DialogResult.OK;
+
+        void ExecuteAfterScripts()
+        {
+            ScriptsRunner.RunEventScripts(ScriptEvent.AfterFetch, this);
+            if (Fetch.IsChecked != true)
+            {
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterPull, this);
+            }
+        }
+
+        bool ExecuteBeforeScripts()
+        {
+            if (Fetch.IsChecked != true
+                && !ScriptsRunner.RunEventScripts(ScriptEvent.BeforePull, this))
+            {
+                return false;
+            }
+
+            return ScriptsRunner.RunEventScripts(ScriptEvent.BeforeFetch, this);
+        }
     }
 
     private bool ShouldPullChanges(WinFormsShims.IWin32Window? owner)

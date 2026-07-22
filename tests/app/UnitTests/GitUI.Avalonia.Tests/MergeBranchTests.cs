@@ -20,6 +20,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Help;
 using GitUI.HelperDialogs;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -227,6 +228,7 @@ public sealed class MergeBranchTests
     public async Task FormMergeBranch_should_fast_forward_a_real_repository()
     {
         AppSettings.CloseProcessDialog = true;
+        TestScriptEventRecorder scriptEvents = TestScriptEventRecorder.Install(_serviceContainer);
         GitModule module = CreateRepositoryWithFeatureBranch(out ObjectId featureId);
         GitUICommands commands = new(_serviceContainer, module);
         FormMergeBranch form = new(commands, "feature");
@@ -243,6 +245,7 @@ public sealed class MergeBranchTests
             File.ReadAllText(Path.Combine(_workingDirectory, "tracked.txt"))
                 .Should().Contain("feature line");
             module.InTheMiddleOfConflictedMerge().Should().BeFalse();
+            scriptEvents.Events.Should().Equal(ScriptEvent.BeforeMerge, ScriptEvent.AfterMerge);
         }
         finally
         {
@@ -270,6 +273,7 @@ public sealed class MergeBranchTests
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
+        commands.GetService(typeof(IScriptsRunner)).Returns(new TestScriptEventRecorder());
         return (commands, module);
     }
 
