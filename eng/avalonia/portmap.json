@@ -1332,11 +1332,107 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Compact author/date/message/branches/tags summary; WinForms-specific color adaptation and resize code are unnecessary in the Avalonia layout."
   },
+  "src/app/GitUI/LeftPanel/BaseBranchLeafNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseBranchLeafNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same branch-leaf identity over native Avalonia tree items; merged and ahead/behind decoration remains reduced."
+  },
+  "src/app/GitUI/LeftPanel/BasePathNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BasePathNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/BaseRefTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseRefTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Builds stable slash-path hierarchies and applies the existing prioritized-branch setting; visibility against a filtered revision set remains reduced."
+  },
+  "src/app/GitUI/LeftPanel/BaseRevisionNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseRevisionNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/BaseRevisionTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseRevisionTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains the same tree-layer boundary; Avalonia rebuilds immutable ref snapshots on the existing FormBrowse-owned refresh task."
+  },
+  "src/app/GitUI/LeftPanel/BranchPathNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BranchPathNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/LocalBranchNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/LocalBranchNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Current-branch emphasis plus checkout/create/merge/rebase/delete/rename actions; reset remains absent until its dialog lands."
+  },
+  "src/app/GitUI/LeftPanel/LocalBranchTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/LocalBranchTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Nested prioritized local-branch hierarchy with checked-out branch emphasis; ahead/behind data remains reduced."
+  },
+  "src/app/GitUI/LeftPanel/Node.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/Node.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/NodeBase.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/NodeBase.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same root/child model identity and depth traversal over native Avalonia TreeViewItems; native multiple selection replaces the WinForms underline implementation."
+  },
+  "src/app/GitUI/LeftPanel/RemoteBranchNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RemoteBranchNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Fetch/checkout/create/merge/rebase and combined actions are real; remote-branch deletion remains absent until its dialog lands."
+  },
+  "src/app/GitUI/LeftPanel/RemoteBranchTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RemoteBranchTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Nested remote refs plus configured empty and inactive remotes, fetch/prune-all and manage actions."
+  },
+  "src/app/GitUI/LeftPanel/RemoteRepoFolderNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RemoteRepoFolderNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/RemoteRepoNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RemoteRepoNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Host-aware icon/URL, manage, fetch/prune, open-browser and activate/deactivate actions use the shared remote settings manager."
+  },
+  "src/app/GitUI/LeftPanel/TagNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/TagNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Create-branch, merge, rebase and delete actions are real; checkout/reset remain absent until their dialogs land."
+  },
+  "src/app/GitUI/LeftPanel/TagTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/TagTree.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/Tree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/Tree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same root identity with persisted category visibility/order; FormBrowse retains ownership of refresh cancellation and thread switching."
+  },
   "src/app/GitUI/LeftPanel/RepoObjectsTree.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Flat Branches/Remotes/Tags lists plus the functional Stashes tree, with original group/ref images, compact 18px rows, and dotted hierarchy lines through root nodes, expanders, and expanded descendants. Stash selection targets the corresponding revision; root and leaf context actions route through the real stash workflows and retain existing XLF identities. Auto-hidden overlay scrollbars are disabled so simultaneous horizontal/vertical scrolling does not cover the last expanded item. Nested branch folders, submodules, worktrees, filtering, reordering, and their context actions remain deferred."
+    "notes": "Same compact toolbar/search/tree boundary with nested Branches/Remotes/Tags/Stashes models, cyclic search, collapse/expand, native multi-selection, selected-ref filtering, persisted category visibility/order, state restoration and only real context actions. Configured empty/inactive remotes and current-branch emphasis are included. Auto-hidden overlay scrollbars remain disabled. Submodules/worktrees, filtered-revision visibility, merged/ahead-behind decoration, and context actions owned by unported dialogs remain deferred."
   },
   "src/app/GitUI/LeftPanel/StashNode.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/StashNode.cs",

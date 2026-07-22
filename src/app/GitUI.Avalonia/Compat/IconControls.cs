@@ -1,5 +1,6 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 
 namespace GitUI.Compat;
@@ -25,6 +26,29 @@ public class IconButton : Button
     }
 
     protected override Type StyleKeyOverride => typeof(Button);
+}
+
+/// <summary>
+/// A toggle button whose string content retains the original translation key while the
+/// shared toolbar template presents only its image.
+/// </summary>
+public class IconToggleButton : ToggleButton
+{
+    public IconToggleButton()
+    {
+        Classes.Add("gitextensions-icon-toggle-button");
+    }
+
+    public static readonly StyledProperty<IImage?> IconProperty =
+        AvaloniaProperty.Register<IconToggleButton, IImage?>(nameof(Icon));
+
+    public IImage? Icon
+    {
+        get => GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
+    protected override Type StyleKeyOverride => typeof(ToggleButton);
 }
 
 /// <summary>
