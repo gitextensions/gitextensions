@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -249,6 +249,17 @@ public sealed partial class ParityScreenshotTests
                 FileStatusList.TestAccessor accessor = fileStatusList.GetTestAccessor();
                 accessor.UpdateContextMenu();
                 accessor.ContextMenu.Open(accessor.List);
+                Dispatcher.UIThread.RunJobs();
+            }
+            else if (view is RepoObjectsTree repoObjectsTree)
+            {
+                RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
+                TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
+                stashRoot.IsExpanded = true;
+                TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Single();
+                accessor.Tree.SelectedItem = stashItem;
+                accessor.UpdateContextMenu();
+                accessor.ContextMenu.Open(accessor.Tree);
                 Dispatcher.UIThread.RunJobs();
             }
 
@@ -629,7 +640,7 @@ public sealed partial class ParityScreenshotTests
             switch (control)
             {
                 case RepoObjectsTree repoObjectsTree:
-                    repoObjectsTree.SetRefs(context.Refs);
+                    repoObjectsTree.SetRefs(context.Refs, context.Stashes);
                     break;
 
                 case CommitInfo commitInfo:
@@ -1033,6 +1044,15 @@ public sealed partial class ParityScreenshotTests
             long parentTime = new DateTimeOffset(2026, 7, 16, 16, 45, 0, TimeSpan.Zero).ToUnixTimeSeconds();
             ParentRevision = CreateRevision(parentId, InitialCommitSubject, parentTime, []);
             HeadRevision = CreateRevision(headId, HeadCommitSubject, headTime, [parentId]);
+            Stashes =
+            [
+                new GitRevision(ObjectId.Parse("4444444444444444444444444444444444444444"))
+                {
+                    ReflogSelector = "refs/stash@{0}",
+                    Subject = "On main: compact toolbar refinements",
+                    ParentIds = [headId],
+                },
+            ];
             ChangedFiles = Module.GetAllChangedFilesWithSubmodulesStatus();
         }
 
@@ -1055,6 +1075,8 @@ public sealed partial class ParityScreenshotTests
         public GitRevision HeadRevision { get; }
 
         public GitRevision ParentRevision { get; }
+
+        public IReadOnlyCollection<GitRevision> Stashes { get; }
 
         public IReadOnlyList<GitItemStatus> ChangedFiles { get; }
 
