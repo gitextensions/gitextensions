@@ -1,4 +1,4 @@
-using Avalonia.Input;
+﻿using Avalonia.Input;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Compat;
@@ -6,6 +6,80 @@ namespace GitUI.Compat;
 /// <summary>Maps Avalonia key events to the persisted WinForms-compatible hotkey values.</summary>
 internal static class KeysMapper
 {
+    public static KeyGesture? ToKeyGesture(WinFormsShims.Keys? keyData)
+    {
+        if (keyData is null)
+        {
+            return null;
+        }
+
+        WinFormsShims.Keys keyCode = keyData.Value & WinFormsShims.Keys.KeyCode;
+        Key key = keyCode switch
+        {
+            >= WinFormsShims.Keys.A and <= WinFormsShims.Keys.Z => Key.A + (keyCode - WinFormsShims.Keys.A),
+            >= WinFormsShims.Keys.D0 and <= WinFormsShims.Keys.D9 => Key.D0 + (keyCode - WinFormsShims.Keys.D0),
+            >= WinFormsShims.Keys.NumPad0 and <= WinFormsShims.Keys.NumPad9 => Key.NumPad0 + (keyCode - WinFormsShims.Keys.NumPad0),
+            >= WinFormsShims.Keys.F1 and <= WinFormsShims.Keys.F24 => Key.F1 + (keyCode - WinFormsShims.Keys.F1),
+            WinFormsShims.Keys.Back => Key.Back,
+            WinFormsShims.Keys.Tab => Key.Tab,
+            WinFormsShims.Keys.Enter => Key.Enter,
+            WinFormsShims.Keys.Escape => Key.Escape,
+            WinFormsShims.Keys.Space => Key.Space,
+            WinFormsShims.Keys.PageUp => Key.PageUp,
+            WinFormsShims.Keys.PageDown => Key.PageDown,
+            WinFormsShims.Keys.End => Key.End,
+            WinFormsShims.Keys.Home => Key.Home,
+            WinFormsShims.Keys.Left => Key.Left,
+            WinFormsShims.Keys.Up => Key.Up,
+            WinFormsShims.Keys.Right => Key.Right,
+            WinFormsShims.Keys.Down => Key.Down,
+            WinFormsShims.Keys.Insert => Key.Insert,
+            WinFormsShims.Keys.Delete => Key.Delete,
+            WinFormsShims.Keys.Multiply => Key.Multiply,
+            WinFormsShims.Keys.Add => Key.Add,
+            WinFormsShims.Keys.Subtract => Key.Subtract,
+            WinFormsShims.Keys.Decimal => Key.Decimal,
+            WinFormsShims.Keys.Divide => Key.Divide,
+            WinFormsShims.Keys.OemSemicolon => Key.OemSemicolon,
+            WinFormsShims.Keys.Oemplus => Key.OemPlus,
+            WinFormsShims.Keys.Oemcomma => Key.OemComma,
+            WinFormsShims.Keys.OemMinus => Key.OemMinus,
+            WinFormsShims.Keys.OemPeriod => Key.OemPeriod,
+            WinFormsShims.Keys.OemQuestion => Key.OemQuestion,
+            WinFormsShims.Keys.Oemtilde => Key.OemTilde,
+            WinFormsShims.Keys.OemOpenBrackets => Key.OemOpenBrackets,
+            WinFormsShims.Keys.OemPipe => Key.OemPipe,
+            WinFormsShims.Keys.OemCloseBrackets => Key.OemCloseBrackets,
+            WinFormsShims.Keys.OemQuotes => Key.OemQuotes,
+            WinFormsShims.Keys.OemBackslash => Key.OemBackslash,
+            WinFormsShims.Keys.BrowserBack => Key.BrowserBack,
+            WinFormsShims.Keys.BrowserForward => Key.BrowserForward,
+            _ => Key.None,
+        };
+        if (key == Key.None)
+        {
+            return null;
+        }
+
+        KeyModifiers modifiers = KeyModifiers.None;
+        if (keyData.Value.HasFlag(WinFormsShims.Keys.Shift))
+        {
+            modifiers |= KeyModifiers.Shift;
+        }
+
+        if (keyData.Value.HasFlag(WinFormsShims.Keys.Control))
+        {
+            modifiers |= OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+        }
+
+        if (keyData.Value.HasFlag(WinFormsShims.Keys.Alt))
+        {
+            modifiers |= KeyModifiers.Alt;
+        }
+
+        return new KeyGesture(key, modifiers);
+    }
+
     public static WinFormsShims.Keys ToKeys(KeyEventArgs e)
     {
         ArgumentNullException.ThrowIfNull(e);
