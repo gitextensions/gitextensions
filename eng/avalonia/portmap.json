@@ -359,6 +359,18 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same three translated labels and text fields in the original compact two-column order."
   },
+  "src/plugins/BuildServerIntegration/GitHubActionsIntegration/Settings/GitHubActionsSettingsUserControl.cs": {
+    "twin": "src/plugins/BuildServerIntegration/GitHubActionsIntegration/Settings/GitHubActionsSettingsUserControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable-only same-named MEF export retains remote-derived owner/repository defaults, configured overrides, API URL normalization, token persistence, and the token-management URL. The Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/GitHubActionsIntegration/Settings/GitHubActionsSettingsUserControl.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/GitHubActionsIntegration/Settings/GitHubActionsSettingsUserControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same translated API URL, owner, repository, masked token, and personal-access-token link controls in the original compact two-column order."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",
