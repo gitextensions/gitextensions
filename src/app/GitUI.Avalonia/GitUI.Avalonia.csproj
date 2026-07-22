@@ -56,6 +56,8 @@
     <Compile Include="..\GitUI\Models\IOutputHistoryRecorder.cs" Link="Models\IOutputHistoryRecorder.cs" />
     <Compile Include="..\GitUI\Models\IOutputHistoryProvider.cs" Link="Models\IOutputHistoryProvider.cs" />
     <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
+    <Compile Include="..\GitUI\Plugin\GitPluginSettingsContainer.cs" Link="Plugin\GitPluginSettingsContainer.cs" />
+    <Compile Include="..\GitUI\Plugin\PluginRegistry.cs" Link="Plugin\PluginRegistry.cs" />
     <Compile Include="..\GitUI\RevisionDiffInfoProvider.cs" Link="RevisionDiffInfoProvider.cs" />
     <Compile Include="..\GitUI\ScriptsEngine\FilePromptCreator.cs" Link="ScriptsEngine\FilePromptCreator.cs" />
     <Compile Include="..\GitUI\ScriptsEngine\IScriptOptionsForm.cs" Link="ScriptsEngine\IScriptOptionsForm.cs" />
