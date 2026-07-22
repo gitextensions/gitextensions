@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 
@@ -176,8 +177,25 @@ partial class ScriptsManager
 
             if (command.StartsWith(PluginPrefix))
             {
-                // The WinForms runner also returns false when no matching plugin is loaded.
-                // Avalonia has no PluginRegistry until its plugin discovery is enabled.
+                command = command.Replace(PluginPrefix, string.Empty);
+
+                lock (PluginRegistry.Plugins)
+                {
+                    foreach (IGitPlugin plugin in PluginRegistry.Plugins)
+                    {
+                        if (string.Equals(plugin.Name, command, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            GitUIEventArgs eventArgs = new(owner, uiCommands);
+                            if (plugin.Execute(eventArgs))
+                            {
+                                uiCommands.RepoChangedNotifier.Notify();
+                            }
+
+                            return true;
+                        }
+                    }
+                }
+
                 return false;
             }
 
