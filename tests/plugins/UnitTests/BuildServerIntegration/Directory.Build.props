@@ -1,24 +1,15 @@
 <Project>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
 
-  <PropertyGroup>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
-    <!-- Avalonia/Linux port: additionally build the adapter/API logic against the
-         headless WinForms contract; platform-owned settings surfaces are excluded. -->
     <TargetFramework></TargetFramework>
     <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
     <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
     <UseGitExtensionsShims>true</UseGitExtensionsShims>
-    <DefaultItemExcludes Condition="'$(TargetFramework)' == 'net10.0'">$(DefaultItemExcludes);$(MSBuildProjectDirectory)\Settings\*UserControl*.cs;$(MSBuildProjectDirectory)\Settings\**\*UserControl*.cs;$(MSBuildProjectDirectory)\Settings\*UserControl*.resx;$(MSBuildProjectDirectory)\Settings\**\*UserControl*.resx;$(MSBuildProjectDirectory)\Settings\TeamCityBuildChooser*.cs;$(MSBuildProjectDirectory)\Settings\TeamCityBuildChooser*.resx</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-    <Using Include="GitExtensions.Shims.WinForms.TaskDialogs" />
     <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
     <Compile Include="$(RepoRoot)\src\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
   </ItemGroup>
-
 </Project>
