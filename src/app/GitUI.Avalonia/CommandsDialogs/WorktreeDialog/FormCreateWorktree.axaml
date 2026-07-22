@@ -1,0 +1,74 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.WorktreeDialog.FormCreateWorktree"
+        Width="608" SizeToContent="Height"
+        MinWidth="500"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Title="Create a new worktree">
+  <DockPanel>
+    <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
+                DockPanel.Dock="Bottom"
+                Margin="8">
+      <Button x:Name="btnCreateWorktree"
+              Classes="gitextensions-dialog-action"
+              Content="_Create the new worktree"
+              IsDefault="True" />
+    </StackPanel>
+
+    <Border x:Name="MainPanel" Classes="gitextensions-dialog-main" Padding="12">
+      <Grid x:Name="tlpnlMain"
+            RowDefinitions="Auto,Auto,Auto"
+            RowSpacing="8">
+        <HeaderedContentControl x:Name="gbxWhatToCheckout"
+                                Classes="gitextensions-group-box"
+                                Header="What to checkout:">
+          <Grid x:Name="tlpnlCheckout"
+                ColumnDefinitions="Auto,*"
+                RowDefinitions="Auto,Auto"
+                ColumnSpacing="8"
+                RowSpacing="6">
+            <RadioButton x:Name="rbCheckoutExistingBranch"
+                         IsChecked="True"
+                         Content="Checkout an _existing branch:"
+                         VerticalAlignment="Center" />
+            <ComboBox x:Name="cbxBranches"
+                      Grid.Column="1"
+                      MinWidth="320"
+                      HorizontalAlignment="Stretch" />
+
+            <RadioButton x:Name="rbCreateNewBranch"
+                         Grid.Row="1"
+                         Content="Create a _new branch:&#x0a;(from current commit)"
+                         VerticalAlignment="Center" />
+            <TextBox x:Name="txtNewBranchName"
+                     Grid.Row="1" Grid.Column="1"
+                     VerticalAlignment="Center" />
+          </Grid>
+        </HeaderedContentControl>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="Auto,*,Auto"
+              ColumnSpacing="8">
+          <Label x:Name="lblNewWorktreeFolder"
+                 Content="New worktree _directory:"
+                 Target="{Binding #txtWorktreeDirectory}"
+                 VerticalAlignment="Center" />
+          <TextBox x:Name="txtWorktreeDirectory"
+                   Grid.Column="1"
+                   VerticalAlignment="Center" />
+          <controls:FolderBrowserButton x:Name="btnBrowseWorktreeDir"
+                                        Grid.Column="2"
+                                        MinWidth="110" />
+        </Grid>
+
+        <CheckBox x:Name="chkOpenWorktree"
+                  Grid.Row="2"
+                  IsChecked="True"
+                  Content="_Open the new worktree after the creation" />
+      </Grid>
+    </Border>
+  </DockPanel>
+</Window>

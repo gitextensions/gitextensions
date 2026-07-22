@@ -9,6 +9,7 @@ using GitExtensions.Shims.WinForms;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
+using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 
@@ -845,9 +846,54 @@ public sealed class GitUICommands : IGitUICommands
         }
     }
 
-    public bool WorktreeCreate(IWin32Window? owner, string mainWorktreePath) => throw NotPorted(nameof(WorktreeCreate));
+    public bool WorktreeCreate(IWin32Window? owner, string mainWorktreePath)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using FormCreateWorktree form = new(this, mainWorktreePath);
+            if (form.ShowDialog(owner) != DialogResult.OK)
+            {
+                return false;
+            }
+
+            if (form.OpenWorktree)
+            {
+                GitModule newModule = new(this.GetRequiredService<IGitExecutorProvider>(), form.WorktreeDirectory);
+                if (newModule.IsValidGitWorkingDir() && FindFormBrowse(owner) is FormBrowse browse)
+                {
+                    browse.SetWorkingDir(Path.GetFullPath(form.WorktreeDirectory));
+                }
+            }
+
+            return true;
+        });
+    }
+
     public bool WorktreeDelete(IWin32Window? owner, string worktreePath) => throw NotPorted(nameof(WorktreeDelete));
     public bool WorktreeSwitch(IWin32Window? owner, string worktreePath) => throw NotPorted(nameof(WorktreeSwitch));
+
+    private static FormBrowse? FindFormBrowse(IWin32Window? window)
+    {
+        if (window is FormBrowse browse)
+        {
+            return browse;
+        }
+
+        if (window is Avalonia.Controls.WindowBase avaloniaWindow)
+        {
+            while (avaloniaWindow.Owner is not null)
+            {
+                if (avaloniaWindow.Owner is FormBrowse ownerBrowse)
+                {
+                    return ownerBrowse;
+                }
+
+                avaloniaWindow = avaloniaWindow.Owner;
+            }
+        }
+
+        return null;
+    }
 
     #endregion
 }

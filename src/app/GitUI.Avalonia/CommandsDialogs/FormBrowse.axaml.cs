@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using GitCommands;
 using GitCommands.Git;
@@ -349,6 +349,12 @@ public sealed partial class FormBrowse : GitModuleForm
         ReloadRepository();
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath).WaitAsync(cancellationToken));
+    }
+
+    public void SetWorkingDir(string? path, ObjectId selectedId = default, ObjectId firstId = default)
+    {
+        RevisionGrid.SelectedId = selectedId.IsZero ? firstId : selectedId;
+        ChangeWorkingDirectory(path ?? string.Empty);
     }
 
     private void OpenRepository(string path, ObjectId selectedId, ObjectId firstId)
