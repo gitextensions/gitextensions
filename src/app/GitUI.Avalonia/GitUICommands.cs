@@ -1,4 +1,5 @@
 using System.Text;
+using Avalonia.Controls.ApplicationLifetimes;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -13,6 +14,9 @@ using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
+using AvaloniaApplication = Avalonia.Application;
+using ShutdownMode = Avalonia.Controls.ShutdownMode;
+using Window = Avalonia.Controls.Window;
 
 namespace GitUI;
 
@@ -23,6 +27,12 @@ namespace GitUI;
 /// <summary>Contains methods to invoke Git Extensions forms, dialogs, etc.</summary>
 public sealed class GitUICommands : IGitUICommands
 {
+    private const string BlameHistoryCommand = "blamehistory";
+    private const string FileHistoryCommand = "filehistory";
+
+    private const string FilterByRevisionArg = "--filter-by-revision";
+    private const string PathFilterArg = "--pathFilter";
+
     private readonly IServiceProvider _serviceProvider;
 
     public IGitModule Module { get; private set; }
@@ -289,7 +299,349 @@ public sealed class GitUICommands : IGitUICommands
     public void RaisePostBrowseInitialize(IWin32Window? owner) => InvokeEvent(owner, PostBrowseInitialize);
     public void RaisePostRegisterPlugin(IWin32Window? owner) => InvokeEvent(owner, PostRegisterPlugin);
     public void RemoveCommitTemplate(string key) => throw NotPorted(nameof(RemoveCommitTemplate));
-    public bool RunCommand(IReadOnlyList<string> args) => throw NotPorted(nameof(RunCommand));
+    public bool RunCommand(IReadOnlyList<string> args)
+    {
+        IReadOnlyDictionary<string, string?> arguments = InitializeArguments(args);
+
+        if (args.Count <= 1)
+        {
+            return false;
+        }
+
+        string command = args[1];
+        if (command == "difftool" && args.Count <= 2)
+        {
+            MessageBoxes.Show("Cannot open difftool, there is no file selected.", "Difftool", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        if (command is BlameHistoryCommand or FileHistoryCommand && args.Count <= 2)
+        {
+            MessageBoxes.Show("Cannot open blame / file history, there is no file selected.", "Blame / file history", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        if (command == "fileeditor" && args.Count <= 2)
+        {
+            MessageBoxes.Show("Cannot open file editor, there is no file selected.", "File editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        return RunCommandBasedOnArgument(args, arguments);
+    }
+
+    // Please update FormCommandlineHelp if you add or change commands.
+    private bool RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string?> arguments)
+    {
+        string command = args[1];
+        switch (command)
+        {
+            case "add":
+            case "addfiles":
+                return StartAddFilesDialog(owner: null, addFiles: args.Count < 3 ? "." : string.Join(' ', args.Skip(2).Select(file => file.Quote())));
+            case "apply":
+            case "applypatch":
+                return StartApplyPatchDialog(null, args.Count == 3 ? args[2] : string.Empty);
+            case "branch":
+                return StartCreateBranchDialog();
+            case "browse":
+                return RunBrowseCommand(args);
+            case "checkout":
+            case "checkoutbranch":
+                return StartCheckoutBranch(null);
+            case "cherry":
+                return StartCherryPickDialog();
+            case "clone":
+                return StartCloneDialog(null, args.Count > 2 ? args[2] : null);
+            case "commit":
+                return Commit(arguments);
+            case "difftool" when args.Count > 2:
+                try
+                {
+                    Module.OpenWithDifftool(args[2]);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+
+            case BlameHistoryCommand:
+            case FileHistoryCommand:
+                return RunFileHistoryCommand(args, showBlame: command == BlameHistoryCommand);
+            case "fileeditor":
+                return StartFileEditorDialog(args[2]);
+            case "init":
+                return StartInitializeDialog(null, args.Count > 2 ? args[2] : null);
+            case "merge":
+                arguments.TryGetValue("branch", out string? branch);
+                return StartMergeBranchDialog(null, branch);
+            case "mergeconflicts":
+            case "mergetool":
+                return RunMergeToolOrConflictCommand(arguments);
+            case "openrepo":
+                return RunOpenRepoCommand(args);
+            case "pull":
+                return Pull(arguments);
+            case "push":
+                return Push(arguments);
+            case "rebase":
+                arguments.TryGetValue("branch", out string? onto);
+                return StartRebaseDialog(owner: null, onto);
+            case "remotes":
+                return StartRemotesDialog(owner: null);
+            case "settings":
+                return StartSettingsDialog(owner: null);
+            case "stash":
+                return StartStashDialog();
+            case "synchronize":
+                return Commit(arguments) & Pull(arguments) & Push(arguments);
+            case "tag":
+                return StartCreateTagDialog();
+            case "viewpatch":
+                return StartViewPatchDialog(args.Count == 3 ? args[2] : string.Empty);
+            default:
+                if (command.StartsWith("git://") || command.StartsWith("http://") || command.StartsWith("https://"))
+                {
+                    return StartCloneDialog(null, command, openedFromProtocolHandler: true);
+                }
+
+                const string GitHubWindowsPrefix = "github-windows://openRepo/";
+                const string GitHubMacPrefix = "github-mac://openRepo/";
+                if (command.StartsWith(GitHubWindowsPrefix))
+                {
+                    return StartCloneDialog(null, command.Replace(GitHubWindowsPrefix, string.Empty), openedFromProtocolHandler: true);
+                }
+
+                if (command.StartsWith(GitHubMacPrefix))
+                {
+                    return StartCloneDialog(null, command.Replace(GitHubMacPrefix, string.Empty), openedFromProtocolHandler: true);
+                }
+
+                string? dir = !string.IsNullOrWhiteSpace(command) && File.Exists(command) ? Path.GetDirectoryName(command) : command;
+                if (args.Count == 2 && Directory.Exists(dir))
+                {
+                    return WithWorkingDirectory(dir).StartBrowseDialog(owner: null);
+                }
+
+                string message = $"The command \"{command}\" is not available in the Avalonia port yet.";
+                Console.Error.WriteLine(message);
+                MessageBoxes.ShowError(owner: null, message, "Unsupported command");
+                return false;
+        }
+    }
+
+    private bool RunBrowseCommand(IReadOnlyList<string> args)
+    {
+        string commit = GetParameterOrEmptyStringAsDefault(args, "-commit");
+        BrowseArguments browseArguments = new()
+        {
+            RevFilter = GetParameterOrEmptyStringAsDefault(args, "-filter"),
+            PathFilter = GetParameterOrEmptyStringAsDefault(args, PathFilterArg),
+            IsFileHistoryMode = args.Any(arg => arg.StartsWith(PathFilterArg))
+        };
+
+        if (commit == string.Empty)
+        {
+            return StartBrowseDialog(owner: null, browseArguments);
+        }
+
+        if (!TryGetObjectIds(commit, Module, out ObjectId selectedId, out ObjectId firstId))
+        {
+            Console.Error.WriteLine($"No commit found matching: {commit}");
+            return false;
+        }
+
+        return StartBrowseDialog(owner: null, browseArguments with
+        {
+            SelectedId = selectedId,
+            FirstId = firstId
+        });
+
+        static bool TryGetObjectIds(string value, IGitModule module, out ObjectId selectedId, out ObjectId firstId)
+        {
+            selectedId = default;
+            firstId = default;
+            foreach (string part in value.LazySplit(','))
+            {
+                if (!module.TryResolvePartialCommitId(part, out ObjectId objectId))
+                {
+                    return false;
+                }
+
+                if (selectedId.IsZero)
+                {
+                    selectedId = objectId;
+                }
+                else if (firstId.IsZero)
+                {
+                    firstId = objectId;
+                    break;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
+    {
+        string withEquals = paramName + "=";
+        for (int i = 2; i < args.Count; i++)
+        {
+            string arg = args[i];
+            if (arg.StartsWith(withEquals))
+            {
+                return arg.Replace(withEquals, string.Empty);
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private bool RunOpenRepoCommand(IReadOnlyList<string> args)
+    {
+        IGitUICommands commands = this;
+        if (args.Count > 2 && File.Exists(args[2]))
+        {
+            string? path = File.ReadAllText(args[2]).Trim().LazySplit('\n').FirstOrDefault();
+            if (Directory.Exists(path))
+            {
+                commands = WithWorkingDirectory(path);
+            }
+        }
+
+        return commands.StartBrowseDialog(owner: null, new BrowseArguments
+        {
+            RevFilter = GetParameterOrEmptyStringAsDefault(args, "-filter"),
+            PathFilter = GetParameterOrEmptyStringAsDefault(args, PathFilterArg)
+        });
+    }
+
+    private bool RunFileHistoryCommand(IReadOnlyList<string> args, bool showBlame)
+    {
+        string fileName = NormalizeFileName(args[2]);
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return false;
+        }
+
+        GitRevision? revision = null;
+        if (args.Count > 3)
+        {
+            if (!ObjectId.TryParse(args[3], out ObjectId objectId))
+            {
+                return false;
+            }
+
+            revision = new GitRevision(objectId);
+        }
+
+        bool filterByRevision = false;
+        if (args.Count > 4)
+        {
+            if (args[4] != FilterByRevisionArg)
+            {
+                return false;
+            }
+
+            filterByRevision = true;
+        }
+
+        if (AppSettings.UseBrowseForFileHistory.Value)
+        {
+            return StartBrowseDialog(owner: null, new BrowseArguments
+            {
+                RevFilter = filterByRevision ? revision?.ObjectId.ToString() : null,
+                PathFilter = fileName,
+                SelectedId = revision?.ObjectId ?? default,
+                IsFileHistoryMode = true
+            });
+        }
+
+        return DoActionOnRepo(owner: null, action: () =>
+        {
+            FormFileHistory form = new(this, fileName.QuoteNE(), revision, filterByRevision, showBlame);
+            ShowModelessWindow(form, owner: null);
+            return true;
+        }, changesRepo: false);
+    }
+
+    private string NormalizeFileName(string fileName)
+    {
+        fileName = fileName.ToPosixPath();
+        return string.IsNullOrEmpty(Module.WorkingDir) ? fileName : fileName.Replace(Module.WorkingDir.ToPosixPath(), string.Empty);
+    }
+
+    private bool RunMergeToolOrConflictCommand(IReadOnlyDictionary<string, string?> arguments)
+    {
+        if (!arguments.ContainsKey("quiet") || Module.InTheMiddleOfConflictedMerge())
+        {
+            return StartResolveConflictsDialog();
+        }
+
+        return true;
+    }
+
+    private static IReadOnlyDictionary<string, string?> InitializeArguments(IReadOnlyList<string> args)
+    {
+        Dictionary<string, string?> arguments = [];
+        for (int i = 2; i < args.Count; i++)
+        {
+            if (args[i].StartsWith("--") && i + 1 < args.Count && !args[i + 1].StartsWith("--"))
+            {
+                arguments.Add(args[i].TrimStart('-'), args[++i]);
+            }
+            else if (args[i].StartsWith("--"))
+            {
+                arguments.Add(args[i].TrimStart('-'), null);
+            }
+        }
+
+        return arguments;
+    }
+
+    private bool Commit(IReadOnlyDictionary<string, string?> arguments)
+    {
+        arguments.TryGetValue("message", out string? overridingMessage);
+        return StartCommitDialog(null, overridingMessage, arguments.ContainsKey("quiet"));
+    }
+
+    private bool Push(IReadOnlyDictionary<string, string?> arguments)
+        => StartPushDialog(null, arguments.ContainsKey("quiet"));
+
+    private bool Pull(IReadOnlyDictionary<string, string?> arguments)
+    {
+        UpdateSettingsBasedOnArguments(arguments);
+        arguments.TryGetValue("remotebranch", out string? remoteBranch);
+        return arguments.ContainsKey("quiet")
+            ? StartPullDialogAndPullImmediately(remoteBranch: remoteBranch)
+            : StartPullDialog(remoteBranch: remoteBranch);
+    }
+
+    private static void UpdateSettingsBasedOnArguments(IReadOnlyDictionary<string, string?> arguments)
+    {
+        if (arguments.ContainsKey("merge"))
+        {
+            AppSettings.DefaultPullAction = GitPullAction.Merge;
+        }
+
+        if (arguments.ContainsKey("rebase"))
+        {
+            AppSettings.DefaultPullAction = GitPullAction.Rebase;
+        }
+
+        if (arguments.ContainsKey("fetch"))
+        {
+            AppSettings.DefaultPullAction = GitPullAction.Fetch;
+        }
+
+        if (arguments.ContainsKey("autostash"))
+        {
+            AppSettings.AutoStash = true;
+        }
+    }
+
     public void ShowModelessForm(IWin32Window? owner, bool requiresValidWorkingDir, EventHandler<GitUIEventArgs>? preEvent, EventHandler<GitUIPostActionEventArgs>? postEvent, Func<Form> provideForm) => throw NotPorted(nameof(ShowModelessForm));
     public bool StartAddFilesDialog(IWin32Window? owner, string? addFiles = null)
     {
@@ -351,7 +703,13 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public void StartBatchFileProcessDialog(string batchFile) => throw NotPorted(nameof(StartBatchFileProcessDialog));
-    public bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null) => throw NotPorted(nameof(StartBrowseDialog));
+    public bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null)
+    {
+        FormBrowse form = new(this, args ?? new BrowseArguments());
+        ShowModelessWindow(form, owner);
+        return true;
+    }
+
     public bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containObjectIds)
         => StartCheckoutBranch(owner, string.Empty, remote: false, containObjectIds);
 
@@ -549,9 +907,30 @@ public sealed class GitUICommands : IGitUICommands
         DoActionOnRepo(owner, action: () =>
         {
             CommandsDialogs.FormFileHistory form = new(this, fileName, revision, filterByRevision, showBlame);
-            form.Show();
+            ShowModelessWindow(form, owner);
             return true;
         }, changesRepo: false);
+    }
+
+    private static void ShowModelessWindow(Window form, IWin32Window? owner)
+    {
+        if (AvaloniaApplication.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+            && desktop.MainWindow is null)
+        {
+            desktop.MainWindow = form;
+            desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            form.Show();
+            return;
+        }
+
+        if (owner is Window ownerWindow && ownerWindow.IsVisible)
+        {
+            form.Show(ownerWindow);
+        }
+        else
+        {
+            form.Show();
+        }
     }
 
     public bool StartFixupCommitDialog(IWin32Window? owner, GitRevision revision)
