@@ -1,0 +1,26 @@
+<settings:DistributedSettingsPage xmlns="https://github.com/avaloniaui"
+                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                  xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                  x:Class="GitUI.CommandsDialogs.SettingsDialog.Plugins.PluginSettingsPage">
+  <settings:DistributedSettingsPage.Styles>
+    <Style Selector="TextBox.plugin-setting-invalid">
+      <Setter Property="Background" Value="#FFFF8080" />
+      <Setter Property="Foreground" Value="Black" />
+    </Style>
+  </settings:DistributedSettingsPage.Styles>
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <Grid Margin="0,0,8,0"
+          RowDefinitions="30,Auto,40">
+      <TextBlock x:Name="labelNoSettings"
+                 Height="30"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Center"
+                 TextAlignment="Center"
+                 Text="There are no settings available for this plugin." />
+      <StackPanel x:Name="settingsPanel"
+                  Grid.Row="1"
+                  Spacing="6" />
+    </Grid>
+  </ScrollViewer>
+</settings:DistributedSettingsPage>

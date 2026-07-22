@@ -85,6 +85,15 @@
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PatchView}" /></MenuItem.Icon>
         </MenuItem>
       </MenuItem>
+      <MenuItem x:Name="pluginsToolStripMenuItem" Header="_Plugins">
+        <MenuItem x:Name="pluginsLoadingToolStripMenuItem"
+                  Header="Loading..."
+                  IsEnabled="False" />
+        <Separator />
+        <MenuItem x:Name="pluginSettingsToolStripMenuItem" Header="Plugins _settings...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
       <MenuItem x:Name="toolsToolStripMenuItem" Header="_Tools">
         <MenuItem Tag="userShell">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GitForWindows}" /></MenuItem.Icon>
