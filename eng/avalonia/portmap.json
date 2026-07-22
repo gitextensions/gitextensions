@@ -659,6 +659,12 @@
     "basedOn": "57d3739f1eb87b5b3fed33138b51ec0ee5a173f6",
     "notes": "Archives one selected revision as ZIP or TAR through native repository Git. Retains explicit path and differential-revision filters, excludes deleted differential paths, uses the same-named commit summary and revision picker, and replaces only SaveFileDialog with Avalonia's native storage provider. The original FormBrowse Commands and revision-grid context contributions are live."
   },
+  "src/app/GitUI/CommandsDialogs/FormCherryPick.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCherryPick.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Cherry-picks ordinary and merge revisions through native repository Git and the existing process/conflict flow. Retains automatic-commit and reference options, successful-dialog settings persistence, selectable mainline parents, revision picking, and sequential oldest-to-newest multi-selection with option carry-forward. The revision-grid context contribution is live and the Avalonia revision grid now supports the original multiple selection mode."
+  },
   "src/app/GitUI/CommandsDialogs/FormCreateTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateTag.axaml.cs",
     "status": "functional",

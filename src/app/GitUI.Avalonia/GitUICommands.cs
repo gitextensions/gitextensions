@@ -370,8 +370,61 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartCheckoutRevisionDialog(IWin32Window? owner, string? revision = null) => throw NotPorted(nameof(StartCheckoutRevisionDialog));
-    public bool StartCherryPickDialog(IWin32Window? owner = null, GitRevision? revision = null) => throw NotPorted(nameof(StartCherryPickDialog));
-    public bool StartCherryPickDialog(IWin32Window? owner, IEnumerable<GitRevision> revisions) => throw NotPorted(nameof(StartCherryPickDialog));
+    public bool StartCherryPickDialog(IWin32Window? owner = null, GitRevision? revision = null)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormCherryPick form = new(this, revision);
+            return form.ShowDialog(owner) == DialogResult.OK;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
+    public bool StartCherryPickDialog(IWin32Window? owner, IEnumerable<GitRevision> revisions)
+    {
+        ArgumentNullException.ThrowIfNull(revisions);
+
+        bool Action()
+        {
+            CommandsDialogs.FormCherryPick? previousForm = null;
+            try
+            {
+                bool repoChanged = false;
+                foreach (GitRevision revision in revisions)
+                {
+                    CommandsDialogs.FormCherryPick form = new(this, revision);
+                    if (previousForm is not null)
+                    {
+                        form.CopyOptions(previousForm);
+                        ((IDisposable)previousForm).Dispose();
+                    }
+
+                    previousForm = form;
+                    if (form.ShowDialog(owner) == DialogResult.OK)
+                    {
+                        repoChanged = true;
+                    }
+                    else
+                    {
+                        return repoChanged;
+                    }
+                }
+
+                return repoChanged;
+            }
+            finally
+            {
+                if (previousForm is not null)
+                {
+                    ((IDisposable)previousForm).Dispose();
+                }
+            }
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartCleanupRepositoryDialog(IWin32Window? owner = null, string? path = null) => throw NotPorted(nameof(StartCleanupRepositoryDialog));
     public bool StartCloneDialog(IWin32Window? owner, string url, EventHandler<GitModuleEventArgs> gitModuleChanged)
     {
