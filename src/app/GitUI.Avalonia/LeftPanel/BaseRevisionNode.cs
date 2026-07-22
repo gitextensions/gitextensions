@@ -35,6 +35,9 @@ internal abstract class BaseRevisionNode : Node
     public bool Rebase()
         => UICommands.StartRebaseDialog(Owner, FullPath);
 
+    public bool Reset()
+        => UICommands.StartResetCurrentBranchDialog(Owner, FullPath);
+
     private static string GetName(string fullPath)
     {
         int separator = fullPath.LastIndexOf('/');

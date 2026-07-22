@@ -770,7 +770,19 @@ public sealed class GitUICommands : IGitUICommands
         }
     }
 
-    public bool StartResetCurrentBranchDialog(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartResetCurrentBranchDialog));
+    public bool StartResetCurrentBranchDialog(IWin32Window? owner, string branch)
+    {
+        ObjectId objectId = Module.RevParse(branch);
+        if (objectId.IsZero)
+        {
+            MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        using FormResetCurrentBranch form = FormResetCurrentBranch.Create(this, Module.GetRevision(objectId));
+        return form.ShowDialog(owner) == DialogResult.OK;
+    }
+
     public bool StartResolveConflictsDialog(IWin32Window? owner = null, bool offerCommit = true)
     {
         bool Action()

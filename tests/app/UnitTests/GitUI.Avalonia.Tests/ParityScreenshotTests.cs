@@ -410,6 +410,14 @@ public sealed partial class ParityScreenshotTests
             return new FormRevertCommit(commands, context.HeadRevision);
         }
 
+        if (viewType == typeof(FormResetCurrentBranch))
+        {
+            return FormResetCurrentBranch.Create(
+                context.Commands,
+                context.ParentRevision,
+                FormResetCurrentBranch.ResetType.Hard);
+        }
+
         if (viewType == typeof(FormClone))
         {
             return new FormClone(
@@ -1101,6 +1109,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormRevertCommit))
         {
             return (630, 410);
+        }
+
+        if (viewType == typeof(FormResetCurrentBranch))
+        {
+            return (479, 469);
         }
 
         if (viewType == typeof(FindAndReplaceForm))

@@ -53,6 +53,15 @@ internal static class AvaloniaThemeResources
         DrawingColor movedAddedForeground = GetAppColor(settings, AppColor.AnsiTerminalBlueForeNormal);
         DrawingColor dimmedRemovedBackground = Dim(Dim(removedBackground, editor), editor);
         DrawingColor dimmedAddedBackground = Dim(Dim(addedBackground, editor), editor);
+        DrawingColor resetSoft = DrawingColor.FromArgb(128, 255, 128);
+        DrawingColor resetMixed = DrawingColor.FromArgb(255, 255, 128);
+        DrawingColor resetHard = DrawingColor.FromArgb(255, 128, 128);
+        if (isDark)
+        {
+            resetSoft = Dim(resetSoft, editor);
+            resetMixed = Dim(resetMixed, editor);
+            resetHard = Dim(resetHard, editor);
+        }
 
         SetBrush(resources, "ThemeBackgroundBrush", panel);
         SetBrush(resources, "ThemeForegroundBrush", windowText);
@@ -75,6 +84,12 @@ internal static class AvaloniaThemeResources
 
         SetBrush(resources, "GitExtensionsValidFilterBackgroundBrush", isDark ? dimmedAddedBackground : addedBackground);
         SetBrush(resources, "GitExtensionsInvalidFilterBackgroundBrush", isDark ? dimmedRemovedBackground : removedBackground);
+        SetBrush(resources, "GitExtensionsResetSoftBackgroundBrush", resetSoft);
+        SetBrush(resources, "GitExtensionsResetMixedBackgroundBrush", resetMixed);
+        SetBrush(resources, "GitExtensionsResetHardBackgroundBrush", resetHard);
+        SetBrush(resources, "GitExtensionsResetSoftForegroundBrush", GetTextColor(resetSoft, windowText));
+        SetBrush(resources, "GitExtensionsResetMixedForegroundBrush", GetTextColor(resetMixed, windowText));
+        SetBrush(resources, "GitExtensionsResetHardForegroundBrush", GetTextColor(resetHard, windowText));
         SetBrush(resources, "GitExtensionsDiffEditorBackgroundBrush", editor);
         SetBrush(resources, "GitExtensionsDiffTextBrush", windowText);
         SetBrush(resources, "GitExtensionsDiffLineNumberBackgroundBrush", GetAppColor(settings, AppColor.LineNumberBackground));
@@ -212,6 +227,35 @@ internal static class AvaloniaThemeResources
         byte b = (byte)Math.Round(from.B + ((to.B - from.B) * amount));
         return DrawingColor.FromArgb(a, r, g, b);
     }
+
+    private static DrawingColor GetTextColor(DrawingColor background, DrawingColor preferred)
+    {
+        const double minimumContrastRatio = 4.5;
+
+        if (GetContrastRatio(background, preferred) >= minimumContrastRatio)
+        {
+            return preferred;
+        }
+
+        DrawingColor black = DrawingColor.Black;
+        DrawingColor white = DrawingColor.White;
+        return GetContrastRatio(background, black) >= GetContrastRatio(background, white)
+            ? black
+            : white;
+    }
+
+    private static double GetContrastRatio(DrawingColor first, DrawingColor second)
+    {
+        double firstLuminance = GetRelativeLuminance(first);
+        double secondLuminance = GetRelativeLuminance(second);
+        return (Math.Max(firstLuminance, secondLuminance) + 0.05)
+            / (Math.Min(firstLuminance, secondLuminance) + 0.05);
+    }
+
+    private static double GetRelativeLuminance(DrawingColor color)
+        => (0.2126 * SrgbLinearize(color.R))
+            + (0.7152 * SrgbLinearize(color.G))
+            + (0.0722 * SrgbLinearize(color.B));
 
     private static DrawingColor Dim(DrawingColor color, DrawingColor background)
     {
