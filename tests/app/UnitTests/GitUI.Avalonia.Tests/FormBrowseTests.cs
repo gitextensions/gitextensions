@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia.Controls;
@@ -21,6 +21,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
+using GitUI.LeftPanel;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -134,6 +135,49 @@ public sealed class FormBrowseTests
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task FormBrowse_should_load_stashes_into_the_left_panel_and_select_their_revision()
+    {
+        bool originalShowStashes = AppSettings.ShowStashes;
+        bool originalShowStashTree = AppSettings.RepoObjectsTreeShowStashes;
+        FormBrowse? form = null;
+        try
+        {
+            AppSettings.ShowStashes = true;
+            AppSettings.RepoObjectsTreeShowStashes = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "stashed");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("stash") { "push", "-m", "older left panel".Quote() });
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "stashed again");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("stash") { "push", "-m", "latest left panel".Quote() });
+            IReadOnlyCollection<GitRevision> stashes = new RevisionReader(module).GetStashes(CancellationToken.None);
+            GitRevision olderStash = stashes.Last();
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            RepoObjectsTree repoObjectsTree = form.FindControl<RepoObjectsTree>("repoObjectsTree")!;
+            RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
+
+            await WaitUntilAsync(() => accessor.Tree.Items.Count == 4);
+            TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
+            await WaitUntilAsync(() => stashRoot.Items.Count == 2);
+            TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Last();
+
+            accessor.Tree.SelectedItem = stashItem;
+
+            await WaitUntilAsync(() => revisionGrid.SelectedRevision?.ObjectId == olderStash.ObjectId);
+            repoObjectsTree.SelectedRevisionObjectId.Should().Be(olderStash.ObjectId);
+            revisionGrid.SelectedRevision!.ReflogSelector.Should().Be("refs/stash@{1}");
+        }
+        finally
+        {
+            form?.Close();
+            AppSettings.ShowStashes = originalShowStashes;
+            AppSettings.RepoObjectsTreeShowStashes = originalShowStashTree;
         }
     }
 

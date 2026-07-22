@@ -17,6 +17,7 @@ using GitUI.Models;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 using ResourceManager;
 using ResourceManager.Hotkey;
@@ -114,11 +115,13 @@ public sealed partial class FormBrowse : GitModuleForm
         RevisionGrid.UICommandsSource = this;
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
+        repoObjectsTree.UICommandsSource = this;
         _consoleEmulatorsRegistry = UICommands.GetService(typeof(IConsoleEmulatorsRegistry)) as IConsoleEmulatorsRegistry;
         _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
+        RevisionGrid.RevisionsLoading += RefreshLeftPanel;
         RevisionGrid.RevisionFilterRequested += (_, _) => ToolStripFilters.SetFocus();
         ToolStripFilters.Bind(() => Module, RevisionGrid);
         revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => string.Empty, refreshGitStatus: null);
@@ -261,15 +264,6 @@ public sealed partial class FormBrowse : GitModuleForm
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
             lblStatus.Text = $"git: {GitVersion.Current}";
             RevisionGrid.ReloadRevisions(module);
-
-            CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
-            _loadOperations.FileAndForget(async () =>
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                IReadOnlyList<IGitRef> refs = module.GetRefs(RefsFilter.NoFilter);
-                await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-                repoObjectsTree.SetRefs(refs);
-            });
         }
         else
         {
@@ -552,10 +546,24 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void RepoObjectsTree_SelectionChanged(object? sender, EventArgs e)
     {
-        if (repoObjectsTree.SelectedRef is IGitRef gitRef)
+        if (repoObjectsTree.SelectedRevisionObjectId is ObjectId objectId)
         {
-            RevisionGrid.SelectRevision(gitRef.ObjectId);
+            RevisionGrid.SelectRevision(objectId);
         }
+    }
+
+    private void RefreshLeftPanel(object? sender, UserControls.RevisionGrid.RevisionLoadEventArgs e)
+    {
+        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
+        _loadOperations.FileAndForget(async () =>
+        {
+            await TaskScheduler.Default;
+            cancellationToken.ThrowIfCancellationRequested();
+            IReadOnlyList<IGitRef> refs = e.GetRefs(RefsFilter.NoFilter);
+            IReadOnlyCollection<GitRevision> stashes = e.GetStashRevs.Value;
+            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            repoObjectsTree.SetRefs(refs, stashes);
+        });
     }
 
     private void RevisionGrid_SelectionChanged(object? sender, EventArgs e)

@@ -179,6 +179,12 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     /// <summary>Occurs when the selected revision is double-clicked.</summary>
     public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
 
+    /// <summary>Occurs when refs and stash revisions for a reload become available.</summary>
+    public event EventHandler<RevisionLoadEventArgs>? RevisionsLoading;
+
+    /// <summary>Occurs after the corresponding revision reload reaches the UI.</summary>
+    public event EventHandler<RevisionLoadEventArgs>? RevisionsLoaded;
+
     private MenuItem GotoCurrentRevisionMenuItem => GetMenuItem(navigateToolStripMenuItem, "GotoCurrentRevision");
     private MenuItem GotoChildCommitMenuItem => GetMenuItem(navigateToolStripMenuItem, "GotoChildCommit");
     private MenuItem GotoParentCommitMenuItem => GetMenuItem(navigateToolStripMenuItem, "GotoParentCommit");
@@ -392,11 +398,14 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     }
 
     /// <summary>
-    ///  Selects and scrolls to the given revision if it is loaded.
+    ///  Selects and scrolls to the given revision, or retains it until the active load reaches it.
     /// </summary>
     public void SelectRevision(ObjectId objectId)
     {
-        SetSelectedRevision(objectId);
+        if (!SetSelectedRevision(objectId))
+        {
+            _pendingSelectedObjectId = objectId;
+        }
     }
 
     /// <summary>Removes the row context menu, like the WinForms grid method.</summary>
@@ -1177,7 +1186,14 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         lstRevisions.ItemsSource = null;
         lblLoadingStatus.Text = "Loading…";
 
-        RevisionObserver observer = new(this, cancellationToken);
+        Lazy<IReadOnlyList<IGitRef>> refs = new(() => module.GetRefs(RefsFilter.NoFilter));
+        Lazy<IReadOnlyCollection<GitRevision>> stashes = new(() =>
+            !AppSettings.ShowStashes || module.IsBareRepository()
+                ? []
+                : new RevisionReader(module).GetStashes(cancellationToken));
+        RevisionLoadEventArgs loadEventArgs = new(this, UICommands, refs, stashes, forceRefresh: true);
+        RevisionObserver observer = new(this, cancellationToken, loadEventArgs);
+        RevisionsLoading?.Invoke(this, loadEventArgs);
         _taskManager.FileAndForget(async () =>
         {
             SuperProjectInfo? superProjectInfo = await GetSuperprojectCheckoutAsync(module).ConfigureAwait(false);
@@ -1194,23 +1210,24 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         {
             // Like the WinForms grid: fetch the refs first so they can be attached to the
             // revisions as they stream in (ref labels; square graph nodes).
-            IReadOnlyList<IGitRef> refs = module.GetRefs(RefsFilter.NoFilter);
+            IReadOnlyList<IGitRef> loadedRefs = refs.Value;
             string selectedBranch = module.GetSelectedBranch(emptyIfDetached: true);
-            IGitRef? selectedRef = refs.FirstOrDefault(
+            IGitRef? selectedRef = loadedRefs.FirstOrDefault(
                 gitRef => gitRef.IsHead && gitRef.Name == selectedBranch);
             if (selectedRef is not null)
             {
                 selectedRef.IsSelected = true;
-                refs.FirstOrDefault(
+                loadedRefs.FirstOrDefault(
                     gitRef => gitRef.IsRemote
                         && gitRef.Remote == selectedRef.TrackingRemote
                         && gitRef.LocalName == selectedRef.MergeWith)
                     ?.IsSelectedHeadMergeSource = true;
             }
 
-            _refsByObjectId = refs
+            _refsByObjectId = loadedRefs
                 .Where(gitRef => !gitRef.ObjectId.IsZero)
                 .ToLookup(gitRef => gitRef.ObjectId);
+            observer.InitializeStashes(stashes.Value);
 
             RevisionReader reader = new(module);
             bool hasNotes = AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes;
@@ -1561,12 +1578,32 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         }
     }
 
-    private sealed class RevisionObserver(RevisionGridControl owner, CancellationToken cancellationToken) : IObserver<IReadOnlyList<GitRevision>>
+    private sealed class RevisionObserver(
+        RevisionGridControl owner,
+        CancellationToken cancellationToken,
+        RevisionLoadEventArgs loadEventArgs) : IObserver<IReadOnlyList<GitRevision>>
     {
+        private Dictionary<ObjectId, GitRevision>? _stashesById;
+        private ILookup<ObjectId, GitRevision>? _stashesByParentId;
+
+        public void InitializeStashes(IReadOnlyCollection<GitRevision> stashes)
+        {
+            foreach (GitRevision stash in stashes.Where(stash => !stash.FirstParentId.IsZero))
+            {
+                stash.ParentIds = [stash.FirstParentId];
+            }
+
+            _stashesById = stashes.ToDictionary(stash => stash.ObjectId);
+            _stashesByParentId = stashes
+                .Where(stash => !stash.FirstParentId.IsZero)
+                .ToLookup(stash => stash.FirstParentId);
+        }
+
         public void OnNext(IReadOnlyList<GitRevision> value)
         {
-            owner.AddToGraph(value, cancellationToken);
-            Dispatcher.UIThread.Post(() => owner.AppendRevisions(value, cancellationToken));
+            IReadOnlyList<GitRevision> revisions = AddStashRevisions(value);
+            owner.AddToGraph(revisions, cancellationToken);
+            Dispatcher.UIThread.Post(() => owner.AppendRevisions(revisions, cancellationToken));
         }
 
         public void OnCompleted()
@@ -1579,11 +1616,49 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
             int lastRowIndex = owner._revisionGraph.Count - 1;
             owner._revisionGraph.CacheTo(lastRowIndex, lastRowIndex, cancellationToken);
 
-            Dispatcher.UIThread.Post(() => owner.OnLoadingCompleted(cancellationToken, artificialRevisions));
+            Dispatcher.UIThread.Post(() =>
+            {
+                owner.OnLoadingCompleted(cancellationToken, artificialRevisions);
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    owner.RevisionsLoaded?.Invoke(owner, loadEventArgs);
+                }
+            });
         }
 
         public void OnError(Exception error)
             => Dispatcher.UIThread.Post(() => owner.OnLoadingError(error, cancellationToken));
+
+        private IReadOnlyList<GitRevision> AddStashRevisions(IReadOnlyList<GitRevision> revisions)
+        {
+            if (_stashesById is not { Count: > 0 } stashesById)
+            {
+                return revisions;
+            }
+
+            List<GitRevision> revisionsWithStashes = new(revisions.Count + stashesById.Count);
+            foreach (GitRevision revision in revisions)
+            {
+                if (stashesById.Remove(revision.ObjectId, out GitRevision? stash))
+                {
+                    revision.ReflogSelector = stash.ReflogSelector;
+                }
+                else if (_stashesByParentId is not null)
+                {
+                    foreach (GitRevision parentStash in _stashesByParentId[revision.ObjectId])
+                    {
+                        if (stashesById.Remove(parentStash.ObjectId))
+                        {
+                            revisionsWithStashes.Add(parentStash);
+                        }
+                    }
+                }
+
+                revisionsWithStashes.Add(revision);
+            }
+
+            return revisionsWithStashes;
+        }
     }
 
     /// <summary>One provider-shaped row recycled by the virtualizing panel.</summary>
