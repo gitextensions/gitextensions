@@ -17,7 +17,13 @@ internal static class AvaloniaTranslationUtils
     {
         foreach ((_, object item) in TranslationUtils.GetObjFields(host, "$this"))
         {
-            if (item is not TextBlock textBlock || textBlock.Text is not string text)
+            TextBlock? textBlock = item switch
+            {
+                TextBlock fieldTextBlock => fieldTextBlock,
+                ContentControl { Content: TextBlock contentTextBlock } => contentTextBlock,
+                _ => null,
+            };
+            if (textBlock?.Text is not string text)
             {
                 continue;
             }
@@ -97,7 +103,7 @@ internal static class AvaloniaTranslationUtils
                 {
                     SetAvaloniaText(item, convertMnemonics ? ToAvaloniaMnemonics(translatedText) : translatedText);
                 }
-                else if (item is TextBlock)
+                else if (item is TextBlock or ContentControl { Content: TextBlock })
                 {
                     // English XLF targets are intentionally empty, so the source AXAML is
                     // also the display fallback and still needs its access marker removed.
@@ -143,6 +149,9 @@ internal static class AvaloniaTranslationUtils
             case HeaderedItemsControl headeredItemsControl:
                 text = headeredItemsControl.Header as string;
                 return true;
+            case ContentControl { Content: TextBlock contentTextBlock }:
+                text = GetTextBlockSource(contentTextBlock);
+                return true;
             case ContentControl contentControl:
                 text = contentControl.Content as string;
                 return true;
@@ -173,6 +182,9 @@ internal static class AvaloniaTranslationUtils
                 break;
             case HeaderedItemsControl headeredItemsControl:
                 headeredItemsControl.Header = text;
+                break;
+            case ContentControl { Content: TextBlock contentTextBlock }:
+                contentTextBlock.Text = RemoveAvaloniaMnemonics(text);
                 break;
             case ContentControl contentControl:
                 contentControl.Content = text;

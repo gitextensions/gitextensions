@@ -453,6 +453,7 @@ public partial class RepoObjectsTree : GitModuleControl
         AddAction(RepoAction.RebaseRemote, "RemoteBranchMenuItemsStrings", "Rebase", "&Rebase current branch on this remote branch...", Images.Rebase);
         AddAction(RepoAction.RebaseTag, "TagMenuItemsStrings", "Rebase", "&Rebase current branch on this tag revision...", Images.Rebase);
         AddAction(RepoAction.CreateBranch, "MenuItemsStrings", "CreateBranch", "Create &branch...", Images.Branch);
+        AddAction(RepoAction.Reset, "MenuItemsStrings", "Reset", "Re&set current branch to here...", Images.ResetCurrentBranchToHere);
         AddAction(RepoAction.RenameBranch, "MenuItemsStrings", "Rename", "R&ename branch...", Images.Renamed);
         AddAction(RepoAction.DeleteBranch, "BranchMenuItemsStrings", "Delete", "&Delete branch...", Images.BranchDelete);
         AddAction(RepoAction.DeleteTag, "TagMenuItemsStrings", "Delete", "&Delete tag...", Images.BranchDelete);
@@ -571,6 +572,7 @@ public partial class RepoObjectsTree : GitModuleControl
         {
             case LocalBranchNode localBranch:
                 SetActionVisible(RepoAction.CreateBranch, canChangeWorkingTree);
+                SetActionVisible(RepoAction.Reset, canChangeWorkingTree);
                 SetActionVisible(RepoAction.RenameBranch, canChangeWorkingTree);
                 if (!localBranch.IsCurrent)
                 {
@@ -586,6 +588,7 @@ public partial class RepoObjectsTree : GitModuleControl
                 SetActionVisible(RepoAction.Merge, canChangeWorkingTree);
                 SetActionVisible(RepoAction.RebaseRemote, canChangeWorkingTree);
                 SetActionVisible(RepoAction.CreateBranch, canChangeWorkingTree);
+                SetActionVisible(RepoAction.Reset, canChangeWorkingTree);
                 SetActionVisible(RepoAction.FetchBranch, canRunCommands);
                 SetActionVisible(RepoAction.FetchMerge, canChangeWorkingTree);
                 SetActionVisible(RepoAction.FetchCheckout, canChangeWorkingTree);
@@ -596,6 +599,7 @@ public partial class RepoObjectsTree : GitModuleControl
                 SetActionVisible(RepoAction.Merge, canChangeWorkingTree);
                 SetActionVisible(RepoAction.RebaseTag, canChangeWorkingTree);
                 SetActionVisible(RepoAction.CreateBranch, canChangeWorkingTree);
+                SetActionVisible(RepoAction.Reset, canChangeWorkingTree);
                 SetActionVisible(RepoAction.DeleteTag, canRunCommands);
                 break;
             case BranchPathNode:
@@ -720,6 +724,7 @@ public partial class RepoObjectsTree : GitModuleControl
                 }
 
                 break;
+            case RepoAction.Reset: ((BaseRevisionNode)SelectedNode!).Reset(); break;
             case RepoAction.RenameBranch: ((LocalBranchNode)SelectedNode!).Rename(); break;
             case RepoAction.DeleteBranch: ((LocalBranchNode)SelectedNode!).Delete(); break;
             case RepoAction.DeleteTag: ((TagNode)SelectedNode!).Delete(); break;
@@ -882,6 +887,7 @@ public partial class RepoObjectsTree : GitModuleControl
         RebaseRemote,
         RebaseTag,
         CreateBranch,
+        Reset,
         RenameBranch,
         DeleteBranch,
         DeleteTag,
