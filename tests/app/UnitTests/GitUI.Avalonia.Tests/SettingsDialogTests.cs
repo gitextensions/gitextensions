@@ -1,7 +1,8 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
@@ -14,6 +15,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -1065,6 +1067,178 @@ public sealed class SettingsDialogTests
             nameof(ConsoleStyleSettingsPage), "consoleFontResetButton", "toolTip", Arg.Any<string>());
         Avalonia.Controls.ToolTip.GetTip(page.GetTestAccessor().ConsoleFontReset)
             .Should().Be("Reset to default");
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_register_and_navigate_to_the_scripts_page()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        ScriptsSettingsPage scripts = accessor.SettingsTreeView.SettingsPages
+            .OfType<ScriptsSettingsPage>()
+            .Single();
+
+        TreeView tree = accessor.SettingsTreeView.FindControl<TreeView>("treeView1")
+            ?? throw new InvalidOperationException("The settings tree was not created.");
+        tree.Items
+            .OfType<TreeViewItem>()
+            .SelectMany(node => node.Items.OfType<TreeViewItem>())
+            .Select(node => node.Tag)
+            .Should().Contain(scripts);
+
+        form.GotoPage(ScriptsSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(scripts);
+        scripts.GetTitle().Should().Be("Scripts");
+    }
+
+    [AvaloniaTest]
+    public void Scripts_settings_should_roundtrip_every_serialized_field()
+    {
+        ScriptInfo original = new()
+        {
+            Enabled = false,
+            HotkeyCommandIdentifier = 9017,
+            Name = "Original",
+            Command = "git",
+            Arguments = "status",
+            AskConfirmation = false,
+            IsPowerShell = false,
+            OnEvent = ScriptEvent.BeforeCommit,
+            AddToRevisionGridContextMenu = false,
+            RunInBackground = false,
+            Icon = "Pull",
+            IconFilePath = "old-icon.png",
+        };
+        System.ComponentModel.BindingList<ScriptInfo> scripts = [original];
+        IScriptsManager manager = Substitute.For<IScriptsManager>();
+        manager.GetScripts().Returns(scripts);
+        manager.SerializeIntoXml().Returns("<serialized-scripts />");
+        IServiceProvider services = Substitute.For<IServiceProvider>();
+        services.GetService(typeof(IScriptsManager)).Returns(manager);
+        string? originalOwnScripts = AppSettings.OwnScripts;
+
+        try
+        {
+            ScriptsSettingsPage page = new(services);
+            page.LoadSettings();
+            ScriptsSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+            accessor.OnEvent.Items.Cast<ScriptEvent>().Should().Equal(Enum.GetValues<ScriptEvent>());
+
+            accessor.Name.Text = "Updated";
+            accessor.Enabled.IsChecked = true;
+            accessor.Command.Text = "pwsh";
+            accessor.Arguments.Text = "-File test.ps1";
+            accessor.OnEvent.SelectedItem = ScriptEvent.AfterPush;
+            accessor.SelectIcon("Push");
+            accessor.IconFilePath.Text = "new-icon.png";
+            accessor.AskConfirmation.IsChecked = true;
+            accessor.RunInBackground.IsChecked = true;
+            accessor.IsPowerShell.IsChecked = true;
+            accessor.AddToRevisionGridContextMenu.IsChecked = true;
+
+            page.SaveSettings();
+
+            ScriptInfo saved = scripts.Should().ContainSingle().Subject;
+            saved.Enabled.Should().BeTrue();
+            saved.HotkeyCommandIdentifier.Should().Be(9017);
+            saved.Name.Should().Be("Updated");
+            saved.Command.Should().Be("pwsh");
+            saved.Arguments.Should().Be("-File test.ps1");
+            saved.AskConfirmation.Should().BeTrue();
+            saved.IsPowerShell.Should().BeTrue();
+            saved.OnEvent.Should().Be(ScriptEvent.AfterPush);
+            saved.AddToRevisionGridContextMenu.Should().BeTrue();
+            saved.RunInBackground.Should().BeTrue();
+            saved.Icon.Should().Be("Push");
+            saved.IconFilePath.Should().Be("new-icon.png");
+            AppSettings.OwnScripts.Should().Be("<serialized-scripts />");
+        }
+        finally
+        {
+            AppSettings.OwnScripts = originalOwnScripts;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Scripts_settings_should_preserve_order_and_allocate_stable_user_hotkey_ids()
+    {
+        System.ComponentModel.BindingList<ScriptInfo> scripts =
+        [
+            new ScriptInfo { Name = "First", HotkeyCommandIdentifier = 9001 },
+            new ScriptInfo { Name = "Second", HotkeyCommandIdentifier = 9010 },
+        ];
+        IScriptsManager manager = Substitute.For<IScriptsManager>();
+        manager.GetScripts().Returns(scripts);
+        manager.SerializeIntoXml().Returns("<ordered-scripts />");
+        IServiceProvider services = Substitute.For<IServiceProvider>();
+        services.GetService(typeof(IScriptsManager)).Returns(manager);
+        string? originalOwnScripts = AppSettings.OwnScripts;
+
+        try
+        {
+            ScriptsSettingsPage page = new(services);
+            page.LoadSettings();
+            ScriptsSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+
+            accessor.Select(0);
+            accessor.MoveDown.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            accessor.Add.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            accessor.Scripts.Select(script => script.Name).Should().Equal("Second", "First", "<New Script>");
+            accessor.Scripts[^1].HotkeyCommandIdentifier.Should().Be(9011);
+            accessor.Delete.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            page.SaveSettings();
+
+            scripts.Select(script => script.Name).Should().Equal("Second", "First");
+            scripts.Select(script => script.HotkeyCommandIdentifier).Should().Equal(9010, 9001);
+        }
+        finally
+        {
+            AppSettings.OwnScripts = originalOwnScripts;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Scripts_settings_should_preserve_original_translation_keys_and_help_content()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        ScriptsSettingsPage page = new();
+
+        page.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(ScriptsSettingsPage), "_scriptSettingsPageHelpDisplayArgumentsHelp", "Text", "Arguments help");
+        translation.Received(1).AddTranslationItem(
+            nameof(ScriptsSettingsPage), "_scriptSettingsPageHelpDisplayContent", "Text", Arg.Is<string>(text =>
+                text.Contains("{SelectedRelativePaths}", StringComparison.Ordinal)
+                && text.Contains("{ColumnNumber}", StringComparison.Ordinal)));
+        page.GetTestAccessor().ArgumentsHelp.Content.Should().Be("?");
+    }
+
+    [AvaloniaTest]
+    public void Simple_help_display_should_apply_its_title_and_content_when_opened()
+    {
+        SimpleHelpDisplayDialog dialog = new()
+        {
+            DialogTitle = "Arguments help",
+            ContentText = "{WorkingDir}",
+        };
+        dialog.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            dialog.Title.Should().Be("Arguments help");
+            dialog.ContentTextBox.Text.Should().Be("{WorkingDir}");
+            dialog.ContentTextBox.CaretIndex.Should().Be(0);
+            dialog.CaptureRenderedFrame().Should().NotBeNull();
+        }
+        finally
+        {
+            dialog.Close();
+        }
     }
 
     private static IConsoleEmulator CreateConsoleEmulator(

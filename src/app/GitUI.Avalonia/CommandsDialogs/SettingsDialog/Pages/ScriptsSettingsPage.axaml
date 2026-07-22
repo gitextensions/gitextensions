@@ -1,0 +1,135 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:compat="using:GitUI.Compat"
+                                 xmlns:properties="using:GitUI.Properties"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ScriptsSettingsPage"
+                                 Text="Scripts">
+  <settings:SettingsPageWithHeader.Styles>
+    <Style Selector="TextBlock.script-disabled">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
+    </Style>
+  </settings:SettingsPageWithHeader.Styles>
+  <Grid x:Name="tableLayoutPanel1"
+        Margin="8"
+        RowDefinitions="260,8,*">
+    <Grid x:Name="panel2"
+          ColumnDefinitions="*,36">
+      <Border BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+              BorderThickness="1">
+        <Grid RowDefinitions="24,*">
+          <Grid Background="{DynamicResource GitExtensionsSectionHeaderBrush}"
+                ColumnDefinitions="28,24,200,130,*">
+            <TextBlock x:Name="chdrNames"
+                       Grid.Column="2"
+                       Margin="5,0"
+                       VerticalAlignment="Center"
+                       Text="Name" />
+            <TextBlock x:Name="chdrEvents"
+                       Grid.Column="3"
+                       Margin="5,0"
+                       VerticalAlignment="Center"
+                       Text="Event" />
+            <TextBlock x:Name="chdrCommand"
+                       Grid.Column="4"
+                       Margin="5,0"
+                       VerticalAlignment="Center"
+                       Text="Command" />
+          </Grid>
+          <ListBox x:Name="lvScripts"
+                   Grid.Row="1"
+                   SelectionMode="Single" />
+        </Grid>
+      </Border>
+      <StackPanel x:Name="panelButtons"
+                  Grid.Column="1"
+                  Margin="6,0,0,0"
+                  Spacing="6">
+        <compat:IconButton x:Name="btnAdd"
+                           Classes="gitextensions-icon-only"
+                           Width="26"
+                           Height="26"
+                           Icon="{x:Static properties:Images.RemoteAdd}" />
+        <compat:IconButton x:Name="btnDelete"
+                           Classes="gitextensions-icon-only"
+                           Width="26"
+                           Height="26"
+                           Icon="{x:Static properties:Images.RemoteDelete}" />
+        <compat:IconButton x:Name="btnMoveUp"
+                           Classes="gitextensions-icon-only"
+                           Width="26"
+                           Height="26"
+                           IsEnabled="False"
+                           Icon="{x:Static properties:Images.ArrowUp}" />
+        <compat:IconButton x:Name="btnMoveDown"
+                           Classes="gitextensions-icon-only"
+                           Width="26"
+                           Height="26"
+                           IsEnabled="False"
+                           Icon="{x:Static properties:Images.ArrowDown}" />
+        <Button x:Name="btnArgumentsHelp"
+                Width="26"
+                Height="26"
+                Padding="0"
+                Content="?" />
+      </StackPanel>
+    </Grid>
+
+    <ScrollViewer x:Name="propertyGrid1"
+                  Grid.Row="2"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+      <StackPanel Spacing="8">
+        <GroupBox x:Name="_NO_TRANSLATE_gbxScript" Header="Script">
+          <Grid Margin="8,4,8,8"
+                ColumnDefinitions="180,*,Auto"
+                RowDefinitions="Auto,Auto,Auto,72,Auto,Auto,Auto"
+                RowSpacing="5">
+            <TextBlock x:Name="_NO_TRANSLATE_lblName" VerticalAlignment="Center" Text="Name" />
+            <TextBox x:Name="txtName" Grid.Column="1" Grid.ColumnSpan="2" />
+
+            <TextBlock x:Name="_NO_TRANSLATE_lblEnabled" Grid.Row="1" VerticalAlignment="Center" Text="Enabled" />
+            <CheckBox x:Name="chkEnabled" Grid.Row="1" Grid.Column="1" />
+
+            <TextBlock x:Name="_NO_TRANSLATE_lblCommand" Grid.Row="2" VerticalAlignment="Center" Text="Command" />
+            <TextBox x:Name="txtCommand" Grid.Row="2" Grid.Column="1" />
+            <Button x:Name="btnBrowseCommand" Grid.Row="2" Grid.Column="2" Margin="5,0,0,0" Content="..." />
+
+            <TextBlock x:Name="_NO_TRANSLATE_lblArguments" Grid.Row="3" VerticalAlignment="Top" Text="Arguments" />
+            <TextBox x:Name="txtArguments"
+                     Grid.Row="3"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="2"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+
+            <TextBlock x:Name="_NO_TRANSLATE_lblOnEvent" Grid.Row="4" VerticalAlignment="Center" Text="Execute on event" />
+            <ComboBox x:Name="cbxOnEvent" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
+
+            <TextBlock x:Name="_NO_TRANSLATE_lblIcon" Grid.Row="5" VerticalAlignment="Center" Text="Icon" />
+            <ComboBox x:Name="cbxIcon" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" />
+
+            <TextBlock x:Name="_NO_TRANSLATE_lblIconFilePath" Grid.Row="6" VerticalAlignment="Center" Text="Icon or associated file path" />
+            <TextBox x:Name="txtIconFilePath" Grid.Row="6" Grid.Column="1" />
+            <Button x:Name="btnBrowseIcon" Grid.Row="6" Grid.Column="2" Margin="5,0,0,0" Content="..." />
+          </Grid>
+        </GroupBox>
+
+        <GroupBox x:Name="_NO_TRANSLATE_gbxScriptBehaviour" Header="Script behaviour">
+          <StackPanel Margin="8,4,8,8" Spacing="4">
+            <CheckBox x:Name="chkAskConfirmation" Content="Ask confirmation" />
+            <CheckBox x:Name="chkRunInBackground" Content="Run in background" />
+            <CheckBox x:Name="chkIsPowerShell" Content="Is PowerShell script" />
+          </StackPanel>
+        </GroupBox>
+
+        <GroupBox x:Name="_NO_TRANSLATE_gbxScriptContext" Header="Script context">
+          <CheckBox x:Name="chkAddToRevisionGridContextMenu"
+                    Margin="8,4,8,8"
+                    Content="Show in RevisionGrid" />
+        </GroupBox>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</settings:SettingsPageWithHeader>
