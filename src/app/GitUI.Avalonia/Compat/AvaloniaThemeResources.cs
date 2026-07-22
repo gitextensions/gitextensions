@@ -56,11 +56,13 @@ internal static class AvaloniaThemeResources
         DrawingColor resetSoft = DrawingColor.FromArgb(128, 255, 128);
         DrawingColor resetMixed = DrawingColor.FromArgb(255, 255, 128);
         DrawingColor resetHard = DrawingColor.FromArgb(255, 128, 128);
+        DrawingColor warningPanel = DrawingColor.FromArgb(230, 99, 99);
         if (isDark)
         {
             resetSoft = Dim(resetSoft, editor);
             resetMixed = Dim(resetMixed, editor);
             resetHard = Dim(resetHard, editor);
+            warningPanel = Dim(warningPanel, panel);
         }
 
         SetBrush(resources, "ThemeBackgroundBrush", panel);
@@ -90,6 +92,8 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsResetSoftForegroundBrush", GetTextColor(resetSoft, windowText));
         SetBrush(resources, "GitExtensionsResetMixedForegroundBrush", GetTextColor(resetMixed, windowText));
         SetBrush(resources, "GitExtensionsResetHardForegroundBrush", GetTextColor(resetHard, windowText));
+        SetBrush(resources, "GitExtensionsWarningPanelBackgroundBrush", warningPanel);
+        SetBrush(resources, "GitExtensionsWarningPanelForegroundBrush", GetTextColor(warningPanel, windowText));
         SetBrush(resources, "GitExtensionsDiffEditorBackgroundBrush", editor);
         SetBrush(resources, "GitExtensionsDiffTextBrush", windowText);
         SetBrush(resources, "GitExtensionsDiffLineNumberBackgroundBrush", GetAppColor(settings, AppColor.LineNumberBackground));

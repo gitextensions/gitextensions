@@ -16,6 +16,7 @@ public class SelectedLineEventArgs : EventArgs
 /// </summary>
 public interface IFileViewer
 {
+    event EventHandler? TextChanged;
     event EventHandler<SelectedLineEventArgs>? SelectedLineChanged;
     event EventHandler? TextLoaded;
 

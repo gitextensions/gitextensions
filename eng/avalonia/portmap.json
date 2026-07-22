@@ -695,6 +695,12 @@
     "basedOn": "090464d5f5c350497427ad5b4717651df9c4f4d2",
     "notes": "Linked unchanged; lost-object diagnostics, commit metadata, annotated-tag parsing, blob timestamps, and object-type classification are framework-neutral."
   },
+  "src/app/GitUI/CommandsDialogs/FormEditor.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormEditor.axaml.cs",
+    "status": "parity",
+    "basedOn": "57d3739f1eb87b5b3fed33138b51ec0ee5a173f6",
+    "notes": "Retains the disk-backed file editor, requested-line navigation, read-only and warning modes, dirty/save state, Ctrl+S, close confirmation, safe writes, and original encoding-preamble behavior. GitUICommands.StartFileEditorDialog is live; top-level fileeditor command dispatch remains owned by the separate entry-point/lifetime subphase."
+  },
   "src/app/GitUI/CommandsDialogs/FormCreateTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateTag.axaml.cs",
     "status": "functional",
