@@ -18,6 +18,8 @@ using GitUI.HelperDialogs;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JenkinsIntegration;
+using JenkinsIntegration.Settings;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 
@@ -30,7 +32,11 @@ public sealed class BuildServerIntegrationTests
     public void OneTimeSetUp()
     {
         GitUI.ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
-        ManagedExtensibility.Initialise([typeof(AppVeyorIntegrationMetadata).Assembly]);
+        ManagedExtensibility.Initialise(
+        [
+            typeof(AppVeyorIntegrationMetadata).Assembly,
+            typeof(JenkinsIntegrationMetadata).Assembly,
+        ]);
     }
 
     [SetUp]
@@ -93,7 +99,8 @@ public sealed class BuildServerIntegrationTests
             pageAccessor.checkBoxShowBuildResultPage.IsChecked.Should().BeTrue();
             pageAccessor.BuildServerType.SelectedIndex.Should().Be(0);
             string[] buildServerTypes = [.. pageAccessor.BuildServerType.Items.Cast<string>()];
-            buildServerTypes.Should().Equal("None", "AppVeyor");
+            buildServerTypes.Should().StartWith("None");
+            buildServerTypes[1..].Should().BeEquivalentTo("AppVeyor", "Jenkins");
             pageAccessor.buildServerSettingsPanel.Content.Should().BeNull(
                 "the parameterless settings form intentionally has no repository module");
 
@@ -116,6 +123,54 @@ public sealed class BuildServerIntegrationTests
             form.GotoPage(new SettingsPageReferenceByType(typeof(SettingsPlaceholderPage)));
             form.Close();
         }
+    }
+
+    [AvaloniaTest]
+    public void Jenkins_settings_control_should_be_a_native_export_and_round_trip_settings()
+    {
+        Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata> export = ManagedExtensibility
+            .GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>()
+            .Single(item => item.Metadata.BuildServerType == "Jenkins");
+        JenkinsSettingsUserControl control = export.Value.Should()
+            .BeAssignableTo<Control>()
+            .Which.Should()
+            .BeOfType<JenkinsSettingsUserControl>()
+            .Subject;
+        TextBox serverUrl = control.FindControl<TextBox>("JenkinsServerUrl")!;
+        TextBox projectName = control.FindControl<TextBox>("JenkinsProjectName")!;
+        TextBox ignoreBuildBranch = control.FindControl<TextBox>("IgnoreBuildBranch")!;
+
+        ITranslation translation = Substitute.For<ITranslation>();
+        control.AddTranslationItems(translation);
+        translation.Received(1).AddTranslationItem(
+            nameof(JenkinsSettingsUserControl), "lblJenkinsServerUrl", "Text", "Jenkins server URL");
+        translation.Received(1).AddTranslationItem(
+            nameof(JenkinsSettingsUserControl), "lblProjectName", "Text", "Project name");
+        translation.Received(1).AddTranslationItem(
+            nameof(JenkinsSettingsUserControl), "lblIgnoreBuildBranch", "Text", "Ignore build for branch");
+
+        TestSettingsSource settings = new();
+        control.Initialize("default-project", []);
+        control.LoadSettings(settings);
+        serverUrl.Text.Should().BeNullOrEmpty();
+        projectName.Text.Should().Be("default-project");
+        ignoreBuildBranch.Text.Should().BeNullOrEmpty();
+
+        settings.SetString("BuildServerUrl", "https://jenkins.example.test");
+        settings.SetString("ProjectName", "configured-project");
+        settings.SetString("IgnoreBuildBranch", "dependabot/*");
+        control.LoadSettings(settings);
+        serverUrl.Text.Should().Be("https://jenkins.example.test");
+        projectName.Text.Should().Be("configured-project");
+        ignoreBuildBranch.Text.Should().Be("dependabot/*");
+
+        serverUrl.Text = "https://saved.example.test";
+        projectName.Text = "saved-project";
+        ignoreBuildBranch.Text = string.Empty;
+        control.SaveSettings(settings);
+        settings.GetString("BuildServerUrl", null).Should().Be("https://saved.example.test");
+        settings.GetString("ProjectName", null).Should().Be("saved-project");
+        settings.GetString("IgnoreBuildBranch", null).Should().BeNull();
     }
 
     [AvaloniaTest]
