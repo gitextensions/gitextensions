@@ -241,6 +241,7 @@ public sealed class FormBrowseTests
         form.AddTranslationItems(translation);
 
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "manageWorktreeToolStripMenuItem", "Text", "Manage &worktrees...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripMenuItemReflog", "Text", "Show reflo&g...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripWorktrees", "ToolTipText", "Worktrees");
     }
 
