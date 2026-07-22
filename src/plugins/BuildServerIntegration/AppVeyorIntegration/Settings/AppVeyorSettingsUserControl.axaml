@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AppVeyorIntegration.Settings.AppVeyorSettingsUserControl"
+             MinWidth="320">
+  <Grid x:Name="tableLayoutPanel1"
+        ColumnDefinitions="Auto,*"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+        ColumnSpacing="6"
+        RowSpacing="2">
+    <TextBlock Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Account name" />
+    <TextBox x:Name="AppVeyorAccountName"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <TextBlock Grid.Row="1"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Api token" />
+    <TextBox x:Name="AppVeyorAccountToken"
+             Grid.Row="1"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <TextBlock Grid.Row="2"
+               Grid.Column="1"
+               Margin="3,0,3,10"
+               Text="Token used to be able to query AppVeyor rest Api. You will find out in the user account menu."
+               TextWrapping="Wrap" />
+
+    <TextBlock Grid.Row="3"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Project(s) Name(s)" />
+    <TextBox x:Name="AppVeyorProjectName"
+             Grid.Row="3"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <TextBlock Grid.Row="4"
+               Grid.Column="1"
+               Margin="3,0,3,10"
+               Text="If you want to use the result of different projects, separate your different projects names by a '|'."
+               TextWrapping="Wrap" />
+
+    <CheckBox x:Name="cbLoadTestResults"
+              Grid.Row="5"
+              Grid.Column="1"
+              Margin="3,2"
+              IsThreeState="True"
+              Content="Display test results in build status summary for each build result (network intensive!)" />
+
+    <StackPanel x:Name="flowLayoutPanel1"
+                Grid.Row="6"
+                Grid.Column="1" />
+  </Grid>
+</UserControl>
