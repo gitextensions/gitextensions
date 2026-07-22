@@ -5,7 +5,7 @@
              x:Class="GitUI.RevisionGridControl">
   <DockPanel>
     <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" />
-    <ListBox x:Name="lstRevisions" SelectionMode="Single">
+    <ListBox x:Name="lstRevisions" SelectionMode="Multiple">
       <ListBox.ContextMenu>
         <ContextMenu x:Name="revisionContextMenu">
           <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" />
@@ -64,6 +64,9 @@
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
           </MenuItem>
           <Separator x:Name="sepCommit" />
+          <MenuItem x:Name="cherryPickCommitToolStripMenuItem" Header="Cherr_y pick this commit...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CherryPick}" /></MenuItem.Icon>
+          </MenuItem>
           <MenuItem x:Name="archiveRevisionToolStripMenuItem" Header="Arch_ive this commit...">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ArchiveRevision}" /></MenuItem.Icon>
           </MenuItem>

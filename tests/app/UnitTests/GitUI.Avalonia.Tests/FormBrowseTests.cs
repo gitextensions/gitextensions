@@ -775,6 +775,8 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Create-tag menu item was not created.");
             MenuItem archiveRevision = revisionGrid.FindControl<MenuItem>("archiveRevisionToolStripMenuItem")
                 ?? throw new InvalidOperationException("Archive-revision menu item was not created.");
+            MenuItem cherryPick = revisionGrid.FindControl<MenuItem>("cherryPickCommitToolStripMenuItem")
+                ?? throw new InvalidOperationException("Cherry-pick menu item was not created.");
             MenuItem archive = form.FindControl<MenuItem>("archiveToolStripMenuItem")
                 ?? throw new InvalidOperationException("Archive menu item was not created.");
             CopyContextMenuItem copy = revisionGrid.FindControl<CopyContextMenuItem>("copyToClipboardToolStripMenuItem")
@@ -828,6 +830,7 @@ public sealed class FormBrowseTests
             deleteBranch.IsEnabled.Should().BeTrue();
             createTag.IsEnabled.Should().BeTrue();
             archiveRevision.IsVisible.Should().BeTrue();
+            cherryPick.IsVisible.Should().BeTrue();
             archive.IsEnabled.Should().BeTrue();
             copy.Items.Should().NotBeEmpty();
 
@@ -850,6 +853,7 @@ public sealed class FormBrowseTests
             createBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             createTag.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             archiveRevision.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            cherryPick.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             archive.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
             commands.Received(1).StartCheckoutBranch(form, "feature");
@@ -867,6 +871,9 @@ public sealed class FormBrowseTests
                 Arg.Is<GitRevision>(revision => revision.ObjectId == selectedObjectId),
                 null,
                 null);
+            commands.Received(1).StartCherryPickDialog(
+                form,
+                Arg.Is<IEnumerable<GitRevision>>(revisions => revisions.Single().ObjectId == selectedObjectId));
 
             bool originalDontConfirmRebase = AppSettings.DontConfirmRebase;
             try
