@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia.Controls;
@@ -17,10 +17,12 @@ using GitCommands.Git.Gpg;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
 using GitUI.LeftPanel;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
@@ -162,7 +164,7 @@ public sealed class FormBrowseTests
             RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
             RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
 
-            await WaitUntilAsync(() => accessor.Tree.Items.Count == 5);
+            await WaitUntilAsync(() => accessor.Tree.Items.Count == 6);
             TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
             await WaitUntilAsync(() => stashRoot.Items.Count == 2);
             TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Last();
@@ -179,6 +181,67 @@ public sealed class FormBrowseTests
             AppSettings.ShowStashes = originalShowStashes;
             AppSettings.RepoObjectsTreeShowStashes = originalShowStashTree;
         }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task FormBrowse_should_expose_loaded_worktrees_in_the_left_panel_and_toolbar()
+    {
+        bool originalShowWorktrees = AppSettings.RepoObjectsTreeShowWorktrees;
+        string linkedPath = $"{_workingDirectory}-linked";
+        FormBrowse? form = null;
+        try
+        {
+            AppSettings.RepoObjectsTreeShowWorktrees = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" });
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("worktree") { "add", "--quiet", linkedPath.Quote(), "feature" });
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            RepoObjectsTree repoObjectsTree = form.FindControl<RepoObjectsTree>("repoObjectsTree")!;
+            RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
+            IconSplitButton worktreeButton = form.FindControl<IconSplitButton>("toolStripWorktrees")!;
+
+            await WaitUntilAsync(() => worktreeButton.IsVisible);
+
+            TreeViewItem root = accessor.Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal));
+            HeaderText(root).Should().Be("Worktrees (2)");
+            root.Items.Cast<TreeViewItem>().Should().HaveCount(2);
+
+            MenuFlyout flyout = (MenuFlyout)worktreeButton.Flyout!;
+            flyout.ShowAt(worktreeButton);
+            Dispatcher.UIThread.RunJobs();
+            MenuItem[] worktreeItems = flyout.Items.OfType<MenuItem>().Take(2).ToArray();
+            worktreeItems.Should().HaveCount(2);
+            worktreeItems[0].IsChecked.Should().BeTrue();
+            worktreeItems[0].IsEnabled.Should().BeFalse();
+            worktreeItems[1].Header!.ToString().Should().Contain("feature");
+            worktreeItems[1].IsEnabled.Should().BeTrue();
+            flyout.Items.OfType<MenuItem>().Skip(2).Select(item => item.Header!.ToString()).Should().Equal(
+                GitUI.TranslatedStrings.CreateWorktree,
+                GitUI.TranslatedStrings.PruneWorktrees,
+                GitUI.TranslatedStrings.ManageWorktrees);
+            flyout.Hide();
+        }
+        finally
+        {
+            form?.Close();
+            AppSettings.RepoObjectsTreeShowWorktrees = originalShowWorktrees;
+            TestDirectory.Delete(linkedPath);
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_worktree_surfaces_should_reuse_the_existing_translation_keys()
+    {
+        FormBrowse form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        form.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "manageWorktreeToolStripMenuItem", "Text", "Manage &worktrees...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripWorktrees", "ToolTipText", "Worktrees");
     }
 
     [AvaloniaTest]
@@ -831,4 +894,7 @@ public sealed class FormBrowseTests
 
         condition().Should().BeTrue("the repository reload should complete before the timeout");
     }
+
+    private static string HeaderText(TreeViewItem item)
+        => ((TextBlock)((StackPanel)item.Header!).Children[1]).Text!;
 }

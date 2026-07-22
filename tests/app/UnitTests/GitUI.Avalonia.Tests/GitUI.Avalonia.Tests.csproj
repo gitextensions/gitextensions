@@ -31,6 +31,8 @@
              Link="CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs" />
     <Compile Include="..\GitUI.Tests\CommandsDialogs\FormAddSubmoduleTests.cs"
              Link="CommandsDialogs\FormAddSubmoduleTests.cs" />
+    <Compile Include="..\GitUI.Tests\LeftPanel\WorktreeTreeTests.cs"
+             Link="LeftPanel\WorktreeTreeTests.cs" />
   </ItemGroup>
 
   <ItemGroup>

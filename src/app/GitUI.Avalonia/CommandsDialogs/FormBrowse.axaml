@@ -11,11 +11,20 @@
         Width="1280" Height="800"
         MinWidth="900" MinHeight="560"
         Title="Git Extensions">
+  <Window.Styles>
+    <Style Selector="MenuItem.worktree-deleted">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
+    </Style>
+  </Window.Styles>
   <DockPanel>
     <Menu x:Name="mainMenuStrip" DockPanel.Dock="Top">
       <MenuItem x:Name="repositoryToolStripMenuItem" Header="_Repository">
         <MenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="manageWorktreeToolStripMenuItem" Header="Manage _worktrees...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.WorkTree}" /></MenuItem.Icon>
         </MenuItem>
       </MenuItem>
       <MenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
@@ -110,6 +119,16 @@
             </MenuFlyout>
           </SplitButton.Flyout>
         </SplitButton>
+        <Border Classes="gitextensions-toolbar-separator" />
+        <compat:IconSplitButton x:Name="toolStripWorktrees"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Content="Worktrees"
+                                Icon="{x:Static properties:Images.WorkTree}"
+                                IsVisible="False">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
         <compat:ToolbarComboBox x:Name="_NO_TRANSLATE_WorkingDir"
                                 Width="180"
                                 Height="23"
