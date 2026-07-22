@@ -238,12 +238,17 @@ public sealed class FormBrowseTests
         FormBrowse form = new();
         ITranslation translation = Substitute.For<ITranslation>();
 
+        MenuItem maintenance = form.FindControl<MenuItem>("gitMaintenanceToolStripMenuItem")!;
+        maintenance.Items.OfType<MenuItem>().Should().ContainSingle(item => item.Name == "recoverLostObjectsToolStripMenuItem");
+
         form.AddTranslationItems(translation);
 
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "manageWorktreeToolStripMenuItem", "Text", "Manage &worktrees...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripMenuItemReflog", "Text", "Show reflo&g...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripWorktrees", "ToolTipText", "Worktrees");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "archiveToolStripMenuItem", "Text", "Archi&ve revision...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitMaintenanceToolStripMenuItem", "Text", "&Git maintenance");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "recoverLostObjectsToolStripMenuItem", "Text", "&Recover lost objects...");
     }
 
     [AvaloniaTest]

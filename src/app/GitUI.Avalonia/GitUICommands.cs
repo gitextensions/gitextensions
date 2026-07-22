@@ -898,7 +898,18 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, postEvent: PostUpdateSubmodules);
     }
 
-    public bool StartVerifyDatabaseDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartVerifyDatabaseDialog));
+    public bool StartVerifyDatabaseDialog(IWin32Window? owner = null)
+    {
+        bool Action()
+        {
+            using FormVerify form = new(this);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartViewPatchDialog(IWin32Window? owner, string? patchFile = null)
     {
         bool Action()

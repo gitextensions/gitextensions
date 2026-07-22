@@ -418,6 +418,15 @@ public sealed partial class ParityScreenshotTests
                 FormResetCurrentBranch.ResetType.Hard);
         }
 
+        if (viewType == typeof(FormVerify))
+        {
+            FormVerify form = new();
+            FormVerify.TestAccessor accessor = form.GetTestAccessor();
+            accessor.SetPreviewRows();
+            accessor.ShowOther.IsChecked = true;
+            return form;
+        }
+
         if (viewType == typeof(FormClone))
         {
             return new FormClone(
@@ -1114,6 +1123,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormResetCurrentBranch))
         {
             return (479, 469);
+        }
+
+        if (viewType == typeof(FormVerify))
+        {
+            return (900, 600);
         }
 
         if (viewType == typeof(FindAndReplaceForm))

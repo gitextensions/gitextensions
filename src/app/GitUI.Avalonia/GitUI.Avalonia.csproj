@@ -35,6 +35,7 @@
     <Compile Include="..\GitUI\Avatars\MultiCacheCleaner.cs" Link="Avatars\MultiCacheCleaner.cs" />
     <Compile Include="..\GitUI\Avatars\TemplateFormatter.cs" Link="Avatars\TemplateFormatter.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\FormClone.RemoteActionResult.cs" Link="CommandsDialogs\FormClone.RemoteActionResult.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\FormVerify.LostObject.cs" Link="CommandsDialogs\FormVerify.LostObject.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\FormRemotesController.cs" Link="CommandsDialogs\FormRemotesController.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridFileUpdate.cs" Link="CommandsDialogs\IRevisionGridFileUpdate.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridInfo.cs" Link="CommandsDialogs\IRevisionGridInfo.cs" />
