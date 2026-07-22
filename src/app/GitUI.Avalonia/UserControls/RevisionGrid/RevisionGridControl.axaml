@@ -118,6 +118,9 @@
           <MenuItem x:Name="runScriptToolStripMenuItem" Header="Run _script">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Console}" /></MenuItem.Icon>
           </MenuItem>
+          <MenuItem x:Name="openBuildReportToolStripMenuItem" Header="View _build report in a browser">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Integration}" /></MenuItem.Icon>
+          </MenuItem>
         </ContextMenu>
       </ListBox.ContextMenu>
       <ListBox.Styles>

@@ -36,6 +36,7 @@ public sealed partial class FormBrowse : GitModuleForm
 {
     private readonly TranslationString _consoleTabCaption = new("Console");
     private readonly TranslationString _outputHistoryTabCaption = new("Output");
+    private readonly TranslationString _buildReportTabCaption = new("Build Report");
 
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
@@ -62,6 +63,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private IConsoleShellRunner? _terminal;
     private TabItem? _consoleTabPage;
     private OutputHistoryControllerBase? _outputHistoryController;
+    private BuildReportTabPageExtension? _buildReportTabPageExtension;
 
     public static readonly string HotkeySettingsName = "Browse";
 
@@ -132,6 +134,7 @@ public sealed partial class FormBrowse : GitModuleForm
         _scriptsManager = UICommands.GetService(typeof(IScriptsManager)) as IScriptsManager;
         _submoduleStatusProvider = UICommands.GetService(typeof(ISubmoduleStatusProvider)) as ISubmoduleStatusProvider;
         RevisionGrid.UICommandsSource = this;
+        RevisionGrid.ShowBuildServerInfo = true;
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
         repoObjectsTree.UICommandsSource = this;
@@ -265,6 +268,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private void ReloadRepository()
     {
         IGitModule module = Module;
+        RevisionGrid.OnRepositoryChanged();
 
         bool isValidWorkingDir = module.IsValidGitWorkingDir();
         string branchName = isValidWorkingDir ? module.GetSelectedBranch() : string.Empty;
@@ -896,6 +900,11 @@ public sealed partial class FormBrowse : GitModuleForm
         _fileTreeRevision = null;
         RefreshGpgInfo(RevisionGrid.SelectedRevision);
         RevisionInfo.Revision = RevisionGrid.SelectedRevision;
+        _buildReportTabPageExtension ??= new BuildReportTabPageExtension(
+            () => Module,
+            CommitInfoTabControl,
+            _buildReportTabCaption.Text);
+        _buildReportTabPageExtension.FillBuildReport(selectedRevisions.Count == 1 ? RevisionGrid.SelectedRevision : null);
         rebaseToolStripMenuItem.IsEnabled =
             RevisionGrid.SelectedRevision is { IsArtificial: false }
             && !Module.IsBareRepository();
