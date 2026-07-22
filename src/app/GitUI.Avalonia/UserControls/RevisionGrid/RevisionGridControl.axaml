@@ -36,6 +36,10 @@
             <Separator x:Name="sepRebase" />
             <MenuItem x:Name="rebaseWithAdvOptionsToolStripMenuItem" Header="Selected commit with _advanced options..." />
           </MenuItem>
+          <MenuItem x:Name="resetCurrentBranchToHereToolStripMenuItem"
+                    Header="Reset c_urrent branch to here...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetCurrentBranchToHere}" /></MenuItem.Icon>
+          </MenuItem>
           <Separator x:Name="sepBranch" />
           <MenuItem x:Name="resetChangesToolStripMenuItem" Header="_Reset changes">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
