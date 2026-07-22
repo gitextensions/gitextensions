@@ -26,6 +26,13 @@
         <MenuItem x:Name="manageWorktreeToolStripMenuItem" Header="Manage _worktrees...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.WorkTree}" /></MenuItem.Icon>
         </MenuItem>
+        <Separator />
+        <MenuItem x:Name="gitMaintenanceToolStripMenuItem" Header="_Git maintenance">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Maintenance}" /></MenuItem.Icon>
+          <MenuItem x:Name="recoverLostObjectsToolStripMenuItem" Header="_Recover lost objects...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RecoverLostObjects}" /></MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
       </MenuItem>
       <MenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
         <MenuItem x:Name="commitToolStripMenuItem" Header="_Commit...">

@@ -143,6 +143,7 @@ public sealed partial class FormBrowse : GitModuleForm
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
         manageWorktreeToolStripMenuItem.Click += ManageWorktreeToolStripMenuItemClick;
+        recoverLostObjectsToolStripMenuItem.Click += recoverLostObjectsToolStripMenuItemClick;
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         checkoutBranchToolStripMenuItem.Click += CheckoutBranchToolStripMenuItemClick;
         branchToolStripMenuItem.Click += CreateBranchToolStripMenuItemClick;
@@ -261,6 +262,7 @@ public sealed partial class FormBrowse : GitModuleForm
         stashToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         toolStripMenuItemReflog.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         manageWorktreeToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        gitMaintenanceToolStripMenuItem.IsEnabled = isValidWorkingDir;
         RefreshButton.IsEnabled = isValidWorkingDir;
         branchSelect.IsEnabled = isValidWorkingDir;
         toolStripButtonPull.IsEnabled = isValidWorkingDir;
@@ -670,6 +672,11 @@ public sealed partial class FormBrowse : GitModuleForm
         {
             RefreshToolStripMenuItemClick(this, EventArgs.Empty);
         }
+    }
+
+    private void recoverLostObjectsToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartVerifyDatabaseDialog(this);
     }
 
     private void PopulateWorktreeSelector()
