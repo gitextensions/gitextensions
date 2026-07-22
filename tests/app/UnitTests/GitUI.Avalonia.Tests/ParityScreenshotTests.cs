@@ -466,6 +466,11 @@ public sealed partial class ParityScreenshotTests
             return new FormRemotes(context.Commands) { PreselectRemoteOnLoad = RemoteName };
         }
 
+        if (viewType == typeof(FormReflog))
+        {
+            return new FormReflog();
+        }
+
         if (viewType == typeof(FormRenameBranch))
         {
             return new FormRenameBranch(context.Commands, FeatureBranchName);
@@ -656,6 +661,20 @@ public sealed partial class ParityScreenshotTests
             GitWorktree feature = new(Path.Combine(rootPath, "gitextensions-feature"), GitWorktreeHeadType.Branch, context.ParentRevision.ObjectId.ToShortString(), FeatureBranchName, IsDeleted: false);
             GitWorktree deleted = new(Path.Combine(rootPath, "gitextensions-old"), GitWorktreeHeadType.Detached, context.ParentRevision.ObjectId.ToShortString(), null, IsDeleted: true);
             formManageWorktree.GetTestAccessor().SetWorktrees([main, feature, deleted], feature.Path);
+        }
+
+        if (root is FormReflog formReflog)
+        {
+            FormReflog.TestAccessor accessor = formReflog.GetTestAccessor();
+            accessor.Branches.ItemsSource = new[] { "HEAD", MainBranchName, $"{RemoteName}/{MainBranchName}" };
+            accessor.Branches.SelectedIndex = 0;
+            accessor.CurrentBranch.Content = $"current branch ({MainBranchName})";
+            accessor.SetRefLines(
+            [
+                new RefLine(context.HeadRevision.ObjectId, "HEAD@{0}", "commit: Add Avalonia reflog dialog"),
+                new RefLine(context.ParentRevision.ObjectId, "HEAD@{1}", "checkout: moving from feature/visual-parity to main"),
+                new RefLine(ObjectId.Parse("3333333333333333333333333333333333333333"), "HEAD@{2}", "commit: Prepare representative repository"),
+            ]);
         }
 
         if (root is Window)
@@ -1025,6 +1044,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormManageWorktree))
         {
             return (710, 361);
+        }
+
+        if (viewType == typeof(FormReflog))
+        {
+            return (782, 555);
         }
 
         if (viewType == typeof(FindAndReplaceForm))
