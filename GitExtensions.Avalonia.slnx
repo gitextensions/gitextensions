@@ -16,6 +16,8 @@
     <Project Path="src/app/ResourceManager/ResourceManager.csproj" />
   </Folder>
   <Folder Name="/src/plugins/">
+    <Project Path="src/plugins/AutoCompileSubmodules/GitExtensions.Plugins.AutoCompileSubmodules.csproj" />
+    <Project Path="src/plugins/BackgroundFetch/GitExtensions.Plugins.BackgroundFetch.csproj" />
     <Project Path="src/plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj" />
   </Folder>
   <Folder Name="/tests/">
