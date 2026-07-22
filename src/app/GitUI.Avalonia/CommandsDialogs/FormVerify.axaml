@@ -1,0 +1,186 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:editor="using:GitUI.Editor"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormVerify"
+        Width="900"
+        Height="600"
+        MinWidth="700"
+        MinHeight="430"
+        WindowStartupLocation="CenterOwner"
+        Title="Verify database">
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Grid x:Name="panel2"
+          Margin="6"
+          ColumnDefinitions="2*,3*">
+      <StackPanel x:Name="flowLayoutPanel1"
+                  Margin="2"
+                  Spacing="5">
+        <TextBlock x:Name="label2"
+                   TextWrapping="Wrap"
+                   Text="By default only unreferenced objects that are older than&#10;2 weeks are removed when cleaning up the database. All&#10;other object are only deleted when you run &quot;Remove all&#10;dangling objects&quot;&#10;&#10;Check commits you want to recover and press Recover button&#10;Context menu for additional operations" />
+        <TextBlock x:Name="label1"
+                   Margin="0,5,0,0"
+                   Text="Double-click on a row for quick view" />
+      </StackPanel>
+
+      <Grid Grid.Column="1"
+            Margin="12,2,2,2"
+            RowDefinitions="Auto,Auto,Auto,Auto"
+            ColumnDefinitions="Auto,*">
+        <CheckBox x:Name="ShowCommitsAndTags"
+                  IsChecked="True"
+                  Content="Show commits and annotated tags"
+                  ToolTip.Tip="To recover unreachable commits or annotated tags" />
+        <CheckBox x:Name="ShowOtherObjects"
+                  Grid.Column="1"
+                  Content="Show blobs and trees"
+                  ToolTip.Tip="To recover contents of files once staged but mistakenly deleted" />
+        <CheckBox x:Name="NoReflogs"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="2"
+                  IsChecked="True"
+                  Content="Do not consider commits that are referenced only by an entry in a&#10;reflog to be reachable." />
+        <CheckBox x:Name="Unreachable"
+                  Grid.Row="2"
+                  Grid.ColumnSpan="2"
+                  Content="Print out objects that exist but that aren't readable from any of the reference&#10;nodes." />
+        <CheckBox x:Name="FullCheck"
+                  Grid.Row="3"
+                  Grid.ColumnSpan="2"
+                  Content="Check not just objects in GIT__OBJECT__DIRECTORY ($GIT__DIR/objects),&#10;but also the ones found in alternate object pools." />
+      </Grid>
+    </Grid>
+
+    <Grid x:Name="splitContainer1"
+          Grid.Row="1"
+          ColumnDefinitions="4*,6,1.2*">
+      <Border Classes="gitextensions-section">
+        <Grid RowDefinitions="Auto,*">
+          <Grid ColumnDefinitions="28,80,100,*,150,92,92">
+            <Border Padding="3,2"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,1,1">
+              <CheckBox x:Name="columnIsLostObjectSelected"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+            </Border>
+            <Border x:Name="columnDate"
+                    Grid.Column="1"
+                    Padding="6,3"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,1,1">
+              <TextBlock FontWeight="SemiBold" Text="Date" />
+            </Border>
+            <Border x:Name="columnType"
+                    Grid.Column="2"
+                    Padding="6,3"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,1,1">
+              <TextBlock FontWeight="SemiBold" Text="Type" />
+            </Border>
+            <Border x:Name="columnSubject"
+                    Grid.Column="3"
+                    Padding="6,3"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,1,1">
+              <TextBlock FontWeight="SemiBold" Text="Subject" />
+            </Border>
+            <Border x:Name="columnAuthor"
+                    Grid.Column="4"
+                    Padding="6,3"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,1,1">
+              <TextBlock FontWeight="SemiBold" Text="Author" />
+            </Border>
+            <Border x:Name="columnHash"
+                    Grid.Column="5"
+                    Padding="6,3"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,1,1">
+              <TextBlock FontWeight="SemiBold" Text="Hash" />
+            </Border>
+            <Border x:Name="columnParent"
+                    Grid.Column="6"
+                    Padding="6,3"
+                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                    BorderThickness="0,0,0,1">
+              <TextBlock FontWeight="SemiBold" Text="Parent(s) hashs" />
+            </Border>
+          </Grid>
+
+          <ListBox x:Name="Warnings"
+                   Grid.Row="1"
+                   SelectionMode="Single"
+                   ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="MinHeight" Value="24" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+              </Style>
+            </ListBox.Styles>
+            <ListBox.ContextMenu>
+              <ContextMenu x:Name="mnuLostObjects">
+                <MenuItem x:Name="mnuLostObjectView" Header="View">
+                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ViewFile}" /></MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="mnuLostObjectsCreateTag" Header="Create tag" HotKey="Ctrl+T">
+                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="mnuLostObjectsCreateBranch" Header="Create branch" HotKey="Ctrl+B">
+                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="copyHashToolStripMenuItem" Header="Copy object hash">
+                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="copyParentHashToolStripMenuItem" Header="Copy parent hash">
+                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="saveAsToolStripMenuItem" Header="Save as..." HotKey="Ctrl+S">
+                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
+                </MenuItem>
+              </ContextMenu>
+            </ListBox.ContextMenu>
+          </ListBox>
+        </Grid>
+      </Border>
+
+      <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+
+      <Border Grid.Column="2" Classes="gitextensions-section">
+        <editor:FileViewer x:Name="fileViewer" />
+      </Border>
+    </Grid>
+
+    <Grid x:Name="panel1"
+          Grid.Row="2"
+          Margin="6"
+          RowDefinitions="Auto,Auto"
+          ColumnDefinitions="260,*,220">
+      <Button x:Name="Remove"
+              MinHeight="25"
+              Content="Remove all dangling objects" />
+      <Button x:Name="btnRestoreSelectedObjects"
+              Grid.Column="1"
+              Margin="16,0"
+              MinHeight="25"
+              Content="Recover selected objects" />
+      <Button x:Name="SaveObjects"
+              Grid.Column="2"
+              MinHeight="25"
+              Content="Save objects to .git/lost-found" />
+      <Button x:Name="DeleteAllLostAndFoundTags"
+              Grid.Row="1"
+              Margin="0,4,0,0"
+              MinHeight="25"
+              Content="Delete all LOST__AND__FOUND tags" />
+      <Button x:Name="btnCloseDialog"
+              Grid.Row="1"
+              Grid.Column="2"
+              Margin="0,4,0,0"
+              MinHeight="25"
+              Content="Cancel" />
+    </Grid>
+  </Grid>
+</Window>
