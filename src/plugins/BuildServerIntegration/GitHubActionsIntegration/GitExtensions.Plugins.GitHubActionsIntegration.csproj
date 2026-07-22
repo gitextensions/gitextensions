@@ -4,6 +4,22 @@
     <Compile Include="..\..\..\app\GitExtUtils\Validates.cs" Link="Validates.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- The portable settings export is a native Avalonia control. Keep the UI reference
+         out of the unchanged Windows flavor and do not copy the host assembly into the
+         plugin folder. -->
+    <Compile Include="Settings\GitHubActionsSettingsUserControl.axaml.cs" />
+    <PackageReference Include="Avalonia" ExcludeAssets="runtime" PrivateAssets="all" />
+    <ProjectReference Include="..\..\..\app\GitUI.Avalonia\GitUI.Avalonia.csproj">
+      <PrivateAssets>all</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows'">
+    <Compile Remove="Settings\GitHubActionsSettingsUserControl.axaml.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\app\GitCommands\GitCommands.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
