@@ -85,6 +85,7 @@ public sealed class FormPushTests
         translation.Received(1).AddTranslationItem(nameof(FormPush), "ForcePushBranches", "Text", "F&orce push");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "ForcePushTags", "Text", "&Force push");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "ReplaceTrackingReference", "Text", "R&eplace tracking reference");
+        translation.Received(1).AddTranslationItem(nameof(FormPush), "_createPullRequestCB", "Text", "&Create pull request after push");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "RecursiveSubmodules", "Item2", "On-demand");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "LocalColumn", "HeaderText", "Local Branch");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "DeleteColumn", "HeaderText", "Delete Remote Branch");
@@ -123,6 +124,8 @@ public sealed class FormPushTests
                 ?? throw new InvalidOperationException("Remote branch field was not created.");
             CheckBox forceWithLease = form.FindControl<CheckBox>("ckForceWithLease")
                 ?? throw new InvalidOperationException("Force-with-lease checkbox was not created.");
+            CheckBox createPullRequest = form.FindControl<CheckBox>("_createPullRequestCB")
+                ?? throw new InvalidOperationException("The create-pull-request checkbox was not created.");
             Button push = form.FindControl<Button>("Push")
                 ?? throw new InvalidOperationException("Push button was not created.");
             TextBlock labelFrom = form.FindControl<TextBlock>("labelFrom")
@@ -137,11 +140,49 @@ public sealed class FormPushTests
             remoteBranch.Text.Should().Be(branch.Text);
             push.IsEnabled.Should().BeTrue();
             forceWithLease.IsChecked.Should().BeFalse();
+            createPullRequest.IsEnabled.Should().BeFalse("the configured local remote is not hosted by Azure DevOps");
 
             form.CheckForceWithLease();
 
             forceWithLease.IsChecked.Should().BeTrue();
             form.CaptureRenderedFrame().Should().NotBeNull("the reduced push dialog should render headlessly");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormPush_should_enable_and_build_the_Azure_DevOps_pull_request_fallback()
+    {
+        GitModule module = CreateRepositoryAndRemote();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("remote")
+        {
+            "set-url",
+            "origin",
+            "https://example@dev.azure.com/example/Project/_git/Repository",
+        });
+        module.InvalidateGitSettings();
+        using FormPush form = new(new GitUICommands(_serviceContainer, module));
+
+        form.Show();
+        try
+        {
+            CheckBox createPullRequest = form.FindControl<CheckBox>("_createPullRequestCB")
+                ?? throw new InvalidOperationException("The create-pull-request checkbox was not created.");
+
+            createPullRequest.IsEnabled.Should().BeTrue();
+            FormPush.BuildAzureDevOpsPullRequestUrl(
+                    "https://example@dev.azure.com/example/Project/_git/Repository",
+                    "feature/test #1")
+                .Should().Be("https://dev.azure.com/example/Project/_git/Repository/pullrequestcreate?sourceRef=feature%2Ftest%20%231");
+            FormPush.BuildAzureDevOpsPullRequestUrl(
+                    "git@ssh.dev.azure.com:v3/example/Project/Repository",
+                    "main")
+                .Should().Be("https://dev.azure.com/example/Project/_git/Repository/pullrequestcreate?sourceRef=main");
+            FormPush.BuildAzureDevOpsPullRequestUrl("https://github.com/example/repository.git", "main")
+                .Should().BeNull();
         }
         finally
         {
