@@ -461,6 +461,13 @@ public sealed partial class ParityScreenshotTests
             return new FormApplyPatch(context.Commands);
         }
 
+        if (viewType == typeof(FormArchive))
+        {
+            FormArchive form = new(context.Commands) { SelectedRevision = context.HeadRevision };
+            form.SetDiffSelectedRevision(context.ParentRevision);
+            return form;
+        }
+
         if (viewType == typeof(FormRemotes))
         {
             return new FormRemotes(context.Commands) { PreselectRemoteOnLoad = RemoteName };
@@ -1049,6 +1056,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormReflog))
         {
             return (782, 555);
+        }
+
+        if (viewType == typeof(FormArchive))
+        {
+            return (610, 609);
         }
 
         if (viewType == typeof(FindAndReplaceForm))
