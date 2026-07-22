@@ -9,6 +9,7 @@ internal enum RepoTreeKind
     Branches,
     Remotes,
     Tags,
+    Submodules,
     Stashes,
 }
 

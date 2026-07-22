@@ -17,6 +17,10 @@ Other local comparison directories are preserved. The folder is intentionally ex
 not regenerate them, but they do verify that every AXAML view resolves to a control with its
 required public parameterless constructor.
 
+For a targeted repository-tree capture with the recursive submodule node and its context menu,
+also set `GITEXT_CAPTURE_PARITY_VIEW=RepoObjectsTree` and
+`GITEXT_CAPTURE_REPO_TREE_CONTEXT=submodule`.
+
 Place owner-supplied WinForms screenshots in the likewise excluded
 `eng/avalonia/parity-reference/` folder. Compare those references with the generated browse,
 diff, commit, and dialog captures during a visual-parity review. Relevant run-time dialogs

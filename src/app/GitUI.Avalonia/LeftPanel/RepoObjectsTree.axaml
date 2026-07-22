@@ -90,6 +90,10 @@
                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                Content="_Tags"
                                Icon="{x:Static properties:Images.TagHorizontal}" />
+      <compat:IconToggleButton x:Name="tsbShowSubmodules"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="_Submodules"
+                               Icon="{x:Static properties:Images.FolderSubmodule}" />
       <compat:IconToggleButton x:Name="tsbShowStashes"
                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                Content="St_ashes"

@@ -153,7 +153,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, and shared Output history; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. Plugins, worktrees, and submodules remain absent until their owning phases. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. Repository reload, refs/history, and GPG work use one form-owned lifetime boundary, so queued notifications and unfinished providers cannot outlive shutdown. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, and shared Output history; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown; plugins and worktrees remain absent until their owning phases. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. Repository reload, refs/history, submodules, and GPG work use one form-owned lifetime boundary, so queued notifications and unfinished providers cannot outlive shutdown. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
   },
   "src/app/GitUI/CommandsDialogs/FormSettings.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml.cs",
@@ -1444,7 +1444,25 @@
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same compact toolbar/search/tree boundary with nested Branches/Remotes/Tags/Stashes models, cyclic search, collapse/expand, native multi-selection, selected-ref filtering, persisted category visibility/order, state restoration and only real context actions. Configured empty/inactive remotes and current-branch emphasis are included. Auto-hidden overlay scrollbars remain disabled. Submodules/worktrees, filtered-revision visibility, merged/ahead-behind decoration, and context actions owned by unported dialogs remain deferred."
+    "notes": "Same compact toolbar/search/tree boundary with nested Branches/Remotes/Tags/Submodules/Stashes models, cyclic search, collapse/expand, native multi-selection, selected-ref filtering, persisted category visibility/order, state restoration and only real context actions. Configured empty/inactive remotes, current-branch emphasis, and status-provider-driven recursive submodules are included. Unsupported context rows are hidden like WinForms. Auto-hidden overlay scrollbars remain disabled. Worktrees, filtered-revision visibility, and merged/ahead-behind decoration remain deferred."
+  },
+  "src/app/GitUI/LeftPanel/SubmoduleFolderNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/SubmoduleFolderNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same italic-equivalent folder grouping boundary and single-child path compaction, with parent links repaired when Avalonia tree items are adopted."
+  },
+  "src/app/GitUI/LeftPanel/SubmoduleNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/SubmoduleNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same current-module emphasis, branch/status text and image matrix, in-window open, new-process open, and double-click behavior. The expensive asynchronously generated detailed status tooltip remains reduced to the immediately available status text, and two-revision diff preselection remains single-revision until the Avalonia revision grid accepts a first diff endpoint."
+  },
+  "src/app/GitUI/LeftPanel/SubmoduleTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/SubmoduleTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Reuses ISubmoduleStatusProvider and the original top-project/recursive hierarchy, with OS-aware full-path parent inference, folder compaction, expansion/selection restoration, and real open/update/sync/manage/reset/stash/commit workflows."
   },
   "src/app/GitUI/LeftPanel/StashNode.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/StashNode.cs",
@@ -1534,7 +1552,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, revision-range difftool, and Settings host members are real; unported members throw NotImplementedException."
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, revision-range difftool, Settings host, and portable same-executable repository-browser launch members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/RevisionDiffInfoProvider.cs": {
     "twin": "src/app/GitUI/RevisionDiffInfoProvider.cs",
@@ -1552,7 +1570,7 @@
     "twin": "src/app/GitUI.Avalonia/MessageBoxes.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated helpers in use: revision-not-found/filter messages, FailedToRunShell, Confirm, ConfirmResolveMergeConflicts, MiddleOfRebase, MiddleOfPatchApply, and ConfirmUpdateSubmodules (task dialog). Other domain-specific helpers join with their consumers."
+    "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated helpers in use: revision-not-found/filter messages, missing submodule/Git Extensions directories, FailedToRunShell, Confirm, ConfirmResolveMergeConflicts, MiddleOfRebase, MiddleOfPatchApply, and ConfirmUpdateSubmodules (task dialog). Other domain-specific helpers join with their consumers."
   },
   "src/app/GitUI/HelperDialogs/FormChooseCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormChooseCommit.axaml.cs",
