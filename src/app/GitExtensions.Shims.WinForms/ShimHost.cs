@@ -19,6 +19,19 @@ public static class ShimHost
         set => _messageBoxHost = value;
     }
 
+    private static TaskDialogs.ITaskDialogHost? _taskDialogHost;
+
+    /// <summary>
+    ///  Gets or sets the handler that displays custom-button task dialogs for
+    ///  <see cref="TaskDialogs.TaskDialog"/>.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">No host has been installed.</exception>
+    public static TaskDialogs.ITaskDialogHost TaskDialogHost
+    {
+        get => _taskDialogHost ?? throw new InvalidOperationException($"No {nameof(TaskDialogs.ITaskDialogHost)} has been installed. The application must assign {nameof(ShimHost)}.{nameof(TaskDialogHost)} at startup.");
+        set => _taskDialogHost = value;
+    }
+
     /// <summary>
     ///  Gets or sets the provider of the currently active form, used by <see cref="Form.ActiveForm"/>.
     ///  <see langword="null"/> (the default) means there is no active form.
