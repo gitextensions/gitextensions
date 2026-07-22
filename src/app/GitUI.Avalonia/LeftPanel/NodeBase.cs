@@ -6,14 +6,14 @@ namespace GitUI.LeftPanel;
 /// <summary>Common repository-tree model shared by roots and their child nodes.</summary>
 internal abstract class NodeBase
 {
-    protected NodeBase(RepoObjectsTree owner, NodeBase? parent, string caption, IImage icon, bool isBold = false)
+    protected NodeBase(RepoObjectsTree owner, NodeBase? parent, string caption, IImage icon, bool isBold = false, bool isItalic = false)
     {
         Owner = owner;
         Parent = parent;
         Caption = caption;
         TreeViewNode = new TreeViewItem
         {
-            Header = RepoObjectsTree.CreateHeader(caption, icon, isBold),
+            Header = RepoObjectsTree.CreateHeader(caption, icon, isBold, isItalic),
             Tag = this,
         };
         owner.PrepareTreeViewItem(this);
@@ -21,7 +21,7 @@ internal abstract class NodeBase
 
     protected RepoObjectsTree Owner { get; }
 
-    public NodeBase? Parent { get; }
+    public NodeBase? Parent { get; private set; }
 
     public TreeViewItem TreeViewNode { get; }
 
@@ -44,10 +44,13 @@ internal abstract class NodeBase
     protected void AddChild(NodeBase node)
         => TreeViewNode.Items.Add(node.TreeViewNode);
 
-    protected void SetHeader(string caption, IImage icon, bool isBold = false)
+    internal void Reparent(NodeBase parent)
+        => Parent = parent;
+
+    protected void SetHeader(string caption, IImage icon, bool isBold = false, bool isItalic = false)
     {
         Caption = caption;
-        TreeViewNode.Header = RepoObjectsTree.CreateHeader(caption, icon, isBold);
+        TreeViewNode.Header = RepoObjectsTree.CreateHeader(caption, icon, isBold, isItalic);
     }
 
     internal virtual void OnDoubleClick()
