@@ -101,6 +101,9 @@
             <MenuItem Tag="showDateColumnToolStripMenuItem" Header="Show _date column" ToggleType="CheckBox" />
             <MenuItem Tag="showIdColumnToolStripMenuItem" Header="Show SHA_-1 column" ToggleType="CheckBox" />
           </MenuItem>
+          <MenuItem x:Name="runScriptToolStripMenuItem" Header="Run _script">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Console}" /></MenuItem.Icon>
+          </MenuItem>
         </ContextMenu>
       </ListBox.ContextMenu>
       <ListBox.Styles>

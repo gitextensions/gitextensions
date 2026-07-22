@@ -19,6 +19,7 @@ using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
 using ResourceManager;
+using ResourceManager.Hotkey;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
@@ -33,6 +34,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private readonly IGpgInfoProvider? _controller;
+    private readonly IScriptsManager? _scriptsManager;
     private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
     private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
@@ -108,6 +110,7 @@ public sealed partial class FormBrowse : GitModuleForm
         InitializeComponent();
 
         _hasRuntimeCommands = true;
+        _scriptsManager = UICommands.GetService(typeof(IScriptsManager)) as IScriptsManager;
         RevisionGrid.UICommandsSource = this;
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
@@ -181,6 +184,40 @@ public sealed partial class FormBrowse : GitModuleForm
         InitializeComplete();
         HotkeysEnabled = true;
         LoadHotkeys(HotkeySettingsName);
+        LoadUserMenu();
+    }
+
+    private void LoadUserMenu()
+    {
+        ReloadScriptHotkeys();
+        ToolStripScripts.Children.Clear();
+        if (_scriptsManager is null)
+        {
+            ToolStripScripts.IsVisible = false;
+            return;
+        }
+
+        IReadOnlyList<HotkeyCommand> hotkeys = UICommands
+            .GetRequiredService<IHotkeySettingsLoader>()
+            .LoadHotkeys(FormSettings.HotkeySettingsName);
+        foreach (ScriptInfo script in _scriptsManager.GetScripts()
+                     .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar))
+        {
+            IconButton button = new()
+            {
+                Content = script.Name,
+                Icon = script.GetIcon(),
+                Tag = "userscript",
+            };
+            button.Classes.Add("gitextensions-toolbar-button");
+            KeyGesture? gesture = KeysMapper.ToKeyGesture(
+                hotkeys.FirstOrDefault(hotkey => hotkey.Name == script.GetDisplayName())?.KeyData);
+            ToolTip.SetTip(button, gesture is null ? script.Name : $"{script.Name} ({gesture})");
+            button.Click += (_, _) => ExecuteCommand(script.HotkeyCommandIdentifier);
+            ToolStripScripts.Children.Add(button);
+        }
+
+        ToolStripScripts.IsVisible = ToolStripScripts.Children.Count > 0;
     }
 
     private void ReloadRepository()
@@ -993,6 +1030,21 @@ public sealed partial class FormBrowse : GitModuleForm
     internal bool ExecuteCommand(Command command)
         => ExecuteCommand((int)command);
 
+    public override IScriptOptionsProvider GetScriptOptionsProvider()
+    {
+        if (CommitInfoTabControl.SelectedItem == TreeTabPage)
+        {
+            return fileTree.ScriptOptionsProvider;
+        }
+
+        if (CommitInfoTabControl.SelectedItem == DiffTabPage)
+        {
+            return revisionDiff.ScriptOptionsProvider;
+        }
+
+        return base.GetScriptOptionsProvider();
+    }
+
     private void OnShowSettingsClick(object? sender, EventArgs e)
     {
         string translation = AppSettings.Translation;
@@ -1014,6 +1066,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         LoadHotkeys(HotkeySettingsName);
+        LoadUserMenu();
         AvatarService.UpdateAvatarInitialFontsSettings();
         RevisionGrid.ApplyColumnSettings();
         RevisionGrid.RefreshRealizedRows();
