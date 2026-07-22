@@ -149,6 +149,17 @@ public sealed class FormEditorTests
         emittedKeys.Should().HaveCount(7);
     }
 
+    [AvaloniaTest]
+    public void GitUICommands_should_report_invalid_or_unported_command_lines_explicitly()
+    {
+        _commands.RunCommand(["GitExtensions.Avalonia", "fileeditor"]).Should().BeFalse();
+        _commands.RunCommand(["GitExtensions.Avalonia", "about"]).Should().BeFalse();
+
+        _stubMessageBoxHost.Messages.Should().ContainInOrder(
+            "Cannot open file editor, there is no file selected.",
+            "The command \"about\" is not available in the Avalonia port yet.");
+    }
+
     private static async Task WaitUntilAsync(Func<bool> condition)
     {
         DateTime deadline = DateTime.UtcNow.AddSeconds(5);
