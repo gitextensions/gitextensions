@@ -1,0 +1,210 @@
+<settings:GitConfigBaseSettingsPage xmlns="https://github.com/avaloniaui"
+                                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                      xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                      x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage"
+                                      Text="Git config">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <Grid x:Name="tableLayoutPanelGitConfig"
+          Margin="8"
+          ColumnDefinitions="Auto,*,Auto"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+          RowSpacing="5">
+      <Border x:Name="InvalidGitPathGlobal"
+              Grid.Column="1"
+              Grid.ColumnSpan="2"
+              Margin="0,0,0,3"
+              Padding="6"
+              BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+              BorderThickness="1"
+              IsVisible="False">
+        <StackPanel Orientation="Horizontal" Spacing="7">
+          <Image x:Name="pictureBox1"
+                 Width="24"
+                 Height="24"
+                 VerticalAlignment="Center" />
+          <TextBlock x:Name="label9"
+                     VerticalAlignment="Center"
+                     TextWrapping="Wrap"
+                     Text="You need to set the correct path to git before you can change global settings." />
+        </StackPanel>
+      </Border>
+
+      <TextBlock x:Name="label3"
+                 Grid.Row="1"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="User name" />
+      <TextBox x:Name="GlobalUserName"
+               Grid.Row="1"
+               Grid.Column="1"
+               MinWidth="260" />
+
+      <TextBlock x:Name="label4"
+                 Grid.Row="2"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="User email" />
+      <TextBox x:Name="GlobalUserEmail"
+               Grid.Row="2"
+               Grid.Column="1" />
+
+      <TextBlock x:Name="lblCredentialHelper"
+                 Grid.Row="3"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Credential helper" />
+      <ComboBox x:Name="cbxCredentialHelper"
+                Grid.Row="3"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                IsEditable="True" />
+
+      <TextBlock x:Name="label6"
+                 Grid.Row="4"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Editor" />
+      <ComboBox x:Name="GlobalEditor"
+                Grid.Row="4"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                IsEditable="True" />
+
+      <TextBlock x:Name="lblMergeTool"
+                 Grid.Row="5"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Mergetool" />
+      <ComboBox x:Name="_NO_TRANSLATE_cboMergeTool"
+                Grid.Row="5"
+                Grid.Column="1"
+                Width="260"
+                HorizontalAlignment="Left"
+                IsEditable="True" />
+
+      <TextBlock x:Name="lblMergeToolPath"
+                 Grid.Row="6"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Path to mergetool" />
+      <TextBox x:Name="txtMergeToolPath"
+               Grid.Row="6"
+               Grid.Column="1" />
+      <Button x:Name="btnMergeToolBrowse"
+              Grid.Row="6"
+              Grid.Column="2"
+              Margin="6,0,0,0"
+              MinWidth="100"
+              Content="Browse" />
+
+      <TextBlock x:Name="lblMergeToolCommand"
+                 Grid.Row="7"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Mergetool command" />
+      <TextBox x:Name="txtMergeToolCommand"
+               Grid.Row="7"
+               Grid.Column="1" />
+      <Button x:Name="btnMergeToolCommandSuggest"
+              Grid.Row="7"
+              Grid.Column="2"
+              Margin="6,0,0,0"
+              MinWidth="100"
+              Content="Suggest" />
+
+      <TextBlock x:Name="lblDiffTool"
+                 Grid.Row="8"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Difftool" />
+      <ComboBox x:Name="_NO_TRANSLATE_cboDiffTool"
+                Grid.Row="8"
+                Grid.Column="1"
+                Width="260"
+                HorizontalAlignment="Left"
+                IsEditable="True" />
+
+      <TextBlock x:Name="lblDiffToolPath"
+                 Grid.Row="9"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Path to difftool" />
+      <TextBox x:Name="txtDiffToolPath"
+               Grid.Row="9"
+               Grid.Column="1" />
+      <Button x:Name="btnDiffToolBrowse"
+              Grid.Row="9"
+              Grid.Column="2"
+              Margin="6,0,0,0"
+              MinWidth="100"
+              Content="Browse" />
+
+      <TextBlock x:Name="lblDiffToolCommand"
+                 Grid.Row="10"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Difftool command" />
+      <TextBox x:Name="txtDiffToolCommand"
+               Grid.Row="10"
+               Grid.Column="1" />
+      <Button x:Name="btnDiffToolCommandSuggest"
+              Grid.Row="10"
+              Grid.Column="2"
+              Margin="6,0,0,0"
+              MinWidth="100"
+              Content="Suggest" />
+
+      <TextBlock x:Name="lblCommitTemplatePath"
+                 Grid.Row="11"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Path to commit template" />
+      <TextBox x:Name="txtCommitTemplatePath"
+               Grid.Row="11"
+               Grid.Column="1" />
+      <Button x:Name="btnCommitTemplateBrowse"
+              Grid.Row="11"
+              Grid.Column="2"
+              Margin="6,0,0,0"
+              MinWidth="100"
+              Content="Browse" />
+
+      <GroupBox x:Name="groupBoxLineEndings"
+                Grid.Row="12"
+                Grid.ColumnSpan="3"
+                Margin="0,3,0,0"
+                Header="Line endings">
+        <StackPanel x:Name="flowLayoutPanelLineEndings"
+                    Margin="8,4,8,8"
+                    Spacing="2">
+          <RadioButton x:Name="globalAutoCrlfTrue"
+                       Content="Checkout Windows-style, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;true&quot;)" />
+          <RadioButton x:Name="globalAutoCrlfInput"
+                       Content="Checkout as-is, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;input&quot;)" />
+          <RadioButton x:Name="globalAutoCrlfFalse"
+                       Content="Checkout as-is, commit as-is (&quot;core.autocrlf&quot;  is set to &quot;false&quot;)" />
+          <RadioButton x:Name="globalAutoCrlfNotSet"
+                       Content="Not set" />
+        </StackPanel>
+      </GroupBox>
+
+      <TextBlock x:Name="label60"
+                 Grid.Row="13"
+                 Margin="3,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="Files content encoding" />
+      <ComboBox x:Name="Global_FilesEncoding"
+                Grid.Row="13"
+                Grid.Column="1"
+                Width="260"
+                HorizontalAlignment="Left" />
+      <Button x:Name="ConfigureEncoding"
+              Grid.Row="13"
+              Grid.Column="2"
+              Margin="6,0,0,0"
+              MinWidth="100"
+              Content="Configure" />
+    </Grid>
+  </ScrollViewer>
+</settings:GitConfigBaseSettingsPage>

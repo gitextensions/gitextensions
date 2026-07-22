@@ -1,0 +1,166 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Avalonia twin of GitUI: ported types keep their original GitUI
+         namespaces so upstream diffs map 1:1 and translation keys stay valid. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <RootNamespace>GitUI</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Ported event handlers keep their WinForms signature "(object sender, EventArgs e)";
+         Avalonia's event delegates declare the sender as nullable. -->
+    <NoWarn>$(NoWarn);CS8622</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Mirror of the implicit System.Drawing using that UseWindowsForms provides in GitUI,
+         so portable GitUI files can be linked below without source changes. Files that also
+         use Avalonia's Point/Size alias per file. -->
+    <Using Include="System.Drawing" />
+    <!-- Exact aliases used by linked WinForms-shaped script contracts. Importing the whole
+         shim namespace would also introduce Button/Control and collide with Avalonia. -->
+    <Using Include="GitExtensions.Shims.WinForms.IWin32Window" Alias="IWin32Window" />
+    <Using Include="GitExtensions.Shims.WinForms.DialogResult" Alias="DialogResult" />
+    <Using Include="GitExtensions.Shims.WinForms.MessageBoxButtons" Alias="MessageBoxButtons" />
+    <Using Include="GitExtensions.Shims.WinForms.MessageBoxIcon" Alias="MessageBoxIcon" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Framework-free GitUI sources compiled unchanged (update
+         eng/avalonia/portmap.json when this list changes). -->
+    <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
+    <Compile Include="..\GitUI\Avatars\CustomAvatarProvider.UriTemplateData.cs" Link="Avatars\CustomAvatarProvider.UriTemplateData.cs" />
+    <Compile Include="..\GitUI\Avatars\HexString.cs" Link="Avatars\HexString.cs" />
+    <Compile Include="..\GitUI\Avatars\IAvatarCacheCleaner.cs" Link="Avatars\IAvatarCacheCleaner.cs" />
+    <Compile Include="..\GitUI\Avatars\MultiCacheCleaner.cs" Link="Avatars\MultiCacheCleaner.cs" />
+    <Compile Include="..\GitUI\Avatars\TemplateFormatter.cs" Link="Avatars\TemplateFormatter.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\FormClone.RemoteActionResult.cs" Link="CommandsDialogs\FormClone.RemoteActionResult.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\FormVerify.LostObject.cs" Link="CommandsDialogs\FormVerify.LostObject.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\FormRemotesController.cs" Link="CommandsDialogs\FormRemotesController.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridFileUpdate.cs" Link="CommandsDialogs\IRevisionGridFileUpdate.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridInfo.cs" Link="CommandsDialogs\IRevisionGridInfo.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridUpdate.cs" Link="CommandsDialogs\IRevisionGridUpdate.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\DistributedSettingsSet.cs" Link="CommandsDialogs\SettingsDialog\DistributedSettingsSet.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\GitConfigSettingsSet.cs" Link="CommandsDialogs\SettingsDialog\GitConfigSettingsSet.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\SettingsPageReference.cs" Link="CommandsDialogs\SettingsDialog\SettingsPageReference.cs" />
+    <Compile Include="..\GitUI\ConsoleEmulation\ConsoleOutputEventArgs.cs" Link="ConsoleEmulation\ConsoleOutputEventArgs.cs" />
+    <Compile Include="..\GitUI\ConsoleEmulation\ConsoleProcessExitEventArgs.cs" Link="ConsoleEmulation\ConsoleProcessExitEventArgs.cs" />
+    <Compile Include="..\GitUI\ConsoleEmulation\IConsoleEmulatorsRegistry.cs" Link="ConsoleEmulation\IConsoleEmulatorsRegistry.cs" />
+    <Compile Include="..\GitUI\ConsoleEmulation\PlainText\IPlainTextConsoleCommandRunner.cs" Link="ConsoleEmulation\PlainText\IPlainTextConsoleCommandRunner.cs" />
+    <Compile Include="..\GitUI\Editor\ViewMode.cs" Link="Editor\ViewMode.cs" />
+    <Compile Include="..\GitUI\Editor\ViewModeExtension.cs" Link="Editor\ViewModeExtension.cs" />
+    <Compile Include="..\GitUI\FormStatusOutputLog.cs" Link="FormStatusOutputLog.cs" />
+    <Compile Include="..\GitUI\IGitUICommandsSource.cs" Link="IGitUICommandsSource.cs" />
+    <Compile Include="..\GitUI\GitUICommandsSourceEventArgs.cs" Link="GitUICommandsSourceEventArgs.cs" />
+    <Compile Include="..\GitUI\Hotkey\HotkeySettings.cs" Link="Hotkey\HotkeySettings.cs" />
+    <Compile Include="..\GitUI\Models\IOutputHistoryRecorder.cs" Link="Models\IOutputHistoryRecorder.cs" />
+    <Compile Include="..\GitUI\Models\IOutputHistoryProvider.cs" Link="Models\IOutputHistoryProvider.cs" />
+    <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
+    <Compile Include="..\GitUI\Plugin\GitPluginSettingsContainer.cs" Link="Plugin\GitPluginSettingsContainer.cs" />
+    <Compile Include="..\GitUI\Plugin\PluginRegistry.cs" Link="Plugin\PluginRegistry.cs" />
+    <Compile Include="..\GitUI\RevisionDiffInfoProvider.cs" Link="RevisionDiffInfoProvider.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\FilePromptCreator.cs" Link="ScriptsEngine\FilePromptCreator.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IScriptOptionsForm.cs" Link="ScriptsEngine\IScriptOptionsForm.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IScriptOptionsProvider.cs" Link="ScriptsEngine\IScriptOptionsProvider.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IScriptsManager.cs" Link="ScriptsEngine\IScriptsManager.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IScriptsRunner.cs" Link="ScriptsEngine\IScriptsRunner.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\IUserInputPrompt.cs" Link="ScriptsEngine\IUserInputPrompt.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\ScriptEvent.cs" Link="ScriptsEngine\ScriptEvent.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\ScriptOptionsParser.cs" Link="ScriptsEngine\ScriptOptionsParser.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\ScriptOptionsProviderBase.cs" Link="ScriptsEngine\ScriptOptionsProviderBase.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\ScriptsManager.cs" Link="ScriptsEngine\ScriptsManager.cs" />
+    <Compile Include="..\GitUI\ScriptsEngine\SimplePromptCreator.cs" Link="ScriptsEngine\SimplePromptCreator.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeCssUrlResolver.cs" Link="Theming\ThemeCssUrlResolver.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeCssUrlResolverException.cs" Link="Theming\ThemeCssUrlResolverException.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeException.cs" Link="Theming\ThemeException.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeFileReader.cs" Link="Theming\ThemeFileReader.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeLoader.cs" Link="Theming\ThemeLoader.cs" />
+    <Compile Include="..\GitUI\Theming\ThemePersistence.cs" Link="Theming\ThemePersistence.cs" />
+    <Compile Include="..\GitUI\Theming\ThemeRepository.cs" Link="Theming\ThemeRepository.cs" />
+    <Compile Include="..\GitUI\SpellChecker\SpellCheckerHelper.cs" Link="SpellChecker\SpellCheckerHelper.cs" />
+    <Compile Include="..\GitUI\SpellChecker\TextPos.cs" Link="SpellChecker\TextPos.cs" />
+    <Compile Include="..\GitUI\SpellChecker\WordAtCursorExtractor.cs" Link="SpellChecker\WordAtCursorExtractor.cs" />
+    <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
+    <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
+    <Compile Include="..\GitUI\UserControls\FileStatusDiffCalculator.cs" Link="UserControls\FileStatusDiffCalculator.cs" />
+    <Compile Include="..\GitUI\UserControls\FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs" Link="UserControls\FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs" />
+    <Compile Include="..\GitUI\UserControls\FileStatusWithDescription.cs" Link="UserControls\FileStatusWithDescription.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" Link="UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\FilterInfo.cs" Link="UserControls\RevisionGrid\FilterInfo.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\IRevisionGridFilter.cs" Link="UserControls\RevisionGrid\IRevisionGridFilter.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionFilter.cs" Link="UserControls\RevisionGrid\RevisionFilter.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\FilterChangedEventArgs.cs" Link="UserControls\RevisionGrid\FilterChangedEventArgs.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionLoadEventArgs.cs" Link="UserControls\RevisionGrid\RevisionLoadEventArgs.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionGridControl.Command.cs" Link="UserControls\RevisionGrid\RevisionGridControl.Command.cs" />
+    <Compile Include="..\GitUI\UserControls\MainThreadScheduler.cs" Link="UserControls\MainThreadScheduler.cs" />
+    <Compile Include="..\GitUI\UserControls\GitBlameParser.cs" Link="UserControls\GitBlameParser.cs" />
+    <Compile Include="..\GitUI\UserControls\PatchFile.cs" Link="UserControls\PatchFile.cs" />
+    <Compile Include="..\GitUI\UserControls\TextEventArgs.cs" Link="UserControls\TextEventArgs.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" Link="UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\GitRefListsForRevision.cs" Link="UserControls\RevisionGrid\GitRefListsForRevision.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\RefLabelIcon.cs" Link="UserControls\RevisionGrid\RefLabelIcon.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\RefLabelShape.cs" Link="UserControls\RevisionGrid\RefLabelShape.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\SuperProjectInfo.cs" Link="UserControls\RevisionGrid\SuperProjectInfo.cs" />
+    <Compile Include="..\GitUI\UserManual\IProvideUserManual.cs" Link="UserManual\IProvideUserManual.cs" />
+    <Compile Include="..\GitUI\UserManual\StandardHtmlUserManual.cs" Link="UserManual\StandardHtmlUserManual.cs" />
+    <Compile Include="..\GitUI\UserManual\UserManual.cs" Link="UserManual\UserManual.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\BranchFinder.cs" Link="UserControls\RevisionGrid\Graph\BranchFinder.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Lane.cs" Link="UserControls\RevisionGrid\Graph\Lane.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneInfo.cs" Link="UserControls\RevisionGrid\Graph\LaneInfo.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneInfoProvider.cs" Link="UserControls\RevisionGrid\Graph\LaneInfoProvider.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneNodeLocator.cs" Link="UserControls\RevisionGrid\Graph\LaneNodeLocator.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneSharing.cs" Link="UserControls\RevisionGrid\Graph\LaneSharing.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraph.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraph.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraphConfig.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraphConfig.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraphRevision.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraphRevision.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraphRow.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraphRow.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraphSegment.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraphSegment.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Rendering\DiagonalSegmentInfo.cs" Link="UserControls\RevisionGrid\Graph\Rendering\DiagonalSegmentInfo.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Rendering\SegmentLanesInfo.cs" Link="UserControls\RevisionGrid\Graph\Rendering\SegmentLanesInfo.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Rendering\SegmentPointsInfo.cs" Link="UserControls\RevisionGrid\Graph\Rendering\SegmentPointsInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\externals\NetSpell.SpellChecker\SpellChecker.csproj"
+                      AdditionalProperties="BuildAvalonia=true" />
+    <!-- The language files are shared with the WinForms application; translation keys are
+         identical, so all existing translations apply to the Avalonia twins unchanged. -->
+    <None Include="..\GitUI\Translation\*.xlf" Link="Translation\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Compile and deploy the same CSS theme files as the WinForms application. -->
+    <Content Include="..\GitUI\Themes\*.css" Link="Themes\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\GitUI\Themes\README.md" Link="Themes\README.md" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Images.resx's existing file-backed assets. Properties/Images.g.cs exposes the same
+         property names as the WinForms resource designer and loads these packaged PNGs. -->
+    <AvaloniaResource Include="..\GitUI\Resources\Backgrounds\*.png" Link="Resources\Backgrounds\%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\GitUI\Resources\Help\*.png" Link="Resources\Help\%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\GitUI\Resources\Icons\*.png" Link="Resources\Icons\%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\GitUI\Resources\Icons\*.ico" Link="Resources\Icons\%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\..\..\setup\assets\Logo\*.png" Link="Resources\Logo\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="ExCSS" />
+    <PackageReference Include="JetBrains.Annotations" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
+    <ProjectReference Include="..\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
+    <ProjectReference Include="..\GitExtensions.Shims.WinForms\GitExtensions.Shims.WinForms.csproj" />
+    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Cross-platform assemblies must not carry the SupportedOSPlatform("windows7.0")
+         attribute from CommonAssemblyInfo.cs; use the platform-neutral variant. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+</Project>

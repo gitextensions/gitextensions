@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.FormResetChanges"
+        Width="460" Height="121"
+        WindowStartupLocation="CenterOwner"
+        Title="Reset changes">
+  <!-- The docked children are ordered bottom-up: Windows Forms docks in reverse z-order,
+       so the button row sits at the very bottom and the message fills what is left. -->
+  <DockPanel Margin="8,8,0,0">
+    <StackPanel x:Name="flowLayoutPanel1" DockPanel.Dock="Bottom" Orientation="Horizontal"
+                HorizontalAlignment="Right" Spacing="6" Margin="2">
+      <Button x:Name="btnReset" Classes="gitextensions-dialog-action" Content="R_eset" />
+      <Button x:Name="btnCancel" Classes="gitextensions-dialog-action" Content="_Cancel" IsDefault="True" IsCancel="True" />
+    </StackPanel>
+    <CheckBox x:Name="cbDeleteNewFilesAndDirectories" DockPanel.Dock="Bottom" Margin="3,8,0,8"
+              Content="Also delete _new files and/or directories" />
+    <TextBlock x:Name="lblDeleteHint" DockPanel.Dock="Bottom" Margin="0,8,0,8"
+               Text="This will delete any uncommitted work." />
+    <TextBox x:Name="txtMessage" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap"
+             BorderThickness="0" Background="Transparent"
+             Text="Are you sure you want to reset your changes?" />
+  </DockPanel>
+</Window>

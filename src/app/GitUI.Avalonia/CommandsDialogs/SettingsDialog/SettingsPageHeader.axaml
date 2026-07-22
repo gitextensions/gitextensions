@@ -1,0 +1,39 @@
+<ui:TranslatedControl xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:ui="using:GitUI"
+                      x:Class="GitUI.CommandsDialogs.SettingsDialog.SettingsPageHeader">
+  <Grid RowDefinitions="Auto,*"
+        Margin="0,4,0,0">
+    <StackPanel x:Name="HeaderPanel"
+                Grid.Row="0"
+                Spacing="7"
+                Margin="0,0,0,7">
+      <WrapPanel x:Name="flowLayoutPanel1"
+                 VerticalAlignment="Center">
+        <TextBlock x:Name="label1"
+                   Margin="3,4,6,4"
+                   VerticalAlignment="Center"
+                   FontWeight="Bold"
+                   Text="Settings source:" />
+        <StackPanel x:Name="tableLayoutPanel1"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center">
+          <RadioButton x:Name="EffectiveRB" Margin="3,4" Content="Effective" />
+          <TextBlock x:Name="arrowLocal" Margin="3,4" VerticalAlignment="Center" Text="&lt;&lt;" />
+          <RadioButton x:Name="LocalRB" Margin="3,4" Content="Local for current repository" />
+          <TextBlock x:Name="arrowDistributed" Margin="3,4" VerticalAlignment="Center" Text="&lt;&lt;" />
+          <RadioButton x:Name="DistributedRB" Margin="3,4" Content="Distributed with current repository" />
+          <TextBlock x:Name="arrowGlobal" Margin="3,4" VerticalAlignment="Center" Text="&lt;&lt;" />
+          <RadioButton x:Name="GlobalRB" Margin="3,4" Content="Global for all repositories" />
+          <TextBlock x:Name="arrowSystem" Margin="3,4" VerticalAlignment="Center" Text="&lt;&lt;" />
+          <RadioButton x:Name="SystemRB" Margin="3,4" Content="System" />
+        </StackPanel>
+      </WrapPanel>
+      <Border x:Name="linePanel"
+              Height="1"
+              Background="{DynamicResource ThemeBorderMidBrush}" />
+    </StackPanel>
+    <ContentControl x:Name="settingsPagePanel"
+                    Grid.Row="1" />
+  </Grid>
+</ui:TranslatedControl>

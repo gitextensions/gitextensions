@@ -1,0 +1,304 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="clr-namespace:GitUI"
+        xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
+        xmlns:commandsDialogs="using:GitUI.CommandsDialogs"
+        xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
+        xmlns:controls="clr-namespace:GitUI.UserControls"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormBrowse"
+        Width="1280" Height="800"
+        MinWidth="900" MinHeight="560"
+        Title="Git Extensions">
+  <Window.Styles>
+    <Style Selector="MenuItem.worktree-deleted">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
+    </Style>
+  </Window.Styles>
+  <DockPanel>
+    <Menu x:Name="mainMenuStrip" DockPanel.Dock="Top">
+      <MenuItem x:Name="repositoryToolStripMenuItem" Header="_Repository">
+        <MenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="manageWorktreeToolStripMenuItem" Header="Manage _worktrees...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.WorkTree}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="gitMaintenanceToolStripMenuItem" Header="_Git maintenance">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Maintenance}" /></MenuItem.Icon>
+          <MenuItem x:Name="recoverLostObjectsToolStripMenuItem" Header="_Recover lost objects...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RecoverLostObjects}" /></MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
+        <MenuItem x:Name="commitToolStripMenuItem" Header="_Commit...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RepoStateClean}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="branchToolStripMenuItem" Header="Create _branch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="deleteBranchToolStripMenuItem" Header="De_lete branch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchDelete}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="pullToolStripMenuItem" Header="Pull_/Fetch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PullFetchAll}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge branches...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Merge}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="rebaseToolStripMenuItem" Header="Rebas_e...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="tagToolStripMenuItem" Header="Create _tag...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="deleteTagToolStripMenuItem" Header="_Delete tag...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="archiveToolStripMenuItem" Header="Archi_ve revision...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ArchiveRevision}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="stashToolStripMenuItem" Header="Ma_nage stashes...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="toolStripMenuItemReflog" Header="Show reflo_g...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Book}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="patchToolStripMenuItem" Header="View patc_h file...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PatchView}" /></MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem x:Name="pluginsToolStripMenuItem" Header="_Plugins">
+        <MenuItem x:Name="pluginsLoadingToolStripMenuItem"
+                  Header="Loading..."
+                  IsEnabled="False" />
+        <Separator />
+        <MenuItem x:Name="pluginSettingsToolStripMenuItem" Header="Plugins _settings...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem x:Name="toolsToolStripMenuItem" Header="_Tools">
+        <MenuItem Tag="userShell">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GitForWindows}" /></MenuItem.Icon>
+          <MenuItem.Header>
+            <TextBlock Text="Git bash" />
+          </MenuItem.Header>
+        </MenuItem>
+      </MenuItem>
+    </Menu>
+    <WrapPanel x:Name="toolPanel"
+               DockPanel.Dock="Top"
+               Margin="3,0"
+               Orientation="Horizontal">
+      <StackPanel x:Name="ToolStripMain"
+                  Height="25"
+                  Orientation="Horizontal"
+                  Spacing="1">
+        <Button x:Name="RefreshButton" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.ReloadRevisions}" />
+        </Button>
+        <Border Classes="gitextensions-toolbar-separator" />
+        <Button x:Name="toggleLeftPanel" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutSidebarLeft}" />
+        </Button>
+        <Button x:Name="toggleSplitViewLayout" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutFooter}" />
+        </Button>
+        <SplitButton x:Name="menuCommitInfoPosition"
+                     Classes="gitextensions-toolbar-button">
+          <SplitButton.Content>
+            <Image x:Name="menuCommitInfoPositionImage"
+                   Width="16"
+                   Height="16"
+                   Source="{x:Static properties:Images.LayoutFooterTab}" />
+          </SplitButton.Content>
+          <SplitButton.Flyout>
+            <MenuFlyout>
+              <MenuItem x:Name="commitInfoBelowMenuItem" Header="Commit info _below graph">
+                <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutFooterTab}" /></MenuItem.Icon>
+              </MenuItem>
+              <MenuItem x:Name="commitInfoLeftwardMenuItem" Header="Commit info _left of graph">
+                <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutSidebarTopLeft}" /></MenuItem.Icon>
+              </MenuItem>
+              <MenuItem x:Name="commitInfoRightwardMenuItem" Header="Commit info _right of graph">
+                <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutSidebarTopRight}" /></MenuItem.Icon>
+              </MenuItem>
+            </MenuFlyout>
+          </SplitButton.Flyout>
+        </SplitButton>
+        <Border Classes="gitextensions-toolbar-separator" />
+        <compat:IconSplitButton x:Name="toolStripWorktrees"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Content="Worktrees"
+                                Icon="{x:Static properties:Images.WorkTree}"
+                                IsVisible="False">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <compat:ToolbarComboBox x:Name="_NO_TRANSLATE_WorkingDir"
+                                Width="180"
+                                Height="23"
+                                IsEditable="True" />
+        <compat:IconSplitButton x:Name="branchSelect"
+                                Classes="gitextensions-toolbar-button"
+                                Content="Branch"
+                                Icon="{x:Static properties:Images.Branch}">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout />
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <Border Classes="gitextensions-toolbar-separator" />
+        <compat:IconSplitButton x:Name="toolStripButtonPull"
+                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                Content="Pull"
+                                Icon="{x:Static properties:Images.Pull}">
+          <compat:IconSplitButton.Flyout>
+            <MenuFlyout>
+              <MenuItem x:Name="pullToolStripMenuItem1" Header="Open _pull dialog..." />
+              <Separator />
+              <MenuItem x:Name="mergeToolStripMenuItem" Header="Pull - _merge" />
+              <MenuItem x:Name="rebaseToolStripMenuItem1" Header="Pull - _rebase" />
+              <MenuItem x:Name="fetchToolStripMenuItem" Header="_Fetch" />
+              <MenuItem Tag="fetchAllToolbar" Header="Fetch _all" />
+              <MenuItem x:Name="fetchPruneAllToolStripMenuItem" Header="F_etch and prune all" />
+              <Separator />
+              <MenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action">
+                <MenuItem x:Name="defaultPullDialogToolStripMenuItem" Header="Open pull dialog" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullMergeToolStripMenuItem" Header="Pull - merge" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullRebaseToolStripMenuItem" Header="Pull - rebase" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullFetchToolStripMenuItem" Header="Fetch" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullFetchAllToolStripMenuItem" Header="Fetch all" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullFetchPruneAllToolStripMenuItem" Header="Fetch and prune all" ToggleType="Radio" />
+              </MenuItem>
+            </MenuFlyout>
+          </compat:IconSplitButton.Flyout>
+        </compat:IconSplitButton>
+        <compat:IconButton x:Name="toolStripButtonPush"
+                           Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                           Content="Push"
+                           Icon="{x:Static properties:Images.Push}" />
+        <compat:IconButton x:Name="toolStripButtonCommit"
+                           Classes="gitextensions-toolbar-button"
+                           Content="Commit"
+                           Icon="{x:Static properties:Images.RepoStateClean}" />
+        <SplitButton x:Name="toolStripSplitStash"
+                     Classes="gitextensions-toolbar-button">
+          <SplitButton.Content>
+            <Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" />
+          </SplitButton.Content>
+          <SplitButton.Flyout>
+            <MenuFlyout>
+              <MenuItem x:Name="stashChangesToolStripMenuItem" Header="_Stash" />
+              <MenuItem x:Name="stashStagedToolStripMenuItem" Header="S_tash staged" />
+              <MenuItem x:Name="stashPopToolStripMenuItem" Header="Stash _pop" />
+              <Separator />
+              <MenuItem x:Name="manageStashesToolStripMenuItem" Header="_Manage stashes..." />
+              <MenuItem x:Name="createAStashToolStripMenuItem" Header="_Create a stash..." />
+            </MenuFlyout>
+          </SplitButton.Flyout>
+        </SplitButton>
+        <Border Classes="gitextensions-toolbar-separator" />
+        <Button x:Name="toolStripFileExplorer" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.BrowseFileExplorer}" />
+        </Button>
+        <Button x:Name="userShell" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.GitForWindows}" />
+        </Button>
+        <compat:IconButton x:Name="EditSettings"
+                           Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                           Content="Settings"
+                           Icon="{x:Static properties:Images.Settings}" />
+      </StackPanel>
+      <controls:FilterToolBar x:Name="ToolStripFilters" />
+      <StackPanel x:Name="ToolStripScripts"
+                  Height="25"
+                  Orientation="Horizontal"
+                  Spacing="1"
+                  IsVisible="False" />
+    </WrapPanel>
+    <TextBlock x:Name="lblRepoPath" IsVisible="False" />
+    <TextBlock x:Name="lblStatus" IsVisible="False" />
+    <Grid x:Name="mainContentGrid"
+          ColumnDefinitions="260,0,*"
+          RowDefinitions="*,0,0"
+          Margin="6,0,6,6">
+      <Border x:Name="leftPanel" Grid.Column="0" Classes="gitextensions-section">
+        <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" />
+      </Border>
+      <GridSplitter x:Name="leftPanelSplitter" Grid.Column="1" ResizeDirection="Columns" />
+      <Grid x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="3*,0,2*">
+        <Grid x:Name="RevisionsSplitContainer" Grid.Row="0" ColumnDefinitions="0,0,*,0,0">
+          <Border x:Name="commitInfoLeftHost" Grid.Column="0" Classes="gitextensions-section" />
+          <GridSplitter x:Name="commitInfoLeftSplitter" Grid.Column="1" ResizeDirection="Columns" IsVisible="False" />
+          <Border x:Name="RevisionGridContainer" Grid.Column="2" Classes="gitextensions-section">
+            <gitui:RevisionGridControl x:Name="RevisionGrid" />
+          </Border>
+          <GridSplitter x:Name="commitInfoRightSplitter" Grid.Column="3" ResizeDirection="Columns" IsVisible="False" />
+          <Border x:Name="commitInfoRightHost" Grid.Column="4" Classes="gitextensions-section" />
+        </Grid>
+        <GridSplitter x:Name="splitViewSplitter" Grid.Row="1" ResizeDirection="Rows" />
+        <commandsDialogs:FullBleedTabControl x:Name="CommitInfoTabControl"
+                                              Grid.Row="2"
+                                              SelectedIndex="0"
+                                              Padding="0"
+                                              Classes="gitextensions-workspace-tabs">
+          <TabItem x:Name="CommitInfoTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="Commit"
+                   Icon="{x:Static properties:Images.CommitSummary}">
+            <Border x:Name="commitInfoBelowHost" Classes="gitextensions-section">
+              <commitinfo:CommitInfo x:Name="RevisionInfo" />
+            </Border>
+          </TabItem>
+          <TabItem x:Name="DiffTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="Diff"
+                   Icon="{x:Static properties:Images.Diff}">
+            <commandsDialogs:RevisionDiffControl x:Name="revisionDiff" />
+          </TabItem>
+          <TabItem x:Name="TreeTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="File tree"
+                   Icon="{x:Static properties:Images.FileTree}">
+            <commandsDialogs:RevisionDiffControl x:Name="fileTree" />
+          </TabItem>
+          <TabItem x:Name="GpgInfoTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="GPG"
+                   Icon="{x:Static properties:Images.Key}"
+                   IsVisible="False">
+            <commandsDialogs:RevisionGpgInfoControl x:Name="revisionGpgInfo1" Padding="6" />
+          </TabItem>
+        </commandsDialogs:FullBleedTabControl>
+      </Grid>
+      <GridSplitter x:Name="outputHistorySplitter"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="3"
+                    ResizeDirection="Rows"
+                    IsVisible="False" />
+      <Border x:Name="outputHistoryPanelHost"
+              Grid.Row="2"
+              Grid.ColumnSpan="3"
+              Classes="gitextensions-section"
+              IsVisible="False" />
+    </Grid>
+  </DockPanel>
+</Window>

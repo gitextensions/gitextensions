@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Avalonia twin of the GitExtensions entry point. -->
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <RootNamespace>GitExtensions</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(RepoRoot)setup\assets\Dictionaries\*.dic"
+             Link="Dictionaries\%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="GitInfo">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GitUI.Avalonia\GitUI.Avalonia.csproj" />
+    <!-- Build the currently portable bundled plugins when GitExtensions.Avalonia is the
+         entry project. Their own output contract places them below TargetDir\Plugins;
+         they are discovered by MEF at runtime rather than referenced by the app. -->
+    <ProjectReference Include="..\..\plugins\AutoCompileSubmodules\GitExtensions.Plugins.AutoCompileSubmodules.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\BackgroundFetch\GitExtensions.Plugins.BackgroundFetch.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\BuildServerIntegration\AzureDevOpsIntegration\GitExtensions.Plugins.AzureDevOpsIntegration.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\BuildServerIntegration\GitHubActionsIntegration\GitExtensions.Plugins.GitHubActionsIntegration.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\BuildServerIntegration\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\BuildServerIntegration\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\BuildServerIntegration\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <MacProcessGroupLauncher>$(IntermediateOutputPath)GitExtensions.ProcessGroupLauncher</MacProcessGroupLauncher>
+  </PropertyGroup>
+
+  <Target Name="BuildMacProcessGroupLauncher"
+          BeforeTargets="CoreCompile"
+          Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <Exec Command="cc -std=c11 -Wall -Wextra -Werror -O2 &quot;$(MSBuildProjectDirectory)/Compat/ProcessGroupLauncher.c&quot; -o &quot;$(MacProcessGroupLauncher)&quot;" />
+  </Target>
+
+  <Target Name="CopyMacProcessGroupLauncherToOutput"
+          AfterTargets="Build"
+          DependsOnTargets="BuildMacProcessGroupLauncher"
+          Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Copy SourceFiles="$(MacProcessGroupLauncher)" DestinationFolder="$(TargetDir)" />
+  </Target>
+
+  <Target Name="AddMacProcessGroupLauncherToPublish"
+          BeforeTargets="ComputeFilesToPublish"
+          DependsOnTargets="BuildMacProcessGroupLauncher"
+          Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(MacProcessGroupLauncher)" RelativePath="GitExtensions.ProcessGroupLauncher" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <!-- Cross-platform assemblies must not carry the SupportedOSPlatform("windows7.0")
+         attribute from CommonAssemblyInfo.cs; use the platform-neutral variant. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Include="$(RepoRoot)\src\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
+  </ItemGroup>
+
+</Project>

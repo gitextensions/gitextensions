@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
@@ -6,15 +6,44 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
+    <!-- Avalonia/Linux port: additionally build a cross-platform flavor
+         that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
+    <UseGitExtensionsShims>true</UseGitExtensionsShims>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="AdysTech.CredentialManager" />
+    <PackageReference Include="AdysTech.CredentialManager" Condition="'$(TargetFramework)' != 'net10.0'" />
     <PackageReference Include="StrongOf" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- Windows-only: Windows Credential Store storage and its WinForms editor control.
+         CredentialsManager.NonWindows.cs keeps ICredentialsManager available on net10.0. -->
+    <Compile Remove="Settings\CredentialsManager.cs" />
+    <Compile Remove="Settings\CredentialsSetting.cs" />
+    <Compile Remove="Settings\UserControls\CredentialsControl.cs" />
+    <Compile Remove="Settings\UserControls\CredentialsControl.Designer.cs" />
+    <EmbeddedResource Remove="Settings\UserControls\CredentialsControl.resx" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
+    <!-- Cross-platform substitute; the Windows flavor uses CredentialsManager.cs instead. -->
+    <Compile Remove="Settings\CredentialsManager.NonWindows.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Settings\UserControls\CredentialsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Include="..\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
   </ItemGroup>
 
 </Project>

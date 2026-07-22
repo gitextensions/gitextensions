@@ -1,0 +1,197 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="using:GitUI"
+        xmlns:help="using:GitUI.Help"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormRebase"
+        Width="1034"
+        Height="500"
+        MinWidth="850"
+        MinHeight="430"
+        WindowStartupLocation="CenterOwner"
+        Title="Rebase">
+  <Grid RowDefinitions="*,Auto,Auto">
+    <Border x:Name="MainPanel" Padding="9">
+      <Grid x:Name="MainLayout" ColumnDefinitions="Auto,*" ColumnSpacing="8">
+        <help:HelpImageDisplayUserControl x:Name="PanelLeftImage"
+                                          MinHeight="390"
+                                          IsExpanded="True"
+                                          UniqueIsExpandedSettingsId="Rebase" />
+
+        <Grid x:Name="PanelMiddle"
+              Grid.Column="1"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto"
+              RowSpacing="8">
+          <TextBlock x:Name="lblRebase"
+                     Text="Rebase current branch on top of another branch" />
+
+          <StackPanel x:Name="PanelCurrentBranch"
+                      Grid.Row="1"
+                      Orientation="Horizontal"
+                      Spacing="6">
+            <TextBlock x:Name="lblCurrent" Text="Current branch:" />
+            <TextBlock x:Name="Currentbranch" FontWeight="Bold" />
+          </StackPanel>
+
+          <StackPanel x:Name="rebasePanel"
+                      Grid.Row="2"
+                      Orientation="Horizontal"
+                      Spacing="8">
+            <TextBlock x:Name="label2"
+                       Text="_Rebase on"
+                       VerticalAlignment="Center" />
+            <ComboBox x:Name="cboBranches"
+                      Width="300"
+                      IsEditable="True" />
+            <HyperlinkButton x:Name="llblShowOptions"
+                             VerticalAlignment="Center"
+                             Content="Show options" />
+          </StackPanel>
+
+          <WrapPanel x:Name="flpnlOptionsPanelTop"
+                     Grid.Row="3"
+                     IsVisible="False">
+            <CheckBox x:Name="chkInteractive"
+                      Margin="0,0,10,4"
+                      Content="_Interactive Rebase"
+                      IsVisible="True" />
+            <CheckBox x:Name="chkPreserveMerges"
+                      Margin="0,0,10,4"
+                      Content="_Preserve Merges" />
+            <CheckBox x:Name="chkAutosquash"
+                      Margin="0,0,10,4"
+                      Content="Autos_quash"
+                      IsEnabled="False" />
+            <CheckBox x:Name="chkStash"
+                      Margin="0,0,10,4"
+                      Content="A_uto stash"
+                      IsEnabled="False" />
+            <CheckBox x:Name="chkIgnoreDate"
+                      Margin="0,0,10,4"
+                      Content="Ignore _date" />
+            <CheckBox x:Name="chkCommitterDateIsAuthorDate"
+                      Margin="0,0,10,4"
+                      Content="Co_mmitter date is author date" />
+            <CheckBox x:Name="checkBoxUpdateRefs"
+                      Margin="0,0,10,4"
+                      Content="Update dependent r_efs" />
+          </WrapPanel>
+
+          <StackPanel x:Name="flpnlOptionsPanelBottom"
+                      Grid.Row="4"
+                      Orientation="Horizontal"
+                      Spacing="6"
+                      IsVisible="False">
+            <CheckBox x:Name="chkSpecificRange"
+                      Content="Specific ra_nge" />
+            <TextBlock x:Name="lblRangeFrom"
+                       Text="_From (exc.)"
+                       VerticalAlignment="Center" />
+            <TextBox x:Name="txtFrom"
+                     Width="100"
+                     IsEnabled="False" />
+            <compat:IconButton x:Name="btnChooseFromRevision"
+                               Classes="gitextensions-icon-only"
+                               Width="26"
+                               Icon="{x:Static properties:Images.SelectRevision}"
+                               IsEnabled="False" />
+            <TextBlock x:Name="lblRangeTo"
+                       Text="_To"
+                       VerticalAlignment="Center" />
+            <ComboBox x:Name="cboTo"
+                      Width="200"
+                      IsEditable="True"
+                      IsEnabled="False" />
+          </StackPanel>
+
+          <DockPanel Grid.Row="5">
+            <TextBlock x:Name="lblCommitsToReapply"
+                       DockPanel.Dock="Top"
+                       Margin="0,0,0,4"
+                       Text="Commits to re-apply:"
+                       IsVisible="False" />
+            <gitui:PatchGrid x:Name="PatchGrid"
+                             Margin="0,24,0,0"
+                             MinHeight="180"
+                             IsVisible="False" />
+          </DockPanel>
+
+          <Grid x:Name="tlpnlSecondaryControls"
+                Grid.Row="6"
+                ColumnDefinitions="*,*">
+            <StackPanel x:Name="flowLayoutPanel1"
+                        Orientation="Horizontal"
+                        Spacing="6">
+              <compat:IconButton x:Name="btnAddFiles"
+                                 Classes="gitextensions-dialog-action"
+                                 MinWidth="79"
+                                 Icon="{x:Static properties:Images.BulletAdd}"
+                                 Content="_Add files"
+                                 IsVisible="False" />
+              <compat:IconButton x:Name="btnCommit"
+                                 Classes="gitextensions-dialog-action"
+                                 MinWidth="86"
+                                 Icon="{x:Static properties:Images.RepoStateStaged}"
+                                 Content="C_ommit..."
+                                 IsVisible="False" />
+              <compat:IconButton x:Name="btnEditTodo"
+                                 Classes="gitextensions-dialog-action"
+                                 MinWidth="90"
+                                 Icon="{x:Static properties:Images.EditFile}"
+                                 Content="_Edit todo..."
+                                 IsVisible="False" />
+            </StackPanel>
+            <StackPanel x:Name="flowLayoutPanel2"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right">
+              <Button x:Name="btnSkip"
+                      Classes="gitextensions-dialog-action"
+                      MinWidth="183"
+                      Content="S_kip currently applying commit"
+                      IsVisible="False" />
+            </StackPanel>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Border>
+
+    <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
+                Grid.Row="1"
+                Margin="8"
+                Spacing="6">
+      <compat:IconButton x:Name="btnRebase"
+                         Classes="gitextensions-dialog-action"
+                         MinWidth="100"
+                         Icon="{x:Static properties:Images.Rebase}"
+                         Content="Rebase"
+                         IsDefault="True" />
+      <Border x:Name="MergeToolPanel">
+        <Button x:Name="btnSolveConflicts"
+                Classes="gitextensions-dialog-action"
+                MinWidth="110"
+                Content="_Solve conflicts"
+                IsVisible="False" />
+      </Border>
+      <Button x:Name="btnContinueRebase"
+              Classes="gitextensions-dialog-action"
+              MinWidth="115"
+              Content="_Continue rebase"
+              IsVisible="False" />
+      <Button x:Name="btnAbort"
+              Classes="gitextensions-dialog-action"
+              Content="A_bort"
+              IsVisible="False" />
+    </StackPanel>
+
+    <Button x:Name="btnSolveMergeconflicts"
+            Classes="gitextensions-dialog-action"
+            Grid.Row="2"
+            Margin="12,0,12,8"
+            MinWidth="213"
+            HorizontalAlignment="Left"
+            Content="There are unresolved merge conflicts"
+            IsVisible="False" />
+  </Grid>
+</Window>

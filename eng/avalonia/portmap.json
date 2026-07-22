@@ -1,0 +1,1971 @@
+{
+  "//": [
+    "Map of Windows Forms sources to their Avalonia twins. One entry per ported source file.",
+    "status: scaffolded (compiles, layout unfinished) | functional (works, reduced feature set) | parity (feature-complete twin).",
+    "basedOn: the upstream commit the twin was last synchronized with.",
+    "eng/avalonia/upstream-drift.sh joins upstream diffs against this map; keep it accurate when porting or syncing."
+  ],
+  "src/app/GitUI/Avatars/AvatarDownloader.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/AvatarDownloader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains concurrent request de-duplication, retry, expiry and proxy credentials while returning validated encoded bytes; the HTTP request itself replaces the Windows-only InternetGetConnectedState pre-check."
+  },
+  "src/app/GitUI/Avatars/AvatarMemoryCache.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/AvatarMemoryCache.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same MRU and concurrent-request coordination over encoded image bytes, so cached objects carry no UI-framework ownership."
+  },
+  "src/app/GitUI/Avatars/AvatarService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/AvatarService.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same provider/fallback composition, hot swap, memory/disk caches and user-image safety net over the encoded-byte contract."
+  },
+  "src/app/GitUI/Avatars/ChainedAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/ChainedAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/CustomAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/CustomAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/CustomAvatarProvider.UriTemplateData.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/CustomAvatarProvider.UriTemplateData.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/Avatars/CustomAvatarProvider.UriTemplateResolver.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/CustomAvatarProvider.UriTemplateResolver.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/FileSystemAvatarCache.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/FileSystemAvatarCache.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same path, expiry, provider-none and cache-clear behavior; encoded bytes are read and written directly instead of round-tripping through GDI."
+  },
+  "src/app/GitUI/Avatars/GithubAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/GithubAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same normal/noreply/bot resolution and 420px identicon rejection. Bot profile lookup uses the portable GitHub JSON endpoint directly because the legacy Git.hub project is Windows-targeted."
+  },
+  "src/app/GitUI/Avatars/GravatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/GravatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/HexString.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/HexString.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/Avatars/HotSwapAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/HotSwapAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/IAvatarCacheCleaner.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/IAvatarCacheCleaner.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/Avatars/IAvatarDownloader.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/IAvatarDownloader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same interface role with encoded byte arrays replacing System.Drawing.Image."
+  },
+  "src/app/GitUI/Avatars/IAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/IAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same provider contract and PerformsIo semantics with encoded byte arrays replacing System.Drawing.Image until the Avalonia rendering edge."
+  },
+  "src/app/GitUI/Avatars/InitialsAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/InitialsAvatarProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same deterministic initials, color selection, contrast threshold and font-setting refresh rendered through Avalonia into encoded PNG bytes."
+  },
+  "src/app/GitUI/Avatars/MultiCacheCleaner.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/MultiCacheCleaner.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/Avatars/SafetynetAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/SafetynetAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Avatars/StaticImageAvatarProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/StaticImageAvatarProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same per-size cache with Avalonia bitmap resizing at the encoded-image boundary."
+  },
+  "src/app/GitUI/Avatars/TemplateFormatter.cs": {
+    "twin": "src/app/GitUI.Avalonia/Avatars/TemplateFormatter.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/UserControls/AvatarControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/AvatarControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same latest-request avatar loading, configured commit-info size, cache/provider/fallback context actions and Gravatar link over native Avalonia Bitmap decoding."
+  },
+  "src/app/GitUI/UserControls/AvatarControl.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/AvatarControl.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named image and context-menu controls with the original translation keys."
+  },
+  "src/app/GitUI/Properties/Images.resx": {
+    "twin": "src/app/GitUI.Avalonia/Properties/Images.g.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "All file-backed images are deterministically generated as same-named cached Avalonia Bitmap properties and packaged from their existing tracked files; the setup logo also supplies the shared application WindowIcon. The generator/completeness test detects Images.resx drift, missing package resources, decode failures, and exceptional property-to-filename mappings."
+  },
+  "src/app/GitUI/SplitterManager.cs": {
+    "twin": "src/app/GitUI.Avalonia/SplitterManager.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named settings boundary for Avalonia GridSplitters and custom persisted splitter targets. Distances retain the original _Size/_Distance setting shape; FormBrowse uses an Avalonia-specific settings path so DIP values cannot overwrite the WinForms pixel/DPI values."
+  },
+  "src/app/GitUI/NestedSplitterManager.cs": {
+    "twin": "src/app/GitUI.Avalonia/NestedSplitterManager.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named nested setting-key composition over the Avalonia SplitterManager."
+  },
+  "src/app/GitUI/CommandsDialogs/FormBrowse.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
+    "status": "functional",
+    "basedOn": "dfdee1b2ae92d832a2ea7420eb4c11aa2cd14420",
+    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, shared Output history, and the selection-driven Build Report contribution when build-server data exists; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown. Portable plugins load and register through the original lifecycle, including unregister/re-register on repository changes; the Browse menu lists them alphabetically, materializes their embedded portable PNGs, executes them through the original GitUIEventArgs boundary, and routes its settings command to the Plugins root. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, GPG, build-server polling, and plugin discovery work use owned lifetime boundaries, so queued notifications and unfinished providers cannot outlive shutdown. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+  },
+  "src/app/GitUI/CommandsDialogs/BuildReportTabPageExtension.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BuildReportTabPageExtension.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains the selection/status subscription, Build Report tab identity, visibility setting, caption, icon, and default-browser action. Avalonia has no built-in cross-platform WebBrowser control, so reports that WinForms embeds use the same explicit browser link as non-embeddable providers."
+  },
+  "src/app/GitUI/CommandsDialogs/WorktreeDialog/FormCreateWorktree.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/WorktreeDialog/FormCreateWorktree.axaml.cs",
+    "status": "parity",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Same-named create-worktree dialog with asynchronously applied local branches, existing/new branch modes, path suggestion and validation, portable folder picking, the original worktree.useRelativePaths command configuration, and optional in-window navigation after creation."
+  },
+  "src/app/GitUI/CommandsDialogs/WorktreeDialog/FormManageWorktree.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/WorktreeDialog/FormManageWorktree.axaml.cs",
+    "status": "parity",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Same-named worktree manager over a typed read-only ListBox with original HeaderText translation identities, deleted-row strikeout, selection-aware create/open/delete/prune actions, and host-correct current-path comparison. Worktree deletion retains confirmation, recursive directory removal, and prune; switching navigates the owning Browse window."
+  },
+  "src/app/GitUI/CommandsDialogs/FormSettings.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and the root placeholder. GeneralSettingsPage and AppearanceSettingsPage are registered under Git Extensions, with Sorting, Colors, Fonts, and Console style nested beneath Appearance in their original order. Git paths, Git config, advanced Git config, and the Git root introduction are registered beneath the original Git group. The Plugins root, introduction, and alphabetically sorted generic settings pages are registered from the runtime PluginRegistry with each plugin's portable icon. Remaining built-in pages land incrementally."
+  },
+  "src/app/GitUI/CommandsDialogs/FormSettings.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Two-column resizable settings layout with the original 200px navigation width, hosted page surface, instant-save notice, and compact dialog actions."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/ISettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/ISettingsPage.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same page contract with Avalonia Control replacing WinForms Control."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/ISettingsPageHost.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/ISettingsPageHost.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same navigation, save/load-all, validation host contract and test mock."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/DistributedSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/DistributedSettingsPage.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves effective/local/distributed/global source switching and save-before-switch behavior. Parameterless design/test construction loads the app-settings fallback without requiring repository commands."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Plugins/PluginRootIntroductionPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Plugins/PluginRootIntroductionPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named Plugins root introduction with the original title, text, page reference, and app-settings source."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Plugins/PluginRootIntroductionPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Plugins/PluginRootIntroductionPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves the original label identity, text, wrapping, and inset in an Avalonia UserControl."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Plugins/PluginSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Plugins/PluginSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves plugin identity/page references, GitPluginSettingsContainer isolation, source switching, load/save, empty-state, exception context, and generic settings creation. Bool, string/password, choice, number, pseudo, and supported custom headless-control bindings are functional; CredentialsSetting remains excluded from net10.0 until Phase 4.5."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Plugins/PluginSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Plugins/PluginSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Scrollable compact caption/control rows replace AutoLayoutSettingsPage's generated table while retaining the original empty-state label and translation identity."
+  },
+  "src/app/GitUI/SettingControlBindings/BoolSettingControlBinding.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Consolidated Avalonia renderer preserves nullable/effective tri-state load and save behavior."
+  },
+  "src/app/GitUI/SettingControlBindings/ChoiceSettingControlBinding.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Consolidated Avalonia renderer preserves the declared choice list, selected value, and effective-setting comparison."
+  },
+  "src/app/GitUI/SettingControlBindings/NumberSettingControlBinding.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Consolidated Avalonia renderer reuses the existing SettingsPageBase translated numeric placeholder."
+  },
+  "src/app/GitUI/SettingControlBindings/NumberSettingNumericUpDownBinding.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Consolidated Avalonia renderer uses the native nullable NumericUpDown with the original non-negative Int32 range and effective-setting behavior."
+  },
+  "src/app/GitUI/SettingControlBindings/NumberSettingTextBoxBinding.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Consolidated Avalonia renderer preserves current-culture numeric conversion, unset values, effective-setting comparisons, and invalid-value highlighting."
+  },
+  "src/app/GitUI/SettingControlBindings/PasswordSettingControlBinding.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Consolidated Avalonia renderer preserves password masking and the string binding's null/empty/effective semantics."
+  },
+  "src/app/GitUI/SettingControlBindings/PseudoSettingControlBinding.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Consolidated Avalonia renderer adapts the supplied headless text/check/choice control model without persisting a value."
+  },
+  "src/app/GitUI/SettingControlBindings/SettingControlBindingsProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Avalonia-side factory consolidates the same model dispatch and adapts plugin-provided headless TextBox, CheckBox, and ComboBox bindings. CredentialsSetting is deliberately deferred with the portable credentials boundary to Phase 4.5."
+  },
+  "src/app/GitUI/SettingControlBindings/StringSettingControlBinding.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Consolidated Avalonia renderer preserves null versus explicit empty string, trimming, multiline newline normalization, translated placeholders, and effective-setting comparisons."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageBase.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves the same type-created page lifecycle, host/services/settings access, load/save state, extensibility ISettingControlBinding reuse, title/reference contract, search-keyword extraction, and an Avalonia ComboBox binding. Future pages can add Avalonia-native bindings without duplicating the extensibility settings model."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageBase.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The empty WinForms designer surface and component ToolTip map to the code-only Avalonia base and SettingsToolTip adapter."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageWithHeader.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageWithHeader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves the lazy same-named source-selector wrapper, global settings container, repository save eligibility, and read-only delegation with Avalonia Control replacing WinForms Control."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageHeader.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageHeader.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same global/local/effective/distributed/system page contracts and source-selection behavior. Global-only pages collapse the unavailable choices; local settings pages can reuse the complete selector as they land."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageHeader.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageHeader.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact translated source-selector row, directional markers, separator, and hosted page surface retain the original control identities."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "All General settings load/save mappings are preserved, including nullable submodule checkout, commit-limit zero semantics, translated pull-action values, clone history and folder browsing, telemetry privacy, and dependent submodule-status enablement."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Performance, Behaviour, and Telemetry groups and same-named controls in a compact scrollable Avalonia layout; wider native spinners keep the full numeric values visible."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves distributed enablement, build-result-page, and server-type settings plus asynchronous runtime adapter discovery. The custom-control host accepts only native Avalonia controls implementing the unchanged IBuildServerSettingsUserControl contract; plugin-owned portable exports land incrementally in follow-up plugin-specific commits."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same translated information, tri-state enable/show-result controls, server selector, and custom-settings content area in a compact scrollable layout. AppVeyor now supplies the first native portable settings control; the remaining adapters land incrementally."
+  },
+  "src/plugins/BuildServerIntegration/AppVeyorIntegration/Settings/AppVeyorSettingsUserControl.cs": {
+    "twin": "src/plugins/BuildServerIntegration/AppVeyorIntegration/Settings/AppVeyorSettingsUserControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable-only same-named MEF export retains default-project initialization, nullable test-result state, and the original settings keys while remaining a native Avalonia control. The Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/AppVeyorIntegration/Settings/AppVeyorSettingsUserControl.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/AppVeyorIntegration/Settings/AppVeyorSettingsUserControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same account, token, project, explanatory text, and tri-state test-result controls in the original order; only the existing checkbox field participates in plugin XLF translation, matching the WinForms Designer field boundary."
+  },
+  "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.cs": {
+    "twin": "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable-only same-named MEF export retains default-project initialization and the original server, project, and ignored-branch settings while remaining a native Avalonia control. The Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same three translated labels and text fields in the original compact two-column order."
+  },
+  "src/plugins/BuildServerIntegration/GitHubActionsIntegration/Settings/GitHubActionsSettingsUserControl.cs": {
+    "twin": "src/plugins/BuildServerIntegration/GitHubActionsIntegration/Settings/GitHubActionsSettingsUserControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable-only same-named MEF export retains remote-derived owner/repository defaults, configured overrides, API URL normalization, token persistence, and the token-management URL. The Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/GitHubActionsIntegration/Settings/GitHubActionsSettingsUserControl.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/GitHubActionsIntegration/Settings/GitHubActionsSettingsUserControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same translated API URL, owner, repository, masked token, and personal-access-token link controls in the original compact two-column order."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves Git-command and Linux-tools path load/save, validation, native executable/folder browsing, Git download routing, environment reporting, and the Change HOME workflow. Linux and macOS show native Git and global-config terminology while retaining the original translation identities; Windows behavior remains unchanged."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Paths and Environment groups and same-named controls in a compact scrollable Avalonia layout. Git-for-Windows-only controls are hidden on native Unix systems."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/GitConfigBaseSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/GitConfigBaseSettingsPage.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves effective, local, global, and system Git-config source switching plus save-before-switch behavior. Parameterless design/test construction remains inert until a real settings host is attached."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/EditorHelper.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/EditorHelper.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same editor suggestion boundary. The live side-by-side executable's fileeditor command is first and is resolved from AppContext.BaseDirectory without touching the WinForms-only AppSettings.FileEditorCommand assertion. Windows retains the original discovered external editors; Linux/macOS also receive native vi, vim, nano, VS Code, and Zed command suggestions."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves identity, editor, credential helper, diff/merge tool, commit-template, line-ending, and file-encoding mappings over the original GitConfigSettingsSet. Native storage pickers replace OpenFileDialog; WSL command adaptation and registered-tool command suggestions remain intact."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named fields in a compact scrollable grid, including the invalid-Git notice, editable editor/tool controls, line-ending group, and encoding controls."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPageController.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigSettingsPageController.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same platform-neutral initial-directory selection logic."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigAdvancedSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigAdvancedSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves all eight tri-state Git boolean mappings, Git-version-gated update-refs visibility, and translated labels with appended config keys."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitConfigAdvancedSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitConfigAdvancedSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact same-named tri-state checkbox list matching the original order."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitRootIntroductionPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitRootIntroductionPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same inert settings-page boundary; replacing the Git group node's Tag restores the original root-selection behavior without introducing settings reads or writes."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitRootIntroductionPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitRootIntroductionPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same translated 284-by-132 introduction label at the original top-left inset."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/FormAvailableEncodings.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/FormAvailableEncodings.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves selected/available encoding partitioning, required-encoding protection, add/remove behavior, sorted available values, and AppSettings persistence."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/FormAvailableEncodings.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/FormAvailableEncodings.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same two-list encoding chooser, directional actions, and modal OK/Cancel controls."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.axaml.cs",
+    "status": "parity",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Preserves the modeless title/content contract, initial caret position, owner relationship, and theme-aware SystemColors.Info presentation used by the scripts argument cheat sheet."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.axaml",
+    "status": "parity",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Same compact read-only scrollable help window without taskbar, minimize, or maximize chrome."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormFixHome.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormFixHome.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves persisted default, user-profile, and custom HOME selection, readable-directory validation, native folder browsing, and global Git-config detection. The WinForms-only candidate-directory scan and informational message cascade remain omitted; users select the desired HOME directly."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormFixHome.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormFixHome.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Environment choices, custom-directory input, browse action, and confirmation control, with portable HOME terminology off Windows."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "General appearance, avatar, and language/dictionary settings retain the original load/save and translation contracts. The Visual Studio-only option is hidden off Windows. Provider/fallback/template changes rebuild and clear the portable avatar cache, while both avatar visibility settings and cache duration apply through their original AppSettings keys."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same visible General, Author images, and Language group boundaries and same-named controls in a compact scrollable layout. Appearance is the original tree parent of Sorting, Colors, Fonts, and Console style."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "All revision and reference sorting choices plus prioritized branch/remote expressions retain the original enum order, load/save behavior, runtime-setting save, translated help text, and user-manual links."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same five-row Sorting group and same-named controls, with fixed-width selectors and text inputs plus bare 16-DIP information images matching the original PictureBox presentation."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "All script fields, event values, enablement, order, add/delete/move behavior, argument help, built-in/custom icon selection, XML persistence, and stable hotkey identifiers retain the original contracts. Avalonia uses explicit code-behind-owned field controls because it has no PropertyGrid; unsupported desktop associated icons remain persisted but may have no preview."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.ScriptInfoProxy.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.ScriptInfoProxy.cs",
+    "status": "parity",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "The proxy keeps every original serialized field and both lossless ScriptInfo conversions; WinForms-only PropertyGrid editor metadata is omitted because the Avalonia page exposes those editors directly."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Retains the top script table, same-named icon-only ordering actions, and lower categorized editor. The PropertyGrid is represented by explicit compact controls for portable behavior and testability."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "All four font settings and the end-of-line glyph option retain the original load/save, point-size rounding, button-preview, field-name, and translation contracts. A reusable Avalonia font dialog enumerates installed families, supports fractional point sizes and bold/italic styles, previews the result, and restricts the code-font chooser to fixed-pitch families."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Fonts group, four same-named font-preview buttons, labels, and end-of-line marker option in the original compact row order."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ConsoleStyleSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ConsoleStyleSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Console-emulator selection, available-theme population and fallback, translated Default value, nullable point-based console font, reset behavior, rounded button preview, and the named consoleFontToolTip translation key retain their original contracts. Avalonia's portable registry advertises Plain text as its available emulator and applies the selected font when new consoles are created."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ConsoleStyleSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ConsoleStyleSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Console settings group, three compact rows, same-named selectors/font button, and icon-only reset action in the original order."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "All revision-graph settings plus repository-backed built-in and user-defined theme discovery, validation, colorblind variation, system-visual-style selection, restart indication, and theme-folder actions retain the original member and controller contracts. Folder actions use the portable platform shell instead of the WinForms Explorer-only helper."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Revision graph and Theme groups and same-named controls in a compact scrollable layout. The theme selector, whole-button folder flyout, colorblind variation, system visual style, and restart notice are functional and visible under the original conditions."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPageController.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPageController.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same repository/path-provider controller owns theme population, validation, nested-update suppression, visual-style derivation, restart detection, persistence, and folder actions. Only directory opening is adapted from the Windows Explorer helper to the portable platform shell. The framework-neutral original controller tests are linked into the Avalonia suite."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/IColorsSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/IColorsSettingsPage.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free page/controller contract is ported unchanged."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageReference.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageReference.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/GroupSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/GroupSettingsPage.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same non-visual translated grouping page with Avalonia Control in the interface boundary."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsGroupPages.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsGroupPages.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Git Extensions, Git, and Plugins group identities and page references."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same root replacement, hierarchy, initial/programmatic navigation, selected-page event, AND-keyword search, cycling foundation, and page enumeration over native Avalonia TreeViewItems. Unknown references fall back to the first root while their pages are incrementally ported."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact filter and scrollable tree preserve the original 200px navigation surface and reuse the established dotted NativeTreeView-style hierarchy template."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/CommonLogic.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CommonLogic.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves construction of distributed and Git-config setting stores plus editor resolution. Available encodings populate a native Avalonia ComboBox with the original Encoding objects/display names; file pickers remain owned by their consuming pages."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable Git/editor/install-directory checks required by the host and first pages. Git-command solving checks an explicit value, the persisted value, then PATH on native systems; Linux-tools validation and derivation remain active on Windows and become a deliberate no-op where the separate tools path is inapplicable. Remaining Windows-specific auto-repair behavior is deferred with its consuming checklist pages."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/DistributedSettingsSet.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/DistributedSettingsSet.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/GitConfigSettingsSet.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/GitConfigSettingsSet.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/RevisionDiffControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed blob/image viewing through FileViewer in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Owner-managed loaders remain in their joinable task collection for deterministic cancellation/shutdown; FileViewer rendering is marshalled as cancellable Avalonia dispatcher operations. Shared FileStatusList actions filter selected paths in the revision grid, navigate ordinary-diff selections to the paired File tree, and apply supported selected/whole revision patches through FileViewer; diff-option changes reload the selection and applied patches request a repository refresh. The original Blame action either toggles an in-pane BlameControl or redirects ordinary diff selections to the File tree according to the shared setting. Its same-named script-options provider exposes selected paths and the active diff/blame caret line and column. Custom tools retain their later owner."
+  },
+  "src/app/GitUI/CommandsDialogs/ScriptOptionsProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/ScriptOptionsProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains the original SelectedRelativePaths, LineNumber, and ColumnNumber option names and command-line escaping; the Avalonia FileStatusList equivalent reads its shared selected Git-item surface."
+  },
+  "src/app/GitUI/CommandsDialogs/UserScriptContextMenuExtensions.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/UserScriptContextMenuExtensions.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Enabled scripts retain the original direct-versus-nested placement, icon, command ID, and configured shortcut display using Avalonia menu items."
+  },
+  "src/app/GitUI/CommandsDialogs/RevisionDiffControl.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The original DiffSplitContainer, DiffFiles, DiffText, and overlaid BlameControl identities map to a bordered two-pane Avalonia grid with an invisible six-DIP splitter hit target."
+  },
+  "src/app/GitUI/CommandsDialogs/RevisionGpgInfoControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionGpgInfoControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named GPG status renderer using the shared GpgInfo/CommitStatus/TagStatus records, original translated unsigned messages, unchanged generated signature/tag icons, native-newline normalization, conditional tag row, and a focusable read-only verification surface."
+  },
+  "src/app/GitUI/CommandsDialogs/RevisionGpgInfoControl.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionGpgInfoControl.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The original tableLayoutPanel1, commitSignPicture, tagSignPicture, txtCommitGpgInfo, and txtTagGpgInfo identities map to a two-row Avalonia grid; the tag row collapses when no tag exists and otherwise shares the available height equally."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named read-only monospace history surface with the original TextBox, copy, and clear identities. AvaloniaEdit supplies selectable automatically styled web/email links without requiring a modifier key."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryControl.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The RichTextBox and ContextMenuStrip map to a read-only no-wrap AvaloniaEdit surface and ContextMenu using the existing translation identities, selection, horizontal/vertical scrolling, and link activation."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryControllerBase.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControllerBase.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves shared-history subscription, copy/clear behavior, tail positioning and scrolling, text-area focus contract, link activation, and disposal."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryTabController.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryTabController.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Creates the original OutputHistoryTab only when history is enabled and focuses its content through the upstream Ctrl+D9 command."
+  },
+  "src/app/GitUI/UserControls/OutputHistoryPanelController.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryPanelController.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Maps the synchronized WinForms split panels to one lower cross-pane Avalonia row, preserving OutputHistoryPanelVisible toggling, focus, a six-DIP splitter target, and the last in-session height."
+  },
+  "src/app/GitUI/Models/OutputHistoryModel.cs": {
+    "twin": "src/app/GitUI.Avalonia/Models/OutputHistoryModel.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves the bounded process-wide history, formatting, ANSI removal, notifications, and clear behavior; ANSI stripping reuses the Avalonia diff parser because the WinForms model references ICSharpCode.TextEditor markers."
+  },
+  "src/app/GitUI/CommandsDialogs/FullBleedTabControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FullBleedTabControl.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The Avalonia twin retains the standard TabControl theme through StyleKeyOverride; compact zero-radius workspace-tab styling removes the Fluent spacing that the WinForms native display-rectangle adjustment removed."
+  },
+  "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Full local and remote flow: remote checkout with reset/create-tracking/custom-name/detached-head options, non-fast-forward reset warning, custom-name validation and auto-normalisation, auto-stash with the upstream task dialog, submodule update after a changed checkout, and the original before/after checkout event scripts. The WinForms ErrorProvider validation is an on-checkout message box, and Avalonia SizeToContent replaces the ApplyLayout row math."
+  },
+  "src/app/GitUI/CommandsDialogs/FormMergeBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMergeBranch.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Branch/tag/remote selection (including multiple heads), fast-forward/no-ff/no-commit/squash/unrelated-history/strategy/log/custom-message options, persisted settings, real process execution, conflict handling, before/after merge event scripts, help images, Browse menu, and Ctrl+M hotkey. AfterMerge retains the original successful-conflict behavior."
+  },
+  "src/app/GitUI/CommandsDialogs/FormRebase.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRebase.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Plain and interactive rebase support heads/remotes/tags, immediate and advanced-option entry points, autosquash/preserve-merges/auto-stash/date/update-refs/specific-range options, real process execution, repository notification, Browse menu, and Ctrl+Shift+E. The in-progress controller supports PatchGrid visualization/skipped state, add-files, commit, edit-todo, continue, skip, abort, conflict resolution, and commit/patch detail on row double-click."
+  },
+  "src/app/GitUI/CommandsDialogs/FormApplyPatch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormApplyPatch.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Same-named file/directory patch source surface with persisted whitespace/sign-off options, raw-diff and mailbox application, PatchGrid state, add-files/conflict resolution, continue, skip, abort, repository notification, and portable file/folder pickers. This completes middle-of-patch recovery through GitUICommands and MergeConflictHandler."
+  },
+  "src/app/GitUI/CommandsDialogs/FormAddFiles.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddFiles.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Filter, force, dry-run preview, and add execution preserve the original FormProcess flow."
+  },
+  "src/app/GitUI/CommandsDialogs/FormStash.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormStash.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Manage/create mode, worktree/index and stored-stash file lists, real diff preview, stash all/selected, apply/drop, persisted options, repository refresh binding, continuous file scrolling, and Ctrl+N/Ctrl+P/F5 hotkeys. The drop confirmation uses the Compat TaskDialog surrogate. The main divider uses the shared light/dark splitter brush. The shared FileStatusList supplies filtering, status imagery, navigation, and file context actions; supported stored-stash patches can be cherry-picked by selected lines or as a whole file through FileViewer, and diff-option changes reload the selection."
+  },
+  "src/app/GitUI/CommandsDialogs/FormSubmodules.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSubmodules.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named asynchronous submodule manager with persisted split, list/details selection, add/remove, update/sync, and pull-in-submodule actions. The WinForms BindingSource/DataGridView becomes an explicitly populated Avalonia ListBox while retaining the original column translation keys. StartSubmodulesDialog is live; Browse and left-panel contributions remain owned by their later surfaces."
+  },
+  "src/app/GitUI/CommandsDialogs/SubmodulesDialog/FormAddSubmodule.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SubmodulesDialog/FormAddSubmodule.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Remote/local path, recent remote history, native folder picking, automatic local-name suggestion, remote branch discovery, force option, and FormProcess execution. Editable combo items are path strings so Avalonia preserves their display text."
+  },
+  "src/app/GitUI/CommandsDialogs/FormResolveConflicts.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResolveConflicts.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Ported at the post-97cfa7b44 shape (FormBusyScope keeps the UI thread free while the merge tool runs). The conflicted-files grid is a multi-select ListBox showing file names (the hidden Author column had no data source upstream); SortableBindingList header-sort is dropped, while the shared go-to-manual control is functional. Solve-conflict choices (keep local/remote/base, apply-to-all) use the Compat TaskDialog surrogate. SaveFileDialog becomes the Avalonia storage provider; \"open with\"/\"show in folder\" fall back to the default application/folder outside Windows. Context-menu Ctrl+1..3 shortcuts are dispatched in OnKeyDown. The shared CustomDiffMergeToolProvider populates the original customMergetool menu and launches the selected native tool for every selected conflict. Submodule conflicts use the real same-named FormMergeSubmodule workflow. The file-history item is live since 3.8."
+  },
+  "src/app/GitUI/CommandsDialogs/FormMergeSubmodule.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMergeSubmodule.axaml.cs",
+    "status": "functional",
+    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
+    "notes": "Same-named submodule conflict controller showing base/local/remote/current revisions, refreshing and staging the current checkout, offering local/remote revision checkout through the submodule command service, and opening an in-process Avalonia browser for the submodule. FormResolveConflicts preserves the original dialog-result staging follow-up."
+  },
+  "src/app/GitUI/CustomDiffMergeToolProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/CustomDiffMergeToolProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Avalonia MenuItem adapter over the unchanged shared discovery/cache contract. It preserves delayed loading, configured-default ordering, bold/default shortcut presentation, per-form diff-tool disabling, cancellation, and consumer-owned launch handlers. Consumers that require deterministic shutdown can own the returned task and supply their JoinableTaskFactory; the original fire-and-forget entry point remains available for existing hosts."
+  },
+  "src/app/GitUI/CommandsDialogs/MergeConflictHandler.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/MergeConflictHandler.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Verbatim; middle-of-rebase and middle-of-patch follow-ups reach the functional same-named FormRebase and FormApplyPatch controllers."
+  },
+  "src/app/GitUI/FormBusyScope.cs": {
+    "twin": "src/app/GitUI.Avalonia/FormBusyScope.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Introduced upstream by 97cfa7b44. Avalonia windows have no IsDisposed; re-enabling unconditionally is safe."
+  },
+  "src/app/GitUI/WaitCursorScope.cs": {
+    "twin": "src/app/GitUI.Avalonia/WaitCursorScope.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "WinForms swaps one global Cursor.Current; the twin swaps the cursor of every open window and restores on dispose, nesting like the original."
+  },
+  "src/app/GitUI/CommandsDialogs/FormCreateBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateBranch.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Creates and optionally checks out normal or orphan branches. Commit selection accepts a revision/SHA as text or the shared FormChooseCommit dialog. A successful checkout to a different commit reuses the same UICommands.UpdateSubmodules confirmation and update path as FormCheckoutBranch."
+  },
+  "src/app/GitUI/CommandsDialogs/FormReflog.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormReflog.axaml.cs",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Displays HEAD, local-branch, and remote-branch reflogs through native repository Git; preserves full object IDs, action text, sortable columns, current-branch/HEAD shortcuts, copy, create-branch, and reset behavior. Loads are latest-selection-wins and owned by the dialog. Reset keeps the original dirty-worktree warning and chooses soft or hard as the initial mode accordingly. FormBrowse Commands -> Show reflog is live."
+  },
+  "src/app/GitUI/CommandsDialogs/FormArchive.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormArchive.axaml.cs",
+    "status": "functional",
+    "basedOn": "57d3739f1eb87b5b3fed33138b51ec0ee5a173f6",
+    "notes": "Archives one selected revision as ZIP or TAR through native repository Git. Retains explicit path and differential-revision filters, excludes deleted differential paths, uses the same-named commit summary and revision picker, and replaces only SaveFileDialog with Avalonia's native storage provider. The original FormBrowse Commands and revision-grid context contributions are live."
+  },
+  "src/app/GitUI/CommandsDialogs/FormCherryPick.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCherryPick.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Cherry-picks ordinary and merge revisions through native repository Git and the existing process/conflict flow. Retains automatic-commit and reference options, successful-dialog settings persistence, selectable mainline parents, revision picking, and sequential oldest-to-newest multi-selection with option carry-forward. The revision-grid context contribution is live and the Avalonia revision grid now supports the original multiple selection mode."
+  },
+  "src/app/GitUI/CommandsDialogs/FormRevertCommit.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRevertCommit.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Reverts ordinary and merge revisions through native repository Git and the existing process/conflict flow. Retains automatic commit, selectable mainline parents, preservation of a pre-existing merge/commit message, and revision-grid processing in the original newest-to-oldest selection order."
+  },
+  "src/app/GitUI/HelperDialogs/FormResetCurrentBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetCurrentBranch.axaml.cs",
+    "status": "functional",
+    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
+    "notes": "Resets the current branch through the shared soft, mixed, keep, merge, and hard git-reset commands. Retains hard-reset confirmation, submodule update behavior, branch/revision summary, mode-specific Git documentation, and the original theme-aware reset palette. Revision-grid, repository-tree, GitUICommands, and reflog contributions are live."
+  },
+  "src/app/GitUI/HelperDialogs/FormEdit.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormEdit.axaml.cs",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Retains the original lightweight in-memory FileViewer wrapper, editable/read-only boundary, class name, path, and translation key. FormVerify View opens recovered object content in this read-only twin. This is intentionally separate from the disk-backed CommandsDialogs/FormEditor command-line editor."
+  },
+  "src/app/GitUI/CommandsDialogs/FormVerify.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormVerify.axaml.cs",
+    "status": "functional",
+    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
+    "notes": "Runs native repository git fsck/prune recovery, preserves the original filters, sortable lost-object grid, preview, selection and LOST_FOUND tag restoration, branch/tag actions, clipboard and native blob save picker. FormBrowse Repository -> Git maintenance -> Recover lost objects is live. The View action opens the selected object in the read-only HelperDialogs/FormEdit twin."
+  },
+  "src/app/GitUI/CommandsDialogs/FormVerify.LostObject.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormVerify.LostObject.cs",
+    "status": "parity",
+    "basedOn": "090464d5f5c350497427ad5b4717651df9c4f4d2",
+    "notes": "Linked unchanged; lost-object diagnostics, commit metadata, annotated-tag parsing, blob timestamps, and object-type classification are framework-neutral."
+  },
+  "src/app/GitUI/CommandsDialogs/FormEditor.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormEditor.axaml.cs",
+    "status": "parity",
+    "basedOn": "57d3739f1eb87b5b3fed33138b51ec0ee5a173f6",
+    "notes": "Retains the disk-backed file editor, requested-line navigation, read-only and warning modes, dirty/save state, Ctrl+S, close confirmation, safe writes, and original encoding-preamble behavior. GitUICommands.StartFileEditorDialog is live; top-level fileeditor command dispatch remains owned by the separate entry-point/lifetime subphase."
+  },
+  "src/app/GitUI/CommandsDialogs/FormCreateTag.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateTag.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Creates lightweight, annotated, default-key-signed, or specific-key-signed tags through the shared GitTagController, with revision picking, force, optional push through FormRemoteProcess, and before/after push event scripts. The original EditNetSpell tag-message control remains represented by the same-named multiline TextBox."
+  },
+  "src/app/GitUI/CommandsDialogs/FormDeleteBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteBranch.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Local branch selection and forced deletion preserve the upstream current-branch, unmerged-branch, main/linked/stale-worktree safety flow. The Compat TaskDialog supplies the explicit default button and reflog footnote used by the confirmations."
+  },
+  "src/app/GitUI/CommandsDialogs/FormInit.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormInit.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Directory picker (shared FolderBrowserButton twin), recent-locals history in the combo (path strings rather than Repository objects), personal/central repository types, rooted-path validation, git init through the module, module-changed event, and history update. StartInitializeDialog is live."
+  },
+  "src/app/GitUI/CommandsDialogs/FormClone.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormClone.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "URL/destination/subdirectory with live location info, clipboard URL suggestion, current-remote prefill, remote branch listing on dropdown (default remote-HEAD / no-checkout items) with the original busy cursor and direct native Git/OpenSSH error reporting, shallow-clone and submodule options, repository type, open-after-clone question, and history updates; clone execution uses FormRemoteProcess with OpenSSH. StartCloneDialog is live. The PuTTY pieces (Load SSH key and registry/key-agent recovery) remain intentionally omitted, and the ShowInTaskbar test is replaced by the dialog invocation itself; history combos hold path strings rather than Repository objects."
+  },
+  "src/app/GitUI/CommandsDialogs/FormRemotes.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRemotes.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Remote management (create/edit/rename via SaveRemote, delete with confirmation, activate/deactivate via ToggleRemoteState, translated Active/Inactive groups, separate push url, URL suggestions from history + git-hosting-pattern rewriting, owner-from-URL name suggestion, native Avalonia color selection/reset, prefix behind AlwaysShowAdvOpt, auto-configure question wiring StartPullDialogAndPullImmediately) and the default-pull tab (the original grid is read-only; tracking-remote and merge-with editing uses its detail fields and commits to the correct selected head on focus leave or row change; preselect opens the tab). StartRemotesDialog is live. The PuTTY panel/connection test remains intentionally omitted in favor of OpenSSH. URL combos hold path strings."
+  },
+  "src/app/GitUI/CommandsDialogs/FormRemotesController.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/FormRemotesController.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/FormClone.RemoteActionResult.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/FormClone.RemoteActionResult.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/UserControls/FolderBrowserButton.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FolderBrowserButton.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Same-named button with the original buttonBrowse.Text translation key; PathShowingControl retains the original any-Control boundary for the TextBox and ComboBox consumers. Picks through the portable OsShellUtil.PickFolder (XDG portal on Linux)."
+  },
+  "src/app/GitUI/CommandsDialogs/FormFileHistory.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormFileHistory.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "File-history workflow with the original Commit/Diff/View/Blame tabs, shared browse/filter toolbar, optional explicit loading, full-history/simplify-merges settings, blame parsing/display options including the live Show author avatar toggle, Save As, copy/navigation/view context actions, custom difftools, and the selection-driven Build Report contribution when build-server data exists. Rename following uses the revision grid's FilePathByObjectId/GetRevisionFileName contract so viewers, titles, Save As, and difftools receive the historical path. Artificial or unavailable files hide inapplicable tabs, and all owned grid/view/avatar/build-server tasks are cancelled and joined on close. StartFileHistoryDialog opens the window in-process and non-modal. Commit manipulation and the Git command log remain owned by their dedicated later phases."
+  },
+  "src/app/GitUI/BuildServerIntegration/BuildServerWatcher.cs": {
+    "twin": "src/app/GitUI.Avalonia/BuildServerIntegration/BuildServerWatcher.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains MEF adapter selection and auto-detection, prioritized remote URLs, polling cadence, newer-result replacement, variable expansion, adapter settings callback, cancellation, and repository-change lifecycle. Grid access uses the Avalonia provider boundary. Credentials use the same prompt and a secret-free-on-disk process-session cache until the portable git-credential backend lands."
+  },
+  "src/app/GitUI/HelperDialogs/FormBuildServerCredentials.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormBuildServerCredentials.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named guest, username/password, and bearer-token prompt with the original control and translation identities."
+  },
+  "src/app/GitUI/CommandsDialogs/FormDeleteTag.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteTag.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Local deletion, optional deletion from one configured remote through FormRemoteProcess, before/after push event scripts around the remote operation, the shared remote selector, and the shared manual link are functional."
+  },
+  "src/app/GitUI/SpellChecker/EditNetSpell.cs": {
+    "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named multiline commit-message editor with the original text, selection, caret, line, watermark, and enabled-state boundary. NetSpell dictionary selection, debounced checking, red misspelling waves, ill-formed-line marks, correction/add/ignore/remove context actions, and editing commands are functional. The separate typing-completion popup remains deferred; spelling suggestions are available from the context menu."
+  },
+  "src/app/GitUI/SpellChecker/EditNetSpell.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Multiline Avalonia TextBox and non-interactive overlay retain the original editor and context-menu field boundary."
+  },
+  "src/app/GitUI/SpellChecker/SpellCheckEditControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/SpellChecker/SpellCheckAdorner.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Avalonia DrawingContext twin renders wrapped-range spelling waves and commit-message length highlights over the native text presenter without platform window handles. WinForms IME composition suppression has no direct Avalonia hook and remains a focused macOS/Linux validation item."
+  },
+  "src/app/GitUI/SpellChecker/SpellCheckerHelper.cs": {
+    "twin": "src/app/GitUI/SpellChecker/SpellCheckerHelper.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral separator logic is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/SpellChecker/TextPos.cs": {
+    "twin": "src/app/GitUI/SpellChecker/TextPos.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral text-range value is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/SpellChecker/WordAtCursorExtractor.cs": {
+    "twin": "src/app/GitUI/SpellChecker/WordAtCursorExtractor.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral extraction logic is linked unchanged; the original test fixture is also linked into GitUI.Avalonia.Tests so both UIs share one behavior specification."
+  },
+  "src/app/GitUI/ScriptsEngine/FilePromptCreator.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/FilePromptCreator.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral prompt factory is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/ScriptsEngine/IScriptOptionsForm.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IScriptOptionsForm.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/IScriptOptionsProvider.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IScriptOptionsProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/IScriptsManager.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IScriptsManager.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/IScriptsRunner.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IScriptsRunner.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/IUserInputPrompt.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/IUserInputPrompt.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/PowerShellHelper.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/PowerShellHelper.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves the original detached execution contract and uses powershell.exe on Windows or the cross-platform pwsh executable elsewhere."
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptEvent.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/ScriptEvent.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptInfo.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/ScriptInfo.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The serialized XML contract is identical. Packaged resource names and image files produce Avalonia images; extracting an associated icon from arbitrary executables has no portable desktop API and is omitted."
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptOptionsParser.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/ScriptOptionsParser.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral parser is linked unchanged and covered by the same 102-case fixture as WinForms."
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptOptionsProviderBase.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/ScriptOptionsProviderBase.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptsManager.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/ScriptsManager.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Serialization, defaults, event iteration, command lookup and hotkey identifier repair are linked unchanged."
+  },
+  "src/app/GitUI/ScriptsEngine/ScriptsManager.ScriptRunner.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/ScriptsManager.ScriptRunner.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains prompts, argument expansion, confirmation, foreground process dialog, background launch, URL opening, navigation, plugin dispatch and repository notification. GitExtensions resolves to the side-by-side process path."
+  },
+  "src/app/GitUI/ScriptsEngine/SimplePromptCreator.cs": {
+    "twin": "src/app/GitUI/ScriptsEngine/SimplePromptCreator.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral prompt factory is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/ScriptsEngine/SimplePrompt.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/SimplePrompt.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves dynamic caption/label/default value, focused input, OK result and Escape selection-clearing/cancel behavior."
+  },
+  "src/app/GitUI/ScriptsEngine/SimplePrompt.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/SimplePrompt.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/ScriptsEngine/FormFilePrompt.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/FormFilePrompt.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses the native Avalonia multi-file picker and returns the same space-separated quoted local paths through the original prompt interface."
+  },
+  "src/app/GitUI/ScriptsEngine/FormFilePrompt.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/ScriptsEngine/FormFilePrompt.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Plugin/GitPluginSettingsContainer.cs": {
+    "twin": "src/app/GitUI/Plugin/GitPluginSettingsContainer.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral plugin settings namespace compatibility is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Plugin/PluginRegistry.cs": {
+    "twin": "src/app/GitUI/Plugin/PluginRegistry.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "MEF loading, failed-export isolation, settings-container assignment, registration and repository-hoster lookup are linked unchanged."
+  },
+  "src/app/GitUI/Plugin/FailedPluginWrapper.cs": {
+    "twin": "src/app/GitUI.Avalonia/Plugin/FailedPluginWrapper.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Behavior is unchanged; the failure icon is carried through the net10.0 headless image wrapper with an Avalonia bitmap payload."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormQuickItemSelector.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickItemSelector.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves sorting consumers, first-item selection, eight-row scroll threshold, measured bounded width, manual location, double-click acceptance and Escape cancellation."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormQuickItemSelector.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickItemSelector.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormQuickGitRefSelector.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickGitRefSelector.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormQuickStringSelector.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickStringSelector.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Whole-file commit workflows are functional: staged/unstaged multi-selection and context actions, revision-aware FileViewer preview with the consumer-owned external-difftool action, selected-line stage/unstage/reset with reload blocking, normal/amend/empty commits, fixup/squash/amend autosquash messages, soft reset, commit-message persistence/history/templates and conventional prefixes, shared validation settings, custom author/sign-off/no-verify/GPG/reset-author arguments, merge-conflict and detached-HEAD recovery, commit-and-push including force-with-lease after amend, optional superproject staging, compact original-named toolbar/options/status controls, and the original close/refresh preferences. The same-named EditNetSpell editor now supplies deployed dictionaries, spell/line marks, and correction context actions. Git hook bypass is functional through No verify, while before/after commit event scripts retain their original placement around successful commits. Template-settings editing remains owned by the settings host."
+  },
+  "src/app/GitUI/CommandsDialogs/FormPush.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPush.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable push workflows are functional through FormRemoteProcess: configured remote or URL/native-path destinations with history and folder browsing; editable single-branch, all-branch, tag/all-tag, and multi-branch push/force/delete modes; new-branch and tracking-reference prompts; remote management; force-with-lease/force safety; recursive-submodule options; push-on-show and commit-and-push; rejected-push recovery through pull-merge/rebase or force-with-lease retry; before/after push event scripts; and the original Azure DevOps create-pull-request browser fallback. Plugin-host pull-request creation remains owned by Phase 4.6, when the first portable IRepositoryHostPlugin and its form can make that route usable and testable. PuTTY/Pageant controls are intentionally omitted in favor of OpenSSH."
+  },
+  "src/app/GitUI/CommandsDialogs/FormPull.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPull.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable pull/fetch workflows are functional through FormRemoteProcess: configured remote, all-remotes, and URL/native-path sources with history and folder browsing; remote management and branch selection; merge, rebase, and fetch-only actions; auto-stash/pop; reachable/no/all-tag, prune/prune-tags, and unshallow options; fetch-and-prune confirmation; submodule initialization/update follow-up; stale-ref, merge-conflict, and rebase-conflict recovery; and the original before/after fetch and pull event ordering. PuTTY/Pageant controls are intentionally omitted in favor of OpenSSH."
+  },
+  "src/app/GitUI/UserControls/FilterToolBar.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "WinForms-shaped quick-filter twin bound to IRevisionGridFilter: all/current/filtered branches, branch-type completion, commit/committer/author/diff text filters, programmatic SetRevisionFilter, reflog, first-parent and reset actions. The not-yet-ported advanced date/limit dialog is intentionally absent; its primary funnel action focuses the functional quick text filter. Existing FormBrowse translation and tooltip keys are reused explicitly."
+  },
+  "src/app/GitUI/UserControls/FilterToolBar.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact 25px Avalonia toolbar layout with the original field names, ordering, split menus and icons."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FilterInfo.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/FilterInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free filter argument builder linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/IRevisionGridFilter.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/IRevisionGridFilter.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free filter contract linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionFilter.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionFilter.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free quick-filter value linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FilterChangedEventArgs.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/FilterChangedEventArgs.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free filter-state event payload linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Read-only graph/ref labels plus WinForms-shaped single/multi-selection, preselection, double-click notification and the shared IRevisionGridFilter contract. Default reloads use the unchanged FilterInfo argument builder, so branch/current/reflog, message/committer/author/diff, first-parent and path filters match WinForms and persist through AppSettings; explicit caller-supplied revision filters remain supported. Stored stash revisions retain their reflog selectors, older stashes are inserted before their base commit, and the shared RevisionsLoading/RevisionsLoaded payload feeds the left panel from the same lazy refs/stash reads. Opt-in ShowUncommittedChangesIfPossible injects the same workspace/index revisions before HEAD after loading, honoring the shared artificial-commit setting and bare-repository exclusion. File-history rename following expands one path through git log --follow and preserves FilePathByObjectId/GetRevisionFileName, including exact-only rename/copy settings and merge commits. The context menu routes copy details, stash apply/pop/drop, local/remote checkout, local push, merge and rebase variants, artificial-row reset/commit, branch/tag creation, local rename/delete, tag delete, parent/child/current navigation, provider visibility toggles, and direct/nested user scripts through real Avalonia workflows; RevisionContextMenu lets specialized hosts such as File History compose that menu. Persisted upstream RevisionGrid command IDs/default hotkeys dispatch from FormBrowse. Recycled rows use the same ordered ColumnProvider boundary; settings control graph, notes, author, date and object-ID visibility, while visible lanes determine graph width. Refs mark the checked-out branch/tracking remote. Selection drives shared author highlighting; related refs and superproject data are functional. Owner-managed superproject loading returns through its JoinableTaskFactory for cancellation-safe shutdown."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionLoadEventArgs.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionLoadEventArgs.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free refs/stash reload payload linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free command enum linked unchanged so persisted hotkey IDs remain identical to WinForms."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/CopyContextMenuItem.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/CopyContextMenuItem.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Avalonia MenuItem twin copies filtered branch/tag names plus commit hash, message, author and date details with the original translated captions, access keys and shared icons."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/AuthorRevisionHighlighting.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/AuthorRevisionHighlighting.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged; the Avalonia revision grid refreshes realized provider rows when the selected-author state changes."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/SuperProjectInfo.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/SuperProjectInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged and populated through the shared superproject module APIs."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/ColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/ColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named ordered provider boundary adapted from DataGridView painting/formatting to creation and update of controls in recycled Avalonia rows; the companion layout model retains width, minimum width, visibility, availability and resizability metadata."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/RevisionGraphColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/RevisionGraphColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Owns graph cells, visible-lane autosizing, the draw-non-relatives setting and lane tooltips from the shared LaneInfoProvider. The WinForms bitmap GraphCache is intentionally omitted because Avalonia draws only realized cells."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/MessageColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/MessageColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Owns ref capsules, checked-out title weight, subject/ref tooltips, tag/remote filtering, fill styling, exact-shape hover highlighting and related-ref double-click navigation. Shared ahead/behind data produces dashed virtual tracking refs; independently loaded superproject checkout/conflict/additional refs and matching-ref dashed outlines mirror WinForms. Expanded commit-message/artificial/stash content remains deferred."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/NotesColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/NotesColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Shows the first note line and the complete note tooltip; RevisionReader requests note data when this column is enabled. Delayed commit-data loading remains with its owning service integration."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/AvatarColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/AvatarColumnProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Correct ordered slot, 32px width and visibility setting; realized 20px avatars load asynchronously from the shared provider and recycled cells reject stale completions. Cache clears refresh realized rows and artificial revisions remain empty."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/AuthorNameColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/AuthorNameColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Author text, visibility setting and translated author/committer tooltip are functional; the linked upstream AuthorRevisionHighlighting state bolds all realized revisions matching the selected author."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/DateColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/DateColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Honors date-column visibility, author-versus-committer date and relative-versus-absolute formatting, including the shared LocalizationHelpers relative-date text and the original detailed tooltip."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/CommitIdColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/CommitIdColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses the configured monospace styling, sizes the abbreviated object ID to the available column width and exposes the full ID tooltip."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/BuildStatusColumnProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/BuildStatusColumnProvider.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Activated by BuildServerWatcher only when an adapter exists; honors the original icon/text settings and widths, formats status symbols/descriptions/colors/tooltips, and opens report URLs from the cell."
+  },
+  "src/app/GitUI/UserControls/MainThreadScheduler.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/MainThreadScheduler.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged; the process-wide JoinableTaskContext targets Avalonia's UI synchronization context."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionGridRefRenderer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridRefRenderer.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Avalonia DrawingContext twin preserves the WinForms ref ordering, tag point, current-branch and tracking-remote indicators, joined local/tracking-remote point/notch geometry, fill mode, dashed virtual/superproject outlines and hover emphasis. Each capsule retains its ref and exact geometry for point/notch hit testing. Theme-variant semantic resources supply the invariant/dark branch, remote, tag, other, and neutral-capsule colors, while configured per-remote colors override the semantic remote brush like WinForms."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RefLabelIcon.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RefLabelIcon.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RefLabelShape.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RefLabelShape.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/DoubleClickRevisionEventArgs.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/DoubleClickRevisionEventArgs.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Graph/RevisionGraphLaneColor.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/RevisionGraphLaneColor.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Preserves the upstream lane-color selection while rebuilding Avalonia brushes when the loaded ThemeSettings instance changes."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Graph/Rendering/GraphRenderer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/Rendering/GraphRenderer.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Covered by golden-image tests in GitUI.Avalonia.Tests."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Graph/Rendering/SegmentRenderer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/Rendering/SegmentRenderer.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Graph/Rendering/Context.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/Rendering/Context.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Reusable list/tree boundary with the original case-insensitive regex filter over current and old names, invalid-input retention/feedback, filtered counts, configurable multi-selection, revision-aware grouping, repository refresh binding, navigation, and WinForms-shaped events. The complete added/removed/modified/renamed/copied/unmerged/range-diff image matrix and asynchronously resolved submodule variants use the shared image cache. File-tree mode builds an ordinal folders-first hierarchy, restores followed selections, and supplies select/expand/collapse actions. The original revision-list SetDiffs, AllItems, and SelectedGitItem surface is available to CommitDiff. FileViewer line/chunk capability is consumed through a callback so unsupported selections remain disabled; custom difftools retain their later owner."
+  },
+  "src/app/GitUI/UserControls/FileStatusList.ContextMenu.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.ContextMenu.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named context-menu boundary with consumer-supplied stage/unstage callbacks plus portable open, copy paths, show folder, show in File tree, revision-grid path filtering, history/blame, tree expansion, and ShowInFileList user-script actions. The cherry-pick action is visible only for bound consumers and enabled only for one selection whose FileViewer reports line-patching support. Ignore/custom-difftool actions retain their later owners."
+  },
+  "src/app/GitUI/UserControls/FileStatusList.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact filter/count row, empty-state label, status list, repository tree, and same-named context items preserve existing translation identities. The active/invalid filter backgrounds are semantic light/dark resources; later toolbar/search commands remain absent rather than inert."
+  },
+  "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs": {
+    "twin": "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged; supplies both ordinary revision groups and GetTreeFiles-backed file-tree data."
+  },
+  "src/app/GitUI/UserControls/FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs": {
+    "twin": "src/app/GitUI/UserControls/FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free calculator state linked unchanged."
+  },
+  "src/app/GitUI/UserControls/FileStatusWithDescription.cs": {
+    "twin": "src/app/GitUI/UserControls/FileStatusWithDescription.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free grouped-status value linked unchanged."
+  },
+  "src/app/GitUI/UserControls/GotoUserManualControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/GotoUserManualControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Preserves the translated Help link, manual icon, URL tooltip, and default-browser launch. Designer/test construction tolerates the documentation base URL not being initialized yet."
+  },
+  "src/app/GitUI/UserControls/RemotesComboboxControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RemotesComboboxControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Loads configured remote names through the shared GitModule and preserves editable single selection. Like the original, enabling the unimplemented multi-select mode throws."
+  },
+  "src/app/GitUI/UserControls/BranchComboBox.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/BranchComboBox.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Editable branch/ref selector with typed display template, selected-text API, validation, and the multi-branch selection dialog. Avalonia's editable ComboBox supplies completion behavior instead of WinForms Suggest mode."
+  },
+  "src/app/GitUI/UserControls/HelpImageDisplayUserControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/HelpImageDisplayUserControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Reusable expandable/collapsible help image, persisted expansion state, hover image swap, and original translation keys. Dynamic top-level resizing is unnecessary because Avalonia layout reflows the host."
+  },
+  "src/app/GitUI/UserControls/FileStatusItem.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusItem.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+  },
+  "src/app/GitUI/Editor/FileViewer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range/fixed diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. FormViewPatch uses the original ViewFixedPatch boundary so loaded patch context cannot be regenerated. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. The original Find/Find previous/Go-to-line, context-line, entire-file, whitespace, change/occurrence navigation, and selected-line stage/unstage/reset command IDs and persisted hotkeys are functional. Copy, Copy patch/new/old version, Find and Go-to-line context actions are present; Replace stays hidden while the viewer is read-only. The shared PatchManager produces selected/new/reset patches without duplicate UI-specific patch logic, Git apply runs through the repository executable, reset is confirmed through the Avalonia TaskDialog adapter, and PatchApplied lets Commit/RevisionDiff reload safely. Revision and stash views can apply selected or whole patches with conflict recovery. The original cancellation/latest-load boundary covers working-tree files and committed blobs; text, binary detection with bounded hex output, image preview/fallback, submodules, 5 MB deferred preview, file preambles, encoding selection/reload notification, and error display are functional. Every asynchronous text/diff/image/error render executes its complete UI mutation as a cancellable Avalonia dispatcher operation, including when a consumer begins loading on TaskManager's worker thread. AvaloniaEdit built-in definitions provide filename-extension syntax highlighting; remembered syntax/nonprinting/context/whitespace/entire-file settings, line-number override, text/glyph EOL markers, and settings-backed vertical ruler are functional. Dark syntax foregrounds remain independent of semantic diff rendering. Revision-aware consumers retain their external-difftool callback and F3 invokes it when present."
+  },
+  "src/app/GitUI/Editor/FileViewer.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "AvaloniaEdit surface with the functional original context-menu identities for selected-line stage/unstage/reset, Copy and Copy patch/new/old version, context-line count, entire-file and whitespace options, nonprinting/syntax toggles, Find, Replace (hidden while read-only), and Go to line. The centered no-upscale image surface and original large-preview link identity remain. The compact hover toolbar restores change navigation, context-line count, entire-file, nonprinting, syntax, whitespace, and encoding actions with the original names and shared icons."
+  },
+  "src/app/GitUI/Editor/ViewMode.cs": {
+    "twin": "src/app/GitUI/Editor/ViewMode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free view-mode enum linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Editor/ViewModeExtension.cs": {
+    "twin": "src/app/GitUI/Editor/ViewModeExtension.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free view-mode classification linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Editor/FindAndReplaceForm.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FindAndReplaceForm.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named reusable modeless Find/Replace window with forward/backward wrapping, case and whole-word matching, selection scan regions, multi-file loader boundary, replace/replace-all, framework-native highlight-all rendering, and next/previous highlighted-occurrence navigation consumed by FileViewer. The current FileViewer exposes Find mode only because it remains read-only; scan-region shading and the optional editor filename in the title remain deferred."
+  },
+  "src/app/GitUI/Editor/FindAndReplaceForm.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FindAndReplaceForm.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Fixed-size layout preserves every original control identity, translation key, mode-dependent visibility, and action grouping."
+  },
+  "src/app/GitUI/Editor/FormGoToLine.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FormGoToLine.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "One-based bounded line selection, translated range label, initial selection/focus, and WinForms-shaped dialog result behavior."
+  },
+  "src/app/GitUI/Editor/FormGoToLine.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/FormGoToLine.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compact fixed dialog retains the original label, numeric input, OK, and Cancel identities; the native Fluent numeric spinner requires a slightly taller input and client area than WinForms."
+  },
+  "src/app/GitUI/Editor/Diff/DiffLineType.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLineType.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/DiffLineInfo.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLineInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses AvaloniaEdit.Document.ISegment in place of the former WinForms editor segment."
+  },
+  "src/app/GitUI/Editor/Diff/DiffLinesInfo.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLinesInfo.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/DiffLineNumAnalyzer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLineNumAnalyzer.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Normal, combined, ANSI word-diff, moved-line, multiple-hunk, and no-newline mapping over AvaloniaEdit documents."
+  },
+  "src/app/GitUI/Editor/Diff/LinesMatcher.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/LinesMatcher.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "AvaloniaEdit segment twin used for bounded replacement-line pairing and common-word matching."
+  },
+  "src/app/GitUI/Editor/Diff/DiffHighlightService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffHighlightService.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-native highlight model retains ANSI semantic spans and computes dimmed common spans; rendering is split between AvaloniaEdit background and text layers."
+  },
+  "src/app/GitUI/Editor/Diff/PatchHighlightService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/PatchHighlightService.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/CombinedDiffHighlightService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/CombinedDiffHighlightService.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/RangeDiffHighlightService.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/RangeDiffHighlightService.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Editor/Diff/DiffViewerLineNumberControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffViewerLineNumberControl.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "AvaloniaEdit AbstractMargin with separate old/new columns, semantic gutter backgrounds, and bold current-line numbers."
+  },
+  "src/app/GitUI/Editor/IFileViewer.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/IFileViewer.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "SelectedLineEventArgs and the framework-neutral portion of IFileViewer are twinned. FileViewer implements text/selection access, Find, highlighting, line mapping/navigation, multi-file search loading, occurrence navigation, display options, and read-only state; WinForms-specific mouse/key/font/scrollbar event types stay at each UI framework boundary."
+  },
+  "src/app/GitUI/Editor/GitBlameEntry.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/GitBlameEntry.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Age-bucket index/color plus encoded Avatar bytes. The Avalonia twin deliberately keeps disposable Bitmap ownership out of this data record."
+  },
+  "src/app/GitUI/Editor/BlameAuthorMargin.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/BlameAuthorMargin.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Extended role: an AvaloniaEdit margin that renders theme-aware age-bucket markers, line-height avatars, and author text itself, replacing the second scroll-synchronised author editor of the WinForms BlameControl. It alone decodes/owns/disposes Avalonia Bitmaps, rejects stale content generations, preserves in-flight avatars across theme-color refreshes, and keeps a transparent right-edge resize grip participating in Blame splitter persistence."
+  },
+  "src/app/GitUI/UserControls/BlameControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/BlameControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Commit info over the blamed file with the combined author/avatar margin; hover highlights the hovered commit's lines and shows the summary tooltip; caret movement drives the commit info; the context menu blames this/the previous revision (via IRevisionGridInfo/IRevisionGridFileUpdate), opens FormCommitDiff through Show changes, and copies hash/message/info; double-click blames the clicked line's revision. Avatar requests start only after blame text is visible, deduplicate by email, retain empty continuation-line slots, use the original unknown-author fallback, and remain cancellation/stale-generation safe under the owner-managed load. When no revision grid hosts the control, blame navigation opens FormCommitDiff like WinForms. Theme-aware age/highlight resources update live, both nested splitter distances persist, and owner-managed loading completes before close-time joins. Deferred: repository-hoster menu items (4.3)."
+  },
+  "src/app/GitUI/UserControls/GitBlameParser.cs": {
+    "twin": "src/app/GitUI/UserControls/GitBlameParser.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/IRevisionGridInfo.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/IRevisionGridInfo.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia; implemented by the twin RevisionGridControl (DescribeRevision without ambiguous-ref disambiguation; parents-rewritten detection from the path filter)."
+  },
+  "src/app/GitUI/CommandsDialogs/IRevisionGridUpdate.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/IRevisionGridUpdate.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free source linked unchanged; the Avalonia RevisionGridControl implements the selection member used by RevisionDiffControl."
+  },
+  "src/app/GitUI/CommandsDialogs/IRevisionGridFileUpdate.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/IRevisionGridFileUpdate.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia; implemented by the twin FormFileHistory."
+  },
+  "src/app/GitUI/HelperDialogs/FormSelectMultipleBranches.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormSelectMultipleBranches.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Multi-select ListBox equivalent of the checked branch list; preserves SelectBranch and GetSelectedBranches."
+  },
+  "src/app/GitUI/UserManual/IProvideUserManual.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserManual/IProvideUserManual.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+  },
+  "src/app/GitUI/UserManual/StandardHtmlUserManual.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserManual/StandardHtmlUserManual.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+  },
+  "src/app/GitUI/UserManual/UserManual.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserManual/UserManual.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+  },
+  "src/app/GitUI/Resources/Help/HelpCommandMerge.png": {
+    "twin": "src/app/GitUI.Avalonia/Resources/Help/HelpCommandMerge.png",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked as an AvaloniaResource; the tracked PNG is shared unchanged."
+  },
+  "src/app/GitUI/Resources/Help/HelpCommandMergeFastForward.png": {
+    "twin": "src/app/GitUI.Avalonia/Resources/Help/HelpCommandMergeFastForward.png",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked as an AvaloniaResource; the tracked PNG is shared unchanged."
+  },
+  "src/app/GitUI/Resources/Help/HelpCommandRebase.png": {
+    "twin": "src/app/GitUI.Avalonia/Resources/Help/HelpCommandRebase.png",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked as an AvaloniaResource; the tracked PNG is shared unchanged."
+  },
+  "src/app/GitUI/CommitInfo/CommitInfo.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfo.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Simplified header + message with the configured same-named AvatarControl. Links and branch/tag expansion remain deferred."
+  },
+  "src/app/GitUI/UserControls/CommitPickerSmallControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/CommitPickerSmallControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Text entry resolves a revision name or SHA; the picker button opens the shared FormChooseCommit twin. The asynchronous shared GetCommitCountString result shows how the selected revision differs from the current checkout and ignores stale completion after a newer selection."
+  },
+  "src/app/GitUI/UserControls/PatchGrid.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/PatchGrid.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Interactive and apply-style rebase state parsing, translated HeaderText keys, applying/applied/skipped status, current-row selection, and virtualized multi-column display are functional. Header separators use the shared light/dark section-border brush. Row double-click opens normal commits in FormCommitDiff and mail/apply patches in FormViewPatch."
+  },
+  "src/app/GitUI/UserControls/CommitDiff.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/CommitDiff.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named CommitInfo/FileStatusList/FileViewer composition, real-parent revision reload, selected-file following, continuous diff scrolling, Escape propagation, and descriptive title are functional."
+  },
+  "src/app/GitUI/HelperDialogs/FormCommitDiff.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormCommitDiff.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Thin same-named host over CommitDiff with the original title propagation, size, minimum size, and centered-owner behavior."
+  },
+  "src/app/GitUI/CommandsDialogs/FormViewPatch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormViewPatch.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable storage-provider picker, lossless patch loading, shared PatchProcessor parsing, selectable filename/change/type rows, sortable headers, and fixed-patch FileViewer display preserve the original behavior and translation identities."
+  },
+  "src/app/GitUI/UserControls/PatchFile.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/PatchFile.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/UserControls/CommitSummaryUserControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/CommitSummaryUserControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Compact author/date/message/branches/tags summary; WinForms-specific color adaptation and resize code are unnecessary in the Avalonia layout."
+  },
+  "src/app/GitUI/LeftPanel/BaseBranchLeafNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseBranchLeafNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same branch-leaf identity over native Avalonia tree items; merged and ahead/behind decoration remains reduced."
+  },
+  "src/app/GitUI/LeftPanel/BasePathNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BasePathNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/BaseRefTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseRefTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Builds stable slash-path hierarchies and applies the existing prioritized-branch setting; visibility against a filtered revision set remains reduced."
+  },
+  "src/app/GitUI/LeftPanel/BaseRevisionNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseRevisionNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/BaseRevisionTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseRevisionTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains the same tree-layer boundary; Avalonia rebuilds immutable ref snapshots on the existing FormBrowse-owned refresh task."
+  },
+  "src/app/GitUI/LeftPanel/BranchPathNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/BranchPathNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/LocalBranchNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/LocalBranchNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Current-branch emphasis plus checkout/create/merge/rebase/delete/rename actions; reset remains absent until its dialog lands."
+  },
+  "src/app/GitUI/LeftPanel/LocalBranchTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/LocalBranchTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Nested prioritized local-branch hierarchy with checked-out branch emphasis; ahead/behind data remains reduced."
+  },
+  "src/app/GitUI/LeftPanel/Node.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/Node.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/NodeBase.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/NodeBase.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same root/child model identity and depth traversal over native Avalonia TreeViewItems; native multiple selection replaces the WinForms underline implementation."
+  },
+  "src/app/GitUI/LeftPanel/RemoteBranchNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RemoteBranchNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Fetch/checkout/create/merge/rebase and combined actions are real; remote-branch deletion remains absent until its dialog lands."
+  },
+  "src/app/GitUI/LeftPanel/RemoteBranchTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RemoteBranchTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Nested remote refs plus configured empty and inactive remotes, fetch/prune-all and manage actions."
+  },
+  "src/app/GitUI/LeftPanel/RemoteRepoFolderNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RemoteRepoFolderNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/RemoteRepoNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RemoteRepoNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Host-aware icon/URL, manage, fetch/prune, open-browser and activate/deactivate actions use the shared remote settings manager."
+  },
+  "src/app/GitUI/LeftPanel/TagNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/TagNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Create-branch, merge, rebase and delete actions are real; checkout/reset remain absent until their dialogs land."
+  },
+  "src/app/GitUI/LeftPanel/TagTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/TagTree.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/LeftPanel/Tree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/Tree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same root identity with persisted category visibility/order; FormBrowse retains ownership of refresh cancellation and thread switching."
+  },
+  "src/app/GitUI/LeftPanel/RepoObjectsTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.axaml.cs",
+    "status": "functional",
+    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
+    "notes": "Same compact toolbar/search/tree boundary with nested Branches/Remotes/Worktrees/Tags/Submodules/Stashes models, cyclic search, collapse/expand, native multi-selection, selected-ref filtering, persisted category visibility/order, state restoration and only real context actions. Configured empty/inactive remotes, current-branch emphasis, status-provider-driven recursive submodules, and current/deleted worktree presentation are included. Unsupported context rows are hidden like WinForms. Auto-hidden overlay scrollbars remain disabled. Filtered-revision visibility and merged/ahead-behind decoration remain deferred."
+  },
+  "src/app/GitUI/LeftPanel/SubmoduleFolderNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/SubmoduleFolderNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same italic-equivalent folder grouping boundary and single-child path compaction, with parent links repaired when Avalonia tree items are adopted."
+  },
+  "src/app/GitUI/LeftPanel/SubmoduleNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/SubmoduleNode.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same current-module emphasis, branch/status text and image matrix, in-window open, new-process open, and double-click behavior. The expensive asynchronously generated detailed status tooltip remains reduced to the immediately available status text, and two-revision diff preselection remains single-revision until the Avalonia revision grid accepts a first diff endpoint."
+  },
+  "src/app/GitUI/LeftPanel/SubmoduleTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/SubmoduleTree.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Reuses ISubmoduleStatusProvider and the original top-project/recursive hierarchy, with OS-aware full-path parent inference, folder compaction, expansion/selection restoration, and real open/update/sync/manage/reset/stash/commit workflows."
+  },
+  "src/app/GitUI/LeftPanel/StashNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/StashNode.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same reflog selector/object-id/display boundary and open/apply/pop/confirmed-drop actions over the Avalonia tree item host."
+  },
+  "src/app/GitUI/LeftPanel/StashTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/StashTree.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same stored-stash root and stash-all/staged/manage actions, populated from the revision grid's shared lazy stash read."
+  },
+  "src/app/GitUI/LeftPanel/WorktreeNode.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/WorktreeNode.cs",
+    "status": "parity",
+    "basedOn": "567fed8966930cfde75c862b076dc47c661339a5",
+    "notes": "Same worktree path identity, display name, current bold/deleted gray state, tooltip, revision selection, double-click switch, and open/delete command boundaries with host-correct path comparison."
+  },
+  "src/app/GitUI/LeftPanel/WorktreeTree.cs": {
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/WorktreeTree.cs",
+    "status": "parity",
+    "basedOn": "567fed8966930cfde75c862b076dc47c661339a5",
+    "notes": "Same main/sibling relative-path presentation and common-prefix compaction, initial expansion, selection restoration, and create/prune/manage workflows. Worktrees join FormBrowse's existing owned background repository snapshot instead of starting a second detached loader."
+  },
+  "src/app/GitUI/GitExtensionsForm.cs": {
+    "twin": "src/app/GitUI.Avalonia/GitExtensionsForm.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "No window-position persistence yet."
+  },
+  "src/app/ResourceManager/GitExtensionsFormBase.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsFormBase.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys; window hotkeys use persisted shim Keys through KeysMapper and ExecuteCommand(int), with shared Escape-to-close for dialogs."
+  },
+  "src/app/ResourceManager/GitExtensionsControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsControl.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains the WinForms-shaped persisted hotkey table, shortcut display and text-edit-key classification; containing Avalonia forms route key events to controls explicitly."
+  },
+  "src/app/ResourceManager/TranslatedControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/TranslatedControl.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys."
+  },
+  "src/app/GitExtUtils/GitUI/DpiUtil.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/DpiUtil.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Identity twin: Avalonia layout units are DIP, scale is always 1."
+  },
+  "src/app/GitUI/GitModuleForm.cs": {
+    "twin": "src/app/GitUI.Avalonia/GitModuleForm.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "UICommands/Module plus the shared IGitUICommandsSource contract, script runner/default provider, central script-command dispatch, and lazy user-script hotkey routing through the original Scripts settings category."
+  },
+  "src/app/GitUI/GitModuleControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/GitModuleControl.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Command-source discovery, Module/UICommands access and control-hotkey service discovery. Script commands use the original runner and walk the logical ancestors for the nearest same-named options provider; the control supplies the WinForms-shaped owner handle expected by shared services."
+  },
+  "src/app/GitUI/IGitUICommandsSource.cs": {
+    "twin": "src/app/GitUI/IGitUICommandsSource.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/GitUICommandsSourceEventArgs.cs": {
+    "twin": "src/app/GitUI/GitUICommandsSourceEventArgs.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Hotkey/HotkeySettings.cs": {
+    "twin": "src/app/GitUI/Hotkey/HotkeySettings.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Hotkey/HotkeySettingsManager.cs": {
+    "twin": "src/app/GitUI.Avalonia/Hotkey/HotkeySettingsManager.cs",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Reduced loader preserves the upstream XML format and command IDs/defaults for the implemented FormBrowse and FormResolveConflicts commands, including ManageWorkTrees ID 49 with Ctrl+Alt+W, plus the complete upstream RevisionGrid command/default table and dynamically loaded user scripts in the original Scripts category. Other hotkey targets join as their consumers are ported."
+  },
+  "src/app/GitUI/GitExtensionsDialog.cs": {
+    "twin": "src/app/GitUI.Avalonia/GitExtensionsDialog.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "MainPanel/ControlsPanel chrome is declared per-dialog in axaml, not inherited; shared visual-parity classes supply the standard 12px content margin, 32px action row, and 75x25 action-button minimums."
+  },
+  "src/app/GitUI/GitUICommands.cs": {
+    "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree create/delete/switch, revision-range difftool, ordinary/plugin Settings hosts, and portable same-executable repository-browser launch members are real. RunCommand retains the upstream verbs and argument parsing for every command whose Avalonia surface is functional; unknown and still-unported verbs report explicitly instead of opening Browse."
+  },
+  "src/app/GitUI/RevisionDiffInfoProvider.cs": {
+    "twin": "src/app/GitUI/RevisionDiffInfoProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free selected-revision to difftool-range mapping linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/ServiceContainerRegistry.cs": {
+    "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Registers the plain-text command and embedded-shell emulation, shared Output history provider/recorder with trace forwarding, reduced hotkey settings loader, and cross-platform external-terminal launcher; Linux honors the desktop default through xdg-terminal-exec before named fallbacks."
+  },
+  "src/app/GitUI/MessageBoxes.cs": {
+    "twin": "src/app/GitUI.Avalonia/MessageBoxes.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated helpers in use: revision-not-found/filter messages, missing submodule/Git Extensions directories, FailedToRunShell, Confirm, ConfirmResolveMergeConflicts, MiddleOfRebase, MiddleOfPatchApply, and ConfirmUpdateSubmodules (task dialog). Other domain-specific helpers join with their consumers."
+  },
+  "src/app/GitUI/HelperDialogs/FormChooseCommit.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormChooseCommit.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Single-selection revision grid, real or artificial preselection, current-branch/last-revision filters, direct SHA lookup, parent navigation, OK and double-click selection are functional. Callers can opt into the shared setting-controlled workspace/index rows like WinForms."
+  },
+  "src/app/GitUI/CommandsDialogs/FormRenameBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRenameBranch.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Verbatim port: auto-normalisation on focus loss (caret preserved), unchanged-name cancel, rename through the cross-platform FormProcess. The revision-grid context menu gains the upstream renameBranchToolStripMenuItem as a per-branch dropdown (underscores escaped for Avalonia access keys); the left-panel branch node entry waits for the left-panel context menus."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/GitRefListsForRevision.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/GitRefListsForRevision.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/FormResetChanges.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResetChanges.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Sizing follows the original: a custom message grows the dialog, clamped between its designed size and three quarters of the screen work area. The minimize box cannot be hidden separately in Avalonia."
+  },
+  "src/app/GitUI/HelperDialogs/FormStatus.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormStatus.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses the portable plain-text console and preserves waiting/success/error status badge window icons, including retry transitions. Windows taskbar progress remains intentionally platform-specific and absent."
+  },
+  "src/app/GitUI/HelperDialogs/FormProcess.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormProcess.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Headless end-to-end success and failure tests pass; Escape now uses the shared dialog key handler instead of a form-specific override."
+  },
+  "src/app/GitUI/HelperDialogs/FormRemoteProcess.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormRemoteProcess.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named remote-command boundary reuses FormProcess progress, stdin authentication, cancellation, process-tree cleanup, and consumer HandleOnExitCallback/Retry behavior. OpenSSH is the portable path; PuTTY registry host-key caching, key-agent recovery, and their translation strings are intentionally absent."
+  },
+  "src/app/GitUI/HelperDialogs/FormRemoteProcess.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormRemoteProcess.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "The original subclass designer adds no controls and is not invoked by its constructor; the Avalonia twin correctly inherits the FormStatus visual tree without a duplicate axaml."
+  },
+  "src/app/GitUI/UserControls/PasswordInput.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/PasswordInput.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "The reveal action switches between the original closed/open eye images. No drag and drop of text."
+  },
+  "src/app/GitUI/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs": {
+    "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Read-only selectable AvaloniaEdit output with automatically styled clickable web/email links, flushed redirected input, and the configured console font family/point size/bold/italic presentation; Linux and macOS commands start through ProcessExtensions.StartInOwnProcessGroup so cancellation reaches re-parented group members. The Avalonia-only PlainTextConsoleShellRunner composes this runner with a matching-font command input and the platform shell."
+  },
+  "src/app/GitUI/ConsoleEmulation/ConsoleEmulatorSettings.cs": {
+    "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/ConsoleEmulatorSettings.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same theme plus nullable point-based font record; the shim font preserves the original settings shape until each Avalonia runner converts points and styles at its presentation edge."
+  },
+  "src/app/GitUI/ConsoleEmulation/PlainText/PlainTextConsoleEmulatorsRegistry.cs": {
+    "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/PlainText/PlainTextConsoleEmulatorsRegistry.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains the plain-text command fallback and advertises one emulator only when the platform shell is usable. Its Avalonia-only emulator/shell-runner pair hosts COMSPEC on Windows and SHELL or /bin/sh on Unix, resolving the configured console font for each newly created command or shell without changing the WinForms registry."
+  },
+  "src/app/GitUI/Theming/ThemeCssUrlResolver.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeCssUrlResolver.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeCssUrlResolverException.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeCssUrlResolverException.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeException.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeException.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeFileReader.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeFileReader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeLoader.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeLoader.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral ExCSS parser linked unchanged into GitUI.Avalonia and covered there by the same test source as WinForms."
+  },
+  "src/app/GitUI/Theming/ThemePathProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/Theming/ThemePathProvider.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same path and user/portable theme contract. The Avalonia twin obtains its application themes directory from AppContext.BaseDirectory because the side-by-side executable is intentionally named GitExtensions.Avalonia rather than GitExtensions.exe; the WinForms provider and executable-name assertion remain unchanged."
+  },
+  "src/app/GitUI/Theming/ThemePersistence.cs": {
+    "twin": "src/app/GitUI/Theming/ThemePersistence.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia and covered there by the same test source as WinForms."
+  },
+  "src/app/GitUI/Theming/ThemeRepository.cs": {
+    "twin": "src/app/GitUI/Theming/ThemeRepository.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Theming/ThemeModule.cs": {
+    "twin": "src/app/GitUI.Avalonia/Theming/ThemeModule.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves CSS repository loading, invariant fallback, default migration, platform color-mode selection, variations, and invalid-theme recovery. Avalonia projects the loaded colors through its Compat resource adapter; WinForms system-color and legacy editor mutation are intentionally absent."
+  },
+  "src/app/GitUI/Theming/AppColorExtension.cs": {
+    "twin": "src/app/GitUI.Avalonia/Theming/AppColorExtension.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Uses the active CSS theme value with the same invariant-theme fallback as WinForms."
+  },
+  "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs": {
+    "twin": "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Shared source retains the Windows Ctrl+C path and adds portable entire-tree termination plus Linux setsid and macOS native-launcher process-group cleanup."
+  },
+  "src/app/GitExtensions/Program.cs": {
+    "twin": "src/app/GitExtensions.Avalonia/Program.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Entry point twin (with App.axaml.cs). Startup retains upstream working-directory discovery and routes arguments through GitUICommands.RunCommand. Browse/modeless commands become and visibly open as MainWindow; modal commands run under explicit shutdown and return success/failure through the desktop process exit code. Startup also maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources, loads the shared CSS theme repository through the ThemeModule twin, projects AppColor/KnownColor and semantic brushes into variant dictionaries, and reloads Windows app color mode when the actual platform variant changes."
+  }
+}

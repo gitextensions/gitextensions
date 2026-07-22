@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -934,8 +934,9 @@ public sealed partial class GitModule : IGitModule
     {
         await TaskScheduler.Default;
 
-        // Use Windows Git if custom tool is selected as the list is native to the application.
-        bool isWindowsGit = !string.IsNullOrWhiteSpace(customTool);
+        // The WinForms application discovers native Windows tools. Cross-platform callers
+        // discover tools from their platform Git and must launch them through that same Git.
+        bool isWindowsGit = OperatingSystem.IsWindows() && !string.IsNullOrWhiteSpace(customTool);
         string gui = (isWindowsGit ? Git.GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
         GitArgumentBuilder args = new("mergetool")
         {
@@ -3590,10 +3591,12 @@ public sealed partial class GitModule : IGitModule
 
     public string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken)
     {
-        // Use a global list of custom tools, always use Windows tools (native paths for the app).
-        // Note that --gui has no effect here
+        // The WinForms application keeps its global Windows-tool list; cross-platform callers
+        // query the native Git installation so Linux and macOS tools are discoverable too.
+        // Note that --gui has no effect here.
         GitArgumentBuilder args = new(isDiff ? "difftool" : "mergetool") { "--tool-help" };
-        ExecutionResult result = _executor.GitWindowsExecutable.Execute(args, cancellationToken: cancellationToken);
+        ExecutionResult result = (OperatingSystem.IsWindows() ? _executor.GitWindowsExecutable : GitExecutable)
+            .Execute(args, cancellationToken: cancellationToken);
         return result.StandardOutput;
     }
 
@@ -3604,8 +3607,9 @@ public sealed partial class GitModule : IGitModule
 
     public void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
     {
-        // Use Windows Git if custom tool is selected as the list is native to the application.
-        (string.IsNullOrWhiteSpace(customTool) ? GitCommandRunner : _executor.GitWindowsCommandRunner)
+        // Preserve the WinForms Windows-tool path while using native Git for tools discovered
+        // by the Avalonia application on Linux and macOS.
+        (OperatingSystem.IsWindows() && !string.IsNullOrWhiteSpace(customTool) ? _executor.GitWindowsCommandRunner : GitCommandRunner)
             .RunDetached(new GitArgumentBuilder("difftool")
         {
             { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },

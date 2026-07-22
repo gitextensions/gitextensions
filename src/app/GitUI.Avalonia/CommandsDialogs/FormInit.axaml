@@ -1,0 +1,47 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormInit"
+        Width="560" SizeToContent="Height"
+        MinWidth="450" CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Create new repository">
+  <Grid Classes="gitextensions-dialog-main" RowDefinitions="Auto,Auto,Auto">
+    <Grid ColumnDefinitions="Auto,*,120" ColumnSpacing="8">
+      <TextBlock x:Name="label1"
+                 Classes="gitextensions-dialog-label"
+                 Text="Directory" />
+      <ComboBox x:Name="_NO_TRANSLATE_Directory"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                IsEditable="True" />
+      <usercontrols:FolderBrowserButton x:Name="Browse"
+                                        Grid.Column="2" />
+    </Grid>
+
+    <HeaderedContentControl x:Name="groupBox1"
+                            Classes="gitextensions-group-box"
+                            Grid.Row="1"
+                            Margin="0,10,0,0"
+                            Header="Repository type">
+      <StackPanel Spacing="6">
+        <RadioButton x:Name="Personal"
+                     Content="Personal repository"
+                     IsChecked="True" />
+        <RadioButton x:Name="Central"
+                     Content="Central repository, no working directory  (--bare --shared=all)" />
+      </StackPanel>
+    </HeaderedContentControl>
+
+    <!-- ControlsPanel -->
+    <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
+                Grid.Row="2"
+                Margin="0,14,0,0">
+      <Button x:Name="Init"
+              Classes="gitextensions-dialog-action"
+              Content="Create"
+              IsDefault="True" />
+    </StackPanel>
+  </Grid>
+</Window>

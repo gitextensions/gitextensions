@@ -1,0 +1,95 @@
+using System.Diagnostics;
+using Avalonia.Media;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
+using Color = System.Drawing.Color;
+
+namespace GitUI.UserControls.RevisionGrid.Graph;
+
+// Twin of GitUI/UserControls/RevisionGrid/Graph/RevisionGraphLaneColor.cs with Avalonia
+// brushes instead of GDI brushes. Keep the lane-color selection logic in sync with upstream.
+public static class RevisionGraphLaneColor
+{
+    private static readonly object ThemeLock = new();
+    private static ThemeSettings? _loadedThemeSettings;
+    private static Color _nonRelativeColor;
+    private static IBrush _nonRelativeBrush = Brushes.LightGray;
+
+    internal static readonly List<IBrush> PresetGraphBrushes = [];
+
+    public static int GetColorForLane(int seed)
+    {
+        EnsureThemeColors();
+        return Math.Abs(seed) % PresetGraphBrushes.Count;
+    }
+
+    public static Color NonRelativeColor
+    {
+        get
+        {
+            EnsureThemeColors();
+            return _nonRelativeColor;
+        }
+    }
+
+    internal static IBrush NonRelativeBrush
+    {
+        get
+        {
+            EnsureThemeColors();
+            return _nonRelativeBrush;
+        }
+    }
+
+    public static IBrush GetBrushForLane(int laneColor)
+    {
+        EnsureThemeColors();
+        return PresetGraphBrushes[laneColor];
+    }
+
+    private static void EnsureThemeColors()
+    {
+        ThemeSettings settings = ThemeModule.Settings;
+        if (ReferenceEquals(_loadedThemeSettings, settings))
+        {
+            return;
+        }
+
+        lock (ThemeLock)
+        {
+            if (ReferenceEquals(_loadedThemeSettings, settings))
+            {
+                return;
+            }
+
+            Color[] branchColors = [.. Enum.GetNames<AppColor>()
+                .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
+                .Select(name => Enum.Parse<AppColor>(name).GetThemeColor())
+                .Where(color => !color.IsEmpty)
+                .Distinct()];
+
+            const int minBranchColors = 4;
+            if (branchColors.Length < minBranchColors)
+            {
+                Trace.WriteLine(@"At least {minBranchColors} different graph colors must be configured - using crying fallback");
+                branchColors = [Color.Cyan, Color.Magenta, Color.Yellow, Color.Lime];
+            }
+
+            PresetGraphBrushes.Clear();
+            foreach (Color color in branchColors)
+            {
+                PresetGraphBrushes.Add(CreateBrush(color));
+            }
+
+            _nonRelativeColor = AppColor.GraphNonRelativeBranch.GetThemeColor();
+            _nonRelativeBrush = CreateBrush(_nonRelativeColor);
+            _loadedThemeSettings = settings;
+        }
+    }
+
+    private static IBrush CreateBrush(Color color)
+    {
+        SolidColorBrush brush = new(Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B));
+        return brush.ToImmutable();
+    }
+}

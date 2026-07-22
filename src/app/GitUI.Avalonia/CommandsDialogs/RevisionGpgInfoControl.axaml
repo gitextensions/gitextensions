@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.CommandsDialogs.RevisionGpgInfoControl"
+             Padding="8">
+  <Grid x:Name="tableLayoutPanel1" ColumnDefinitions="38,*">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="0" />
+    </Grid.RowDefinitions>
+    <Image x:Name="commitSignPicture"
+           Width="32"
+           Height="32"
+           Margin="3"
+           HorizontalAlignment="Left"
+           VerticalAlignment="Top" />
+    <TextBox x:Name="txtCommitGpgInfo"
+             Grid.Column="1"
+             Margin="3"
+             Padding="0"
+             AcceptsReturn="True"
+             Background="Transparent"
+             BorderThickness="0"
+             IsReadOnly="True"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             TextWrapping="NoWrap" />
+    <Image x:Name="tagSignPicture"
+           Grid.Row="1"
+           Width="32"
+           Height="32"
+           Margin="3"
+           HorizontalAlignment="Left"
+           VerticalAlignment="Top" />
+    <TextBox x:Name="txtTagGpgInfo"
+             Grid.Row="1"
+             Grid.Column="1"
+             Margin="3"
+             Padding="0"
+             AcceptsReturn="True"
+             Background="Transparent"
+             BorderThickness="0"
+             IsReadOnly="True"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             TextWrapping="NoWrap" />
+  </Grid>
+</UserControl>

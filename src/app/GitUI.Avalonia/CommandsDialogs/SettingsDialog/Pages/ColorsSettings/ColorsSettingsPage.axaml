@@ -1,0 +1,75 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:compat="using:GitUI.Compat"
+                                 xmlns:properties="using:GitUI.Properties"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ColorsSettingsPage"
+                                 Text="Colors">
+  <settings:SettingsPageWithHeader.Styles>
+    <Style Selector="CheckBox">
+      <Setter Property="Margin" Value="0,-4" />
+    </Style>
+  </settings:SettingsPageWithHeader.Styles>
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="tlpnlMain"
+                Margin="8"
+                Spacing="6">
+      <GroupBox x:Name="gbRevisionGraph" Header="Revision graph">
+        <StackPanel x:Name="tlpnlRevisionGraph" Margin="8,4,8,8">
+          <CheckBox x:Name="MulticolorBranches" Content="Multicolor branches" />
+          <CheckBox x:Name="chkDrawAlternateBackColor" Content="Draw alternate background" />
+          <CheckBox x:Name="DrawNonRelativesGray" Content="Draw non relatives graph gray" />
+          <CheckBox x:Name="DrawNonRelativesTextGray" Content="Draw non relatives text gray" />
+          <CheckBox x:Name="chkHighlightAuthored" Content="Highlight authored revisions" />
+          <CheckBox x:Name="chkFillRefLabels" Content="Fill git ref labels" />
+        </StackPanel>
+      </GroupBox>
+
+      <GroupBox x:Name="gbTheme" Header="Theme">
+        <Grid x:Name="tableLayoutPanel1"
+              Margin="8,4,8,8"
+              ColumnDefinitions="Auto,Auto,*"
+              RowDefinitions="Auto,Auto,Auto,Auto"
+              RowSpacing="1">
+          <StackPanel x:Name="_NO_TRANSLATE_restartNeededPanel"
+                      Grid.ColumnSpan="3"
+                      Orientation="Horizontal"
+                      Spacing="6"
+                      Margin="3,1,3,3"
+                      IsVisible="False">
+            <Image Width="16" Height="16" Source="{x:Static properties:Images.Warning}" />
+            <TextBlock x:Name="lblRestartNeeded"
+                       VerticalAlignment="Center"
+                       Text="Restart required to apply changes" />
+          </StackPanel>
+          <ComboBox x:Name="_NO_TRANSLATE_cbSelectTheme"
+                    Grid.Row="1"
+                    Width="213"
+                    HorizontalAlignment="Left" />
+          <compat:IconSplitButton x:Name="sbOpenThemeFolder"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  Margin="6,0,0,0"
+                                  Icon="{x:Static properties:Images.BrowseFileExplorer}"
+                                  Content="Open theme folder">
+            <compat:IconSplitButton.Flyout>
+              <MenuFlyout>
+                <MenuItem x:Name="tsmiApplicationFolder" Header="Application folder" />
+                <MenuItem x:Name="tsmiUserFolder" Header="User folder" />
+              </MenuFlyout>
+            </compat:IconSplitButton.Flyout>
+          </compat:IconSplitButton>
+          <CheckBox x:Name="chkColorblind"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="3"
+                    Content="Colorblind" />
+          <CheckBox x:Name="chkUseSystemVisualStyle"
+                    Grid.Row="3"
+                    Grid.ColumnSpan="3"
+                    Content="Use system-defined visual style (looks bad with dark colors)" />
+        </Grid>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

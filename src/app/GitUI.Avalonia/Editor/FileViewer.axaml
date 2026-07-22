@@ -1,0 +1,164 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.Editor.FileViewer">
+  <Grid>
+    <compat:ThemeAwareTextEditor x:Name="TextEditor"
+                                 Classes="gitextensions-diff-editor"
+                                 IsReadOnly="True"
+                                 ShowLineNumbers="True"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 VerticalScrollBarVisibility="Auto">
+      <compat:ThemeAwareTextEditor.ContextMenu>
+        <ContextMenu x:Name="contextMenu">
+          <MenuItem x:Name="stageSelectedLinesToolStripMenuItem"
+                    Header="Stage selected lines">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stage}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="unstageSelectedLinesToolStripMenuItem"
+                    Header="Unstage selected lines">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Unstage}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="resetSelectedLinesToolStripMenuItem"
+                    Header="Reset selected lines">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="copyToolStripMenuItem"
+                    Header="_Copy"
+                    InputGesture="Ctrl+C" />
+          <MenuItem x:Name="copyPatchToolStripMenuItem"
+                    Header="Copy _patch" />
+          <MenuItem x:Name="copyNewVersionToolStripMenuItem"
+                    Header="Copy _new version" />
+          <MenuItem x:Name="copyOldVersionToolStripMenuItem"
+                    Header="Copy _old version" />
+          <Separator x:Name="toolStripSeparator1" />
+          <MenuItem x:Name="increaseNumberOfLinesToolStripMenuItem"
+                    Header="_Increase the number of lines of context">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.NumberOfLinesIncrease}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="decreaseNumberOfLinesToolStripMenuItem"
+                    Header="_Decrease the number of lines of context">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.NumberOfLinesDecrease}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="showEntireFileToolStripMenuItem"
+                    Header="Show _entire file"
+                    ToggleType="CheckBox">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ShowEntireFile}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="showNonprintableCharactersToolStripMenuItem"
+                    Header="S_how nonprinting characters"
+                    ToggleType="CheckBox">
+            <MenuItem.Icon>
+              <TextBlock Width="16"
+                         Text="¶"
+                         TextAlignment="Center" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="showSyntaxHighlightingToolStripMenuItem"
+                    Header="Show synta_x highlighting"
+                    ToggleType="CheckBox">
+            <MenuItem.Icon>
+              <TextBlock Width="16"
+                         FontSize="8"
+                         Text="&lt;/&gt;"
+                         TextAlignment="Center" />
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="ignoreWhitespaceAtEolToolStripMenuItem"
+                    Header="Ignore whitespace changes at end of _line"
+                    ToggleType="CheckBox" />
+          <MenuItem x:Name="ignoreWhitespaceChangesToolStripMenuItem"
+                    Header="Ignore changes in _amount of whitespace"
+                    ToggleType="CheckBox" />
+          <MenuItem x:Name="ignoreAllWhitespaceChangesToolStripMenuItem"
+                    Header="Ignore all _whitespace changes"
+                    ToggleType="CheckBox" />
+          <Separator x:Name="toolStripSeparator2" />
+          <MenuItem x:Name="findToolStripMenuItem"
+                    Header="_Find..."
+                    InputGesture="Ctrl+F" />
+          <MenuItem x:Name="replaceToolStripMenuItem"
+                    Header="_Replace..."
+                    InputGesture="Ctrl+H"
+                    IsVisible="False" />
+          <MenuItem x:Name="goToLineToolStripMenuItem"
+                    Header="_Go to line"
+                    InputGesture="Ctrl+G" />
+        </ContextMenu>
+      </compat:ThemeAwareTextEditor.ContextMenu>
+    </compat:ThemeAwareTextEditor>
+
+    <Border x:Name="PictureBox"
+            IsVisible="False"
+            Background="{DynamicResource ThemeBackgroundBrush}">
+      <Image x:Name="ImagePreview"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center"
+             Stretch="Uniform"
+             StretchDirection="DownOnly" />
+    </Border>
+
+    <HyperlinkButton x:Name="_NO_TRANSLATE_lblShowPreview"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     Margin="43,23,0,0"
+                     Padding="0"
+                     IsVisible="False"
+                     Content="This file is over 5 MB. Click to show preview" />
+
+    <Border x:Name="fileviewerToolbar"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Margin="0,0,40,0"
+            IsVisible="False"
+            Background="{DynamicResource ThemeBackgroundBrush}">
+      <StackPanel Orientation="Horizontal">
+        <compat:IconButton x:Name="nextChangeButton"
+                           Classes="gitextensions-toolbar-button image-only"
+                           Icon="{x:Static properties:Images.ArrowDown}" />
+        <compat:IconButton x:Name="previousChangeButton"
+                           Classes="gitextensions-toolbar-button image-only"
+                           Icon="{x:Static properties:Images.ArrowUp}" />
+        <Separator Width="1" Margin="2,3" />
+        <compat:IconButton x:Name="increaseNumberOfLines"
+                           Classes="gitextensions-toolbar-button image-only"
+                           Icon="{x:Static properties:Images.NumberOfLinesIncrease}" />
+        <compat:IconButton x:Name="decreaseNumberOfLines"
+                           Classes="gitextensions-toolbar-button image-only"
+                           Icon="{x:Static properties:Images.NumberOfLinesDecrease}" />
+        <Separator Width="1" Margin="2,3" />
+        <compat:IconButton x:Name="showEntireFileButton"
+                           Classes="gitextensions-toolbar-button image-only"
+                           Icon="{x:Static properties:Images.ShowEntireFile}" />
+        <Button x:Name="showNonPrintChars"
+                Classes="gitextensions-toolbar-button">
+          <TextBlock Width="16"
+                     Text="¶"
+                     TextAlignment="Center" />
+        </Button>
+        <Button x:Name="showSyntaxHighlighting"
+                Classes="gitextensions-toolbar-button">
+          <TextBlock Width="16"
+                     FontSize="8"
+                     Text="&lt;/&gt;"
+                     TextAlignment="Center" />
+        </Button>
+        <compat:IconButton x:Name="ignoreWhitespaceAtEol"
+                           Classes="gitextensions-toolbar-button image-only"
+                           Icon="{x:Static properties:Images.WhitespaceIgnoreEol}" />
+        <compat:IconButton x:Name="ignoreWhiteSpaces"
+                           Classes="gitextensions-toolbar-button image-only"
+                           Icon="{x:Static properties:Images.WhitespaceIgnore}" />
+        <compat:IconButton x:Name="ignoreAllWhitespaces"
+                           Classes="gitextensions-toolbar-button image-only"
+                           Icon="{x:Static properties:Images.WhitespaceIgnoreAll}" />
+        <ComboBox x:Name="encodingToolStripComboBox"
+                  Classes="gitextensions-toolbar-input"
+                  Width="140"
+                  Height="23" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

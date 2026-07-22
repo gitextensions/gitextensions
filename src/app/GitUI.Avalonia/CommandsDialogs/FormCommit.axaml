@@ -1,0 +1,274 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:editor="using:GitUI.Editor"
+        xmlns:gitui="using:GitUI"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        xmlns:spellChecker="using:GitUI.SpellChecker"
+        x:Class="GitUI.CommandsDialogs.FormCommit"
+        Width="1100"
+        Height="720"
+        MinWidth="800"
+        MinHeight="500"
+        Title="Commit">
+  <Grid RowDefinitions="*,Auto">
+    <Grid x:Name="splitMain"
+          Grid.Row="0"
+          Margin="8,8,8,0"
+          ColumnDefinitions="380,5,*">
+      <Grid x:Name="splitLeft"
+            Grid.Column="0"
+            RowDefinitions="*,5,*">
+        <DockPanel Grid.Row="0">
+          <WrapPanel DockPanel.Dock="Top"
+                     MaxWidth="380"
+                     HorizontalAlignment="Right"
+                     Margin="0,0,0,4"
+                     Orientation="Horizontal">
+            <compat:IconButton x:Name="toolStageAllItem"
+                               Classes="gitextensions-icon-only"
+                               Icon="{x:Static properties:Images.StageAll}"
+                               IsEnabled="False" />
+            <compat:IconButton x:Name="toolStageItem"
+                               Margin="4,0,0,0"
+                               Icon="{x:Static properties:Images.Stage}"
+                               Content="_Stage"
+                               IsEnabled="False" />
+          </WrapPanel>
+          <gitui:FileStatusList x:Name="Unstaged" />
+        </DockPanel>
+
+        <GridSplitter Grid.Row="1"
+                      ResizeDirection="Rows" />
+
+        <DockPanel Grid.Row="2">
+          <StackPanel DockPanel.Dock="Top"
+                      Margin="0,4,0,4"
+                      Orientation="Horizontal">
+            <TextBlock x:Name="commitStagedCountLabel"
+                       VerticalAlignment="Center"
+                       Text="Staged" />
+            <TextBlock x:Name="commitStagedCount"
+                       Margin="6,0,0,0"
+                       VerticalAlignment="Center" />
+            <compat:IconButton x:Name="toolUnstageItem"
+                               Margin="12,0,0,0"
+                               Icon="{x:Static properties:Images.Unstage}"
+                               Content="_Unstage"
+                               IsEnabled="False" />
+            <compat:IconButton x:Name="toolUnstageAllItem"
+                               Classes="gitextensions-icon-only"
+                               Margin="4,0,0,0"
+                               Icon="{x:Static properties:Images.UnstageAll}"
+                               IsEnabled="False" />
+          </StackPanel>
+          <gitui:FileStatusList x:Name="Staged" />
+        </DockPanel>
+      </Grid>
+
+      <GridSplitter Grid.Column="1"
+                    ResizeDirection="Columns" />
+
+      <Grid x:Name="splitRight"
+            Grid.Column="2"
+            Margin="4,0,0,0"
+            RowDefinitions="260,5,*">
+        <Grid Grid.Row="0"
+              RowDefinitions="Auto,*,Auto,Auto">
+          <StackPanel x:Name="toolbarCommit"
+                      Grid.Row="0"
+                      Margin="0,0,0,4"
+                      Orientation="Horizontal">
+            <compat:IconDropDownButton x:Name="commitMessageToolStripMenuItem"
+                                       Classes="gitextensions-toolbar-button"
+                                       Icon="{x:Static properties:Images.WorkingDirChanges}"
+                                       Content="Commit _message">
+              <compat:IconDropDownButton.Flyout>
+                <MenuFlyout>
+                  <MenuItem x:Name="ShowOnlyMyMessagesToolStripMenuItem"
+                            Header="Show only my messages"
+                            ToggleType="CheckBox" />
+                </MenuFlyout>
+              </compat:IconDropDownButton.Flyout>
+            </compat:IconDropDownButton>
+
+            <compat:IconDropDownButton x:Name="commitTemplatesToolStripMenuItem"
+                                       Classes="gitextensions-toolbar-button"
+                                       Margin="4,0,0,0"
+                                       Icon="{x:Static properties:Images.CommitTemplates}"
+                                       Content="Commit _templates">
+              <compat:IconDropDownButton.Flyout>
+                <MenuFlyout />
+              </compat:IconDropDownButton.Flyout>
+            </compat:IconDropDownButton>
+
+            <compat:IconButton x:Name="createBranchToolStripButton"
+                               Classes="gitextensions-toolbar-button"
+                               Margin="4,0,0,0"
+                               Icon="{x:Static properties:Images.BranchCreate}"
+                               Content="Create _branch" />
+
+            <compat:IconDropDownButton x:Name="tsmiOptions"
+                                       Classes="gitextensions-toolbar-button"
+                                       Margin="4,0,0,0"
+                                       Icon="{x:Static properties:Images.Settings}"
+                                       Content="_Options">
+              <compat:IconDropDownButton.Flyout>
+                <Flyout Placement="BottomEdgeAlignedRight">
+                  <Border Padding="10"
+                          MinWidth="310"
+                          Background="{DynamicResource MenuFlyoutPresenterBackground}"
+                          BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                          BorderThickness="1">
+                    <StackPanel Spacing="4">
+                      <CheckBox x:Name="closeDialogAfterEachCommitToolStripMenuItem"
+                                Content="Close dialog after each commit" />
+                      <CheckBox x:Name="closeDialogAfterAllFilesCommittedToolStripMenuItem"
+                                Content="Close dialog when all changes are committed" />
+                      <CheckBox x:Name="refreshDialogOnFormFocusToolStripMenuItem"
+                                Content="Refresh dialog on form focus" />
+                      <CheckBox x:Name="tsmiSelectStagedOnEnterMessage"
+                                Content="Select staged on entering message editor" />
+                      <Separator Margin="0,4" />
+                      <CheckBox x:Name="signOffToolStripMenuItem"
+                                Content="Sign-off commit" />
+                      <CheckBox x:Name="noVerifyToolStripMenuItem"
+                                Content="No verify" />
+                      <TextBlock x:Name="toolAuthorLabelItem"
+                                 Margin="0,4,0,0"
+                                 Text="Author: (Format: &quot;name &lt;mail&gt;&quot;)" />
+                      <TextBox x:Name="toolAuthor" />
+                      <Separator Margin="0,4" />
+                      <ComboBox x:Name="gpgSignCommitToolStripComboBox"
+                                SelectedIndex="0">
+                        <ComboBoxItem Content="Git default GPG signing" />
+                        <ComboBoxItem Content="Do not sign commit" />
+                        <ComboBoxItem Content="Sign with default GPG" />
+                        <ComboBoxItem Content="Sign with specific GPG" />
+                      </ComboBox>
+                      <TextBox x:Name="toolStripGpgKeyTextBox"
+                               IsVisible="False" />
+                    </StackPanel>
+                  </Border>
+                </Flyout>
+              </compat:IconDropDownButton.Flyout>
+            </compat:IconDropDownButton>
+          </StackPanel>
+
+          <Grid Grid.Row="1">
+            <spellChecker:EditNetSpell x:Name="Message" />
+            <Button x:Name="modifyCommitMessageButton"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="Modify the commit m_essage"
+                    IsVisible="False" />
+          </Grid>
+
+          <WrapPanel Grid.Row="2"
+                     Margin="0,4,0,0"
+                     VerticalAlignment="Center">
+            <CheckBox x:Name="Amend"
+                      Margin="0,0,10,0"
+                      Content="_Amend commit" />
+            <StackPanel x:Name="AmendPanel"
+                        Margin="0,0,10,0"
+                        Orientation="Horizontal"
+                        IsVisible="False">
+              <CheckBox x:Name="ResetAuthor"
+                        VerticalAlignment="Center"
+                        Content="R_eset author" />
+              <compat:IconButton x:Name="ResetSoft"
+                                 Margin="6,0,0,0"
+                                 Icon="{x:Static properties:Images.ResetCurrentBranchToHere}"
+                                 Content="Reset so_ft"
+                                 IsEnabled="False" />
+            </StackPanel>
+            <CheckBox x:Name="StageInSuperproject"
+                      Margin="0,0,10,0"
+                      Content="Stage _in Superproject"
+                      IsVisible="False" />
+            <compat:IconButton x:Name="btnResetAllChanges"
+                               Margin="0,0,6,0"
+                               Icon="{x:Static properties:Images.ResetWorkingDirChanges}"
+                               Content="Reset _all changes"
+                               IsEnabled="False" />
+            <compat:IconButton x:Name="btnResetUnstagedChanges"
+                               Icon="{x:Static properties:Images.ResetWorkingDirChanges}"
+                               Content="Reset _unstaged changes"
+                               IsEnabled="False" />
+          </WrapPanel>
+
+          <StackPanel Grid.Row="3"
+                      Margin="0,4,0,0"
+                      HorizontalAlignment="Right"
+                      Orientation="Horizontal">
+            <compat:IconButton x:Name="Commit"
+                               Icon="{x:Static properties:Images.RepoStateClean}"
+                               Content="_Commit"
+                               IsEnabled="False" />
+            <compat:IconButton x:Name="CommitAndPush"
+                               Margin="6,0,0,0"
+                               Icon="{x:Static properties:Images.ArrowUp}"
+                               Content="Commit &amp; _push"
+                               IsEnabled="False" />
+          </StackPanel>
+        </Grid>
+
+        <GridSplitter Grid.Row="1"
+                      ResizeDirection="Rows" />
+
+        <DockPanel Grid.Row="2"
+                   Margin="0,4,0,0">
+          <compat:IconButton x:Name="SolveMergeconflicts"
+                             DockPanel.Dock="Top"
+                             Margin="0,0,0,4"
+                             HorizontalAlignment="Left"
+                             Icon="{x:Static properties:Images.SolveMerge}"
+                             Content="There are unresolved merge conflicts&#x0a;"
+                             IsVisible="False" />
+          <editor:FileViewer x:Name="SelectedDiff" />
+        </DockPanel>
+      </Grid>
+    </Grid>
+
+    <Border Grid.Row="1"
+            Margin="8,3,8,5"
+            Padding="4,2"
+            BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+            BorderThickness="1,1,1,0">
+      <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto">
+        <TextBlock x:Name="commitAuthorStatus"
+                   Grid.Column="0"
+                   VerticalAlignment="Center"
+                   TextTrimming="CharacterEllipsis" />
+        <TextBlock x:Name="branchNameLabel"
+                   Grid.Column="1"
+                   Margin="12,0,0,0"
+                   VerticalAlignment="Center"
+                   Text="(Branch name)" />
+        <HyperlinkButton x:Name="remoteNameLabel"
+                         Grid.Column="2"
+                         Margin="4,0,12,0"
+                         Padding="0"
+                         VerticalAlignment="Center"
+                         Content="(Remote name)" />
+        <TextBlock x:Name="commitCursorLineLabel"
+                   Grid.Column="3"
+                   VerticalAlignment="Center"
+                   Text="Ln" />
+        <TextBlock x:Name="commitCursorLine"
+                   Grid.Column="4"
+                   Margin="4,0,8,0"
+                   VerticalAlignment="Center" />
+        <TextBlock x:Name="commitCursorColumnLabel"
+                   Grid.Column="5"
+                   VerticalAlignment="Center"
+                   Text="Col" />
+        <TextBlock x:Name="commitCursorColumn"
+                   Grid.Column="6"
+                   Margin="4,0,0,0"
+                   VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

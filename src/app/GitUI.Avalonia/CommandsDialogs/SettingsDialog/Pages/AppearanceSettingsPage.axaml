@@ -1,0 +1,153 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 xmlns:properties="using:GitUI.Properties"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.AppearanceSettingsPage"
+                                 Text="Appearance">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="tlpnlMain"
+                Margin="8"
+                Spacing="6">
+      <GroupBox x:Name="gbGeneral" Header="_General">
+        <StackPanel x:Name="tlpnlGeneral"
+                    Margin="8,4,8,8"
+                    Spacing="0">
+          <CheckBox x:Name="chkShowRelativeDate"
+                    Height="28"
+                    Content="Show relative date instead of full date" />
+          <CheckBox x:Name="chkShowRepoCurrentBranch"
+                    Height="28"
+                    Content="Show current branch names in the dashboard and the recent repositories dropdown menu" />
+          <CheckBox x:Name="chkShowCurrentBranchInVisualStudio"
+                    Height="28"
+                    Content="Show current branch in Visual Studio" />
+          <CheckBox x:Name="chkEnableAutoScale"
+                    Height="28"
+                    Content="Auto scale user interface when high DPI is used" />
+          <Grid ColumnDefinitions="Auto,180,*">
+            <TextBlock x:Name="truncateLongFilenames"
+                       Margin="3,0,12,0"
+                       VerticalAlignment="Center"
+                       Text="Truncate long filenames" />
+            <ComboBox x:Name="truncatePathMethod"
+                      Grid.Column="1"
+                      HorizontalAlignment="Stretch" />
+          </Grid>
+        </StackPanel>
+      </GroupBox>
+
+      <GroupBox x:Name="gbAuthorImages"
+                Header="_Author images">
+        <Grid x:Name="tlpnlAuthor"
+              Margin="8,4,8,8"
+              ColumnDefinitions="Auto,180,Auto,*"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+              RowSpacing="5">
+          <CheckBox x:Name="ShowAuthorAvatarInCommitGraph"
+                    Grid.ColumnSpan="2"
+                    Content="Show author's avatar column in the commit graph" />
+          <CheckBox x:Name="ShowAuthorAvatarInCommitInfo"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Content="Show author's avatar in the commit info view" />
+          <TextBlock x:Name="lblCacheDays"
+                     Grid.Row="2"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Cache images (days)" />
+          <NumericUpDown x:Name="_NO_TRANSLATE_DaysToCacheImages"
+                         Grid.Row="2"
+                         Grid.Column="1"
+                         Width="96"
+                         HorizontalAlignment="Left"
+                         Maximum="400" />
+          <TextBlock x:Name="lblAvatarProvider"
+                     Grid.Row="3"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Avatar provider" />
+          <ComboBox x:Name="AvatarProvider"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+          <Button x:Name="avatarProviderHelp"
+                  Grid.Row="3"
+                  Grid.Column="2"
+                  Width="24"
+                  Height="24"
+                  Margin="4,0,0,0"
+                  Padding="4">
+            <Image Width="16" Height="16" Source="{x:Static properties:Images.Information}" />
+          </Button>
+          <TextBlock x:Name="lblNoImageService"
+                     Grid.Row="4"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Fallback generated avatar style" />
+          <ComboBox x:Name="_NO_TRANSLATE_NoImageService"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+          <Button x:Name="pictureAvatarHelp"
+                  Grid.Row="4"
+                  Grid.Column="2"
+                  Width="24"
+                  Height="24"
+                  Margin="4,0,0,0"
+                  Padding="4">
+            <Image Width="16" Height="16" Source="{x:Static properties:Images.Information}" />
+          </Button>
+          <TextBlock x:Name="lblCustomAvatarTemplate"
+                     Grid.Row="5"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Custom avatar template" />
+          <TextBox x:Name="txtCustomAvatarTemplate"
+                   Grid.Row="5"
+                   Grid.Column="1" />
+          <Button x:Name="ClearImageCache"
+                  Grid.Row="6"
+                  Grid.Column="1"
+                  Content="Clear image cache" />
+        </Grid>
+      </GroupBox>
+
+      <GroupBox x:Name="gbLanguages" Header="_Language">
+        <Grid x:Name="tlpnlLanguage"
+              Margin="8,4,8,8"
+              ColumnDefinitions="Auto,180,Auto,*"
+              RowDefinitions="Auto,Auto"
+              RowSpacing="5">
+          <TextBlock x:Name="lblLanguage"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Language (restart required)" />
+          <ComboBox x:Name="Language"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+          <HyperlinkButton x:Name="helpTranslate"
+                           Grid.Column="2"
+                           Margin="6,0,0,0"
+                           HorizontalAlignment="Left"
+                           Content="Help translate" />
+          <TextBlock x:Name="lblSpellingDictionary"
+                     Grid.Row="1"
+                     Margin="3,0,12,0"
+                     VerticalAlignment="Center"
+                     Text="Dictionary for spelling checker" />
+          <ComboBox x:Name="Dictionary"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+          <HyperlinkButton x:Name="downloadDictionary"
+                           Grid.Row="1"
+                           Grid.Column="2"
+                           Margin="6,0,0,0"
+                           HorizontalAlignment="Left"
+                           Content="Download dictionary" />
+        </Grid>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

@@ -1,0 +1,545 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+        xmlns:compat="using:GitUI.Compat">
+  <Styles.Resources>
+    <ResourceDictionary>
+      <!-- WinForms stores fonts in points; these defaults are the equivalent Avalonia
+           device-independent-pixel sizes until AppSettings replaces them at startup. -->
+      <FontFamily x:Key="GitExtensionsUiFontFamily">Segoe UI</FontFamily>
+      <x:Double x:Key="GitExtensionsUiFontSize">12</x:Double>
+      <FontStyle x:Key="GitExtensionsUiFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsUiFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsCommitFontFamily">Segoe UI</FontFamily>
+      <x:Double x:Key="GitExtensionsCommitFontSize">12</x:Double>
+      <FontStyle x:Key="GitExtensionsCommitFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsCommitFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsFixedWidthFontFamily">Consolas</FontFamily>
+      <x:Double x:Key="GitExtensionsFixedWidthFontSize">13.333333333333334</x:Double>
+      <FontStyle x:Key="GitExtensionsFixedWidthFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsFixedWidthFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsMonospaceFontFamily">Consolas</FontFamily>
+      <x:Double x:Key="GitExtensionsMonospaceFontSize">12</x:Double>
+      <FontStyle x:Key="GitExtensionsMonospaceFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsMonospaceFontWeight">Normal</FontWeight>
+
+      <!-- WinForms MenuStrip is a compact desktop control: 24px bar, 20px top-level
+           items, and 22px dropdown rows. Fluent's defaults are intentionally roomier. -->
+      <x:Double x:Key="MenuBarHeight">24</x:Double>
+      <Thickness x:Key="MenuBarItemPadding">7,0</Thickness>
+      <Thickness x:Key="MenuFlyoutItemThemePaddingNarrow">8,1</Thickness>
+      <Thickness x:Key="MenuFlyoutScrollerMargin">0</Thickness>
+      <x:Double x:Key="MenuFlyoutThemeMinHeight">0</x:Double>
+      <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
+
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
+                           Color="#C3C3FF" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionPointerOverBackgroundBrush"
+                           Color="#B3B3EB" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionForegroundBrush"
+                           Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
+                           Color="#E6E6E6" />
+          <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
+                           Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsPaneBorderBrush"
+                           Color="#D2D2D2" />
+          <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
+                           Color="#D2D2D2" />
+          <SolidColorBrush x:Key="GitExtensionsRefLabelBackgroundBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsBranchRefBrush"
+                           Color="#008000" />
+          <SolidColorBrush x:Key="GitExtensionsRemoteBranchRefBrush"
+                           Color="#8B0009" />
+          <SolidColorBrush x:Key="GitExtensionsTagRefBrush"
+                           Color="#00008B" />
+          <SolidColorBrush x:Key="GitExtensionsOtherRefBrush"
+                           Color="#808080" />
+          <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
+                           Color="#8A8A8A" />
+          <SolidColorBrush x:Key="GitExtensionsValidFilterBackgroundBrush"
+                           Color="#C8FFC8" />
+          <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
+                           Color="#FFC8C8" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftBackgroundBrush" Color="#80FF80" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedBackgroundBrush" Color="#FFFF80" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardBackgroundBrush" Color="#FF8080" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#EBEBEB" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberSelectedBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffSectionBrush" Color="#E6E6E6" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedBrush" Color="#FFC8C8" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedBrush" Color="#C8FFC8" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimBrush" Color="#FFF1F1" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimBrush" Color="#F1FFF1" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedBrush" Color="#F6CEFF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedBrush" Color="#C8D0F4" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedForegroundBrush" Color="#D3000B" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedForegroundBrush" Color="#189100" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimForegroundBrush" Color="#F4C0C2" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimForegroundBrush" Color="#C5E4BF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedForegroundBrush" Color="#B148C6" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedForegroundBrush" Color="#005DFF" />
+          <SolidColorBrush x:Key="GitExtensionsBlameHighlightBrush" Color="#E3E3E3" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAuthorBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge0Brush" Color="#F7FCF5" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge1Brush" Color="#C7E9C0" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge2Brush" Color="#A1D99B" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge3Brush" Color="#74C476" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge4Brush" Color="#41AB5D" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge5Brush" Color="#238B45" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge6Brush" Color="#00441B" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
+                           Color="#00009B" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionPointerOverBackgroundBrush"
+                           Color="#1313A2" />
+          <SolidColorBrush x:Key="GitExtensionsSelectionForegroundBrush"
+                           Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsInactiveSelectionBackgroundBrush"
+                           Color="#3A3A3A" />
+          <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
+                           Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
+                           Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsPaneBorderBrush"
+                           Color="#4C4C4C" />
+          <SolidColorBrush x:Key="GitExtensionsSectionBorderBrush"
+                           Color="#4C4C4C" />
+          <SolidColorBrush x:Key="GitExtensionsRefLabelBackgroundBrush"
+                           Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsBranchRefBrush"
+                           Color="#7FE28A" />
+          <SolidColorBrush x:Key="GitExtensionsRemoteBranchRefBrush"
+                           Color="#FD9797" />
+          <SolidColorBrush x:Key="GitExtensionsTagRefBrush"
+                           Color="#40BAF7" />
+          <SolidColorBrush x:Key="GitExtensionsOtherRefBrush"
+                           Color="#CFB3B3" />
+          <SolidColorBrush x:Key="GitExtensionsTreeConnectorBrush"
+                           Color="#7A7A7A" />
+          <SolidColorBrush x:Key="GitExtensionsValidFilterBackgroundBrush"
+                           Color="#274439" />
+          <SolidColorBrush x:Key="GitExtensionsInvalidFilterBackgroundBrush"
+                           Color="#453030" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftBackgroundBrush" Color="#63BE63" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedBackgroundBrush" Color="#BEBE63" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardBackgroundBrush" Color="#BE6363" />
+          <SolidColorBrush x:Key="GitExtensionsResetSoftForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetMixedForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsResetHardForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsDiffEditorBackgroundBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsDiffTextBrush" Color="#F1F1F1" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBackgroundBrush" Color="#252526" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberBrush" Color="#AAAAAA" />
+          <SolidColorBrush x:Key="GitExtensionsDiffLineNumberSelectedBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsDiffSectionBrush" Color="#5F5E5E" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedBrush" Color="#6E1919" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedBrush" Color="#076641" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimBrush" Color="#453030" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimBrush" Color="#274439" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedBrush" Color="#622163" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedBrush" Color="#12396B" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedForegroundBrush" Color="#CD3131" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedForegroundBrush" Color="#0DBC79" />
+          <SolidColorBrush x:Key="GitExtensionsDiffRemovedDimForegroundBrush" Color="#5E3131" />
+          <SolidColorBrush x:Key="GitExtensionsDiffAddedDimForegroundBrush" Color="#2B544A" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedRemovedForegroundBrush" Color="#D670D6" />
+          <SolidColorBrush x:Key="GitExtensionsDiffMovedAddedForegroundBrush" Color="#65A4FF" />
+          <SolidColorBrush x:Key="GitExtensionsBlameHighlightBrush" Color="#414141" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAuthorBrush" Color="#B8B8B8" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge0Brush" Color="#263A2C" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge1Brush" Color="#315B3C" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge2Brush" Color="#347A47" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge3Brush" Color="#2F9952" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge4Brush" Color="#29B35B" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge5Brush" Color="#46CA70" />
+          <SolidColorBrush x:Key="GitExtensionsBlameAge6Brush" Color="#78E391" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+
+  <!-- Runtime values come from the shared Git Extensions CSS theme. These light/dark values
+       remain as designer and pre-startup fallbacks. -->
+  <Style Selector="Window">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+  </Style>
+  <Style Selector="UserControl">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBox">
+    <Setter Property="MinHeight" Value="23" />
+  </Style>
+  <Style Selector="TextBox.file-filter-active">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsValidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="TextBox.file-filter-invalid">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox">
+    <Setter Property="MinHeight" Value="23" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input">
+    <!-- Fluent's default 5/7px padding and 32px arrow column are touch metrics. Keep the
+         editor vertically symmetric and use the compact ToolStripComboBox arrow segment. -->
+    <Setter Property="Padding" Value="4,2,0,2" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input /template/ TextBox#PART_EditableTextBox">
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input /template/ Border#DropDownOverlay">
+    <Setter Property="Width" Value="15" />
+  </Style>
+  <Style Selector="ComboBox.gitextensions-toolbar-input /template/ PathIcon#DropDownGlyph">
+    <Setter Property="Width" Value="7" />
+    <Setter Property="Height" Value="5" />
+    <Setter Property="Margin" Value="0,0,5,0" />
+  </Style>
+  <Style Selector="Button.gitextensions-dialog-action">
+    <Setter Property="MinWidth" Value="75" />
+    <Setter Property="MinHeight" Value="25" />
+  </Style>
+  <!-- Button.Content must stay a string so AvaloniaTranslationUtils can continue mapping
+       the original control .Text key. These templates add the original raster icon without
+       wrapping or replacing that translatable value in each form. -->
+  <Style Selector="Button.gitextensions-icon-button">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[compat:IconButton].Icon}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.gitextensions-icon-button.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="ToggleButton.gitextensions-icon-toggle-button.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconToggleButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="SplitButton.gitextensions-icon-split-button">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[compat:IconSplitButton].Icon}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="SplitButton.gitextensions-icon-split-button.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconSplitButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="DropDownButton.gitextensions-icon-drop-down-button.gitextensions-icon-only">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <Image Width="16"
+               Height="16"
+               Stretch="Uniform"
+               Source="{Binding $parent[compat:IconDropDownButton].Icon}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TabItem.gitextensions-workspace-tab">
+    <Setter Property="Height" Value="23" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="6,1" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="HeaderTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[TabItem].Icon}" />
+          <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TabItem.gitextensions-dialog-tab">
+    <Setter Property="Height" Value="27" />
+    <Setter Property="MinHeight" Value="27" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button,
+                   compat|IconButton.gitextensions-toolbar-button,
+                   compat|IconToggleButton.gitextensions-toolbar-button,
+                   compat|IconSplitButton.gitextensions-toolbar-button,
+                   compat|IconDropDownButton.gitextensions-toolbar-button,
+                   SplitButton.gitextensions-toolbar-button,
+                   DropDownButton.gitextensions-toolbar-button">
+    <Setter Property="Height" Value="23" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="MinWidth" Value="23" />
+    <Setter Property="Padding" Value="3,1" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_PrimaryButton">
+    <Setter Property="MinWidth" Value="23" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_SecondaryButton">
+    <Setter Property="MinWidth" Value="13" />
+  </Style>
+  <Style Selector="SplitButton.gitextensions-toolbar-button /template/ Button#PART_SecondaryButton > PathIcon">
+    <Setter Property="Width" Value="7" />
+    <Setter Property="Height" Value="5" />
+  </Style>
+  <Style Selector="Button.gitextensions-toolbar-button.checked">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="ToggleButton.gitextensions-toolbar-button:checked">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="Border.gitextensions-toolbar-separator">
+    <Setter Property="Width" Value="1" />
+    <Setter Property="Height" Value="17" />
+    <Setter Property="Margin" Value="3,3" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-toolbar-label">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Margin" Value="3,0,1,0" />
+  </Style>
+  <Style Selector="RadioButton.gitextensions-icon-radio-button">
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Image Width="16"
+                 Height="16"
+                 Stretch="Uniform"
+                 Source="{Binding $parent[compat:IconRadioButton].Icon}" />
+          <AccessText VerticalAlignment="Center" Text="{Binding}" />
+        </StackPanel>
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="StackPanel.gitextensions-dialog-controls">
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="Margin" Value="5" />
+    <Setter Property="Orientation" Value="Horizontal" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+    <Setter Property="Spacing" Value="6" />
+  </Style>
+  <Style Selector="Grid.gitextensions-dialog-main">
+    <Setter Property="Margin" Value="12" />
+  </Style>
+  <Style Selector="Border.gitextensions-dialog-main">
+    <Setter Property="Padding" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-dialog-label">
+    <Setter Property="Margin" Value="3" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Label.gitextensions-dialog-label">
+    <Setter Property="Margin" Value="3" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="HeaderedContentControl.gitextensions-group-box">
+    <Setter Property="Padding" Value="8" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid RowDefinitions="Auto,*" ColumnDefinitions="8,Auto,*">
+          <Border Grid.Column="0"
+                  Height="1"
+                  VerticalAlignment="Center"
+                  Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
+          <ContentPresenter x:Name="PART_HeaderPresenter"
+                            Grid.Column="1"
+                            Margin="3,0"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            VerticalContentAlignment="Center" />
+          <Border Grid.Column="2"
+                  Height="1"
+                  VerticalAlignment="Center"
+                  Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
+          <Border x:Name="PART_GroupBoxFrame"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="3"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="1,0,1,1"
+                  CornerRadius="0" />
+          <ContentPresenter Grid.Row="1"
+                            Grid.ColumnSpan="3"
+                            Margin="{TemplateBinding Padding}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="avaloniaEdit|TextEditor.gitextensions-diff-editor">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsFixedWidthFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsFixedWidthFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsFixedWidthFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsFixedWidthFontWeight}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsDiffEditorBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDiffTextBrush}" />
+  </Style>
+  <Style Selector="avaloniaEdit|TextEditor.gitextensions-diff-editor avaloniaEdit|TextArea">
+    <Setter Property="SelectionBrush" Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
+    <Setter Property="SelectionForeground" Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="SelectableTextBlock.gitextensions-commit-header">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsMonospaceFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsMonospaceFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsMonospaceFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsMonospaceFontWeight}" />
+  </Style>
+  <Style Selector="SelectableTextBlock.gitextensions-commit-message">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsCommitFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsCommitFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsCommitFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsCommitFontWeight}" />
+  </Style>
+
+  <Style Selector="ListBoxItem">
+    <Setter Property="MinHeight" Value="24" />
+    <Setter Property="Padding" Value="6,2" />
+  </Style>
+  <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsSelectionPointerOverBackgroundBrush}" />
+  </Style>
+
+  <Style Selector="TreeViewItem">
+    <Setter Property="MinHeight" Value="24" />
+  </Style>
+  <Style Selector="TreeViewItem:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="TreeViewItem:selected:pointerover /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsSelectionPointerOverBackgroundBrush}" />
+  </Style>
+
+  <Style Selector="MenuItem">
+    <Setter Property="MinHeight" Value="22" />
+  </Style>
+  <Style Selector="ContextMenu">
+    <!-- ContextMenu owns a private 4px scroller inset in Fluent; setting only the shared
+         resource does not affect this presenter variant. -->
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="ContextMenu /template/ ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="Margin" Value="0" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter">
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter /template/ Border#LayoutRoot">
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter /template/ ItemsPresenter#PART_ItemsPresenter">
+    <Setter Property="Margin" Value="0" />
+  </Style>
+  <Style Selector="Menu">
+    <Setter Property="Padding" Value="4,0" />
+  </Style>
+  <Style Selector="Menu > MenuItem">
+    <Setter Property="Margin" Value="0,2" />
+    <Setter Property="MinHeight" Value="20" />
+    <!-- Reserve the open-state border so selecting an item never remeasures the menu bar. -->
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="1,1,1,0" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="Menu > MenuItem:selected /template/ Border#PART_LayoutRoot">
+    <!-- WinForms joins an open top-level item visually to its dropdown. -->
+    <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
+  </Style>
+
+  <Style Selector="GridSplitter">
+    <!-- SplitContainer.SplitterWidth is an invisible drag target in FormBrowse. The visible
+         separators are the adjacent panes' one-pixel borders, not an extra splitter rule. -->
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="Border.gitextensions-section">
+    <Setter Property="BorderBrush"
+            Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Border.gitextensions-section-separator">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+  </Style>
+</Styles>

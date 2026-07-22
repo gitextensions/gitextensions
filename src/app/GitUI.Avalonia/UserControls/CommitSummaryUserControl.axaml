@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.UserControls.CommitSummaryUserControl">
+  <HeaderedContentControl x:Name="groupBox1"
+                          Classes="gitextensions-group-box"
+                          Padding="10"
+                          Header="...">
+    <Grid x:Name="tableLayoutPanel1" ColumnDefinitions="Auto,*"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="3">
+      <TextBlock x:Name="labelMessage" Grid.ColumnSpan="2" Margin="0,0,0,5"
+                 FontWeight="SemiBold" Text="..." TextWrapping="Wrap" />
+      <TextBlock x:Name="labelAuthorCaption" Grid.Row="1" Text="Author:" />
+      <TextBlock x:Name="labelAuthor" Grid.Row="1" Grid.Column="1" Text="..." />
+      <TextBlock x:Name="labelDateCaption" Grid.Row="2" Text="Commit date:" />
+      <TextBlock x:Name="labelDate" Grid.Row="2" Grid.Column="1" Text="..." />
+      <TextBlock x:Name="labelBranchesCaption" Grid.Row="3" Text="Branch(es):" />
+      <TextBlock x:Name="labelBranches" Grid.Row="3" Grid.Column="1" Text="..." TextWrapping="Wrap" />
+      <TextBlock x:Name="labelTagsCaption" Grid.Row="4" Text="Tag(s):" />
+      <TextBlock x:Name="labelTags" Grid.Row="4" Grid.Column="1" Text="..." TextWrapping="Wrap" />
+    </Grid>
+  </HeaderedContentControl>
+</UserControl>

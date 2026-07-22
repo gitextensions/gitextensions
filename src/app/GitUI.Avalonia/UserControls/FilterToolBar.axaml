@@ -1,0 +1,84 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.UserControls.FilterToolBar">
+  <StackPanel x:Name="ToolStripFilters"
+              Height="25"
+              Orientation="Horizontal"
+              Spacing="1">
+    <compat:IconSplitButton x:Name="tsbtnAdvancedFilter"
+                            Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                            Content="Advanced filter"
+                            Icon="{x:Static properties:Images.FunnelPencil}">
+      <compat:IconSplitButton.Flyout>
+        <MenuFlyout>
+          <MenuItem x:Name="tsmiResetPathFilters" Header="Reset _path filter" />
+          <MenuItem x:Name="tsmiResetAllFilters" Header="_Reset revision filters" />
+        </MenuFlyout>
+      </compat:IconSplitButton.Flyout>
+    </compat:IconSplitButton>
+    <ToggleButton x:Name="tsbShowReflog"
+                  Classes="gitextensions-toolbar-button"
+                  Padding="3">
+      <Image Width="16" Height="16" Source="{x:Static properties:Images.Book}" />
+    </ToggleButton>
+    <compat:IconSplitButton x:Name="tssbtnShowBranches"
+                            Classes="gitextensions-toolbar-button"
+                            Content="_All branches"
+                            Icon="{x:Static properties:Images.BranchLocal}">
+      <compat:IconSplitButton.Flyout>
+        <MenuFlyout>
+          <MenuItem x:Name="tsmiShowBranchesAll" Header="_All branches" />
+          <MenuItem x:Name="tsmiShowBranchesCurrent" Header="_Current branch only" />
+          <MenuItem x:Name="tsmiShowBranchesFiltered" Header="_Filtered branches" />
+        </MenuFlyout>
+      </compat:IconSplitButton.Flyout>
+    </compat:IconSplitButton>
+    <TextBlock x:Name="toolStripLabel1"
+               Classes="gitextensions-toolbar-label"
+               Text="_Branches:" />
+    <compat:ToolbarComboBox x:Name="tscboBranchFilter"
+                            Width="100"
+                            Height="23"
+                            IsEditable="True" />
+    <compat:IconDropDownButton x:Name="tsddbtnBranchFilter"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="Branch type"
+                               Icon="{x:Static properties:Images.EditFilter}">
+      <compat:IconDropDownButton.Flyout>
+        <MenuFlyout>
+          <MenuItem x:Name="tsmiBranchLocal" Header="_Local" ToggleType="CheckBox" IsChecked="True" />
+          <MenuItem x:Name="tsmiBranchRemote" Header="_Remote" ToggleType="CheckBox" />
+          <MenuItem x:Name="tsmiBranchTag" Header="_Tag" ToggleType="CheckBox" />
+        </MenuFlyout>
+      </compat:IconDropDownButton.Flyout>
+    </compat:IconDropDownButton>
+    <Border Classes="gitextensions-toolbar-separator" />
+    <TextBlock x:Name="tslblRevisionFilter"
+               Classes="gitextensions-toolbar-label"
+               Text="_Filter:" />
+    <compat:ToolbarComboBox x:Name="tstxtRevisionFilter"
+                            Width="100"
+                            Height="23"
+                            IsEditable="True" />
+    <compat:IconDropDownButton x:Name="tsddbtnRevisionFilter"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="Filter type"
+                               Icon="{x:Static properties:Images.EditFilter}">
+      <compat:IconDropDownButton.Flyout>
+        <MenuFlyout>
+          <MenuItem x:Name="tsmiCommitFilter" Header="Commit _message" ToggleType="CheckBox" IsChecked="True" />
+          <MenuItem x:Name="tsmiCommitterFilter" Header="_Committer" ToggleType="CheckBox" />
+          <MenuItem x:Name="tsmiAuthorFilter" Header="_Author" ToggleType="CheckBox" />
+          <MenuItem x:Name="tsmiDiffContainsFilter" Header="_Diff contains (SLOW)" ToggleType="CheckBox" />
+        </MenuFlyout>
+      </compat:IconDropDownButton.Flyout>
+    </compat:IconDropDownButton>
+    <ToggleButton x:Name="tsmiShowOnlyFirstParent"
+                  Classes="gitextensions-toolbar-button"
+                  Padding="3">
+      <Image Width="16" Height="16" Source="{x:Static properties:Images.ShowOnlyFirstParent}" />
+    </ToggleButton>
+  </StackPanel>
+</UserControl>
