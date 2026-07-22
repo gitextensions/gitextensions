@@ -1,0 +1,112 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="using:GitUI.UserControls"
+        x:Class="GitUI.HelperDialogs.FormResetCurrentBranch"
+        Width="479"
+        Height="469"
+        MinWidth="479"
+        MinHeight="469"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Title="Reset current branch">
+  <Grid x:Name="tableLayoutPanel1"
+        Margin="8"
+        RowDefinitions="Auto,150,245,*">
+    <TextBlock x:Name="_NO_TRANSLATE_BranchInfo"
+               Margin="4,0"
+               Text="##Reset branch '{0}' to:" />
+
+    <usercontrols:CommitSummaryUserControl x:Name="commitSummaryUserControl1"
+                                           Grid.Row="1"
+                                           Margin="1"
+                                           MinWidth="440"
+                                           MinHeight="147" />
+
+    <HeaderedContentControl Grid.Row="2"
+                            Margin="2"
+                            Classes="gitextensions-group-box"
+                            Header="Reset type">
+      <Grid x:Name="tableLayoutPanel2"
+            RowDefinitions="42,42,42,42,42">
+        <RadioButton x:Name="Soft"
+                     Margin="3"
+                     Padding="3,0"
+                     HorizontalAlignment="Stretch"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Center"
+                     Background="{DynamicResource GitExtensionsResetSoftBackgroundBrush}"
+                     Foreground="{DynamicResource GitExtensionsResetSoftForegroundBrush}"
+                     IsChecked="True"
+                     Content="_Soft: leave working directory and index untouched" />
+        <RadioButton x:Name="Mixed"
+                     Grid.Row="1"
+                     Margin="3"
+                     Padding="3,0"
+                     HorizontalAlignment="Stretch"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Center"
+                     Background="{DynamicResource GitExtensionsResetMixedBackgroundBrush}"
+                     Foreground="{DynamicResource GitExtensionsResetMixedForegroundBrush}"
+                     Content="Mi_xed: leave working directory untouched, reset index" />
+        <RadioButton x:Name="Keep"
+                     Grid.Row="2"
+                     Margin="3"
+                     Padding="3,0"
+                     HorizontalAlignment="Stretch"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Center"
+                     Background="{DynamicResource GitExtensionsResetMixedBackgroundBrush}"
+                     Foreground="{DynamicResource GitExtensionsResetMixedForegroundBrush}">
+          <TextBlock Text="_Keep: update working directory to the commit &#10;(abort if there are local changes), reset index" />
+        </RadioButton>
+        <RadioButton x:Name="Merge"
+                     Grid.Row="3"
+                     Margin="3"
+                     Padding="3,0"
+                     HorizontalAlignment="Stretch"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Center"
+                     Background="{DynamicResource GitExtensionsResetMixedBackgroundBrush}"
+                     Foreground="{DynamicResource GitExtensionsResetMixedForegroundBrush}">
+          <TextBlock Text="_Merge: update working directory to the commit and keep local changes &#10;(abort if there are conflicts), reset index" />
+        </RadioButton>
+        <RadioButton x:Name="Hard"
+                     Grid.Row="4"
+                     Margin="3"
+                     Padding="3,0"
+                     HorizontalAlignment="Stretch"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Center"
+                     Background="{DynamicResource GitExtensionsResetHardBackgroundBrush}"
+                     Foreground="{DynamicResource GitExtensionsResetHardForegroundBrush}">
+          <TextBlock Text="_Hard: reset working directory and index&#10;(discard ALL local changes, even uncommitted changes)" />
+        </RadioButton>
+      </Grid>
+    </HeaderedContentControl>
+
+    <Grid Grid.Row="3"
+          ColumnDefinitions="Auto,*">
+      <Button x:Name="_NO_TRANSLATE_Help"
+              Width="25"
+              Height="25"
+              Margin="2"
+              VerticalAlignment="Center"
+              Content="?" />
+      <StackPanel x:Name="flowLayoutPanel1"
+                  Grid.Column="1"
+                  Classes="gitextensions-dialog-controls"
+                  Margin="1">
+        <Button x:Name="Ok"
+                Classes="gitextensions-dialog-action"
+                Width="91"
+                Height="25"
+                Content="OK" />
+        <Button x:Name="Cancel"
+                Classes="gitextensions-dialog-action"
+                Width="91"
+                Height="25"
+                Content="Cancel" />
+      </StackPanel>
+    </Grid>
+  </Grid>
+</Window>

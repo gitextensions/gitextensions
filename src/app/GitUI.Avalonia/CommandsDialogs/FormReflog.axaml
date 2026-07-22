@@ -100,10 +100,8 @@
                   <Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" />
                 </MenuItem.Icon>
               </MenuItem>
-              <!-- Activated when the same-named FormResetCurrentBranch twin is available. -->
               <MenuItem x:Name="resetCurrentBranchOnThisCommitToolStripMenuItem"
-                        Header="Reset current branch to this commit..."
-                        IsVisible="False">
+                        Header="Reset current branch to this commit...">
                 <MenuItem.Icon>
                   <Image Width="16" Height="16" Source="{x:Static properties:Images.ResetCurrentBranchToHere}" />
                 </MenuItem.Icon>

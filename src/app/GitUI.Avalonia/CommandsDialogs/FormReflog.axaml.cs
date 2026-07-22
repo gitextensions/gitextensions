@@ -11,9 +11,11 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Compat;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
@@ -61,6 +63,7 @@ public sealed partial class FormReflog : GitModuleForm
         linkHead.Click += linkHead_Click;
         copySha1ToolStripMenuItem.Click += copySha1ToolStripMenuItem_Click;
         createABranchOnThisCommitToolStripMenuItem.Click += createABranchOnThisCommitToolStripMenuItem_Click;
+        resetCurrentBranchOnThisCommitToolStripMenuItem.Click += resetCurrentBranchOnThisCommitToolStripMenuItem_Click;
         Sha.PointerReleased += Header_PointerReleased;
         Ref.PointerReleased += Header_PointerReleased;
         Action.PointerReleased += Header_PointerReleased;
@@ -76,16 +79,7 @@ public sealed partial class FormReflog : GitModuleForm
             return;
         }
 
-        _isDirtyDir = Module.IsDirtyDir();
-        _currentBranch = Module.GetSelectedBranch();
-        _isBranchCheckedOut = _currentBranch != DetachedHeadParser.DetachedBranch;
-        linkCurrentBranch.Content = "current branch (" + _currentBranch + ")";
-        linkCurrentBranch.IsVisible = _isBranchCheckedOut;
-
-        // The warning and reset contribution become visible together when the real
-        // FormResetCurrentBranch twin lands; showing either one alone would be misleading.
-        lblDirtyWorkingDirectory.IsVisible = false;
-        resetCurrentBranchOnThisCommitToolStripMenuItem.IsVisible = false;
+        SetRepositoryState(Module.IsDirtyDir(), Module.GetSelectedBranch());
 
         List<string> branches =
         [
@@ -95,6 +89,17 @@ public sealed partial class FormReflog : GitModuleForm
         ];
         Branches.ItemsSource = branches;
         Branches.SelectedIndex = branches.Count == 0 ? -1 : 0;
+    }
+
+    private void SetRepositoryState(bool isDirtyDir, string currentBranch)
+    {
+        _isDirtyDir = isDirtyDir;
+        _currentBranch = currentBranch;
+        _isBranchCheckedOut = _currentBranch != DetachedHeadParser.DetachedBranch;
+        linkCurrentBranch.Content = "current branch (" + _currentBranch + ")";
+        linkCurrentBranch.IsVisible = _isBranchCheckedOut;
+        lblDirtyWorkingDirectory.IsVisible = _isDirtyDir;
+        UpdateActionState();
     }
 
     protected override void OnClosed(EventArgs e)
@@ -254,6 +259,37 @@ public sealed partial class FormReflog : GitModuleForm
         }
     }
 
+    private void resetCurrentBranchOnThisCommitToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (_isDirtyDir
+            && MessageBoxes.Show(
+                this,
+                _continueResetCurrentBranchEvenWithChangesText.Text,
+                _continueResetCurrentBranchCaptionText.Text,
+                WinFormsShims.MessageBoxButtons.YesNo,
+                WinFormsShims.MessageBoxIcon.Warning,
+                WinFormsShims.MessageBoxDefaultButton.Button2) == WinFormsShims.DialogResult.No)
+        {
+            return;
+        }
+
+        if (GetSelectedRefLine() is not RefLine refLine)
+        {
+            return;
+        }
+
+        GitRevision gitRevision = Module.GetRevision(refLine.Sha);
+        FormResetCurrentBranch.ResetType resetType = GetResetType();
+        UICommands.DoActionOnRepo(() =>
+        {
+            using FormResetCurrentBranch form = FormResetCurrentBranch.Create(UICommands, gitRevision, resetType);
+            return form.ShowDialog(this) == WinFormsShims.DialogResult.OK;
+        });
+    }
+
+    private FormResetCurrentBranch.ResetType GetResetType()
+        => _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
+
     private void copySha1ToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         if (GetSelectedRefLine() is RefLine refLine)
@@ -338,11 +374,16 @@ public sealed partial class FormReflog : GitModuleForm
         public MenuItem Reset => form.resetCurrentBranchOnThisCommitToolStripMenuItem;
         public IReadOnlyList<RefLine> RefLines => form._refLines;
         public HyperlinkButton CurrentBranch => form.linkCurrentBranch;
+        public TextBlock DirtyWorkingDirectory => form.lblDirtyWorkingDirectory;
+        public FormResetCurrentBranch.ResetType ResetType => form.GetResetType();
 
         public static IReadOnlyList<RefLine> Parse(string output) => ParseReflogOutput(output);
 
         public void SetRefLines(IReadOnlyList<RefLine> refLines, RefLine? selectedRefLine = null)
             => form.SetRefLines(refLines, selectedRefLine);
+
+        public void SetRepositoryState(bool isDirtyDir, string currentBranch)
+            => form.SetRepositoryState(isDirtyDir, currentBranch);
 
         public void SortByRef() => form.SortBy(nameof(RefLine.Ref));
     }
