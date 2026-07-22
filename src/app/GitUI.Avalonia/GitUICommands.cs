@@ -335,7 +335,21 @@ public sealed class GitUICommands : IGitUICommands
         }, changesRepo: false);
     }
 
-    public bool StartArchiveDialog(IWin32Window? owner = null, GitRevision? revision = null, GitRevision? revision2 = null, string? path = null) => throw NotPorted(nameof(StartArchiveDialog));
+    public bool StartArchiveDialog(IWin32Window? owner = null, GitRevision? revision = null, GitRevision? revision2 = null, string? path = null)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using CommandsDialogs.FormArchive form = new(this)
+            {
+                SelectedRevision = revision,
+            };
+            form.SetDiffSelectedRevision(revision2);
+            form.SetPathArgument(path);
+            form.ShowDialog(owner);
+            return true;
+        }, changesRepo: false);
+    }
+
     public void StartBatchFileProcessDialog(string batchFile) => throw NotPorted(nameof(StartBatchFileProcessDialog));
     public bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null) => throw NotPorted(nameof(StartBrowseDialog));
     public bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containObjectIds)

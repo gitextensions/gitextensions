@@ -63,6 +63,10 @@
           <MenuItem x:Name="deleteTagToolStripMenuItem" Header="_Delete tag...">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
           </MenuItem>
+          <Separator x:Name="sepCommit" />
+          <MenuItem x:Name="archiveRevisionToolStripMenuItem" Header="Arch_ive this commit...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ArchiveRevision}" /></MenuItem.Icon>
+          </MenuItem>
           <Separator x:Name="sepNavigate" />
           <MenuItem x:Name="navigateToolStripMenuItem" Header="_Navigate">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GotoCommit}" /></MenuItem.Icon>
