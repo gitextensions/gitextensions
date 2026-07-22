@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using GitCommands;
 using GitExtUtils;
 using GitUI.Compat;
@@ -36,7 +36,7 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IScriptsRunner>(scriptsManager);
         serviceContainer.AddService<ISimplePromptCreator>(new SimplePromptCreator());
         serviceContainer.AddService<IFilePromptCreator>(new FilePromptCreator());
-        serviceContainer.AddService<IHotkeySettingsLoader>(new HotkeySettingsManager());
+        serviceContainer.AddService<IHotkeySettingsLoader>(new HotkeySettingsManager(scriptsManager));
         serviceContainer.AddService<IOutputHistoryProvider>(outputHistoryModel);
         serviceContainer.AddService<IOutputHistoryRecorder>(outputHistoryModel);
         serviceContainer.AddService<ITerminalLauncher>(new TerminalLauncher());

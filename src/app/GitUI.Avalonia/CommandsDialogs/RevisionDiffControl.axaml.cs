@@ -1,9 +1,10 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -11,8 +12,7 @@ using Microsoft.VisualStudio.Threading;
 namespace GitUI.CommandsDialogs;
 
 // Functional Avalonia twin of RevisionDiffControl. The shared diff calculator and the
-// WinForms-shaped list/viewer/blame boundary are retained; scripts and the remaining
-// FileViewer modes join in their owning follow-up phases.
+// WinForms-shaped list/viewer/blame boundary are retained.
 public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUpdate
 {
     private readonly FileStatusDiffCalculator _diffCalculator;
@@ -74,6 +74,16 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
     internal Editor.FileViewer FileViewer => DiffText;
     internal bool IsFileTreeMode => _revisionFileTree is null;
     internal GitRevision? DisplayedRevision { get; private set; }
+
+    internal IScriptOptionsProvider ScriptOptionsProvider => GetScriptOptionsProvider();
+
+    protected override IScriptOptionsProvider GetScriptOptionsProvider()
+    {
+        return new ScriptOptionsProvider(
+            DiffFiles,
+            () => BlameControl.IsVisible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine,
+            () => BlameControl.IsVisible ? BlameControl.CurrentFileColumn : DiffText.CurrentFileColumn);
+    }
 
     public void Bind(
         IRevisionGridInfo revisionGridInfo,

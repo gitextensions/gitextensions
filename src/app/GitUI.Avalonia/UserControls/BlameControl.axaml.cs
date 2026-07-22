@@ -121,6 +121,8 @@ public sealed partial class BlameControl : GitModuleControl
         BlameFile.TextEditor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
     }
 
+    public int CurrentFileColumn => BlameFile.CurrentFileColumn;
+
     public int CurrentFileLine => BlameFile.CurrentFileLine;
 
     public async Task LoadBlameAsync(
