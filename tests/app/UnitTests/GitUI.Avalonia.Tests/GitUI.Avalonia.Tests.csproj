@@ -53,4 +53,12 @@
     <ProjectReference Include="..\..\..\..\src\app\GitExtensions.Avalonia\GitExtensions.Avalonia.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Exercises the Avalonia-side fallback used by portable plugins whose headless Icon
+         cannot carry a platform image. The production plugin embeds this same source PNG. -->
+    <EmbeddedResource Include="$(RepoRoot)src\plugins\BackgroundFetch\Resources\IconBackgroundFetch.png"
+                      Link="PluginTestAssets\IconEmbedded.png"
+                      LogicalName="GitUI.Avalonia.Tests.IconEmbedded.png" />
+  </ItemGroup>
+
 </Project>
