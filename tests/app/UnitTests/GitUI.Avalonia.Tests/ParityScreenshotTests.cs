@@ -395,6 +395,21 @@ public sealed partial class ParityScreenshotTests
             return new FormCherryPick(commands, context.HeadRevision);
         }
 
+        if (viewType == typeof(FormRevertCommit))
+        {
+            IGitModule module = Substitute.For<IGitModule>();
+            module.WorkingDir.Returns(context.WorkingDirectory);
+            module.IsMerge(context.HeadRevision.ObjectId).Returns(true);
+            GitRevision secondParent = context.ParentRevision.Clone();
+            secondParent.Author = "Second Parent Author";
+            secondParent.Subject = "Preserve the second side of the representative merge";
+            module.GetParentRevisions(context.HeadRevision.ObjectId).Returns([context.ParentRevision, secondParent]);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            commands.GetService(Arg.Any<Type>()).Returns(call => context.Commands.GetService(call.Arg<Type>()));
+            return new FormRevertCommit(commands, context.HeadRevision);
+        }
+
         if (viewType == typeof(FormClone))
         {
             return new FormClone(
@@ -1081,6 +1096,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormCherryPick))
         {
             return (630, 470);
+        }
+
+        if (viewType == typeof(FormRevertCommit))
+        {
+            return (630, 410);
         }
 
         if (viewType == typeof(FindAndReplaceForm))
