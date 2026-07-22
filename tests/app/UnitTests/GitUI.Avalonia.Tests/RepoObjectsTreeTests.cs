@@ -163,13 +163,18 @@ public sealed class RepoObjectsTreeTests
 
             accessor.Tree.SelectedItem = branch;
             accessor.UpdateContextMenu().Should().BeTrue();
+            MenuItem reset = accessor.GetActionMenuItem("Reset");
             MenuItem rename = accessor.GetActionMenuItem("RenameBranch");
             MenuItem delete = accessor.GetActionMenuItem("DeleteBranch");
+            reset.IsVisible.Should().BeTrue();
+            reset.Header.Should().Be("Re_set current branch to here...");
             rename.IsVisible.Should().BeTrue();
             delete.IsVisible.Should().BeTrue();
+            Click(reset);
             Click(rename);
             Click(delete);
 
+            commands.Received(1).StartResetCurrentBranchDialog(control, "feature");
             commands.Received(1).StartRenameDialog(control, "feature");
             commands.Received(1).StartDeleteBranchDialog(control, "feature");
         }
