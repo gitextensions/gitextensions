@@ -34,6 +34,13 @@ public enum RevisionGraphDrawStyle
     HighlightSelected
 }
 
+// Twin of the enum declared in GitUI/UserControls/RevisionGrid/RevisionGridControl.cs.
+public enum SortDirection
+{
+    Ascending,
+    Descending
+}
+
 public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, IRevisionGridFilter, IRevisionGridUpdate
 {
     public static readonly string HotkeySettingsName = "RevisionGrid";
@@ -126,6 +133,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
         createTagToolStripMenuItem.Click += CreateTagToolStripMenuItemClick;
+        cherryPickCommitToolStripMenuItem.Click += CherryPickCommitToolStripMenuItemClick;
         archiveRevisionToolStripMenuItem.Click += ArchiveRevisionToolStripMenuItemClick;
         GotoCurrentRevisionMenuItem.Click += (_, _) => SelectCurrentRevision();
         GotoChildCommitMenuItem.Click += (_, _) => GoToChild();
@@ -480,9 +488,29 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     }
 
     public IReadOnlyList<GitRevision> GetSelectedRevisions()
-        => lstRevisions.SelectedItems is { } selectedItems
-            ? [.. selectedItems.OfType<GitRevision>()]
-            : [];
+        => GetSelectedRevisions(direction: null);
+
+    public IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection direction)
+        => GetSelectedRevisions((SortDirection?)direction);
+
+    private IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection? direction)
+    {
+        if (lstRevisions.SelectedItems is not { } selectedItems)
+        {
+            return [];
+        }
+
+        IReadOnlySet<GitRevision> selectedRevisions = selectedItems.OfType<GitRevision>().ToHashSet();
+        IEnumerable<GitRevision> revisions = _revisions.Count > 0
+            ? _revisions.Where(selectedRevisions.Contains)
+            : lstRevisions.Items.OfType<GitRevision>().Where(selectedRevisions.Contains);
+        if (direction == SortDirection.Descending)
+        {
+            revisions = revisions.Reverse();
+        }
+
+        return [.. revisions];
+    }
 
     /// <summary>
     /// Returns the historical name of a file in a revision, following renames and merge commits.
@@ -554,7 +582,8 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     {
         PointerPointProperties properties = e.GetCurrentPoint(lstRevisions).Properties;
         if (properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed
-            && e.Source is Control { DataContext: GitRevision revision })
+            && e.Source is Control { DataContext: GitRevision revision }
+            && lstRevisions.SelectedItems?.Contains(revision) != true)
         {
             lstRevisions.SelectedItem = revision;
         }
@@ -601,6 +630,12 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         SetVisible(deleteTagToolStripMenuItem, deleteTagToolStripMenuItem.Items.Count > 0);
         IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
         SetVisible(
+            cherryPickCommitToolStripMenuItem,
+            hasCommands
+            && !Module.IsBareRepository()
+            && selectedRevisions.Count > 0
+            && selectedRevisions.All(selectedRevision => !selectedRevision.IsArtificial));
+        SetVisible(
             archiveRevisionToolStripMenuItem,
             hasCommands
             && selectedRevisions.Count is >= 1 and <= 2
@@ -614,7 +649,8 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         sepBranchModification.IsVisible = createNewBranchToolStripMenuItem.IsVisible
             || renameBranchToolStripMenuItem.IsVisible
             || deleteBranchToolStripMenuItem.IsVisible;
-        sepCommit.IsVisible = archiveRevisionToolStripMenuItem.IsVisible;
+        sepCommit.IsVisible = cherryPickCommitToolStripMenuItem.IsVisible
+            || archiveRevisionToolStripMenuItem.IsVisible;
         sepNavigate.IsVisible = revision is not null;
 
         navigateToolStripMenuItem.IsVisible = revision is not null;
@@ -779,6 +815,12 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         GitRevision mainRevision = selectedRevisions[0];
         GitRevision? diffRevision = selectedRevisions.Count == 2 ? selectedRevisions[1] : null;
         UICommands.StartArchiveDialog(GetOwner(), mainRevision, diffRevision);
+    }
+
+    private void CherryPickCommitToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> revisions = GetSelectedRevisions(SortDirection.Descending);
+        UICommands.StartCherryPickDialog(GetOwner(), revisions);
     }
 
     private void ResetChangesToolStripMenuItemClick(object? sender, EventArgs e)

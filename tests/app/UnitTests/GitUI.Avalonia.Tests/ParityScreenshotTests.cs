@@ -380,6 +380,21 @@ public sealed partial class ParityScreenshotTests
             return new FormCheckoutBranch(context.Commands, FeatureBranchName, remote: false);
         }
 
+        if (viewType == typeof(FormCherryPick))
+        {
+            IGitModule module = Substitute.For<IGitModule>();
+            module.WorkingDir.Returns(context.WorkingDirectory);
+            module.IsMerge(context.HeadRevision.ObjectId).Returns(true);
+            GitRevision secondParent = context.ParentRevision.Clone();
+            secondParent.Author = "Second Parent Author";
+            secondParent.Subject = "Preserve the second side of the representative merge";
+            module.GetParentRevisions(context.HeadRevision.ObjectId).Returns([context.ParentRevision, secondParent]);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            commands.GetService(Arg.Any<Type>()).Returns(call => context.Commands.GetService(call.Arg<Type>()));
+            return new FormCherryPick(commands, context.HeadRevision);
+        }
+
         if (viewType == typeof(FormClone))
         {
             return new FormClone(
@@ -1061,6 +1076,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormArchive))
         {
             return (610, 609);
+        }
+
+        if (viewType == typeof(FormCherryPick))
+        {
+            return (630, 470);
         }
 
         if (viewType == typeof(FindAndReplaceForm))
