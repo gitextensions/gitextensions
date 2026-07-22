@@ -3,14 +3,18 @@ using AppVeyorIntegration.Settings;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.Plugins.GitHubActionsIntegration;
+using GitExtensions.Plugins.GitHubActionsIntegration.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -35,6 +39,7 @@ public sealed class BuildServerIntegrationTests
         ManagedExtensibility.Initialise(
         [
             typeof(AppVeyorIntegrationMetadata).Assembly,
+            typeof(GitHubActionsIntegrationMetadataAttribute).Assembly,
             typeof(JenkinsIntegrationMetadata).Assembly,
         ]);
     }
@@ -100,7 +105,7 @@ public sealed class BuildServerIntegrationTests
             pageAccessor.BuildServerType.SelectedIndex.Should().Be(0);
             string[] buildServerTypes = [.. pageAccessor.BuildServerType.Items.Cast<string>()];
             buildServerTypes.Should().StartWith("None");
-            buildServerTypes[1..].Should().BeEquivalentTo("AppVeyor", "Jenkins");
+            buildServerTypes[1..].Should().BeEquivalentTo("AppVeyor", "GitHub Actions", "Jenkins");
             pageAccessor.buildServerSettingsPanel.Content.Should().BeNull(
                 "the parameterless settings form intentionally has no repository module");
 
@@ -122,6 +127,100 @@ public sealed class BuildServerIntegrationTests
             BuildServerSettings.ServerName[settings] = originalServerName;
             form.GotoPage(new SettingsPageReferenceByType(typeof(SettingsPlaceholderPage)));
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void GitHub_Actions_settings_control_should_be_a_native_export_and_round_trip_settings()
+    {
+        Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata> export = ManagedExtensibility
+            .GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>()
+            .Single(item => item.Metadata.BuildServerType == "GitHub Actions");
+        GitHubActionsSettingsUserControl control = export.Value.Should()
+            .BeAssignableTo<Control>()
+            .Which.Should()
+            .BeOfType<GitHubActionsSettingsUserControl>()
+            .Subject;
+        TextBox apiUrl = control.FindControl<TextBox>("txtApiUrl")!;
+        TextBox owner = control.FindControl<TextBox>("txtOwner")!;
+        TextBox repository = control.FindControl<TextBox>("txtRepository")!;
+        TextBox apiToken = control.FindControl<TextBox>("txtApiToken")!;
+        HyperlinkButton tokenManagement = control.FindControl<HyperlinkButton>("lnkTokenManagement")!;
+
+        ITranslation translation = Substitute.For<ITranslation>();
+        control.AddTranslationItems(translation);
+        translation.Received(1).AddTranslationItem(
+            nameof(GitHubActionsSettingsUserControl), "lblApiUrl", "Text", "&API URL");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitHubActionsSettingsUserControl), "lblOwner", "Text", "&Owner");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitHubActionsSettingsUserControl), "lblRepository", "Text", "&Repository");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitHubActionsSettingsUserControl), "lblApiToken", "Text", "API &Token");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitHubActionsSettingsUserControl), "lnkTokenManagement", "Text",
+            "Create a GitHub personal access token");
+
+        TestSettingsSource settings = new();
+        control.Initialize("unused", ["git@github.com:gitextensions/gitextensions.git"]);
+        control.LoadSettings(settings);
+        apiUrl.Text.Should().Be("https://api.github.com");
+        owner.Text.Should().Be("gitextensions");
+        repository.Text.Should().Be("gitextensions");
+        apiToken.Text.Should().BeNullOrEmpty();
+        apiToken.PasswordChar.Should().Be('●');
+
+        settings.SetString("GitHubActionsApiUrl", "https://github.example.test/api/v3/");
+        settings.SetString("GitHubActionsOwner", "configured-owner");
+        settings.SetString("GitHubActionsRepository", "configured-repository");
+        settings.SetString("GitHubActionsApiToken", "configured-token");
+        control.LoadSettings(settings);
+        apiUrl.Text.Should().Be("https://github.example.test/api/v3/");
+        owner.Text.Should().Be("configured-owner");
+        repository.Text.Should().Be("configured-repository");
+        apiToken.Text.Should().Be("configured-token");
+
+        apiUrl.Text = " HTTPS://API.GITHUB.COM/// ";
+        owner.Text = string.Empty;
+        repository.Text = "saved-repository";
+        apiToken.Text = "saved-token";
+        control.SaveSettings(settings);
+        settings.GetString("GitHubActionsApiUrl", null).Should().BeNull();
+        settings.GetString("GitHubActionsOwner", null).Should().BeNull();
+        settings.GetString("GitHubActionsRepository", null).Should().Be("saved-repository");
+        settings.GetString("GitHubActionsApiToken", null).Should().Be("saved-token");
+        tokenManagement.Content.Should().Be("Create a GitHub personal access token");
+
+        IProcess process = Substitute.For<IProcess>();
+        IExecutable executable = Substitute.For<IExecutable>();
+        executable.Start(
+            Arg.Any<ArgumentString>(),
+            Arg.Any<bool>(),
+            Arg.Any<bool>(),
+            Arg.Any<bool>(),
+            Arg.Any<System.Text.Encoding?>(),
+            Arg.Any<bool>(),
+            Arg.Any<bool>(),
+            Arg.Any<CancellationToken>())
+            .Returns(process);
+        OsShellUtil.TestAccessor.MockExecutable = executable;
+        try
+        {
+            tokenManagement.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            executable.Received(1).Start(
+                Arg.Any<ArgumentString>(),
+                createWindow: false,
+                redirectInput: false,
+                redirectOutput: false,
+                outputEncoding: null,
+                useShellExecute: true,
+                throwOnErrorExit: false,
+                Arg.Any<CancellationToken>());
+        }
+        finally
+        {
+            OsShellUtil.TestAccessor.MockExecutable = null;
+            process.Dispose();
         }
     }
 
