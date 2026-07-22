@@ -15,9 +15,11 @@ public class MessageBoxes : Translate
     private readonly TranslationString _cannotFindRevisionFilter = new(@"Revision ""{0}"" is not visible in the revision grid. Remove the revision filter.");
     private readonly TranslationString _cannotFindRevisionCaption = new("Cannot find revision");
     private readonly TranslationString _noRevisionFoundError = new("No revision found.");
+    private readonly TranslationString _archiveRevisionCaption = new("Archive revision");
 
     private readonly TranslationString _failedToRunShell = new("Failed to run shell");
     private readonly TranslationString _reason = new("Reason");
+    private readonly TranslationString _selectOnlyOneOrTwoRevisions = new("Select only one or two revisions. Abort.");
 
     private readonly TranslationString _confirmBranchCheckoutCaption = new("Confirm checkout");
     private readonly TranslationString _confirmBranchCheckout = new(@"Are you sure you want to check out branch ""{0}""?");
@@ -52,6 +54,9 @@ public class MessageBoxes : Translate
 
     public static void CannotFindGitRevision(WinFormsShims.IWin32Window? owner)
         => ShowError(owner, Instance._noRevisionFoundError.Text, Instance._cannotFindRevisionCaption.Text);
+
+    public static void SelectOnlyOneOrTwoRevisions(WinFormsShims.IWin32Window? owner)
+        => ShowError(owner, Instance._selectOnlyOneOrTwoRevisions.Text, Instance._archiveRevisionCaption.Text);
 
     public static void SubmoduleDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory, string submoduleName)
         => ShowError(owner, string.Format(Instance._submoduleDirectoryDoesNotExist.Text, directory, submoduleName), Instance._cannotOpenSubmoduleCaption.Text);
