@@ -581,6 +581,18 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Manage/create mode, worktree/index and stored-stash file lists, real diff preview, stash all/selected, apply/drop, persisted options, repository refresh binding, continuous file scrolling, and Ctrl+N/Ctrl+P/F5 hotkeys. The drop confirmation uses the Compat TaskDialog surrogate. The main divider uses the shared light/dark splitter brush. The shared FileStatusList supplies filtering, status imagery, navigation, and file context actions; supported stored-stash patches can be cherry-picked by selected lines or as a whole file through FileViewer, and diff-option changes reload the selection."
   },
+  "src/app/GitUI/CommandsDialogs/FormSubmodules.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSubmodules.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named asynchronous submodule manager with persisted split, list/details selection, add/remove, update/sync, and pull-in-submodule actions. The WinForms BindingSource/DataGridView becomes an explicitly populated Avalonia ListBox while retaining the original column translation keys. StartSubmodulesDialog is live; Browse and left-panel contributions remain owned by their later surfaces."
+  },
+  "src/app/GitUI/CommandsDialogs/SubmodulesDialog/FormAddSubmodule.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SubmodulesDialog/FormAddSubmodule.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Remote/local path, recent remote history, native folder picking, automatic local-name suggestion, remote branch discovery, force option, and FormProcess execution. Editable combo items are path strings so Avalonia preserves their display text."
+  },
   "src/app/GitUI/CommandsDialogs/FormResolveConflicts.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResolveConflicts.axaml.cs",
     "status": "functional",
@@ -1522,7 +1534,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, repository and single-submodule update, submodule synchronization, revision-range difftool, and Settings host members are real; unported members throw NotImplementedException."
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, revision-range difftool, and Settings host members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/RevisionDiffInfoProvider.cs": {
     "twin": "src/app/GitUI/RevisionDiffInfoProvider.cs",
