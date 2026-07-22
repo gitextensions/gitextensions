@@ -269,6 +269,17 @@ public sealed partial class ParityScreenshotTests
                         .First(node => !node.IsCurrent);
                     accessor.Tree.SelectedItem = submodule.TreeViewNode;
                 }
+                else if (Environment.GetEnvironmentVariable(CaptureRepoTreeContextEnvironmentVariable) == "worktree")
+                {
+                    WorktreeTree worktreeTree = accessor.Tree.Items.Cast<TreeViewItem>()
+                        .Select(item => item.Tag)
+                        .OfType<WorktreeTree>()
+                        .Single();
+                    WorktreeNode worktree = worktreeTree.DescendantsAndSelf()
+                        .OfType<WorktreeNode>()
+                        .First(node => !node.IsCurrent && !node.Worktree.IsDeleted);
+                    accessor.Tree.SelectedItem = worktree.TreeViewNode;
+                }
                 else
                 {
                     TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
@@ -709,6 +720,13 @@ public sealed partial class ParityScreenshotTests
             {
                 case RepoObjectsTree repoObjectsTree:
                     repoObjectsTree.SetRefs(context.Refs, context.Stashes, MainBranchName);
+                    string worktreeRoot = OperatingSystem.IsWindows() ? @"C:\Repos" : "/home/user/repos";
+                    repoObjectsTree.GetTestAccessor().SetWorktrees(
+                    [
+                        new GitWorktree(Path.Combine(worktreeRoot, "gitextensions"), GitWorktreeHeadType.Branch, context.HeadRevision.ObjectId.ToString(), MainBranchName, IsDeleted: false),
+                        new GitWorktree(Path.Combine(worktreeRoot, "gitextensions.worktrees", "feature-ui"), GitWorktreeHeadType.Branch, context.ParentRevision.ObjectId.ToString(), FeatureBranchName, IsDeleted: false),
+                        new GitWorktree(Path.Combine(worktreeRoot, "gitextensions.worktrees", "old-review"), GitWorktreeHeadType.Detached, context.ParentRevision.ObjectId.ToString(), null, IsDeleted: true),
+                    ], Path.Combine(worktreeRoot, "gitextensions"));
                     repoObjectsTree.GetTestAccessor().SetSubmodules(new SubmoduleInfoResult
                     {
                         TopProject = new SubmoduleInfo("gitextensions (main)", context.WorkingDirectory, bold: true),

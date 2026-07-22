@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using System.Xml.Serialization;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -80,6 +80,9 @@ public sealed class HotkeyTests
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.Rebase
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.E));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.ManageWorkTrees
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Alt | WinFormsShims.Keys.W));
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.FocusRevisionGrid
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D1));
