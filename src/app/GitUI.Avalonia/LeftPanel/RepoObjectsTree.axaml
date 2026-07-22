@@ -3,7 +3,9 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:converters="using:Avalonia.Controls.Converters"
              xmlns:leftpanel="using:GitUI.LeftPanel"
-             x:Class="GitUI.LeftPanel.RepoObjectsTree">
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.LeftPanel.RepoObjectsTree"
+             MinWidth="190">
   <UserControl.Resources>
     <!-- Match NativeTreeView: the root icon follows the chevron immediately and each
          child icon begins at its parent's text column. -->
@@ -62,34 +64,83 @@
         </ControlTemplate>
       </Setter>
     </Style>
+    <Style Selector="TreeViewItem.repo-search-result /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+    </Style>
   </UserControl.Styles>
-  <TreeView x:Name="treeMain"
-            SelectionMode="Single"
-            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ScrollViewer.AllowAutoHide="False">
-    <TreeView.ContextMenu>
-      <ContextMenu x:Name="repoObjectsContextMenu">
-        <MenuItem x:Name="mnubtnStashAllFromRootNode" Header="_Stash" />
-        <MenuItem x:Name="mnubtnStashStagedFromRootNode" Header="S_tash staged" />
-        <MenuItem x:Name="mnubtnManageStashFromRootNode" Header="_Manage stashes..." />
-        <MenuItem x:Name="mnubtnOpenStash"
-                  Header="_Open stash"
-                  ToolTip.Tip="Open this stash"
-                  compat:TranslationCompat.UseToolTipText="True" />
-        <MenuItem x:Name="mnubtnApplyStash"
-                  Header="_Apply stash"
-                  ToolTip.Tip="Apply this stash"
-                  compat:TranslationCompat.UseToolTipText="True" />
-        <MenuItem x:Name="mnubtnPopStash"
-                  Header="_Pop stash"
-                  ToolTip.Tip="Pop this stash"
-                  compat:TranslationCompat.UseToolTipText="True" />
-        <MenuItem x:Name="mnubtnDropStash"
-                  Header="_Drop stash..."
-                  ToolTip.Tip="Drop this stash"
-                  compat:TranslationCompat.UseToolTipText="True" />
-      </ContextMenu>
-    </TreeView.ContextMenu>
-  </TreeView>
+  <Grid RowDefinitions="27,26,*">
+    <StackPanel x:Name="leftPanelToolStrip"
+                Grid.Row="0"
+                Orientation="Horizontal"
+                Margin="1,2"
+                Spacing="1">
+      <compat:IconButton x:Name="tsbCollapseAll"
+                         Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                         Content=""
+                         Icon="{x:Static properties:Images.CollapseAll}" />
+      <compat:IconToggleButton x:Name="tsbShowBranches"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="_Branches"
+                               Icon="{x:Static properties:Images.BranchLocalRoot}" />
+      <compat:IconToggleButton x:Name="tsbShowRemotes"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="_Remotes"
+                               Icon="{x:Static properties:Images.BranchRemoteRoot}" />
+      <compat:IconToggleButton x:Name="tsbShowTags"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="_Tags"
+                               Icon="{x:Static properties:Images.TagHorizontal}" />
+      <compat:IconToggleButton x:Name="tsbShowStashes"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="St_ashes"
+                               Icon="{x:Static properties:Images.Stash}" />
+    </StackPanel>
+    <Grid x:Name="branchSearchPanel"
+          Grid.Row="1"
+          ColumnDefinitions="*,26">
+      <TextBox x:Name="txtBranchCriterion"
+               Grid.Column="0"
+               Height="24"
+               Margin="1"
+               Padding="4,1"
+               VerticalContentAlignment="Center" />
+      <compat:IconButton x:Name="btnSearch"
+                         Grid.Column="1"
+                         Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                         Width="26"
+                         Height="26"
+                         Content=""
+                         Icon="{x:Static properties:Images.Preview}" />
+    </Grid>
+    <TreeView x:Name="treeMain"
+              Grid.Row="2"
+              SelectionMode="Multiple"
+              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+              ScrollViewer.VerticalScrollBarVisibility="Auto"
+              ScrollViewer.AllowAutoHide="False">
+      <TreeView.ContextMenu>
+        <ContextMenu x:Name="repoObjectsContextMenu">
+          <MenuItem x:Name="mnubtnStashAllFromRootNode" Header="_Stash" />
+          <MenuItem x:Name="mnubtnStashStagedFromRootNode" Header="S_tash staged" />
+          <MenuItem x:Name="mnubtnManageStashFromRootNode" Header="_Manage stashes..." />
+          <MenuItem x:Name="mnubtnOpenStash"
+                    Header="_Open stash"
+                    ToolTip.Tip="Open this stash"
+                    compat:TranslationCompat.UseToolTipText="True" />
+          <MenuItem x:Name="mnubtnApplyStash"
+                    Header="_Apply stash"
+                    ToolTip.Tip="Apply this stash"
+                    compat:TranslationCompat.UseToolTipText="True" />
+          <MenuItem x:Name="mnubtnPopStash"
+                    Header="_Pop stash"
+                    ToolTip.Tip="Pop this stash"
+                    compat:TranslationCompat.UseToolTipText="True" />
+          <MenuItem x:Name="mnubtnDropStash"
+                    Header="_Drop stash..."
+                    ToolTip.Tip="Drop this stash"
+                    compat:TranslationCompat.UseToolTipText="True" />
+        </ContextMenu>
+      </TreeView.ContextMenu>
+    </TreeView>
+  </Grid>
 </UserControl>
