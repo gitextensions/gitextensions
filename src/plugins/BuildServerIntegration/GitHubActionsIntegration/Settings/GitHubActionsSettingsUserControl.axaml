@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitExtensions.Plugins.GitHubActionsIntegration.Settings.GitHubActionsSettingsUserControl"
+             MinWidth="320">
+  <Grid x:Name="tlpnlMain"
+        Margin="2"
+        ColumnDefinitions="Auto,*"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+        ColumnSpacing="6"
+        RowSpacing="2">
+    <TextBlock x:Name="lblApiUrl"
+               Margin="2,0"
+               VerticalAlignment="Center"
+               Text="_API URL" />
+    <TextBox x:Name="txtApiUrl"
+             Grid.Column="1"
+             Margin="2" />
+
+    <TextBlock x:Name="lblOwner"
+               Grid.Row="1"
+               Margin="2,0"
+               VerticalAlignment="Center"
+               Text="_Owner" />
+    <TextBox x:Name="txtOwner"
+             Grid.Row="1"
+             Grid.Column="1"
+             Margin="2" />
+
+    <TextBlock x:Name="lblRepository"
+               Grid.Row="2"
+               Margin="2,0"
+               VerticalAlignment="Center"
+               Text="_Repository" />
+    <TextBox x:Name="txtRepository"
+             Grid.Row="2"
+             Grid.Column="1"
+             Margin="2" />
+
+    <TextBlock x:Name="lblApiToken"
+               Grid.Row="3"
+               Margin="2,0"
+               VerticalAlignment="Center"
+               Text="API _Token" />
+    <TextBox x:Name="txtApiToken"
+             Grid.Row="3"
+             Grid.Column="1"
+             Margin="2"
+             PasswordChar="●" />
+
+    <HyperlinkButton x:Name="lnkTokenManagement"
+                     Grid.Row="4"
+                     Grid.Column="1"
+                     Padding="2,0"
+                     HorizontalAlignment="Left"
+                     Content="Create a GitHub personal access token" />
+  </Grid>
+</UserControl>
