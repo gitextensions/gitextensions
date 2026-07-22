@@ -323,6 +323,18 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same Performance, Behaviour, and Telemetry groups and same-named controls in a compact scrollable Avalonia layout; wider native spinners keep the full numeric values visible."
   },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preserves distributed enablement, build-result-page, and server-type settings plus asynchronous runtime adapter discovery. The custom-control host accepts only native Avalonia controls implementing the unchanged IBuildServerSettingsUserControl contract; plugin-owned portable exports land incrementally in follow-up plugin-specific commits."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same translated information, tri-state enable/show-result controls, server selector, and custom-settings content area in a compact scrollable layout. The content area remains empty until the selected adapter supplies its portable settings control."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",
