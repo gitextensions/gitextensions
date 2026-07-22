@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -29,6 +29,7 @@ using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SubmodulesDialog;
+using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.CommitInfo;
 using GitUI.Compat;
 using GitUI.Editor;
@@ -627,6 +628,16 @@ public sealed partial class ParityScreenshotTests
             accessor.Branch.Text = "master";
         }
 
+        if (root is FormCreateWorktree formCreateWorktree)
+        {
+            IGitRef feature = Substitute.For<IGitRef>();
+            feature.Name.Returns("feature/visual-parity");
+            feature.LocalName.Returns("feature/visual-parity");
+            FormCreateWorktree.TestAccessor accessor = formCreateWorktree.GetTestAccessor();
+            accessor.SetBranches([feature]);
+            accessor.WorktreeDirectory.Text = Path.Combine(context.WorkingDirectory, "..", "visual-parity-worktree");
+        }
+
         if (root is Window)
         {
             return;
@@ -977,6 +988,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormAddSubmodule))
         {
             return (492, 150);
+        }
+
+        if (viewType == typeof(FormCreateWorktree))
+        {
+            return (608, 208);
         }
 
         if (viewType == typeof(FindAndReplaceForm))
