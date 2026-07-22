@@ -25,6 +25,7 @@ using GitUI;
 using GitUI.Avatars;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
 using GitUI.Compat;
@@ -314,6 +315,15 @@ public sealed partial class ParityScreenshotTests
             return new FormSettings(context.Commands, GeneralSettingsPage.GetPageReference());
         }
 
+        if (viewType == typeof(SimpleHelpDisplayDialog))
+        {
+            return new SimpleHelpDisplayDialog
+            {
+                DialogTitle = "Arguments help",
+                ContentText = "Use {option} for normal replacement.\n\nWorking directory:\n{WorkingDir}\n\nSelected revision:\n{sHash}",
+            };
+        }
+
         if (viewType == typeof(FormBrowse))
         {
             return new FormBrowse(context.Commands);
@@ -526,6 +536,11 @@ public sealed partial class ParityScreenshotTests
         if (root is ConsoleStyleSettingsPage consoleStyleSettingsPage)
         {
             consoleStyleSettingsPage.LoadSettings();
+        }
+
+        if (root is ScriptsSettingsPage scriptsSettingsPage)
+        {
+            scriptsSettingsPage.LoadSettings();
         }
 
         if (root is OutputHistoryControl outputHistory)
@@ -823,6 +838,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormQuickItemSelector))
         {
             return (190, 134);
+        }
+
+        if (viewType == typeof(SimpleHelpDisplayDialog))
+        {
+            return (299, 439);
         }
 
         if (viewType == typeof(FormBrowse))
