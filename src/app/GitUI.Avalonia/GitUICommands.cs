@@ -721,7 +721,16 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartSubmodulesDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSubmodulesDialog));
-    public bool StartSyncSubmodulesDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSyncSubmodulesDialog));
+    public bool StartSyncSubmodulesDialog(IWin32Window? owner)
+    {
+        bool Action()
+        {
+            return FormProcess.ShowDialog(owner, this, arguments: Commands.SubmoduleSync(""), Module.WorkingDir, input: null, useDialogSettings: true);
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartTheContinueRebaseDialog(IWin32Window? owner)
     {
         return StartRebaseDialog(
@@ -733,7 +742,17 @@ public sealed class GitUICommands : IGitUICommands
             startRebaseImmediately: false);
     }
 
-    public bool StartUpdateSubmoduleDialog(IWin32Window? owner, string submoduleLocalPath, string submoduleParentPath) => throw NotPorted(nameof(StartUpdateSubmoduleDialog));
+    public bool StartUpdateSubmoduleDialog(IWin32Window? owner, string submoduleLocalPath, string submoduleParentPath)
+    {
+        bool Action()
+        {
+            // Execute the submodule update command from the submodule's parent directory
+            return FormProcess.ShowDialog(owner, this, arguments: Commands.SubmoduleUpdate(submoduleLocalPath), submoduleParentPath, null, true);
+        }
+
+        return DoActionOnRepo(owner, Action, postEvent: PostUpdateSubmodules);
+    }
+
     public bool StartUpdateSubmodulesDialog(IWin32Window? owner, string submoduleLocalPath = "")
     {
         bool Action()
