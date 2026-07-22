@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JenkinsIntegration.Settings.JenkinsSettingsUserControl"
+             MinWidth="320">
+  <Grid x:Name="tableLayoutPanel1"
+        ColumnDefinitions="Auto,*"
+        RowDefinitions="Auto,Auto,Auto"
+        ColumnSpacing="6"
+        RowSpacing="2">
+    <TextBlock x:Name="lblJenkinsServerUrl"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Jenkins server URL" />
+    <TextBox x:Name="JenkinsServerUrl"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <TextBlock x:Name="lblProjectName"
+               Grid.Row="1"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Project name" />
+    <TextBox x:Name="JenkinsProjectName"
+             Grid.Row="1"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <TextBlock x:Name="lblIgnoreBuildBranch"
+               Grid.Row="2"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Ignore build for branch" />
+    <TextBox x:Name="IgnoreBuildBranch"
+             Grid.Row="2"
+             Grid.Column="1"
+             Margin="3,2" />
+  </Grid>
+</UserControl>
