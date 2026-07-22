@@ -418,6 +418,16 @@ public sealed partial class ParityScreenshotTests
                 FormResetCurrentBranch.ResetType.Hard);
         }
 
+        if (viewType == typeof(FormEdit))
+        {
+            FormEdit form = new();
+            form.GetTestAccessor().LoadText(
+                "recovered.cs",
+                "namespace Recovered;\n\npublic static class LostObject\n{\n    public static string Restore() => \"Recovered content\";\n}\n");
+            form.IsReadOnly = true;
+            return form;
+        }
+
         if (viewType == typeof(FormVerify))
         {
             FormVerify form = new();
@@ -1123,6 +1133,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormResetCurrentBranch))
         {
             return (479, 469);
+        }
+
+        if (viewType == typeof(FormEdit))
+        {
+            return (733, 571);
         }
 
         if (viewType == typeof(FormVerify))
