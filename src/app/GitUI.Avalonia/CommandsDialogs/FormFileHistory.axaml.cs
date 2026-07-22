@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
@@ -15,6 +15,7 @@ namespace GitUI.CommandsDialogs;
 public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUpdate
 {
     private readonly TranslationString _fileNotFound = new(" - Git could not identify the file {0}");
+    private readonly TranslationString _buildReportTabCaption = new("Build Report");
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
     private readonly IFullPathResolver _fullPathResolver;
@@ -23,6 +24,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     private readonly List<Task> _viewTasks = [];
 
     private string? _commitInfoTabPageText;
+    private BuildReportTabPageExtension? _buildReportTabPageExtension;
 
     private string FileName { get; init; } = string.Empty;
 
@@ -68,6 +70,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     {
         ToolStripFilters.Bind(() => Module, RevisionGrid);
         RevisionGrid.MultiSelect = true;
+        RevisionGrid.ShowBuildServerInfo = true;
         RevisionGrid.FilePathByObjectId = [];
         copyToClipboardToolStripMenuItem.SetRevisionFunc(RevisionGrid.GetSelectedRevisions);
 
@@ -505,6 +508,12 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         {
             CommitDiff.SetRevision(revision.ObjectId, fileName);
         }
+
+        _buildReportTabPageExtension ??= new BuildReportTabPageExtension(
+            () => Module,
+            tabControl1,
+            _buildReportTabCaption.Text);
+        _buildReportTabPageExtension.FillBuildReport(selectedRevisions.Count == 1 ? revision : null);
     }
 
     private void TrackViewTask(Task task)
