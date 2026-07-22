@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Input;
 using GitCommands;
@@ -316,6 +317,30 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+
+        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
+        _loadOperations.FileAndForget(async () =>
+        {
+            try
+            {
+                await TaskScheduler.Default;
+                PluginRegistry.InitializeAll();
+                await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                RegisterPlugins();
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception exception)
+            {
+                Trace.WriteLine(exception);
+            }
+        });
+    }
+
     private void LoadWorkingDirectories()
     {
         string workingDirectory = Module.WorkingDir;
@@ -379,13 +404,25 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         _submoduleStatusProvider?.Init();
+        PluginRegistry.Unregister(UICommands);
         UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
         UICommands = UICommands.WithWorkingDirectory(normalizedPath);
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+        RegisterPlugins();
         ChangeTerminalActiveFolder(normalizedPath);
         ReloadRepository();
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath).WaitAsync(cancellationToken));
+    }
+
+    private void RegisterPlugins()
+    {
+        bool werePluginsRegistered = PluginRegistry.PluginsRegistered;
+        PluginRegistry.Register(UICommands);
+        if (!werePluginsRegistered && PluginRegistry.PluginsRegistered)
+        {
+            UICommands.RaisePostRegisterPlugin(this);
+        }
     }
 
     public void SetWorkingDir(string? path, ObjectId selectedId = default, ObjectId firstId = default)
@@ -1377,6 +1414,7 @@ public sealed partial class FormBrowse : GitModuleForm
     {
         if (_hasRuntimeCommands)
         {
+            PluginRegistry.Unregister(UICommands);
             UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
         }
 

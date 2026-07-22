@@ -153,7 +153,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "dfdee1b2ae92d832a2ea7420eb4c11aa2cd14420",
-    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, and shared Output history; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown; plugins remain absent until their owning phase. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, and GPG work use one form-owned lifetime boundary, so queued notifications and unfinished providers cannot outlive shutdown. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, and shared Output history; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown. Portable plugins load and register through the original lifecycle, including unregister/re-register on repository changes; their menu remains hidden until the generic settings renderer lands. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, GPG, and plugin discovery work use one form-owned lifetime boundary, so queued notifications and unfinished providers cannot outlive shutdown. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
   },
   "src/app/GitUI/CommandsDialogs/WorktreeDialog/FormCreateWorktree.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/WorktreeDialog/FormCreateWorktree.axaml.cs",
@@ -866,7 +866,7 @@
     "twin": "src/app/GitUI.Avalonia/ScriptsEngine/ScriptsManager.ScriptRunner.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Retains prompts, argument expansion, confirmation, foreground process dialog, background launch, URL opening, navigation and repository notification. GitExtensions resolves to the side-by-side process path; plugin commands return the original not-found result until PluginRegistry activation in Phase 4."
+    "notes": "Retains prompts, argument expansion, confirmation, foreground process dialog, background launch, URL opening, navigation, plugin dispatch and repository notification. GitExtensions resolves to the side-by-side process path."
   },
   "src/app/GitUI/ScriptsEngine/SimplePromptCreator.cs": {
     "twin": "src/app/GitUI/ScriptsEngine/SimplePromptCreator.cs",
@@ -895,6 +895,24 @@
     "twin": "src/app/GitUI.Avalonia/ScriptsEngine/FormFilePrompt.axaml",
     "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+  },
+  "src/app/GitUI/Plugin/GitPluginSettingsContainer.cs": {
+    "twin": "src/app/GitUI/Plugin/GitPluginSettingsContainer.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-neutral plugin settings namespace compatibility is linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Plugin/PluginRegistry.cs": {
+    "twin": "src/app/GitUI/Plugin/PluginRegistry.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "MEF loading, failed-export isolation, settings-container assignment, registration and repository-hoster lookup are linked unchanged."
+  },
+  "src/app/GitUI/Plugin/FailedPluginWrapper.cs": {
+    "twin": "src/app/GitUI.Avalonia/Plugin/FailedPluginWrapper.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Behavior is unchanged; the failure icon is carried through the net10.0 headless image wrapper with an Avalonia bitmap payload."
   },
   "src/app/GitUI/UserControls/RevisionGrid/FormQuickItemSelector.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickItemSelector.axaml.cs",
