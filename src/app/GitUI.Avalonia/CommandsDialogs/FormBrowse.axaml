@@ -66,6 +66,10 @@
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
         </MenuItem>
         <Separator />
+        <MenuItem x:Name="toolStripMenuItemReflog" Header="Show reflo_g...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Book}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
         <MenuItem x:Name="patchToolStripMenuItem" Header="View patc_h file...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PatchView}" /></MenuItem.Icon>
         </MenuItem>
