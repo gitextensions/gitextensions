@@ -16,6 +16,7 @@ using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Gpg;
+using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -57,6 +58,7 @@ public sealed partial class ParityScreenshotTests
     private const string CaptureCategory = "VisualParityCapture";
     private const string CaptureEnvironmentVariable = "GITEXT_CAPTURE_PARITY_SHOTS";
     private const string CaptureViewEnvironmentVariable = "GITEXT_CAPTURE_PARITY_VIEW";
+    private const string CaptureRepoTreeContextEnvironmentVariable = "GITEXT_CAPTURE_REPO_TREE_CONTEXT";
     private const string AxamlExtension = ".axaml";
     private const string AppSourcePath = "src/App.cs";
     private const string FeatureBranchName = "feature/visual-parity";
@@ -255,10 +257,25 @@ public sealed partial class ParityScreenshotTests
             else if (view is RepoObjectsTree repoObjectsTree)
             {
                 RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
-                TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
-                stashRoot.IsExpanded = true;
-                TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Single();
-                accessor.Tree.SelectedItem = stashItem;
+                if (Environment.GetEnvironmentVariable(CaptureRepoTreeContextEnvironmentVariable) == "submodule")
+                {
+                    SubmoduleTree submoduleTree = accessor.Tree.Items.Cast<TreeViewItem>()
+                        .Select(item => item.Tag)
+                        .OfType<SubmoduleTree>()
+                        .Single();
+                    SubmoduleNode submodule = submoduleTree.DescendantsAndSelf()
+                        .OfType<SubmoduleNode>()
+                        .First(node => !node.IsCurrent);
+                    accessor.Tree.SelectedItem = submodule.TreeViewNode;
+                }
+                else
+                {
+                    TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
+                    stashRoot.IsExpanded = true;
+                    TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Single();
+                    accessor.Tree.SelectedItem = stashItem;
+                }
+
                 accessor.UpdateContextMenu();
                 accessor.ContextMenu.Open(accessor.Tree);
                 Dispatcher.UIThread.RunJobs();
@@ -672,6 +689,16 @@ public sealed partial class ParityScreenshotTests
             {
                 case RepoObjectsTree repoObjectsTree:
                     repoObjectsTree.SetRefs(context.Refs, context.Stashes, MainBranchName);
+                    repoObjectsTree.GetTestAccessor().SetSubmodules(new SubmoduleInfoResult
+                    {
+                        TopProject = new SubmoduleInfo("gitextensions (main)", context.WorkingDirectory, bold: true),
+                        AllSubmodules =
+                        {
+                            new SubmoduleInfo("externals/AvaloniaEdit (main)", Path.Combine(context.WorkingDirectory, "externals", "AvaloniaEdit"), bold: false),
+                            new SubmoduleInfo("externals/NetSpell.SpellChecker (release)", Path.Combine(context.WorkingDirectory, "externals", "NetSpell.SpellChecker"), bold: false),
+                            new SubmoduleInfo("samples/ThemePreview (feature/colors)", Path.Combine(context.WorkingDirectory, "externals", "AvaloniaEdit", "samples", "ThemePreview"), bold: false),
+                        },
+                    });
                     break;
 
                 case CommitInfo commitInfo:

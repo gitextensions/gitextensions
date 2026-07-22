@@ -162,7 +162,7 @@ public sealed class FormBrowseTests
             RepoObjectsTree.TestAccessor accessor = repoObjectsTree.GetTestAccessor();
             RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
 
-            await WaitUntilAsync(() => accessor.Tree.Items.Count == 4);
+            await WaitUntilAsync(() => accessor.Tree.Items.Count == 5);
             TreeViewItem stashRoot = accessor.Tree.Items.Cast<TreeViewItem>().Last();
             await WaitUntilAsync(() => stashRoot.Items.Count == 2);
             TreeViewItem stashItem = stashRoot.Items.Cast<TreeViewItem>().Last();
