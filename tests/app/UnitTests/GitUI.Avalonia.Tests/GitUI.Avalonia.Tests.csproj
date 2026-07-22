@@ -53,6 +53,8 @@
     <ProjectReference Include="..\..\..\..\src\app\GitExtensions.Avalonia\GitExtensions.Avalonia.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj"
                       AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.csproj"
+                      AdditionalProperties="BuildAvalonia=true" />
   </ItemGroup>
 
   <ItemGroup>
