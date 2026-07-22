@@ -12,6 +12,7 @@ public static class ShimServices
     public static void Install(IClassicDesktopStyleApplicationLifetime desktop)
     {
         ShimHost.MessageBoxHost = new AvaloniaMessageBoxHost(desktop);
+        ShimHost.TaskDialogHost = new AvaloniaTaskDialogHost();
         ShimHost.Clipboard = new AvaloniaClipboard(desktop);
         ShimHost.FolderPicker = new AvaloniaFolderPicker(desktop);
         ShimHost.TextMeasurer = new AvaloniaTextMeasurer();
