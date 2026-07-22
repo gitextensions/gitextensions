@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using GitCommands;
 using GitCommands.Settings;
@@ -156,6 +156,10 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<ConsoleStyleSettingsPage>(this, serviceProvider),
             AppearanceSettingsPage.GetPageReference(),
+            Images.Console);
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<ScriptsSettingsPage>(this, serviceProvider),
+            GitExtensionsSettingsGroup.GetPageReference(),
             Images.Console);
 
         GitSettingsGroup gitSettingsGroup = new();
