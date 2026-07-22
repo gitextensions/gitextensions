@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Condition="'$(TargetFramework)' != 'net10.0'" />
   </ItemGroup>
 
   <ItemGroup>

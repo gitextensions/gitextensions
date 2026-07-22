@@ -18,9 +18,20 @@
   <Folder Name="/src/plugins/">
     <Project Path="src/plugins/AutoCompileSubmodules/GitExtensions.Plugins.AutoCompileSubmodules.csproj" />
     <Project Path="src/plugins/BackgroundFetch/GitExtensions.Plugins.BackgroundFetch.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/GitlabIntegration/GitExtensions.Plugins.GitlabIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/JenkinsIntegration/GitExtensions.Plugins.JenkinsIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/TeamCityIntegration/GitExtensions.Plugins.TeamCityIntegration.csproj" />
     <Project Path="src/plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AppVeyorIntegration.Tests/AppVeyorIntegration.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AzureDevOpsIntegration.Tests/AzureDevOpsIntegration.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/GitHubActionsIntegration.Tests/GitHubActionsIntegration.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/GitlabIntegration.Tests/GitlabIntegration.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/JenkinsIntegration.Tests/JenkinsIntegration.Tests.csproj" />
   </Folder>
 </Solution>
