@@ -107,11 +107,21 @@ public sealed partial class FormBrowse : GitModuleForm
     }
 
     public FormBrowse(IGitUICommands commands)
-        : this(commands, gpgInfoProvider: null)
+        : this(commands, new BrowseArguments())
+    {
+    }
+
+    public FormBrowse(IGitUICommands commands, BrowseArguments args)
+        : this(commands, args, gpgInfoProvider: null)
     {
     }
 
     internal FormBrowse(IGitUICommands commands, IGpgInfoProvider? gpgInfoProvider)
+        : this(commands, new BrowseArguments(), gpgInfoProvider)
+    {
+    }
+
+    private FormBrowse(IGitUICommands commands, BrowseArguments args, IGpgInfoProvider? gpgInfoProvider)
         : base(commands, enablePositionRestore: true)
     {
         InitializeComponent();
@@ -195,6 +205,18 @@ public sealed partial class FormBrowse : GitModuleForm
         _NO_TRANSLATE_WorkingDir.SelectionChanged += WorkingDirectorySelectionChanged;
         _NO_TRANSLATE_WorkingDir.KeyUp += WorkingDirectoryKeyUp;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+
+        RevisionGrid.SelectedId = args.SelectedId.IsZero ? args.FirstId : args.SelectedId;
+        ToolStripFilters.SetRevisionFilter(args.RevFilter);
+        if (!string.IsNullOrWhiteSpace(args.PathFilter))
+        {
+            RevisionGrid.SetAndApplyPathFilter(args.PathFilter.ToPosixPath());
+        }
+
+        if (args.IsFileHistoryMode)
+        {
+            ToggleLeftPanelClick(this, EventArgs.Empty);
+        }
 
         ReloadRepository();
 
@@ -281,7 +303,7 @@ public sealed partial class FormBrowse : GitModuleForm
             _aheadBehindDataProvider?.ResetCache();
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
             lblStatus.Text = $"git: {GitVersion.Current}";
-            RevisionGrid.ReloadRevisions(module);
+            RevisionGrid.ReloadRevisions(module, selectedObjectId: RevisionGrid.SelectedId);
             UpdateSubmodulesStructure();
         }
         else
