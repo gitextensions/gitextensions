@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Config;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI.Compat;
@@ -54,6 +55,18 @@ public class MessageBoxes : Translate
 
     public static void ShowError(WinFormsShims.IWin32Window? owner, string text, string? caption = null)
         => GitExtensions.Extensibility.MessageBoxes.ShowError(owner, text, caption);
+
+    public static void ShowGitConfigurationExceptionMessage(WinFormsShims.IWin32Window? owner, GitConfigurationException exception)
+        => Show(
+            owner,
+            string.Format(
+                ResourceManager.TranslatedStrings.GeneralGitConfigExceptionMessage,
+                exception.ConfigPath,
+                Environment.NewLine,
+                (exception.InnerException ?? exception).Message),
+            ResourceManager.TranslatedStrings.GeneralGitConfigExceptionCaption,
+            WinFormsShims.MessageBoxButtons.OK,
+            WinFormsShims.MessageBoxIcon.Warning);
 
     public static bool MiddleOfRebase(WinFormsShims.IWin32Window? owner)
         => Confirm(owner, Instance._middleOfRebase.Text, Instance._middleOfRebaseCaption.Text);
