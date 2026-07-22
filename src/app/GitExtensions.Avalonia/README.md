@@ -87,7 +87,19 @@ dotnet run --project src/app/GitExtensions.Avalonia -- browse /path/to/repositor
 
 The command-line arguments follow the Windows Forms application: the first argument is the
 command (for example `browse`), the second is the repository path. Without arguments the
-application starts without an opened repository.
+application starts without an opened repository. The standalone `--` separates `dotnet run`
+options from application arguments; `--browse` is not a command. If the explicit MSBuild
+property is used on Windows, it must remain before that separator:
+
+```
+dotnet run --project src/app/GitExtensions.Avalonia -p:BuildAvalonia=true -- browse .
+```
+
+The Avalonia application uses the shared MEF plugin infrastructure, but scans the separate
+`UserPlugins.Avalonia` directory under the Git Extensions local application-data folder.
+It does not load the Windows Forms `UserPlugins` directory because existing plugins can carry
+Windows-only UI and `System.Drawing` dependencies. Portable user plugins can use the separate
+directory without affecting the Windows Forms installation.
 
 ## Testing
 
