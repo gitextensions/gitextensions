@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
@@ -104,6 +104,7 @@ public sealed partial class FormCommit : GitModuleForm
     private bool _assigningInitialMessage;
     private bool _messageEditedByUser;
     private bool _messageConsumed;
+    private FileStatusList _currentFilesList = null!;
     private FileStatusItem? _selectedDiffItem;
     private bool _selectedDiffItemStaged;
     private bool _subscribedToRepositoryChanges;
@@ -127,6 +128,7 @@ public sealed partial class FormCommit : GitModuleForm
 
         InitializeComponent();
 
+        _currentFilesList = Unstaged;
         Unstaged.SelectionMode = SelectionMode.Multiple;
         Staged.SelectionMode = SelectionMode.Multiple;
         Unstaged.BindContextMenu(() => ReloadChanges(), canAutoRefresh: true, StageSelected, unstage: null);
@@ -340,6 +342,7 @@ public sealed partial class FormCommit : GitModuleForm
             return;
         }
 
+        _currentFilesList = Unstaged;
         _changingSelection = true;
         Staged.ClearSelected();
         _changingSelection = false;
@@ -354,6 +357,7 @@ public sealed partial class FormCommit : GitModuleForm
             return;
         }
 
+        _currentFilesList = Staged;
         _changingSelection = true;
         Unstaged.ClearSelected();
         _changingSelection = false;
@@ -482,6 +486,14 @@ public sealed partial class FormCommit : GitModuleForm
     }
 
     private void Message_SelectionChanged(object? sender, EventArgs e) => UpdateCursorPosition();
+
+    public override IScriptOptionsProvider GetScriptOptionsProvider()
+    {
+        return new ScriptOptionsProvider(
+            _currentFilesList,
+            () => SelectedDiff.CurrentFileLine,
+            () => SelectedDiff.CurrentFileColumn);
+    }
 
     private void UpdateCursorPosition()
     {

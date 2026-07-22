@@ -185,7 +185,11 @@
                            Icon="{x:Static properties:Images.Settings}" />
       </StackPanel>
       <controls:FilterToolBar x:Name="ToolStripFilters" />
-      <StackPanel x:Name="ToolStripScripts" IsVisible="False" />
+      <StackPanel x:Name="ToolStripScripts"
+                  Height="25"
+                  Orientation="Horizontal"
+                  Spacing="1"
+                  IsVisible="False" />
     </WrapPanel>
     <TextBlock x:Name="lblRepoPath" IsVisible="False" />
     <TextBlock x:Name="lblStatus" IsVisible="False" />

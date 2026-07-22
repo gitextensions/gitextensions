@@ -1,7 +1,11 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
 using GitUI.ScriptsEngine;
+using ResourceManager;
+using ResourceManager.Hotkey;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
@@ -12,6 +16,8 @@ namespace GitUI;
 public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceManager.IGitModuleForm, IScriptOptionsForm
 {
     private IScriptsRunner? _scriptsRunner;
+    private IReadOnlyList<HotkeyCommand> _scriptHotkeys = [];
+    private bool _scriptHotkeysLoaded;
     private IGitUICommands? _uiCommands;
 
     public event EventHandler<GitUICommandsChangedEventArgs>? UICommandsChanged;
@@ -39,6 +45,7 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
             IGitUICommands? oldCommands = _uiCommands;
             _uiCommands = value;
             _scriptsRunner = null;
+            _scriptHotkeysLoaded = false;
             UICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
         }
     }
@@ -51,6 +58,35 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
 
     public virtual IScriptOptionsProvider GetScriptOptionsProvider()
         => ScriptOptionsProviderBase.Default;
+
+    public override bool ProcessHotkey(WinFormsShims.Keys keyData)
+    {
+        if (!HotkeysEnabled)
+        {
+            return false;
+        }
+
+        if (base.ProcessHotkey(keyData))
+        {
+            return true;
+        }
+
+        if (!_scriptHotkeysLoaded)
+        {
+            ReloadScriptHotkeys();
+        }
+
+        HotkeyCommand? hotkey = _scriptHotkeys.FirstOrDefault(command => command.KeyData == keyData);
+        return hotkey is not null && ExecuteCommand(hotkey.CommandCode);
+    }
+
+    protected void ReloadScriptHotkeys()
+    {
+        _scriptHotkeys = UICommands.GetService(typeof(IHotkeySettingsLoader)) is IHotkeySettingsLoader loader
+            ? loader.LoadHotkeys(FormSettings.HotkeySettingsName)
+            : [];
+        _scriptHotkeysLoaded = true;
+    }
 
     protected override bool ExecuteCommand(int command)
     {

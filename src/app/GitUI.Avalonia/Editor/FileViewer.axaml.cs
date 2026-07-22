@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -1130,6 +1130,9 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         _diffViewerLineNumberControl.Clear();
         UpdateLineNumberVisibility();
     }
+
+    /// <summary>Gets the one-based column number of the caret.</summary>
+    public int CurrentFileColumn => TextEditor.TextArea.Caret.Column;
 
     /// <summary>
     ///  Gets the one-based line number of the caret.

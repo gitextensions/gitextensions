@@ -1,7 +1,8 @@
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.ScriptsEngine;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -12,10 +13,16 @@ namespace GitUI.Hotkey;
 internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
 {
     private static readonly XmlSerializer _serializer = new(typeof(HotkeySettings[]), [typeof(HotkeyCommand)]);
+    private readonly IScriptsManager? _scriptsManager;
+
+    public HotkeySettingsManager(IScriptsManager? scriptsManager = null)
+    {
+        _scriptsManager = scriptsManager;
+    }
 
     public IReadOnlyList<HotkeyCommand> LoadHotkeys(string hotkeySettingsName)
     {
-        HotkeySettings? defaults = CreateDefaultSettings()
+        HotkeySettings? defaults = CreateDefaultSettings(_scriptsManager)
             .FirstOrDefault(settings => settings.Name == hotkeySettingsName);
         if (defaults?.Commands is null)
         {
@@ -40,7 +47,7 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
         return commands;
     }
 
-    internal static IReadOnlyList<HotkeySettings> CreateDefaultSettings()
+    internal static IReadOnlyList<HotkeySettings> CreateDefaultSettings(IScriptsManager? scriptsManager = null)
     {
         HotkeyCommand Hk<TCommand>(TCommand command, WinFormsShims.Keys key)
             where TCommand : struct, Enum
@@ -138,7 +145,22 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
                 Hk(FileViewer.Command.FindNextOrOpenWithDifftool, WinFormsShims.Keys.F3),
                 Hk(FileViewer.Command.FindPrevious, WinFormsShims.Keys.Shift | WinFormsShims.Keys.F3),
                 Hk(FileViewer.Command.GoToLine, WinFormsShims.Keys.Control | WinFormsShims.Keys.G)),
+            new HotkeySettings(
+                FormSettings.HotkeySettingsName,
+                LoadScriptHotkeys()),
         ];
+
+        HotkeyCommand[] LoadScriptHotkeys()
+        {
+            return scriptsManager is null
+                ? []
+                : [.. scriptsManager.GetScripts()
+                    .Where(script => !string.IsNullOrEmpty(script.Name))
+                    .Select(script => new HotkeyCommand(script.HotkeyCommandIdentifier, script.GetDisplayName())
+                    {
+                        KeyData = WinFormsShims.Keys.None,
+                    })];
+        }
     }
 
     private static HotkeySettings[]? LoadSerializedSettings()
