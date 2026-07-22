@@ -1,0 +1,109 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="using:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormRevertCommit"
+        Width="630"
+        SizeToContent="Height"
+        MinWidth="630"
+        MinHeight="362"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Title="Revert commit">
+  <DockPanel>
+    <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
+                DockPanel.Dock="Bottom">
+      <Button x:Name="Revert"
+              Classes="gitextensions-dialog-action"
+              MinWidth="117"
+              Height="25"
+              Content="_Revert this commit" />
+      <Button x:Name="btnAbort"
+              MinWidth="75"
+              Height="25"
+              Content="A_bort" />
+    </StackPanel>
+
+    <Border x:Name="MainPanel"
+            Classes="gitextensions-dialog-main"
+            Padding="12">
+      <Grid x:Name="tlPnlMain"
+            RowDefinitions="Auto,160,Auto,Auto"
+            RowSpacing="3">
+        <TextBlock x:Name="BranchInfo"
+                   Text="Revert this commit:" />
+
+        <usercontrols:CommitSummaryUserControl x:Name="commitSummaryUserControl1"
+                                               Grid.Row="1"
+                                               Margin="13,0,3,0"
+                                               MinWidth="440"
+                                               MinHeight="160" />
+
+        <Grid x:Name="parentsPanel"
+              Grid.Row="2"
+              RowDefinitions="Auto,Auto"
+              IsVisible="False">
+          <Label x:Name="ParentsLabel"
+                 Padding="0"
+                 Content="This commit is a merge, select _parent:"
+                 Target="{Binding #lvParentsList}" />
+          <Border Grid.Row="1"
+                  Margin="3,3,3,0"
+                  Classes="gitextensions-section">
+            <Grid RowDefinitions="Auto,*">
+              <Grid ColumnDefinitions="43,*,120,80">
+                <Border Padding="6,3"
+                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                        BorderThickness="0,0,1,1">
+                  <TextBlock x:Name="columnHeader1"
+                             FontWeight="SemiBold"
+                             Text="No." />
+                </Border>
+                <Border Grid.Column="1"
+                        Padding="6,3"
+                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                        BorderThickness="0,0,1,1">
+                  <TextBlock x:Name="columnHeader2"
+                             FontWeight="SemiBold"
+                             Text="Message" />
+                </Border>
+                <Border Grid.Column="2"
+                        Padding="6,3"
+                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                        BorderThickness="0,0,1,1">
+                  <TextBlock x:Name="columnHeader3"
+                             FontWeight="SemiBold"
+                             Text="Author" />
+                </Border>
+                <Border Grid.Column="3"
+                        Padding="6,3"
+                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                        BorderThickness="0,0,0,1">
+                  <TextBlock x:Name="columnHeader4"
+                             FontWeight="SemiBold"
+                             Text="Date" />
+                </Border>
+              </Grid>
+              <ListBox x:Name="lvParentsList"
+                       Grid.Row="1"
+                       SelectionMode="Single">
+                <ListBox.Styles>
+                  <Style Selector="ListBoxItem">
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="MinHeight" Value="24" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                  </Style>
+                </ListBox.Styles>
+              </ListBox>
+            </Grid>
+          </Border>
+        </Grid>
+
+        <CheckBox x:Name="AutoCommit"
+                  Grid.Row="3"
+                  Margin="0,3,0,0"
+                  Content="_Automatically create a commit" />
+      </Grid>
+    </Border>
+  </DockPanel>
+</Window>

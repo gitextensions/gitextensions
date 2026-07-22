@@ -783,7 +783,17 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action);
     }
 
-    public bool StartRevertCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartRevertCommitDialog));
+    public bool StartRevertCommitDialog(IWin32Window? owner, GitRevision revision)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormRevertCommit form = new(this, revision);
+            return form.ShowDialog(owner) == DialogResult.OK;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartSettingsDialog(IGitPlugin gitPlugin)
         => StartSettingsDialog(owner: null, new SettingsPageReferenceByPlugin(gitPlugin));
 
