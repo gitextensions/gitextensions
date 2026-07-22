@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
@@ -39,12 +39,13 @@ public sealed class RepoObjectsTreeTests
             ], [], "main");
 
             TreeViewItem[] roots = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>().ToArray();
-            roots.Should().HaveCount(5);
+            roots.Should().HaveCount(6);
             HeaderText(roots[0]).Should().Be("Branches (2)");
             HeaderText(roots[1]).Should().Be("Remotes (2)");
-            HeaderText(roots[2]).Should().Be("Tags (1)");
-            HeaderText(roots[3]).Should().Be("Submodules (0)");
-            HeaderText(roots[4]).Should().Be("Stashes (0)");
+            HeaderText(roots[2]).Should().Be("Worktrees (0)");
+            HeaderText(roots[3]).Should().Be("Tags (1)");
+            HeaderText(roots[4]).Should().Be("Submodules (0)");
+            HeaderText(roots[5]).Should().Be("Stashes (0)");
 
             TreeViewItem main = roots[0].Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main");
             HeaderLabel(main).FontWeight.Should().Be(FontWeight.Bold);
@@ -57,7 +58,7 @@ public sealed class RepoObjectsTreeTests
             TreeViewItem origin = roots[1].Items.Cast<TreeViewItem>().Single();
             HeaderText(origin).Should().Be("origin");
             origin.Items.Cast<TreeViewItem>().Should().Contain(item => HeaderText(item) == "main");
-            HeaderText(roots[2].Items.Cast<TreeViewItem>().Single()).Should().Be("release");
+            HeaderText(roots[3].Items.Cast<TreeViewItem>().Single()).Should().Be("release");
         }
         finally
         {
@@ -121,15 +122,20 @@ public sealed class RepoObjectsTreeTests
             MenuItem moveUp = accessor.GetActionMenuItem("MoveUp");
             moveUp.IsVisible.Should().BeTrue();
             int previousTagIndex = AppSettings.RepoObjectsTreeTagsIndex;
-            int previousRemoteIndex = AppSettings.RepoObjectsTreeRemotesIndex;
+            int previousWorktreeIndex = AppSettings.RepoObjectsTreeWorktreesIndex;
             Click(moveUp);
-            AppSettings.RepoObjectsTreeTagsIndex.Should().Be(previousRemoteIndex);
-            AppSettings.RepoObjectsTreeRemotesIndex.Should().Be(previousTagIndex);
+            AppSettings.RepoObjectsTreeTagsIndex.Should().Be(previousWorktreeIndex);
+            AppSettings.RepoObjectsTreeWorktreesIndex.Should().Be(previousTagIndex);
 
             accessor.ShowSubmodulesButton.IsChecked = false;
             Click(accessor.ShowSubmodulesButton);
             AppSettings.RepoObjectsTreeShowSubmodules.Should().BeFalse();
             accessor.Tree.Items.Cast<TreeViewItem>().Select(HeaderText).Should().NotContain(text => text.StartsWith("Submodules", StringComparison.Ordinal));
+
+            accessor.ShowWorktreesButton.IsChecked = false;
+            Click(accessor.ShowWorktreesButton);
+            AppSettings.RepoObjectsTreeShowWorktrees.Should().BeFalse();
+            accessor.Tree.Items.Cast<TreeViewItem>().Select(HeaderText).Should().NotContain(text => text.StartsWith("Worktrees", StringComparison.Ordinal));
         }
         finally
         {
@@ -262,7 +268,7 @@ public sealed class RepoObjectsTreeTests
 
             AppSettings.RepoObjectsTreeShowStashes = false;
             control.SetRefs([], [stash]);
-            accessor.Tree.Items.Cast<TreeViewItem>().Should().HaveCount(4);
+            accessor.Tree.Items.Cast<TreeViewItem>().Should().HaveCount(5);
         }
         finally
         {
@@ -353,6 +359,133 @@ public sealed class RepoObjectsTreeTests
         translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "tsbShowTags", "Text", "&Tags");
         translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "tsbShowSubmodules", "Text", "&Submodules");
         translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "tsbShowStashes", "Text", "St&ashes");
+    }
+
+    [AvaloniaTest]
+    public void Worktrees_should_preserve_display_state_and_select_their_revision()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            string parentPath = Path.Combine(Path.GetTempPath(), $"GitExtensions-worktree-tree-{Guid.NewGuid():N}");
+            string mainPath = Path.Combine(parentPath, "repo");
+            string linkedRoot = Path.Combine(parentPath, "repo.worktrees");
+            GitWorktree main = new(mainPath, GitWorktreeHeadType.Branch, "1111111111111111111111111111111111111111", "main", IsDeleted: false);
+            GitWorktree feature = new(Path.Combine(linkedRoot, "feature-a"), GitWorktreeHeadType.Branch, "2222222222222222222222222222222222222222", "feature-a", IsDeleted: false);
+            GitWorktree deleted = new(Path.Combine(linkedRoot, "feature-b"), GitWorktreeHeadType.Detached, "3333333333333333333333333333333333333333", null, IsDeleted: true);
+            RepoObjectsTree control = new();
+            control.SetRefs([], []);
+
+            control.GetTestAccessor().SetWorktrees([main, feature, deleted], mainPath);
+
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            TreeViewItem root = accessor.Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal));
+            HeaderText(root).Should().Be("Worktrees (3)");
+            root.IsExpanded.Should().BeTrue();
+            TreeViewItem[] items = root.Items.Cast<TreeViewItem>().ToArray();
+            HeaderText(items[0]).Should().Be("repo (main)");
+            HeaderLabel(items[0]).FontWeight.Should().Be(FontWeight.Bold);
+            HeaderText(items[1]).Should().Be("feature-a (feature-a)");
+            HeaderText(items[2]).Should().Be("feature-b (detached at 3333333)");
+            items[2].Classes.Should().Contain("worktree-deleted");
+            ToolTip.GetTip(items[0])!.ToString().Should().Contain("(current)").And.Contain("HEAD: 1111111");
+
+            accessor.Tree.SelectedItem = items[1];
+
+            control.SelectedRevisionObjectId.Should().Be(ObjectId.Parse(feature.Sha1!));
+            control.SelectedRef.Should().BeNull();
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Worktree_context_actions_should_match_the_WinForms_enablement_and_commands()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        string parentPath = Path.Combine(Path.GetTempPath(), $"GitExtensions-worktree-actions-{Guid.NewGuid():N}");
+        string mainPath = Path.Combine(parentPath, "repo");
+        string linkedPath = Path.Combine(parentPath, "feature");
+        Directory.CreateDirectory(mainPath);
+        Directory.CreateDirectory(linkedPath);
+        try
+        {
+            settings.EnableAllTrees();
+            GitWorktree main = new(mainPath, GitWorktreeHeadType.Branch, "1111111111111111111111111111111111111111", "main", IsDeleted: false);
+            GitWorktree linked = new(linkedPath, GitWorktreeHeadType.Branch, "2222222222222222222222222222222222222222", "feature", IsDeleted: false);
+            IGitModule module = Substitute.For<IGitModule>();
+            module.IsBareRepository().Returns(false);
+            module.WorkingDir.Returns(mainPath);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.SetRefs([], []);
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            accessor.SetWorktrees([main, linked], mainPath);
+            TreeViewItem root = accessor.Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Worktrees", StringComparison.Ordinal));
+            TreeViewItem current = root.Items.Cast<TreeViewItem>().First();
+            TreeViewItem other = root.Items.Cast<TreeViewItem>().Last();
+
+            accessor.Tree.SelectedItem = root;
+            accessor.UpdateContextMenu().Should().BeTrue();
+            accessor.CreateWorktreeMenuItem.IsVisible.Should().BeTrue();
+            accessor.PruneWorktreesMenuItem.IsVisible.Should().BeTrue();
+            accessor.ManageWorktreesMenuItem.IsVisible.Should().BeTrue();
+            Click(accessor.CreateWorktreeMenuItem);
+            commands.Received(1).WorktreeCreate(control, mainPath);
+
+            accessor.Tree.SelectedItem = current;
+            accessor.UpdateContextMenu().Should().BeTrue();
+            accessor.OpenWorktreeMenuItem.IsVisible.Should().BeTrue();
+            accessor.OpenWorktreeMenuItem.IsEnabled.Should().BeFalse();
+            accessor.DeleteWorktreeMenuItem.IsEnabled.Should().BeFalse();
+
+            accessor.Tree.SelectedItem = other;
+            accessor.UpdateContextMenu().Should().BeTrue();
+            accessor.OpenWorktreeMenuItem.IsEnabled.Should().BeTrue();
+            accessor.DeleteWorktreeMenuItem.IsEnabled.Should().BeTrue();
+            accessor.CopyWorktreePathMenuItem.IsEnabled.Should().BeTrue();
+            accessor.ShowWorktreeInFolderMenuItem.IsEnabled.Should().BeTrue();
+            Click(accessor.OpenWorktreeMenuItem);
+            Click(accessor.DeleteWorktreeMenuItem);
+
+            commands.Received(1).WorktreeSwitch(control, linkedPath);
+            commands.Received(1).WorktreeDelete(control, linkedPath);
+        }
+        finally
+        {
+            settings.Restore();
+            Directory.Delete(parentPath, recursive: true);
+        }
+    }
+
+    [AvaloniaTest]
+    public void Worktree_context_actions_should_reuse_the_existing_translation_keys()
+    {
+        RepoObjectsTree control = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        control.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnCreateWorktreeFromRootNode", "Text", "&Create worktree...");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnPruneWorktreesFromRootNode", "Text", "&Prune worktrees");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnManageWorktreesFromRootNode", "Text", "&Manage worktrees...");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnOpenWorktree", "Text", "&Open worktree");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnDeleteWorktree", "Text", "&Delete worktree...");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnCopyWorktreePath", "Text", "Copy &path");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnShowWorktreeInFolder", "Text", "Show &in folder");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnOpenWorktree", "ToolTipText", "Open this worktree");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnDeleteWorktree", "ToolTipText", "Delete this worktree");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnCopyWorktreePath", "ToolTipText", "Copy the worktree path to clipboard");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "mnubtnShowWorktreeInFolder", "ToolTipText", "Show the worktree in File Explorer");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "tsbShowWorktrees", "Text", "&Worktrees");
     }
 
     [AvaloniaTest]
@@ -552,11 +685,13 @@ public sealed class RepoObjectsTreeTests
     private readonly record struct SettingsSnapshot(
         bool ShowBranches,
         bool ShowRemotes,
+        bool ShowWorktrees,
         bool ShowTags,
         bool ShowSubmodules,
         bool ShowStashes,
         int BranchesIndex,
         int RemotesIndex,
+        int WorktreesIndex,
         int TagsIndex,
         int SubmodulesIndex,
         int StashesIndex)
@@ -565,11 +700,13 @@ public sealed class RepoObjectsTreeTests
             => new(
                 AppSettings.RepoObjectsTreeShowBranches,
                 AppSettings.RepoObjectsTreeShowRemotes,
+                AppSettings.RepoObjectsTreeShowWorktrees,
                 AppSettings.RepoObjectsTreeShowTags,
                 AppSettings.RepoObjectsTreeShowSubmodules,
                 AppSettings.RepoObjectsTreeShowStashes,
                 AppSettings.RepoObjectsTreeBranchesIndex,
                 AppSettings.RepoObjectsTreeRemotesIndex,
+                AppSettings.RepoObjectsTreeWorktreesIndex,
                 AppSettings.RepoObjectsTreeTagsIndex,
                 AppSettings.RepoObjectsTreeSubmodulesIndex,
                 AppSettings.RepoObjectsTreeStashesIndex);
@@ -578,11 +715,13 @@ public sealed class RepoObjectsTreeTests
         {
             AppSettings.RepoObjectsTreeShowBranches = true;
             AppSettings.RepoObjectsTreeShowRemotes = true;
+            AppSettings.RepoObjectsTreeShowWorktrees = true;
             AppSettings.RepoObjectsTreeShowTags = true;
             AppSettings.RepoObjectsTreeShowSubmodules = true;
             AppSettings.RepoObjectsTreeShowStashes = true;
             AppSettings.RepoObjectsTreeBranchesIndex = 0;
             AppSettings.RepoObjectsTreeRemotesIndex = 1;
+            AppSettings.RepoObjectsTreeWorktreesIndex = 2;
             AppSettings.RepoObjectsTreeTagsIndex = 3;
             AppSettings.RepoObjectsTreeSubmodulesIndex = 4;
             AppSettings.RepoObjectsTreeStashesIndex = 5;
@@ -592,11 +731,13 @@ public sealed class RepoObjectsTreeTests
         {
             AppSettings.RepoObjectsTreeShowBranches = ShowBranches;
             AppSettings.RepoObjectsTreeShowRemotes = ShowRemotes;
+            AppSettings.RepoObjectsTreeShowWorktrees = ShowWorktrees;
             AppSettings.RepoObjectsTreeShowTags = ShowTags;
             AppSettings.RepoObjectsTreeShowSubmodules = ShowSubmodules;
             AppSettings.RepoObjectsTreeShowStashes = ShowStashes;
             AppSettings.RepoObjectsTreeBranchesIndex = BranchesIndex;
             AppSettings.RepoObjectsTreeRemotesIndex = RemotesIndex;
+            AppSettings.RepoObjectsTreeWorktreesIndex = WorktreesIndex;
             AppSettings.RepoObjectsTreeTagsIndex = TagsIndex;
             AppSettings.RepoObjectsTreeSubmodulesIndex = SubmodulesIndex;
             AppSettings.RepoObjectsTreeStashesIndex = StashesIndex;

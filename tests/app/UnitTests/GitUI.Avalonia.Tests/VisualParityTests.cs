@@ -586,7 +586,7 @@ public sealed class VisualParityTests
                 .ToArray();
 
             children.Should().HaveCount(2);
-            connectors.Should().HaveCount(5);
+            connectors.Should().HaveCount(7);
             TreeConnectorControl[] childConnectors = connectors
                 .Where(connector => children.Contains(connector.Item))
                 .ToArray();

@@ -67,6 +67,9 @@
     <Style Selector="TreeViewItem.repo-search-result /template/ Border#PART_LayoutRoot">
       <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
     </Style>
+    <Style Selector="TreeViewItem.worktree-deleted TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
+    </Style>
   </UserControl.Styles>
   <Grid RowDefinitions="27,26,*">
     <StackPanel x:Name="leftPanelToolStrip"
@@ -86,6 +89,10 @@
                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                Content="_Remotes"
                                Icon="{x:Static properties:Images.BranchRemoteRoot}" />
+      <compat:IconToggleButton x:Name="tsbShowWorktrees"
+                               Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                               Content="_Worktrees"
+                               Icon="{x:Static properties:Images.WorkTree}" />
       <compat:IconToggleButton x:Name="tsbShowTags"
                                Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                Content="_Tags"
@@ -143,6 +150,32 @@
                     Header="_Drop stash..."
                     ToolTip.Tip="Drop this stash"
                     compat:TranslationCompat.UseToolTipText="True" />
+          <MenuItem x:Name="mnubtnCreateWorktreeFromRootNode" Header="_Create worktree..." />
+          <MenuItem x:Name="mnubtnPruneWorktreesFromRootNode" Header="_Prune worktrees" />
+          <MenuItem x:Name="mnubtnManageWorktreesFromRootNode" Header="_Manage worktrees..." />
+          <MenuItem x:Name="mnubtnOpenWorktree"
+                    Header="_Open worktree"
+                    ToolTip.Tip="Open this worktree"
+                    compat:TranslationCompat.UseToolTipText="True">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.FolderOpen}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="mnubtnDeleteWorktree"
+                    Header="_Delete worktree..."
+                    ToolTip.Tip="Delete this worktree"
+                    compat:TranslationCompat.UseToolTipText="True" />
+          <Separator x:Name="worktreePathSeparator" />
+          <MenuItem x:Name="mnubtnCopyWorktreePath"
+                    Header="Copy _path"
+                    ToolTip.Tip="Copy the worktree path to clipboard"
+                    compat:TranslationCompat.UseToolTipText="True">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="mnubtnShowWorktreeInFolder"
+                    Header="Show _in folder"
+                    ToolTip.Tip="Show the worktree in File Explorer"
+                    compat:TranslationCompat.UseToolTipText="True">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
+          </MenuItem>
         </ContextMenu>
       </TreeView.ContextMenu>
     </TreeView>
