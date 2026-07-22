@@ -1,9 +1,15 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using GitCommands;
+using GitCommands.Remotes;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
+using GitExtUtils;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 
@@ -11,18 +17,45 @@ using ResourceManager;
 
 namespace GitUI.LeftPanel;
 
-// TODO(avalonia-port): nested branch folders, submodules, worktrees, favorites, filtering,
-// and their context menus arrive in later browse-feature subphases.
 public partial class RepoObjectsTree : GitModuleControl
 {
+    private readonly Dictionary<RepoAction, MenuItem> _actionItems = [];
+    private readonly Separator _actionSeparator = new();
+    private readonly TranslationString _searchTooltip = new("Search");
+    private readonly List<Tree> _trees = [];
+    private Action<string?>? _filterRevisionGridBySpaceSeparatedRefs;
+    private List<TreeViewItem>? _searchResults;
     private StashTree? _stashTree;
 
     public RepoObjectsTree()
     {
         InitializeComponent();
+        CreateContextActions();
 
         treeMain.SelectionChanged += (_, _) => SelectionChanged?.Invoke(this, EventArgs.Empty);
         repoObjectsContextMenu.Opening += RepoObjectsContextMenuOpening;
+        tsbCollapseAll.Click += (_, _) => CollapseAll();
+        tsbShowBranches.Click += (_, _) => ToggleTree(RepoTreeKind.Branches, tsbShowBranches.IsChecked == true);
+        tsbShowRemotes.Click += (_, _) => ToggleTree(RepoTreeKind.Remotes, tsbShowRemotes.IsChecked == true);
+        tsbShowTags.Click += (_, _) => ToggleTree(RepoTreeKind.Tags, tsbShowTags.IsChecked == true);
+        tsbShowStashes.Click += (_, _) => ToggleTree(RepoTreeKind.Stashes, tsbShowStashes.IsChecked == true);
+        btnSearch.Click += (_, _) => DoSearch();
+        txtBranchCriterion.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == TextBox.TextProperty)
+            {
+                ClearSearchResults();
+            }
+        };
+        txtBranchCriterion.KeyDown += (_, e) =>
+        {
+            if (e.Key == Key.Enter)
+            {
+                DoSearch();
+                e.Handled = true;
+            }
+        };
+
         mnubtnStashAllFromRootNode.Click += (_, _) => _stashTree?.StashAll(this);
         mnubtnStashStagedFromRootNode.Click += (_, _) => _stashTree?.StashStaged(this);
         mnubtnManageStashFromRootNode.Click += (_, _) => _stashTree?.OpenStash(this);
@@ -31,100 +64,124 @@ public partial class RepoObjectsTree : GitModuleControl
         mnubtnPopStash.Click += (_, _) => SelectedStashNode?.PopStash(this);
         mnubtnDropStash.Click += (_, _) => SelectedStashNode?.DropStash(this);
 
+        tsbShowBranches.IsChecked = AppSettings.RepoObjectsTreeShowBranches;
+        tsbShowRemotes.IsChecked = AppSettings.RepoObjectsTreeShowRemotes;
+        tsbShowTags.IsChecked = AppSettings.RepoObjectsTreeShowTags;
+        tsbShowStashes.IsChecked = AppSettings.RepoObjectsTreeShowStashes;
+
         InitializeComplete();
+        ToolTip.SetTip(btnSearch, _searchTooltip.Text);
+        ToolTip.SetTip(tsbCollapseAll, Translate(nameof(RepoObjectsTree), "mnubtnCollapse", "Collapse all subnodes", "ToolTipText"));
+        ToolTip.SetTip(tsbShowBranches, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowBranches.Content!));
+        ToolTip.SetTip(tsbShowRemotes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowRemotes.Content!));
+        ToolTip.SetTip(tsbShowTags, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowTags.Content!));
+        ToolTip.SetTip(tsbShowStashes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowStashes.Content!));
     }
 
-    /// <summary>
-    ///  Occurs when the selected node changes.
-    /// </summary>
+    /// <summary>Occurs when the selected node changes.</summary>
     public event EventHandler? SelectionChanged;
 
-    /// <summary>
-    ///  Gets the ref of the selected node, or <see langword="null"/> for group nodes.
-    /// </summary>
-    public IGitRef? SelectedRef => (treeMain.SelectedItem as TreeViewItem)?.Tag as IGitRef;
+    /// <summary>Gets the ref of the selected node, or <see langword="null"/> for group nodes.</summary>
+    public IGitRef? SelectedRef => (SelectedNode as BaseRevisionNode)?.GitRef;
 
-    /// <summary>
-    ///  Gets the object id represented by the selected ref or stash node.
-    /// </summary>
+    /// <summary>Gets the object id represented by the selected ref or stash node.</summary>
     public ObjectId? SelectedRevisionObjectId
-        => (treeMain.SelectedItem as TreeViewItem)?.Tag switch
+        => SelectedNode switch
         {
-            IGitRef gitRef => gitRef.ObjectId,
+            BaseRevisionNode { GitRef: not null } revisionNode => revisionNode.ObjectId,
             StashNode stashNode => stashNode.ObjectId,
             _ => null,
         };
 
-    private StashNode? SelectedStashNode => (treeMain.SelectedItem as TreeViewItem)?.Tag as StashNode;
+    private NodeBase? SelectedNode => (treeMain.SelectedItem as TreeViewItem)?.Tag as NodeBase;
 
-    /// <summary>
-    ///  Fills the tree from the repository refs.
-    /// </summary>
+    private StashNode? SelectedStashNode => SelectedNode as StashNode;
+
+    /// <summary>Connects the tree's selected-ref filtering action to the revision grid.</summary>
+    public void Initialize(Action<string?> filterRevisionGridBySpaceSeparatedRefs)
+        => _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;
+
+    /// <summary>Fills the tree from the repository refs.</summary>
     public void SetRefs(IReadOnlyList<IGitRef> refs)
-        => SetRefs(refs, [], includeStashes: false);
+        => SetRefs(refs, [], includeStashes: false, currentBranch: string.Empty, enabledRemotes: null, disabledRemotes: null, remotesManager: null);
 
-    /// <summary>
-    ///  Fills the tree from the repository refs and stash revisions.
-    /// </summary>
+    /// <summary>Fills the tree from repository refs and stash revisions.</summary>
     public void SetRefs(IReadOnlyList<IGitRef> refs, IReadOnlyCollection<GitRevision> stashes)
-        => SetRefs(refs, stashes, includeStashes: true);
+        => SetRefs(refs, stashes, includeStashes: true, currentBranch: string.Empty, enabledRemotes: null, disabledRemotes: null, remotesManager: null);
+
+    /// <summary>Fills the tree and marks the currently checked-out local branch.</summary>
+    public void SetRefs(IReadOnlyList<IGitRef> refs, IReadOnlyCollection<GitRevision> stashes, string currentBranch)
+        => SetRefs(refs, stashes, includeStashes: true, currentBranch, enabledRemotes: null, disabledRemotes: null, remotesManager: null);
+
+    /// <summary>Fills the tree with configured enabled and inactive remotes, including remotes without branches.</summary>
+    public void SetRefs(
+        IReadOnlyList<IGitRef> refs,
+        IReadOnlyCollection<GitRevision> stashes,
+        string currentBranch,
+        IReadOnlyList<Remote> enabledRemotes,
+        IReadOnlyList<Remote> disabledRemotes,
+        IConfigFileRemoteSettingsManager remotesManager)
+        => SetRefs(refs, stashes, includeStashes: true, currentBranch, enabledRemotes, disabledRemotes, remotesManager);
 
     private void SetRefs(
         IReadOnlyList<IGitRef> refs,
         IReadOnlyCollection<GitRevision> stashes,
-        bool includeStashes)
+        bool includeStashes,
+        string currentBranch,
+        IReadOnlyList<Remote>? enabledRemotes,
+        IReadOnlyList<Remote>? disabledRemotes,
+        IConfigFileRemoteSettingsManager? remotesManager)
     {
-        TreeViewItem branchesNode = CreateGroupNode(
-            "Branches",
-            Images.BranchLocalRoot,
-            refs.Where(gitRef => gitRef.IsHead && !gitRef.IsTag));
-        TreeViewItem remotesNode = CreateGroupNode(
-            "Remotes",
-            Images.BranchRemoteRoot,
-            refs.Where(gitRef => gitRef.IsRemote));
-        TreeViewItem tagsNode = CreateGroupNode(
-            "Tags",
-            Images.TagHorizontal,
-            refs.Where(gitRef => gitRef.IsTag));
+        HashSet<string> expandedNodes =
+        [
+            .. _trees
+                .SelectMany(tree => tree.DescendantsAndSelf())
+                .Where(node => node.TreeViewNode.IsExpanded)
+                .Select(GetNodeIdentity),
+        ];
+        HashSet<string> selectedNodes = [.. GetSelectedNodes().Select(GetNodeIdentity)];
+        bool restoreState = _trees.Count > 0;
+
+        ClearSearchResults();
+        _trees.Clear();
+
+        IGitRef[] branches = [.. refs.Where(gitRef => gitRef.IsHead && !gitRef.IsTag)];
+        IGitRef[] remotes = [.. refs.Where(gitRef => gitRef.IsRemote)];
+        IGitRef[] tags = [.. refs.Where(gitRef => gitRef.IsTag && !gitRef.IsDereference)];
+        _trees.Add(new LocalBranchTree(this, branches, currentBranch));
+        _trees.Add(new RemoteBranchTree(this, remotes, enabledRemotes, disabledRemotes, remotesManager));
+        _trees.Add(new TagTree(this, tags));
+
         _stashTree = new StashTree(this, stashes);
-        branchesNode.IsExpanded = true;
-
-        TreeViewItem[] roots = includeStashes && AppSettings.RepoObjectsTreeShowStashes
-            ? [branchesNode, remotesNode, tagsNode, _stashTree.TreeViewNode]
-            : [branchesNode, remotesNode, tagsNode];
-        treeMain.ItemsSource = roots;
-
-        return;
-
-        static TreeViewItem CreateGroupNode(string caption, IImage groupIcon, IEnumerable<IGitRef> groupRefs)
+        if (includeStashes)
         {
-            IGitRef[] refs =
-            [
-                .. groupRefs.OrderBy(gitRef => gitRef.Name, StringComparer.OrdinalIgnoreCase),
-            ];
-            TreeViewItem[] children =
-            [
-                .. refs.Select(gitRef => new TreeViewItem
-                {
-                    Header = CreateHeader(
-                        gitRef.Name,
-                        gitRef.IsTag
-                            ? Images.TagHorizontal
-                            : gitRef.IsRemote
-                                ? Images.BranchRemote
-                                : Images.BranchLocal),
-                    Tag = gitRef,
-                }),
-            ];
-            return new TreeViewItem
+            _trees.Add(_stashTree);
+        }
+
+        ApplyRoots();
+        if (restoreState)
+        {
+            NodeBase[] nodes = [.. _trees.SelectMany(tree => tree.DescendantsAndSelf())];
+            foreach (NodeBase node in nodes)
             {
-                Header = CreateHeader($"{caption} ({children.Length})", groupIcon),
-                ItemsSource = children,
-            };
+                node.TreeViewNode.IsExpanded = expandedNodes.Contains(GetNodeIdentity(node));
+            }
+
+            if (treeMain.SelectedItems is not null)
+            {
+                treeMain.SelectedItems.Clear();
+                foreach (NodeBase node in nodes.Where(node => selectedNodes.Contains(GetNodeIdentity(node))))
+                {
+                    treeMain.SelectedItems.Add(node.TreeViewNode);
+                }
+            }
         }
     }
 
-    internal static Control CreateHeader(string caption, IImage icon)
+    private static string GetNodeIdentity(NodeBase node)
+        => $"{node.GetType().Name}:{node.SearchText}";
+
+    internal static Control CreateHeader(string caption, IImage icon, bool isBold = false)
         => new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal,
@@ -140,15 +197,226 @@ public partial class RepoObjectsTree : GitModuleControl
                 },
                 new TextBlock
                 {
+                    FontWeight = isBold ? FontWeight.Bold : FontWeight.Normal,
                     VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
                     Text = caption,
                 },
             },
         };
 
+    internal void PrepareTreeViewItem(NodeBase node)
+    {
+        node.TreeViewNode.PointerPressed += (_, e) =>
+        {
+            if (e.GetCurrentPoint(node.TreeViewNode).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
+            {
+                SelectTreeViewItem(node.TreeViewNode);
+            }
+        };
+        node.TreeViewNode.DoubleTapped += (_, _) => node.OnDoubleClick();
+    }
+
+    internal int GetTreePosition(RepoTreeKind kind)
+        => kind switch
+        {
+            RepoTreeKind.Branches => AppSettings.RepoObjectsTreeBranchesIndex,
+            RepoTreeKind.Remotes => AppSettings.RepoObjectsTreeRemotesIndex,
+            RepoTreeKind.Tags => AppSettings.RepoObjectsTreeTagsIndex,
+            RepoTreeKind.Stashes => AppSettings.RepoObjectsTreeStashesIndex,
+            _ => throw new ArgumentOutOfRangeException(nameof(kind)),
+        };
+
+    internal void SetTreePosition(RepoTreeKind kind, int value)
+    {
+        switch (kind)
+        {
+            case RepoTreeKind.Branches: AppSettings.RepoObjectsTreeBranchesIndex = value; break;
+            case RepoTreeKind.Remotes: AppSettings.RepoObjectsTreeRemotesIndex = value; break;
+            case RepoTreeKind.Tags: AppSettings.RepoObjectsTreeTagsIndex = value; break;
+            case RepoTreeKind.Stashes: AppSettings.RepoObjectsTreeStashesIndex = value; break;
+            default: throw new ArgumentOutOfRangeException(nameof(kind));
+        }
+    }
+
+    internal bool GetTreeVisibility(RepoTreeKind kind)
+        => kind switch
+        {
+            RepoTreeKind.Branches => AppSettings.RepoObjectsTreeShowBranches,
+            RepoTreeKind.Remotes => AppSettings.RepoObjectsTreeShowRemotes,
+            RepoTreeKind.Tags => AppSettings.RepoObjectsTreeShowTags,
+            RepoTreeKind.Stashes => AppSettings.RepoObjectsTreeShowStashes,
+            _ => throw new ArgumentOutOfRangeException(nameof(kind)),
+        };
+
+    internal void SetTreeVisibility(RepoTreeKind kind, bool value)
+    {
+        switch (kind)
+        {
+            case RepoTreeKind.Branches: AppSettings.RepoObjectsTreeShowBranches = value; break;
+            case RepoTreeKind.Remotes: AppSettings.RepoObjectsTreeShowRemotes = value; break;
+            case RepoTreeKind.Tags: AppSettings.RepoObjectsTreeShowTags = value; break;
+            case RepoTreeKind.Stashes: AppSettings.RepoObjectsTreeShowStashes = value; break;
+            default: throw new ArgumentOutOfRangeException(nameof(kind));
+        }
+    }
+
+    private void ApplyRoots()
+    {
+        TreeViewItem[] visibleRoots =
+        [
+            .. _trees
+                .Where(tree => tree.IsEnabled)
+                .OrderBy(tree => tree.PositionIndex)
+                .ThenBy(tree => tree.Kind)
+                .Select(tree => tree.TreeViewNode),
+        ];
+        treeMain.ItemsSource = visibleRoots;
+    }
+
+    private void ToggleTree(RepoTreeKind kind, bool show)
+    {
+        SetTreeVisibility(kind, show);
+        ClearSearchResults();
+        ApplyRoots();
+    }
+
+    private void CollapseAll()
+    {
+        foreach (Tree tree in _trees)
+        {
+            SetExpanded(tree.TreeViewNode, expanded: false, recursive: true);
+        }
+    }
+
+    private void DoSearch()
+    {
+        string criterion = txtBranchCriterion.Text?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(criterion))
+        {
+            ClearSearchResults();
+            txtBranchCriterion.Focus();
+            return;
+        }
+
+        if (_searchResults is null)
+        {
+            _searchResults =
+            [
+                .. _trees
+                    .Where(tree => tree.IsEnabled)
+                    .SelectMany(tree => tree.DescendantsAndSelf())
+                    .Where(node => node.SearchText.Contains(criterion, StringComparison.InvariantCultureIgnoreCase))
+                    .Select(node => node.TreeViewNode),
+            ];
+            foreach (TreeViewItem result in _searchResults)
+            {
+                result.Classes.Add("repo-search-result");
+            }
+        }
+
+        if (_searchResults.Count == 0)
+        {
+            return;
+        }
+
+        TreeViewItem next = _searchResults[0];
+        _searchResults.RemoveAt(0);
+        _searchResults.Add(next);
+        if (next.Tag is NodeBase node)
+        {
+            for (NodeBase? parent = node.Parent; parent is not null; parent = parent.Parent)
+            {
+                parent.TreeViewNode.IsExpanded = true;
+            }
+        }
+
+        treeMain.SelectedItem = next;
+        next.BringIntoView();
+    }
+
+    private void ClearSearchResults()
+    {
+        if (_searchResults is not null)
+        {
+            foreach (TreeViewItem item in _searchResults)
+            {
+                item.Classes.Remove("repo-search-result");
+            }
+        }
+
+        _searchResults = null;
+    }
+
+    private void CreateContextActions()
+    {
+        repoObjectsContextMenu.Items.Add(_actionSeparator);
+        AddAction(RepoAction.Copy, nameof(RepoObjectsTree), "copyContextMenuItem", "&Copy to clipboard", Images.CopyToClipboard);
+        AddAction(RepoAction.Filter, nameof(RepoObjectsTree), "filterForSelectedRefsMenuItem", "&Filter for selected", Images.ShowThisBranchOnly);
+        AddAction(RepoAction.CheckoutLocal, "BranchMenuItemsStrings", "Checkout", "Chec&kout branch...", Images.BranchCheckout);
+        AddAction(RepoAction.CheckoutRemote, "RemoteBranchMenuItemsStrings", "Checkout", "Chec&kout remote branch...", Images.BranchCheckout);
+        AddAction(RepoAction.Merge, "MenuItemsStrings", "Merge", "&Merge into current branch...", Images.Merge);
+        AddAction(RepoAction.RebaseLocal, "BranchMenuItemsStrings", "Rebase", "&Rebase current branch on this branch...", Images.Rebase);
+        AddAction(RepoAction.RebaseRemote, "RemoteBranchMenuItemsStrings", "Rebase", "&Rebase current branch on this remote branch...", Images.Rebase);
+        AddAction(RepoAction.RebaseTag, "TagMenuItemsStrings", "Rebase", "&Rebase current branch on this tag revision...", Images.Rebase);
+        AddAction(RepoAction.CreateBranch, "MenuItemsStrings", "CreateBranch", "Create &branch...", Images.Branch);
+        AddAction(RepoAction.RenameBranch, "MenuItemsStrings", "Rename", "R&ename branch...", Images.Renamed);
+        AddAction(RepoAction.DeleteBranch, "BranchMenuItemsStrings", "Delete", "&Delete branch...", Images.BranchDelete);
+        AddAction(RepoAction.DeleteTag, "TagMenuItemsStrings", "Delete", "&Delete tag...", Images.BranchDelete);
+        AddAction(RepoAction.FetchBranch, nameof(RepoObjectsTree), "mnubtnFetchOneBranch", "Fe&tch", Images.Stage);
+        AddAction(RepoAction.FetchMerge, nameof(RepoObjectsTree), "mnubtnPullFromRemoteBranch", "Fetch && Merge (&Pull)", Images.Pull);
+        AddAction(RepoAction.FetchCheckout, nameof(RepoObjectsTree), "mnubtnRemoteBranchFetchAndCheckout", "&Fetch && Checkout", Images.BranchCheckout);
+        AddAction(RepoAction.FetchRebase, nameof(RepoObjectsTree), "mnubtnFetchRebase", "Fetch && Re&base", Images.Rebase);
+        AddAction(RepoAction.FetchCreate, nameof(RepoObjectsTree), "mnubtnFetchCreateBranch", "Fetc&h && Create Branch", Images.Branch);
+        AddAction(RepoAction.CreateInFolder, nameof(RepoObjectsTree), "mnubtnCreateBranch", "Create Branch...", Images.BranchCreate);
+        AddAction(RepoAction.DeleteFolderBranches, nameof(RepoObjectsTree), "mnubtnDeleteAllBranches", "Delete All", Images.BranchDelete);
+        AddAction(RepoAction.ManageRemotes, nameof(RepoObjectsTree), "mnuBtnManageRemotesFromRootNode", "&Manage...", Images.Remotes);
+        AddAction(RepoAction.FetchAllRemotes, nameof(RepoObjectsTree), "mnuBtnFetchAllRemotes", "Fetch all remotes", Images.PullFetchAll);
+        AddAction(RepoAction.PruneAllRemotes, nameof(RepoObjectsTree), "mnuBtnPruneAllRemotes", "Fetch and prune all remotes", Images.PullFetchPruneAll);
+        AddAction(RepoAction.ManageRemote, nameof(RepoObjectsTree), "mnubtnManageRemotes", "&Manage...", Images.Remotes);
+        AddAction(RepoAction.EnableRemote, nameof(RepoObjectsTree), "mnubtnEnableRemote", "&Activate", Images.EyeOpened);
+        AddAction(RepoAction.EnableRemoteAndFetch, nameof(RepoObjectsTree), "mnubtnEnableRemoteAndFetch", "A&ctivate and fetch", Images.RemoteEnableAndFetch);
+        AddAction(RepoAction.DisableRemote, nameof(RepoObjectsTree), "mnubtnDisableRemote", "&Deactivate", Images.EyeClosed);
+        AddAction(RepoAction.FetchRemote, nameof(RepoObjectsTree), "mnubtnFetchAllBranchesFromARemote", "&Fetch", Images.PullFetch);
+        AddAction(RepoAction.PruneRemote, nameof(RepoObjectsTree), "mnuBtnPruneAllBranchesFromARemote", "Fetch and &prune", Images.PullFetchPrune);
+        AddAction(RepoAction.OpenRemoteUrl, nameof(RepoObjectsTree), "mnuBtnOpenRemoteUrlInBrowser", "Open remote Url", Images.Globe);
+        AddAction(RepoAction.Collapse, nameof(RepoObjectsTree), "mnubtnCollapse", "Collapse", Images.CollapseAll);
+        AddAction(RepoAction.Expand, nameof(RepoObjectsTree), "mnubtnExpand", "Expand", Images.ExpandAll);
+        AddAction(RepoAction.MoveUp, nameof(RepoObjectsTree), "mnubtnMoveUp", "Move Up", Images.ArrowUp);
+        AddAction(RepoAction.MoveDown, nameof(RepoObjectsTree), "mnubtnMoveDown", "Move Down", Images.ArrowDown);
+    }
+
+    private void AddAction(RepoAction action, string category, string name, string source, IImage icon)
+    {
+        MenuItem item = new()
+        {
+            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(Translate(category, name, source)),
+            Icon = new Image { Width = 16, Height = 16, Source = icon, Stretch = Stretch.Uniform },
+            IsVisible = false,
+        };
+        item.Click += (_, _) => ExecuteAction(action);
+        _actionItems.Add(action, item);
+        repoObjectsContextMenu.Items.Add(item);
+    }
+
+    private static string Translate(string category, string name, string source, string property = "Text")
+    {
+        string text = source;
+        foreach (ITranslation translation in Translator.GetTranslation(AppSettings.CurrentTranslation).Values)
+        {
+            text = translation.TranslateItem(category, name, property, () => source) ?? text;
+        }
+
+        return text;
+    }
+
     private void RepoObjectsContextMenuOpening(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        bool stashTreeSelected = (treeMain.SelectedItem as TreeViewItem)?.Tag is StashTree;
+        foreach (MenuItem item in _actionItems.Values)
+        {
+            item.IsVisible = false;
+        }
+
+        bool stashTreeSelected = SelectedNode is StashTree;
         bool stashSelected = SelectedStashNode is not null;
         bool canRunCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
         bool canChangeWorkingTree = canRunCommands && !commands!.Module.IsBareRepository();
@@ -168,7 +436,213 @@ public partial class RepoObjectsTree : GitModuleControl
         mnubtnApplyStash.IsEnabled = canChangeWorkingTree;
         mnubtnPopStash.IsEnabled = canChangeWorkingTree;
         mnubtnDropStash.IsEnabled = canChangeWorkingTree;
-        e.Cancel = !stashTreeSelected && !stashSelected;
+
+        SetActionVisible(RepoAction.Copy, SelectedNode is BaseBranchLeafNode or StashNode);
+        SetActionVisible(RepoAction.Filter, GetSelectedNodes().OfType<BaseRevisionNode>().Any(node => node.GitRef is not null) && _filterRevisionGridBySpaceSeparatedRefs is not null);
+
+        switch (SelectedNode)
+        {
+            case LocalBranchNode localBranch:
+                SetActionVisible(RepoAction.CreateBranch, canChangeWorkingTree);
+                SetActionVisible(RepoAction.RenameBranch, canChangeWorkingTree);
+                if (!localBranch.IsCurrent)
+                {
+                    SetActionVisible(RepoAction.CheckoutLocal, canChangeWorkingTree);
+                    SetActionVisible(RepoAction.Merge, canChangeWorkingTree);
+                    SetActionVisible(RepoAction.RebaseLocal, canChangeWorkingTree);
+                    SetActionVisible(RepoAction.DeleteBranch, canChangeWorkingTree);
+                }
+
+                break;
+            case RemoteBranchNode:
+                SetActionVisible(RepoAction.CheckoutRemote, canChangeWorkingTree);
+                SetActionVisible(RepoAction.Merge, canChangeWorkingTree);
+                SetActionVisible(RepoAction.RebaseRemote, canChangeWorkingTree);
+                SetActionVisible(RepoAction.CreateBranch, canChangeWorkingTree);
+                SetActionVisible(RepoAction.FetchBranch, canRunCommands);
+                SetActionVisible(RepoAction.FetchMerge, canChangeWorkingTree);
+                SetActionVisible(RepoAction.FetchCheckout, canChangeWorkingTree);
+                SetActionVisible(RepoAction.FetchRebase, canChangeWorkingTree);
+                SetActionVisible(RepoAction.FetchCreate, canChangeWorkingTree);
+                break;
+            case TagNode:
+                SetActionVisible(RepoAction.Merge, canChangeWorkingTree);
+                SetActionVisible(RepoAction.RebaseTag, canChangeWorkingTree);
+                SetActionVisible(RepoAction.CreateBranch, canChangeWorkingTree);
+                SetActionVisible(RepoAction.DeleteTag, canRunCommands);
+                break;
+            case BranchPathNode:
+                SetActionVisible(RepoAction.CreateInFolder, canChangeWorkingTree);
+                SetActionVisible(RepoAction.DeleteFolderBranches, canChangeWorkingTree);
+                break;
+            case RemoteBranchTree:
+                SetActionVisible(RepoAction.ManageRemotes, canRunCommands);
+                SetActionVisible(RepoAction.FetchAllRemotes, canRunCommands);
+                SetActionVisible(RepoAction.PruneAllRemotes, canRunCommands);
+                break;
+            case RemoteRepoNode remoteRepo:
+                SetActionVisible(RepoAction.ManageRemote, canRunCommands);
+                if (remoteRepo.Enabled)
+                {
+                    SetActionVisible(RepoAction.FetchRemote, canRunCommands);
+                    SetActionVisible(RepoAction.PruneRemote, canRunCommands);
+                    SetActionVisible(RepoAction.DisableRemote, canRunCommands && remoteRepo.CanToggle);
+                }
+                else
+                {
+                    SetActionVisible(RepoAction.EnableRemote, canRunCommands && remoteRepo.CanToggle);
+                    SetActionVisible(RepoAction.EnableRemoteAndFetch, canRunCommands && remoteRepo.CanToggle);
+                }
+
+                if (remoteRepo.IsRemoteUrlUsingHttp)
+                {
+                    SetActionVisible(RepoAction.OpenRemoteUrl, enabled: true);
+                }
+
+                break;
+        }
+
+        if (SelectedNode?.TreeViewNode.Items.Count > 0)
+        {
+            SetActionVisible(RepoAction.Collapse, SelectedNode.TreeViewNode.IsExpanded);
+            SetActionVisible(RepoAction.Expand, !SelectedNode.TreeViewNode.IsExpanded);
+        }
+
+        if (SelectedNode is Tree selectedTree)
+        {
+            Tree[] visibleTrees = [.. _trees.Where(tree => tree.IsEnabled).OrderBy(tree => tree.PositionIndex)];
+            int index = Array.IndexOf(visibleTrees, selectedTree);
+            SetActionVisible(RepoAction.MoveUp, index > 0);
+            SetActionVisible(RepoAction.MoveDown, index >= 0 && index < visibleTrees.Length - 1);
+        }
+
+        bool hasDynamicAction = _actionItems.Values.Any(item => item.IsVisible);
+        _actionSeparator.IsVisible = hasDynamicAction && (stashTreeSelected || stashSelected);
+        e.Cancel = !hasDynamicAction && !stashTreeSelected && !stashSelected;
+    }
+
+    private void SetActionVisible(RepoAction action, bool enabled)
+    {
+        MenuItem item = _actionItems[action];
+        item.IsVisible = true;
+        item.IsEnabled = enabled;
+    }
+
+    private void ExecuteAction(RepoAction action)
+    {
+        switch (action)
+        {
+            case RepoAction.Copy:
+                ClipboardUtil.TrySetText(SelectedNode switch
+                {
+                    BaseRevisionNode revisionNode => revisionNode.FullPath,
+                    StashNode stashNode => stashNode.ReflogSelector,
+                    _ => string.Empty,
+                });
+                break;
+            case RepoAction.Filter:
+                _filterRevisionGridBySpaceSeparatedRefs?.Invoke(string.Join(" ", GetSelectedNodes().OfType<BaseRevisionNode>().Where(node => node.GitRef is not null).Select(node => node.FullPath)));
+                break;
+            case RepoAction.CheckoutLocal: ((LocalBranchNode)SelectedNode!).Checkout(); break;
+            case RepoAction.CheckoutRemote: ((RemoteBranchNode)SelectedNode!).Checkout(); break;
+            case RepoAction.Merge:
+                if (SelectedNode is LocalBranchNode localMerge)
+                {
+                    localMerge.Merge();
+                }
+                else if (SelectedNode is RemoteBranchNode remoteMerge)
+                {
+                    remoteMerge.Merge();
+                }
+                else
+                {
+                    ((TagNode)SelectedNode!).Merge();
+                }
+
+                break;
+            case RepoAction.RebaseLocal: ((LocalBranchNode)SelectedNode!).Rebase(); break;
+            case RepoAction.RebaseRemote: ((RemoteBranchNode)SelectedNode!).Rebase(); break;
+            case RepoAction.RebaseTag: ((TagNode)SelectedNode!).Rebase(); break;
+            case RepoAction.CreateBranch:
+                if (SelectedNode is LocalBranchNode localCreate)
+                {
+                    localCreate.CreateBranch();
+                }
+                else if (SelectedNode is RemoteBranchNode remoteCreate)
+                {
+                    remoteCreate.CreateBranch();
+                }
+                else
+                {
+                    ((TagNode)SelectedNode!).CreateBranch();
+                }
+
+                break;
+            case RepoAction.RenameBranch: ((LocalBranchNode)SelectedNode!).Rename(); break;
+            case RepoAction.DeleteBranch: ((LocalBranchNode)SelectedNode!).Delete(); break;
+            case RepoAction.DeleteTag: ((TagNode)SelectedNode!).Delete(); break;
+            case RepoAction.FetchBranch: ((RemoteBranchNode)SelectedNode!).Fetch(); break;
+            case RepoAction.FetchMerge: ((RemoteBranchNode)SelectedNode!).FetchAndMerge(); break;
+            case RepoAction.FetchCheckout: ((RemoteBranchNode)SelectedNode!).FetchAndCheckout(); break;
+            case RepoAction.FetchRebase: ((RemoteBranchNode)SelectedNode!).FetchAndRebase(); break;
+            case RepoAction.FetchCreate: ((RemoteBranchNode)SelectedNode!).FetchAndCreateBranch(); break;
+            case RepoAction.CreateInFolder: ((BranchPathNode)SelectedNode!).CreateBranch(); break;
+            case RepoAction.DeleteFolderBranches: ((BranchPathNode)SelectedNode!).DeleteAll(); break;
+            case RepoAction.ManageRemotes: ((RemoteBranchTree)SelectedNode!).PopupManageRemotesForm(remoteName: null); break;
+            case RepoAction.FetchAllRemotes: ((RemoteBranchTree)SelectedNode!).FetchAll(); break;
+            case RepoAction.PruneAllRemotes: ((RemoteBranchTree)SelectedNode!).FetchPruneAll(); break;
+            case RepoAction.ManageRemote: ((RemoteRepoNode)SelectedNode!).PopupManageRemotesForm(); break;
+            case RepoAction.EnableRemote: ((RemoteRepoNode)SelectedNode!).Enable(fetch: false); break;
+            case RepoAction.EnableRemoteAndFetch: ((RemoteRepoNode)SelectedNode!).Enable(fetch: true); break;
+            case RepoAction.DisableRemote: ((RemoteRepoNode)SelectedNode!).Disable(); break;
+            case RepoAction.FetchRemote: ((RemoteRepoNode)SelectedNode!).Fetch(); break;
+            case RepoAction.PruneRemote: ((RemoteRepoNode)SelectedNode!).Prune(); break;
+            case RepoAction.OpenRemoteUrl: ((RemoteRepoNode)SelectedNode!).OpenRemoteUrlInBrowser(); break;
+            case RepoAction.Collapse: SetExpanded(SelectedNode!.TreeViewNode, expanded: false, recursive: true); break;
+            case RepoAction.Expand: SetExpanded(SelectedNode!.TreeViewNode, expanded: true, recursive: true); break;
+            case RepoAction.MoveUp: ReorderTree((Tree)SelectedNode!, up: true); break;
+            case RepoAction.MoveDown: ReorderTree((Tree)SelectedNode!, up: false); break;
+            default: throw new ArgumentOutOfRangeException(nameof(action));
+        }
+    }
+
+    private IEnumerable<NodeBase> GetSelectedNodes()
+    {
+        IEnumerable<TreeViewItem> items = treeMain.SelectedItems?.OfType<TreeViewItem>()
+            ?? (treeMain.SelectedItem is TreeViewItem selected ? [selected] : []);
+        return items.Select(item => item.Tag).OfType<NodeBase>();
+    }
+
+    private void ReorderTree(Tree tree, bool up)
+    {
+        Tree[] visibleTrees = [.. _trees.Where(item => item.IsEnabled).OrderBy(item => item.PositionIndex)];
+        int index = Array.IndexOf(visibleTrees, tree);
+        int swapIndex = up ? index - 1 : index + 1;
+        if (index < 0 || swapIndex < 0 || swapIndex >= visibleTrees.Length)
+        {
+            return;
+        }
+
+        Tree swap = visibleTrees[swapIndex];
+        int position = tree.PositionIndex;
+        tree.PositionIndex = swap.PositionIndex;
+        swap.PositionIndex = position;
+        ApplyRoots();
+        SelectTreeViewItem(tree.TreeViewNode);
+    }
+
+    private static void SetExpanded(TreeViewItem item, bool expanded, bool recursive)
+    {
+        item.IsExpanded = expanded;
+        if (!recursive)
+        {
+            return;
+        }
+
+        foreach (TreeViewItem child in item.Items.Cast<TreeViewItem>())
+        {
+            SetExpanded(child, expanded, recursive: true);
+        }
     }
 
     internal void SelectTreeViewItem(TreeViewItem item)
@@ -182,6 +656,18 @@ public partial class RepoObjectsTree : GitModuleControl
         internal TreeView Tree => control.treeMain;
 
         internal ContextMenu ContextMenu => control.repoObjectsContextMenu;
+
+        internal TextBox SearchBox => control.txtBranchCriterion;
+
+        internal Button SearchButton => control.btnSearch;
+
+        internal ToggleButton ShowBranchesButton => control.tsbShowBranches;
+
+        internal ToggleButton ShowRemotesButton => control.tsbShowRemotes;
+
+        internal ToggleButton ShowTagsButton => control.tsbShowTags;
+
+        internal ToggleButton ShowStashesButton => control.tsbShowStashes;
 
         internal MenuItem StashAllMenuItem => control.mnubtnStashAllFromRootNode;
 
@@ -197,18 +683,61 @@ public partial class RepoObjectsTree : GitModuleControl
 
         internal MenuItem DropStashMenuItem => control.mnubtnDropStash;
 
+        internal MenuItem GetActionMenuItem(string action)
+            => control._actionItems[Enum.Parse<RepoAction>(action)];
+
         internal bool UpdateContextMenu()
         {
             System.ComponentModel.CancelEventArgs eventArgs = new();
             control.RepoObjectsContextMenuOpening(control.repoObjectsContextMenu, eventArgs);
             return !eventArgs.Cancel;
         }
+
+        internal void Search()
+            => control.DoSearch();
+    }
+
+    private enum RepoAction
+    {
+        Copy,
+        Filter,
+        CheckoutLocal,
+        CheckoutRemote,
+        Merge,
+        RebaseLocal,
+        RebaseRemote,
+        RebaseTag,
+        CreateBranch,
+        RenameBranch,
+        DeleteBranch,
+        DeleteTag,
+        FetchBranch,
+        FetchMerge,
+        FetchCheckout,
+        FetchRebase,
+        FetchCreate,
+        CreateInFolder,
+        DeleteFolderBranches,
+        ManageRemotes,
+        FetchAllRemotes,
+        PruneAllRemotes,
+        ManageRemote,
+        EnableRemote,
+        EnableRemoteAndFetch,
+        DisableRemote,
+        FetchRemote,
+        PruneRemote,
+        OpenRemoteUrl,
+        Collapse,
+        Expand,
+        MoveUp,
+        MoveDown,
     }
 }
 
 /// <summary>
-///  Draws the dotted hierarchy lines supplied by the native WinForms tree but absent from
-///  Avalonia's Fluent TreeView template.
+/// Draws the dotted hierarchy lines supplied by the native WinForms tree but absent from
+/// Avalonia's Fluent TreeView template.
 /// </summary>
 internal sealed class TreeConnectorControl : Control
 {

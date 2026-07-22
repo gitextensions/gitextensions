@@ -640,7 +640,7 @@ public sealed partial class ParityScreenshotTests
             switch (control)
             {
                 case RepoObjectsTree repoObjectsTree:
-                    repoObjectsTree.SetRefs(context.Refs, context.Stashes);
+                    repoObjectsTree.SetRefs(context.Refs, context.Stashes, MainBranchName);
                     break;
 
                 case CommitInfo commitInfo:
