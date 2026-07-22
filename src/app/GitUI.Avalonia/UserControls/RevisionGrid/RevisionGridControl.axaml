@@ -64,6 +64,9 @@
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
           </MenuItem>
           <Separator x:Name="sepCommit" />
+          <MenuItem x:Name="revertCommitToolStripMenuItem" Header="Re_vert this commit...">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RevertCommit}" /></MenuItem.Icon>
+          </MenuItem>
           <MenuItem x:Name="cherryPickCommitToolStripMenuItem" Header="Cherr_y pick this commit...">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CherryPick}" /></MenuItem.Icon>
           </MenuItem>

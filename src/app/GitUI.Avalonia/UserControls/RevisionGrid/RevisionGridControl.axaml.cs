@@ -133,6 +133,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
         createTagToolStripMenuItem.Click += CreateTagToolStripMenuItemClick;
+        revertCommitToolStripMenuItem.Click += RevertCommitToolStripMenuItemClick;
         cherryPickCommitToolStripMenuItem.Click += CherryPickCommitToolStripMenuItemClick;
         archiveRevisionToolStripMenuItem.Click += ArchiveRevisionToolStripMenuItemClick;
         GotoCurrentRevisionMenuItem.Click += (_, _) => SelectCurrentRevision();
@@ -630,6 +631,12 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         SetVisible(deleteTagToolStripMenuItem, deleteTagToolStripMenuItem.Items.Count > 0);
         IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
         SetVisible(
+            revertCommitToolStripMenuItem,
+            hasCommands
+            && !Module.IsBareRepository()
+            && selectedRevisions.Count > 0
+            && selectedRevisions.All(selectedRevision => !selectedRevision.IsArtificial));
+        SetVisible(
             cherryPickCommitToolStripMenuItem,
             hasCommands
             && !Module.IsBareRepository()
@@ -649,7 +656,8 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         sepBranchModification.IsVisible = createNewBranchToolStripMenuItem.IsVisible
             || renameBranchToolStripMenuItem.IsVisible
             || deleteBranchToolStripMenuItem.IsVisible;
-        sepCommit.IsVisible = cherryPickCommitToolStripMenuItem.IsVisible
+        sepCommit.IsVisible = revertCommitToolStripMenuItem.IsVisible
+            || cherryPickCommitToolStripMenuItem.IsVisible
             || archiveRevisionToolStripMenuItem.IsVisible;
         sepNavigate.IsVisible = revision is not null;
 
@@ -815,6 +823,15 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         GitRevision mainRevision = selectedRevisions[0];
         GitRevision? diffRevision = selectedRevisions.Count == 2 ? selectedRevisions[1] : null;
         UICommands.StartArchiveDialog(GetOwner(), mainRevision, diffRevision);
+    }
+
+    private void RevertCommitToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> revisions = GetSelectedRevisions(SortDirection.Ascending);
+        foreach (GitRevision revision in revisions)
+        {
+            UICommands.StartRevertCommitDialog(GetOwner(), revision);
+        }
     }
 
     private void CherryPickCommitToolStripMenuItemClick(object? sender, EventArgs e)
