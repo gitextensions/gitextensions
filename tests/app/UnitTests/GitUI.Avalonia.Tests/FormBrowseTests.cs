@@ -243,6 +243,7 @@ public sealed class FormBrowseTests
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "manageWorktreeToolStripMenuItem", "Text", "Manage &worktrees...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripMenuItemReflog", "Text", "Show reflo&g...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripWorktrees", "ToolTipText", "Worktrees");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "archiveToolStripMenuItem", "Text", "Archi&ve revision...");
     }
 
     [AvaloniaTest]
@@ -772,6 +773,10 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Delete-branch menu item was not created.");
             MenuItem createTag = revisionGrid.FindControl<MenuItem>("createTagToolStripMenuItem")
                 ?? throw new InvalidOperationException("Create-tag menu item was not created.");
+            MenuItem archiveRevision = revisionGrid.FindControl<MenuItem>("archiveRevisionToolStripMenuItem")
+                ?? throw new InvalidOperationException("Archive-revision menu item was not created.");
+            MenuItem archive = form.FindControl<MenuItem>("archiveToolStripMenuItem")
+                ?? throw new InvalidOperationException("Archive menu item was not created.");
             CopyContextMenuItem copy = revisionGrid.FindControl<CopyContextMenuItem>("copyToClipboardToolStripMenuItem")
                 ?? throw new InvalidOperationException("Copy menu item was not created.");
             MenuItem rebase = revisionGrid.FindControl<MenuItem>("rebaseToolStripMenuItem")
@@ -822,6 +827,8 @@ public sealed class FormBrowseTests
             renameBranch.IsEnabled.Should().BeTrue();
             deleteBranch.IsEnabled.Should().BeTrue();
             createTag.IsEnabled.Should().BeTrue();
+            archiveRevision.IsVisible.Should().BeTrue();
+            archive.IsEnabled.Should().BeTrue();
             copy.Items.Should().NotBeEmpty();
 
             MenuItem checkoutFeature = checkoutBranch.Items.Cast<MenuItem>()
@@ -842,6 +849,8 @@ public sealed class FormBrowseTests
             deleteFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             createBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             createTag.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            archiveRevision.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            archive.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
             commands.Received(1).StartCheckoutBranch(form, "feature");
             bool pushCompleted;
@@ -853,6 +862,11 @@ public sealed class FormBrowseTests
             commands.Received(1).StartCreateTagDialog(
                 form,
                 Arg.Is<GitRevision>(revision => revision.ObjectId == selectedObjectId));
+            commands.Received(2).StartArchiveDialog(
+                form,
+                Arg.Is<GitRevision>(revision => revision.ObjectId == selectedObjectId),
+                null,
+                null);
 
             bool originalDontConfirmRebase = AppSettings.DontConfirmRebase;
             try

@@ -62,6 +62,10 @@
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
         </MenuItem>
         <Separator />
+        <MenuItem x:Name="archiveToolStripMenuItem" Header="Archi_ve revision...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ArchiveRevision}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
         <MenuItem x:Name="stashToolStripMenuItem" Header="Ma_nage stashes...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
         </MenuItem>

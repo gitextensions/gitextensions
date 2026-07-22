@@ -1,0 +1,150 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        xmlns:userControls="using:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormArchive"
+        Width="610"
+        Height="609"
+        MinWidth="610"
+        MinHeight="609"
+        WindowStartupLocation="CenterOwner"
+        Title="Archive">
+  <Grid x:Name="tableLayoutPanel4"
+        Margin="3"
+        RowDefinitions="30,166,*,Auto"
+        RowSpacing="3">
+    <TextBlock x:Name="label1"
+               VerticalAlignment="Center"
+               Text="This revision will be archived:" />
+
+    <Grid Grid.Row="1"
+          ColumnDefinitions="*,110">
+      <userControls:CommitSummaryUserControl x:Name="commitSummaryUserControl1"
+                                             Margin="13,0,3,3"
+                                             MinWidth="440"
+                                             MinHeight="160" />
+      <StackPanel x:Name="flowLayoutPanel1"
+                  Grid.Column="1"
+                  Margin="3,0"
+                  Spacing="3">
+        <TextBlock x:Name="label2"
+                   Text="Choose another&#10;revision:" />
+        <Button x:Name="btnChooseRevision"
+                Classes="gitextensions-icon-only"
+                Width="25"
+                Height="24"
+                Padding="3"
+                HorizontalAlignment="Left">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.SelectRevision}" />
+        </Button>
+      </StackPanel>
+    </Grid>
+
+    <HeaderedContentControl x:Name="groupBox2"
+                            Classes="gitextensions-group-box"
+                            Grid.Row="2"
+                            Margin="0,17,0,0"
+                            Header="Filter files">
+      <Grid RowDefinitions="Auto,75,Auto,Auto,100"
+            RowSpacing="4">
+        <CheckBox x:Name="checkBoxPathFilter"
+                  Content="Archive specific paths only" />
+        <TextBox x:Name="textBoxPaths"
+                 Grid.Row="1"
+                 Margin="15,0,0,0"
+                 AcceptsReturn="True"
+                 TextWrapping="NoWrap"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        <TextBlock x:Name="label4"
+                   Grid.Row="2"
+                   Margin="18,0,0,0"
+                   Text="separate each new path by new line" />
+        <CheckBox x:Name="checkboxRevisionFilter"
+                  Grid.Row="3"
+                  Content="Take the files that have changed from the revision above to this one and archive only those" />
+
+        <Grid Grid.Row="4"
+              ColumnDefinitions="*,110">
+          <HeaderedContentControl x:Name="gbDiffRevision"
+                                  Classes="gitextensions-group-box"
+                                  Margin="7,0,3,0"
+                                  Header="...">
+            <Grid RowDefinitions="*,Auto"
+                  ColumnDefinitions="Auto,*,Auto,Auto"
+                  ColumnSpacing="5">
+              <TextBlock x:Name="labelMessage"
+                         Grid.ColumnSpan="4"
+                         VerticalAlignment="Center"
+                         FontWeight="Bold"
+                         Text="..."
+                         TextTrimming="CharacterEllipsis"
+                         TextWrapping="Wrap" />
+              <TextBlock x:Name="labelAuthorCaption"
+                         Grid.Row="1"
+                         VerticalAlignment="Center"
+                         Text="Author:" />
+              <TextBlock x:Name="labelAuthor"
+                         Grid.Row="1"
+                         Grid.Column="1"
+                         VerticalAlignment="Center"
+                         FontWeight="Bold"
+                         Text="..."
+                         TextTrimming="CharacterEllipsis" />
+              <TextBlock x:Name="labelDateCaption"
+                         Grid.Row="1"
+                         Grid.Column="2"
+                         VerticalAlignment="Center"
+                         Text="Commit date:" />
+            </Grid>
+          </HeaderedContentControl>
+
+          <StackPanel Grid.Column="1"
+                      Margin="3,6,0,0"
+                      Spacing="3">
+            <TextBlock x:Name="lblChooseDiffRevision"
+                       Text="Choose revision to &#10;compare with first:" />
+            <Button x:Name="btnDiffChooseRevision"
+                    Classes="gitextensions-icon-only"
+                    Width="25"
+                    Height="24"
+                    Padding="3"
+                    HorizontalAlignment="Left">
+              <Image Width="16" Height="16" Source="{x:Static properties:Images.SelectRevision}" />
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Grid>
+    </HeaderedContentControl>
+
+    <StackPanel Grid.Row="3"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="6">
+      <HeaderedContentControl x:Name="groupBox1"
+                              Classes="gitextensions-group-box"
+                              Width="109"
+                              Height="60"
+                              Header="Archive format">
+        <StackPanel x:Name="tableLayoutPanel2"
+                    Orientation="Horizontal"
+                    Spacing="6">
+          <RadioButton x:Name="_NO_TRANSLATE_radioButtonFormatZip"
+                       GroupName="ArchiveFormat"
+                       Content="zip"
+                       IsChecked="True" />
+          <RadioButton x:Name="_NO_TRANSLATE_radioButtonFormatTar"
+                       GroupName="ArchiveFormat"
+                       Content="tar" />
+        </StackPanel>
+      </HeaderedContentControl>
+      <compat:IconButton x:Name="buttonArchiveRevision"
+                         Classes="gitextensions-dialog-action"
+                         Width="111"
+                         Height="25"
+                         VerticalAlignment="Bottom"
+                         Icon="{x:Static properties:Images.SaveAs}"
+                         Content="Save as..." />
+    </StackPanel>
+  </Grid>
+</Window>

@@ -126,6 +126,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
         createTagToolStripMenuItem.Click += CreateTagToolStripMenuItemClick;
+        archiveRevisionToolStripMenuItem.Click += ArchiveRevisionToolStripMenuItemClick;
         GotoCurrentRevisionMenuItem.Click += (_, _) => SelectCurrentRevision();
         GotoChildCommitMenuItem.Click += (_, _) => GoToChild();
         GotoParentCommitMenuItem.Click += (_, _) => GoToParent(firstParent: true);
@@ -598,6 +599,12 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         SetVisible(deleteBranchToolStripMenuItem, deleteBranchToolStripMenuItem.Items.Count > 0);
         SetVisible(createTagToolStripMenuItem, revision is { IsArtificial: false } && hasCommands);
         SetVisible(deleteTagToolStripMenuItem, deleteTagToolStripMenuItem.Items.Count > 0);
+        IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
+        SetVisible(
+            archiveRevisionToolStripMenuItem,
+            hasCommands
+            && selectedRevisions.Count is >= 1 and <= 2
+            && selectedRevisions.All(selectedRevision => !selectedRevision.IsArtificial));
 
         sepCopy.IsVisible = copyToClipboardToolStripMenuItem.IsVisible;
         sepBranch.IsVisible = checkoutBranchToolStripMenuItem.IsVisible
@@ -607,6 +614,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         sepBranchModification.IsVisible = createNewBranchToolStripMenuItem.IsVisible
             || renameBranchToolStripMenuItem.IsVisible
             || deleteBranchToolStripMenuItem.IsVisible;
+        sepCommit.IsVisible = archiveRevisionToolStripMenuItem.IsVisible;
         sepNavigate.IsVisible = revision is not null;
 
         navigateToolStripMenuItem.IsVisible = revision is not null;
@@ -757,6 +765,20 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         {
             UICommands.StartCreateTagDialog(GetOwner(), revision);
         }
+    }
+
+    private void ArchiveRevisionToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
+        if (selectedRevisions.Count is (< 1 or > 2))
+        {
+            MessageBoxes.SelectOnlyOneOrTwoRevisions(GetOwner());
+            return;
+        }
+
+        GitRevision mainRevision = selectedRevisions[0];
+        GitRevision? diffRevision = selectedRevisions.Count == 2 ? selectedRevisions[1] : null;
+        UICommands.StartArchiveDialog(GetOwner(), mainRevision, diffRevision);
     }
 
     private void ResetChangesToolStripMenuItemClick(object? sender, EventArgs e)
