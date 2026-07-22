@@ -998,7 +998,9 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, changesRepo: false);
     }
 
-    public bool StartPluginSettingsDialog(IWin32Window? owner) => StartSettingsDialog(owner);
+    public bool StartPluginSettingsDialog(IWin32Window? owner)
+        => StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.PluginsSettingsGroup.GetPageReference());
+
     public bool StartPullDialog(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
         => StartPullDialogInternal(owner, pullOnShow: false, out _, remoteBranch, remote, pullAction);
 

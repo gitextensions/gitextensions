@@ -4,9 +4,12 @@ using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUI.CommandsDialogs.SettingsDialog.Plugins;
+using GitUI.Compat;
 using GitUI.Properties;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -181,6 +184,32 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             GitSettingsGroup.GetPageReference(),
             icon: null,
             asRoot: true);
+
+        PluginsSettingsGroup pluginsSettingsGroup = new();
+        settingsTreeView.AddSettingsPage(pluginsSettingsGroup, parentPageReference: null, Images.Plugin);
+        SettingsPageReference pluginsPageReference = PluginsSettingsGroup.GetPageReference();
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<PluginRootIntroductionPage>(this, serviceProvider),
+            pluginsPageReference,
+            icon: null,
+            asRoot: true);
+
+        lock (PluginRegistry.Plugins)
+        {
+            IOrderedEnumerable<(IGitPlugin plugin, PluginSettingsPage page)> pluginEntries = PluginRegistry.Plugins
+                .Where(plugin => plugin.HasSettings)
+                .Select(plugin => (
+                    plugin,
+                    page: PluginSettingsPage.CreateSettingsPageFromPlugin(this, plugin, serviceProvider)))
+                .OrderBy(entry => entry.page.GetTitle(), StringComparer.CurrentCultureIgnoreCase);
+            foreach ((IGitPlugin plugin, PluginSettingsPage page) entry in pluginEntries)
+            {
+                settingsTreeView.AddSettingsPage(
+                    entry.page,
+                    pluginsPageReference,
+                    PluginIconProvider.GetIcon(entry.plugin));
+            }
+        }
     }
 
     private void OnSettingsPageSelected(object? sender, SettingsPageSelectedEventArgs e)
