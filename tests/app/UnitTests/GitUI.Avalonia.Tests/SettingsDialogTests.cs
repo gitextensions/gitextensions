@@ -445,11 +445,12 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
-    public void FormSettings_should_offer_only_supported_editor_commands()
+    public void FormSettings_should_offer_the_supported_built_in_editor_command_first()
     {
         string[] editors = EditorHelper.GetEditors();
-        editors.Should().Contain(EditorHelper.GetDefaultEditor());
-        editors.Should().NotContain(editor => editor.Contains("fileeditor", StringComparison.OrdinalIgnoreCase));
+        editors[0].Should().Be(EditorHelper.GetBuiltInEditorCommand());
+        editors[0].Should().Be(EditorHelper.GetDefaultEditor());
+        editors[0].Should().EndWith($"GitExtensions.Avalonia{(OperatingSystem.IsWindows() ? ".exe" : string.Empty)}\" fileeditor");
 
         FormSettings form = new();
         Action initializePages = () => form.GetTestAccessor().InitializePages();

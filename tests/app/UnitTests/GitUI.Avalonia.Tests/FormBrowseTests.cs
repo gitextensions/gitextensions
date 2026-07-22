@@ -285,6 +285,40 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task FormBrowse_should_apply_command_line_browse_arguments_before_loading()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        ObjectId selectedId = module.GetCurrentCheckout();
+        File.WriteAllText(Path.Combine(_workingDirectory, "other.txt"), "other");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "other.txt" });
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial other".Quote() });
+        BrowseArguments args = new()
+        {
+            RevFilter = "initial",
+            PathFilter = "tracked.txt",
+            SelectedId = selectedId,
+            IsFileHistoryMode = true,
+        };
+
+        FormBrowse form = new(new GitUICommands(_serviceContainer, module), args);
+        try
+        {
+            form.Show();
+            TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && form.RevisionGrid.SelectedRevision is not null);
+
+            form.RevisionGrid.SelectedId.Should().Be(selectedId);
+            form.FindControl<FilterToolBar>("ToolStripFilters")!
+                .FindControl<ComboBox>("tstxtRevisionFilter")!.Text.Should().Be("initial");
+            form.FindControl<Control>("leftPanel")!.IsVisible.Should().BeFalse();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public async Task FormBrowse_commit_and_diff_tabs_should_follow_the_selected_revision()
     {
         CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;

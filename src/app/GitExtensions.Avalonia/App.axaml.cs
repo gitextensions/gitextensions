@@ -8,9 +8,9 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
-using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using Microsoft.VisualStudio.Threading;
+using ShutdownMode = Avalonia.Controls.ShutdownMode;
 
 namespace GitExtensions;
 
@@ -42,10 +42,46 @@ public partial class App : Application
 
             string[] args = Environment.GetCommandLineArgs();
             GitModule module = new(Program.ServiceContainer.GetRequiredService<IGitExecutorProvider>(), GetWorkingDir(args));
-            desktop.MainWindow = new FormBrowse(Program.ServiceContainer, module);
+            GitUICommands commands = new(Program.ServiceContainer, module);
+            if (args.Length <= 1)
+            {
+                commands.StartBrowseDialog(owner: null);
+            }
+            else
+            {
+                // A command dialog must be allowed to become visible before the desktop
+                // lifetime decides that there are no windows left. Modal commands shut the
+                // process down explicitly; Browse changes the mode when it becomes MainWindow.
+                desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                Dispatcher.UIThread.Post(() => RunCommand(desktop, commands, args));
+            }
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private static void RunCommand(IClassicDesktopStyleApplicationLifetime desktop, GitUICommands commands, string[] args)
+    {
+        int exitCode = -1;
+        try
+        {
+            if (commands.RunCommand(args))
+            {
+                exitCode = 0;
+            }
+        }
+        catch (Exception exception)
+        {
+            GitUI.MessageBoxes.ShowError(
+                owner: null,
+                $"Invalid Git Extensions command line:{Environment.NewLine}{Environment.NewLine}{exception}",
+                "Command-line error");
+        }
+
+        if (desktop.MainWindow is null)
+        {
+            desktop.Shutdown(exitCode);
+        }
     }
 
     // Twin of GitExtensions/Program.cs GetWorkingDir (keep in sync on upstream drift).

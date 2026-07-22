@@ -9,16 +9,17 @@ internal static class Program
     internal static readonly ServiceContainer ServiceContainer = new();
 
     [STAThread]
-    private static void Main(string[] args)
+    private static int Main(string[] args)
     {
         ServiceContainerRegistry.RegisterServices(ServiceContainer);
 
         AppSettings.SetDocumentationBaseUrl(AppSettings.ProductVersion);
         AppTitleGenerator.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.Branch);
 
-        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        int exitCode = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 
         AppSettings.SaveSettings();
+        return exitCode;
     }
 
     /// <summary>

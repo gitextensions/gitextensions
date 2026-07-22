@@ -10,6 +10,7 @@ public static class EditorHelper
         {
             return
             [
+                GetBuiltInEditorCommand(),
                 "vi",
                 "vim",
                 "nano",
@@ -20,6 +21,7 @@ public static class EditorHelper
 
         return
         [
+            GetBuiltInEditorCommand(),
             "vi",
             "notepad",
             GetNotepadPlusPlus(),
@@ -29,7 +31,15 @@ public static class EditorHelper
         ];
     }
 
-    internal static string GetDefaultEditor() => "vi";
+    internal static string GetDefaultEditor() => GetBuiltInEditorCommand();
+
+    internal static string GetBuiltInEditorCommand()
+    {
+        string executableName = OperatingSystem.IsWindows()
+            ? "GitExtensions.Avalonia.exe"
+            : "GitExtensions.Avalonia";
+        return $"\"{Path.Combine(AppContext.BaseDirectory, executableName)}\" fileeditor";
+    }
 
     private static string GetNotepadPlusPlus()
         => GetEditorCommandLine("notepad++.exe", "-multiInst -nosession", "notepad++");
