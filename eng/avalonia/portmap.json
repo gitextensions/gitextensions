@@ -677,6 +677,18 @@
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
     "notes": "Resets the current branch through the shared soft, mixed, keep, merge, and hard git-reset commands. Retains hard-reset confirmation, submodule update behavior, branch/revision summary, mode-specific Git documentation, and the original theme-aware reset palette. Revision-grid, repository-tree, GitUICommands, and reflog contributions are live."
   },
+  "src/app/GitUI/CommandsDialogs/FormVerify.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormVerify.axaml.cs",
+    "status": "functional",
+    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
+    "notes": "Runs native repository git fsck/prune recovery, preserves the original filters, sortable lost-object grid, preview, selection and LOST_FOUND tag restoration, branch/tag actions, clipboard and native blob save picker. FormBrowse Repository -> Git maintenance -> Recover lost objects is live. The View action focuses the built-in preview until the separately owned FormEdit twin lands."
+  },
+  "src/app/GitUI/CommandsDialogs/FormVerify.LostObject.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormVerify.LostObject.cs",
+    "status": "parity",
+    "basedOn": "090464d5f5c350497427ad5b4717651df9c4f4d2",
+    "notes": "Linked unchanged; lost-object diagnostics, commit metadata, annotated-tag parsing, blob timestamps, and object-type classification are framework-neutral."
+  },
   "src/app/GitUI/CommandsDialogs/FormCreateTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateTag.axaml.cs",
     "status": "functional",
