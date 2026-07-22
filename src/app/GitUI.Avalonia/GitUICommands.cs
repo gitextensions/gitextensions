@@ -720,7 +720,18 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, changesRepo: false);
     }
 
-    public bool StartSubmodulesDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSubmodulesDialog));
+    public bool StartSubmodulesDialog(IWin32Window? owner)
+    {
+        bool Action()
+        {
+            using FormSubmodules form = new(this);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartSyncSubmodulesDialog(IWin32Window? owner)
     {
         bool Action()
