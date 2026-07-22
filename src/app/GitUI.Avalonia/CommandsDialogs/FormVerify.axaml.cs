@@ -570,17 +570,29 @@ public sealed partial class FormVerify : GitModuleForm
 
     private void ViewCurrentItem()
     {
-        if (CurrentItem is null)
+        using FormEdit? form = CreateCurrentItemView();
+        if (form is null)
         {
             return;
         }
 
-        if (!ReferenceEquals(_previewedItem, CurrentItem))
+        form.ShowDialog(this);
+    }
+
+    private FormEdit? CreateCurrentItemView()
+    {
+        if (CurrentItem is not LostObject currentItem || !TryGetUICommands(out _))
         {
-            Warnings_SelectionChanged(this, EventArgs.Empty);
+            return null;
         }
 
-        fileViewer.Focus();
+        string content = GetLostObjectContent(currentItem);
+        if (string.IsNullOrEmpty(content))
+        {
+            return null;
+        }
+
+        return new FormEdit(UICommands, content, _defaultFilename!) { IsReadOnly = true };
     }
 
     private int CreateLostFoundTags()
@@ -820,6 +832,8 @@ public sealed partial class FormVerify : GitModuleForm
         public void SelectAll(bool selected) => form.columnIsLostObjectSelected.IsChecked = selected;
 
         public int SelectedCount => form._selectedObjectIds.Count;
+
+        public FormEdit? CreateCurrentItemView() => form.CreateCurrentItemView();
 
         public void SetPreviewRows()
         {
