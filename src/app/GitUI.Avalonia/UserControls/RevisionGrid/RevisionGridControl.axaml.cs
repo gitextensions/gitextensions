@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -12,6 +12,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Avatars;
+using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
@@ -81,6 +82,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     private readonly TranslationString _rebaseBranchInteractive = new("Rebase branch interactively.");
     private readonly TranslationString _rebaseConfirmTitle = new("Rebase Confirmation");
     private readonly RevisionGraph _revisionGraph = new();
+    private readonly BuildServerWatcher _buildServerWatcher;
     private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
     private readonly MessageColumnProvider _messageColumnProvider;
     private ObjectId? _headId;
@@ -98,6 +100,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     {
         InitializeComponent();
 
+        _buildServerWatcher = new BuildServerWatcher(this, this, () => Module);
         GitRevisionSummaryBuilder gitRevisionSummaryBuilder = new();
         _revisionGraphColumnProvider = new RevisionGraphColumnProvider(_revisionGraph, this, gitRevisionSummaryBuilder);
         AddColumn(_revisionGraphColumnProvider);
@@ -108,7 +111,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         AddColumn(new AuthorNameColumnProvider(_authorHighlighting));
         AddColumn(new DateColumnProvider());
         AddColumn(new CommitIdColumnProvider());
-        AddColumn(new BuildStatusColumnProvider());
+        AddColumn(_buildServerWatcher.ColumnProvider);
         ApplyColumnSettings();
 
         lstRevisions.ItemTemplate = new FuncDataTemplate<GitRevision>((_, _) => new RevisionRowControl(this), supportsRecycling: true);
@@ -138,6 +141,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         revertCommitToolStripMenuItem.Click += RevertCommitToolStripMenuItemClick;
         cherryPickCommitToolStripMenuItem.Click += CherryPickCommitToolStripMenuItemClick;
         archiveRevisionToolStripMenuItem.Click += ArchiveRevisionToolStripMenuItemClick;
+        openBuildReportToolStripMenuItem.Click += (_, _) => OpenBuildReport(SelectedRevision);
         GotoCurrentRevisionMenuItem.Click += (_, _) => SelectCurrentRevision();
         GotoChildCommitMenuItem.Click += (_, _) => GoToChild();
         GotoParentCommitMenuItem.Click += (_, _) => GoToParent(firstParent: true);
@@ -156,6 +160,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         HotkeysEnabled = true;
         UICommandsSourceSet += (_, _) => LoadHotkeys(HotkeySettingsName);
         UpdateContextMenuItems();
+        DetachedFromVisualTree += (_, _) => _buildServerWatcher.Dispose();
 
         InitializeComplete();
     }
@@ -174,6 +179,8 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     }
 
     internal bool ShowUncommittedChangesIfPossible { get; set; }
+
+    internal bool ShowBuildServerInfo { get; set; }
 
     internal bool HasRevisionSource => _lastModule is not null;
 
@@ -257,6 +264,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     internal void CancelBackgroundTasks()
     {
         _refreshSequence.CancelCurrent();
+        _buildServerWatcher.CancelBuildStatusFetchOperation();
         _taskManager.JoinPendingOperations();
     }
 
@@ -650,6 +658,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
             hasCommands
             && selectedRevisions.Count is >= 1 and <= 2
             && selectedRevisions.All(selectedRevision => !selectedRevision.IsArtificial));
+        SetVisible(openBuildReportToolStripMenuItem, !string.IsNullOrWhiteSpace(revision?.BuildStatus?.Url));
 
         sepCopy.IsVisible = copyToClipboardToolStripMenuItem.IsVisible;
         sepBranch.IsVisible = checkoutBranchToolStripMenuItem.IsVisible
@@ -1267,6 +1276,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         FilterChanged?.Invoke(this, new FilterChangedEventArgs(_filterInfo));
 
         _revisions.Clear();
+        _buildServerWatcher.CancelBuildStatusFetchOperation();
         foreach (ColumnProvider columnProvider in _columnProviders)
         {
             columnProvider.Clear();
@@ -1721,6 +1731,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
                 if (!cancellationToken.IsCancellationRequested)
                 {
                     owner.RevisionsLoaded?.Invoke(owner, loadEventArgs);
+                    owner.LaunchBuildServerInfoFetchOperation(cancellationToken);
                 }
             });
         }
@@ -1822,4 +1833,20 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
             }
         }
     }
+
+    public void OnRepositoryChanged()
+        => _buildServerWatcher.OnRepositoryChanged();
+
+    private void LaunchBuildServerInfoFetchOperation(CancellationToken cancellationToken)
+    {
+        if (!ShowBuildServerInfo)
+        {
+            return;
+        }
+
+        _taskManager.FileAndForget(() => _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync().WaitAsync(cancellationToken));
+    }
+
+    private static void OpenBuildReport(GitRevision? revision)
+        => OsShellUtil.OpenUrlInDefaultBrowser(revision?.BuildStatus?.Url);
 }
