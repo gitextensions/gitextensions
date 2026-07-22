@@ -10,6 +10,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -97,6 +98,25 @@ public sealed class VerifyTests
 
         accessor.SelectAll(selected: true);
         accessor.SelectedCount.Should().Be(2);
+    }
+
+    [AvaloniaTest]
+    public void FormVerify_should_open_the_selected_object_in_the_read_only_FormEdit_twin()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.ShowObject(Arg.Any<ObjectId>(), Arg.Any<bool>()).Returns("recovered object content");
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        FormVerify form = new(commands);
+        FormVerify.TestAccessor accessor = form.GetTestAccessor();
+        accessor.SetPreviewRows();
+
+        FormEdit? view = accessor.CreateCurrentItemView();
+        view.Should().NotBeNull();
+        using FormEdit actualView = view!;
+
+        actualView.IsReadOnly.Should().BeTrue();
+        actualView.GetTestAccessor().Viewer.GetText().Should().Be("recovered object content");
     }
 
     [AvaloniaTest]
