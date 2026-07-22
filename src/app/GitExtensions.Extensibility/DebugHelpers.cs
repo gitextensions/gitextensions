@@ -10,6 +10,8 @@ namespace GitExtensions.Extensibility;
 /// </summary>
 public static class DebugHelpers
 {
+    private const string FailFastEnvironmentVariable = "GITEXTENSIONS_DEBUG_FAIL_FAST";
+
     [Conditional("DEBUG")]
     public static void Assert([DoesNotReturnIf(false)] bool condition, string message)
     {
@@ -22,6 +24,12 @@ public static class DebugHelpers
     [Conditional("DEBUG")]
     public static void Fail(string message)
     {
+        if (string.Equals(Environment.GetEnvironmentVariable(FailFastEnvironmentVariable), "1", StringComparison.Ordinal))
+        {
+            Console.Error.WriteLine($"Debug assertion failed: {message}");
+            throw new InvalidOperationException(message);
+        }
+
         if (Debugger.IsAttached || IsTestRunning)
         {
             Debug.Fail(message);
