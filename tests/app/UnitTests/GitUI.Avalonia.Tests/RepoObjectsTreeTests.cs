@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using GitCommands;
 using GitCommands.Remotes;
+using GitCommands.Submodules;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
@@ -38,11 +39,12 @@ public sealed class RepoObjectsTreeTests
             ], [], "main");
 
             TreeViewItem[] roots = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>().ToArray();
-            roots.Should().HaveCount(4);
+            roots.Should().HaveCount(5);
             HeaderText(roots[0]).Should().Be("Branches (2)");
             HeaderText(roots[1]).Should().Be("Remotes (2)");
             HeaderText(roots[2]).Should().Be("Tags (1)");
-            HeaderText(roots[3]).Should().Be("Stashes (0)");
+            HeaderText(roots[3]).Should().Be("Submodules (0)");
+            HeaderText(roots[4]).Should().Be("Stashes (0)");
 
             TreeViewItem main = roots[0].Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main");
             HeaderLabel(main).FontWeight.Should().Be(FontWeight.Bold);
@@ -123,6 +125,11 @@ public sealed class RepoObjectsTreeTests
             Click(moveUp);
             AppSettings.RepoObjectsTreeTagsIndex.Should().Be(previousRemoteIndex);
             AppSettings.RepoObjectsTreeRemotesIndex.Should().Be(previousTagIndex);
+
+            accessor.ShowSubmodulesButton.IsChecked = false;
+            Click(accessor.ShowSubmodulesButton);
+            AppSettings.RepoObjectsTreeShowSubmodules.Should().BeFalse();
+            accessor.Tree.Items.Cast<TreeViewItem>().Select(HeaderText).Should().NotContain(text => text.StartsWith("Submodules", StringComparison.Ordinal));
         }
         finally
         {
@@ -255,7 +262,7 @@ public sealed class RepoObjectsTreeTests
 
             AppSettings.RepoObjectsTreeShowStashes = false;
             control.SetRefs([], [stash]);
-            accessor.Tree.Items.Cast<TreeViewItem>().Should().HaveCount(3);
+            accessor.Tree.Items.Cast<TreeViewItem>().Should().HaveCount(4);
         }
         finally
         {
@@ -344,7 +351,180 @@ public sealed class RepoObjectsTreeTests
         translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "tsbShowBranches", "Text", "&Branches");
         translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "tsbShowRemotes", "Text", "&Remotes");
         translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "tsbShowTags", "Text", "&Tags");
+        translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "tsbShowSubmodules", "Text", "&Submodules");
         translation.Received(1).AddTranslationItem(nameof(RepoObjectsTree), "tsbShowStashes", "Text", "St&ashes");
+    }
+
+    [AvaloniaTest]
+    public void Submodules_should_keep_the_top_project_and_nested_folder_hierarchy()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            string topPath = Path.Combine(Path.GetTempPath(), "repo");
+            SubmoduleInfoResult result = CreateSubmoduleResult(
+                topPath,
+                new SubmoduleInfo("Externals/alpha (main)", Path.Combine(topPath, "Externals", "alpha"), bold: false),
+                new SubmoduleInfo("Externals/beta (release)", Path.Combine(topPath, "Externals", "beta"), bold: false),
+                new SubmoduleInfo("nested/deep (topic)", Path.Combine(topPath, "Externals", "alpha", "nested", "deep"), bold: false));
+            RepoObjectsTree control = new();
+            control.SetRefs([], []);
+            control.GetTestAccessor().SetSubmodules(result);
+
+            TreeViewItem submodules = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Submodules", StringComparison.Ordinal));
+            HeaderText(submodules).Should().Be("Submodules (3)");
+            TreeViewItem top = submodules.Items.Cast<TreeViewItem>().Single();
+            HeaderText(top).Should().Be("repo (main)");
+            HeaderLabel(top).FontWeight.Should().Be(FontWeight.Bold);
+            TreeViewItem externals = top.Items.Cast<TreeViewItem>().Single();
+            HeaderText(externals).Should().Be("Externals");
+            TreeViewItem alpha = externals.Items.Cast<TreeViewItem>().Single(item => HeaderText(item).StartsWith("alpha", StringComparison.Ordinal));
+            externals.Items.Cast<TreeViewItem>().Should().Contain(item => HeaderText(item).StartsWith("beta", StringComparison.Ordinal));
+            HeaderText(alpha.Items.Cast<TreeViewItem>().Single()).Should().Be("nested");
+            HeaderText(alpha.Items.Cast<TreeViewItem>().Single().Items.Cast<TreeViewItem>().Single()).Should().Be("deep (topic)");
+
+            control.GetTestAccessor().Tree.SelectedItem = alpha;
+            control.GetTestAccessor().SetSubmodules(result);
+            HeaderText((TreeViewItem)control.GetTestAccessor().Tree.SelectedItem!).Should().Be("alpha (main)");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Submodule_folder_nodes_should_compact_single_child_chains()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            string topPath = Path.Combine(Path.GetTempPath(), "repo");
+            RepoObjectsTree control = new();
+            control.SetRefs([], []);
+            control.GetTestAccessor().SetSubmodules(CreateSubmoduleResult(
+                topPath,
+                new SubmoduleInfo("group/one/two/leaf", Path.Combine(topPath, "group", "one", "two", "leaf"), bold: false)));
+
+            TreeViewItem submodules = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Submodules", StringComparison.Ordinal));
+            TreeViewItem top = submodules.Items.Cast<TreeViewItem>().Single();
+            TreeViewItem compactFolder = top.Items.Cast<TreeViewItem>().Single();
+            HeaderText(compactFolder).Should().Be("group/one/two");
+            HeaderLabel(compactFolder).FontStyle.Should().Be(FontStyle.Italic);
+            HeaderText(compactFolder.Items.Cast<TreeViewItem>().Single()).Should().Be("leaf");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Submodule_status_provider_should_refresh_the_existing_tree_root()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            ISubmoduleStatusProvider provider = Substitute.For<ISubmoduleStatusProvider>();
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.GetService(typeof(ISubmoduleStatusProvider)).Returns(provider);
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.SetRefs([], []);
+            SubmoduleInfoResult result = CreateSubmoduleResult(
+                Path.Combine(Path.GetTempPath(), "repo"),
+                new SubmoduleInfo("child", Path.Combine(Path.GetTempPath(), "repo", "child"), bold: false));
+
+            provider.StatusUpdated += Raise.Event<EventHandler<SubmoduleStatusEventArgs>>(
+                provider,
+                new SubmoduleStatusEventArgs(result, structureUpdated: true, CancellationToken.None));
+
+            TreeViewItem submodules = control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Submodules", StringComparison.Ordinal));
+            HeaderText(submodules).Should().Be("Submodules (1)");
+            HeaderText(submodules.Items.Cast<TreeViewItem>().Single().Items.Cast<TreeViewItem>().Single()).Should().Be("child");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Submodule_context_actions_should_route_to_the_existing_workflows()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        string topPath = Path.Combine(Path.GetTempPath(), $"GitExtensions-submodule-tree-{Guid.NewGuid():N}");
+        string childPath = Path.Combine(topPath, "libs", "child");
+        Directory.CreateDirectory(childPath);
+        try
+        {
+            settings.EnableAllTrees();
+            IGitModule module = Substitute.For<IGitModule>();
+            module.IsBareRepository().Returns(false);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            string? openedPath = null;
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.Initialize(_ => { }, (path, _, _) => openedPath = path);
+            control.SetRefs([], []);
+            control.GetTestAccessor().SetSubmodules(CreateSubmoduleResult(
+                topPath,
+                new SubmoduleInfo("libs/child (main)", childPath, bold: false)));
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            TreeViewItem submodules = accessor.Tree.Items.Cast<TreeViewItem>()
+                .Single(item => HeaderText(item).StartsWith("Submodules", StringComparison.Ordinal));
+            TreeViewItem top = submodules.Items.Cast<TreeViewItem>().Single();
+            TreeViewItem child = top.Items.Cast<TreeViewItem>().Single().Items.Cast<TreeViewItem>().Single();
+
+            accessor.Tree.SelectedItem = child;
+            accessor.UpdateContextMenu().Should().BeTrue();
+            accessor.GetActionMenuItem("Copy").IsVisible.Should().BeFalse();
+            accessor.GetActionMenuItem("Filter").IsVisible.Should().BeFalse();
+            accessor.GetActionMenuItem("OpenSubmodule").IsVisible.Should().BeTrue();
+            accessor.GetActionMenuItem("ManageSubmodules").IsVisible.Should().BeFalse();
+            Click(accessor.GetActionMenuItem("OpenSubmodule"));
+            Click(accessor.GetActionMenuItem("UpdateSubmodule"));
+
+            openedPath.Should().Be(childPath);
+            commands.Received(1).StartUpdateSubmoduleDialog(control, "libs/child", topPath);
+
+            accessor.Tree.SelectedItem = top;
+            accessor.UpdateContextMenu().Should().BeTrue();
+            accessor.GetActionMenuItem("OpenSubmodule").IsVisible.Should().BeFalse();
+            accessor.GetActionMenuItem("ManageSubmodules").IsVisible.Should().BeTrue();
+            Click(accessor.GetActionMenuItem("ManageSubmodules"));
+            Click(accessor.GetActionMenuItem("SynchronizeSubmodules"));
+            commands.Received(1).StartSubmodulesDialog(control);
+            commands.Received(1).StartSyncSubmodulesDialog(control);
+        }
+        finally
+        {
+            settings.Restore();
+            Directory.Delete(topPath, recursive: true);
+        }
+    }
+
+    private static SubmoduleInfoResult CreateSubmoduleResult(string topPath, params SubmoduleInfo[] submodules)
+    {
+        SubmoduleInfoResult result = new()
+        {
+            TopProject = new SubmoduleInfo($"{Path.GetFileName(topPath)} (main)", topPath, bold: true),
+        };
+        foreach (SubmoduleInfo submodule in submodules)
+        {
+            result.AllSubmodules.Add(submodule);
+        }
+
+        return result;
     }
 
     private static GitRevision CreateStash()
@@ -373,10 +553,12 @@ public sealed class RepoObjectsTreeTests
         bool ShowBranches,
         bool ShowRemotes,
         bool ShowTags,
+        bool ShowSubmodules,
         bool ShowStashes,
         int BranchesIndex,
         int RemotesIndex,
         int TagsIndex,
+        int SubmodulesIndex,
         int StashesIndex)
     {
         public static SettingsSnapshot Capture()
@@ -384,10 +566,12 @@ public sealed class RepoObjectsTreeTests
                 AppSettings.RepoObjectsTreeShowBranches,
                 AppSettings.RepoObjectsTreeShowRemotes,
                 AppSettings.RepoObjectsTreeShowTags,
+                AppSettings.RepoObjectsTreeShowSubmodules,
                 AppSettings.RepoObjectsTreeShowStashes,
                 AppSettings.RepoObjectsTreeBranchesIndex,
                 AppSettings.RepoObjectsTreeRemotesIndex,
                 AppSettings.RepoObjectsTreeTagsIndex,
+                AppSettings.RepoObjectsTreeSubmodulesIndex,
                 AppSettings.RepoObjectsTreeStashesIndex);
 
         public void EnableAllTrees()
@@ -395,10 +579,12 @@ public sealed class RepoObjectsTreeTests
             AppSettings.RepoObjectsTreeShowBranches = true;
             AppSettings.RepoObjectsTreeShowRemotes = true;
             AppSettings.RepoObjectsTreeShowTags = true;
+            AppSettings.RepoObjectsTreeShowSubmodules = true;
             AppSettings.RepoObjectsTreeShowStashes = true;
             AppSettings.RepoObjectsTreeBranchesIndex = 0;
             AppSettings.RepoObjectsTreeRemotesIndex = 1;
             AppSettings.RepoObjectsTreeTagsIndex = 3;
+            AppSettings.RepoObjectsTreeSubmodulesIndex = 4;
             AppSettings.RepoObjectsTreeStashesIndex = 5;
         }
 
@@ -407,10 +593,12 @@ public sealed class RepoObjectsTreeTests
             AppSettings.RepoObjectsTreeShowBranches = ShowBranches;
             AppSettings.RepoObjectsTreeShowRemotes = ShowRemotes;
             AppSettings.RepoObjectsTreeShowTags = ShowTags;
+            AppSettings.RepoObjectsTreeShowSubmodules = ShowSubmodules;
             AppSettings.RepoObjectsTreeShowStashes = ShowStashes;
             AppSettings.RepoObjectsTreeBranchesIndex = BranchesIndex;
             AppSettings.RepoObjectsTreeRemotesIndex = RemotesIndex;
             AppSettings.RepoObjectsTreeTagsIndex = TagsIndex;
+            AppSettings.RepoObjectsTreeSubmodulesIndex = SubmodulesIndex;
             AppSettings.RepoObjectsTreeStashesIndex = StashesIndex;
         }
     }
