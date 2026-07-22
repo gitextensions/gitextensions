@@ -153,6 +153,7 @@ public sealed partial class FormBrowse : GitModuleForm
         rebaseToolStripMenuItem.Click += RebaseToolStripMenuItemClick;
         tagToolStripMenuItem.Click += TagToolStripMenuItemClick;
         deleteTagToolStripMenuItem.Click += DeleteTagToolStripMenuItemClick;
+        archiveToolStripMenuItem.Click += ArchiveToolStripMenuItemClick;
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
         toolStripMenuItemReflog.Click += toolStripMenuItemReflog_Click;
         patchToolStripMenuItem.Click += PatchToolStripMenuItemClick;
@@ -256,6 +257,7 @@ public sealed partial class FormBrowse : GitModuleForm
         rebaseToolStripMenuItem.IsEnabled = false;
         tagToolStripMenuItem.IsEnabled = isValidWorkingDir;
         deleteTagToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        archiveToolStripMenuItem.IsEnabled = false;
         stashToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         toolStripMenuItemReflog.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         manageWorktreeToolStripMenuItem.IsEnabled = isValidWorkingDir;
@@ -762,6 +764,9 @@ public sealed partial class FormBrowse : GitModuleForm
         rebaseToolStripMenuItem.IsEnabled =
             RevisionGrid.SelectedRevision is { IsArtificial: false }
             && !Module.IsBareRepository();
+        archiveToolStripMenuItem.IsEnabled =
+            selectedRevisions.Count == 1
+            && selectedRevisions[0] is { IsArtificial: false };
 
         if (CommitInfoTabControl.SelectedItem == TreeTabPage)
         {
@@ -1072,6 +1077,20 @@ public sealed partial class FormBrowse : GitModuleForm
     private void DeleteTagToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartDeleteTagDialog(this, null);
+    }
+
+    private void ArchiveToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+        if (revisions.Count is (< 1 or > 2))
+        {
+            MessageBoxes.SelectOnlyOneOrTwoRevisions(this);
+            return;
+        }
+
+        GitRevision mainRevision = revisions[0];
+        GitRevision? diffRevision = revisions.Count == 2 ? revisions[1] : null;
+        UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
     }
 
     private void userShell_Click(object? sender, EventArgs e)
