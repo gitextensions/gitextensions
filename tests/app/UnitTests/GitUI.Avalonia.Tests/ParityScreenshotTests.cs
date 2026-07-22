@@ -638,6 +638,15 @@ public sealed partial class ParityScreenshotTests
             accessor.WorktreeDirectory.Text = Path.Combine(context.WorkingDirectory, "..", "visual-parity-worktree");
         }
 
+        if (root is FormManageWorktree formManageWorktree)
+        {
+            string rootPath = OperatingSystem.IsWindows() ? @"C:\Repos" : "/home/user/repos";
+            GitWorktree main = new(Path.Combine(rootPath, "gitextensions"), GitWorktreeHeadType.Branch, context.HeadRevision.ObjectId.ToShortString(), MainBranchName, IsDeleted: false);
+            GitWorktree feature = new(Path.Combine(rootPath, "gitextensions-feature"), GitWorktreeHeadType.Branch, context.ParentRevision.ObjectId.ToShortString(), FeatureBranchName, IsDeleted: false);
+            GitWorktree deleted = new(Path.Combine(rootPath, "gitextensions-old"), GitWorktreeHeadType.Detached, context.ParentRevision.ObjectId.ToShortString(), null, IsDeleted: true);
+            formManageWorktree.GetTestAccessor().SetWorktrees([main, feature, deleted], feature.Path);
+        }
+
         if (root is Window)
         {
             return;
@@ -993,6 +1002,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormCreateWorktree))
         {
             return (608, 208);
+        }
+
+        if (viewType == typeof(FormManageWorktree))
+        {
+            return (710, 361);
         }
 
         if (viewType == typeof(FindAndReplaceForm))
