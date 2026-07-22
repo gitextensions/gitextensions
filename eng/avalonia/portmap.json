@@ -299,6 +299,18 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same two-list encoding chooser, directional actions, and modal OK/Cancel controls."
   },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.axaml.cs",
+    "status": "parity",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Preserves the modeless title/content contract, initial caret position, owner relationship, and theme-aware SystemColors.Info presentation used by the scripts argument cheat sheet."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.axaml",
+    "status": "parity",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Same compact read-only scrollable help window without taskbar, minimize, or maximize chrome."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormFixHome.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormFixHome.axaml.cs",
     "status": "functional",
@@ -334,6 +346,24 @@
     "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same five-row Sorting group and same-named controls, with fixed-width selectors and text inputs plus bare 16-DIP information images matching the original PictureBox presentation."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "All script fields, event values, enablement, order, add/delete/move behavior, argument help, built-in/custom icon selection, XML persistence, and stable hotkey identifiers retain the original contracts. Avalonia uses explicit code-behind-owned field controls because it has no PropertyGrid; unsupported desktop associated icons remain persisted but may have no preview."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.ScriptInfoProxy.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.ScriptInfoProxy.cs",
+    "status": "parity",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "The proxy keeps every original serialized field and both lossless ScriptInfo conversions; WinForms-only PropertyGrid editor metadata is omitted because the Avalonia page exposes those editors directly."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Retains the top script table, same-named icon-only ordering actions, and lower categorized editor. The PropertyGrid is represented by explicit compact controls for portable behavior and testability."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.axaml.cs",
