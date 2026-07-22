@@ -777,6 +777,8 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Archive-revision menu item was not created.");
             MenuItem cherryPick = revisionGrid.FindControl<MenuItem>("cherryPickCommitToolStripMenuItem")
                 ?? throw new InvalidOperationException("Cherry-pick menu item was not created.");
+            MenuItem revertCommit = revisionGrid.FindControl<MenuItem>("revertCommitToolStripMenuItem")
+                ?? throw new InvalidOperationException("Revert-commit menu item was not created.");
             MenuItem archive = form.FindControl<MenuItem>("archiveToolStripMenuItem")
                 ?? throw new InvalidOperationException("Archive menu item was not created.");
             CopyContextMenuItem copy = revisionGrid.FindControl<CopyContextMenuItem>("copyToClipboardToolStripMenuItem")
@@ -831,6 +833,7 @@ public sealed class FormBrowseTests
             createTag.IsEnabled.Should().BeTrue();
             archiveRevision.IsVisible.Should().BeTrue();
             cherryPick.IsVisible.Should().BeTrue();
+            revertCommit.IsVisible.Should().BeTrue();
             archive.IsEnabled.Should().BeTrue();
             copy.Items.Should().NotBeEmpty();
 
@@ -854,6 +857,7 @@ public sealed class FormBrowseTests
             createTag.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             archiveRevision.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             cherryPick.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            revertCommit.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             archive.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
             commands.Received(1).StartCheckoutBranch(form, "feature");
@@ -874,6 +878,9 @@ public sealed class FormBrowseTests
             commands.Received(1).StartCherryPickDialog(
                 form,
                 Arg.Is<IEnumerable<GitRevision>>(revisions => revisions.Single().ObjectId == selectedObjectId));
+            commands.Received(1).StartRevertCommitDialog(
+                form,
+                Arg.Is<GitRevision>(revision => revision.ObjectId == selectedObjectId));
 
             bool originalDontConfirmRebase = AppSettings.DontConfirmRebase;
             try
