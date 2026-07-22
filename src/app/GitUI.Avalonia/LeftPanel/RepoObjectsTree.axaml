@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
              xmlns:converters="using:Avalonia.Controls.Converters"
              xmlns:leftpanel="using:GitUI.LeftPanel"
              x:Class="GitUI.LeftPanel.RepoObjectsTree">
@@ -66,5 +67,29 @@
             SelectionMode="Single"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ScrollViewer.AllowAutoHide="False" />
+            ScrollViewer.AllowAutoHide="False">
+    <TreeView.ContextMenu>
+      <ContextMenu x:Name="repoObjectsContextMenu">
+        <MenuItem x:Name="mnubtnStashAllFromRootNode" Header="_Stash" />
+        <MenuItem x:Name="mnubtnStashStagedFromRootNode" Header="S_tash staged" />
+        <MenuItem x:Name="mnubtnManageStashFromRootNode" Header="_Manage stashes..." />
+        <MenuItem x:Name="mnubtnOpenStash"
+                  Header="_Open stash"
+                  ToolTip.Tip="Open this stash"
+                  compat:TranslationCompat.UseToolTipText="True" />
+        <MenuItem x:Name="mnubtnApplyStash"
+                  Header="_Apply stash"
+                  ToolTip.Tip="Apply this stash"
+                  compat:TranslationCompat.UseToolTipText="True" />
+        <MenuItem x:Name="mnubtnPopStash"
+                  Header="_Pop stash"
+                  ToolTip.Tip="Pop this stash"
+                  compat:TranslationCompat.UseToolTipText="True" />
+        <MenuItem x:Name="mnubtnDropStash"
+                  Header="_Drop stash..."
+                  ToolTip.Tip="Drop this stash"
+                  compat:TranslationCompat.UseToolTipText="True" />
+      </ContextMenu>
+    </TreeView.ContextMenu>
+  </TreeView>
 </UserControl>
