@@ -677,11 +677,17 @@
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
     "notes": "Resets the current branch through the shared soft, mixed, keep, merge, and hard git-reset commands. Retains hard-reset confirmation, submodule update behavior, branch/revision summary, mode-specific Git documentation, and the original theme-aware reset palette. Revision-grid, repository-tree, GitUICommands, and reflog contributions are live."
   },
+  "src/app/GitUI/HelperDialogs/FormEdit.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormEdit.axaml.cs",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Retains the original lightweight in-memory FileViewer wrapper, editable/read-only boundary, class name, path, and translation key. FormVerify View opens recovered object content in this read-only twin. This is intentionally separate from the disk-backed CommandsDialogs/FormEditor command-line editor."
+  },
   "src/app/GitUI/CommandsDialogs/FormVerify.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormVerify.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Runs native repository git fsck/prune recovery, preserves the original filters, sortable lost-object grid, preview, selection and LOST_FOUND tag restoration, branch/tag actions, clipboard and native blob save picker. FormBrowse Repository -> Git maintenance -> Recover lost objects is live. The View action focuses the built-in preview until the separately owned FormEdit twin lands."
+    "notes": "Runs native repository git fsck/prune recovery, preserves the original filters, sortable lost-object grid, preview, selection and LOST_FOUND tag restoration, branch/tag actions, clipboard and native blob save picker. FormBrowse Repository -> Git maintenance -> Recover lost objects is live. The View action opens the selected object in the read-only HelperDialogs/FormEdit twin."
   },
   "src/app/GitUI/CommandsDialogs/FormVerify.LostObject.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormVerify.LostObject.cs",
