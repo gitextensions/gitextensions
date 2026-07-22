@@ -7,6 +7,12 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- Keep portable plugin artifacts beside the Avalonia application. The Windows
+         flavor retains the existing GitExtensions/net10.0-windows/Plugins layout. -->
+    <ArtifactsPluginsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', 'GitExtensions.Avalonia', 'net10.0', 'Plugins'))</ArtifactsPluginsDir>
+  </PropertyGroup>
+
   <!--
       Direct plugins artifacts to be placed under Plugins folder
     -->
