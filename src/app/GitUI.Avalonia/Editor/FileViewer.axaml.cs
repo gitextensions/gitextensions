@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -85,6 +85,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(_diffBackgroundRenderer);
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(new HighlightBackgroundRenderer(_lineHighlights));
         TextEditor.TextArea.TextView.LineTransformers.Add(_diffTextColorizer);
+        TextEditor.TextChanged += (sender, e) => TextChanged?.Invoke(sender, e);
         TextEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
         TextEditor.KeyDown += TextEditor_KeyDown;
         TextEditor.PointerWheelChanged += TextEditor_PointerWheelChanged;
@@ -175,6 +176,11 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
         InitializeComplete();
     }
+
+    /// <summary>
+    ///  Raised when the editable document text changes.
+    /// </summary>
+    public event EventHandler? TextChanged;
 
     /// <summary>
     ///  Raised when Escape is pressed in the diff editor.

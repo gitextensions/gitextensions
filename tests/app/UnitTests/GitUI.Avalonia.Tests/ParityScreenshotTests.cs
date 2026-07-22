@@ -428,6 +428,17 @@ public sealed partial class ParityScreenshotTests
             return form;
         }
 
+        if (viewType == typeof(FormEditor))
+        {
+            FormEditor form = new();
+            form.GetTestAccessor().LoadText(
+                "COMMIT_EDITMSG",
+                "Port the file editor command\n\nPreserve the original encoding and preamble.\n",
+                hasChanges: true);
+            form.FindControl<Border>("panelMessage")!.IsVisible = true;
+            return form;
+        }
+
         if (viewType == typeof(FormVerify))
         {
             FormVerify form = new();
@@ -1138,6 +1149,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormEdit))
         {
             return (733, 571);
+        }
+
+        if (viewType == typeof(FormEditor))
+        {
+            return (659, 543);
         }
 
         if (viewType == typeof(FormVerify))

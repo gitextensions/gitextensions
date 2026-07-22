@@ -536,7 +536,12 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartEditGitAttributesDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartEditGitAttributesDialog));
     public bool StartEditGitIgnoreDialog(IWin32Window? owner, bool localExcludes) => throw NotPorted(nameof(StartEditGitIgnoreDialog));
-    public bool StartFileEditorDialog(string? filename, bool showWarning = false, int? lineNumber = null) => throw NotPorted(nameof(StartFileEditorDialog));
+    public bool StartFileEditorDialog(string? filename, bool showWarning = false, int? lineNumber = null)
+    {
+        using FormEditor formEditor = new(this, filename, showWarning, lineNumber: lineNumber);
+        return formEditor.ShowDialog() != DialogResult.Cancel;
+    }
+
     public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
     {
         // The WinForms client launches a separate process (or reuses Browse) for file
