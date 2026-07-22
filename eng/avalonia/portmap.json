@@ -161,6 +161,12 @@
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
     "notes": "Same-named create-worktree dialog with asynchronously applied local branches, existing/new branch modes, path suggestion and validation, portable folder picking, the original worktree.useRelativePaths command configuration, and optional in-window navigation after creation."
   },
+  "src/app/GitUI/CommandsDialogs/WorktreeDialog/FormManageWorktree.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/WorktreeDialog/FormManageWorktree.axaml.cs",
+    "status": "parity",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Same-named worktree manager over a typed read-only ListBox with original HeaderText translation identities, deleted-row strikeout, selection-aware create/open/delete/prune actions, and host-correct current-path comparison. Worktree deletion retains confirmation, recursive directory removal, and prune; switching navigates the owning Browse window."
+  },
   "src/app/GitUI/CommandsDialogs/FormSettings.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml.cs",
     "status": "functional",
@@ -1558,7 +1564,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree creation, revision-range difftool, Settings host, and portable same-executable repository-browser launch members are real; unported members throw NotImplementedException."
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree create/delete/switch, revision-range difftool, Settings host, and portable same-executable repository-browser launch members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/RevisionDiffInfoProvider.cs": {
     "twin": "src/app/GitUI/RevisionDiffInfoProvider.cs",
