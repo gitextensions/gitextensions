@@ -1,5 +1,6 @@
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Serialization;
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
@@ -11,6 +12,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.Hotkey;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -36,6 +38,20 @@ public sealed class HotkeyTests
     public void KeysMapper_should_map_key_and_modifiers(Key key, KeyModifiers modifiers, WinFormsShims.Keys expected)
     {
         KeysMapper.ToKeys(key, modifiers).Should().Be(expected);
+    }
+
+    [TestCase(WinFormsShims.Keys.F5, Key.F5, KeyModifiers.None)]
+    [TestCase(WinFormsShims.Keys.B | WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift, Key.B, KeyModifiers.Control | KeyModifiers.Shift)]
+    [TestCase(WinFormsShims.Keys.Oemcomma | WinFormsShims.Keys.Alt, Key.OemComma, KeyModifiers.Alt)]
+    public void KeysMapper_should_map_persisted_hotkeys_to_Avalonia_gestures(
+        WinFormsShims.Keys keyData,
+        Key expectedKey,
+        KeyModifiers expectedModifiers)
+    {
+        KeyGesture gesture = KeysMapper.ToKeyGesture(keyData)!;
+
+        gesture.Key.Should().Be(expectedKey);
+        gesture.KeyModifiers.Should().Be(expectedModifiers);
     }
 
     [Test]
@@ -88,6 +104,31 @@ public sealed class HotkeyTests
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.FocusNextTab
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Tab));
+        }
+        finally
+        {
+            AppSettings.SerializedHotkeys = serializedHotkeys!;
+        }
+    }
+
+    [Test]
+    public void HotkeySettingsManager_should_expose_user_scripts_in_the_original_settings_category()
+    {
+        string? serializedHotkeys = AppSettings.SerializedHotkeys;
+        AppSettings.SerializedHotkeys = string.Empty;
+        try
+        {
+            ScriptInfo script = new() { Name = "&Review", HotkeyCommandIdentifier = 9012 };
+            IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
+            scriptsManager.GetScripts().Returns(new System.ComponentModel.BindingList<ScriptInfo>([script]));
+            IHotkeySettingsLoader loader = new HotkeySettingsManager(scriptsManager);
+
+            IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(FormSettings.HotkeySettingsName);
+
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == script.HotkeyCommandIdentifier
+                && command.Name == "Review"
+                && command.KeyData == WinFormsShims.Keys.None);
         }
         finally
         {
@@ -284,6 +325,38 @@ public sealed class HotkeyTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_should_build_the_user_script_toolbar_from_the_shared_manager()
+    {
+        ScriptInfo script = new()
+        {
+            Name = "Review",
+            HotkeyCommandIdentifier = 9014,
+            OnEvent = ScriptEvent.ShowInUserMenuBar,
+            Icon = "EditFile",
+        };
+        IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
+        scriptsManager.GetScripts().Returns(new System.ComponentModel.BindingList<ScriptInfo>([script]));
+        IScriptsRunner scriptsRunner = Substitute.For<IScriptsRunner>();
+        scriptsRunner.RunScript(script, Arg.Any<IWin32Window>(), Arg.Any<IGitUICommands>(), Arg.Any<IScriptOptionsProvider>()).Returns(true);
+        (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm(
+            browseHotkeys: [],
+            revisionHotkeys: [],
+            scriptsManager,
+            scriptsRunner,
+            scriptHotkeys: []);
+        scriptsManager.GetScript(script.HotkeyCommandIdentifier).Returns(script);
+        StackPanel toolbar = form.FindControl<StackPanel>("ToolStripScripts")!;
+
+        toolbar.IsVisible.Should().BeTrue();
+        IconButton button = toolbar.Children.Should().ContainSingle().Which.Should().BeOfType<IconButton>().Subject;
+        button.Content.Should().Be("Review");
+        button.Icon.Should().NotBeNull();
+        button.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+
+        scriptsRunner.Received(1).RunScript(script, form, commands, Arg.Any<IScriptOptionsProvider>());
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_create_tag_hotkey_should_open_for_the_current_revision()
     {
         (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm(
@@ -421,7 +494,10 @@ public sealed class HotkeyTests
 
     private static (FormBrowse Form, IGitUICommands Commands, ILockableNotifier Notifier) CreateBrowseForm(
         IReadOnlyList<HotkeyCommand> browseHotkeys,
-        IReadOnlyList<HotkeyCommand> revisionHotkeys)
+        IReadOnlyList<HotkeyCommand> revisionHotkeys,
+        IScriptsManager? scriptsManager = null,
+        IScriptsRunner? scriptsRunner = null,
+        IReadOnlyList<HotkeyCommand>? scriptHotkeys = null)
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
@@ -433,12 +509,15 @@ public sealed class HotkeyTests
         IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
         loader.LoadHotkeys(FormBrowse.HotkeySettingsName).Returns(browseHotkeys);
         loader.LoadHotkeys(RevisionGridControl.HotkeySettingsName).Returns(revisionHotkeys);
+        loader.LoadHotkeys(FormSettings.HotkeySettingsName).Returns(scriptHotkeys ?? []);
 
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
+        commands.GetService(typeof(IScriptsManager)).Returns(scriptsManager);
+        commands.GetService(typeof(IScriptsRunner)).Returns(scriptsRunner);
 
         return (new FormBrowse(commands), commands, notifier);
     }

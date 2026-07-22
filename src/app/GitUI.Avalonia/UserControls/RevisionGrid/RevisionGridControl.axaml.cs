@@ -604,6 +604,18 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         UpdateNavigationMenu(revision);
         viewToolStripMenuItem.IsVisible = hasCommands;
         UpdateViewMenuChecks();
+        if (hasCommands)
+        {
+            revisionContextMenu.AddUserScripts(
+                runScriptToolStripMenuItem,
+                ExecuteCommand,
+                script => script.AddToRevisionGridContextMenu,
+                commands!);
+        }
+        else
+        {
+            revisionContextMenu.RemoveUserScripts(runScriptToolStripMenuItem);
+        }
 
         void SetVisible(MenuItem item, bool visible)
         {

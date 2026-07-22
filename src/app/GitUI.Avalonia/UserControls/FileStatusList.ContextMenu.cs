@@ -1,8 +1,10 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -151,6 +153,20 @@ partial class FileStatusList
         tsmiFilterFileInGrid.IsEnabled = hasPath;
         tsmiFileHistory.IsEnabled = hasSingleItem && selectedItems[0].IsTracked;
         tsmiBlame.IsEnabled = hasSingleItem && selectedItems[0].IsTracked;
+
+        if (TryGetUICommandsDirect(out IGitUICommands? commands))
+        {
+            sepScripts.IsVisible = ItemContextMenu.AddUserScripts(
+                tsmiRunScript,
+                ExecuteCommand,
+                script => script.OnEvent == ScriptEvent.ShowInFileList,
+                commands);
+        }
+        else
+        {
+            ItemContextMenu.RemoveUserScripts(tsmiRunScript);
+            sepScripts.IsVisible = false;
+        }
 
         _treeContextMenuSeparator.IsVisible = _isFileTreeMode;
         _collapseAll.IsVisible = _isFileTreeMode;

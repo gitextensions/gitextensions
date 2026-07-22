@@ -52,6 +52,13 @@
                 Header="E_xpand all" />
       <MenuItem x:Name="_selectAll"
                 Header="S_elect all" />
+      <Separator x:Name="sepScripts" />
+      <MenuItem x:Name="tsmiRunScript"
+                Header="Run script">
+        <MenuItem.Icon>
+          <Image Source="{x:Static properties:Images.Console}" />
+        </MenuItem.Icon>
+      </MenuItem>
     </ContextMenu>
   </UserControl.ContextMenu>
   <DockPanel>

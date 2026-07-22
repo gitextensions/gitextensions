@@ -1,12 +1,15 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
+using GitUI.ScriptsEngine;
 using ResourceManager;
 
 namespace GitUI;
 
 /// <summary>Base control that obtains Git UI commands from its containing form.</summary>
-public class GitModuleControl : GitExtensionsControl
+public class GitModuleControl : GitExtensionsControl, IWin32Window
 {
     private IGitUICommandsSource? _uiCommandsSource;
 
@@ -51,5 +54,48 @@ public class GitModuleControl : GitExtensionsControl
     /// <summary>Gets the current Git module.</summary>
     public IGitModule Module => UICommands.Module;
 
+    nint IWin32Window.Handle => TopLevel.GetTopLevel(this)?.TryGetPlatformHandle()?.Handle ?? 0;
+
     protected override IServiceProvider ServiceProvider => UICommands;
+
+    protected override bool ExecuteCommand(int command)
+    {
+        if (TryGetUICommandsDirect(out IGitUICommands? commands)
+            && commands.GetService(typeof(IScriptsManager)) is IScriptsManager scriptsManager
+            && scriptsManager.GetScript(command) is ScriptInfo script)
+        {
+            IScriptsRunner scriptsRunner = commands.GetRequiredService<IScriptsRunner>();
+            _ = scriptsRunner.RunScript(script, this, commands, FindScriptOptionsProvider());
+            return true;
+        }
+
+        return base.ExecuteCommand(command);
+    }
+
+    internal IScriptOptionsProvider FindScriptOptionsProvider()
+    {
+        if (GetScriptOptionsProvider() is IScriptOptionsProvider ownProvider)
+        {
+            return ownProvider;
+        }
+
+        foreach (object ancestor in this.GetLogicalAncestors())
+        {
+            if (ancestor is GitModuleControl gitModuleControl
+                && gitModuleControl.GetScriptOptionsProvider() is IScriptOptionsProvider controlProvider)
+            {
+                return controlProvider;
+            }
+
+            if (ancestor is GitModuleForm gitModuleForm)
+            {
+                return gitModuleForm.GetScriptOptionsProvider();
+            }
+        }
+
+        return ScriptOptionsProviderBase.Default;
+    }
+
+    protected virtual IScriptOptionsProvider? GetScriptOptionsProvider()
+        => null;
 }
