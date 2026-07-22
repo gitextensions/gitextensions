@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Gpg;
 using GitCommands.Remotes;
+using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -37,6 +38,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
     private readonly IGpgInfoProvider? _controller;
     private readonly IScriptsManager? _scriptsManager;
+    private readonly ISubmoduleStatusProvider? _submoduleStatusProvider;
     private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
     private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
@@ -113,6 +115,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
         _hasRuntimeCommands = true;
         _scriptsManager = UICommands.GetService(typeof(IScriptsManager)) as IScriptsManager;
+        _submoduleStatusProvider = UICommands.GetService(typeof(ISubmoduleStatusProvider)) as ISubmoduleStatusProvider;
         RevisionGrid.UICommandsSource = this;
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
@@ -121,7 +124,7 @@ public sealed partial class FormBrowse : GitModuleForm
         _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
-        repoObjectsTree.Initialize(RevisionGrid.SetAndApplyBranchFilter);
+        repoObjectsTree.Initialize(RevisionGrid.SetAndApplyBranchFilter, OpenRepository);
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
         RevisionGrid.RevisionsLoading += RefreshLeftPanel;
         RevisionGrid.RevisionFilterRequested += (_, _) => ToolStripFilters.SetFocus();
@@ -266,6 +269,7 @@ public sealed partial class FormBrowse : GitModuleForm
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
             lblStatus.Text = $"git: {GitVersion.Current}";
             RevisionGrid.ReloadRevisions(module);
+            UpdateSubmodulesStructure();
         }
         else
         {
@@ -337,6 +341,7 @@ public sealed partial class FormBrowse : GitModuleForm
             return;
         }
 
+        _submoduleStatusProvider?.Init();
         UICommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
         UICommands = UICommands.WithWorkingDirectory(normalizedPath);
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
@@ -344,6 +349,51 @@ public sealed partial class FormBrowse : GitModuleForm
         ReloadRepository();
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath).WaitAsync(cancellationToken));
+    }
+
+    private void OpenRepository(string path, ObjectId selectedId, ObjectId firstId)
+    {
+        // The Avalonia grid currently retains one pending revision across repository changes.
+        // Keep the original first diff endpoint in this boundary until multi-selection accepts it.
+        RevisionGrid.SelectedId = selectedId;
+        ChangeWorkingDirectory(path);
+    }
+
+    private void UpdateSubmodulesStructure()
+    {
+        if (_submoduleStatusProvider is null)
+        {
+            return;
+        }
+
+        string workingDirectory = Module.WorkingDir;
+        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
+        _loadOperations.FileAndForget(async () =>
+        {
+            try
+            {
+                await _submoduleStatusProvider.UpdateSubmodulesStructureAsync(
+                    workingDirectory,
+                    TranslatedStrings.NoBranch,
+                    updateStatus: AppSettings.ShowSubmoduleStatus);
+                if (AppSettings.ShowSubmoduleStatus)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    IReadOnlyList<GitItemStatus> status = new GitModule(
+                        UICommands.GetRequiredService<IGitExecutorProvider>(),
+                        workingDirectory).GetAllChangedFilesWithSubmodulesStatus(cancellationToken);
+                    await _submoduleStatusProvider.UpdateSubmodulesStatusAsync(workingDirectory, status, forceUpdate: true);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (GitCommands.Config.GitConfigurationException exception)
+            {
+                await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                MessageBoxes.ShowGitConfigurationExceptionMessage(this, exception);
+            }
+        });
     }
 
     private void ToggleLeftPanelClick(object? sender, EventArgs e)
@@ -1148,6 +1198,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         _loadOperationsCancellationTokenSource.Cancel();
+        _submoduleStatusProvider?.Init();
         _splitterManager?.SaveSplitters();
         _gpgInfoLoadSequence.Dispose();
         RevisionGrid.CancelBackgroundTasks();

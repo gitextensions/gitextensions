@@ -35,6 +35,10 @@ public class MessageBoxes : Translate
     private readonly TranslationString _theRepositorySubmodules = new("Update submodules on checkout?");
     private readonly TranslationString _updateSubmodulesToo = new("Since this repository has submodules, it's necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
     private readonly TranslationString _rememberChoice = new("&Remember choice");
+    private readonly TranslationString _cannotOpenSubmoduleCaption = new("Cannot open submodule");
+    private readonly TranslationString _cannotOpenGitExtensionsCaption = new("Cannot open Git Extensions");
+    private readonly TranslationString _directoryDoesNotExist = new("The directory \"{0}\" does not exist.");
+    private readonly TranslationString _submoduleDirectoryDoesNotExist = new("The directory \"{0}\" does not exist for submodule \"{1}\".");
 
     internal MessageBoxes()
     {
@@ -48,6 +52,15 @@ public class MessageBoxes : Translate
 
     public static void CannotFindGitRevision(WinFormsShims.IWin32Window? owner)
         => ShowError(owner, Instance._noRevisionFoundError.Text, Instance._cannotFindRevisionCaption.Text);
+
+    public static void SubmoduleDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory, string submoduleName)
+        => ShowError(owner, string.Format(Instance._submoduleDirectoryDoesNotExist.Text, directory, submoduleName), Instance._cannotOpenSubmoduleCaption.Text);
+
+    public static void SubmoduleDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory)
+        => ShowError(owner, string.Format(Instance._directoryDoesNotExist.Text, directory), Instance._cannotOpenSubmoduleCaption.Text);
+
+    public static void GitExtensionsDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory)
+        => ShowError(owner, string.Format(Instance._directoryDoesNotExist.Text, directory), Instance._cannotOpenGitExtensionsCaption.Text);
 
     public static void FailedToRunShell(WinFormsShims.IWin32Window? owner, string shell, Exception ex)
         => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
