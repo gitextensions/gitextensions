@@ -97,7 +97,7 @@
                   BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                   BorderThickness="1"
                   IsVisible="False">
-            <Grid RowDefinitions="Auto,Auto"
+            <Grid RowDefinitions="Auto,Auto,Auto"
                   ColumnDefinitions="*,Auto">
               <StackPanel x:Name="ForcePushOptionPanel"
                           Orientation="Horizontal">
@@ -123,6 +123,11 @@
                         Grid.ColumnSpan="2"
                         Margin="0,6,0,0"
                         Content="R_eplace tracking reference" />
+              <CheckBox x:Name="_createPullRequestCB"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Margin="0,6,0,0"
+                        Content="_Create pull request after push" />
             </Grid>
           </Border>
         </Grid>

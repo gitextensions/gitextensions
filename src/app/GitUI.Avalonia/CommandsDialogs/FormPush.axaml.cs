@@ -137,6 +137,7 @@ public sealed partial class FormPush : GitModuleForm
     {
         base.OnRuntimeLoad(e);
         Title = $"{_pushCaption.Text} ({Module.WorkingDir})";
+        _createPullRequestCB.IsEnabled = HasAzureDevOpsRemote();
         _NO_TRANSLATE_Remotes.Focus();
     }
 
@@ -349,6 +350,11 @@ public sealed partial class FormPush : GitModuleForm
         if (!Module.InTheMiddleOfAction() && !ErrorOccurred)
         {
             ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
+            if (_createPullRequestCB.IsChecked == true)
+            {
+                TryOpenAzureDevOpsPullRequestInBrowser();
+            }
+
             return true;
         }
 
@@ -1126,6 +1132,60 @@ public sealed partial class FormPush : GitModuleForm
         {
             textBlock.Text = text;
         }
+    }
+
+    /// <summary>
+    ///  Checks whether any configured remote points to an Azure DevOps repository.
+    /// </summary>
+    private bool HasAzureDevOpsRemote()
+    {
+        AzureDevOpsRemoteParser parser = new();
+        foreach (string remoteName in Module.GetRemoteNames())
+        {
+            string remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
+            if (!string.IsNullOrWhiteSpace(remoteUrl) && parser.IsValidRemoteUrl(remoteUrl))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    ///  Opens the Azure DevOps create-pull-request page for the selected remote and branch.
+    /// </summary>
+    private void TryOpenAzureDevOpsPullRequestInBrowser()
+    {
+        string branch = _selectedBranch is not null and not HeadText and not AllRefs
+            ? _selectedBranch
+            : Module.GetSelectedBranch();
+        string? pullRequestUrl = BuildAzureDevOpsPullRequestUrl(_selectedRemote?.Url, branch);
+        if (pullRequestUrl is null)
+        {
+            return;
+        }
+
+        OsShellUtil.OpenUrlInDefaultBrowser(pullRequestUrl);
+    }
+
+    internal static string? BuildAzureDevOpsPullRequestUrl(string? remoteUrl, string branch)
+    {
+        if (string.IsNullOrWhiteSpace(remoteUrl))
+        {
+            return null;
+        }
+
+        AzureDevOpsRemoteParser parser = new();
+        if (!parser.TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out string? owner, out string? project, out string? repo))
+        {
+            return null;
+        }
+
+        string? repoWebUrl = AzureDevOpsRemoteParser.BuildRepositoryUrl(remoteUrl, owner, project, repo);
+        return repoWebUrl is null
+            ? null
+            : $"{repoWebUrl}/pullrequestcreate?sourceRef={Uri.EscapeDataString(branch)}";
     }
 
     internal TestAccessor GetTestAccessor() => new(this);
