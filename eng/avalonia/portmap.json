@@ -333,7 +333,19 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same translated information, tri-state enable/show-result controls, server selector, and custom-settings content area in a compact scrollable layout. The content area remains empty until the selected adapter supplies its portable settings control."
+    "notes": "Same translated information, tri-state enable/show-result controls, server selector, and custom-settings content area in a compact scrollable layout. AppVeyor now supplies the first native portable settings control; the remaining adapters land incrementally."
+  },
+  "src/plugins/BuildServerIntegration/AppVeyorIntegration/Settings/AppVeyorSettingsUserControl.cs": {
+    "twin": "src/plugins/BuildServerIntegration/AppVeyorIntegration/Settings/AppVeyorSettingsUserControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable-only same-named MEF export retains default-project initialization, nullable test-result state, and the original settings keys while remaining a native Avalonia control. The Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/AppVeyorIntegration/Settings/AppVeyorSettingsUserControl.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/AppVeyorIntegration/Settings/AppVeyorSettingsUserControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same account, token, project, explanatory text, and tri-state test-result controls in the original order; only the existing checkbox field participates in plugin XLF translation, matching the WinForms Designer field boundary."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
