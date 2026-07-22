@@ -12,7 +12,9 @@ using GitExtUtils;
 using GitUI.Avatars;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
+using GitUI.HelperDialogs;
 using GitUI.Models;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
@@ -65,6 +67,7 @@ public sealed partial class FormBrowse : GitModuleForm
         FocusOutputHistoryAndToggleIfPanel = 47,
         Commit = 7,
         CheckoutBranch = 10,
+        QuickFetch = 11,
         FocusFilter = 18,
         OpenSettings = 20,
         ToggleLeftPanel = 21,
@@ -685,6 +688,30 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.RepoChangedNotifier.Notify();
     }
 
+    private void QuickFetch()
+    {
+        bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeFetch, this);
+        if (!success)
+        {
+            return;
+        }
+
+        success = FormProcess.ShowDialog(
+            this,
+            UICommands,
+            arguments: Module.FetchCmd(string.Empty, string.Empty, string.Empty),
+            Module.WorkingDir,
+            input: null,
+            useDialogSettings: true);
+        if (!success)
+        {
+            return;
+        }
+
+        ScriptsRunner.RunEventScripts(ScriptEvent.AfterFetch, this);
+        UICommands.RepoChangedNotifier.Notify();
+    }
+
     private void CheckoutBranchToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartCheckoutBranch(this);
@@ -950,6 +977,7 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.Refresh: RefreshToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.QuickFetch: QuickFetch(); break;
             case Command.PullOrFetch: PullToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Push: UICommands.StartPushDialog(this, pushOnShow: false); break;
             case Command.CreateBranch: CreateBranchToolStripMenuItemClick(this, EventArgs.Empty); break;

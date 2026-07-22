@@ -13,6 +13,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
+using GitUI.ScriptsEngine;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -326,12 +327,16 @@ public sealed partial class FormPush : GitModuleForm
             return false;
         }
 
+        bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforePush, this);
+        if (!success)
+        {
+            return false;
+        }
+
         _selectedBranch = localBranch;
         _selectedRemoteBranchName = remoteBranch;
         _candidateForRebasingMergeCommit = !pushToUrl && localBranch != AllRefs && TabControlTagBranch.SelectedItem == BranchTab;
 
-        // Native Git hooks remain active. Git Extensions before/after push event scripts join
-        // when the shared scripts engine is available to the Avalonia application.
         using FormRemoteProcess form = new(UICommands, pushArguments)
         {
             Remote = remote,
@@ -341,7 +346,13 @@ public sealed partial class FormPush : GitModuleForm
         form.ShowDialog(owner);
         ErrorOccurred = form.ErrorOccurred();
         Module.InvalidateGitSettings();
-        return !Module.InTheMiddleOfAction() && !ErrorOccurred;
+        if (!Module.InTheMiddleOfAction() && !ErrorOccurred)
+        {
+            ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
+            return true;
+        }
+
+        return false;
     }
 
     private bool? ShouldUpdateTrackingReference(WinFormsShims.IWin32Window? owner, string localBranch, string remoteBranch)
