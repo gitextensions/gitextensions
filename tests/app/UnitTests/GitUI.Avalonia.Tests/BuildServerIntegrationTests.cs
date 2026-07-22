@@ -1,3 +1,5 @@
+﻿using AppVeyorIntegration;
+using AppVeyorIntegration.Settings;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -15,6 +17,7 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 
@@ -26,7 +29,8 @@ public sealed class BuildServerIntegrationTests
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        ManagedExtensibility.Initialise();
+        GitUI.ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        ManagedExtensibility.Initialise([typeof(AppVeyorIntegrationMetadata).Assembly]);
     }
 
     [SetUp]
@@ -89,9 +93,9 @@ public sealed class BuildServerIntegrationTests
             pageAccessor.checkBoxShowBuildResultPage.IsChecked.Should().BeTrue();
             pageAccessor.BuildServerType.SelectedIndex.Should().Be(0);
             string[] buildServerTypes = [.. pageAccessor.BuildServerType.Items.Cast<string>()];
-            buildServerTypes.Should().StartWith("None");
+            buildServerTypes.Should().Equal("None", "AppVeyor");
             pageAccessor.buildServerSettingsPanel.Content.Should().BeNull(
-                "plugin-owned settings controls are activated independently");
+                "the parameterless settings form intentionally has no repository module");
 
             pageAccessor.checkBoxEnableBuildServerIntegration.IsChecked = true;
             pageAccessor.checkBoxShowBuildResultPage.IsChecked = false;
@@ -112,6 +116,58 @@ public sealed class BuildServerIntegrationTests
             form.GotoPage(new SettingsPageReferenceByType(typeof(SettingsPlaceholderPage)));
             form.Close();
         }
+    }
+
+    [AvaloniaTest]
+    public void AppVeyor_settings_control_should_be_a_native_export_and_round_trip_settings()
+    {
+        Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata> export = ManagedExtensibility
+            .GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>()
+            .Single(item => item.Metadata.BuildServerType == "AppVeyor");
+        AppVeyorSettingsUserControl control = export.Value.Should()
+            .BeAssignableTo<Control>()
+            .Which.Should()
+            .BeOfType<AppVeyorSettingsUserControl>()
+            .Subject;
+        TextBox projectName = control.FindControl<TextBox>("AppVeyorProjectName")!;
+        TextBox accountName = control.FindControl<TextBox>("AppVeyorAccountName")!;
+        TextBox accountToken = control.FindControl<TextBox>("AppVeyorAccountToken")!;
+        CheckBox loadTestResults = control.FindControl<CheckBox>("cbLoadTestResults")!;
+
+        ITranslation translation = Substitute.For<ITranslation>();
+        control.AddTranslationItems(translation);
+        translation.Received(1).AddTranslationItem(
+            nameof(AppVeyorSettingsUserControl), "cbLoadTestResults", "Text",
+            "Display test results in build status summary for each build result (network intensive!)");
+
+        TestSettingsSource settings = new();
+        control.Initialize("default-project", []);
+        control.LoadSettings(settings);
+        projectName.Text.Should().Be("default-project");
+        accountName.Text.Should().BeNullOrEmpty();
+        accountToken.Text.Should().BeNullOrEmpty();
+        loadTestResults.IsThreeState.Should().BeTrue();
+        loadTestResults.IsChecked.Should().BeNull();
+
+        settings.SetString("AppVeyorProjectName", "project-one|project-two");
+        settings.SetString("AppVeyorAccountName", "account");
+        settings.SetString("AppVeyorAccountToken", "token");
+        settings.SetBool("AppVeyorLoadTestsResults", true);
+        control.LoadSettings(settings);
+        projectName.Text.Should().Be("project-one|project-two");
+        accountName.Text.Should().Be("account");
+        accountToken.Text.Should().Be("token");
+        loadTestResults.IsChecked.Should().BeTrue();
+
+        projectName.Text = "saved-project";
+        accountName.Text = string.Empty;
+        accountToken.Text = "saved-token";
+        loadTestResults.IsChecked = null;
+        control.SaveSettings(settings);
+        settings.GetString("AppVeyorProjectName", null).Should().Be("saved-project");
+        settings.GetString("AppVeyorAccountName", null).Should().BeNull();
+        settings.GetString("AppVeyorAccountToken", null).Should().Be("saved-token");
+        settings.GetBool("AppVeyorLoadTestsResults").Should().BeNull();
     }
 
     [AvaloniaTest]
@@ -206,5 +262,16 @@ public sealed class BuildServerIntegrationTests
         revision.BuildStatus = null;
         Dispatcher.UIThread.RunJobs();
         tabs.Items.Should().HaveCount(1);
+    }
+
+    private sealed class TestSettingsSource : SettingsSource
+    {
+        private readonly Dictionary<string, string?> _values = [];
+
+        public override string? GetValue(string name)
+            => _values.GetValueOrDefault(name);
+
+        public override void SetValue(string name, string? value)
+            => _values[name] = value;
     }
 }

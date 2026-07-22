@@ -51,6 +51,8 @@
     <ProjectReference Include="..\..\..\..\eng\tools\ImagesResxToAvalonia\ImagesResxToAvalonia.csproj" />
     <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
     <ProjectReference Include="..\..\..\..\src\app\GitExtensions.Avalonia\GitExtensions.Avalonia.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj"
+                      AdditionalProperties="BuildAvalonia=true" />
   </ItemGroup>
 
   <ItemGroup>
