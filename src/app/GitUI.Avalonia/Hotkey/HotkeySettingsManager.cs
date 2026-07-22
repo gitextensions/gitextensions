@@ -1,4 +1,4 @@
-﻿using System.Xml.Serialization;
+using System.Xml.Serialization;
 using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
@@ -77,7 +77,8 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
                 Hk(FormBrowse.Command.CreateBranch, WinFormsShims.Keys.Control | WinFormsShims.Keys.B),
                 Hk(FormBrowse.Command.MergeBranches, WinFormsShims.Keys.Control | WinFormsShims.Keys.M),
                 Hk(FormBrowse.Command.CreateTag, WinFormsShims.Keys.Control | WinFormsShims.Keys.T),
-                Hk(FormBrowse.Command.Rebase, WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.E)),
+                Hk(FormBrowse.Command.Rebase, WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.E),
+                Hk(FormBrowse.Command.ManageWorkTrees, WinFormsShims.Keys.Control | WinFormsShims.Keys.Alt | WinFormsShims.Keys.W)),
             new HotkeySettings(
                 RevisionGridControl.HotkeySettingsName,
                 Hk(RevisionGridControl.Command.CompareSelectedCommits, WinFormsShims.Keys.None),

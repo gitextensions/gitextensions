@@ -29,12 +29,14 @@ public partial class RepoObjectsTree : GitModuleControl
     private List<TreeViewItem>? _searchResults;
     private StashTree? _stashTree;
     private readonly SubmoduleTree _submoduleTree;
+    private readonly WorktreeTree _worktreeTree;
     private ISubmoduleStatusProvider? _submoduleStatusProvider;
 
     public RepoObjectsTree()
     {
         InitializeComponent();
         _submoduleTree = new SubmoduleTree(this);
+        _worktreeTree = new WorktreeTree(this);
         CreateContextActions();
 
         treeMain.SelectionChanged += (_, _) => SelectionChanged?.Invoke(this, EventArgs.Empty);
@@ -42,6 +44,7 @@ public partial class RepoObjectsTree : GitModuleControl
         tsbCollapseAll.Click += (_, _) => CollapseAll();
         tsbShowBranches.Click += (_, _) => ToggleTree(RepoTreeKind.Branches, tsbShowBranches.IsChecked == true);
         tsbShowRemotes.Click += (_, _) => ToggleTree(RepoTreeKind.Remotes, tsbShowRemotes.IsChecked == true);
+        tsbShowWorktrees.Click += (_, _) => ToggleTree(RepoTreeKind.Worktrees, tsbShowWorktrees.IsChecked == true);
         tsbShowTags.Click += (_, _) => ToggleTree(RepoTreeKind.Tags, tsbShowTags.IsChecked == true);
         tsbShowSubmodules.Click += (_, _) => ToggleTree(RepoTreeKind.Submodules, tsbShowSubmodules.IsChecked == true);
         tsbShowStashes.Click += (_, _) => ToggleTree(RepoTreeKind.Stashes, tsbShowStashes.IsChecked == true);
@@ -69,9 +72,17 @@ public partial class RepoObjectsTree : GitModuleControl
         mnubtnApplyStash.Click += (_, _) => SelectedStashNode?.ApplyStash(this);
         mnubtnPopStash.Click += (_, _) => SelectedStashNode?.PopStash(this);
         mnubtnDropStash.Click += (_, _) => SelectedStashNode?.DropStash(this);
+        mnubtnCreateWorktreeFromRootNode.Click += (_, _) => _worktreeTree.CreateWorktree(this);
+        mnubtnPruneWorktreesFromRootNode.Click += (_, _) => _worktreeTree.PruneWorktrees(this);
+        mnubtnManageWorktreesFromRootNode.Click += (_, _) => _worktreeTree.ManageWorktrees(this);
+        mnubtnOpenWorktree.Click += (_, _) => SelectedWorktreeNode?.OpenWorktree();
+        mnubtnDeleteWorktree.Click += (_, _) => SelectedWorktreeNode?.DeleteWorktree();
+        mnubtnCopyWorktreePath.Click += (_, _) => ClipboardUtil.TrySetText(SelectedWorktreeNode?.Worktree.Path ?? string.Empty);
+        mnubtnShowWorktreeInFolder.Click += (_, _) => OsShellUtil.OpenWithFileExplorer(SelectedWorktreeNode!.Worktree.Path);
 
         tsbShowBranches.IsChecked = AppSettings.RepoObjectsTreeShowBranches;
         tsbShowRemotes.IsChecked = AppSettings.RepoObjectsTreeShowRemotes;
+        tsbShowWorktrees.IsChecked = AppSettings.RepoObjectsTreeShowWorktrees;
         tsbShowTags.IsChecked = AppSettings.RepoObjectsTreeShowTags;
         tsbShowSubmodules.IsChecked = AppSettings.RepoObjectsTreeShowSubmodules;
         tsbShowStashes.IsChecked = AppSettings.RepoObjectsTreeShowStashes;
@@ -89,6 +100,7 @@ public partial class RepoObjectsTree : GitModuleControl
         ToolTip.SetTip(tsbCollapseAll, Translate(nameof(RepoObjectsTree), "mnubtnCollapse", "Collapse all subnodes", "ToolTipText"));
         ToolTip.SetTip(tsbShowBranches, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowBranches.Content!));
         ToolTip.SetTip(tsbShowRemotes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowRemotes.Content!));
+        ToolTip.SetTip(tsbShowWorktrees, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowWorktrees.Content!));
         ToolTip.SetTip(tsbShowTags, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowTags.Content!));
         ToolTip.SetTip(tsbShowSubmodules, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowSubmodules.Content!));
         ToolTip.SetTip(tsbShowStashes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowStashes.Content!));
@@ -106,12 +118,15 @@ public partial class RepoObjectsTree : GitModuleControl
         {
             BaseRevisionNode { GitRef: not null } revisionNode => revisionNode.ObjectId,
             StashNode stashNode => stashNode.ObjectId,
+            WorktreeNode worktreeNode => worktreeNode.ObjectId,
             _ => null,
         };
 
     private NodeBase? SelectedNode => (treeMain.SelectedItem as TreeViewItem)?.Tag as NodeBase;
 
     private StashNode? SelectedStashNode => SelectedNode as StashNode;
+
+    private WorktreeNode? SelectedWorktreeNode => SelectedNode as WorktreeNode;
 
     /// <summary>Connects the tree's selected-ref filtering action to the revision grid.</summary>
     public void Initialize(
@@ -144,8 +159,10 @@ public partial class RepoObjectsTree : GitModuleControl
         string currentBranch,
         IReadOnlyList<Remote> enabledRemotes,
         IReadOnlyList<Remote> disabledRemotes,
-        IConfigFileRemoteSettingsManager remotesManager)
-        => SetRefs(refs, stashes, includeStashes: true, currentBranch, enabledRemotes, disabledRemotes, remotesManager);
+        IConfigFileRemoteSettingsManager remotesManager,
+        IReadOnlyList<GitWorktree>? worktrees = null,
+        string currentWorkingDirectory = "")
+        => SetRefs(refs, stashes, includeStashes: true, currentBranch, enabledRemotes, disabledRemotes, remotesManager, worktrees, currentWorkingDirectory);
 
     private void SetRefs(
         IReadOnlyList<IGitRef> refs,
@@ -154,7 +171,9 @@ public partial class RepoObjectsTree : GitModuleControl
         string currentBranch,
         IReadOnlyList<Remote>? enabledRemotes,
         IReadOnlyList<Remote>? disabledRemotes,
-        IConfigFileRemoteSettingsManager? remotesManager)
+        IConfigFileRemoteSettingsManager? remotesManager,
+        IReadOnlyList<GitWorktree>? worktrees = null,
+        string currentWorkingDirectory = "")
     {
         HashSet<string> expandedNodes =
         [
@@ -174,6 +193,8 @@ public partial class RepoObjectsTree : GitModuleControl
         IGitRef[] tags = [.. refs.Where(gitRef => gitRef.IsTag && !gitRef.IsDereference)];
         _trees.Add(new LocalBranchTree(this, branches, currentBranch));
         _trees.Add(new RemoteBranchTree(this, remotes, enabledRemotes, disabledRemotes, remotesManager));
+        _worktreeTree.Load(worktrees ?? [], currentWorkingDirectory);
+        _trees.Add(_worktreeTree);
         _trees.Add(new TagTree(this, tags));
         _trees.Add(_submoduleTree);
 
@@ -286,6 +307,7 @@ public partial class RepoObjectsTree : GitModuleControl
         {
             RepoTreeKind.Branches => AppSettings.RepoObjectsTreeBranchesIndex,
             RepoTreeKind.Remotes => AppSettings.RepoObjectsTreeRemotesIndex,
+            RepoTreeKind.Worktrees => AppSettings.RepoObjectsTreeWorktreesIndex,
             RepoTreeKind.Tags => AppSettings.RepoObjectsTreeTagsIndex,
             RepoTreeKind.Submodules => AppSettings.RepoObjectsTreeSubmodulesIndex,
             RepoTreeKind.Stashes => AppSettings.RepoObjectsTreeStashesIndex,
@@ -298,6 +320,7 @@ public partial class RepoObjectsTree : GitModuleControl
         {
             case RepoTreeKind.Branches: AppSettings.RepoObjectsTreeBranchesIndex = value; break;
             case RepoTreeKind.Remotes: AppSettings.RepoObjectsTreeRemotesIndex = value; break;
+            case RepoTreeKind.Worktrees: AppSettings.RepoObjectsTreeWorktreesIndex = value; break;
             case RepoTreeKind.Tags: AppSettings.RepoObjectsTreeTagsIndex = value; break;
             case RepoTreeKind.Submodules: AppSettings.RepoObjectsTreeSubmodulesIndex = value; break;
             case RepoTreeKind.Stashes: AppSettings.RepoObjectsTreeStashesIndex = value; break;
@@ -310,6 +333,7 @@ public partial class RepoObjectsTree : GitModuleControl
         {
             RepoTreeKind.Branches => AppSettings.RepoObjectsTreeShowBranches,
             RepoTreeKind.Remotes => AppSettings.RepoObjectsTreeShowRemotes,
+            RepoTreeKind.Worktrees => AppSettings.RepoObjectsTreeShowWorktrees,
             RepoTreeKind.Tags => AppSettings.RepoObjectsTreeShowTags,
             RepoTreeKind.Submodules => AppSettings.RepoObjectsTreeShowSubmodules,
             RepoTreeKind.Stashes => AppSettings.RepoObjectsTreeShowStashes,
@@ -322,6 +346,7 @@ public partial class RepoObjectsTree : GitModuleControl
         {
             case RepoTreeKind.Branches: AppSettings.RepoObjectsTreeShowBranches = value; break;
             case RepoTreeKind.Remotes: AppSettings.RepoObjectsTreeShowRemotes = value; break;
+            case RepoTreeKind.Worktrees: AppSettings.RepoObjectsTreeShowWorktrees = value; break;
             case RepoTreeKind.Tags: AppSettings.RepoObjectsTreeShowTags = value; break;
             case RepoTreeKind.Submodules: AppSettings.RepoObjectsTreeShowSubmodules = value; break;
             case RepoTreeKind.Stashes: AppSettings.RepoObjectsTreeShowStashes = value; break;
@@ -495,6 +520,8 @@ public partial class RepoObjectsTree : GitModuleControl
 
         bool stashTreeSelected = SelectedNode is StashTree;
         bool stashSelected = SelectedStashNode is not null;
+        bool worktreeTreeSelected = SelectedNode is WorktreeTree;
+        bool worktreeSelected = SelectedWorktreeNode is not null;
         bool canRunCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
         bool canChangeWorkingTree = canRunCommands && !commands!.Module.IsBareRepository();
 
@@ -513,6 +540,26 @@ public partial class RepoObjectsTree : GitModuleControl
         mnubtnApplyStash.IsEnabled = canChangeWorkingTree;
         mnubtnPopStash.IsEnabled = canChangeWorkingTree;
         mnubtnDropStash.IsEnabled = canChangeWorkingTree;
+
+        mnubtnCreateWorktreeFromRootNode.IsVisible = worktreeTreeSelected;
+        mnubtnPruneWorktreesFromRootNode.IsVisible = worktreeTreeSelected;
+        mnubtnManageWorktreesFromRootNode.IsVisible = worktreeTreeSelected;
+        mnubtnCreateWorktreeFromRootNode.IsEnabled = canChangeWorkingTree;
+        mnubtnPruneWorktreesFromRootNode.IsEnabled = canRunCommands;
+        mnubtnManageWorktreesFromRootNode.IsEnabled = canRunCommands;
+
+        bool canActOnWorktree = worktreeSelected
+            && SelectedWorktreeNode is { IsCurrent: false, Worktree.IsDeleted: false };
+        mnubtnOpenWorktree.IsVisible = worktreeSelected;
+        mnubtnDeleteWorktree.IsVisible = worktreeSelected;
+        worktreePathSeparator.IsVisible = worktreeSelected;
+        mnubtnCopyWorktreePath.IsVisible = worktreeSelected;
+        mnubtnShowWorktreeInFolder.IsVisible = worktreeSelected;
+        mnubtnOpenWorktree.IsEnabled = canActOnWorktree && canRunCommands;
+        mnubtnDeleteWorktree.IsEnabled = canActOnWorktree && canRunCommands;
+        mnubtnCopyWorktreePath.IsEnabled = worktreeSelected;
+        mnubtnShowWorktreeInFolder.IsEnabled = worktreeSelected
+            && Directory.Exists(SelectedWorktreeNode!.Worktree.Path);
 
         bool canCopy = SelectedNode is BaseBranchLeafNode or StashNode;
         bool canFilter = GetSelectedNodes().OfType<BaseRevisionNode>().Any(node => node.GitRef is not null)
@@ -608,8 +655,9 @@ public partial class RepoObjectsTree : GitModuleControl
         }
 
         bool hasDynamicAction = _actionItems.Values.Any(item => item.IsVisible);
-        _actionSeparator.IsVisible = hasDynamicAction && (stashTreeSelected || stashSelected);
-        e.Cancel = !hasDynamicAction && !stashTreeSelected && !stashSelected;
+        bool hasStaticAction = stashTreeSelected || stashSelected || worktreeTreeSelected || worktreeSelected;
+        _actionSeparator.IsVisible = hasDynamicAction && hasStaticAction;
+        e.Cancel = !hasDynamicAction && !hasStaticAction;
     }
 
     private void SetActionVisible(RepoAction action, bool enabled)
@@ -767,6 +815,8 @@ public partial class RepoObjectsTree : GitModuleControl
 
         internal ToggleButton ShowRemotesButton => control.tsbShowRemotes;
 
+        internal ToggleButton ShowWorktreesButton => control.tsbShowWorktrees;
+
         internal ToggleButton ShowTagsButton => control.tsbShowTags;
 
         internal ToggleButton ShowSubmodulesButton => control.tsbShowSubmodules;
@@ -787,6 +837,20 @@ public partial class RepoObjectsTree : GitModuleControl
 
         internal MenuItem DropStashMenuItem => control.mnubtnDropStash;
 
+        internal MenuItem CreateWorktreeMenuItem => control.mnubtnCreateWorktreeFromRootNode;
+
+        internal MenuItem PruneWorktreesMenuItem => control.mnubtnPruneWorktreesFromRootNode;
+
+        internal MenuItem ManageWorktreesMenuItem => control.mnubtnManageWorktreesFromRootNode;
+
+        internal MenuItem OpenWorktreeMenuItem => control.mnubtnOpenWorktree;
+
+        internal MenuItem DeleteWorktreeMenuItem => control.mnubtnDeleteWorktree;
+
+        internal MenuItem CopyWorktreePathMenuItem => control.mnubtnCopyWorktreePath;
+
+        internal MenuItem ShowWorktreeInFolderMenuItem => control.mnubtnShowWorktreeInFolder;
+
         internal MenuItem GetActionMenuItem(string action)
             => control._actionItems[Enum.Parse<RepoAction>(action)];
 
@@ -802,6 +866,9 @@ public partial class RepoObjectsTree : GitModuleControl
 
         internal void SetSubmodules(SubmoduleInfoResult result)
             => control._submoduleTree.Load(result);
+
+        internal void SetWorktrees(IReadOnlyList<GitWorktree> worktrees, string currentWorkingDirectory)
+            => control._worktreeTree.Load(worktrees, currentWorkingDirectory);
     }
 
     private enum RepoAction

@@ -8,6 +8,7 @@ internal enum RepoTreeKind
 {
     Branches,
     Remotes,
+    Worktrees,
     Tags,
     Submodules,
     Stashes,
