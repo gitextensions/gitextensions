@@ -665,6 +665,12 @@
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
     "notes": "Cherry-picks ordinary and merge revisions through native repository Git and the existing process/conflict flow. Retains automatic-commit and reference options, successful-dialog settings persistence, selectable mainline parents, revision picking, and sequential oldest-to-newest multi-selection with option carry-forward. The revision-grid context contribution is live and the Avalonia revision grid now supports the original multiple selection mode."
   },
+  "src/app/GitUI/CommandsDialogs/FormRevertCommit.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRevertCommit.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Reverts ordinary and merge revisions through native repository Git and the existing process/conflict flow. Retains automatic commit, selectable mainline parents, preservation of a pre-existing merge/commit message, and revision-grid processing in the original newest-to-oldest selection order."
+  },
   "src/app/GitUI/CommandsDialogs/FormCreateTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateTag.axaml.cs",
     "status": "functional",
