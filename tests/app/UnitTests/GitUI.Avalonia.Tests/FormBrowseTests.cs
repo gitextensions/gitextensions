@@ -21,6 +21,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
@@ -67,6 +68,20 @@ public sealed class FormBrowseTests
     {
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
+    }
+
+    [AvaloniaTest]
+    public void QuickFetch_should_stop_when_the_before_fetch_script_cancels()
+    {
+        TestScriptEventRecorder scriptEvents = TestScriptEventRecorder.Install(_serviceContainer);
+        scriptEvents.CancelledEvents.Add(ScriptEvent.BeforeFetch);
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+
+        form.ExecuteCommand(FormBrowse.Command.QuickFetch).Should().BeTrue();
+
+        scriptEvents.Events.Should().Equal(ScriptEvent.BeforeFetch);
     }
 
     [AvaloniaTest]

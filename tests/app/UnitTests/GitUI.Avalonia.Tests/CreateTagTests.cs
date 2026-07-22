@@ -12,6 +12,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -176,6 +177,36 @@ public sealed class CreateTagTests
     }
 
     [AvaloniaTest]
+    public void PushTag_should_stop_when_the_before_push_script_cancels()
+    {
+        (IGitUICommands commands, _) = CreateCommands();
+        TestScriptEventRecorder scriptEvents = (TestScriptEventRecorder)commands.GetRequiredService<IScriptsRunner>();
+        scriptEvents.CancelledEvents.Add(ScriptEvent.BeforePush);
+        commands.StartCommandLineProcessDialog(
+                Arg.Any<WinFormsShims.IWin32Window>(),
+                Arg.Any<IGitCommand>())
+            .Returns(true);
+        FormCreateTag form = new(commands, RevisionId);
+        form.Show();
+        try
+        {
+            form.FindControl<TextBox>("textBoxTagName")!.Text = "v1.0";
+            form.FindControl<CheckBox>("pushTag")!.IsChecked = true;
+            form.FindControl<Button>("Ok")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            scriptEvents.Events.Should().Equal(ScriptEvent.BeforePush);
+            form.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
+        }
+        finally
+        {
+            if (form.IsVisible)
+            {
+                form.Close();
+            }
+        }
+    }
+
+    [AvaloniaTest]
     public void Create_click_should_create_a_tag_in_a_real_repository()
     {
         string workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.CreateTag-{Guid.NewGuid():N}");
@@ -244,6 +275,7 @@ public sealed class CreateTagTests
 
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
+        commands.GetService(typeof(IScriptsRunner)).Returns(new TestScriptEventRecorder());
         return (commands, module);
     }
 }

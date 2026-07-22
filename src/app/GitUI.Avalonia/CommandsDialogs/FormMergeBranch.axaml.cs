@@ -8,6 +8,7 @@ using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -15,8 +16,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 namespace GitUI.CommandsDialogs;
 
 /// <summary>Form to merge a branch into the current branch.</summary>
-// Twin of GitUI/CommandsDialogs/FormMergeBranch.cs. Before/after merge event scripts remain
-// deferred with the ScriptsEngine tranche; the merge operation itself is fully functional.
+// Twin of GitUI/CommandsDialogs/FormMergeBranch.cs.
 public partial class FormMergeBranch : GitModuleForm
 {
     private readonly TranslationString _formMergeBranchHoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
@@ -137,6 +137,12 @@ public partial class FormMergeBranch : GitModuleForm
             detachedSettings.NoFastForwardMerge = noFastForward.IsChecked == true;
             AppSettings.DontCommitMerge = noCommit.IsChecked == true;
 
+            bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeMerge, this);
+            if (!success)
+            {
+                return;
+            }
+
             string? mergeMessagePath = null;
             if (addMergeMessage.IsChecked == true)
             {
@@ -158,7 +164,7 @@ public partial class FormMergeBranch : GitModuleForm
                 mergeMessagePath,
                 Module.GetPathForGitExecution,
                 addLogMessages.IsChecked == true ? Convert.ToInt32(nbMessages.Value) : null);
-            bool success = FormProcess.ShowDialog(
+            success = FormProcess.ShowDialog(
                 this,
                 UICommands,
                 arguments: command,
@@ -173,6 +179,7 @@ public partial class FormMergeBranch : GitModuleForm
 
             if (success || wasConflict)
             {
+                ScriptsRunner.RunEventScripts(ScriptEvent.AfterMerge, this);
                 UICommands.RepoChangedNotifier.Notify();
                 Close();
             }
