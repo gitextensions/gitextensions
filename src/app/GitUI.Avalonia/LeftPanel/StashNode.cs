@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.Compat;
@@ -8,13 +8,11 @@ using ResourceManager;
 namespace GitUI.LeftPanel;
 
 [DebuggerDisplay("(Stash) ReflogSelector = {ReflogSelector}, Hash = {ObjectId}")]
-internal sealed class StashNode
+internal sealed class StashNode : Node
 {
-    private readonly StashTree _tree;
-
-    public StashNode(StashTree tree, in ObjectId objectId, string reflogSelector, string subject)
+    public StashNode(StashTree tree, NodeBase parent, in ObjectId objectId, string reflogSelector, string subject)
+        : base(tree, parent, $"{reflogSelector.RemovePrefix(GitRefName.RefsStashPrefix)}: {subject}", GitUI.Properties.Images.Stash)
     {
-        _tree = tree;
         ObjectId = objectId;
         DisplayName = $"{reflogSelector.RemovePrefix(GitRefName.RefsStashPrefix)}: {subject}";
         ReflogSelector = reflogSelector;
@@ -28,17 +26,17 @@ internal sealed class StashNode
 
     internal bool OpenStash(IWin32Window owner)
     {
-        return _tree.UICommands.StartStashDialog(owner, manageStashes: true, ReflogSelector);
+        return UICommands.StartStashDialog(owner, manageStashes: true, ReflogSelector);
     }
 
     public void ApplyStash(IWin32Window owner)
     {
-        _tree.UICommands.StashApply(owner, ReflogSelector);
+        UICommands.StashApply(owner, ReflogSelector);
     }
 
     public void PopStash(IWin32Window owner)
     {
-        _tree.UICommands.StashPop(owner, ReflogSelector);
+        UICommands.StashPop(owner, ReflogSelector);
     }
 
     public void DropStash(IWin32Window owner)
@@ -76,8 +74,11 @@ internal sealed class StashNode
 
             if (result == TaskDialogButton.Yes)
             {
-                _tree.UICommands.StashDrop(owner, ReflogSelector);
+                UICommands.StashDrop(owner, ReflogSelector);
             }
         }
     }
+
+    internal override void OnDoubleClick()
+        => OpenStash(Owner);
 }

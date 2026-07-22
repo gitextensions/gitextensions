@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI.Compat;
@@ -17,6 +17,9 @@ public class MessageBoxes : Translate
 
     private readonly TranslationString _failedToRunShell = new("Failed to run shell");
     private readonly TranslationString _reason = new("Reason");
+
+    private readonly TranslationString _confirmBranchCheckoutCaption = new("Confirm checkout");
+    private readonly TranslationString _confirmBranchCheckout = new(@"Are you sure you want to check out branch ""{0}""?");
 
     private readonly TranslationString _unresolvedMergeConflictsCaption = new("Merge conflicts");
     private readonly TranslationString _unresolvedMergeConflicts = new("There are unresolved merge conflicts, solve conflicts now?");
@@ -60,6 +63,10 @@ public class MessageBoxes : Translate
 
     public static bool ConfirmResolveMergeConflicts(WinFormsShims.IWin32Window? owner)
         => Confirm(owner, Instance._unresolvedMergeConflicts.Text, Instance._unresolvedMergeConflictsCaption.Text);
+
+    public static bool ConfirmBranchCheckout(WinFormsShims.IWin32Window? owner, string branchName)
+        => !AppSettings.ConfirmBranchCheckout.Value
+           || Confirm(owner, string.Format(Instance._confirmBranchCheckout.Text, branchName), Instance._confirmBranchCheckoutCaption.Text);
 
     public static bool ConfirmUpdateSubmodules(WinFormsShims.IWin32Window? owner)
     {

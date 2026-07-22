@@ -3,6 +3,7 @@ using Avalonia.Input;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Gpg;
+using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -120,6 +121,7 @@ public sealed partial class FormBrowse : GitModuleForm
         _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
+        repoObjectsTree.Initialize(RevisionGrid.SetAndApplyBranchFilter);
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
         RevisionGrid.RevisionsLoading += RefreshLeftPanel;
         RevisionGrid.RevisionFilterRequested += (_, _) => ToolStripFilters.SetFocus();
@@ -561,8 +563,13 @@ public sealed partial class FormBrowse : GitModuleForm
             cancellationToken.ThrowIfCancellationRequested();
             IReadOnlyList<IGitRef> refs = e.GetRefs(RefsFilter.NoFilter);
             IReadOnlyCollection<GitRevision> stashes = e.GetStashRevs.Value;
+            string currentBranch = Module.GetSelectedBranch();
+            IReadOnlyList<Remote> enabledRemotes = await Module.GetRemotesAsync();
+            ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
+            IReadOnlyList<Remote> disabledRemotes = remotesManager.GetDisabledRemotes();
+            cancellationToken.ThrowIfCancellationRequested();
             await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            repoObjectsTree.SetRefs(refs, stashes);
+            repoObjectsTree.SetRefs(refs, stashes, currentBranch, enabledRemotes, disabledRemotes, remotesManager);
         });
     }
 
