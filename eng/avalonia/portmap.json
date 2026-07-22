@@ -347,6 +347,18 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same account, token, project, explanatory text, and tri-state test-result controls in the original order; only the existing checkbox field participates in plugin XLF translation, matching the WinForms Designer field boundary."
   },
+  "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.cs": {
+    "twin": "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable-only same-named MEF export retains default-project initialization and the original server, project, and ignored-branch settings while remaining a native Avalonia control. The Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same three translated labels and text fields in the original compact two-column order."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",
