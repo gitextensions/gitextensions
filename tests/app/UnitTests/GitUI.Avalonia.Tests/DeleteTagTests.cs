@@ -12,6 +12,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -145,8 +146,16 @@ public sealed class DeleteTagTests
     public void Delete_click_should_delete_local_and_selected_remote_tag()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands("v1.0");
+        TestScriptEventRecorder scriptEvents = (TestScriptEventRecorder)commands.GetRequiredService<IScriptsRunner>();
         ArgumentString? remoteDeleteArguments = null;
-        FormDeleteTag form = new(commands, "v1.0", arguments => remoteDeleteArguments = arguments);
+        FormDeleteTag form = new(
+            commands,
+            "v1.0",
+            arguments =>
+            {
+                remoteDeleteArguments = arguments;
+                return true;
+            });
         form.Show();
         Dispatcher.UIThread.RunJobs();
 
@@ -160,7 +169,31 @@ public sealed class DeleteTagTests
         module.Received(1).DeleteTag("v1.0");
         remoteDeleteArguments.Should().NotBeNull();
         remoteDeleteArguments!.Value.ToString().Should().Be("push \"origin\" :refs/tags/v1.0");
+        scriptEvents.Events.Should().Equal(ScriptEvent.BeforePush, ScriptEvent.AfterPush);
         form.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
+    }
+
+    [AvaloniaTest]
+    public void Delete_click_should_not_run_after_push_when_the_remote_process_fails()
+    {
+        (IGitUICommands commands, _) = CreateCommands("v1.0");
+        TestScriptEventRecorder scriptEvents = (TestScriptEventRecorder)commands.GetRequiredService<IScriptsRunner>();
+        FormDeleteTag form = new(commands, "v1.0", _ => false);
+        form.Show();
+        try
+        {
+            form.FindControl<CheckBox>("deleteTag")!.IsChecked = true;
+            form.FindControl<Button>("Ok")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            scriptEvents.Events.Should().Equal(ScriptEvent.BeforePush);
+        }
+        finally
+        {
+            if (form.IsVisible)
+            {
+                form.Close();
+            }
+        }
     }
 
     [AvaloniaTest]
@@ -213,6 +246,7 @@ public sealed class DeleteTagTests
 
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
+        commands.GetService(typeof(IScriptsRunner)).Returns(new TestScriptEventRecorder());
         return (commands, module);
     }
 

@@ -20,6 +20,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -160,8 +161,7 @@ public sealed class FormCommitTests
         try
         {
             form.Show();
-            TextBox message = form.FindControl<TextBox>("Message")
-                ?? throw new InvalidOperationException("Commit message editor was not created.");
+            GitUI.SpellChecker.EditNetSpell message = form.GetTestAccessor().Message;
             Button modifyMessage = form.FindControl<Button>("modifyCommitMessageButton")
                 ?? throw new InvalidOperationException("Modify-message button was not created.");
 
@@ -221,33 +221,46 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
-    public void FormCommit_should_load_message_history_and_saved_templates()
+    public async Task FormCommit_should_load_message_history_and_saved_templates()
     {
         string lastCommitMessage = AppSettings.LastCommitMessage;
         string commitTemplates = AppSettings.CommitTemplates;
         bool showOnlyMyMessages = AppSettings.CommitDialogShowOnlyMyMessages;
-        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        string gitDirectory = Path.Combine(_workingDirectory, ".git");
+        Directory.CreateDirectory(gitDirectory);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_workingDirectory);
+        module.WorkingDirGitDir.Returns(gitDirectory);
+        module.CommitEncoding.Returns(Encoding.UTF8);
+        module.FilesEncoding.Returns(Encoding.UTF8);
+        module.GetSelectedBranch().Returns("main");
+        module.GetAllChangedFilesWithSubmodulesStatus(Arg.Any<CancellationToken>()).Returns([]);
+        module.GetRefs(Arg.Any<RefsFilter>()).Returns([]);
+        module.GetRemoteNames().Returns([]);
         FormCommit form = new(new GitUICommands(_serviceContainer, module));
+        FormCommit.TestAccessor accessor = form.GetTestAccessor();
         try
         {
+            form.Show();
             AppSettings.LastCommitMessage = "Last message from another repository";
             AppSettings.CommitDialogShowOnlyMyMessages = false;
             CommitTemplateItem.SaveToSettings([new CommitTemplateItem("Saved template", "Template body", icon: null, isRegex: false)]);
 
-            FormCommit.TestAccessor accessor = form.GetTestAccessor();
             accessor.PopulateCommitMessageHistory();
             MenuItem lastMessage = accessor.CommitMessageFlyout.Items
                 .OfType<MenuItem>()
                 .First(item => Equals(item.Header, "Last message from another repository"));
             lastMessage.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
-            form.FindControl<TextBox>("Message")!.Text.Should().Be("Last message from another repository");
+            Dispatcher.UIThread.RunJobs();
+            form.GetTestAccessor().Message.Text.Should().Be("Last message from another repository");
 
             accessor.PopulateCommitTemplates();
             MenuItem savedTemplate = accessor.CommitTemplatesFlyout.Items
                 .OfType<MenuItem>()
                 .First(item => Equals(item.Header, "Saved template"));
             savedTemplate.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
-            form.FindControl<TextBox>("Message")!.Text.Should().Be("Template body");
+            Dispatcher.UIThread.RunJobs();
+            form.GetTestAccessor().Message.Text.Should().Be("Template body");
 
             MenuItem conventional = accessor.CommitTemplatesFlyout.Items.OfType<MenuItem>().Last();
             conventional.Items.OfType<MenuItem>().Select(item => item.Header).Should().Contain(FeatCommitTypeForTest);
@@ -258,6 +271,7 @@ public sealed class FormCommitTests
             AppSettings.CommitTemplates = commitTemplates;
             AppSettings.CommitDialogShowOnlyMyMessages = showOnlyMyMessages;
             form.Close();
+            await accessor.ClosePersistenceTask;
         }
     }
 
@@ -298,6 +312,7 @@ public sealed class FormCommitTests
         bool closeProcessDialog = AppSettings.CloseProcessDialog;
         string lastCommitMessage = AppSettings.LastCommitMessage;
         AppSettings.CloseProcessDialog = true;
+        TestScriptEventRecorder scriptEvents = TestScriptEventRecorder.Install(_serviceContainer);
         GitModule module = CreateRepositoryWithTwoUnstagedChanges();
         ObjectId initialCommit = module.GetCurrentCheckout();
         GitUICommands commands = new(_serviceContainer, module);
@@ -311,8 +326,7 @@ public sealed class FormCommitTests
                 ?? throw new InvalidOperationException("Staged file list was not created.");
             Button stageAll = form.FindControl<Button>("toolStageAllItem")
                 ?? throw new InvalidOperationException("Stage-all button was not created.");
-            TextBox message = form.FindControl<TextBox>("Message")
-                ?? throw new InvalidOperationException("Commit message editor was not created.");
+            GitUI.SpellChecker.EditNetSpell message = form.GetTestAccessor().Message;
             Button commit = form.FindControl<Button>("Commit")
                 ?? throw new InvalidOperationException("Commit button was not created.");
             Button commitAndPush = form.FindControl<Button>("CommitAndPush")
@@ -334,6 +348,7 @@ public sealed class FormCommitTests
             revision.Subject.Should().Be("Commit from Avalonia");
             module.GetAllChangedFilesWithSubmodulesStatus().Should().BeEmpty();
             File.Exists(Path.Combine(module.WorkingDirGitDir, "COMMITMESSAGE")).Should().BeFalse();
+            scriptEvents.Events.Should().Equal(ScriptEvent.BeforeCommit, ScriptEvent.AfterCommit);
         }
         finally
         {
@@ -379,7 +394,7 @@ public sealed class FormCommitTests
                 .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
             await WaitForCountsAsync(unstaged, 0, staged, 2);
 
-            form.FindControl<TextBox>("Message")!.Text = "Commit with options";
+            form.GetTestAccessor().Message.Text = "Commit with options";
             form.FindControl<TextBox>("toolAuthor")!.Text = "Custom Author <author@example.com>";
             form.FindControl<CheckBox>("signOffToolStripMenuItem")!.IsChecked = true;
             form.FindControl<CheckBox>("noVerifyToolStripMenuItem")!.IsChecked = true;

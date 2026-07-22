@@ -13,6 +13,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -196,6 +197,7 @@ public sealed class FormPushTests
     {
         bool closeProcessDialog = AppSettings.CloseProcessDialog;
         AppSettings.CloseProcessDialog = true;
+        TestScriptEventRecorder scriptEvents = TestScriptEventRecorder.Install(_serviceContainer);
         GitModule module = CreateRepositoryAndRemote();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("remote") { "remove", "origin" });
         string branch = module.GetSelectedBranch();
@@ -213,6 +215,7 @@ public sealed class FormPushTests
             GitModule remoteModule = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _bareRemoteDirectory);
             remoteModule.RevParse($"refs/heads/{branch}").Should().Be(localCommit);
             form.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
+            scriptEvents.Events.Should().Equal(ScriptEvent.BeforePush, ScriptEvent.AfterPush);
         }
         finally
         {
