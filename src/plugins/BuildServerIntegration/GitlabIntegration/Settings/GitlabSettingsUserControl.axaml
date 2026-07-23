@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitExtensions.Plugins.GitlabIntegration.Settings.GitlabSettingsUserControl"
+             MinWidth="320">
+  <Grid x:Name="tableLayoutPanel1"
+        Margin="2"
+        ColumnDefinitions="Auto,*"
+        RowDefinitions="Auto,Auto,Auto,20,Auto,Auto"
+        ColumnSpacing="6"
+        RowSpacing="2">
+    <TextBlock x:Name="label1"
+               Margin="2,0"
+               VerticalAlignment="Center"
+               Text="Instance URL" />
+    <TextBox x:Name="InstanceUrlTextBox"
+             Grid.Column="1"
+             Margin="2" />
+
+    <TextBlock x:Name="label3"
+               Grid.Row="1"
+               Margin="2,0"
+               VerticalAlignment="Center"
+               Text="Project ID" />
+    <TextBox x:Name="ProjectIdTextBox"
+             Grid.Row="1"
+             Grid.Column="1"
+             Margin="2" />
+
+    <HyperlinkButton x:Name="GetProjectIdLink"
+                     Grid.Row="2"
+                     Grid.Column="1"
+                     Padding="2,0"
+                     HorizontalAlignment="Left"
+                     Content="Get Project ID from server" />
+
+    <TextBlock x:Name="GetProjectIdStatusText"
+               Grid.Row="3"
+               Grid.Column="1"
+               Margin="2,0"
+               VerticalAlignment="Center"
+               IsVisible="False"
+               Text="Failed to obtain project from server. Try to specify valid API token or check instance URL" />
+
+    <TextBlock x:Name="label2"
+               Grid.Row="4"
+               Margin="2,0"
+               VerticalAlignment="Center"
+               Text="Api Token" />
+    <TextBox x:Name="ApiTokenTextBox"
+             Grid.Row="4"
+             Grid.Column="1"
+             Margin="2" />
+
+    <HyperlinkButton x:Name="TokenManagementLink"
+                     Grid.Row="5"
+                     Grid.Column="1"
+                     Padding="2,0"
+                     HorizontalAlignment="Left"
+                     Content="Go to token management page" />
+  </Grid>
+</UserControl>
