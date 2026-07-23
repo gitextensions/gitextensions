@@ -15,6 +15,8 @@ using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtensions.Plugins.GitHubActionsIntegration;
 using GitExtensions.Plugins.GitHubActionsIntegration.Settings;
+using GitExtensions.Plugins.GitlabIntegration;
+using GitExtensions.Plugins.GitlabIntegration.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -40,6 +42,7 @@ public sealed class BuildServerIntegrationTests
         [
             typeof(AppVeyorIntegrationMetadata).Assembly,
             typeof(GitHubActionsIntegrationMetadataAttribute).Assembly,
+            typeof(GitlabIntegrationMetadataAttribute).Assembly,
             typeof(JenkinsIntegrationMetadata).Assembly,
         ]);
     }
@@ -105,7 +108,7 @@ public sealed class BuildServerIntegrationTests
             pageAccessor.BuildServerType.SelectedIndex.Should().Be(0);
             string[] buildServerTypes = [.. pageAccessor.BuildServerType.Items.Cast<string>()];
             buildServerTypes.Should().StartWith("None");
-            buildServerTypes[1..].Should().BeEquivalentTo("AppVeyor", "GitHub Actions", "Jenkins");
+            buildServerTypes[1..].Should().BeEquivalentTo("AppVeyor", "GitHub Actions", "Gitlab", "Jenkins");
             pageAccessor.buildServerSettingsPanel.Content.Should().BeNull(
                 "the parameterless settings form intentionally has no repository module");
 
@@ -127,6 +130,103 @@ public sealed class BuildServerIntegrationTests
             BuildServerSettings.ServerName[settings] = originalServerName;
             form.GotoPage(new SettingsPageReferenceByType(typeof(SettingsPlaceholderPage)));
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void GitLab_settings_control_should_be_a_native_export_and_round_trip_settings()
+    {
+        Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata> export = ManagedExtensibility
+            .GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>()
+            .Single(item => item.Metadata.BuildServerType == "Gitlab");
+        GitlabSettingsUserControl control = export.Value.Should()
+            .BeAssignableTo<Control>()
+            .Which.Should()
+            .BeOfType<GitlabSettingsUserControl>()
+            .Subject;
+        TextBox instanceUrl = control.FindControl<TextBox>("InstanceUrlTextBox")!;
+        TextBox projectId = control.FindControl<TextBox>("ProjectIdTextBox")!;
+        TextBox apiToken = control.FindControl<TextBox>("ApiTokenTextBox")!;
+        HyperlinkButton getProjectId = control.FindControl<HyperlinkButton>("GetProjectIdLink")!;
+        HyperlinkButton tokenManagement = control.FindControl<HyperlinkButton>("TokenManagementLink")!;
+        TextBlock getProjectIdStatus = control.FindControl<TextBlock>("GetProjectIdStatusText")!;
+
+        ITranslation translation = Substitute.For<ITranslation>();
+        control.AddTranslationItems(translation);
+        translation.Received(1).AddTranslationItem(
+            nameof(GitlabSettingsUserControl), "label1", "Text", "Instance URL");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitlabSettingsUserControl), "label2", "Text", "Api Token");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitlabSettingsUserControl), "label3", "Text", "Project ID");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitlabSettingsUserControl), "GetProjectIdLink", "Text", "Get Project ID from server");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitlabSettingsUserControl), "TokenManagementLink", "Text", "Go to token management page");
+        translation.Received(1).AddTranslationItem(
+            nameof(GitlabSettingsUserControl), "GetProjectIdStatusText", "Text",
+            "Failed to obtain project from server. Try to specify valid API token or check instance URL");
+
+        TestSettingsSource settings = new();
+        settings.SetInt("ProjectId", 123);
+        settings.SetString("ApiToken", "configured-token");
+        control.Initialize("unused", ["git@gitlab.example.test:team/repository.git"]);
+        control.LoadSettings(settings);
+        instanceUrl.Text.Should().Be("https://gitlab.example.test");
+        projectId.Text.Should().Be("123");
+        apiToken.Text.Should().Be("configured-token");
+        apiToken.PasswordChar.Should().Be(default);
+        getProjectId.IsEnabled.Should().BeTrue();
+        tokenManagement.IsEnabled.Should().BeTrue();
+        getProjectIdStatus.IsVisible.Should().BeFalse();
+
+        settings.SetString("InstanceUrl", "https://configured.gitlab.test");
+        control.LoadSettings(settings);
+        instanceUrl.Text.Should().Be("https://configured.gitlab.test");
+
+        instanceUrl.Text = "not a URL";
+        getProjectId.IsEnabled.Should().BeFalse();
+        tokenManagement.IsEnabled.Should().BeFalse();
+
+        instanceUrl.Text = "https://saved.gitlab.test";
+        projectId.Text = "456";
+        apiToken.Text = string.Empty;
+        control.SaveSettings(settings);
+        settings.GetString("InstanceUrl", null).Should().Be("https://saved.gitlab.test");
+        settings.GetInt("ProjectId", 0).Should().Be(456);
+        settings.GetString("ApiToken", null).Should().BeNull();
+        settings.GetInt("PagesLimit", -1).Should().Be(0);
+
+        IProcess process = Substitute.For<IProcess>();
+        IExecutable executable = Substitute.For<IExecutable>();
+        executable.Start(
+            Arg.Any<ArgumentString>(),
+            Arg.Any<bool>(),
+            Arg.Any<bool>(),
+            Arg.Any<bool>(),
+            Arg.Any<System.Text.Encoding?>(),
+            Arg.Any<bool>(),
+            Arg.Any<bool>(),
+            Arg.Any<CancellationToken>())
+            .Returns(process);
+        OsShellUtil.TestAccessor.MockExecutable = executable;
+        try
+        {
+            tokenManagement.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            executable.Received(1).Start(
+                Arg.Any<ArgumentString>(),
+                createWindow: false,
+                redirectInput: false,
+                redirectOutput: false,
+                outputEncoding: null,
+                useShellExecute: true,
+                throwOnErrorExit: false,
+                Arg.Any<CancellationToken>());
+        }
+        finally
+        {
+            OsShellUtil.TestAccessor.MockExecutable = null;
+            process.Dispose();
         }
     }
 

@@ -371,6 +371,18 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same translated API URL, owner, repository, masked token, and personal-access-token link controls in the original compact two-column order."
   },
+  "src/plugins/BuildServerIntegration/GitlabIntegration/Settings/GitlabSettingsUserControl.cs": {
+    "twin": "src/plugins/BuildServerIntegration/GitlabIntegration/Settings/GitlabSettingsUserControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable-only same-named MEF export retains remote-derived instance and project identity, configured overrides, project lookup, settings persistence, URL validation, and the token-management action. Asynchronous API results marshal to Avalonia's UI thread; the Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/GitlabIntegration/Settings/GitlabSettingsUserControl.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/GitlabIntegration/Settings/GitlabSettingsUserControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same six translated items—three labels, status text, and two links—plus three text fields in the original compact two-column order."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",
