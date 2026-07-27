@@ -2034,11 +2034,23 @@
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
     "notes": "Native 744x552 two-tab layout with source column metrics, shared dialog/group styles, clone destination, protocol, parent-remote, depth, and action controls; no ListView or ColumnHeader shim types are introduced."
   },
+  "src/app/GitUI/CommandsDialogs/RepoHosting/ViewPullRequestsForm.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml.cs",
+    "status": "parity",
+    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
+    "notes": "Retains current-remote hosted-repository selection and fallback, pull-request rows, provider diff/discussion loading, selected-file patch viewing, fetch, add-remote/fetch/checkout, close, refresh, and post-comment actions. Provider work is latest-selection-wins under one form-owned TaskManager; structured Git command builders replace the original raw fetch/checkout strings."
+  },
+  "src/app/GitUI/CommandsDialogs/RepoHosting/ViewPullRequestsForm.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native 754x511 split layout preserves the repository selector, five-column pull-request list, action rail, Diff/Comments tabs, FileStatusList/FileViewer and EditNetSpell boundaries. Discussion entries use typed Avalonia rows instead of the WinForms WebBrowser/GDI HTML renderer, while the four translated header identities and literal # header remain unchanged."
+  },
   "src/app/GitUI/GitUICommands.cs": {
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "a7557b981a569ede1a53153e14e053da42873bf9",
-    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. StartBatchFileProcessDialog runs private temporary cmd.exe scripts on Windows or /bin/sh scripts on Linux/macOS through that same process dialog and always deletes the temporary file. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree create/delete/switch, revision-range difftool, ordinary/plugin Settings hosts, repository-host fork/clone, plugin commit-template registration, and portable same-executable repository-browser launch members are real. RunCommand retains the upstream verbs and argument parsing for every command whose Avalonia surface is functional; unknown and still-unported verbs report explicitly instead of opening Browse."
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. StartBatchFileProcessDialog runs private temporary cmd.exe scripts on Windows or /bin/sh scripts on Linux/macOS through that same process dialog and always deletes the temporary file. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree create/delete/switch, revision-range difftool, ordinary/plugin Settings hosts, repository-host fork/clone and pull-request viewer, plugin commit-template registration, and portable same-executable repository-browser launch members are real. RunCommand retains the upstream verbs and argument parsing for every command whose Avalonia surface is functional; unknown and still-unported verbs report explicitly instead of opening Browse."
   },
   "src/app/GitUI/RevisionDiffInfoProvider.cs": {
     "twin": "src/app/GitUI/RevisionDiffInfoProvider.cs",
