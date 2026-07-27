@@ -151,6 +151,9 @@ public sealed class FormBrowseTests
                 .Select(label => label.Label)
                 .Should()
                 .Contain([ResourceManager.TranslatedStrings.Workspace, ResourceManager.TranslatedStrings.Index]);
+            RevisionGridControl.TestAccessor revisionGrid = form.RevisionGrid.GetTestAccessor();
+            revisionGrid.HasGraphParent(ObjectId.WorkTreeId, ObjectId.IndexId).Should().BeTrue();
+            revisionGrid.HasGraphParent(ObjectId.IndexId, module.GetCurrentCheckout()).Should().BeTrue();
         }
         finally
         {
