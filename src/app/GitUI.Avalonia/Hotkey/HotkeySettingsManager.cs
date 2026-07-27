@@ -1,3 +1,4 @@
+using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
 using GitUI.CommandsDialogs;
@@ -8,11 +9,42 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Hotkey;
 
-// Reduced twin: loads the persisted settings for commands currently implemented by the
-// Avalonia Browse form. More targets join the default set as their command handlers are ported.
-internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
+/// <summary>
+///  Provides the ability to manage hotkeys settings.
+/// </summary>
+public interface IHotkeySettingsManager : IHotkeySettingsLoader
+{
+    /// <summary>
+    ///  Generates the list of preset hotkeys.
+    /// </summary>
+    /// <returns>The list of preset hotkeys.</returns>
+    IReadOnlyList<HotkeySettings> CreateDefaultSettings();
+
+    /// <summary>
+    ///  Determines whether the hotkey is already assigned.
+    /// </summary>
+    /// <returns><see langword="true"/> if the hotkey is available; otherwise, <see langword="false"/>.</returns>
+    bool IsUniqueKey(WinFormsShims.Keys keyData);
+
+    /// <summary>
+    ///  Loads all preset and user-configured hotkeys.
+    /// </summary>
+    /// <returns>The union of preset and user-configured hotkeys.</returns>
+    IReadOnlyList<HotkeySettings> LoadSettings();
+
+    /// <summary>
+    ///  Saves the user-configured hotkeys.
+    /// </summary>
+    /// <param name="settings">The user-configured hotkeys.</param>
+    void SaveSettings(IEnumerable<HotkeySettings> settings);
+}
+
+// Reduced twin: preserves the original manager and persistence contract while publishing
+// defaults only for command groups whose Avalonia consumers are implemented.
+internal sealed class HotkeySettingsManager : IHotkeySettingsManager
 {
     private static readonly XmlSerializer _serializer = new(typeof(HotkeySettings[]), [typeof(HotkeyCommand)]);
+    private readonly HashSet<WinFormsShims.Keys> _usedKeys = [];
     private readonly IScriptsManager? _scriptsManager;
 
     public HotkeySettingsManager(IScriptsManager? scriptsManager = null)
@@ -20,32 +52,113 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
         _scriptsManager = scriptsManager;
     }
 
+    public bool IsUniqueKey(WinFormsShims.Keys keyData) => _usedKeys.Contains(keyData);
+
     public IReadOnlyList<HotkeyCommand> LoadHotkeys(string hotkeySettingsName)
     {
-        HotkeySettings? defaults = CreateDefaultSettings(_scriptsManager)
-            .FirstOrDefault(settings => settings.Name == hotkeySettingsName);
-        if (defaults?.Commands is null)
+        HotkeySettings? settings = LoadSettings()
+            .FirstOrDefault(candidate => candidate.Name == hotkeySettingsName);
+        return settings?.Commands ?? [];
+    }
+
+    public IReadOnlyList<HotkeySettings> LoadSettings()
+    {
+        IReadOnlyList<HotkeySettings> defaultSettings = CreateDefaultSettings();
+        HotkeySettings[]? loadedSettings = LoadSerializedSettings();
+
+        MergeIntoDefaultSettings(defaultSettings, loadedSettings);
+
+        return defaultSettings;
+    }
+
+    private void UpdateUsedKeys(IEnumerable<HotkeySettings> settings)
+    {
+        _usedKeys.Clear();
+
+        foreach (HotkeySettings setting in settings)
         {
-            return [];
+            if (setting.Commands is not null)
+            {
+                foreach (HotkeyCommand command in setting.Commands)
+                {
+                    _usedKeys.Add(command.KeyData);
+                }
+            }
+        }
+    }
+
+    /// <summary>Serializes and saves the supplied settings.</summary>
+    public void SaveSettings(IEnumerable<HotkeySettings> settings)
+    {
+        try
+        {
+            UpdateUsedKeys(settings);
+
+            XmlWriterSettings xmlWriterSettings = new()
+            {
+                Indent = true,
+            };
+            using StringWriter writer = new();
+            using XmlWriter xmlWriter = XmlWriter.Create(writer, xmlWriterSettings);
+
+            _serializer.Serialize(xmlWriter, settings.ToArray());
+            AppSettings.SerializedHotkeys = writer.ToString();
+        }
+        catch
+        {
+            // Preserve the original best-effort settings-save boundary.
+        }
+    }
+
+    internal static void MergeIntoDefaultSettings(
+        IEnumerable<HotkeySettings> defaultSettings,
+        IEnumerable<HotkeySettings>? loadedSettings)
+    {
+        if (loadedSettings is null)
+        {
+            return;
         }
 
-        HotkeyCommand[] commands = [.. defaults.Commands.Select(command => new HotkeyCommand(command.CommandCode, command.Name!) { KeyData = command.KeyData })];
-        HotkeySettings? loaded = LoadSerializedSettings()
-            ?.FirstOrDefault(settings => settings.Name == hotkeySettingsName);
-        if (loaded?.Commands is not null)
+        Dictionary<string, HotkeyCommand> defaultCommands = [];
+        foreach (HotkeySettings setting in defaultSettings)
         {
-            Dictionary<int, HotkeyCommand> commandsByCode = commands.ToDictionary(command => command.CommandCode);
-            foreach (HotkeyCommand loadedCommand in loaded.Commands)
+            if (setting.Commands is null || setting.Name is null)
             {
-                if (commandsByCode.TryGetValue(loadedCommand.CommandCode, out HotkeyCommand? command))
+                continue;
+            }
+
+            foreach (HotkeyCommand command in setting.Commands)
+            {
+                defaultCommands.Add(CalcDictionaryKey(setting.Name, command.CommandCode), command);
+            }
+        }
+
+        foreach (HotkeySettings setting in loadedSettings)
+        {
+            if (setting.Commands is null || setting.Name is null)
+            {
+                continue;
+            }
+
+            foreach (HotkeyCommand command in setting.Commands)
+            {
+                if (defaultCommands.TryGetValue(
+                        CalcDictionaryKey(setting.Name, command.CommandCode),
+                        out HotkeyCommand? defaultCommand))
                 {
-                    command.KeyData = loadedCommand.KeyData;
+                    defaultCommand.KeyData = command.KeyData;
                 }
             }
         }
 
-        return commands;
+        return;
+
+        static string CalcDictionaryKey(string settingName, int commandCode)
+            => settingName + ":" + commandCode;
     }
+
+    public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
+        => CreateDefaultSettings(_scriptsManager);
 
     internal static IReadOnlyList<HotkeySettings> CreateDefaultSettings(IScriptsManager? scriptsManager = null)
     {

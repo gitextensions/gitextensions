@@ -2,7 +2,9 @@ using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -19,10 +21,13 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
+using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using ResourceManager;
+using ResourceManager.Hotkey;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -1433,6 +1438,133 @@ public sealed class SettingsDialogTests
                 text.Contains("{SelectedRelativePaths}", StringComparison.Ordinal)
                 && text.Contains("{ColumnNumber}", StringComparison.Ordinal)));
         page.GetTestAccessor().ArgumentsHelp.Content.Should().Be("?");
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_register_hotkeys_after_scripts()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        List<ISettingsPage> pages = accessor.SettingsTreeView.SettingsPages.ToList();
+        ScriptsSettingsPage scripts = pages.OfType<ScriptsSettingsPage>().Single();
+        HotkeysSettingsPage hotkeys = pages.OfType<HotkeysSettingsPage>().Single();
+
+        pages.IndexOf(scripts).Should().BeLessThan(pages.IndexOf(hotkeys));
+
+        form.GotoPage(HotkeysSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(hotkeys);
+        hotkeys.GetTitle().Should().Be("Hotkeys");
+    }
+
+    [AvaloniaTest]
+    public void Hotkeys_settings_should_capture_apply_clear_reset_and_save()
+    {
+        string? serializedHotkeys = AppSettings.SerializedHotkeys;
+        AppSettings.SerializedHotkeys = string.Empty;
+        try
+        {
+            IHotkeySettingsManager manager = new HotkeySettingsManager();
+            IServiceProvider services = Substitute.For<IServiceProvider>();
+            services.GetService(typeof(IHotkeySettingsManager)).Returns(manager);
+            HotkeysSettingsPage page = new(services);
+            HotkeysSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+            Window window = new()
+            {
+                Content = page,
+                Width = 791,
+                Height = 525,
+            };
+            window.Show();
+            try
+            {
+                page.LoadSettings();
+                int browseIndex = accessor.Hotkeys.Values!
+                    .Select((setting, index) => (setting, index))
+                    .Single(item => item.setting.Name == FormBrowse.HotkeySettingsName)
+                    .index;
+                accessor.Hotkeys.Settings.SelectedIndex = browseIndex;
+                int refreshIndex = accessor.Hotkeys.Mappings.Items
+                    .Cast<HotkeyCommand>()
+                    .Select((command, index) => (command, index))
+                    .Single(item => item.command.CommandCode == (int)FormBrowse.Command.Refresh)
+                    .index;
+                accessor.Hotkeys.Mappings.SelectedIndex = refreshIndex;
+                accessor.Hotkeys.Hotkey.Focus();
+
+                window.KeyPress(
+                    Key.F6,
+                    RawInputModifiers.Control,
+                    PhysicalKey.F6,
+                    keySymbol: null);
+                accessor.Hotkeys.Hotkey.KeyData.Should()
+                    .Be(WinFormsShims.Keys.Control | WinFormsShims.Keys.F6);
+                accessor.Hotkeys.Apply.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                accessor.Hotkeys.Values![browseIndex].Commands![refreshIndex].KeyData.Should()
+                    .Be(WinFormsShims.Keys.Control | WinFormsShims.Keys.F6);
+                Dispatcher.UIThread.RunJobs();
+                accessor.Hotkeys.Mappings.GetVisualDescendants()
+                    .OfType<TextBlock>()
+                    .Should()
+                    .Contain(textBlock => textBlock.Text == "Ctrl+F6");
+
+                accessor.Hotkeys.Mappings.SelectedIndex = refreshIndex;
+                accessor.Hotkeys.Clear.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                accessor.Hotkeys.Values[browseIndex].Commands![refreshIndex].KeyData.Should()
+                    .Be(WinFormsShims.Keys.None);
+
+                accessor.Hotkeys.Reset.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                HotkeyCommand resetRefresh = accessor.Hotkeys.Values!
+                    .Single(setting => setting.Name == FormBrowse.HotkeySettingsName)
+                    .Commands!
+                    .Single(command => command.CommandCode == (int)FormBrowse.Command.Refresh);
+                resetRefresh.KeyData.Should().Be(WinFormsShims.Keys.F5);
+
+                page.SaveSettings();
+                manager.LoadHotkeys(FormBrowse.HotkeySettingsName)
+                    .Should()
+                    .ContainSingle(command =>
+                        command.CommandCode == (int)FormBrowse.Command.Refresh
+                        && command.KeyData == WinFormsShims.Keys.F5);
+                window.CaptureRenderedFrame().Should().NotBeNull();
+            }
+            finally
+            {
+                window.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.SerializedHotkeys = serializedHotkeys!;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Hotkeys_settings_should_preserve_original_translation_keys()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        HotkeysSettingsPage page = new();
+        ControlHotkeys control = page.GetLogicalDescendants()
+            .OfType<ControlHotkeys>()
+            .Single();
+
+        page.AddTranslationItems(translation);
+        control.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(HotkeysSettingsPage), "$this", "Text", "Hotkeys");
+        translation.Received(1).AddTranslationItem(
+            nameof(ControlHotkeys), "lHotkeyableItems", "Text", "Hotkeyable Items");
+        translation.Received(1).AddTranslationItem(
+            nameof(ControlHotkeys), "columnCommand", "Text", "Command");
+        translation.Received(1).AddTranslationItem(
+            nameof(ControlHotkeys), "columnKey", "Text", "Key");
+        translation.Received(1).AddTranslationItem(
+            nameof(ControlHotkeys), "txtHotkey", "Text", "None");
+        translation.Received(1).AddTranslationItem(
+            nameof(ControlHotkeys), "bResetToDefaults", "Text", "Reset all Hotkeys to defaults");
     }
 
     [AvaloniaTest]

@@ -172,6 +172,10 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             SettingsPageBase.Create<ScriptsSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
             Images.Console);
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<HotkeysSettingsPage>(this, serviceProvider),
+            GitExtensionsSettingsGroup.GetPageReference(),
+            Images.Hotkey);
 
         GitSettingsGroup gitSettingsGroup = new();
         settingsTreeView.AddSettingsPage(gitSettingsGroup, parentPageReference: null, Images.GitLogo16);
