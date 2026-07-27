@@ -63,6 +63,7 @@
     <ProjectReference Include="..\..\..\..\src\plugins\GitHub3\GitExtensions.Plugins.GitHub3.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\Statistics\GitImpact\GitExtensions.Plugins.GitImpact.csproj" />
   </ItemGroup>
 
   <ItemGroup>

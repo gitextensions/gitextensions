@@ -509,6 +509,36 @@
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
     "notes": "Same 760x421 resizable dialog, seven-column large-object selector, progress/footer actions, same-named fields, and existing plugin XLF keys."
   },
+  "src/plugins/Statistics/GitImpact/FormImpact.cs": {
+    "twin": "src/plugins/Statistics/GitImpact/FormImpact.axaml.cs",
+    "status": "parity",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Portable-only same-named dialog retains author hover details, author color display, submodule inclusion, plugin ownership, and the original four translation identities."
+  },
+  "src/plugins/Statistics/GitImpact/FormImpact.Designer.cs": {
+    "twin": "src/plugins/Statistics/GitImpact/FormImpact.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Same 863x484 resizable graph window, 32px author strip, 20px color swatch, right-aligned submodule checkbox, and original field names."
+  },
+  "src/plugins/Statistics/GitImpact/ImpactControl.cs": {
+    "twin": "src/plugins/Statistics/GitImpact/ImpactControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Native Avalonia DrawingContext twin retains weekly logarithmic author bands, cubic transitions, changed-line and date labels, horizontal scrolling, author hit testing, selection outline, aggregation, and theme-aware author colors."
+  },
+  "src/plugins/Statistics/GitImpact/ImpactControl.Designer.cs": {
+    "twin": "src/plugins/Statistics/GitImpact/ImpactControl.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Same filling custom graph surface with a bottom-docked horizontal scrollbar and semantic fixed border."
+  },
+  "src/plugins/Statistics/GitImpact/ImpactLoader.cs": {
+    "twin": "src/plugins/Statistics/GitImpact/ImpactLoader.NonWindows.cs",
+    "status": "parity",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Preserves mailmap-aware main/submodule git-log parsing, per-module caching, weekly grouping, callbacks, and intermediate empty weeks. Portable work is cancellable, owned, and synchronously joined on disposal instead of using eager process-global tasks."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",
