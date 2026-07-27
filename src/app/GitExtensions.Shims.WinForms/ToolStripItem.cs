@@ -6,8 +6,9 @@ namespace GitExtensions.Shims.WinForms;
 /// </summary>
 /// <remarks>
 ///  Consumed by: <c>GitExtensions.Extensibility/Plugins/IRepositoryHostPlugin.cs</c>
-///  (via <see cref="ContextMenuStrip"/>), <c>GitExtUtils/GitUI/ControlThreadingExtensions.cs</c>
-///  (only <see cref="IsDisposed"/> and <see cref="Disposed"/>).
+///  (via <see cref="ContextMenuStrip"/>), <c>plugins/GitHub3/GitHub3Plugin.cs</c>,
+///  <c>GitExtUtils/GitUI/ControlThreadingExtensions.cs</c> (only
+///  <see cref="IsDisposed"/> and <see cref="Disposed"/>).
 /// </remarks>
 public class ToolStripItem : System.ComponentModel.IComponent
 {
@@ -26,6 +27,11 @@ public class ToolStripItem : System.ComponentModel.IComponent
     /// </summary>
     public object? Tag { get; set; }
 
+    /// <summary>
+    ///  Gets or sets the optional item image.
+    /// </summary>
+    public Image? Image { get; set; }
+
     public System.ComponentModel.ISite? Site { get; set; }
 
     /// <summary>
@@ -37,6 +43,19 @@ public class ToolStripItem : System.ComponentModel.IComponent
     ///  Occurs when the item is disposed.
     /// </summary>
     public event EventHandler? Disposed;
+
+    /// <summary>
+    ///  Occurs when the item is activated.
+    /// </summary>
+    public event EventHandler? Click;
+
+    /// <summary>
+    ///  Activates the item.
+    /// </summary>
+    public void PerformClick()
+    {
+        Click?.Invoke(this, EventArgs.Empty);
+    }
 
     public void Dispose()
     {
