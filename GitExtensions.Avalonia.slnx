@@ -6,6 +6,9 @@
     <Project Path="eng/tools/ImagesResxToAvalonia/ImagesResxToAvalonia.csproj" />
     <Project Path="eng/tools/WinFormsToAxaml/WinFormsToAxaml.csproj" />
   </Folder>
+  <Folder Name="/externals/">
+    <Project Path="externals/Git.hub.Portable/Git.hub.Portable.csproj" />
+  </Folder>
   <Folder Name="/src/app/">
     <Project Path="src/app/GitCommands/GitCommands.csproj" />
     <Project Path="src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj" />
@@ -19,6 +22,7 @@
     <Project Path="src/plugins/AutoCompileSubmodules/GitExtensions.Plugins.AutoCompileSubmodules.csproj" />
     <Project Path="src/plugins/BackgroundFetch/GitExtensions.Plugins.BackgroundFetch.csproj" />
     <Project Path="src/plugins/CreateLocalBranches/GitExtensions.Plugins.CreateLocalBranches.csproj" />
+    <Project Path="src/plugins/GitHub3/GitExtensions.Plugins.GitHub3.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.csproj" />

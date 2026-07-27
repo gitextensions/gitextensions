@@ -36,6 +36,9 @@
     <ProjectReference Include="..\..\plugins\CreateLocalBranches\GitExtensions.Plugins.CreateLocalBranches.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\GitHub3\GitExtensions.Plugins.GitHub3.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
     <ProjectReference Include="..\..\plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />

@@ -465,6 +465,7 @@ internal static class PluginSettingControlFactory
                 WinFormsShims.TextBox textBox => new TextBoxAdapter(textBox),
                 WinFormsShims.CheckBox checkBox => new CheckBoxAdapter(checkBox),
                 WinFormsShims.ComboBox comboBox => new ComboBoxAdapter(comboBox),
+                WinFormsShims.LinkLabel linkLabel => new LinkLabelAdapter(linkLabel),
                 _ => throw new NotSupportedException(
                     $"No Avalonia plugin-setting control adapter is registered for {model.GetType().Name}."),
             };
@@ -509,5 +510,27 @@ internal static class PluginSettingControlFactory
         internal override void Load() => ComboBox.SelectedIndex = model.SelectedIndex;
 
         internal override void Save() => model.SelectedIndex = ComboBox.SelectedIndex;
+    }
+
+    private sealed class LinkLabelAdapter(WinFormsShims.LinkLabel model)
+        : ShimControlAdapter(new HyperlinkButton())
+    {
+        private HyperlinkButton LinkLabel => (HyperlinkButton)Control;
+
+        internal override void Load()
+        {
+            LinkLabel.Content = model.Text;
+            LinkLabel.Click -= LinkLabel_Click;
+            LinkLabel.Click += LinkLabel_Click;
+        }
+
+        internal override void Save()
+        {
+        }
+
+        private void LinkLabel_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            model.PerformClick();
+        }
     }
 }

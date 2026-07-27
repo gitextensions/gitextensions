@@ -9,6 +9,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.Plugins.GitHub3;
 using GitUI;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
@@ -118,6 +119,43 @@ public sealed class PluginSettingsTests
         customText.Text = "saved";
         customBinding.Save(new TestSettingsSource());
         customSetting.Binding.SavedText.Should().Be("saved");
+    }
+
+    [AvaloniaTest]
+    public void Generic_renderer_should_forward_headless_link_activation()
+    {
+        bool activated = false;
+        WinFormsShims.LinkLabel model = new() { Text = "Open token page" };
+        model.Click += (_, _) => activated = true;
+        PluginSettingBinding binding = PluginSettingControlFactory.Create(new PseudoSetting(model));
+
+        binding.Load(new TestSettingsSource());
+
+        HyperlinkButton link = binding.Control.Should().BeOfType<HyperlinkButton>().Subject;
+        link.Content.Should().Be("Open token page");
+        link.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        activated.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public void GitHub_plugin_settings_and_icon_should_materialize_portably()
+    {
+        GitHub3Plugin plugin = new();
+        PluginSettingBinding[] bindings = plugin.GetSettings()
+            .Select(PluginSettingControlFactory.Create)
+            .ToArray();
+
+        foreach (PluginSettingBinding binding in bindings)
+        {
+            binding.Load(new TestSettingsSource { SettingLevel = SettingLevel.Global });
+        }
+
+        bindings.Should().HaveCount(6);
+        bindings[1].Control.Should().BeOfType<HyperlinkButton>()
+            .Which.Content.Should().Be("Generate a GitHub personal access token");
+        bindings[2].Control.Should().BeOfType<HyperlinkButton>()
+            .Which.Content.Should().Be("Manage GitHub personal access token");
+        PluginIconProvider.GetIcon(plugin).Should().NotBeNull();
     }
 
     [AvaloniaTest]
