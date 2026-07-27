@@ -497,6 +497,18 @@
     "basedOn": "090464d5f5c350497427ad5b4717651df9c4f4d2",
     "notes": "Avalonia DataTransfer preserves plain text plus native rich HTML: CF_HTML on Windows, text/html on Linux, and public.html on macOS. The unchanged Windows flavor retains its WinForms DataObject implementation."
   },
+  "src/plugins/FindLargeFiles/FindLargeFilesForm.cs": {
+    "twin": "src/plugins/FindLargeFiles/FindLargeFilesForm.axaml.cs",
+    "status": "parity",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Portable-only same-named dialog retains threshold-based revision/tree scanning, object de-duplication, commit counts and dates, pack compression sizes, sortable delete selection, confirmation, and history cleanup. The detached exception-swallowing thread becomes owner-managed cancellable Git execution, and the rewrite script uses cmd.exe syntax on Windows or POSIX sh syntax on Linux/macOS."
+  },
+  "src/plugins/FindLargeFiles/FindLargeFilesForm.Designer.cs": {
+    "twin": "src/plugins/FindLargeFiles/FindLargeFilesForm.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Same 760x421 resizable dialog, seven-column large-object selector, progress/footer actions, same-named fields, and existing plugin XLF keys."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",
@@ -1930,7 +1942,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree create/delete/switch, revision-range difftool, ordinary/plugin Settings hosts, plugin commit-template registration, and portable same-executable repository-browser launch members are real. RunCommand retains the upstream verbs and argument parsing for every command whose Avalonia surface is functional; unknown and still-unported verbs report explicitly instead of opening Browse."
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. StartBatchFileProcessDialog runs private temporary cmd.exe scripts on Windows or /bin/sh scripts on Linux/macOS through that same process dialog and always deletes the temporary file. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree create/delete/switch, revision-range difftool, ordinary/plugin Settings hosts, plugin commit-template registration, and portable same-executable repository-browser launch members are real. RunCommand retains the upstream verbs and argument parsing for every command whose Avalonia surface is functional; unknown and still-unported verbs report explicitly instead of opening Browse."
   },
   "src/app/GitUI/RevisionDiffInfoProvider.cs": {
     "twin": "src/app/GitUI/RevisionDiffInfoProvider.cs",
