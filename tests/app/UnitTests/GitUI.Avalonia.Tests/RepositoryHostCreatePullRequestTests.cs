@@ -10,9 +10,12 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
+using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -41,6 +44,9 @@ public sealed class RepositoryHostCreatePullRequestTests
         _serviceContainer.AddService<System.IO.Abstractions.IFileSystem>(fileSystem);
         _serviceContainer.AddService<IGitDirectoryResolver>(gitDirectoryResolver);
         _serviceContainer.AddService<IRepositoryDescriptionProvider>(repositoryDescriptionProvider);
+        _serviceContainer.AddService<IAppTitleGenerator>(
+            new AppTitleGenerator(repositoryDescriptionProvider));
+        _serviceContainer.AddService<ILinkFactory>(new LinkFactory());
         GitCommands.ServiceContainerRegistry.RegisterServices(_serviceContainer);
         GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
 
@@ -165,6 +171,31 @@ public sealed class RepositoryHostCreatePullRequestTests
         commands.StartCreatePullRequest(owner: null);
 
         host.Received(1).Execute(Arg.Any<GitUIEventArgs>());
+    }
+
+    [AvaloniaTest]
+    public async Task AddUpstreamRemote_should_run_the_provider_under_the_browse_owner()
+    {
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.ConfigurationOk.Returns(true);
+        host.AddUpstreamRemoteAsync().Returns(Task.FromResult<string?>(null));
+        GitModule module = new(
+            _serviceContainer.GetRequiredService<IGitExecutorProvider>(),
+            _workingDirectory);
+        GitUICommands commands = new(_serviceContainer, module);
+        FormBrowse owner = new(commands);
+        try
+        {
+            commands.AddUpstreamRemote(owner, host);
+            await owner.JoinLoadOperationsForTestAsync()
+                .WaitAsync(TimeSpan.FromSeconds(5));
+
+            await host.Received(1).AddUpstreamRemoteAsync();
+        }
+        finally
+        {
+            owner.Close();
+        }
     }
 
     private CreatePullRequestForm CreateForm(
