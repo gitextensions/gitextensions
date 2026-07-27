@@ -358,6 +358,11 @@ public sealed partial class ParityScreenshotTests
             return new FormSettings(context.Commands, GeneralSettingsPage.GetPageReference());
         }
 
+        if (viewType == typeof(HotkeysSettingsPage))
+        {
+            return new HotkeysSettingsPage(context.Commands);
+        }
+
         if (viewType == typeof(SimpleHelpDisplayDialog))
         {
             return new SimpleHelpDisplayDialog
@@ -697,6 +702,12 @@ public sealed partial class ParityScreenshotTests
                     },
                 ]);
             revisionLinksSettingsPage.GetTestAccessor().LoadFromSettings(settings);
+        }
+
+        if (root is HotkeysSettingsPage hotkeysSettingsPage)
+        {
+            hotkeysSettingsPage.LoadSettings();
+            hotkeysSettingsPage.GetTestAccessor().Hotkeys.Settings.SelectedIndex = 0;
         }
 
         if (root is ScriptsSettingsPage scriptsSettingsPage)
@@ -1214,6 +1225,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FontDialogWindow))
         {
             return (520, 300);
+        }
+
+        if (viewType == typeof(HotkeysSettingsPage))
+        {
+            return (791, 525);
         }
 
         if (typeof(Window).IsAssignableFrom(viewType))
