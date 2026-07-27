@@ -39,6 +39,9 @@
     <ProjectReference Include="..\..\plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
     <ProjectReference Include="..\..\plugins\GitHub3\GitExtensions.Plugins.GitHub3.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
