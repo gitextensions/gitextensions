@@ -1,0 +1,61 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitExtensions.Plugins.ProxySwitcher.ProxySwitcherForm"
+        Width="341"
+        Height="106"
+        MinWidth="341"
+        MinHeight="106"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Proxy Switcher">
+  <Grid x:Name="tableLayoutPanel1"
+        ColumnDefinitions="Auto,*"
+        RowDefinitions="26,26,*,29">
+    <TextBlock x:Name="LocalHttpProxy_Label"
+               Margin="3"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Center"
+               Text="Local http.proxy:" />
+    <TextBox x:Name="LocalHttpProxy_TextBox"
+             Grid.Column="1"
+             Margin="3,1"
+             IsReadOnly="True" />
+
+    <TextBlock x:Name="GlobalHttpProxy_Label"
+               Grid.Row="1"
+               Margin="3"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Center"
+               Text="Global http.proxy:" />
+    <TextBox x:Name="GlobalHttpProxy_TextBox"
+             Grid.Row="1"
+             Grid.Column="1"
+             Margin="3,1"
+             IsReadOnly="True" />
+
+    <CheckBox x:Name="ApplyGlobally_CheckBox"
+              Grid.Row="2"
+              Grid.Column="1"
+              Margin="3,0"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Top"
+              IsChecked="True"
+              Content="Apply globally" />
+
+    <Grid x:Name="tableLayoutPanel2"
+          Grid.Row="3"
+          Grid.ColumnSpan="2"
+          ColumnDefinitions="*,123,123">
+      <Button x:Name="SetProxy_Button"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="1"
+              Margin="3"
+              Content="Set proxy" />
+      <Button x:Name="UnsetProxy_Button"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="2"
+              Margin="3"
+              Content="Unset proxy" />
+    </Grid>
+  </Grid>
+</Window>

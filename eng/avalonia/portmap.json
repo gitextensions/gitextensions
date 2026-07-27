@@ -467,6 +467,18 @@
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
     "notes": "Portable collection keeps Name, Date, and Author ascending/descending sorting while dropping only WinForms DataGridView and binding-list dependencies."
   },
+  "src/plugins/ProxySwitcher/ProxySwitcherForm.cs": {
+    "twin": "src/plugins/ProxySwitcher/ProxySwitcherForm.axaml.cs",
+    "status": "parity",
+    "basedOn": "57d3739f1eb87b5b3fed33138b51ec0ee5a173f6",
+    "notes": "Portable-only same-named dialog retains plugin settings, local/effective and global Git-config reads, credential masking, scope comparison, and local/global set/unset commands. It invalidates the existing GitModule settings cache after each direct config write so the refreshed values are current; the original WinForms flavor is untouched."
+  },
+  "src/plugins/ProxySwitcher/ProxySwitcherForm.Designer.cs": {
+    "twin": "src/plugins/ProxySwitcher/ProxySwitcherForm.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Same compact 341x106 client layout, two read-only proxy values, global-scope checkbox, 117px set/unset actions, centered owner placement, field names, and seven existing plugin XLF keys."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",
