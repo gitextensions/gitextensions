@@ -347,6 +347,18 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same account, token, project, explanatory text, and tri-state test-result controls in the original order; only the existing checkbox field participates in plugin XLF translation, matching the WinForms Designer field boundary."
   },
+  "src/plugins/BuildServerIntegration/AzureDevOpsIntegration/Settings/SettingsUserControl.cs": {
+    "twin": "src/plugins/BuildServerIntegration/AzureDevOpsIntegration/Settings/SettingsUserControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable-only same-named MEF export retains remote-derived project detection, model/view synchronization, regex validation, valid-only settings persistence, token-management navigation, and clipboard build-URL extraction. Clipboard and message-box access continue through the existing headless shim services; asynchronous API results return to Avalonia's UI thread. The adapter's custom-button errors retain the task-dialog shim host, and the Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/AzureDevOpsIntegration/Settings/SettingsUserControl.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/AzureDevOpsIntegration/Settings/SettingsUserControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same project URL, build-definition filter, validation warning, API token, two links, examples, scope guidance, and deliberate spacer rows in the original two-column order. Only the five original member controls participate in field-based translation; the four Designer-local captions remain outside that key set."
+  },
   "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.cs": {
     "twin": "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.axaml.cs",
     "status": "parity",
