@@ -6,6 +6,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using AzureDevOpsIntegration;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
@@ -28,6 +29,8 @@ using JenkinsIntegration;
 using JenkinsIntegration.Settings;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using AzureDevOpsSettingsUserControl = AzureDevOpsIntegration.Settings.SettingsUserControl;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -41,6 +44,7 @@ public sealed class BuildServerIntegrationTests
         ManagedExtensibility.Initialise(
         [
             typeof(AppVeyorIntegrationMetadata).Assembly,
+            typeof(AzureDevOpsIntegrationMetadata).Assembly,
             typeof(GitHubActionsIntegrationMetadataAttribute).Assembly,
             typeof(GitlabIntegrationMetadataAttribute).Assembly,
             typeof(JenkinsIntegrationMetadata).Assembly,
@@ -108,7 +112,12 @@ public sealed class BuildServerIntegrationTests
             pageAccessor.BuildServerType.SelectedIndex.Should().Be(0);
             string[] buildServerTypes = [.. pageAccessor.BuildServerType.Items.Cast<string>()];
             buildServerTypes.Should().StartWith("None");
-            buildServerTypes[1..].Should().BeEquivalentTo("AppVeyor", "GitHub Actions", "Gitlab", "Jenkins");
+            buildServerTypes[1..].Should().BeEquivalentTo(
+                "AppVeyor",
+                "Azure DevOps and Team Foundation Server (since TFS2015)",
+                "GitHub Actions",
+                "Gitlab",
+                "Jenkins");
             pageAccessor.buildServerSettingsPanel.Content.Should().BeNull(
                 "the parameterless settings form intentionally has no repository module");
 
@@ -130,6 +139,179 @@ public sealed class BuildServerIntegrationTests
             BuildServerSettings.ServerName[settings] = originalServerName;
             form.GotoPage(new SettingsPageReferenceByType(typeof(SettingsPlaceholderPage)));
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Azure_DevOps_settings_control_should_be_a_native_export_and_round_trip_settings()
+    {
+        const string category = nameof(AzureDevOpsIntegration.Settings.SettingsUserControl);
+        const string pluginName = "Azure DevOps and Team Foundation Server (since TFS2015)";
+        Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata> export = ManagedExtensibility
+            .GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>()
+            .Single(item => item.Metadata.BuildServerType == pluginName);
+        AzureDevOpsSettingsUserControl control = export.Value.Should()
+            .BeAssignableTo<Control>()
+            .Which.Should()
+            .BeOfType<AzureDevOpsSettingsUserControl>()
+            .Subject;
+        TextBox projectUrl = control.FindControl<TextBox>("TfsServer")!;
+        TextBox definitionFilter = control.FindControl<TextBox>("TfsBuildDefinitionNameFilter")!;
+        TextBox apiToken = control.FindControl<TextBox>("RestApiToken")!;
+        HyperlinkButton extract = control.FindControl<HyperlinkButton>("ExtractLink")!;
+        HyperlinkButton tokenManagement = control.FindControl<HyperlinkButton>("TokenManagementLink")!;
+        TextBlock regexError = control.FindControl<TextBlock>("labelRegexError")!;
+
+        ITranslation translation = Substitute.For<ITranslation>();
+        control.AddTranslationItems(translation);
+        translation.Received(1).AddTranslationItem(
+            category, "ExtractLink", "Text",
+            "Extract data from a build result url copied in the clipboard");
+        translation.Received(1).AddTranslationItem(
+            category, "TokenManagementLink", "Text",
+            "Go to token management page");
+        translation.Received(1).AddTranslationItem(
+            category, "label1", "Text",
+            "Examples:\n - https://dev.azure.com/yourorganization/projectname/\n - https://yourhost:8080/tfs/collectionname/projectname/\n - https://yourorganization.visualstudio.com/projectname/");
+        translation.Received(1).AddTranslationItem(
+            category, "label4", "Text",
+            "You need to create a token with the following scopes:\n - 'Build (read)'\n - 'Project and team (read)'");
+        translation.Received(1).AddTranslationItem(
+            category, "labelRegexError", "Text",
+            "The 'Build definition name' regular expression is not valid and won't be saved!");
+        translation.Received(1).AddTranslationItem(
+            category, "_failToExtractDataFromClipboardCaption", "Text",
+            "Could not extract data");
+        translation.Received(1).AddTranslationItem(
+            category, "_failToExtractDataFromClipboardMessage", "Text",
+            "The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
+            "Please copy the url of the build into the clipboard before retrying." + Environment.NewLine +
+            "(Should contain at least the \"buildId\" parameter)");
+        translation.Received(1).AddTranslationItem(
+            category, "_failToLoadBuildDefinitionInfoMessage", "Text",
+            "Error while trying to retrieve build definition information from url." + Environment.NewLine + Environment.NewLine +
+            "Please ensure that the url is valid and that the API token has access to build and project information.");
+        translation.Received(1).AddTranslationItem(
+            category, "_infoNoApiTokenMessage", "Text",
+            "Unable to retrieve build definition information without API token. Field will be left blank.");
+        translation.ReceivedCalls().Should().HaveCount(9);
+
+        TestSettingsSource settings = new();
+        control.Initialize("unused", ["git@ssh.dev.azure.com:v3/example/project/repository"]);
+        control.LoadSettings(settings);
+        projectUrl.Text.Should().Be("https://dev.azure.com/example/project");
+        definitionFilter.Text.Should().BeEmpty();
+        apiToken.Text.Should().BeEmpty();
+        apiToken.PasswordChar.Should().Be(default);
+        tokenManagement.IsEnabled.Should().BeTrue();
+        regexError.IsVisible.Should().BeFalse();
+
+        definitionFilter.Text = "[";
+        regexError.IsVisible.Should().BeTrue();
+        control.SaveSettings(settings);
+        settings.GetString("ProjectUrl", null).Should().BeNull();
+
+        projectUrl.Text = "https://dev.azure.com/saved/project";
+        definitionFilter.Text = "build-.*";
+        apiToken.Text = "configured-token";
+        control.SaveSettings(settings);
+        settings.GetString("ProjectUrl", null).Should().Be("https://dev.azure.com/saved/project");
+        settings.GetString("BuildDefinitionNameFilter", null).Should().Be("build-.*");
+        settings.GetString("RestApiToken", null).Should().Be("configured-token");
+
+        IProcess process = Substitute.For<IProcess>();
+        IExecutable executable = Substitute.For<IExecutable>();
+        executable.Start(
+            Arg.Any<ArgumentString>(),
+            Arg.Any<bool>(),
+            Arg.Any<bool>(),
+            Arg.Any<bool>(),
+            Arg.Any<System.Text.Encoding?>(),
+            Arg.Any<bool>(),
+            Arg.Any<bool>(),
+            Arg.Any<CancellationToken>())
+            .Returns(process);
+        OsShellUtil.TestAccessor.MockExecutable = executable;
+        try
+        {
+            tokenManagement.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            executable.Received(1).Start(
+                Arg.Any<ArgumentString>(),
+                createWindow: false,
+                redirectInput: false,
+                redirectOutput: false,
+                outputEncoding: null,
+                useShellExecute: true,
+                throwOnErrorExit: false,
+                Arg.Any<CancellationToken>());
+        }
+        finally
+        {
+            OsShellUtil.TestAccessor.MockExecutable = null;
+            process.Dispose();
+        }
+
+        StubClipboard clipboard = new("https://dev.azure.com/copied/project/_build/results?buildId=42&view=results");
+        StubMessageBoxHost messageBoxes = new();
+        WinFormsShims.IClipboard? originalClipboard = TryGetClipboard();
+        WinFormsShims.IMessageBoxHost? originalMessageBoxHost = TryGetMessageBoxHost();
+        WinFormsShims.ShimHost.Clipboard = clipboard;
+        WinFormsShims.ShimHost.MessageBoxHost = messageBoxes;
+        apiToken.Text = string.Empty;
+        try
+        {
+            extract.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            await WaitUntilAsync(() => projectUrl.Text == "https://dev.azure.com/copied/project");
+            definitionFilter.Text.Should().BeEmpty();
+            messageBoxes.Messages.Should().ContainSingle()
+                .Which.Should().Be("Unable to retrieve build definition information without API token. Field will be left blank.");
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.Clipboard = originalClipboard ?? new StubClipboard(string.Empty);
+            WinFormsShims.ShimHost.MessageBoxHost = originalMessageBoxHost ?? new StubMessageBoxHost();
+        }
+
+        return;
+
+        static WinFormsShims.IClipboard? TryGetClipboard()
+        {
+            try
+            {
+                return WinFormsShims.ShimHost.Clipboard;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
+
+        static WinFormsShims.IMessageBoxHost? TryGetMessageBoxHost()
+        {
+            try
+            {
+                return WinFormsShims.ShimHost.MessageBoxHost;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
+
+        static async Task WaitUntilAsync(Func<bool> condition)
+        {
+            for (int attempt = 0; attempt < 100; attempt++)
+            {
+                Dispatcher.UIThread.RunJobs();
+                if (condition())
+                {
+                    return;
+                }
+
+                await Task.Delay(10);
+            }
+
+            condition().Should().BeTrue("the clipboard extraction should complete before the timeout");
         }
     }
 
@@ -516,6 +698,34 @@ public sealed class BuildServerIntegrationTests
         revision.BuildStatus = null;
         Dispatcher.UIThread.RunJobs();
         tabs.Items.Should().HaveCount(1);
+    }
+
+    private sealed class StubClipboard(string text) : WinFormsShims.IClipboard
+    {
+        public bool ContainsText() => text.Length > 0;
+
+        public string GetText() => text;
+
+        public void SetText(string value)
+        {
+        }
+    }
+
+    private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
+    {
+        public List<string> Messages { get; } = [];
+
+        public WinFormsShims.DialogResult Show(
+            WinFormsShims.IWin32Window? owner,
+            string? text,
+            string? caption,
+            WinFormsShims.MessageBoxButtons buttons,
+            WinFormsShims.MessageBoxIcon icon,
+            WinFormsShims.MessageBoxDefaultButton defaultButton)
+        {
+            Messages.Add(text ?? string.Empty);
+            return WinFormsShims.DialogResult.OK;
+        }
     }
 
     private sealed class TestSettingsSource : SettingsSource

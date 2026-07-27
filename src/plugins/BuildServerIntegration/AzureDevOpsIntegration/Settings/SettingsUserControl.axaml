@@ -1,0 +1,78 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AzureDevOpsIntegration.Settings.SettingsUserControl"
+             MinWidth="400">
+  <Grid x:Name="tableLayoutPanel1"
+        ColumnDefinitions="Auto,*"
+        RowDefinitions="Auto,Auto,Auto,20,Auto,Auto,Auto,20,Auto,Auto,Auto"
+        ColumnSpacing="6"
+        RowSpacing="2">
+    <HyperlinkButton x:Name="ExtractLink"
+                     Grid.Column="1"
+                     Padding="2,0"
+                     HorizontalAlignment="Left"
+                     Content="Extract data from a build result url copied in the clipboard" />
+
+    <TextBlock Grid.Row="1"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Project Url" />
+    <TextBox x:Name="TfsServer"
+             Grid.Row="1"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <TextBlock x:Name="label1"
+               Grid.Row="2"
+               Grid.Column="1"
+               Margin="3,0,3,5"
+               TextWrapping="Wrap"
+               Text="Examples:&#10; - https://dev.azure.com/yourorganization/projectname/&#10; - https://yourhost:8080/tfs/collectionname/projectname/&#10; - https://yourorganization.visualstudio.com/projectname/" />
+
+    <TextBlock Grid.Row="4"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Build definition name&#10;(all existing if left empty)" />
+    <TextBox x:Name="TfsBuildDefinitionNameFilter"
+             Grid.Row="4"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <TextBlock Grid.Row="5"
+               Grid.Column="1"
+               Margin="3,0"
+               Text="If needed, use the '*' wildcard or enter a Regular Expression" />
+
+    <TextBlock x:Name="labelRegexError"
+               Grid.Row="6"
+               Grid.Column="1"
+               Margin="3,5"
+               Foreground="Red"
+               IsVisible="False"
+               TextWrapping="Wrap"
+               Text="The 'Build definition name' regular expression is not valid and won't be saved!" />
+
+    <TextBlock Grid.Row="8"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Rest Api Token" />
+    <TextBox x:Name="RestApiToken"
+             Grid.Row="8"
+             Grid.Column="1"
+             Margin="3,2" />
+
+    <HyperlinkButton x:Name="TokenManagementLink"
+                     Grid.Row="9"
+                     Grid.Column="1"
+                     Padding="2,0"
+                     HorizontalAlignment="Left"
+                     Content="Go to token management page" />
+
+    <TextBlock x:Name="label4"
+               Grid.Row="10"
+               Grid.Column="1"
+               Margin="3,0"
+               TextWrapping="Wrap"
+               Text="You need to create a token with the following scopes:&#10; - 'Build (read)'&#10; - 'Project and team (read)'" />
+  </Grid>
+</UserControl>
