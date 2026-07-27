@@ -34,6 +34,7 @@ public sealed class GitUICommands : IGitUICommands
     private const string PathFilterArg = "--pathFilter";
 
     private readonly IServiceProvider _serviceProvider;
+    private readonly ICommitTemplateManager _commitTemplateManager;
 
     public IGitModule Module { get; private set; }
     public ILockableNotifier RepoChangedNotifier { get; }
@@ -47,6 +48,7 @@ public sealed class GitUICommands : IGitUICommands
         _serviceProvider = serviceProvider;
         Module = module;
 
+        _commitTemplateManager = new CommitTemplateManager(() => module);
         RepoChangedNotifier = new ActionNotifier(
             () => InvokeEvent(null, PostRepositoryChanged));
     }
@@ -291,14 +293,22 @@ public sealed class GitUICommands : IGitUICommands
 
     #region Not ported yet
 
-    public void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex = false) => throw NotPorted(nameof(AddCommitTemplate));
+    public void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex = false)
+    {
+        _commitTemplateManager.Register(key, addingText, icon, isRegex);
+    }
+
     public void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster) => throw NotPorted(nameof(AddUpstreamRemote));
     public IGitRemoteCommand CreateRemoteCommand() => throw NotPorted(nameof(CreateRemoteCommand));
     public bool DoActionOnRepo(Func<bool> action)
         => DoActionOnRepo(owner: null, action, requiresValidWorkingDir: false);
     public void RaisePostBrowseInitialize(IWin32Window? owner) => InvokeEvent(owner, PostBrowseInitialize);
     public void RaisePostRegisterPlugin(IWin32Window? owner) => InvokeEvent(owner, PostRegisterPlugin);
-    public void RemoveCommitTemplate(string key) => throw NotPorted(nameof(RemoveCommitTemplate));
+    public void RemoveCommitTemplate(string key)
+    {
+        _commitTemplateManager.Unregister(key);
+    }
+
     public bool RunCommand(IReadOnlyList<string> args)
     {
         IReadOnlyDictionary<string, string?> arguments = InitializeArguments(args);
