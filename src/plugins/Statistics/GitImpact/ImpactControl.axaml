@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitExtensions.Plugins.GitImpact.ImpactControl"
+             ClipToBounds="True"
+             BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+             BorderThickness="1">
+  <Grid RowDefinitions="*,Auto">
+    <ScrollBar x:Name="_scrollBar"
+               Grid.Row="1"
+               HorizontalAlignment="Stretch"
+               LargeChange="0"
+               Maximum="0"
+               Orientation="Horizontal"
+               SmallChange="0" />
+  </Grid>
+</UserControl>
