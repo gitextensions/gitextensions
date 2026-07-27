@@ -1133,7 +1133,25 @@ public sealed class GitUICommands : IGitUICommands
         return done;
     }
 
-    public void StartPullRequestsDialog(IWin32Window? owner, IRepositoryHostPlugin gitHoster) => throw NotPorted(nameof(StartPullRequestsDialog));
+    public void StartPullRequestsDialog(IWin32Window? owner, IRepositoryHostPlugin gitHoster)
+    {
+        WrapRepoHostingCall(
+            TranslatedStrings.ViewPullRequest,
+            gitHoster,
+            hoster =>
+            {
+                ViewPullRequestsForm form = new(this, hoster);
+                if (owner is Window { IsVisible: true } ownerWindow)
+                {
+                    form.Show(ownerWindow);
+                }
+                else
+                {
+                    form.Show();
+                }
+            });
+    }
+
     public bool StartPushDialog(IWin32Window? owner, bool pushOnShow)
         => StartPushDialog(owner, pushOnShow, forceWithLease: false, out _);
 
