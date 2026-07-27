@@ -285,6 +285,37 @@ public sealed class HotkeyTests
         }
     }
 
+    [Test]
+    public void HotkeySettingsManager_should_save_the_edited_reduced_settings()
+    {
+        string? serializedHotkeys = AppSettings.SerializedHotkeys;
+        AppSettings.SerializedHotkeys = string.Empty;
+        try
+        {
+            IHotkeySettingsManager manager = new HotkeySettingsManager();
+            IReadOnlyList<HotkeySettings> settings = manager.LoadSettings();
+            HotkeyCommand refresh = settings
+                .Single(setting => setting.Name == FormBrowse.HotkeySettingsName)
+                .Commands!
+                .Single(command => command.CommandCode == (int)FormBrowse.Command.Refresh);
+            refresh.KeyData = WinFormsShims.Keys.F6;
+
+            manager.SaveSettings(settings);
+
+            AppSettings.SerializedHotkeys.Should().Contain(nameof(FormBrowse.Command.Refresh));
+            manager.IsUniqueKey(WinFormsShims.Keys.F6).Should().BeTrue();
+            manager.LoadHotkeys(FormBrowse.HotkeySettingsName)
+                .Should()
+                .ContainSingle(command =>
+                    command.CommandCode == (int)FormBrowse.Command.Refresh
+                    && command.KeyData == WinFormsShims.Keys.F6);
+        }
+        finally
+        {
+            AppSettings.SerializedHotkeys = serializedHotkeys!;
+        }
+    }
+
     [AvaloniaTest]
     public void FormBrowse_F5_should_dispatch_refresh_through_the_hotkey_command()
     {
