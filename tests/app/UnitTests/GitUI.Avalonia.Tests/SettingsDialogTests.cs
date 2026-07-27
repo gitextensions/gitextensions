@@ -5,7 +5,10 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
+using GitCommands.ExternalLinks;
+using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
@@ -13,6 +16,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
 using GitUI.ScriptsEngine;
@@ -1071,6 +1075,218 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
+    public void FormSettings_should_register_revision_links_before_build_server_integration()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        List<ISettingsPage> pages = accessor.SettingsTreeView.SettingsPages.ToList();
+        RevisionLinksSettingsPage revisionLinks = pages
+            .OfType<RevisionLinksSettingsPage>()
+            .Single();
+        BuildServerIntegrationSettingsPage buildServer = pages
+            .OfType<BuildServerIntegrationSettingsPage>()
+            .Single();
+
+        pages.IndexOf(revisionLinks).Should().BeLessThan(pages.IndexOf(buildServer));
+
+        form.GotoPage(RevisionLinksSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(revisionLinks);
+        revisionLinks.GetTitle().Should().Be("Revision links");
+    }
+
+    [AvaloniaTest]
+    public void Revision_links_settings_should_roundtrip_all_fields_and_editable_formats()
+    {
+        DistributedSettings settings = CreateRevisionLinkSettings();
+        ExternalLinkDefinition original = new()
+        {
+            Name = "Original",
+            Enabled = true,
+            SearchPattern = "issue-(\\d+)",
+            NestedSearchPattern = "\\d+",
+            RemoteSearchPattern = "github",
+            UseRemotesPattern = "origin",
+            UseOnlyFirstRemote = true,
+            SearchInParts = { ExternalLinkDefinition.RevisionPart.Message },
+            RemoteSearchInParts = { ExternalLinkDefinition.RemotePart.URL },
+            LinkFormats =
+            {
+                new ExternalLinkFormat
+                {
+                    Caption = "Issue {0}",
+                    Format = "https://example.test/issues/{0}",
+                },
+            },
+        };
+        new ExternalLinksStorage().Save(settings, [original]);
+        RevisionLinksSettingsPage page = new();
+        RevisionLinksSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+        accessor.LoadFromSettings(settings);
+
+        Window window = new()
+        {
+            Content = page,
+            Width = 900,
+            Height = 620,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            TextBox[] formatEditors = accessor.Links
+                .GetVisualDescendants()
+                .OfType<TextBox>()
+                .ToArray();
+            formatEditors.Should().HaveCount(2);
+            formatEditors[0].Text = "Ticket {0}";
+            formatEditors[1].Text = "https://tracker.test/tickets/{0}";
+            Dispatcher.UIThread.RunJobs();
+            ExternalLinkDefinition selectedDefinition = accessor.SelectedDefinition
+                ?? throw new InvalidOperationException("The revision-link definition was not selected.");
+            selectedDefinition.LinkFormats.Should().ContainSingle()
+                .Which.Should().BeEquivalentTo(new ExternalLinkFormat
+                {
+                    Caption = "Ticket {0}",
+                    Format = "https://tracker.test/tickets/{0}",
+                });
+
+            accessor.Name.Text = "Updated";
+            accessor.SearchPattern.Text = "ticket-(\\d+)";
+            accessor.NestedPattern.Text = "(\\d+)";
+            accessor.RemotePattern.Text = "tracker";
+            accessor.UseRemotes.Text = "upstream|fork";
+            accessor.Enabled.IsChecked = false;
+            accessor.Message.IsChecked = false;
+            accessor.LocalBranch.IsChecked = true;
+            accessor.RemoteBranch.IsChecked = true;
+            accessor.Url.IsChecked = false;
+            accessor.PushUrl.IsChecked = true;
+            accessor.OnlyFirstRemote.IsChecked = false;
+            accessor.SaveToSettings();
+
+            ExternalLinkDefinition saved = new ExternalLinksStorage()
+                .Load(settings)
+                .Should()
+                .ContainSingle()
+                .Subject;
+            saved.Name.Should().Be("Updated");
+            saved.Enabled.Should().BeFalse();
+            saved.SearchPattern.Should().Be("ticket-(\\d+)");
+            saved.NestedSearchPattern.Should().Be("(\\d+)");
+            saved.RemoteSearchPattern.Should().Be("tracker");
+            saved.UseRemotesPattern.Should().Be("upstream|fork");
+            saved.UseOnlyFirstRemote.Should().BeFalse();
+            saved.SearchInParts.Should().BeEquivalentTo(
+                [
+                    ExternalLinkDefinition.RevisionPart.LocalBranches,
+                    ExternalLinkDefinition.RevisionPart.RemoteBranches,
+                ]);
+            saved.RemoteSearchInParts.Should().BeEquivalentTo(
+                [ExternalLinkDefinition.RemotePart.PushURL]);
+            saved.LinkFormats.Should().ContainSingle()
+                .Which.Should().BeEquivalentTo(new ExternalLinkFormat
+                {
+                    Caption = "Ticket {0}",
+                    Format = "https://tracker.test/tickets/{0}",
+                });
+            window.CaptureRenderedFrame().Should().NotBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Revision_links_settings_should_add_and_remove_categories_and_formats()
+    {
+        RevisionLinksSettingsPage page = new();
+        RevisionLinksSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+        accessor.LoadFromSettings(CreateRevisionLinkSettings());
+
+        accessor.Categories.ItemCount.Should().Be(0);
+
+        accessor.AddCategory();
+
+        ExternalLinkDefinition definition = accessor.SelectedDefinition
+            ?? throw new InvalidOperationException("The new revision-link definition was not selected.");
+        definition.Name.Should().Be("<new>");
+        definition.Enabled.Should().BeTrue();
+        definition.UseRemotesPattern.Should().Be("upstream|origin");
+        definition.UseOnlyFirstRemote.Should().BeTrue();
+        definition.SearchInParts.Should().BeEquivalentTo(
+            [ExternalLinkDefinition.RevisionPart.Message]);
+        definition.RemoteSearchInParts.Should().BeEquivalentTo(
+            [ExternalLinkDefinition.RemotePart.URL]);
+
+        accessor.AddLink();
+        accessor.SelectedFormat.Should().NotBeNull();
+        definition.LinkFormats.Should().ContainSingle();
+
+        accessor.RemoveLink();
+        definition.LinkFormats.Should().BeEmpty();
+
+        accessor.RemoveCategory();
+        accessor.Categories.ItemCount.Should().Be(0);
+        accessor.SelectedDefinition.Should().BeNull();
+    }
+
+    [AvaloniaTest]
+    public async Task Revision_links_templates_should_prefer_upstream_and_run_as_owned_work()
+    {
+        DistributedSettings settings = CreateRevisionLinkSettings();
+        RevisionLinksSettingsPage page = new();
+        RevisionLinksSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+        accessor.LoadFromSettings(settings);
+        IGitModule module = Substitute.For<IGitModule>();
+        IReadOnlyList<Remote> remotes =
+        [
+            new Remote("origin", "https://github.com/origin/project.git", "https://github.com/origin/project.git"),
+            new Remote("fork", "https://github.com/fork/project.git", "https://github.com/fork/project.git"),
+            new Remote("upstream", "https://github.com/upstream/project.git", "https://github.com/upstream/project.git"),
+        ];
+        module.GetRemotesAsync().Returns(Task.FromResult(remotes));
+
+        accessor.ExtractTemplate(new GitHubExternalLinkDefinitionExtractor(), module);
+        await accessor.JoinTemplateOperationsAsync().WaitAsync(TimeSpan.FromSeconds(10));
+        accessor.SaveToSettings();
+
+        IReadOnlyList<ExternalLinkDefinition> definitions = new ExternalLinksManager(settings)
+            .GetEffectiveSettings();
+        definitions.Should().HaveCount(3);
+        definitions.SelectMany(definition => definition.LinkFormats)
+            .Select(format => format.Format ?? string.Empty)
+            .Should().OnlyContain(format =>
+                format.Contains("github.com/upstream/project", StringComparison.Ordinal));
+        accessor.Categories.ItemCount.Should().Be(3);
+    }
+
+    [AvaloniaTest]
+    public void Revision_links_settings_should_preserve_original_translation_identities()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        RevisionLinksSettingsPage page = new();
+
+        page.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(RevisionLinksSettingsPage), "$this", "Text", "Revision links");
+        translation.Received(1).AddTranslationItem(
+            nameof(RevisionLinksSettingsPage), "CaptionCol", "HeaderText", "Caption");
+        translation.Received(1).AddTranslationItem(
+            nameof(RevisionLinksSettingsPage), "URICol", "HeaderText", "URI");
+        translation.Received(1).AddTranslationItem(
+            nameof(RevisionLinksSettingsPage), "_addTemplate", "Text", "Add {0} templates");
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(RevisionLinksSettingsPage), "CaptionCol", "Text", Arg.Any<string>());
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(RevisionLinksSettingsPage), "URICol", "Text", Arg.Any<string>());
+    }
+
+    [AvaloniaTest]
     public void FormSettings_should_register_and_navigate_to_the_scripts_page()
     {
         FormSettings form = new();
@@ -1253,6 +1469,14 @@ public sealed class SettingsDialogTests
         emulator.AvailableThemes.Returns(themes);
         return emulator;
     }
+
+    private static DistributedSettings CreateRevisionLinkSettings()
+        => new(
+            lowerPriority: null,
+            new GitExtSettingsCache(
+                Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.settings"),
+                autoSave: false),
+            SettingLevel.Global);
 
     [AvaloniaTest]
     public void Settings_tree_should_preserve_root_replacement_navigation_and_search()
