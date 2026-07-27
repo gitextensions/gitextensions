@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitExtensions.Plugins.CreateLocalBranches.CreateLocalBranchesForm"
+        Width="518"
+        Height="79"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Create local tracking branches">
+  <Grid>
+    <TextBlock x:Name="label1"
+               Classes="gitextensions-dialog-label"
+               Margin="15,11,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Height="20"
+               Text="Remote to create tracking branches for" />
+    <TextBox x:Name="_NO_TRANSLATE_Remote"
+             Margin="0,8,21,0"
+             HorizontalAlignment="Right"
+             VerticalAlignment="Top"
+             Width="176"
+             Height="27"
+             Text="origin" />
+    <Button x:Name="button1"
+            Classes="gitextensions-dialog-action"
+            Margin="66,40,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Width="377"
+            Height="30"
+            Content="Create local tracking branches" />
+  </Grid>
+</Window>
