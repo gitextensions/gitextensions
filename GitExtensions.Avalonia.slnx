@@ -18,6 +18,7 @@
   <Folder Name="/src/plugins/">
     <Project Path="src/plugins/AutoCompileSubmodules/GitExtensions.Plugins.AutoCompileSubmodules.csproj" />
     <Project Path="src/plugins/BackgroundFetch/GitExtensions.Plugins.BackgroundFetch.csproj" />
+    <Project Path="src/plugins/CreateLocalBranches/GitExtensions.Plugins.CreateLocalBranches.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
