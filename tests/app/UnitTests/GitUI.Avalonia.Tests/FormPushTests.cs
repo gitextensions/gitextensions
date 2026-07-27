@@ -9,6 +9,7 @@ using GitCommands.Git.Extensions;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
@@ -187,6 +188,37 @@ public sealed class FormPushTests
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormPush_should_enable_and_route_the_repository_host_pull_request_continuation()
+    {
+        GitModule module = CreateRepositoryAndRemote();
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GitModuleIsRelevantToMe().Returns(true);
+        PluginRegistry.GitHosters.Add(host);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        using FormPush form = new(commands);
+
+        try
+        {
+            form.Show();
+            CheckBox createPullRequest = form.FindControl<CheckBox>("_createPullRequestCB")
+                ?? throw new InvalidOperationException("The create-pull-request checkbox was not created.");
+
+            createPullRequest.IsEnabled.Should().BeTrue();
+            form.GetTestAccessor().StartPullRequestAfterPush();
+            commands.Received(1).StartCreatePullRequest(owner: null);
+        }
+        finally
+        {
+            PluginRegistry.GitHosters.Remove(host);
+            if (form.IsVisible)
+            {
+                form.Close();
+            }
         }
     }
 

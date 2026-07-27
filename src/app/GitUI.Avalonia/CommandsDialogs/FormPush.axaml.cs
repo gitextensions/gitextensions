@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -10,6 +10,7 @@ using GitCommands.Settings;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
@@ -137,7 +138,8 @@ public sealed partial class FormPush : GitModuleForm
     {
         base.OnRuntimeLoad(e);
         Title = $"{_pushCaption.Text} ({Module.WorkingDir})";
-        _createPullRequestCB.IsEnabled = HasAzureDevOpsRemote();
+        _createPullRequestCB.IsEnabled = PluginRegistry.TryGetGitHosterForModule(Module) is not null
+            || HasAzureDevOpsRemote();
         _NO_TRANSLATE_Remotes.Focus();
     }
 
@@ -352,7 +354,7 @@ public sealed partial class FormPush : GitModuleForm
             ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
             if (_createPullRequestCB.IsChecked == true)
             {
-                TryOpenAzureDevOpsPullRequestInBrowser();
+                StartPullRequestAfterPush(owner);
             }
 
             return true;
@@ -1169,6 +1171,18 @@ public sealed partial class FormPush : GitModuleForm
         OsShellUtil.OpenUrlInDefaultBrowser(pullRequestUrl);
     }
 
+    private void StartPullRequestAfterPush(WinFormsShims.IWin32Window? owner)
+    {
+        if (PluginRegistry.TryGetGitHosterForModule(Module) is not null)
+        {
+            UICommands.StartCreatePullRequest(owner);
+        }
+        else
+        {
+            TryOpenAzureDevOpsPullRequestInBrowser();
+        }
+    }
+
     internal static string? BuildAzureDevOpsPullRequestUrl(string? remoteUrl, string branch)
     {
         if (string.IsNullOrWhiteSpace(remoteUrl))
@@ -1195,6 +1209,7 @@ public sealed partial class FormPush : GitModuleForm
         internal IReadOnlyList<BranchPushRow> BranchRows => form._branchRows;
         internal ArgumentString CreatePushArguments(string destination, bool track = false) => form.CreatePushArguments(destination, track);
         internal ForcePushOptions GetForcePushOption() => form.GetForcePushOption();
+        internal void StartPullRequestAfterPush(WinFormsShims.IWin32Window? owner = null) => form.StartPullRequestAfterPush(owner);
         internal void UpdateMultiBranchView() => form.UpdateMultiBranchView();
     }
 
