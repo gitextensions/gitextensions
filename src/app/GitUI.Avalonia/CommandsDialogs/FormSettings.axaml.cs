@@ -184,6 +184,14 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             SettingsPageBase.Create<ConfirmationsSettingsPage>(this, serviceProvider),
             AdvancedSettingsPage.GetPageReference(),
             Images.BisectGood);
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<DetailedSettingsPage>(this, serviceProvider),
+            GitExtensionsSettingsGroup.GetPageReference(),
+            Images.Settings);
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<DiffViewerSettingsPage>(this, serviceProvider),
+            DetailedSettingsPage.GetPageReference(),
+            Images.Diff);
 
         GitSettingsGroup gitSettingsGroup = new();
         settingsTreeView.AddSettingsPage(gitSettingsGroup, parentPageReference: null, Images.GitLogo16);
