@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Input;
 using GitCommands;
@@ -37,6 +38,8 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly TranslationString _consoleTabCaption = new("Console");
     private readonly TranslationString _outputHistoryTabCaption = new("Output");
     private readonly TranslationString _buildReportTabCaption = new("Build Report");
+    private readonly TranslationString _noReposHostPluginLoaded = new("No repository host plugin loaded.");
+    private readonly TranslationString _noReposHostFound = new("Could not find any relevant repository hosts for the currently open repository.");
 
     private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
     private readonly IConsoleEmulatorsRegistry? _consoleEmulatorsRegistry;
@@ -173,6 +176,10 @@ public sealed partial class FormBrowse : GitModuleForm
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
         toolStripMenuItemReflog.Click += toolStripMenuItemReflog_Click;
         patchToolStripMenuItem.Click += PatchToolStripMenuItemClick;
+        _forkCloneRepositoryToolStripMenuItem.Click += _forkCloneMenuItem_Click;
+        _viewPullRequestsToolStripMenuItem.Click += _viewPullRequestsToolStripMenuItem_Click;
+        _createPullRequestsToolStripMenuItem.Click += _createPullRequestToolStripMenuItem_Click;
+        _addUpstreamRemoteToolStripMenuItem.Click += _addUpstreamRemoteToolStripMenuItem_Click;
         pluginSettingsToolStripMenuItem.Click += PluginSettingsToolStripMenuItemClick;
         RefreshButton.Click += RefreshToolStripMenuItemClick;
         toggleLeftPanel.Click += ToggleLeftPanelClick;
@@ -303,6 +310,7 @@ public sealed partial class FormBrowse : GitModuleForm
         ToolStripFilters.IsEnabled = isValidWorkingDir;
         branchSelect.Content = string.IsNullOrEmpty(branchName) ? "Branch" : branchName;
         pluginsToolStripMenuItem.IsVisible = isValidWorkingDir;
+        UpdateRepositoryHostsMenu(isValidWorkingDir);
         UpdatePluginMenu(isValidWorkingDir);
         RefreshDefaultPullAction();
 
@@ -433,7 +441,10 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         PopulatePluginMenu();
+        UpdateRepositoryHostsMenu(Module.IsValidGitWorkingDir());
         UpdatePluginMenu(Module.IsValidGitWorkingDir());
+        revisionDiff.RegisterGitHostingPluginInBlameControl();
+        fileTree.RegisterGitHostingPluginInBlameControl();
     }
 
     private void PopulatePluginMenu()
@@ -493,6 +504,86 @@ public sealed partial class FormBrowse : GitModuleForm
 
             item.IsEnabled = item.Tag is not IGitPluginForRepository || validWorkingDir;
         }
+    }
+
+    private void UpdateRepositoryHostsMenu(bool validWorkingDir)
+    {
+        IRepositoryHostPlugin? firstHost = PluginRegistry.GitHosters.FirstOrDefault();
+        _repositoryHostsToolStripMenuItem.IsVisible = firstHost is not null;
+        if (firstHost is not null)
+        {
+            _repositoryHostsToolStripMenuItem.Header = firstHost.Name;
+        }
+
+        _forkCloneRepositoryToolStripMenuItem.IsEnabled = firstHost is not null;
+        _viewPullRequestsToolStripMenuItem.IsEnabled = firstHost is not null && validWorkingDir;
+        _createPullRequestsToolStripMenuItem.IsEnabled = firstHost is not null && validWorkingDir;
+        _addUpstreamRemoteToolStripMenuItem.IsEnabled = firstHost is not null && validWorkingDir;
+    }
+
+    private void _forkCloneMenuItem_Click(object? sender, EventArgs e)
+    {
+        IRepositoryHostPlugin? repoHost = PluginRegistry.GitHosters.FirstOrDefault();
+        if (repoHost is null)
+        {
+            MessageBoxes.ShowError(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error);
+            return;
+        }
+
+        UICommands.StartCloneForkFromHoster(
+            this,
+            repoHost,
+            (_, args) => SetWorkingDir(args.GitModule.WorkingDir));
+    }
+
+    private void _viewPullRequestsToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
+        {
+            UICommands.StartPullRequestsDialog(this, repoHost);
+        }
+    }
+
+    private void _createPullRequestToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
+        {
+            UICommands.StartCreatePullRequest(this, repoHost);
+        }
+    }
+
+    private void _addUpstreamRemoteToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
+        {
+            UICommands.AddUpstreamRemote(this, repoHost);
+        }
+    }
+
+    private bool TryGetRepositoryHost(
+        [NotNullWhen(returnValue: true)] out IRepositoryHostPlugin? repoHost)
+    {
+        repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
+        if (repoHost is not null)
+        {
+            return true;
+        }
+
+        MessageBoxes.Show(
+            this,
+            _noReposHostFound.Text,
+            TranslatedStrings.Error,
+            WinFormsShims.MessageBoxButtons.OK,
+            WinFormsShims.MessageBoxIcon.Error);
+        return false;
+    }
+
+    internal void QueueRepositoryHostOperation(
+        Func<JoinableTaskFactory, CancellationToken, Task> operation)
+    {
+        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
+        _loadOperations.FileAndForget(
+            () => operation(_loadOperations.JoinableTaskFactory, cancellationToken));
     }
 
     private void PluginSettingsToolStripMenuItemClick(object? sender, EventArgs e)
@@ -1513,6 +1604,9 @@ public sealed partial class FormBrowse : GitModuleForm
     }
 
     internal void PopulatePluginMenuForTest() => PopulatePluginMenu();
+    internal void UpdateRepositoryHostsMenuForTest(bool validWorkingDir) => UpdateRepositoryHostsMenu(validWorkingDir);
+    internal Task JoinLoadOperationsForTestAsync(CancellationToken cancellationToken = default)
+        => _loadOperations.JoinPendingOperationsAsync(cancellationToken);
 
     internal FileStatusList fileStatusList => revisionDiff.FileStatusList;
     internal Editor.FileViewer fileViewer => revisionDiff.FileViewer;
