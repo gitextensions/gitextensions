@@ -949,8 +949,58 @@ public sealed class GitUICommands : IGitUICommands
         });
     }
 
-    public void StartCreatePullRequest(IWin32Window? owner) => throw NotPorted(nameof(StartCreatePullRequest));
-    public void StartCreatePullRequest(IWin32Window? owner, IRepositoryHostPlugin gitHoster, string? chooseRemote = null, string? chooseBranch = null) => throw NotPorted(nameof(StartCreatePullRequest));
+    public void StartCreatePullRequest(IWin32Window? owner)
+    {
+        List<IRepositoryHostPlugin> relevantHosts =
+            [.. PluginRegistry.GitHosters.Where(hoster => hoster.GitModuleIsRelevantToMe())];
+
+        if (relevantHosts.Count == 0)
+        {
+            MessageBoxes.Show(
+                owner,
+                "Could not find any repo hosts for current working directory",
+                TranslatedStrings.Error,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+        else if (relevantHosts.Count == 1)
+        {
+            StartCreatePullRequest(owner, relevantHosts[0]);
+        }
+        else
+        {
+            MessageBoxes.Show(
+                owner,
+                "StartCreatePullRequest:Selection not implemented!",
+                TranslatedStrings.Error,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+    }
+
+    public void StartCreatePullRequest(
+        IWin32Window? owner,
+        IRepositoryHostPlugin gitHoster,
+        string? chooseRemote = null,
+        string? chooseBranch = null)
+    {
+        WrapRepoHostingCall(
+            TranslatedStrings.CreatePullRequest,
+            gitHoster,
+            hoster =>
+            {
+                CreatePullRequestForm form = new(this, hoster, chooseRemote, chooseBranch);
+                if (owner is Window { IsVisible: true } ownerWindow)
+                {
+                    form.Show(ownerWindow);
+                }
+                else
+                {
+                    form.Show();
+                }
+            });
+    }
+
     public bool StartCreateTagDialog(IWin32Window? owner = null, GitRevision? revision = null)
     {
         if (revision?.IsArtificial is true)
