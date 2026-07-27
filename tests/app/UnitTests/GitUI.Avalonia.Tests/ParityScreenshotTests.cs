@@ -710,6 +710,16 @@ public sealed partial class ParityScreenshotTests
             hotkeysSettingsPage.GetTestAccessor().Hotkeys.Settings.SelectedIndex = 0;
         }
 
+        if (root is AdvancedSettingsPage advancedSettingsPage)
+        {
+            advancedSettingsPage.LoadSettings();
+        }
+
+        if (root is ConfirmationsSettingsPage confirmationsSettingsPage)
+        {
+            confirmationsSettingsPage.LoadSettings();
+        }
+
         if (root is ScriptsSettingsPage scriptsSettingsPage)
         {
             scriptsSettingsPage.LoadSettings();
@@ -1230,6 +1240,16 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(HotkeysSettingsPage))
         {
             return (791, 525);
+        }
+
+        if (viewType == typeof(AdvancedSettingsPage))
+        {
+            return (791, 525);
+        }
+
+        if (viewType == typeof(ConfirmationsSettingsPage))
+        {
+            return (791, 760);
         }
 
         if (typeof(Window).IsAssignableFrom(viewType))

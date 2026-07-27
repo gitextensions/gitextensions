@@ -1568,6 +1568,271 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
+    public void FormSettings_should_register_advanced_after_hotkeys_with_confirmations_beneath_it()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        List<ISettingsPage> pages = accessor.SettingsTreeView.SettingsPages.ToList();
+        HotkeysSettingsPage hotkeys = pages.OfType<HotkeysSettingsPage>().Single();
+        AdvancedSettingsPage advanced = pages.OfType<AdvancedSettingsPage>().Single();
+        ConfirmationsSettingsPage confirmations = pages.OfType<ConfirmationsSettingsPage>().Single();
+
+        pages.IndexOf(hotkeys).Should().BeLessThan(pages.IndexOf(advanced));
+
+        TreeView tree = accessor.SettingsTreeView.FindControl<TreeView>("treeView1")
+            ?? throw new InvalidOperationException("The settings tree was not created.");
+        TreeViewItem advancedNode = tree.Items
+            .OfType<TreeViewItem>()
+            .SelectMany(node => node.Items.OfType<TreeViewItem>())
+            .Single(node => node.Tag is AdvancedSettingsPage);
+        advancedNode.Items
+            .OfType<TreeViewItem>()
+            .Select(node => node.Tag)
+            .Should()
+            .ContainSingle(item => ReferenceEquals(item, confirmations));
+
+        form.GotoPage(ConfirmationsSettingsPage.GetPageReference());
+
+        SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+        header.GetTestAccessor().Page.Should().BeSameAs(confirmations);
+        confirmations.GetTitle().Should().Be("Confirmations");
+    }
+
+    [AvaloniaTest]
+    public void Advanced_settings_should_roundtrip_live_values_and_preserve_hidden_consumer_values()
+    {
+        bool originalAlwaysShowCheckout = AppSettings.AlwaysShowCheckoutBranchDlg;
+        bool originalUseLocalChanges = AppSettings.UseDefaultCheckoutBranchAction;
+        bool originalDontShowHelpImages = AppSettings.DontShowHelpImages;
+        bool originalAlwaysShowAdvanced = AppSettings.AlwaysShowAdvOpt;
+        bool originalCheckForUpdates = AppSettings.CheckForUpdates;
+        bool originalCheckForReleaseCandidates = AppSettings.CheckForReleaseCandidates;
+        bool originalConsoleEmulator = AppSettings.UseConsoleEmulatorForCommands.Value;
+        bool originalAutoNormalise = AppSettings.AutoNormaliseBranchName;
+        string originalAutoNormaliseSymbol = AppSettings.AutoNormaliseSymbol;
+        bool originalForcedPush = AppSettings.CommitAndPushForcedWhenAmend;
+        try
+        {
+            AppSettings.AlwaysShowCheckoutBranchDlg = true;
+            AppSettings.UseDefaultCheckoutBranchAction = false;
+            AppSettings.DontShowHelpImages = true;
+            AppSettings.AlwaysShowAdvOpt = false;
+            AppSettings.CheckForUpdates = true;
+            AppSettings.CheckForReleaseCandidates = false;
+            AppSettings.UseConsoleEmulatorForCommands.Value = true;
+            AppSettings.AutoNormaliseBranchName = false;
+            AppSettings.AutoNormaliseSymbol = "-";
+            AppSettings.CommitAndPushForcedWhenAmend = false;
+
+            AdvancedSettingsPage page = new();
+            page.LoadSettings();
+            AdvancedSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+
+            accessor.AlwaysShowCheckoutDialog.IsChecked.Should().BeTrue();
+            accessor.UseLocalChangesAction.IsChecked.Should().BeFalse();
+            accessor.DontShowHelpImages.IsChecked.Should().BeTrue();
+            accessor.AlwaysShowAdvancedOptions.IsChecked.Should().BeFalse();
+            accessor.AutoNormaliseBranchName.IsChecked.Should().BeFalse();
+            accessor.AutoNormaliseSymbol.IsEnabled.Should().BeFalse();
+            accessor.AutoNormaliseSymbol.SelectedItem!.ToString().Should().Be("-");
+            accessor.UpdatesGroup.IsVisible.Should().BeFalse();
+            accessor.ConsoleEmulatorRow.IsVisible.Should().BeFalse();
+            accessor.ConsoleEmulator.IsVisible.Should().BeFalse();
+            accessor.CheckForUpdates.IsVisible.Should().BeFalse();
+            accessor.CheckForReleaseCandidates.IsVisible.Should().BeFalse();
+
+            accessor.AlwaysShowCheckoutDialog.IsChecked = false;
+            accessor.UseLocalChangesAction.IsChecked = true;
+            accessor.DontShowHelpImages.IsChecked = false;
+            accessor.AlwaysShowAdvancedOptions.IsChecked = true;
+            accessor.AutoNormaliseBranchName.IsChecked = true;
+            accessor.AutoNormaliseSymbol.IsEnabled.Should().BeTrue();
+            accessor.AutoNormaliseSymbol.SelectedItem = accessor.AutoNormaliseSymbol.Items
+                .Cast<object>()
+                .Single(item => item.ToString() == "(none)");
+            accessor.CommitAndPushForcedWhenAmend.IsChecked = true;
+            page.SaveSettings();
+
+            AppSettings.AlwaysShowCheckoutBranchDlg.Should().BeFalse();
+            AppSettings.UseDefaultCheckoutBranchAction.Should().BeTrue();
+            AppSettings.DontShowHelpImages.Should().BeFalse();
+            AppSettings.AlwaysShowAdvOpt.Should().BeTrue();
+            AppSettings.AutoNormaliseBranchName.Should().BeTrue();
+            AppSettings.AutoNormaliseSymbol.Should().BeEmpty();
+            AppSettings.CommitAndPushForcedWhenAmend.Should().BeTrue();
+            AppSettings.CheckForUpdates.Should().BeTrue();
+            AppSettings.CheckForReleaseCandidates.Should().BeFalse();
+            AppSettings.UseConsoleEmulatorForCommands.Value.Should().BeTrue();
+        }
+        finally
+        {
+            AppSettings.AlwaysShowCheckoutBranchDlg = originalAlwaysShowCheckout;
+            AppSettings.UseDefaultCheckoutBranchAction = originalUseLocalChanges;
+            AppSettings.DontShowHelpImages = originalDontShowHelpImages;
+            AppSettings.AlwaysShowAdvOpt = originalAlwaysShowAdvanced;
+            AppSettings.CheckForUpdates = originalCheckForUpdates;
+            AppSettings.CheckForReleaseCandidates = originalCheckForReleaseCandidates;
+            AppSettings.UseConsoleEmulatorForCommands.Value = originalConsoleEmulator;
+            AppSettings.AutoNormaliseBranchName = originalAutoNormalise;
+            AppSettings.AutoNormaliseSymbol = originalAutoNormaliseSymbol;
+            AppSettings.CommitAndPushForcedWhenAmend = originalForcedPush;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Confirmations_settings_should_preserve_direct_inverted_and_nullable_mappings()
+    {
+        bool originalAmend = AppSettings.DontConfirmAmend;
+        bool originalUndo = AppSettings.DontConfirmUndoLastCommit;
+        bool originalCommitIfNoBranch = AppSettings.DontConfirmCommitIfNoBranch;
+        bool originalRebase = AppSettings.DontConfirmRebase;
+        bool originalFetchAndPrune = AppSettings.DontConfirmFetchAndPruneAll;
+        bool originalPushNewBranch = AppSettings.DontConfirmPushNewBranch;
+        bool originalAddTrackingRef = AppSettings.DontConfirmAddTrackingRef;
+        bool originalDeleteUnmerged = AppSettings.DontConfirmDeleteUnmergedBranch;
+        bool originalBranchCheckout = AppSettings.ConfirmBranchCheckout.Value;
+        bool? originalAutoPopAfterPull = AppSettings.AutoPopStashAfterPull;
+        bool? originalAutoPopAfterCheckout = AppSettings.AutoPopStashAfterCheckoutBranch;
+        bool originalStashDrop = AppSettings.DontConfirmStashDrop;
+        bool originalResolveConflicts = AppSettings.DontConfirmResolveConflicts;
+        bool originalCommitAfterConflicts = AppSettings.DontConfirmCommitAfterConflictsResolved;
+        bool originalSecondAbort = AppSettings.DontConfirmSecondAbortConfirmation;
+        bool? originalUpdateSubmodules = AppSettings.DontConfirmUpdateSubmodulesOnCheckout;
+        bool originalSwitchWorktree = AppSettings.DontConfirmSwitchWorktree;
+        try
+        {
+            AppSettings.DontConfirmAmend = false;
+            AppSettings.DontConfirmUndoLastCommit = true;
+            AppSettings.DontConfirmCommitIfNoBranch = false;
+            AppSettings.DontConfirmRebase = true;
+            AppSettings.DontConfirmFetchAndPruneAll = false;
+            AppSettings.DontConfirmPushNewBranch = true;
+            AppSettings.DontConfirmAddTrackingRef = false;
+            AppSettings.DontConfirmDeleteUnmergedBranch = true;
+            AppSettings.ConfirmBranchCheckout.Value = true;
+            AppSettings.AutoPopStashAfterPull = null;
+            AppSettings.AutoPopStashAfterCheckoutBranch = true;
+            AppSettings.DontConfirmStashDrop = false;
+            AppSettings.DontConfirmResolveConflicts = true;
+            AppSettings.DontConfirmCommitAfterConflictsResolved = false;
+            AppSettings.DontConfirmSecondAbortConfirmation = true;
+            AppSettings.DontConfirmUpdateSubmodulesOnCheckout = null;
+            AppSettings.DontConfirmSwitchWorktree = false;
+
+            ConfirmationsSettingsPage page = new();
+            page.LoadSettings();
+            ConfirmationsSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+
+            accessor.Amend.IsChecked.Should().BeTrue();
+            accessor.UndoLastCommit.IsChecked.Should().BeFalse();
+            accessor.CommitIfNoBranch.IsChecked.Should().BeTrue();
+            accessor.RebaseOnTop.IsChecked.Should().BeFalse();
+            accessor.FetchAndPruneAll.IsChecked.Should().BeTrue();
+            accessor.PushNewBranch.IsChecked.Should().BeFalse();
+            accessor.AddTrackingRef.IsChecked.Should().BeTrue();
+            accessor.DeleteUnmergedBranch.IsChecked.Should().BeFalse();
+            accessor.BranchCheckout.IsChecked.Should().BeTrue();
+            accessor.AutoPopStashAfterPull.IsChecked.Should().BeNull();
+            accessor.AutoPopStashAfterCheckout.IsChecked.Should().BeFalse();
+            accessor.ConfirmStashDrop.IsChecked.Should().BeTrue();
+            accessor.ResolveConflicts.IsChecked.Should().BeFalse();
+            accessor.CommitAfterConflictsResolved.IsChecked.Should().BeTrue();
+            accessor.SecondAbort.IsChecked.Should().BeFalse();
+            accessor.UpdateModules.IsChecked.Should().BeNull();
+            accessor.SwitchWorktree.IsChecked.Should().BeTrue();
+
+            accessor.Amend.IsChecked = false;
+            accessor.UndoLastCommit.IsChecked = null;
+            accessor.CommitIfNoBranch.IsChecked = false;
+            accessor.RebaseOnTop.IsChecked = true;
+            accessor.FetchAndPruneAll.IsChecked = false;
+            accessor.PushNewBranch.IsChecked = true;
+            accessor.AddTrackingRef.IsChecked = false;
+            accessor.DeleteUnmergedBranch.IsChecked = true;
+            accessor.BranchCheckout.IsChecked = false;
+            accessor.AutoPopStashAfterPull.IsChecked = true;
+            accessor.AutoPopStashAfterCheckout.IsChecked = null;
+            accessor.ConfirmStashDrop.IsChecked = false;
+            accessor.ResolveConflicts.IsChecked = true;
+            accessor.CommitAfterConflictsResolved.IsChecked = false;
+            accessor.SecondAbort.IsChecked = true;
+            accessor.UpdateModules.IsChecked = false;
+            accessor.SwitchWorktree.IsChecked = false;
+            page.SaveSettings();
+
+            AppSettings.DontConfirmAmend.Should().BeTrue();
+            AppSettings.DontConfirmUndoLastCommit.Should().BeTrue();
+            AppSettings.DontConfirmCommitIfNoBranch.Should().BeTrue();
+            AppSettings.DontConfirmRebase.Should().BeFalse();
+            AppSettings.DontConfirmFetchAndPruneAll.Should().BeTrue();
+            AppSettings.DontConfirmPushNewBranch.Should().BeFalse();
+            AppSettings.DontConfirmAddTrackingRef.Should().BeTrue();
+            AppSettings.DontConfirmDeleteUnmergedBranch.Should().BeFalse();
+            AppSettings.ConfirmBranchCheckout.Value.Should().BeFalse();
+            AppSettings.AutoPopStashAfterPull.Should().BeFalse();
+            AppSettings.AutoPopStashAfterCheckoutBranch.Should().BeNull();
+            AppSettings.DontConfirmStashDrop.Should().BeTrue();
+            AppSettings.DontConfirmResolveConflicts.Should().BeFalse();
+            AppSettings.DontConfirmCommitAfterConflictsResolved.Should().BeTrue();
+            AppSettings.DontConfirmSecondAbortConfirmation.Should().BeFalse();
+            AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Should().BeTrue();
+            AppSettings.DontConfirmSwitchWorktree.Should().BeTrue();
+        }
+        finally
+        {
+            AppSettings.DontConfirmAmend = originalAmend;
+            AppSettings.DontConfirmUndoLastCommit = originalUndo;
+            AppSettings.DontConfirmCommitIfNoBranch = originalCommitIfNoBranch;
+            AppSettings.DontConfirmRebase = originalRebase;
+            AppSettings.DontConfirmFetchAndPruneAll = originalFetchAndPrune;
+            AppSettings.DontConfirmPushNewBranch = originalPushNewBranch;
+            AppSettings.DontConfirmAddTrackingRef = originalAddTrackingRef;
+            AppSettings.DontConfirmDeleteUnmergedBranch = originalDeleteUnmerged;
+            AppSettings.ConfirmBranchCheckout.Value = originalBranchCheckout;
+            AppSettings.AutoPopStashAfterPull = originalAutoPopAfterPull;
+            AppSettings.AutoPopStashAfterCheckoutBranch = originalAutoPopAfterCheckout;
+            AppSettings.DontConfirmStashDrop = originalStashDrop;
+            AppSettings.DontConfirmResolveConflicts = originalResolveConflicts;
+            AppSettings.DontConfirmCommitAfterConflictsResolved = originalCommitAfterConflicts;
+            AppSettings.DontConfirmSecondAbortConfirmation = originalSecondAbort;
+            AppSettings.DontConfirmUpdateSubmodulesOnCheckout = originalUpdateSubmodules;
+            AppSettings.DontConfirmSwitchWorktree = originalSwitchWorktree;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Advanced_and_confirmations_settings_should_preserve_original_translation_keys()
+    {
+        ITranslation translation = Substitute.For<ITranslation>();
+        AdvancedSettingsPage advanced = new();
+        ConfirmationsSettingsPage confirmations = new();
+
+        advanced.AddTranslationItems(translation);
+        confirmations.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(AdvancedSettingsPage), "$this", "Text", "Advanced");
+        translation.Received(1).AddTranslationItem(
+            nameof(AdvancedSettingsPage), "CheckoutGB", "Text", "Checkout");
+        translation.Received(1).AddTranslationItem(
+            nameof(AdvancedSettingsPage), "chkConsoleEmulator", "ToolTipText", Arg.Is<string>(text =>
+                text.Contains("command progress dialogs", StringComparison.Ordinal)));
+        translation.Received(1).AddTranslationItem(
+            nameof(AdvancedSettingsPage), "chkAutoNormaliseBranchName", "ToolTipText", Arg.Is<string>(text =>
+                text.Contains("git branch naming rules", StringComparison.Ordinal)));
+        translation.Received(1).AddTranslationItem(
+            nameof(ConfirmationsSettingsPage), "$this", "Text", "Confirmations");
+        translation.Received(1).AddTranslationItem(
+            nameof(ConfirmationsSettingsPage), "gbConfirmations", "Text", "Confirm actions");
+        translation.Received(1).AddTranslationItem(
+            nameof(ConfirmationsSettingsPage), "lblGroupConflictResolution", "Text", "Rebase / conflict resolution:");
+        translation.Received(1).AddTranslationItem(
+            nameof(ConfirmationsSettingsPage), "chkAutoPopStashAfterPull", "Text",
+            "Apply stashed changes after successful pull (else stash will be popped automatically)");
+    }
+
+    [AvaloniaTest]
     public void Simple_help_display_should_apply_its_title_and_content_when_opened()
     {
         SimpleHelpDisplayDialog dialog = new()
