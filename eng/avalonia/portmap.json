@@ -2022,11 +2022,23 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "MainPanel/ControlsPanel chrome is declared per-dialog in axaml, not inherited; shared visual-parity classes supply the standard 12px content margin, 32px action row, and 75x25 action-button minimums."
   },
+  "src/app/GitUI/CommandsDialogs/RepoHosting/ForkAndCloneForm.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ForkAndCloneForm.axaml.cs",
+    "status": "parity",
+    "basedOn": "93d538f6c9a878f010044a021fa53d08cf4e64c0",
+    "notes": "Retains provider-owned repository listing, repository and user search, fork and homepage actions, destination/history fallback, clone protocol and depth selection, optional upstream remote, FormRemoteProcess clone, and the GitModuleEventArgs callback. Provider calls are owned by one cancellable form TaskManager and native typed ListBox rows preserve the original eight translated column identities."
+  },
+  "src/app/GitUI/CommandsDialogs/RepoHosting/ForkAndCloneForm.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ForkAndCloneForm.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native 744x552 two-tab layout with source column metrics, shared dialog/group styles, clone destination, protocol, parent-remote, depth, and action controls; no ListView or ColumnHeader shim types are introduced."
+  },
   "src/app/GitUI/GitUICommands.cs": {
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. StartBatchFileProcessDialog runs private temporary cmd.exe scripts on Windows or /bin/sh scripts on Linux/macOS through that same process dialog and always deletes the temporary file. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree create/delete/switch, revision-range difftool, ordinary/plugin Settings hosts, plugin commit-template registration, and portable same-executable repository-browser launch members are real. RunCommand retains the upstream verbs and argument parsing for every command whose Avalonia surface is functional; unknown and still-unported verbs report explicitly instead of opening Browse."
+    "basedOn": "a7557b981a569ede1a53153e14e053da42873bf9",
+    "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. StartBatchFileProcessDialog runs private temporary cmd.exe scripts on Windows or /bin/sh scripts on Linux/macOS through that same process dialog and always deletes the temporary file. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree create/delete/switch, revision-range difftool, ordinary/plugin Settings hosts, repository-host fork/clone, plugin commit-template registration, and portable same-executable repository-browser launch members are real. RunCommand retains the upstream verbs and argument parsing for every command whose Avalonia surface is functional; unknown and still-unported verbs report explicitly instead of opening Browse."
   },
   "src/app/GitUI/RevisionDiffInfoProvider.cs": {
     "twin": "src/app/GitUI/RevisionDiffInfoProvider.cs",
