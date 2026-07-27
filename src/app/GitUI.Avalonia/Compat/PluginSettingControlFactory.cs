@@ -1,7 +1,10 @@
+﻿using System.Net;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using Avalonia.Media;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
+using GitExtensions.Extensibility.Settings.UserControls;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Compat;
@@ -65,6 +68,7 @@ internal static class PluginSettingControlFactory
         return setting switch
         {
             BoolSetting boolSetting => CreateBoolBinding(boolSetting),
+            CredentialsSetting credentialsSetting => CreateCredentialsBinding(credentialsSetting),
             PasswordSetting passwordSetting => CreatePasswordBinding(passwordSetting),
             StringSetting stringSetting => CreateStringBinding(stringSetting),
             ChoiceSetting choiceSetting => CreateChoiceBinding(choiceSetting),
@@ -77,6 +81,69 @@ internal static class PluginSettingControlFactory
                 $"No Avalonia plugin-setting renderer is registered for {setting.GetType().Name}."),
         };
     }
+
+    private static PluginSettingBinding CreateCredentialsBinding(CredentialsSetting setting)
+    {
+        CredentialsControl model = setting.CustomControl ??= new CredentialsControl();
+        TextBox userNameTextBox = new();
+        TextBox passwordTextBox = new() { PasswordChar = '\u25CF' };
+        Grid control = new()
+        {
+            ColumnDefinitions = new ColumnDefinitions(model.ShowUserName ? "Auto,*,Auto,*" : "0,0,Auto,*"),
+            ColumnSpacing = 6,
+        };
+        AddField(model.UserNameLabelText, userNameTextBox, column: 0, model.ShowUserName);
+        AddField(model.PasswordLabelText, passwordTextBox, column: 2, isVisible: true);
+
+        return new DelegateBinding(
+            control,
+            setting.Caption,
+            settings =>
+            {
+                bool supported = IsCredentialSettingLevelSupported(settings.SettingLevel);
+                NetworkCredential credentials = supported
+                    ? setting.GetValueOrDefault(settings)
+                    : new NetworkCredential();
+                userNameTextBox.Text = credentials.UserName;
+                passwordTextBox.Text = credentials.Password;
+                model.UserName = credentials.UserName;
+                model.Password = credentials.Password;
+                control.IsEnabled = supported;
+            },
+            settings =>
+            {
+                if (!IsCredentialSettingLevelSupported(settings.SettingLevel))
+                {
+                    return;
+                }
+
+                setting.SaveValue(
+                    settings,
+                    userNameTextBox.Text ?? string.Empty,
+                    passwordTextBox.Text ?? string.Empty);
+                model.UserName = userNameTextBox.Text ?? string.Empty;
+                model.Password = passwordTextBox.Text ?? string.Empty;
+            });
+
+        void AddField(string labelText, TextBox textBox, int column, bool isVisible)
+        {
+            TextBlock label = new()
+            {
+                IsVisible = isVisible,
+                Text = labelText,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            textBox.IsVisible = isVisible;
+            Grid.SetColumn(label, column);
+            control.Children.Add(label);
+
+            Grid.SetColumn(textBox, column + 1);
+            control.Children.Add(textBox);
+        }
+    }
+
+    private static bool IsCredentialSettingLevelSupported(SettingLevel settingLevel)
+        => settingLevel is SettingLevel.Global or SettingLevel.Local or SettingLevel.Effective;
 
     private static PluginSettingBinding CreateBoolBinding(BoolSetting setting)
     {

@@ -27,6 +27,7 @@
     <Project Path="src/plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/app/UnitTests/GitExtensions.Extensibility.Tests/GitExtensions.Extensibility.Tests.csproj" />
     <Project Path="tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AppVeyorIntegration.Tests/AppVeyorIntegration.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AzureDevOpsIntegration.Tests/AzureDevOpsIntegration.Tests.csproj" />
