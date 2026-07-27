@@ -82,6 +82,8 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     private readonly TranslationString _rebaseBranchInteractive = new("Rebase branch interactively.");
     private readonly TranslationString _rebaseConfirmTitle = new("Rebase Confirmation");
     private readonly RevisionGraph _revisionGraph = new();
+    private readonly ArtificialCommitChangeCount _workTreeChangeCount = new();
+    private readonly ArtificialCommitChangeCount _indexChangeCount = new();
     private readonly BuildServerWatcher _buildServerWatcher;
     private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
     private readonly MessageColumnProvider _messageColumnProvider;
@@ -178,7 +180,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         set => lstRevisions.SelectionMode = value ? SelectionMode.Multiple : SelectionMode.Single;
     }
 
-    internal bool ShowUncommittedChangesIfPossible { get; set; }
+    internal bool ShowUncommittedChangesIfPossible { get; set; } = true;
 
     internal bool ShowBuildServerInfo { get; set; }
 
@@ -1836,6 +1838,33 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
 
     public void OnRepositoryChanged()
         => _buildServerWatcher.OnRepositoryChanged();
+
+    /// <summary>
+    ///  Gets the tracked change count for an artificial revision.
+    /// </summary>
+    public ArtificialCommitChangeCount? GetChangeCount(ObjectId objectId)
+        => objectId == ObjectId.WorkTreeId
+            ? _workTreeChangeCount
+            : objectId == ObjectId.IndexId
+                ? _indexChangeCount
+                : null;
+
+    /// <summary>
+    ///  Updates the Working directory and Commit index counters from one parsed status.
+    /// </summary>
+    public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus>? status)
+    {
+        UpdateChangeCount(ObjectId.WorkTreeId, StagedStatus.WorkTree);
+        UpdateChangeCount(ObjectId.IndexId, StagedStatus.Index);
+        RefreshRealizedRows();
+
+        void UpdateChangeCount(ObjectId objectId, StagedStatus staged)
+        {
+            ArtificialCommitChangeCount changeCount = GetChangeCount(objectId)
+                ?? throw new InvalidOperationException($"Unexpected artificial revision id {objectId}.");
+            changeCount.Update(status?.Where(item => item.Staged == staged).ToList());
+        }
+    }
 
     private void LaunchBuildServerInfoFetchOperation(CancellationToken cancellationToken)
     {

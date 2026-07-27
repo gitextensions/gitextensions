@@ -37,6 +37,9 @@
     <Compile Include="..\GitUI\CommandsDialogs\FormClone.RemoteActionResult.cs" Link="CommandsDialogs\FormClone.RemoteActionResult.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\ReleaseVersion.cs" Link="CommandsDialogs\BrowseDialog\ReleaseVersion.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\ReleaseType.cs" Link="CommandsDialogs\BrowseDialog\ReleaseType.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" Link="CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" Link="CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" Link="CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\FormVerify.LostObject.cs" Link="CommandsDialogs\FormVerify.LostObject.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\FormRemotesController.cs" Link="CommandsDialogs\FormRemotesController.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridFileUpdate.cs" Link="CommandsDialogs\IRevisionGridFileUpdate.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="..\GitUI\UserControls\FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs" Link="UserControls\FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusWithDescription.cs" Link="UserControls\FileStatusWithDescription.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" Link="UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\ArtificialCommitChangeCount.cs" Link="UserControls\RevisionGrid\ArtificialCommitChangeCount.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\FilterInfo.cs" Link="UserControls\RevisionGrid\FilterInfo.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\IRevisionGridFilter.cs" Link="UserControls\RevisionGrid\IRevisionGridFilter.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionFilter.cs" Link="UserControls\RevisionGrid\RevisionFilter.cs" />

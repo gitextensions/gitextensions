@@ -208,10 +208,10 @@
             </MenuFlyout>
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
-        <compat:IconButton x:Name="toolStripButtonPush"
-                           Classes="gitextensions-toolbar-button gitextensions-icon-only"
-                           Content="Push"
-                           Icon="{x:Static properties:Images.Push}" />
+        <commandsDialogs:ToolStripPushButton x:Name="toolStripButtonPush"
+                                            Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                                            Content="Push"
+                                            Icon="{x:Static properties:Images.Push}" />
         <compat:IconButton x:Name="toolStripButtonCommit"
                            Classes="gitextensions-toolbar-button"
                            Content="Commit"
