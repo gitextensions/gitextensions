@@ -42,6 +42,9 @@
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridUpdate.cs" Link="CommandsDialogs\IRevisionGridUpdate.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\DistributedSettingsSet.cs" Link="CommandsDialogs\SettingsDialog\DistributedSettingsSet.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\GitConfigSettingsSet.cs" Link="CommandsDialogs\SettingsDialog\GitConfigSettingsSet.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderExternalLinkDefinitionExtractorFactory.cs" Link="CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderExternalLinkDefinitionExtractorFactory.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderKind.cs" Link="CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderKind.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\RevisionLinks\ICloudProviderExternalLinkDefinitionExtractorFactory.cs" Link="CommandsDialogs\SettingsDialog\RevisionLinks\ICloudProviderExternalLinkDefinitionExtractorFactory.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\SettingsPageReference.cs" Link="CommandsDialogs\SettingsDialog\SettingsPageReference.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\ConsoleOutputEventArgs.cs" Link="ConsoleEmulation\ConsoleOutputEventArgs.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\ConsoleProcessExitEventArgs.cs" Link="ConsoleEmulation\ConsoleProcessExitEventArgs.cs" />
