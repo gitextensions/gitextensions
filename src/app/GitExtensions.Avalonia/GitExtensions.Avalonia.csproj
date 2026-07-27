@@ -48,6 +48,9 @@
     <ProjectReference Include="..\..\plugins\Statistics\GitImpact\GitExtensions.Plugins.GitImpact.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\Statistics\GitStatistics\GitExtensions.Plugins.GitStatistics.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
     <ProjectReference Include="..\..\plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
