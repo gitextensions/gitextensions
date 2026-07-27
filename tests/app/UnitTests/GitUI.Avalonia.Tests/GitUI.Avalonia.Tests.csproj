@@ -56,6 +56,7 @@
     <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\GitHubActionsIntegration\GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.csproj" />
   </ItemGroup>
 
   <ItemGroup>

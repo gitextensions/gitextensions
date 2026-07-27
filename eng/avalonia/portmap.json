@@ -359,6 +359,30 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same project URL, build-definition filter, validation warning, API token, two links, examples, scope guidance, and deliberate spacer rows in the original two-column order. Only the five original member controls participate in field-based translation; the four Designer-local captions remain outside that key set."
   },
+  "src/plugins/BuildServerIntegration/TeamCityIntegration/Settings/TeamCityBuildChooser.cs": {
+    "twin": "src/plugins/BuildServerIntegration/TeamCityIntegration/Settings/TeamCityBuildChooser.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named native dialog retains the unchanged TeamCity adapter, eager root-project read, lazy per-project build loading, loading placeholder, project/build ordering, previous-build reselection, build-only acceptance, double-click, and cancel semantics. The public parameterless constructor exists only for Avalonia's compiled-XAML loader; the original operational constructor remains unchanged in shape. The chooser remains outside plugin XLF translation like the original plain WinForms Form, and the Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/TeamCityIntegration/Settings/TeamCityBuildChooser.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/TeamCityIntegration/Settings/TeamCityBuildChooser.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same project/build tree, disabled-until-build OK action, Cancel action, compact footer placement, centered owning window, and original untranslated title and captions."
+  },
+  "src/plugins/BuildServerIntegration/TeamCityIntegration/Settings/TeamCitySettingsUserControl.cs": {
+    "twin": "src/plugins/BuildServerIntegration/TeamCityIntegration/Settings/TeamCitySettingsUserControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Portable-only same-named MEF export retains default-project initialization, nullable guest-login persistence, regex validation and valid-only saving, chooser ownership, chooser error handling, and clipboard build-URL extraction through the unchanged TeamCity adapter. Clipboard and message boxes reuse the existing headless shim services; Avalonia resolves the real owning window at the UI boundary. The original seven plugin XLF keys remain exact, and the Windows target continues compiling the original source."
+  },
+  "src/plugins/BuildServerIntegration/TeamCityIntegration/Settings/TeamCitySettingsUserControl.Designer.cs": {
+    "twin": "src/plugins/BuildServerIntegration/TeamCityIntegration/Settings/TeamCitySettingsUserControl.axaml",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same server, project, chooser, project guidance, build filter, regex guidance/error, guest-login option, and clipboard link in the original compact row order. Only the original checkbox, error, and link member controls participate in field-based translation; the four Designer-local captions remain outside that key set."
+  },
   "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.cs": {
     "twin": "src/plugins/BuildServerIntegration/JenkinsIntegration/Settings/JenkinsSettingsUserControl.axaml.cs",
     "status": "parity",
