@@ -1,0 +1,163 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:pie="using:GitExtensions.Plugins.GitStatistics.PieChart"
+        x:Class="GitExtensions.Plugins.GitStatistics.FormGitStatistics"
+        Width="751"
+        Height="465"
+        MinWidth="350"
+        MinHeight="250"
+        WindowStartupLocation="CenterOwner"
+        Title="Statistics">
+  <Window.Styles>
+    <Style Selector="TextBlock.summary">
+      <Setter Property="Margin" Value="5,2,0,0" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="ScrollViewer.statisticsText">
+      <Setter Property="Padding" Value="9,4,4,4" />
+      <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+      <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+    <Style Selector="GridSplitter.statisticsSplitter">
+      <Setter Property="Width" Value="6" />
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+  </Window.Styles>
+
+  <Grid>
+    <TabControl x:Name="Tabs"
+                Margin="0"
+                IsVisible="False">
+      <TabItem x:Name="tabPage2"
+               Header="Commits per contributor">
+        <Grid x:Name="splitContainer3"
+              RowDefinitions="29,*">
+          <TextBlock x:Name="TotalCommits"
+                     Classes="summary"
+                     Text="Total commits" />
+          <Grid x:Name="splitContainer4"
+                Grid.Row="1"
+                ColumnDefinitions="286,6,*">
+            <Border BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,1,0">
+              <ScrollViewer Classes="statisticsText">
+                <TextBlock x:Name="CommitStatistics"
+                           Text="Loading.."
+                           TextWrapping="NoWrap" />
+              </ScrollViewer>
+            </Border>
+            <GridSplitter Grid.Column="1"
+                          Classes="statisticsSplitter"
+                          ResizeDirection="Columns" />
+            <Border Grid.Column="2"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,0,0">
+              <pie:PieChartControl x:Name="CommitCountPie"
+                                   InitialAngle="-30" />
+            </Border>
+          </Grid>
+        </Grid>
+      </TabItem>
+
+      <TabItem x:Name="tabPage1"
+               Header="Lines of code per language">
+        <Grid x:Name="splitContainer2"
+              RowDefinitions="29,*">
+          <TextBlock x:Name="TotalLinesOfCode"
+                     Classes="summary"
+                     Text="Total lines of code" />
+          <Grid x:Name="splitContainer1"
+                Grid.Row="1"
+                ColumnDefinitions="286,6,*">
+            <Border BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,1,0">
+              <ScrollViewer Classes="statisticsText">
+                <TextBlock x:Name="LinesOfCodePerLanguageText"
+                           Text="Loading..."
+                           TextWrapping="NoWrap" />
+              </ScrollViewer>
+            </Border>
+            <GridSplitter Grid.Column="1"
+                          Classes="statisticsSplitter"
+                          ResizeDirection="Columns" />
+            <Border Grid.Column="2"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,0,0">
+              <pie:PieChartControl x:Name="LinesOfCodeExtensionPie"
+                                   InitialAngle="-30" />
+            </Border>
+          </Grid>
+        </Grid>
+      </TabItem>
+
+      <TabItem x:Name="tabPage3"
+               Header="Lines of code per type">
+        <Grid x:Name="splitContainer5"
+              RowDefinitions="29,*">
+          <TextBlock x:Name="TotalLinesOfCode2"
+                     Classes="summary"
+                     Text="Total lines of code" />
+          <Grid x:Name="splitContainer6"
+                Grid.Row="1"
+                ColumnDefinitions="286,6,*">
+            <Border BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,1,0">
+              <ScrollViewer Classes="statisticsText">
+                <TextBlock x:Name="LinesOfCodePerTypeText"
+                           Text="Loading..."
+                           TextWrapping="NoWrap" />
+              </ScrollViewer>
+            </Border>
+            <GridSplitter Grid.Column="1"
+                          Classes="statisticsSplitter"
+                          ResizeDirection="Columns" />
+            <Border Grid.Column="2"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,0,0">
+              <pie:PieChartControl x:Name="LinesOfCodePie"
+                                   InitialAngle="-30" />
+            </Border>
+          </Grid>
+        </Grid>
+      </TabItem>
+
+      <TabItem x:Name="tabPage4"
+               Header="Lines of test code">
+        <Grid x:Name="splitContainer7"
+              RowDefinitions="29,*">
+          <TextBlock x:Name="TotalLinesOfTestCode"
+                     Classes="summary"
+                     Text="Total lines of code" />
+          <Grid x:Name="splitContainer8"
+                Grid.Row="1"
+                ColumnDefinitions="286,6,*">
+            <Border BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,1,0">
+              <ScrollViewer Classes="statisticsText">
+                <TextBlock x:Name="TestCodeText"
+                           Text="Loading..."
+                           TextWrapping="NoWrap" />
+              </ScrollViewer>
+            </Border>
+            <GridSplitter Grid.Column="1"
+                          Classes="statisticsSplitter"
+                          ResizeDirection="Columns" />
+            <Border Grid.Column="2"
+                    BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                    BorderThickness="0,1,0,0">
+              <pie:PieChartControl x:Name="TestCodePie"
+                                   InitialAngle="-30" />
+            </Border>
+          </Grid>
+        </Grid>
+      </TabItem>
+    </TabControl>
+
+    <TextBlock x:Name="LoadingLabel"
+               Margin="0,26,0,0"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
+               FontWeight="Bold"
+               Text="Loading..." />
+  </Grid>
+</Window>
