@@ -28,6 +28,7 @@ using GitUI;
 using GitUI.Avatars;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SubmodulesDialog;
@@ -375,6 +376,19 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormBrowse))
         {
             return new FormBrowse(context.Commands);
+        }
+
+        if (viewType == typeof(FormUpdates))
+        {
+            FormUpdates form = new(new Version(98, 0));
+            form.GetTestAccessor().DisplayReleases(
+                """
+                [Version "99.1"]
+                    ReleaseType = Major
+                    DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v99.1/GitExtensions-x64-99.1.msi
+                    NetRuntimeVersion = 99.0.2
+                """);
+            return form;
         }
 
         if (viewType == typeof(FormAddFiles))
@@ -1220,6 +1234,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormVerify))
         {
             return (900, 600);
+        }
+
+        if (viewType == typeof(FormUpdates))
+        {
+            return (462, 157);
         }
 
         if (viewType == typeof(FindAndReplaceForm))

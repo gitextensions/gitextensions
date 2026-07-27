@@ -35,6 +35,8 @@
              Link="CommandsDialogs\Settings\AzureDevOpsExternalLinkDefinitionExtractorTests.cs" />
     <Compile Include="..\GitUI.Tests\CommandsDialogs\FormAddSubmoduleTests.cs"
              Link="CommandsDialogs\FormAddSubmoduleTests.cs" />
+    <Compile Include="..\GitUI.Tests\CommandsDialogs\BrowseDialog\ReleaseVersionTests.cs"
+             Link="CommandsDialogs\BrowseDialog\ReleaseVersionTests.cs" />
     <Compile Include="..\GitUI.Tests\LeftPanel\WorktreeTreeTests.cs"
              Link="LeftPanel\WorktreeTreeTests.cs" />
   </ItemGroup>
