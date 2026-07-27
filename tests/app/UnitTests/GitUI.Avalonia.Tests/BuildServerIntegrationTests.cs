@@ -1,4 +1,7 @@
-﻿using AppVeyorIntegration;
+﻿using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using AppVeyorIntegration;
 using AppVeyorIntegration.Settings;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -29,6 +32,8 @@ using JenkinsIntegration;
 using JenkinsIntegration.Settings;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using TeamCityIntegration;
+using TeamCityIntegration.Settings;
 using AzureDevOpsSettingsUserControl = AzureDevOpsIntegration.Settings.SettingsUserControl;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -48,6 +53,7 @@ public sealed class BuildServerIntegrationTests
             typeof(GitHubActionsIntegrationMetadataAttribute).Assembly,
             typeof(GitlabIntegrationMetadataAttribute).Assembly,
             typeof(JenkinsIntegrationMetadata).Assembly,
+            typeof(TeamCityIntegrationMetadataAttribute).Assembly,
         ]);
     }
 
@@ -117,7 +123,8 @@ public sealed class BuildServerIntegrationTests
                 "Azure DevOps and Team Foundation Server (since TFS2015)",
                 "GitHub Actions",
                 "Gitlab",
-                "Jenkins");
+                "Jenkins",
+                "TeamCity");
             pageAccessor.buildServerSettingsPanel.Content.Should().BeNull(
                 "the parameterless settings form intentionally has no repository module");
 
@@ -312,6 +319,196 @@ public sealed class BuildServerIntegrationTests
             }
 
             condition().Should().BeTrue("the clipboard extraction should complete before the timeout");
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task TeamCity_settings_control_should_be_a_native_export_and_round_trip_settings()
+    {
+        const string category = nameof(TeamCitySettingsUserControl);
+        Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata> export = ManagedExtensibility
+            .GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>()
+            .Single(item => item.Metadata.BuildServerType == "TeamCity");
+        TeamCitySettingsUserControl control = export.Value.Should()
+            .BeAssignableTo<Control>()
+            .Which.Should()
+            .BeOfType<TeamCitySettingsUserControl>()
+            .Subject;
+        TextBox serverUrl = control.FindControl<TextBox>("TeamCityServerUrl")!;
+        TextBox projectName = control.FindControl<TextBox>("TeamCityProjectName")!;
+        TextBox buildIdFilter = control.FindControl<TextBox>("TeamCityBuildIdFilter")!;
+        CheckBox logAsGuest = control.FindControl<CheckBox>("CheckBoxLogAsGuest")!;
+        Button projectChooser = control.FindControl<Button>("buttonProjectChooser")!;
+        HyperlinkButton extract = control.FindControl<HyperlinkButton>("lnkExtractDataFromBuildUrlCopiedInTheClipboard")!;
+        TextBlock regexError = control.FindControl<TextBlock>("labelRegexError")!;
+
+        ITranslation translation = Substitute.For<ITranslation>();
+        control.AddTranslationItems(translation);
+        translation.Received(1).AddTranslationItem(
+            category, "CheckBoxLogAsGuest", "Text",
+            "Log as guest to display the build report");
+        translation.Received(1).AddTranslationItem(
+            category, "_failToExtractDataFromClipboardCaption", "Text",
+            "Build url not valid");
+        translation.Received(1).AddTranslationItem(
+            category, "_failToExtractDataFromClipboardMessage", "Text",
+            "The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
+            "Please copy in the clipboard the url of the build before retrying." + Environment.NewLine +
+            "(Should contain at least the \"buildTypeId\" parameter)");
+        translation.Received(1).AddTranslationItem(
+            category, "_failToLoadProjectCaption", "Text",
+            "Error when loading the projects and build list");
+        translation.Received(1).AddTranslationItem(
+            category, "_failToLoadProjectMessage", "Text",
+            "Failed to load the projects and build list." + Environment.NewLine +
+            "Please verify the server url.");
+        translation.Received(1).AddTranslationItem(
+            category, "labelRegexError", "Text",
+            "The \"Build Id Filter\" regular expression is not valid and won't be saved!");
+        translation.Received(1).AddTranslationItem(
+            category, "lnkExtractDataFromBuildUrlCopiedInTheClipboard", "Text",
+            "Extract the data from the build url copied in the clipboard");
+        translation.ReceivedCalls().Should().HaveCount(7);
+
+        TestSettingsSource settings = new();
+        control.Initialize("default-project", []);
+        control.LoadSettings(settings);
+        serverUrl.Text.Should().BeNullOrEmpty();
+        projectName.Text.Should().Be("default-project");
+        buildIdFilter.Text.Should().BeNullOrEmpty();
+        logAsGuest.IsChecked.Should().BeFalse();
+        projectChooser.IsEnabled.Should().BeFalse();
+        regexError.IsVisible.Should().BeFalse();
+
+        serverUrl.Text = "https://teamcity.example.test";
+        buildIdFilter.Text = "[";
+        regexError.IsVisible.Should().BeTrue();
+        projectChooser.IsEnabled.Should().BeTrue();
+        control.SaveSettings(settings);
+        settings.GetString("BuildServerUrl", null).Should().BeNull();
+
+        projectName.Text = "ProjectA|ProjectB";
+        buildIdFilter.Text = "Build.*";
+        logAsGuest.IsChecked = null;
+        control.SaveSettings(settings);
+        settings.GetString("BuildServerUrl", null).Should().Be("https://teamcity.example.test");
+        settings.GetString("ProjectName", null).Should().Be("ProjectA|ProjectB");
+        settings.GetString("BuildIdFilter", null).Should().Be("Build.*");
+        settings.GetBool("LogAsGuest").Should().BeNull();
+
+        await using LoopbackHttpServer httpServer = new();
+        httpServer.AddResponse(
+            "/guestAuth/app/rest/buildTypes/id:BuildA",
+            """<buildType id="BuildA" name="Build A" projectId="ProjectA" />""");
+
+        WinFormsShims.IClipboard? originalClipboard = TryGetClipboard();
+        WinFormsShims.IMessageBoxHost? originalMessageBoxHost = TryGetMessageBoxHost();
+        StubMessageBoxHost messageBoxes = new();
+        WinFormsShims.ShimHost.MessageBoxHost = messageBoxes;
+        try
+        {
+            WinFormsShims.ShimHost.Clipboard = new StubClipboard("not a TeamCity build URL");
+            extract.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            messageBoxes.Messages.Should().ContainSingle()
+                .Which.Should().StartWith("The clipboard doesn't contain a valid build url.");
+
+            WinFormsShims.ShimHost.Clipboard = new StubClipboard(
+                $"{httpServer.BaseUrl}/viewLog.html?buildTypeId=BuildA&buildId=42");
+            extract.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            serverUrl.Text.Should().Be(httpServer.BaseUrl);
+            projectName.Text.Should().Be("ProjectA");
+            buildIdFilter.Text.Should().Be("BuildA");
+            messageBoxes.Messages.Should().HaveCount(1);
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.Clipboard = originalClipboard ?? new StubClipboard(string.Empty);
+            WinFormsShims.ShimHost.MessageBoxHost = originalMessageBoxHost ?? new StubMessageBoxHost();
+        }
+
+        return;
+
+        static WinFormsShims.IClipboard? TryGetClipboard()
+        {
+            try
+            {
+                return WinFormsShims.ShimHost.Clipboard;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
+
+        static WinFormsShims.IMessageBoxHost? TryGetMessageBoxHost()
+        {
+            try
+            {
+                return WinFormsShims.ShimHost.MessageBoxHost;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task TeamCity_build_chooser_should_load_projects_lazily_and_select_a_build()
+    {
+        await using LoopbackHttpServer httpServer = new();
+        httpServer.AddResponse(
+            "/guestAuth/app/rest/projects",
+            """
+            <projects>
+              <project id="_Root" name="Root" />
+              <project id="ProjectA" name="Project A" parentProjectId="_Root" />
+            </projects>
+            """);
+        httpServer.AddResponse(
+            "/guestAuth/app/rest/projects/_Root",
+            """<project id="_Root"><buildTypes /></project>""");
+        httpServer.AddResponse(
+            "/guestAuth/app/rest/projects/ProjectA",
+            """
+            <project id="ProjectA">
+              <buildTypes>
+                <buildType id="BuildA" name="Build A" projectId="ProjectA" />
+              </buildTypes>
+            </project>
+            """);
+
+        using TeamCityBuildChooser chooser = new(httpServer.BaseUrl, "ProjectA", "BuildA");
+        TreeView tree = chooser.FindControl<TreeView>("treeViewTeamCityProjects")!;
+        Button buttonOK = chooser.FindControl<Button>("buttonOK")!;
+        Button buttonCancel = chooser.FindControl<Button>("buttonCancel")!;
+        TreeViewItem root = tree.Items.OfType<TreeViewItem>().Should().ContainSingle().Subject;
+        TreeViewItem project = root.Items.OfType<TreeViewItem>()
+            .Single(item => item.Tag is TeamCityIntegration.Project { Id: "ProjectA" });
+        project.Items.Should().ContainSingle("leaf projects start with the original loading placeholder");
+        buttonOK.IsEnabled.Should().BeFalse();
+
+        chooser.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            TreeViewItem build = project.Items.OfType<TreeViewItem>()
+                .Single(item => item.Tag is TeamCityIntegration.Build { Id: "BuildA" });
+            ((TextBlock)build.Header!).Text.Should().Be("Build A (BuildA)");
+            tree.SelectedItem.Should().BeSameAs(build);
+            buttonOK.IsEnabled.Should().BeTrue();
+
+            buttonOK.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            chooser.TeamCityProjectName.Should().Be("ProjectA");
+            chooser.TeamCityBuildIdFilter.Should().Be("BuildA");
+            chooser.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
+
+            buttonCancel.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            chooser.DialogResult.Should().Be(WinFormsShims.DialogResult.Cancel);
+        }
+        finally
+        {
+            chooser.Close();
         }
     }
 
@@ -725,6 +922,79 @@ public sealed class BuildServerIntegrationTests
         {
             Messages.Add(text ?? string.Empty);
             return WinFormsShims.DialogResult.OK;
+        }
+    }
+
+    private sealed class LoopbackHttpServer : System.IAsyncDisposable
+    {
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
+        private readonly TcpListener _listener = new(IPAddress.Loopback, 0);
+        private readonly Dictionary<string, string> _responses = [];
+        private readonly Task _serverTask;
+
+        public LoopbackHttpServer()
+        {
+            _listener.Start();
+            BaseUrl = $"http://127.0.0.1:{((IPEndPoint)_listener.LocalEndpoint).Port}";
+            _serverTask = Task.Run(RunAsync);
+        }
+
+        public string BaseUrl { get; }
+
+        public void AddResponse(string path, string content)
+            => _responses[path] = content;
+
+        public async ValueTask DisposeAsync()
+        {
+            await _cancellationTokenSource.CancelAsync();
+            _listener.Stop();
+#pragma warning disable VSTHRD003 // The owned server task is canceled and awaited during fixture disposal.
+            await _serverTask;
+#pragma warning restore VSTHRD003
+            _cancellationTokenSource.Dispose();
+        }
+
+        private async Task RunAsync()
+        {
+            try
+            {
+                while (!_cancellationTokenSource.IsCancellationRequested)
+                {
+                    using TcpClient client = await _listener.AcceptTcpClientAsync(_cancellationTokenSource.Token);
+                    await RespondAsync(client, _cancellationTokenSource.Token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (SocketException) when (_cancellationTokenSource.IsCancellationRequested)
+            {
+            }
+        }
+
+        private async Task RespondAsync(TcpClient client, CancellationToken cancellationToken)
+        {
+            using NetworkStream stream = client.GetStream();
+            using StreamReader reader = new(stream, Encoding.ASCII, leaveOpen: true);
+            string requestLine = await reader.ReadLineAsync(cancellationToken) ?? string.Empty;
+            string? header;
+            do
+            {
+                header = await reader.ReadLineAsync(cancellationToken);
+            }
+            while (!string.IsNullOrEmpty(header));
+
+            string path = requestLine.Split(' ', StringSplitOptions.RemoveEmptyEntries).ElementAtOrDefault(1) ?? "/";
+            bool found = _responses.TryGetValue(path, out string? content);
+            content ??= "<error>Not found</error>";
+            byte[] body = Encoding.UTF8.GetBytes(content);
+            byte[] responseHeader = Encoding.ASCII.GetBytes(
+                $"HTTP/1.1 {(found ? "200 OK" : "404 Not Found")}\r\n" +
+                "Content-Type: application/xml\r\n" +
+                $"Content-Length: {body.Length}\r\n" +
+                "Connection: close\r\n\r\n");
+            await stream.WriteAsync(responseHeader, cancellationToken);
+            await stream.WriteAsync(body, cancellationToken);
         }
     }
 
