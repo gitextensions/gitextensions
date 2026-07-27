@@ -15,6 +15,7 @@ using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Avatars;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
@@ -46,6 +47,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly IGpgInfoProvider? _controller;
     private readonly IScriptsManager? _scriptsManager;
     private readonly ISubmoduleStatusProvider? _submoduleStatusProvider;
+    private readonly IUpdateCheckService? _updateCheckService;
     private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
     private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
@@ -136,6 +138,7 @@ public sealed partial class FormBrowse : GitModuleForm
         _hasRuntimeCommands = true;
         _scriptsManager = UICommands.GetService(typeof(IScriptsManager)) as IScriptsManager;
         _submoduleStatusProvider = UICommands.GetService(typeof(ISubmoduleStatusProvider)) as ISubmoduleStatusProvider;
+        _updateCheckService = UICommands.GetService(typeof(IUpdateCheckService)) as IUpdateCheckService;
         RevisionGrid.UICommandsSource = this;
         RevisionGrid.ShowBuildServerInfo = true;
         revisionDiff.UICommandsSource = this;
@@ -181,6 +184,7 @@ public sealed partial class FormBrowse : GitModuleForm
         _createPullRequestsToolStripMenuItem.Click += _createPullRequestToolStripMenuItem_Click;
         _addUpstreamRemoteToolStripMenuItem.Click += _addUpstreamRemoteToolStripMenuItem_Click;
         pluginSettingsToolStripMenuItem.Click += PluginSettingsToolStripMenuItemClick;
+        checkForUpdatesToolStripMenuItem.Click += checkForUpdatesToolStripMenuItem_Click;
         RefreshButton.Click += RefreshToolStripMenuItemClick;
         toggleLeftPanel.Click += ToggleLeftPanelClick;
         InitializeWorkspaceLayout();
@@ -337,6 +341,14 @@ public sealed partial class FormBrowse : GitModuleForm
     {
         base.OnRuntimeLoad(e);
 
+        if (_updateCheckService is not null
+            && AppSettings.CheckForUpdates
+            && AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
+        {
+            AppSettings.LastUpdateCheck = DateTime.Now;
+            _updateCheckService.SearchForUpdatesAndShow(this, alwaysShow: false);
+        }
+
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(async () =>
         {
@@ -355,6 +367,11 @@ public sealed partial class FormBrowse : GitModuleForm
                 Trace.WriteLine(exception);
             }
         });
+    }
+
+    private void checkForUpdatesToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        _updateCheckService?.SearchForUpdatesAndShow(this, alwaysShow: true);
     }
 
     private void LoadWorkingDirectories()

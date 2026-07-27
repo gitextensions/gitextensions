@@ -1636,11 +1636,11 @@ public sealed class SettingsDialogTests
             accessor.AutoNormaliseBranchName.IsChecked.Should().BeFalse();
             accessor.AutoNormaliseSymbol.IsEnabled.Should().BeFalse();
             accessor.AutoNormaliseSymbol.SelectedItem!.ToString().Should().Be("-");
-            accessor.UpdatesGroup.IsVisible.Should().BeFalse();
+            accessor.UpdatesGroup.IsVisible.Should().BeTrue();
             accessor.ConsoleEmulatorRow.IsVisible.Should().BeFalse();
             accessor.ConsoleEmulator.IsVisible.Should().BeFalse();
-            accessor.CheckForUpdates.IsVisible.Should().BeFalse();
-            accessor.CheckForReleaseCandidates.IsVisible.Should().BeFalse();
+            accessor.CheckForUpdates.IsVisible.Should().BeTrue();
+            accessor.CheckForReleaseCandidates.IsVisible.Should().BeTrue();
 
             accessor.AlwaysShowCheckoutDialog.IsChecked = false;
             accessor.UseLocalChangesAction.IsChecked = true;

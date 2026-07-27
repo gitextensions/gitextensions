@@ -114,6 +114,11 @@
           </MenuItem.Header>
         </MenuItem>
       </MenuItem>
+      <MenuItem x:Name="helpToolStripMenuItem" Header="_Help">
+        <MenuItem x:Name="checkForUpdatesToolStripMenuItem" Header="Check for _updates">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CheckForUpdates}" /></MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
     </Menu>
     <WrapPanel x:Name="toolPanel"
                DockPanel.Dock="Top"
