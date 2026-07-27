@@ -1,0 +1,121 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitExtensions.Plugins.FindLargeFiles.FindLargeFilesForm"
+        Width="760"
+        Height="421"
+        MinWidth="620"
+        MinHeight="320"
+        WindowStartupLocation="CenterOwner"
+        Title="Find large files">
+  <Grid x:Name="tableLayoutPanel1"
+        RowDefinitions="25,*,37">
+    <TextBlock x:Name="label1"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository." />
+
+    <Border Grid.Row="1"
+            Margin="3"
+            Classes="gitextensions-section">
+      <Grid RowDefinitions="Auto,*">
+        <Grid ColumnDefinitions="54,*,52,100,88,103,70">
+          <Border x:Name="sHADataGridViewTextBoxColumn"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold"
+                       Text="SHA" />
+          </Border>
+          <Border x:Name="pathDataGridViewTextBoxColumn"
+                  Grid.Column="1"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold"
+                       Text="Path" />
+          </Border>
+          <Border x:Name="sizeDataGridViewTextBoxColumn"
+                  Grid.Column="2"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold"
+                       Text="Size" />
+          </Border>
+          <Border x:Name="CompressedSize"
+                  Grid.Column="3"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold"
+                       Text="Compressed size" />
+          </Border>
+          <Border x:Name="commitCountDataGridViewTextBoxColumn"
+                  Grid.Column="4"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold"
+                       Text="Commit count" />
+          </Border>
+          <Border x:Name="lastCommitDateDataGridViewTextBoxColumn"
+                  Grid.Column="5"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold"
+                       Text="Last commit date" />
+          </Border>
+          <Border x:Name="dataGridViewCheckBoxColumn1"
+                  Grid.Column="6"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,0,1">
+            <TextBlock HorizontalAlignment="Center"
+                       FontWeight="SemiBold"
+                       Text="Delete" />
+          </Border>
+        </Grid>
+
+        <ListBox x:Name="BranchesGrid"
+                 Grid.Row="1"
+                 SelectionMode="Single">
+          <ListBox.Styles>
+            <Style Selector="ListBoxItem">
+              <Setter Property="Padding" Value="0" />
+              <Setter Property="MinHeight" Value="24" />
+              <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </Style>
+          </ListBox.Styles>
+        </ListBox>
+      </Grid>
+    </Border>
+
+    <Grid x:Name="tableLayoutPanel2"
+          Grid.Row="2"
+          Margin="3"
+          ColumnDefinitions="*,150,150">
+      <ProgressBar x:Name="pbRevisions"
+                   Height="27"
+                   Margin="2"
+                   VerticalAlignment="Center" />
+      <Button x:Name="Delete"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="1"
+              Width="75"
+              Height="25"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Content="Delete" />
+      <Button x:Name="Cancel"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="2"
+              Width="75"
+              Height="25"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Center"
+              IsCancel="True"
+              Content="Close" />
+    </Grid>
+  </Grid>
+</Window>

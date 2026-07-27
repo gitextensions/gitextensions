@@ -23,6 +23,7 @@
     <Project Path="src/plugins/BackgroundFetch/GitExtensions.Plugins.BackgroundFetch.csproj" />
     <Project Path="src/plugins/CreateLocalBranches/GitExtensions.Plugins.CreateLocalBranches.csproj" />
     <Project Path="src/plugins/DeleteUnusedBranches/GitExtensions.Plugins.DeleteUnusedBranches.csproj" />
+    <Project Path="src/plugins/FindLargeFiles/GitExtensions.Plugins.FindLargeFiles.csproj" />
     <Project Path="src/plugins/GitHub3/GitExtensions.Plugins.GitHub3.csproj" />
     <Project Path="src/plugins/ProxySwitcher/GitExtensions.Plugins.ProxySwitcher.csproj" />
     <Project Path="src/plugins/ReleaseNotesGenerator/GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
