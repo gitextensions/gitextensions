@@ -14,8 +14,10 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using AvaloniaEdit;
 using GitCommands;
+using GitCommands.ExternalLinks;
 using GitCommands.Git;
 using GitCommands.Git.Gpg;
+using GitCommands.Settings;
 using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
@@ -657,6 +659,44 @@ public sealed partial class ParityScreenshotTests
         if (root is ConsoleStyleSettingsPage consoleStyleSettingsPage)
         {
             consoleStyleSettingsPage.LoadSettings();
+        }
+
+        if (root is RevisionLinksSettingsPage revisionLinksSettingsPage)
+        {
+            DistributedSettings settings = new(
+                lowerPriority: null,
+                new GitExtSettingsCache(
+                    Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.settings"),
+                    autoSave: false),
+                GitExtensions.Extensibility.Settings.SettingLevel.Global);
+            new ExternalLinksStorage().Save(
+                settings,
+                [
+                    new ExternalLinkDefinition
+                    {
+                        Name = "GitHub - Issues",
+                        Enabled = true,
+                        SearchInParts =
+                        {
+                            ExternalLinkDefinition.RevisionPart.Message,
+                            ExternalLinkDefinition.RevisionPart.LocalBranches,
+                        },
+                        SearchPattern = @"(?i)#\d+",
+                        NestedSearchPattern = @"\d+",
+                        UseRemotesPattern = "upstream|origin",
+                        UseOnlyFirstRemote = true,
+                        RemoteSearchInParts = { ExternalLinkDefinition.RemotePart.URL },
+                        LinkFormats =
+                        {
+                            new ExternalLinkFormat
+                            {
+                                Caption = "Issue #{0}",
+                                Format = "https://github.com/gitextensions/gitextensions/issues/{0}",
+                            },
+                        },
+                    },
+                ]);
+            revisionLinksSettingsPage.GetTestAccessor().LoadFromSettings(settings);
         }
 
         if (root is ScriptsSettingsPage scriptsSettingsPage)
