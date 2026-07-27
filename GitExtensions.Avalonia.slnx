@@ -28,6 +28,7 @@
     <Project Path="src/plugins/ProxySwitcher/GitExtensions.Plugins.ProxySwitcher.csproj" />
     <Project Path="src/plugins/ReleaseNotesGenerator/GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
     <Project Path="src/plugins/Statistics/GitImpact/GitExtensions.Plugins.GitImpact.csproj" />
+    <Project Path="src/plugins/Statistics/GitStatistics/GitExtensions.Plugins.GitStatistics.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
