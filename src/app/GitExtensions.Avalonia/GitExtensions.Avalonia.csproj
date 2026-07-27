@@ -45,6 +45,9 @@
     <ProjectReference Include="..\..\plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
     <ProjectReference Include="..\..\plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
