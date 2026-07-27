@@ -1,0 +1,50 @@
+<settings:DistributedSettingsPage xmlns="https://github.com/avaloniaui"
+                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                  xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                  x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.DetailedSettingsPage"
+                                  Text="Detailed">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="tableLayoutPanel2"
+                Margin="8"
+                Spacing="6">
+      <GroupBox x:Name="gbRevisionGraph"
+                Header="Revision graph">
+        <StackPanel x:Name="tlpnlRevisionGraph"
+                    Margin="8,4,8,8">
+          <CheckBox x:Name="chkMergeGraphLanesHavingCommonParent"
+                    Content="Merge graph lanes having common parent" />
+          <CheckBox x:Name="chkRenderGraphWithDiagonals"
+                    Content="Render graph with diagonals" />
+          <CheckBox x:Name="chkStraightenGraphDiagonals"
+                    Content="Straighten graph diagonals" />
+        </StackPanel>
+      </GroupBox>
+
+      <GroupBox x:Name="PushWindowGB"
+                Header="Push window">
+        <StackPanel x:Name="tableLayoutPanel1"
+                    Margin="8,4,8,8">
+          <CheckBox x:Name="chkRemotesFromServer"
+                    Content="Get remote branches directly from the remote" />
+        </StackPanel>
+      </GroupBox>
+
+      <GroupBox x:Name="mergeWindowGroup"
+                Header="Merge window">
+        <StackPanel x:Name="tableLayoutPanel4"
+                    Margin="8,4,8,8">
+          <StackPanel x:Name="flowLayoutPanel1"
+                      Orientation="Horizontal"
+                      Spacing="6">
+            <CheckBox x:Name="addLogMessages"
+                      VerticalAlignment="Center"
+                      Content="Add log messages" />
+            <TextBox x:Name="nbMessages"
+                     Width="100" />
+          </StackPanel>
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:DistributedSettingsPage>
