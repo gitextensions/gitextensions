@@ -25,6 +25,7 @@ using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.LeftPanel;
+using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -42,12 +43,15 @@ public sealed class FormBrowseTests
 {
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
+    private bool _revisionGraphShowArtificialCommits;
 
     [SetUp]
     public void SetUp()
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        _revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
+        AppSettings.RevisionGraphShowArtificialCommits = false;
 
         _serviceContainer = new ServiceContainer();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(_serviceContainer);
@@ -70,6 +74,7 @@ public sealed class FormBrowseTests
     [TearDown]
     public void TearDown()
     {
+        AppSettings.RevisionGraphShowArtificialCommits = _revisionGraphShowArtificialCommits;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
@@ -86,6 +91,75 @@ public sealed class FormBrowseTests
         form.ExecuteCommand(FormBrowse.Command.QuickFetch).Should().BeTrue();
 
         scriptEvents.Events.Should().Equal(ScriptEvent.BeforeFetch);
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task FormBrowse_should_show_artificial_revisions_and_live_toolbar_status()
+    {
+        bool originalShowArtificial = AppSettings.RevisionGraphShowArtificialCommits;
+        bool originalShowArtificialStatus = AppSettings.ShowGitStatusForArtificialCommits;
+        bool originalShowToolbarStatus = AppSettings.ShowGitStatusInBrowseToolbar;
+        bool originalShowAheadBehind = AppSettings.ShowAheadBehindData;
+        string remoteDirectory = Path.Combine(
+            Path.GetTempPath(),
+            $"GitExtensions.Avalonia.Remote-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(remoteDirectory);
+
+        try
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = true;
+            AppSettings.ShowGitStatusForArtificialCommits = true;
+            AppSettings.ShowGitStatusInBrowseToolbar = true;
+            AppSettings.ShowAheadBehindData = true;
+
+            GitModule module = CreateRepositoryWithInitialCommit();
+            GitModule remote = new(
+                _serviceContainer.GetRequiredService<IGitExecutorProvider>(),
+                remoteDirectory);
+            remote.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet", "--bare" });
+            module.GitExecutable.RunCommand(
+                new GitArgumentBuilder("remote") { "add", "origin", remoteDirectory });
+            module.GitExecutable.RunCommand(
+                new GitArgumentBuilder("push") { "--quiet", "--set-upstream", "origin", "HEAD" });
+
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second commit");
+            module.GitExecutable.RunCommand(
+                new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "unstaged");
+            File.WriteAllText(Path.Combine(_workingDirectory, "staged.txt"), "staged");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "staged.txt" });
+
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            form.Show();
+
+            TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            IconButton commitButton = form.FindControl<IconButton>("toolStripButtonCommit")!;
+            ToolStripPushButton pushButton = form.FindControl<ToolStripPushButton>("toolStripButtonPush")!;
+
+            await WaitUntilAsync(() =>
+                loadingStatus.Text == "4 revisions"
+                && commitButton.Content?.ToString() == "Commit (2)"
+                && pushButton.GetTestAccessor().GetButtonText() == "1↑");
+
+            form.RevisionGrid.ShowUncommittedChangesIfPossible.Should().BeTrue();
+            form.RevisionGrid.GetChangeCount(ObjectId.WorkTreeId)!.Changed.Should().ContainSingle();
+            form.RevisionGrid.GetChangeCount(ObjectId.IndexId)!.New.Should().ContainSingle();
+            commitButton.Icon.Should().BeSameAs(Images.RepoStateMixed);
+            form.RevisionGrid.GetVisualDescendants()
+                .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .Select(label => label.Label)
+                .Should()
+                .Contain([ResourceManager.TranslatedStrings.Workspace, ResourceManager.TranslatedStrings.Index]);
+        }
+        finally
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = originalShowArtificial;
+            AppSettings.ShowGitStatusForArtificialCommits = originalShowArtificialStatus;
+            AppSettings.ShowGitStatusInBrowseToolbar = originalShowToolbarStatus;
+            AppSettings.ShowAheadBehindData = originalShowAheadBehind;
+            TestDirectory.Delete(remoteDirectory);
+        }
     }
 
     [AvaloniaTest]

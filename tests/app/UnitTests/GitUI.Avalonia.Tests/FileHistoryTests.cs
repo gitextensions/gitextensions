@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -36,6 +36,7 @@ public sealed class FileHistoryTests
     private bool _ignoreWhitespaceOnBlame;
     private bool _loadBlameOnShow;
     private bool _loadHistoryOnShow;
+    private bool _revisionGraphShowArtificialCommits;
     private bool _showAuthor;
     private bool _showAuthorAvatar;
     private bool _showAuthorDate;
@@ -74,6 +75,7 @@ public sealed class FileHistoryTests
         _ignoreWhitespaceOnBlame = AppSettings.IgnoreWhitespaceOnBlame;
         _loadBlameOnShow = AppSettings.LoadBlameOnShow;
         _loadHistoryOnShow = AppSettings.LoadFileHistoryOnShow;
+        _revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
         _showAuthor = AppSettings.BlameShowAuthor;
         _showAuthorAvatar = AppSettings.BlameShowAuthorAvatar;
         _showAuthorDate = AppSettings.BlameShowAuthorDate;
@@ -85,6 +87,7 @@ public sealed class FileHistoryTests
         AppSettings.FollowRenamesInFileHistory = true;
         AppSettings.LoadBlameOnShow = true;
         AppSettings.LoadFileHistoryOnShow = true;
+        AppSettings.RevisionGraphShowArtificialCommits = false;
     }
 
     [TearDown]
@@ -99,6 +102,7 @@ public sealed class FileHistoryTests
         AppSettings.IgnoreWhitespaceOnBlame = _ignoreWhitespaceOnBlame;
         AppSettings.LoadBlameOnShow = _loadBlameOnShow;
         AppSettings.LoadFileHistoryOnShow = _loadHistoryOnShow;
+        AppSettings.RevisionGraphShowArtificialCommits = _revisionGraphShowArtificialCommits;
         AppSettings.BlameShowAuthor = _showAuthor;
         AppSettings.BlameShowAuthorAvatar = _showAuthorAvatar;
         AppSettings.BlameShowAuthorDate = _showAuthorDate;

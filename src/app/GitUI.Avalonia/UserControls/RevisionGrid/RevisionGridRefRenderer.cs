@@ -367,7 +367,8 @@ internal static class RevisionGridRefRenderer
         {
             _formattedText = CreateFormattedText(Brushes.Black);
             _backgroundHeight = Math.Ceiling(_formattedText.Height) + (PaddingTopBottom * 2) - 1;
-            double iconWidth = Icon == RefLabelIcon.None ? 0 : RowHeight / 2;
+            RefLabelIcon effectiveIcon = GetEffectiveIcon(Icon);
+            double iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : RowHeight / 2;
             double extraWidth = Shape switch
             {
                 RefLabelShape.NotchLeft or RefLabelShape.NotchRight => PointWidth,
@@ -392,6 +393,7 @@ internal static class RevisionGridRefRenderer
             }
 
             IBrush refBrush = RefBrush;
+            RefLabelIcon effectiveIcon = GetEffectiveIcon(Icon);
             double top = (Bounds.Height - _backgroundHeight) / 2;
             Rect capsuleBounds = new(0.5, top + 0.5, Math.Max(0, _labelWidth - 1), _backgroundHeight - 1);
             StreamGeometry geometry = CreateGeometry(capsuleBounds, Shape, PointWidth);
@@ -404,12 +406,12 @@ internal static class RevisionGridRefRenderer
             double iconXOffset = Shape is RefLabelShape.NotchLeft or RefLabelShape.PointLeft
                 ? PointWidth
                 : 0;
-            if (Icon != RefLabelIcon.None)
+            if (effectiveIcon != RefLabelIcon.None)
             {
-                DrawHeadIndicator(context, refBrush, capsuleBounds, iconXOffset, Icon == RefLabelIcon.Head);
+                DrawHeadIndicator(context, refBrush, capsuleBounds, iconXOffset, effectiveIcon == RefLabelIcon.Head);
             }
 
-            double iconWidth = Icon == RefLabelIcon.None ? 0 : RowHeight / 2;
+            double iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : RowHeight / 2;
             double textX = iconXOffset
                 + iconWidth
                 + PaddingLeftRight
@@ -417,6 +419,11 @@ internal static class RevisionGridRefRenderer
             FormattedText formattedText = CreateFormattedText(Fill ? CapsuleBackgroundBrush : refBrush);
             context.DrawText(formattedText, new Point(textX, capsuleBounds.Y + PaddingTopBottom - 1));
         }
+
+        private static RefLabelIcon GetEffectiveIcon(RefLabelIcon icon)
+            => icon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource
+                ? icon
+                : RefLabelIcon.None;
 
         public bool Contains(Point point)
         {
