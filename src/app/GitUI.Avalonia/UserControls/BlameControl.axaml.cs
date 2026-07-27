@@ -1,10 +1,11 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitUI.Avatars;
 using GitUI.CommandsDialogs;
@@ -14,6 +15,7 @@ using GitUI.HelperDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -23,8 +25,7 @@ namespace GitUI.Blame;
 
 // Twin of GitUI/UserControls/BlameControl.cs. The author gutter is a BlameAuthorMargin
 // inside the file editor instead of a second scroll-synchronised editor, so the
-// scroll-position handlers of the original have no twin. Repository-hoster context-menu
-// items remain owned by their provider phase.
+// scroll-position handlers of the original have no twin.
 public sealed partial class BlameControl : GitModuleControl
 {
     /// <summary>
@@ -40,6 +41,8 @@ public sealed partial class BlameControl : GitModuleControl
     private GitBlameLine? _clickedBlameLine;
     private GitBlameCommit? _highlightedCommit;
     private GitBlame? _blame;
+    private WinFormsShims.ContextMenuStrip? _repositoryHostContextMenu;
+    private readonly List<MenuItem> _repositoryHostMenuItems = [];
     private IRevisionGridInfo? _revisionGridInfo;
     private IRevisionGridFileUpdate? _revisionGridFileUpdate;
     private ObjectId? _blameId;
@@ -101,6 +104,74 @@ public sealed partial class BlameControl : GitModuleControl
         }
 
         nested.AddSplitter(BlameAuthor, "splitContainer2", defaultDistance: 26);
+    }
+
+    public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin? gitHoster)
+    {
+        foreach (MenuItem menuItem in _repositoryHostMenuItems)
+        {
+            contextMenu.Items.Remove(menuItem);
+        }
+
+        _repositoryHostMenuItems.Clear();
+        _repositoryHostContextMenu?.Dispose();
+        _repositoryHostContextMenu = null;
+        if (gitHoster is null)
+        {
+            return;
+        }
+
+        // IRepositoryHostPlugin deliberately retains its WinForms-shaped headless menu
+        // contract. Materialize only that bounded model here so providers remain UI-neutral.
+        WinFormsShims.ContextMenuStrip sourceMenu = new();
+        gitHoster.ConfigureContextMenu(sourceMenu);
+        _repositoryHostContextMenu = sourceMenu;
+        foreach (WinFormsShims.ToolStripItem sourceItem in sourceMenu.Items)
+        {
+            MenuItem menuItem = MaterializeRepositoryHostMenuItem(
+                sourceItem,
+                PluginIconProvider.GetIcon(gitHoster));
+            _repositoryHostMenuItems.Add(menuItem);
+            contextMenu.Items.Add(menuItem);
+        }
+    }
+
+    private static MenuItem MaterializeRepositoryHostMenuItem(
+        WinFormsShims.ToolStripItem sourceItem,
+        Avalonia.Media.IImage? fallbackIcon = null)
+    {
+        MenuItem menuItem = new()
+        {
+            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(sourceItem.Text),
+            Tag = sourceItem,
+        };
+        if (!string.IsNullOrEmpty(sourceItem.Name))
+        {
+            menuItem.Name = sourceItem.Name;
+        }
+
+        Avalonia.Media.IImage? icon = sourceItem.Image?.PlatformImage as Avalonia.Media.IImage
+            ?? fallbackIcon;
+        if (icon is not null)
+        {
+            menuItem.Icon = new Image
+            {
+                Width = 16,
+                Height = 16,
+                Source = icon,
+            };
+        }
+
+        if (sourceItem is WinFormsShims.ToolStripMenuItem sourceMenuItem)
+        {
+            foreach (WinFormsShims.ToolStripItem child in sourceMenuItem.DropDownItems)
+            {
+                menuItem.Items.Add(MaterializeRepositoryHostMenuItem(child));
+            }
+        }
+
+        menuItem.Click += (_, _) => sourceItem.PerformClick();
+        return menuItem;
     }
 
     public void HideCommitInfo()
@@ -569,6 +640,15 @@ public sealed partial class BlameControl : GitModuleControl
 
     private void contextMenu_Opened(object sender, EventArgs e)
     {
+        if (_repositoryHostContextMenu is not null)
+        {
+            _repositoryHostContextMenu.Tag = _fileName is not null
+                && _blame is not null
+                && _blameId is { IsZero: false }
+                ? new GitBlameContext(_fileName, _lineIndex, GetBlameLine(), _blameId.Value)
+                : null;
+        }
+
         // Unlike WinForms, the menu can open before a blame is loaded; disable instead
         // of asserting.
         if (_fileName is null || _blame is null || _blameId is null
@@ -773,6 +853,8 @@ public sealed partial class BlameControl : GitModuleControl
 
         public Grid SplitContainer => _control.splitContainer1;
 
+        public IReadOnlyList<MenuItem> RepositoryHostMenuItems => _control._repositoryHostMenuItems;
+
         public double AuthorMarginWidth
         {
             get => ((IPersistedSplitter)_control.BlameAuthor).SplitterDistance;
@@ -797,5 +879,18 @@ public sealed partial class BlameControl : GitModuleControl
 
         public Color GetCommitHighlightColor()
             => _control.GetThemeColor("GitExtensionsBlameHighlightBrush", SystemColors.ControlLight);
+
+        public void OpenContextMenu(
+            string fileName,
+            int lineIndex,
+            ObjectId blameId,
+            GitBlame blame)
+        {
+            _control._fileName = fileName;
+            _control._lineIndex = lineIndex;
+            _control._blameId = blameId;
+            _control._blame = blame;
+            _control.contextMenu_Opened(_control.contextMenu, EventArgs.Empty);
+        }
     }
 }

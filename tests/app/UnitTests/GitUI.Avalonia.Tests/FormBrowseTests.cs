@@ -17,6 +17,7 @@ using GitCommands.Git.Gpg;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
@@ -249,6 +250,104 @@ public sealed class FormBrowseTests
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "archiveToolStripMenuItem", "Text", "Archi&ve revision...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitMaintenanceToolStripMenuItem", "Text", "&Git maintenance");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "recoverLostObjectsToolStripMenuItem", "Text", "&Recover lost objects...");
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_repository_host_menu_should_preserve_translation_identities()
+    {
+        using FormBrowse form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        form.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "_repositoryHostsToolStripMenuItem",
+            "Text",
+            "(Repository hosts)");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "_forkCloneRepositoryToolStripMenuItem",
+            "Text",
+            "&Fork/Clone repository...");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "_viewPullRequestsToolStripMenuItem",
+            "Text",
+            "View &pull requests...");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "_createPullRequestsToolStripMenuItem",
+            "Text",
+            "&Create pull requests...");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "_addUpstreamRemoteToolStripMenuItem",
+            "Text",
+            "&Add upstream remote");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "_noReposHostPluginLoaded",
+            "Text",
+            "No repository host plugin loaded.");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "_noReposHostFound",
+            "Text",
+            "Could not find any relevant repository hosts for the currently open repository.");
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public void FormBrowse_repository_host_menu_should_route_all_functional_contributions()
+    {
+        IRepositoryHostPlugin[] originalHosts = [.. PluginRegistry.GitHosters];
+        GitModule module = CreateRepositoryWithInitialCommit();
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(Arg.Any<Type>())
+            .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.Name.Returns("TestHost");
+        host.GitModuleIsRelevantToMe().Returns(true);
+        PluginRegistry.GitHosters.Clear();
+        PluginRegistry.GitHosters.Add(host);
+        FormBrowse? form = null;
+
+        try
+        {
+            form = new FormBrowse(commands);
+            form.Show();
+            form.UpdateRepositoryHostsMenuForTest(validWorkingDir: true);
+            MenuItem hostMenu = form.FindControl<MenuItem>("_repositoryHostsToolStripMenuItem")!;
+            MenuItem forkClone = form.FindControl<MenuItem>("_forkCloneRepositoryToolStripMenuItem")!;
+            MenuItem viewPullRequests = form.FindControl<MenuItem>("_viewPullRequestsToolStripMenuItem")!;
+            MenuItem createPullRequest = form.FindControl<MenuItem>("_createPullRequestsToolStripMenuItem")!;
+            MenuItem addUpstream = form.FindControl<MenuItem>("_addUpstreamRemoteToolStripMenuItem")!;
+
+            hostMenu.IsVisible.Should().BeTrue();
+            hostMenu.Header.Should().Be("TestHost");
+            forkClone.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            viewPullRequests.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            createPullRequest.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            addUpstream.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            commands.Received(1).StartCloneForkFromHoster(
+                form,
+                host,
+                Arg.Any<EventHandler<GitModuleEventArgs>>());
+            commands.Received(1).StartPullRequestsDialog(form, host);
+            commands.Received(1).StartCreatePullRequest(form, host);
+            commands.Received(1).AddUpstreamRemote(form, host);
+        }
+        finally
+        {
+            form?.Close();
+            PluginRegistry.GitHosters.Clear();
+            PluginRegistry.GitHosters.AddRange(originalHosts);
+        }
     }
 
     [AvaloniaTest]
