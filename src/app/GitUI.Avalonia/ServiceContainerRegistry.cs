@@ -36,7 +36,9 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IScriptsRunner>(scriptsManager);
         serviceContainer.AddService<ISimplePromptCreator>(new SimplePromptCreator());
         serviceContainer.AddService<IFilePromptCreator>(new FilePromptCreator());
-        serviceContainer.AddService<IHotkeySettingsLoader>(new HotkeySettingsManager(scriptsManager));
+        HotkeySettingsManager hotkeySettingsManager = new(scriptsManager);
+        serviceContainer.AddService<IHotkeySettingsLoader>(hotkeySettingsManager);
+        serviceContainer.AddService<IHotkeySettingsManager>(hotkeySettingsManager);
         serviceContainer.AddService<IOutputHistoryProvider>(outputHistoryModel);
         serviceContainer.AddService<IOutputHistoryRecorder>(outputHistoryModel);
         serviceContainer.AddService<ITerminalLauncher>(new TerminalLauncher());
