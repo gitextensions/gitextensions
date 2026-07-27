@@ -93,19 +93,15 @@
         </StackPanel>
       </GroupBox>
 
-      <!-- The automatic updater is ported together with its real dialog and Browse command. -->
       <GroupBox x:Name="grpUpdates"
-                Header="Updates"
-                IsVisible="False">
+                Header="Updates">
         <StackPanel x:Name="tableLayoutPanel6"
                     Margin="8,4,8,8"
                     Spacing="1">
           <CheckBox x:Name="chkCheckForUpdates"
                     IsChecked="True"
-                    IsVisible="False"
                     Content="Check for updates weekly" />
           <CheckBox x:Name="chkCheckForRCVersions"
-                    IsVisible="False"
                     Content="Check for release candidate versions" />
         </StackPanel>
       </GroupBox>
