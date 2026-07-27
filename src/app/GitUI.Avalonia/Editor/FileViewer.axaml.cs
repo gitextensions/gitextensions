@@ -49,6 +49,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
 
     private readonly CancellationTokenSequence _viewSequence = new();
+    private readonly ContinuousScrollEventManager _continuousScrollEventManager = new();
     private readonly DiffBackgroundRenderer _diffBackgroundRenderer;
     private readonly DiffTextColorizer _diffTextColorizer;
     private readonly DiffViewerLineNumberControl _diffViewerLineNumberControl;
@@ -89,6 +90,8 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         TextEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
         TextEditor.KeyDown += TextEditor_KeyDown;
         TextEditor.PointerWheelChanged += TextEditor_PointerWheelChanged;
+        _continuousScrollEventManager.TopScrollReached += (_, _) => TopScrollReached?.Invoke(this, EventArgs.Empty);
+        _continuousScrollEventManager.BottomScrollReached += (_, _) => BottomScrollReached?.Invoke(this, EventArgs.Empty);
         TextEditor.PointerMoved += (_, _) => ShowFileViewerToolbar();
         PointerExited += (_, _) => fileviewerToolbar.IsVisible = false;
         PictureBox.PointerWheelChanged += PictureBox_PointerWheelChanged;
@@ -2277,29 +2280,36 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         AvaloniaEdit.Rendering.TextView textView = TextEditor.TextArea.TextView;
         if (e.Delta.Y > 0 && textView.ScrollOffset.Y <= 0)
         {
-            TopScrollReached?.Invoke(this, EventArgs.Empty);
-            e.Handled = true;
+            e.Handled = RaiseContinuousScroll(e.Delta.Y, e.KeyModifiers);
         }
         else if (e.Delta.Y < 0
                  && textView.ScrollOffset.Y + textView.Bounds.Height >= textView.DocumentHeight)
         {
-            BottomScrollReached?.Invoke(this, EventArgs.Empty);
-            e.Handled = true;
+            e.Handled = RaiseContinuousScroll(e.Delta.Y, e.KeyModifiers);
         }
     }
 
     private void PictureBox_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+        => e.Handled = RaiseContinuousScroll(e.Delta.Y, e.KeyModifiers);
+
+    private bool RaiseContinuousScroll(double delta, KeyModifiers keyModifiers)
     {
-        if (e.Delta.Y > 0)
+        if (keyModifiers.HasFlag(KeyModifiers.Shift))
         {
-            TopScrollReached?.Invoke(sender, EventArgs.Empty);
-            e.Handled = true;
+            return false;
         }
-        else if (e.Delta.Y < 0)
+
+        if (delta > 0)
         {
-            BottomScrollReached?.Invoke(sender, EventArgs.Empty);
-            e.Handled = true;
+            return _continuousScrollEventManager.RaiseTopScrollReached(keyModifiers);
         }
+
+        if (delta < 0)
+        {
+            return _continuousScrollEventManager.RaiseBottomScrollReached(keyModifiers);
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -2392,5 +2402,8 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         public FileStatusItem? ViewItem => _control._viewItem;
 
         public Action? OpenWithDifftool => _control._openWithDifftool;
+
+        public bool RaiseContinuousScroll(double delta, KeyModifiers keyModifiers)
+            => _control.RaiseContinuousScroll(delta, keyModifiers);
     }
 }
