@@ -59,6 +59,7 @@
     <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\CreateLocalBranches\GitExtensions.Plugins.CreateLocalBranches.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\GitHub3\GitExtensions.Plugins.GitHub3.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
