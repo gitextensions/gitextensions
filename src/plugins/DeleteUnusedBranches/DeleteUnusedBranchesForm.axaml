@@ -1,0 +1,194 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitExtensions.Plugins.DeleteUnusedBranches.DeleteUnusedBranchesForm"
+        Width="760"
+        Height="500"
+        MinWidth="600"
+        MinHeight="400"
+        WindowStartupLocation="CenterOwner"
+        Title="Delete obsolete branches">
+  <Grid RowDefinitions="25,247,*,37,22">
+    <TextBlock x:Name="instructionLabel"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Text="...." />
+
+    <Grid x:Name="tableLayoutPanel3"
+          Grid.Row="1"
+          Margin="3"
+          ColumnDefinitions="*,*"
+          RowDefinitions="30,30,30,30,30,30,30,30">
+      <TextBlock x:Name="label1"
+                 Margin="0,5,3,0"
+                 VerticalAlignment="Top"
+                 Text="Delete branches older than x days" />
+      <NumericUpDown x:Name="olderThanDays"
+                     Grid.Column="1"
+                     Width="120"
+                     Height="27"
+                     HorizontalAlignment="Left"
+                     Minimum="0"
+                     Maximum="100000"
+                     Value="30" />
+
+      <TextBlock x:Name="label2"
+                 Grid.Row="1"
+                 Margin="0,5,3,0"
+                 VerticalAlignment="Top"
+                 Text="Delete branches fully merged into branch" />
+      <TextBox x:Name="mergedIntoBranch"
+               Grid.Row="1"
+               Grid.Column="1"
+               Width="218"
+               Height="27"
+               HorizontalAlignment="Left" />
+
+      <CheckBox x:Name="IncludeRemoteBranches"
+                Grid.Row="2"
+                VerticalAlignment="Center"
+                Content="Delete remote branches from" />
+      <TextBox x:Name="_NO_TRANSLATE_Remote"
+               Grid.Row="2"
+               Grid.Column="1"
+               Width="218"
+               Height="27"
+               HorizontalAlignment="Left"
+               Text="origin" />
+
+      <CheckBox x:Name="useRegexFilter"
+                Grid.Row="3"
+                VerticalAlignment="Center"
+                Content="Use regex to filter branches" />
+      <TextBox x:Name="regexFilter"
+               Grid.Row="3"
+               Grid.Column="1"
+               Width="218"
+               Height="27"
+               HorizontalAlignment="Left"
+               Text="/(feature|develop)/" />
+
+      <CheckBox x:Name="useRegexCaseInsensitive"
+                Grid.Row="4"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Content="Case insensitive" />
+      <CheckBox x:Name="regexDoesNotMatch"
+                Grid.Row="5"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Content="Does not match" />
+      <CheckBox x:Name="includeUnmergedBranches"
+                Grid.Row="6"
+                VerticalAlignment="Center"
+                Content="Include unmerged branches" />
+      <Button x:Name="RefreshBtn"
+              Classes="gitextensions-dialog-action"
+              Grid.Row="7"
+              Grid.Column="1"
+              Width="124"
+              Height="25"
+              HorizontalAlignment="Left"
+              Content="Search branches" />
+    </Grid>
+
+    <Border x:Name="pnlBranchesArea"
+            Grid.Row="2"
+            Margin="3,0"
+            Classes="gitextensions-section">
+      <Grid RowDefinitions="Auto,*">
+        <Grid ColumnDefinitions="50,180,175,120,*">
+          <Border Padding="6,2"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <CheckBox x:Name="_NO_TRANSLATE_deleteDataGridViewCheckBoxColumn"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" />
+          </Border>
+          <Border x:Name="nameDataGridViewTextBoxColumn"
+                  Grid.Column="1"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold" Text="Name" />
+          </Border>
+          <Border x:Name="dateDataGridViewTextBoxColumn"
+                  Grid.Column="2"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold" Text="Last activity" />
+          </Border>
+          <Border x:Name="Author"
+                  Grid.Column="3"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold" Text="Last author" />
+          </Border>
+          <Border x:Name="Message"
+                  Grid.Column="4"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,0,1">
+            <TextBlock FontWeight="SemiBold" Text="Last message" />
+          </Border>
+        </Grid>
+
+        <ListBox x:Name="BranchesGrid"
+                 Grid.Row="1"
+                 SelectionMode="Single">
+          <ListBox.Styles>
+            <Style Selector="ListBoxItem">
+              <Setter Property="Padding" Value="0" />
+              <Setter Property="MinHeight" Value="24" />
+              <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </Style>
+          </ListBox.Styles>
+        </ListBox>
+
+        <Border x:Name="imgLoading"
+                Grid.RowSpan="2"
+                Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
+                IsVisible="False">
+          <ProgressBar Width="220"
+                       Height="8"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       IsIndeterminate="True" />
+        </Border>
+      </Grid>
+    </Border>
+
+    <Grid x:Name="tableLayoutPanel2"
+          Grid.Row="3"
+          Margin="3"
+          ColumnDefinitions="Auto,*,Auto,Auto">
+      <Button x:Name="buttonSettings"
+              Classes="gitextensions-dialog-action"
+              Width="75"
+              Height="25"
+              Content="Settings" />
+      <Button x:Name="Delete"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="2"
+              Width="75"
+              Height="25"
+              Margin="0,0,6,0"
+              Content="Delete" />
+      <Button x:Name="Cancel"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="3"
+              Width="75"
+              Height="25"
+              Content="Close" />
+    </Grid>
+
+    <Border Grid.Row="4"
+            Padding="3,1"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+            BorderThickness="0,1,0,0">
+      <TextBlock x:Name="lblStatus"
+                 VerticalAlignment="Center" />
+    </Border>
+  </Grid>
+</Window>
