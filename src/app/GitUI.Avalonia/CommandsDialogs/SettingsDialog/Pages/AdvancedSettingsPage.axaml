@@ -1,0 +1,114 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:compat="using:GitUI.Compat"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 xmlns:usercontrols="using:GitUI.UserControls"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.AdvancedSettingsPage"
+                                 MinWidth="650"
+                                 MinHeight="360"
+                                 Text="Advanced">
+  <settings:SettingsPageWithHeader.Styles>
+    <Style Selector="CheckBox">
+      <Setter Property="Margin" Value="0,-4" />
+    </Style>
+  </settings:SettingsPageWithHeader.Styles>
+
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="tableLayoutPanel2"
+                Margin="8"
+                Spacing="6">
+      <GroupBox x:Name="CheckoutGB"
+                Header="Checkout">
+        <StackPanel x:Name="tableLayoutPanel3"
+                    Margin="8,4,8,8"
+                    Spacing="1">
+          <CheckBox x:Name="chkAlwaysShowCheckoutDlg"
+                    Content="Always show checkout dialog" />
+          <CheckBox x:Name="chkUseLocalChangesAction"
+                    Content="Use last chosen &quot;local changes&quot; action as default action.&#xA;This action will be performed without warning while checking out branch." />
+        </StackPanel>
+      </GroupBox>
+
+      <GroupBox x:Name="GeneralGB"
+                Header="General">
+        <StackPanel x:Name="tableLayoutPanel1"
+                    Margin="8,4,8,8"
+                    Spacing="1">
+          <CheckBox x:Name="chkAlwaysShowAdvOpt"
+                    Content="Always show advanced options" />
+          <CheckBox x:Name="chkDontSHowHelpImages"
+                    Content="Don't show help images" />
+
+          <!-- Avalonia currently exposes only its portable plain-text console renderer. -->
+          <Grid x:Name="_NO_TRANSLATE_ConsoleEmulatorRow"
+                IsVisible="False"
+                ColumnDefinitions="Auto,Auto,*">
+            <CheckBox x:Name="chkConsoleEmulator"
+                      compat:TranslationCompat.ToolTipPropertyName="ToolTipText"
+                      Content="Use Console Emulator for console output in command dialogs"
+                      IsVisible="False"
+                      ToolTip.Tip="Controls how console programs output is displayed in command progress dialogs, like Clone or Pull.&#xA;&#xA;If yes, embeds the fully functional console emulator. This is experimental and might have side-effects.&#xA;If no, redirects select strings from stdout/stderr into an edit box. This is the classic mode.&#xA;&#xA;Turn off if you experience problems with the console emulator." />
+            <usercontrols:GotoUserManualControl x:Name="_NO_TRANSLATE_ConsoleEmulatorHelp"
+                                                Grid.Column="1"
+                                                Margin="4,0,0,0"
+                                                IsVisible="False"
+                                                ManualSectionAnchorName="general-use-console-emulator-for-console-output-in-command-dialogs"
+                                                ManualSectionSubfolder="settings" />
+          </Grid>
+
+          <Grid x:Name="tableLayoutPanel4"
+                ColumnDefinitions="Auto,Auto,*"
+                RowDefinitions="Auto,Auto">
+            <CheckBox x:Name="chkAutoNormaliseBranchName"
+                      Grid.ColumnSpan="2"
+                      compat:TranslationCompat.ToolTipPropertyName="ToolTipText"
+                      Content="Auto normalise branch name"
+                      ToolTip.Tip="Controls whether branch name should be automatically normalised as per git branch naming rules.&#xA;If enabled, any illegal symbols will be replaced with the replacement symbol of your choice." />
+            <usercontrols:GotoUserManualControl x:Name="_NO_TRANSLATE_AutoNormaliseBranchNameHelp"
+                                                Grid.Column="2"
+                                                Margin="4,0,0,0"
+                                                ManualSectionAnchorName="general-auto-normalise-branch-name"
+                                                ManualSectionSubfolder="settings" />
+            <TextBlock x:Name="label1"
+                       Grid.Row="1"
+                       Margin="24,4,8,4"
+                       VerticalAlignment="Center"
+                       Text="Symbol to use:" />
+            <ComboBox x:Name="cboAutoNormaliseSymbol"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      Width="110"
+                      HorizontalAlignment="Left" />
+          </Grid>
+        </StackPanel>
+      </GroupBox>
+
+      <GroupBox x:Name="grpCommit"
+                Header="Commit">
+        <StackPanel x:Name="tableLayoutPanel5"
+                    Margin="8,4,8,8">
+          <CheckBox x:Name="chkCommitAndPushForcedWhenAmend"
+                    Content="Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked" />
+        </StackPanel>
+      </GroupBox>
+
+      <!-- The automatic updater is ported together with its real dialog and Browse command. -->
+      <GroupBox x:Name="grpUpdates"
+                Header="Updates"
+                IsVisible="False">
+        <StackPanel x:Name="tableLayoutPanel6"
+                    Margin="8,4,8,8"
+                    Spacing="1">
+          <CheckBox x:Name="chkCheckForUpdates"
+                    IsChecked="True"
+                    IsVisible="False"
+                    Content="Check for updates weekly" />
+          <CheckBox x:Name="chkCheckForRCVersions"
+                    IsVisible="False"
+                    Content="Check for release candidate versions" />
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>
