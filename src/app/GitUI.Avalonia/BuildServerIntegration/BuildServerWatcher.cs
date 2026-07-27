@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -27,11 +27,10 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 {
     private static readonly TimeSpan ShortPollInterval = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan LongPollInterval = TimeSpan.FromSeconds(120);
-    private static readonly Dictionary<string, BuildServerCredentials> SessionCredentials = [];
-    private static readonly Lock SessionCredentialsLock = new();
 
     private readonly CancellationTokenSequence _launchCancellation = new();
     private readonly Lock _buildServerCredentialsLock = new();
+    private readonly BuildServerCredentialStore _credentialStore;
     private readonly RevisionGridControl _revisionGrid;
     private readonly IRevisionGridInfo _revisionGridInfo;
     private readonly Func<IGitModule> _module;
@@ -46,6 +45,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         _revisionGridInfo = revisionGridInfo;
         _module = module;
 
+        _credentialStore = new BuildServerCredentialStore(() => _module().WorkingDir);
         _repoNameExtractor = new RepoNameExtractor(_module);
         ColumnProvider = new BuildStatusColumnProvider(OpenBuildReport);
     }
@@ -131,21 +131,19 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
         lock (_buildServerCredentialsLock)
         {
+            BuildServerCredentials? storedCredentials = _credentialStore.Get(buildServerAdapter.UniqueKey);
             BuildServerCredentials credentials;
-            lock (SessionCredentialsLock)
+            if (storedCredentials is not null)
             {
-                if (SessionCredentials.TryGetValue(buildServerAdapter.UniqueKey, out BuildServerCredentials? storedCredentials))
+                credentials = Clone(storedCredentials);
+                if (useStoredCredentialsIfExisting)
                 {
-                    credentials = Clone(storedCredentials);
-                    if (useStoredCredentialsIfExisting)
-                    {
-                        return credentials;
-                    }
+                    return credentials;
                 }
-                else
-                {
-                    credentials = new BuildServerCredentials { BuildServerCredentialsType = BuildServerCredentialsType.Guest };
-                }
+            }
+            else
+            {
+                credentials = new BuildServerCredentials { BuildServerCredentialsType = BuildServerCredentialsType.Guest };
             }
 
             IBuildServerCredentials? enteredCredentials = ThreadHelper.JoinableTaskFactory.Run(
@@ -156,11 +154,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             }
 
             credentials = Clone(enteredCredentials);
-            lock (SessionCredentialsLock)
-            {
-                SessionCredentials[buildServerAdapter.UniqueKey] = credentials;
-            }
-
+            _credentialStore.Save(buildServerAdapter.UniqueKey, credentials);
             return Clone(credentials);
         }
     }

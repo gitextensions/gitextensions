@@ -22,7 +22,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <!-- Windows-only: Windows Credential Store storage and its WinForms editor control.
-         CredentialsManager.NonWindows.cs keeps ICredentialsManager available on net10.0. -->
+         The portable flavor uses git credential and a native Avalonia editor. -->
     <Compile Remove="Settings\CredentialsManager.cs" />
     <Compile Remove="Settings\CredentialsSetting.cs" />
     <Compile Remove="Settings\UserControls\CredentialsControl.cs" />
@@ -31,8 +31,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
-    <!-- Cross-platform substitute; the Windows flavor uses CredentialsManager.cs instead. -->
+    <!-- Cross-platform substitutes; the Windows flavor remains unchanged. -->
     <Compile Remove="Settings\CredentialsManager.NonWindows.cs" />
+    <Compile Remove="Settings\CredentialsSetting.NonWindows.cs" />
+    <Compile Remove="Settings\UserControls\CredentialsControl.NonWindows.cs" />
   </ItemGroup>
 
   <ItemGroup>

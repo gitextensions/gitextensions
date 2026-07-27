@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
@@ -10,12 +10,14 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
+using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
 using GitUI.Compat;
 using GitUI.Properties;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
@@ -116,6 +118,38 @@ public sealed class PluginSettingsTests
         customText.Text = "saved";
         customBinding.Save(new TestSettingsSource());
         customSetting.Binding.SavedText.Should().Be("saved");
+    }
+
+    [AvaloniaTest]
+    public void Generic_renderer_should_create_native_credentials_fields()
+    {
+        CredentialsSetting setting = new("Credentials", "Credentials", () => Path.GetTempPath());
+
+        PluginSettingBinding binding = PluginSettingControlFactory.Create(setting);
+
+        Grid control = binding.Control.Should().BeOfType<Grid>().Subject;
+        control.Children.OfType<TextBox>().Should().HaveCount(2);
+        control.Children.OfType<TextBox>().Last().PasswordChar.Should().Be('\u25CF');
+        control.Children.OfType<TextBlock>().Select(label => label.Text).Should().Equal(
+            "User name",
+            "API token/Password");
+    }
+
+    [Test]
+    public void Build_server_credentials_should_round_trip_through_the_git_credential_payload()
+    {
+        BuildServerCredentials expected = new()
+        {
+            BuildServerCredentialsType = BuildServerCredentialsType.BearerToken,
+            Username = "ignored-user",
+            Password = "ignored-password",
+            BearerToken = "token\nwith=special-values",
+        };
+
+        BuildServerCredentials? actual = BuildServerCredentialStore.Deserialize(
+            BuildServerCredentialStore.Serialize(expected));
+
+        actual.Should().BeEquivalentTo(expected);
     }
 
     [AvaloniaTest]
