@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
@@ -9,14 +9,17 @@ using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.Avatars;
 using GitUI.Blame;
 using GitUI.Editor;
+using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -85,6 +88,49 @@ public sealed class BlameControlTests
             .Select(call => string.Join('.', call.GetArguments().Take(3)))
             .ToArray();
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(emittedKeys.Length);
+    }
+
+    [AvaloniaTest]
+    public void BlameControl_should_materialize_and_forward_the_repository_host_context_menu()
+    {
+        object? clickedContext = null;
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.When(plugin => plugin.ConfigureContextMenu(Arg.Any<WinFormsShims.ContextMenuStrip>()))
+            .Do(call =>
+            {
+                WinFormsShims.ContextMenuStrip sourceMenu =
+                    call.Arg<WinFormsShims.ContextMenuStrip>();
+                WinFormsShims.ToolStripMenuItem root = new("View in TestHost", image: null);
+                WinFormsShims.ToolStripItem child = root.DropDownItems.Add("owner/repository");
+                child.Click += (_, _) => clickedContext = sourceMenu.Tag;
+                sourceMenu.Items.Add(root);
+            });
+        BlameControl control = new();
+        control.ConfigureRepositoryHostPlugin(host);
+        BlameControl.TestAccessor accessor = control.GetTestAccessor();
+        MenuItem rootItem = accessor.RepositoryHostMenuItems.Should().ContainSingle().Subject;
+        MenuItem childItem = rootItem.Items.OfType<MenuItem>().Should().ContainSingle().Subject;
+        ObjectId blameId = ObjectId.Random();
+
+        accessor.OpenContextMenu(
+            "src/file.cs",
+            lineIndex: 0,
+            blameId,
+            new GitBlame([_gitBlameLine]));
+        childItem.RaiseEvent(
+            new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+
+        rootItem.Header.Should().Be("View in TestHost");
+        childItem.Header.Should().Be("owner/repository");
+        GitBlameContext context = clickedContext.Should().BeOfType<GitBlameContext>().Subject;
+        context.FileName.Should().Be("src/file.cs");
+        context.LineIndex.Should().Be(0);
+        context.BlameLine.Should().Be(0);
+        context.BlameId.Should().Be(blameId);
+
+        control.ConfigureRepositoryHostPlugin(null);
+
+        accessor.RepositoryHostMenuItems.Should().BeEmpty();
     }
 
     [AvaloniaTest]

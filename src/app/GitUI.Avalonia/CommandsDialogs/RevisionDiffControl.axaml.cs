@@ -1,8 +1,9 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
@@ -381,6 +382,12 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
             line,
             cancellationTokenSequence: _viewChangesSequence,
             joinableTaskFactory: _taskManager.JoinableTaskFactory);
+    }
+
+    internal void RegisterGitHostingPluginInBlameControl()
+    {
+        BlameControl.ConfigureRepositoryHostPlugin(
+            PluginRegistry.TryGetGitHosterForModule(Module));
     }
 
     private void BlameFile()
