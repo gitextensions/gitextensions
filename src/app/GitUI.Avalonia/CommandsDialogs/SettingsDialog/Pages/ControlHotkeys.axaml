@@ -1,0 +1,78 @@
+<resource:GitExtensionsControl xmlns="https://github.com/avaloniaui"
+                               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                               xmlns:pages="using:GitUI.CommandsDialogs.SettingsDialog.Pages"
+                               xmlns:resource="using:ResourceManager"
+                               x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ControlHotkeys"
+                               MinWidth="670"
+                               MinHeight="330">
+  <Grid Margin="3"
+        RowDefinitions="Auto,*,Auto,Auto"
+        RowSpacing="6">
+    <Grid ColumnDefinitions="232,6,222,*">
+      <TextBlock x:Name="lHotkeyableItems"
+                 Text="Hotkeyable Items" />
+      <Border Grid.Column="2"
+              Padding="6,3"
+              BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+              BorderThickness="1,1,1,0">
+        <TextBlock x:Name="columnCommand"
+                   FontWeight="SemiBold"
+                   Text="Command" />
+      </Border>
+      <Border Grid.Column="3"
+              Padding="6,3"
+              BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+              BorderThickness="0,1,1,0">
+        <TextBlock x:Name="columnKey"
+                   FontWeight="SemiBold"
+                   Text="Key" />
+      </Border>
+    </Grid>
+
+    <Grid Grid.Row="1"
+          ColumnDefinitions="232,6,*">
+      <ListBox x:Name="cmbSettings">
+        <ListBox.Styles>
+          <Style Selector="ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+          </Style>
+        </ListBox.Styles>
+      </ListBox>
+      <ListBox x:Name="listMappings"
+               Grid.Column="2"
+               SelectionMode="Single">
+        <ListBox.Styles>
+          <Style Selector="ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+          </Style>
+        </ListBox.Styles>
+      </ListBox>
+    </Grid>
+
+    <Grid Grid.Row="2"
+          ColumnDefinitions="120,*,100,100"
+          ColumnSpacing="6">
+      <TextBlock x:Name="lHotkey"
+                 VerticalAlignment="Center"
+                 Text="Hotkey" />
+      <pages:TextboxHotkey x:Name="txtHotkey"
+                           Grid.Column="1"
+                           Text="None" />
+      <Button x:Name="bApply"
+              Grid.Column="2"
+              Classes="gitextensions-dialog-action"
+              Content="Apply" />
+      <Button x:Name="bClear"
+              Grid.Column="3"
+              Classes="gitextensions-dialog-action"
+              Content="Clear" />
+    </Grid>
+
+    <Button x:Name="bResetToDefaults"
+            Grid.Row="3"
+            Width="209"
+            Height="26"
+            HorizontalAlignment="Left"
+            Content="Reset all Hotkeys to defaults" />
+  </Grid>
+</resource:GitExtensionsControl>

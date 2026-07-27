@@ -773,6 +773,36 @@
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
     "notes": "Same split category/detail layout, control names, revision-links manual target, and CaptionCol/URICol HeaderText identities. The editable DataGridView is represented by a typed editable ListBox."
   },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/HotkeysSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/HotkeysSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Retains the original settings-page load/save boundary and same Hotkeys page identity; parameterless compiled-XAML construction remains inert until runtime services are attached."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/HotkeysSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/HotkeysSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Hosts the same-named hotkey editor at the original 670x330 minimum size."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ControlHotkeys.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ControlHotkeys.axaml.cs",
+    "status": "parity",
+    "basedOn": "58937dbe78448761e69f47d7170b991c511425ef",
+    "notes": "Retains group and command selection, Apply, Clear, reset-all, and manager save/reload behavior over typed native ListBoxes."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ControlHotkeys.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ControlHotkeys.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves the two-list layout, fixed 222-DIP command column, original control names, button metrics, and existing Text translation identities."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/TextboxHotkey.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/TextboxHotkey.cs",
+    "status": "parity",
+    "basedOn": "58937dbe78448761e69f47d7170b991c511425ef",
+    "notes": "Captures and swallows native key input through the central KeysMapper, rejects modifier-only input, preserves persisted shim Keys, and retains duplicate-key coloring."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/RevisionLinks/CloudProviderKind.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/RevisionLinks/CloudProviderKind.cs",
     "status": "parity",
@@ -2068,7 +2098,7 @@
     "twin": "src/app/GitUI.Avalonia/Hotkey/HotkeySettingsManager.cs",
     "status": "functional",
     "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "Reduced loader preserves the upstream XML format and command IDs/defaults for the implemented FormBrowse and FormResolveConflicts commands, including ManageWorkTrees ID 49 with Ctrl+Alt+W, plus the complete upstream RevisionGrid command/default table and dynamically loaded user scripts in the original Scripts category. Other hotkey targets join as their consumers are ported."
+    "notes": "Reduced command inventory preserves the upstream XML format and command IDs/defaults for implemented consumers, including the complete RevisionGrid table and dynamically loaded user scripts. The original manager contract now loads, merges, saves, resets, and tracks assigned keys for the live editor; other command groups join only with their consumers."
   },
   "src/app/GitUI/GitExtensionsDialog.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsDialog.cs",
