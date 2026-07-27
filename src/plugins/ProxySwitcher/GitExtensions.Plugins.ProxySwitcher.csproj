@@ -1,5 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
+    <!-- Avalonia/Linux port: additionally build a cross-platform flavor
+         that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
+    <UseGitExtensionsShims>true</UseGitExtensionsShims>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\app\GitCommands\GitCommands.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
@@ -34,6 +43,32 @@
   <ItemGroup>
     <!-- Resources -->
     <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- The portable dialog is a native Avalonia window. Keep its UI dependency out of
+         the unchanged Windows flavor and do not copy the host assembly into the plugin. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Remove="ProxySwitcherForm.cs" />
+    <Compile Remove="ProxySwitcherForm.Designer.cs" />
+    <Compile Remove="Properties\Resources.Designer.cs" />
+    <EmbeddedResource Remove="ProxySwitcherForm.resx" />
+    <EmbeddedResource Remove="Properties\Resources.resx" />
+    <None Remove="Resources\IconProxySwitcher.png" />
+    <Compile Include="..\..\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
+    <EmbeddedResource Include="Resources\IconProxySwitcher.png"
+                      LogicalName="GitExtensions.Plugins.ProxySwitcher.IconProxySwitcher.png" />
+    <PackageReference Include="Avalonia" ExcludeAssets="runtime" PrivateAssets="all" />
+    <ProjectReference Include="..\..\app\GitUI.Avalonia\GitUI.Avalonia.csproj">
+      <PrivateAssets>all</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
+    <Compile Remove="Properties\AssemblyInfo.NonWindows.cs" />
+    <Compile Remove="Properties\Resources.NonWindows.cs" />
+    <Compile Remove="ProxySwitcherForm.axaml.cs" />
   </ItemGroup>
 
 </Project>
