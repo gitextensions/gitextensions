@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils;
+using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager;
 
 namespace GitExtensions;
@@ -28,5 +29,6 @@ internal static class ServiceContainerRegistry
 
         GitCommands.ServiceContainerRegistry.RegisterServices(serviceContainer);
         GitUI.ServiceContainerRegistry.RegisterServices(serviceContainer);
+        serviceContainer.AddService<IUpdateCheckService>(new UpdateCheckService());
     }
 }

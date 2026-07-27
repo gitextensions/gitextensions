@@ -153,7 +153,49 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "dfdee1b2ae92d832a2ea7420eb4c11aa2cd14420",
-    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The first loaded repository host owns the same-named top-level menu; fork/clone remains available outside a repository, while view/create pull request and add-upstream resolve the provider relevant to the current repository and preserve the original errors and command boundaries. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, shared Output history, and the selection-driven Build Report contribution when build-server data exists; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown. Portable plugins load and register through the original lifecycle, including unregister/re-register on repository changes; the Browse menu lists them alphabetically, materializes their embedded portable PNGs, executes them through the original GitUIEventArgs boundary, and routes its settings command to the Plugins root. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, GPG, build-server polling, and plugin discovery work use owned lifetime boundaries, so queued notifications and unfinished providers cannot outlive shutdown. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The first loaded repository host owns the same-named top-level menu; fork/clone remains available outside a repository, while view/create pull request and add-upstream resolve the provider relevant to the current repository and preserve the original errors and command boundaries. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, recent working-directory and current-branch selectors, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, shared Output history, and the selection-driven Build Report contribution when build-server data exists; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown. Portable plugins load and register through the original lifecycle, including unregister/re-register on repository changes; the Browse menu lists them alphabetically, materializes their embedded portable PNGs, executes them through the original GitUIEventArgs boundary, and routes its settings command to the Plugins root. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, GPG, build-server polling, and plugin discovery work use owned lifetime boundaries, so queued notifications and unfinished providers cannot outlive shutdown. The Help menu exposes the original check-for-updates contribution, and the weekly startup check is routed through an injected production-only update service so view tests never contact the network. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormUpdates.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormUpdates.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Preserves the same-named release check, translated result/runtime links, manual and automatic display modes, and Windows MSI update path. The legacy GitHub tree API is replaced by the raw configdata feed. Linux/macOS deliberately open the generic releases page and never execute the Windows-only MSI; Windows portable builds retain the same links-only behavior."
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormUpdates.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormUpdates.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Fixed compact update/result layout with the original field names, action order, visibility states, and translation identities."
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/ReleaseVersion.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/BrowseDialog/ReleaseVersion.cs",
+    "status": "parity",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Framework-neutral release configuration parser linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/ReleaseType.cs": {
+    "twin": "src/app/GitUI/CommandsDialogs/BrowseDialog/ReleaseType.cs",
+    "status": "parity",
+    "basedOn": "8863b8b46fc42b416f7493eaad35138e8c80ce41",
+    "notes": "Framework-neutral release classification linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/UserControls/Settings/SettingsLinkLabel.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsLinkLabel.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Same-named link/information-icon control with parent-owned Text and ToolTipText translation identities and the original manual-link boundary. Avalonia links the full caption because it has no LinkArea equivalent."
+  },
+  "src/app/GitUI/UserControls/Settings/SettingsLinkLabel.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsLinkLabel.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Compact same-named link and optional 16px information icon."
+  },
+  "src/app/GitUI/UserControls/Settings/ToolTipIcon.cs": {
+    "twin": "src/app/GitUI/UserControls/Settings/ToolTipIcon.cs",
+    "status": "parity",
+    "basedOn": "8863b8b46fc42b416f7493eaad35138e8c80ce41",
+    "notes": "Framework-neutral enum linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/BuildReportTabPageExtension.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BuildReportTabPageExtension.cs",
@@ -741,13 +783,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AdvancedSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "abd6d14ce72e1183663c546c2698b5f0066b2b0e",
-    "notes": "Retains every original setting mapping and the live checkout, help-image, advanced-option, branch-normalisation, and amend-push controls. Automatic-update and alternate console-emulator controls preserve their values but remain hidden until their real portable consumers land."
+    "notes": "Retains every original setting mapping and the live checkout, help-image, advanced-option, branch-normalisation, amend-push, and automatic-update controls. Only the alternate console-emulator control remains hidden until its real portable consumer lands."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AdvancedSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AdvancedSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves the original group and control names, order, translation identities, manual links, explanatory tooltips, and dependent replacement-symbol selector; unavailable consumer rows are retained but hidden."
+    "notes": "Preserves the original group and control names, order, translation identities, manual links, explanatory tooltips, and dependent replacement-symbol selector. The Updates group is visible now that FormUpdates and both Browse contributions are functional; only the unavailable alternate console-emulator row remains hidden."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.axaml.cs",
