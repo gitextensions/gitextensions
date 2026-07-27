@@ -479,6 +479,24 @@
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
     "notes": "Same compact 341x106 client layout, two read-only proxy values, global-scope checkbox, 117px set/unset actions, centered owner placement, field names, and seven existing plugin XLF keys."
   },
+  "src/plugins/ReleaseNotesGenerator/ReleaseNotesGeneratorForm.cs": {
+    "twin": "src/plugins/ReleaseNotesGenerator/ReleaseNotesGeneratorForm.axaml.cs",
+    "status": "parity",
+    "basedOn": "9eaad127ca2469245cffdc05f3a8266bdd004cf6",
+    "notes": "Portable-only same-named dialog retains input validation, synchronous repository-native git log execution, parser/count behavior, original/plain-table/HTML copy actions, HTML encoding, and existing plugin translation identities."
+  },
+  "src/plugins/ReleaseNotesGenerator/ReleaseNotesGeneratorForm.Designer.cs": {
+    "twin": "src/plugins/ReleaseNotesGenerator/ReleaseNotesGeneratorForm.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Same 614x547 resizable result/copy layout, same-named fields, default Generate action, multiline hints, and existing XLF control keys."
+  },
+  "src/plugins/ReleaseNotesGenerator/HtmlFragment.cs": {
+    "twin": "src/plugins/ReleaseNotesGenerator/HtmlFragment.NonWindows.cs",
+    "status": "parity",
+    "basedOn": "090464d5f5c350497427ad5b4717651df9c4f4d2",
+    "notes": "Avalonia DataTransfer preserves plain text plus native rich HTML: CF_HTML on Windows, text/html on Linux, and public.html on macOS. The unchanged Windows flavor retains its WinForms DataObject implementation."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",

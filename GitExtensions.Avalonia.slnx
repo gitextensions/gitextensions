@@ -25,6 +25,7 @@
     <Project Path="src/plugins/DeleteUnusedBranches/GitExtensions.Plugins.DeleteUnusedBranches.csproj" />
     <Project Path="src/plugins/GitHub3/GitExtensions.Plugins.GitHub3.csproj" />
     <Project Path="src/plugins/ProxySwitcher/GitExtensions.Plugins.ProxySwitcher.csproj" />
+    <Project Path="src/plugins/ReleaseNotesGenerator/GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
@@ -37,6 +38,7 @@
     <Project Path="tests/app/UnitTests/GitExtensions.Extensibility.Tests/GitExtensions.Extensibility.Tests.csproj" />
     <Project Path="tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/DeleteUnusedBranches.Tests/DeleteUnusedBranches.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/ReleaseNotesGenerator.Tests/ReleaseNotesGenerator.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AppVeyorIntegration.Tests/AppVeyorIntegration.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AzureDevOpsIntegration.Tests/AzureDevOpsIntegration.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/GitHubActionsIntegration.Tests/GitHubActionsIntegration.Tests.csproj" />
