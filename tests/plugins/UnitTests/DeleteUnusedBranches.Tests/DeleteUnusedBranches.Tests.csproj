@@ -1,8 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
+    <UseGitExtensionsShims>true</UseGitExtensionsShims>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.csproj" />
     <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Include="$(RepoRoot)\src\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
   </ItemGroup>
 
 </Project>

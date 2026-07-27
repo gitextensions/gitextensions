@@ -437,6 +437,36 @@
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
     "notes": "Same fixed 518x79 client layout, remote field, create action, centered owner placement, and three existing plugin XLF keys."
   },
+  "src/plugins/DeleteUnusedBranches/CheckBoxHeaderCellEventArgs.cs": {
+    "twin": "src/plugins/DeleteUnusedBranches/DeleteUnusedBranchesForm.axaml.cs",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Avalonia's native header CheckBox carries the same checked state directly, so the WinForms-only custom header event-argument type is unnecessary."
+  },
+  "src/plugins/DeleteUnusedBranches/DataGridViewCheckBoxHeaderCell.cs": {
+    "twin": "src/plugins/DeleteUnusedBranches/DeleteUnusedBranchesForm.axaml",
+    "status": "parity",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "The explicit first grid header hosts a native same-named CheckBox and preserves select-all and per-row synchronization without carrying GDI/DataGridView painting into the portable flavor."
+  },
+  "src/plugins/DeleteUnusedBranches/DeleteUnusedBranchesForm.cs": {
+    "twin": "src/plugins/DeleteUnusedBranches/DeleteUnusedBranchesForm.axaml.cs",
+    "status": "parity",
+    "basedOn": "96b00fa263048f9bd70e62f363926d1433f946c3",
+    "notes": "Portable-only same-named dialog retains settings, merged/age/remote/regex filtering, cancellation, sortable checked branches, local and remote deletion confirmations and commands, repository notification, and the settings handoff. Branch Git reads are materialized off-thread and all owned work is joined on close."
+  },
+  "src/plugins/DeleteUnusedBranches/DeleteUnusedBranchesForm.Designer.cs": {
+    "twin": "src/plugins/DeleteUnusedBranches/DeleteUnusedBranchesForm.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Same 760x500 resizable dialog, 600x400 minimum, option grid, five-column branch selector, loading overlay, footer actions, status row, field names, and existing plugin XLF keys."
+  },
+  "src/plugins/DeleteUnusedBranches/SortableBranchesList.cs": {
+    "twin": "src/plugins/DeleteUnusedBranches/SortableBranchesList.NonWindows.cs",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Portable collection keeps Name, Date, and Author ascending/descending sorting while dropping only WinForms DataGridView and binding-list dependencies."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",
