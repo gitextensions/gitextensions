@@ -15,6 +15,7 @@ using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using AvaloniaApplication = Avalonia.Application;
 using ShutdownMode = Avalonia.Controls.ShutdownMode;
 using Window = Avalonia.Controls.Window;
@@ -295,11 +296,22 @@ public sealed class GitUICommands : IGitUICommands
             }
             catch (Exception ex)
             {
-                MessageBoxes.Show(
-                    string.Format("ERROR: {0} failed. Message: {1}\r\n\r\n{2}", name, ex.Message, ex.StackTrace),
-                    "Error! :(", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowRepositoryHostingError(name, ex);
             }
         }
+    }
+
+    private static void ShowRepositoryHostingError(string name, Exception exception)
+    {
+        MessageBoxes.Show(
+            string.Format(
+                "ERROR: {0} failed. Message: {1}\r\n\r\n{2}",
+                name,
+                exception.Message,
+                exception.StackTrace),
+            "Error! :(",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error);
     }
 
     public void OpenWithDifftool(IWin32Window? owner, IReadOnlyList<GitRevision?> revisions, string fileName, string? oldFileName, RevisionDiffKind diffKind, bool isTracked, string? customTool = null)
@@ -322,7 +334,76 @@ public sealed class GitUICommands : IGitUICommands
         _commitTemplateManager.Register(key, addingText, icon, isRegex);
     }
 
-    public void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster) => throw NotPorted(nameof(AddUpstreamRemote));
+    public void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster)
+    {
+        WrapRepoHostingCall(
+            TranslatedStrings.AddUpstreamRemote,
+            gitHoster,
+            hoster =>
+            {
+                if (owner is FormBrowse formBrowse)
+                {
+                    formBrowse.QueueRepositoryHostOperation(
+                        (mainThreadFactory, cancellationToken) =>
+                            AddUpstreamRemoteAsync(
+                                owner,
+                                hoster,
+                                mainThreadFactory,
+                                cancellationToken));
+                }
+                else
+                {
+                    ThreadHelper.FileAndForget(
+                        () => AddUpstreamRemoteAsync(
+                            owner,
+                            hoster,
+                            ThreadHelper.JoinableTaskFactory,
+                            CancellationToken.None));
+                }
+            });
+    }
+
+    private async Task AddUpstreamRemoteAsync(
+        IWin32Window? owner,
+        IRepositoryHostPlugin gitHoster,
+        JoinableTaskFactory mainThreadFactory,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            string? remoteName = await gitHoster.AddUpstreamRemoteAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (string.IsNullOrEmpty(remoteName))
+            {
+                return;
+            }
+
+            await mainThreadFactory.SwitchToMainThreadAsync(cancellationToken);
+            StartPullDialogAndPullImmediately(
+                owner,
+                remoteBranch: null,
+                remoteName,
+                GitPullAction.Fetch);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            await mainThreadFactory.SwitchToMainThreadAsync();
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                ShowRepositoryHostingError(TranslatedStrings.AddUpstreamRemote, ex);
+            }
+        }
+    }
+
     public IGitRemoteCommand CreateRemoteCommand() => throw NotPorted(nameof(CreateRemoteCommand));
     public bool DoActionOnRepo(Func<bool> action)
         => DoActionOnRepo(owner: null, action, requiresValidWorkingDir: false);

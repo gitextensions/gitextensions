@@ -4,6 +4,7 @@ using Avalonia.Platform.Storage;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitUI.Compat;
 using GitUI.UserControls;
@@ -63,6 +64,8 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
 
         tabControl1.SelectedItem = !isSubmodule && showBlame ? BlameTab : DiffTab;
         InitializeComplete();
+        Blame.ConfigureRepositoryHostPlugin(
+            PluginRegistry.TryGetGitHosterForModule(Module));
         SetTitle();
     }
 

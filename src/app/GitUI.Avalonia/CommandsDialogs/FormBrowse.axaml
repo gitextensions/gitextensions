@@ -85,6 +85,18 @@
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PatchView}" /></MenuItem.Icon>
         </MenuItem>
       </MenuItem>
+      <MenuItem x:Name="_repositoryHostsToolStripMenuItem"
+                Header="(Repository hosts)"
+                IsVisible="False">
+        <MenuItem x:Name="_forkCloneRepositoryToolStripMenuItem"
+                  Header="_Fork/Clone repository..." />
+        <MenuItem x:Name="_viewPullRequestsToolStripMenuItem"
+                  Header="View _pull requests..." />
+        <MenuItem x:Name="_createPullRequestsToolStripMenuItem"
+                  Header="_Create pull requests..." />
+        <MenuItem x:Name="_addUpstreamRemoteToolStripMenuItem"
+                  Header="_Add upstream remote" />
+      </MenuItem>
       <MenuItem x:Name="pluginsToolStripMenuItem" Header="_Plugins">
         <MenuItem x:Name="pluginsLoadingToolStripMenuItem"
                   Header="Loading..."
