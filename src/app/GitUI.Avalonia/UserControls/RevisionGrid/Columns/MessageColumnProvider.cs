@@ -1,4 +1,5 @@
 using System.Collections.Frozen;
+using System.Globalization;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
@@ -9,6 +10,7 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
+using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
@@ -19,6 +21,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
     private record struct Settings(
         bool FillRefLabels,
         bool ShowRemoteBranches,
+        bool ShowGitStatusForArtificialCommits,
         bool ShowRevisionGridTooltips,
         bool ShowTags);
 
@@ -50,6 +53,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         _settings = new Settings(
             AppSettings.FillRefLabels,
             AppSettings.ShowRemoteBranches,
+            AppSettings.ShowGitStatusForArtificialCommits,
             AppSettings.ShowRevisionGridTooltips.Value,
             AppSettings.ShowTags);
     }
@@ -78,6 +82,31 @@ internal sealed class MessageColumnProvider : ColumnProvider
     {
         MessageCell panel = (MessageCell)control;
         panel.Children.RemoveRange(0, panel.Children.Count - 1);
+
+        if (revision.IsArtificial)
+        {
+            RevisionGridRefRenderer.RefLabelControl artificialLabel =
+                RevisionGridRefRenderer.CreateSpecialLabel(
+                    revision.Subject,
+                    revision.ObjectId == ObjectId.IndexId
+                        ? RefLabelIcon.CommitIndex
+                        : RefLabelIcon.WorkingDirectory,
+                    dashed: false);
+            artificialLabel.MinWidth = GetArtificialLabelWidth(panel);
+            panel.Children.Insert(panel.Children.Count - 1, artificialLabel);
+
+            foreach (Control statusControl in CreateArtificialStatusControls(revision.ObjectId))
+            {
+                panel.Children.Insert(panel.Children.Count - 1, statusControl);
+            }
+
+            panel.Subject.Text = string.Empty;
+            panel.Subject.FontWeight = FontWeight.Normal;
+            panel.Revision = revision;
+            panel.ClearHighlight();
+            ToolTip.SetTip(panel, GetArtificialToolTip(revision));
+            return;
+        }
 
         SuperProjectInfo? superProjectInfo = _grid.TryGetSuperProjectInfo(out SuperProjectInfo? info)
             ? info
@@ -109,6 +138,105 @@ internal sealed class MessageColumnProvider : ColumnProvider
         panel.Revision = revision;
         panel.ClearHighlight();
         ToolTip.SetTip(panel, _settings.ShowRevisionGridTooltips ? revision.Subject : null);
+    }
+
+    private static double GetArtificialLabelWidth(MessageCell panel)
+    {
+        double fontSize = panel.Subject.FontSize > 0 ? panel.Subject.FontSize : 12;
+        Typeface typeface = new(
+            panel.Subject.FontFamily,
+            panel.Subject.FontStyle,
+            panel.Subject.FontWeight);
+        double workTreeWidth = Measure(ResourceManager.TranslatedStrings.Workspace);
+        double indexWidth = Measure(ResourceManager.TranslatedStrings.Index);
+
+        // RefLabelControl adds eight pixels of horizontal padding, one-pixel overlap
+        // correction, and a five-pixel right margin.
+        return Math.Ceiling(Math.Max(workTreeWidth, indexWidth)) + 12;
+
+        double Measure(string text)
+            => new FormattedText(
+                text,
+                CultureInfo.CurrentUICulture,
+                FlowDirection.LeftToRight,
+                typeface,
+                fontSize,
+                Brushes.Black).Width;
+    }
+
+    private IReadOnlyList<Control> CreateArtificialStatusControls(ObjectId objectId)
+    {
+        if (!_settings.ShowGitStatusForArtificialCommits
+            || _grid.GetChangeCount(objectId) is not ArtificialCommitChangeCount changeCount)
+        {
+            return [];
+        }
+
+        if (!changeCount.DataValid)
+        {
+            return [CreateArtificialCount(icon: Images.RepoStateUnknown, count: null)];
+        }
+
+        if (!changeCount.HasChanges)
+        {
+            return [CreateArtificialCount(icon: Images.RepoStateClean, count: null)];
+        }
+
+        List<Control> controls = [];
+        Add(changeCount.Changed, Images.FileStatusModified);
+        Add(changeCount.New, Images.FileStatusAdded);
+        Add(changeCount.Deleted, Images.FileStatusRemoved);
+        Add(changeCount.SubmodulesChanged, Images.SubmoduleRevisionDown);
+        Add(changeCount.SubmodulesDirty, Images.SubmoduleDirty);
+        return controls;
+
+        void Add(IReadOnlyList<GitItemStatus> items, IImage icon)
+        {
+            if (items.Count > 0)
+            {
+                controls.Add(CreateArtificialCount(icon, items.Count));
+            }
+        }
+    }
+
+    private string? GetArtificialToolTip(GitRevision revision)
+    {
+        if (_settings.ShowGitStatusForArtificialCommits
+            && _grid.GetChangeCount(revision.ObjectId) is ArtificialCommitChangeCount changeCount)
+        {
+            return changeCount.GetSummary();
+        }
+
+        return _settings.ShowRevisionGridTooltips ? revision.Subject : null;
+    }
+
+    private static Control CreateArtificialCount(IImage icon, int? count)
+    {
+        StackPanel panel = new()
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 3,
+            Margin = new Thickness(1, 0, 5, 0),
+        };
+        panel.Children.Add(new Image
+        {
+            Source = icon,
+            Width = 12,
+            Height = 12,
+            VerticalAlignment = VerticalAlignment.Center,
+        });
+        if (count is int value)
+        {
+            panel.Children.Add(new TextBlock
+            {
+                Text = value.ToString(),
+                MinWidth = 14,
+                VerticalAlignment = VerticalAlignment.Center,
+            });
+        }
+
+        return panel;
     }
 
     internal static IReadOnlyList<Control> CreateSuperprojectLabels(
