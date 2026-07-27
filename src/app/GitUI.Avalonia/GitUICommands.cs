@@ -9,6 +9,7 @@ using GitExtensions.Extensibility.Settings;
 using GitExtensions.Shims.WinForms;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Compat;
@@ -277,6 +278,29 @@ public sealed class GitUICommands : IGitUICommands
 
     private static NotImplementedException NotPorted(string member)
         => new($"{member} is not ported to the Avalonia UI yet.");
+
+    private void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster, Action<IRepositoryHostPlugin> call)
+    {
+        if (!gitHoster.ConfigurationOk)
+        {
+            GitUIEventArgs eventArgs = new(null, this);
+            gitHoster.Execute(eventArgs);
+        }
+
+        if (gitHoster.ConfigurationOk)
+        {
+            try
+            {
+                call(gitHoster);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxes.Show(
+                    string.Format("ERROR: {0} failed. Message: {1}\r\n\r\n{2}", name, ex.Message, ex.StackTrace),
+                    "Error! :(", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
 
     public void OpenWithDifftool(IWin32Window? owner, IReadOnlyList<GitRevision?> revisions, string fileName, string? oldFileName, RevisionDiffKind diffKind, bool isTracked, string? customTool = null)
     {
@@ -869,7 +893,15 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, changesRepo: false);
     }
 
-    public void StartCloneForkFromHoster(IWin32Window? owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged) => throw NotPorted(nameof(StartCloneForkFromHoster));
+    public void StartCloneForkFromHoster(IWin32Window? owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged)
+    {
+        WrapRepoHostingCall(TranslatedStrings.ForkCloneRepo, gitHoster, gh =>
+        {
+            using ForkAndCloneForm frm = new(this, gh, gitModuleChanged);
+            frm.ShowDialog(owner);
+        });
+    }
+
     public bool StartCommitDialog(IWin32Window? owner, string? commitMessage = null, bool showOnlyWhenChanges = false)
     {
         if (Module.IsBareRepository())
