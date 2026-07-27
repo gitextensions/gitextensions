@@ -219,7 +219,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Plugins/PluginSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves plugin identity/page references, GitPluginSettingsContainer isolation, source switching, load/save, empty-state, exception context, and generic settings creation. Bool, string/password, choice, number, pseudo, and supported custom headless-control bindings are functional; CredentialsSetting remains excluded from net10.0 until Phase 4.5."
+    "notes": "Preserves plugin identity/page references, GitPluginSettingsContainer isolation, source switching, load/save, empty-state, exception context, and generic settings creation. Bool, string/password, choice, number, credentials, pseudo, and supported custom headless-control bindings are functional."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Plugins/PluginSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Plugins/PluginSettingsPage.axaml",
@@ -238,6 +238,12 @@
     "status": "parity",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Consolidated Avalonia renderer preserves the declared choice list, selected value, and effective-setting comparison."
+  },
+  "src/app/GitUI/SettingControlBindings/CredentialsSettingControlBinding.cs": {
+    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Consolidated Avalonia renderer preserves supported setting levels, username/password load and save, password masking, custom labels, and username-field visibility over the portable git-credential backend."
   },
   "src/app/GitUI/SettingControlBindings/NumberSettingControlBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
@@ -273,7 +279,7 @@
     "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Avalonia-side factory consolidates the same model dispatch and adapts plugin-provided headless TextBox, CheckBox, and ComboBox bindings. CredentialsSetting is deliberately deferred with the portable credentials boundary to Phase 4.5."
+    "notes": "Avalonia-side factory consolidates the same model dispatch and adapts credentials plus plugin-provided headless TextBox, CheckBox, and ComboBox bindings."
   },
   "src/app/GitUI/SettingControlBindings/StringSettingControlBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
@@ -945,7 +951,7 @@
     "twin": "src/app/GitUI.Avalonia/BuildServerIntegration/BuildServerWatcher.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Retains MEF adapter selection and auto-detection, prioritized remote URLs, polling cadence, newer-result replacement, variable expansion, adapter settings callback, cancellation, and repository-change lifecycle. Grid access uses the Avalonia provider boundary. Credentials use the same prompt and a secret-free-on-disk process-session cache until the portable git-credential backend lands."
+    "notes": "Retains MEF adapter selection and auto-detection, prioritized remote URLs, polling cadence, newer-result replacement, variable expansion, adapter settings callback, cancellation, and repository-change lifecycle. Grid access uses the Avalonia provider boundary. Credentials use the same prompt and an extracted private JSON store over the portable git-credential backend; secrets never enter ordinary settings or logs."
   },
   "src/app/GitUI/HelperDialogs/FormBuildServerCredentials.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormBuildServerCredentials.axaml.cs",
