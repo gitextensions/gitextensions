@@ -1571,7 +1571,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         }
     }
 
-    private IReadOnlyList<GitRevision> AddArtificialRevisions(CancellationToken cancellationToken)
+    private IReadOnlyList<GitRevision> CreateArtificialRevisions(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested
             || !ShowUncommittedChangesIfPossible
@@ -1608,11 +1608,15 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
             ParentIds = _headId is ObjectId { IsZero: false } headId ? [headId] : null,
             Subject = ResourceManager.TranslatedStrings.Index,
         };
+        return [workTreeRevision, indexRevision];
+    }
+
+    private void InsertArtificialRevisions(IReadOnlyList<GitRevision> artificialRevisions)
+    {
         IReadOnlyList<ObjectId> insertionParents = _headId is ObjectId { IsZero: false } currentCheckout
             ? [currentCheckout]
             : [];
-        _revisionGraph.Insert(workTreeRevision, indexRevision, insertionParents);
-        return [workTreeRevision, indexRevision];
+        _revisionGraph.Insert(artificialRevisions[0], artificialRevisions[1], insertionParents);
     }
 
     private void SelectPendingRevision()
@@ -1689,11 +1693,21 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         }
     }
 
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(RevisionGridControl control)
+    {
+        public bool HasGraphParent(ObjectId childId, ObjectId parentId)
+            => control._revisionGraph.TryGetNode(childId, out RevisionGraphRevision? child)
+                && child.Parents.Any(parent => parent.Objectid == parentId);
+    }
+
     private sealed class RevisionObserver(
         RevisionGridControl owner,
         CancellationToken cancellationToken,
         RevisionLoadEventArgs loadEventArgs) : IObserver<IReadOnlyList<GitRevision>>
     {
+        private bool _artificialRevisionsAddedToStream;
         private Dictionary<ObjectId, GitRevision>? _stashesById;
         private ILookup<ObjectId, GitRevision>? _stashesByParentId;
 
@@ -1713,13 +1727,23 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
         public void OnNext(IReadOnlyList<GitRevision> value)
         {
             IReadOnlyList<GitRevision> revisions = AddStashRevisions(value);
+            revisions = AddArtificialRevisionsBeforeHead(revisions);
             owner.AddToGraph(revisions, cancellationToken);
             Dispatcher.UIThread.Post(() => owner.AppendRevisions(revisions, cancellationToken));
         }
 
         public void OnCompleted()
         {
-            IReadOnlyList<GitRevision> artificialRevisions = owner.AddArtificialRevisions(cancellationToken);
+            IReadOnlyList<GitRevision> artificialRevisions = _artificialRevisionsAddedToStream
+                ? []
+                : owner.CreateArtificialRevisions(cancellationToken);
+            if (artificialRevisions.Count > 0)
+            {
+                // HEAD was filtered out (or this is an empty repository), so use the same
+                // fallback insertion path as WinForms.
+                owner.InsertArtificialRevisions(artificialRevisions);
+            }
+
             owner._revisionGraph.LoadingCompleted();
 
             // Finish the row cache (including segment straightening); before this final pass
@@ -1740,6 +1764,44 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
 
         public void OnError(Exception error)
             => Dispatcher.UIThread.Post(() => owner.OnLoadingError(error, cancellationToken));
+
+        private IReadOnlyList<GitRevision> AddArtificialRevisionsBeforeHead(IReadOnlyList<GitRevision> revisions)
+        {
+            if (_artificialRevisionsAddedToStream || owner._headId is not ObjectId headId)
+            {
+                return revisions;
+            }
+
+            int headIndex = -1;
+            for (int index = 0; index < revisions.Count; ++index)
+            {
+                if (revisions[index].ObjectId == headId)
+                {
+                    headIndex = index;
+                    break;
+                }
+            }
+
+            if (headIndex < 0)
+            {
+                return revisions;
+            }
+
+            IReadOnlyList<GitRevision> artificialRevisions = owner.CreateArtificialRevisions(cancellationToken);
+            if (artificialRevisions.Count == 0)
+            {
+                return revisions;
+            }
+
+            // Match WinForms insertion timing. Adding the artificial children before HEAD
+            // lets RevisionGraph.Add resolve Commit index -> HEAD when HEAD arrives.
+            List<GitRevision> revisionsWithArtificial = new(revisions.Count + artificialRevisions.Count);
+            revisionsWithArtificial.AddRange(revisions.Take(headIndex));
+            revisionsWithArtificial.AddRange(artificialRevisions);
+            revisionsWithArtificial.AddRange(revisions.Skip(headIndex));
+            _artificialRevisionsAddedToStream = true;
+            return revisionsWithArtificial;
+        }
 
         private IReadOnlyList<GitRevision> AddStashRevisions(IReadOnlyList<GitRevision> revisions)
         {
