@@ -1,5 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
+    <!-- Avalonia/Linux port: additionally build a cross-platform flavor
+         that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
+    <UseGitExtensionsShims>true</UseGitExtensionsShims>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\app\GitExtUtils\GitExtUtils.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
@@ -10,6 +19,15 @@
       <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
+    <!-- The original single-target project receives GitCommands through its interface
+         references. The guarded two-target graph needs an explicit matching flavor. -->
+    <ProjectReference Include="..\..\..\app\GitCommands\GitCommands.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
       <Private>false</Private>
     </ProjectReference>
@@ -30,6 +48,37 @@
   <ItemGroup>
     <!-- Resources -->
     <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- Keep native Avalonia UI dependencies private to the portable plugin flavor. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Remove="FormImpact.cs" />
+    <Compile Remove="FormImpact.Designer.cs" />
+    <Compile Remove="ImpactControl.cs" />
+    <Compile Remove="ImpactControl.Designer.cs" />
+    <Compile Remove="ImpactLoader.cs" />
+    <Compile Remove="Properties\Resources.Designer.cs" />
+    <EmbeddedResource Remove="FormImpact.resx" />
+    <EmbeddedResource Remove="ImpactControl.resx" />
+    <EmbeddedResource Remove="Properties\Resources.resx" />
+    <None Remove="Resources\IconGitImpact.png" />
+    <Compile Include="..\..\..\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
+    <EmbeddedResource Include="Resources\IconGitImpact.png"
+                      LogicalName="GitExtensions.Plugins.GitImpact.IconGitImpact.png" />
+    <PackageReference Include="Avalonia" ExcludeAssets="runtime" PrivateAssets="all" />
+    <ProjectReference Include="..\..\..\app\GitUI.Avalonia\GitUI.Avalonia.csproj">
+      <PrivateAssets>all</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
+    <Compile Remove="FormImpact.axaml.cs" />
+    <Compile Remove="ImpactControl.axaml.cs" />
+    <Compile Remove="ImpactLoader.NonWindows.cs" />
+    <Compile Remove="Properties\AssemblyInfo.NonWindows.cs" />
+    <Compile Remove="Properties\Resources.NonWindows.cs" />
   </ItemGroup>
 
 </Project>
