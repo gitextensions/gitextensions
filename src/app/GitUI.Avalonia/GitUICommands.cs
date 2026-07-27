@@ -712,7 +712,65 @@ public sealed class GitUICommands : IGitUICommands
         }, changesRepo: false);
     }
 
-    public void StartBatchFileProcessDialog(string batchFile) => throw NotPorted(nameof(StartBatchFileProcessDialog));
+    public void StartBatchFileProcessDialog(string batchFile)
+    {
+        bool useWindowsBatch = OperatingSystem.IsWindows();
+        string extension = useWindowsBatch ? ".cmd" : ".sh";
+        string tempFile = Path.Join(Path.GetTempPath(), $"GitExtensions-{Guid.NewGuid():N}{extension}");
+
+        try
+        {
+            FileStreamOptions streamOptions = new()
+            {
+                Access = FileAccess.Write,
+                Mode = FileMode.CreateNew,
+                Options = FileOptions.SequentialScan,
+                Share = FileShare.None,
+            };
+            if (!useWindowsBatch)
+            {
+                streamOptions.UnixCreateMode = UnixFileMode.UserRead | UnixFileMode.UserWrite;
+            }
+
+            using (FileStream stream = new(tempFile, streamOptions))
+            using (StreamWriter writer = new(stream, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)))
+            {
+                if (useWindowsBatch)
+                {
+                    writer.WriteLine("@prompt $G");
+                }
+
+                writer.Write(batchFile);
+            }
+
+            string process = useWindowsBatch
+                ? Environment.GetEnvironmentVariable("COMSPEC") ?? "cmd.exe"
+                : "/bin/sh";
+            ArgumentString arguments = useWindowsBatch
+                ? $"/D /C {tempFile.Quote()}"
+                : tempFile.Quote();
+            IWin32Window? owner = null;
+            if (AvaloniaApplication.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                owner = desktop.Windows.FirstOrDefault(window => window.IsActive) as IWin32Window
+                    ?? desktop.MainWindow as IWin32Window;
+            }
+
+            FormProcess.ShowDialog(
+                owner,
+                this,
+                arguments,
+                Module.WorkingDir,
+                input: null,
+                useDialogSettings: true,
+                process: process);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
     public bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null)
     {
         FormBrowse form = new(this, args ?? new BrowseArguments());
