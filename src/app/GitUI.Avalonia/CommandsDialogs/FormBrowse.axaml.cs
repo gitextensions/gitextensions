@@ -39,6 +39,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly TranslationString _consoleTabCaption = new("Console");
     private readonly TranslationString _outputHistoryTabCaption = new("Output");
     private readonly TranslationString _buildReportTabCaption = new("Build Report");
+    private readonly TranslationString _commitButtonText = new("Commit");
     private readonly TranslationString _noReposHostPluginLoaded = new("No repository host plugin loaded.");
     private readonly TranslationString _noReposHostFound = new("Could not find any relevant repository hosts for the currently open repository.");
 
@@ -52,6 +53,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
     private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
     private readonly SplitterManager? _splitterManager;
+    private readonly GitStatusMonitor? _gitStatusMonitor;
     private GridLength _commitInfoWidth = new(490);
     private GpgInfo? _gpgInfo;
     private GitRevision? _gpgInfoLoadingRevision;
@@ -153,8 +155,8 @@ public sealed partial class FormBrowse : GitModuleForm
         RevisionGrid.RevisionsLoading += RefreshLeftPanel;
         RevisionGrid.RevisionFilterRequested += (_, _) => ToolStripFilters.SetFocus();
         ToolStripFilters.Bind(() => Module, RevisionGrid);
-        revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => string.Empty, refreshGitStatus: null);
-        fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => string.Empty, refreshGitStatus: null);
+        revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => string.Empty, RefreshGitStatusMonitor);
+        fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => string.Empty, RefreshGitStatusMonitor);
         _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse.Avalonia"));
         revisionDiff.InitSplitterManager(_splitterManager);
         fileTree.InitSplitterManager(_splitterManager);
@@ -222,6 +224,9 @@ public sealed partial class FormBrowse : GitModuleForm
         _NO_TRANSLATE_WorkingDir.SelectionChanged += WorkingDirectorySelectionChanged;
         _NO_TRANSLATE_WorkingDir.KeyUp += WorkingDirectoryKeyUp;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+        _gitStatusMonitor = new GitStatusMonitor(this, () => WindowState == WindowState.Minimized);
+        _gitStatusMonitor.GitStatusMonitorStateChanged += GitStatusMonitorStateChanged;
+        _gitStatusMonitor.GitWorkingDirectoryStatusChanged += GitWorkingDirectoryStatusChanged;
 
         RevisionGrid.SelectedId = args.SelectedId.IsZero ? args.FirstId : args.SelectedId;
         ToolStripFilters.SetRevisionFilter(args.RevFilter);
@@ -307,6 +312,7 @@ public sealed partial class FormBrowse : GitModuleForm
         branchSelect.IsEnabled = isValidWorkingDir;
         toolStripButtonPull.IsEnabled = isValidWorkingDir;
         toolStripButtonPush.IsEnabled = isValidWorkingDir;
+        toolStripButtonPush.ResetBeforeUpdate();
         toolStripButtonCommit.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         toolStripSplitStash.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         toolStripFileExplorer.IsEnabled = Directory.Exists(module.WorkingDir);
@@ -326,6 +332,7 @@ public sealed partial class FormBrowse : GitModuleForm
             lblStatus.Text = $"git: {GitVersion.Current}";
             RevisionGrid.ReloadRevisions(module, selectedObjectId: RevisionGrid.SelectedId);
             UpdateSubmodulesStructure();
+            RefreshPushButton(module, branchName);
         }
         else
         {
@@ -334,7 +341,10 @@ public sealed partial class FormBrowse : GitModuleForm
             _NO_TRANSLATE_WorkingDir.Text = module.WorkingDir;
             lblRepoPath.Text = "No git repository";
             lblStatus.Text = "Start the app inside a repository or pass one on the command line: GitExtensions.Avalonia browse <path>";
+            toolStripButtonPush.ResetToDefaultState();
         }
+
+        _gitStatusMonitor?.Active = isValidWorkingDir && NeedsGitStatusMonitor();
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -1173,6 +1183,91 @@ public sealed partial class FormBrowse : GitModuleForm
     private void RefreshToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.RepoChangedNotifier.Notify();
+        RefreshGitStatusMonitor();
+    }
+
+    private static bool NeedsGitStatusMonitor()
+        => AppSettings.ShowGitStatusInBrowseToolbar
+            || (AppSettings.ShowGitStatusForArtificialCommits
+                && AppSettings.RevisionGraphShowArtificialCommits);
+
+    private void RefreshGitStatusMonitor()
+        => _gitStatusMonitor?.RequestRefresh();
+
+    private void GitStatusMonitorStateChanged(object? sender, GitStatusMonitorStateEventArgs e)
+    {
+        if (e.State != GitStatusMonitorState.Stopped)
+        {
+            return;
+        }
+
+        UpdateCommitButtonAndGetBrush(status: null, showCount: false);
+        RevisionGrid.UpdateArtificialCommitCount(status: null);
+    }
+
+    private void GitWorkingDirectoryStatusChanged(object? sender, GitWorkingDirectoryStatusEventArgs? e)
+    {
+        IReadOnlyList<GitItemStatus>? status = e?.ItemStatuses;
+        UpdateCommitButtonAndGetBrush(status, AppSettings.ShowGitStatusInBrowseToolbar);
+        RevisionGrid.UpdateArtificialCommitCount(
+            AppSettings.ShowGitStatusForArtificialCommits
+                && AppSettings.RevisionGraphShowArtificialCommits
+                    ? status
+                    : null);
+    }
+
+    private Avalonia.Media.IBrush UpdateCommitButtonAndGetBrush(
+        IReadOnlyList<GitItemStatus>? status,
+        bool showCount)
+    {
+        RepoStateVisualiser repoStateVisualiser = new();
+        (Avalonia.Media.IImage image, Avalonia.Media.IBrush brush) = repoStateVisualiser.Invoke(status);
+
+        if (showCount)
+        {
+            toolStripButtonCommit.Icon = image;
+            toolStripButtonCommit.Content = status is null
+                ? _commitButtonText.Text
+                : $"{_commitButtonText} ({status.Count})";
+        }
+        else
+        {
+            toolStripButtonCommit.Icon = RepoStateVisualiser.Clean.Item1;
+            toolStripButtonCommit.Content = _commitButtonText.Text;
+        }
+
+        return brush;
+    }
+
+    private void RefreshPushButton(IGitModule module, string branchName)
+    {
+        if (_aheadBehindDataProvider is null
+            || !AppSettings.ShowAheadBehindData
+            || string.IsNullOrWhiteSpace(branchName))
+        {
+            toolStripButtonPush.ResetToDefaultState();
+            return;
+        }
+
+        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
+        _loadOperations.FileAndForget(async () =>
+        {
+            await TaskScheduler.Default;
+            IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData =
+                _aheadBehindDataProvider.GetData(branchName);
+            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
+            if (!ReferenceEquals(module, Module)
+                || !string.Equals(branchName, Module.GetSelectedBranch(), StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            toolStripButtonPush.DisplayAheadBehindInformation(
+                aheadBehindData,
+                branchName,
+                GetShortcutKeyTooltipString(Command.Push));
+        });
     }
 
     private void QuickFetch()
@@ -1543,6 +1638,9 @@ public sealed partial class FormBrowse : GitModuleForm
         RevisionGrid.RefreshRealizedRows();
         RevisionInfo.Revision = RevisionGrid.SelectedRevision;
         RefreshDefaultPullAction();
+        _gitStatusMonitor?.Active = Module.IsValidGitWorkingDir() && NeedsGitStatusMonitor();
+        RefreshGitStatusMonitor();
+        RefreshPushButton(Module, Module.IsValidGitWorkingDir() ? Module.GetSelectedBranch() : string.Empty);
     }
 
     /// <summary>
@@ -1608,6 +1706,7 @@ public sealed partial class FormBrowse : GitModuleForm
         _submoduleStatusProvider?.Init();
         _splitterManager?.SaveSplitters();
         _gpgInfoLoadSequence.Dispose();
+        _gitStatusMonitor?.Dispose();
         RevisionGrid.CancelBackgroundTasks();
         revisionDiff.CancelBackgroundTasks();
         fileTree.CancelBackgroundTasks();

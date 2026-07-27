@@ -28,6 +28,7 @@ public sealed class RenameBranchTests
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
     private bool _closeProcessDialog;
+    private bool _revisionGraphShowArtificialCommits;
 
     [SetUp]
     public void SetUp()
@@ -36,6 +37,8 @@ public sealed class RenameBranchTests
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
         _closeProcessDialog = AppSettings.CloseProcessDialog;
+        _revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
+        AppSettings.RevisionGraphShowArtificialCommits = false;
 
         _serviceContainer = new ServiceContainer();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(_serviceContainer);
@@ -59,6 +62,7 @@ public sealed class RenameBranchTests
     public void TearDown()
     {
         AppSettings.CloseProcessDialog = _closeProcessDialog;
+        AppSettings.RevisionGraphShowArtificialCommits = _revisionGraphShowArtificialCommits;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
