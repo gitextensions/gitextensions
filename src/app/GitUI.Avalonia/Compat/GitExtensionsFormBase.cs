@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using GitCommands;
@@ -7,6 +7,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Compat;
 using GitUI.Properties;
+using ResourceManager.Hotkey;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace ResourceManager;
@@ -164,6 +165,10 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
             ? loader.LoadHotkeys(hotkeySettingsName)
             : [];
     }
+
+    protected string GetShortcutKeyTooltipString<T>(T commandCode)
+        where T : struct, Enum
+        => _hotkeys.GetShortcutToolTip(commandCode);
 
     /// <summary>Dispatches a WinForms-compatible key value through the loaded command table.</summary>
     public virtual bool ProcessHotkey(WinFormsShims.Keys keyData)
