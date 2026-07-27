@@ -407,6 +407,30 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same Performance, Behaviour, and Telemetry groups and same-named controls in a compact scrollable Avalonia layout; wider native spinners keep the full numeric values visible."
   },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/DetailedSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/DetailedSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "933fd98ba963b3d71546b1ce23183c572dc40480",
+    "notes": "Same-named distributed Detailed settings parent preserves global-only graph settings and effective/local/global push and merge settings without a UI-specific binding layer."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/DetailedSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/DetailedSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "96b998ee96c1ba5bbbe0fdafda978f171635da77",
+    "notes": "Same Revision graph, Push window, and Merge window groups, control identities, and compact ordering."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/DiffViewerSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/DiffViewerSettingsPage.axaml.cs",
+    "status": "parity",
+    "basedOn": "b45fd57c5c2f748d45bddea50acf2a7467f7cbc8",
+    "notes": "All original diff-viewer settings load/save mappings, dynamic Git-coloring enablement, translated continuous-scroll/all-parent labels, explanatory tooltips, and save-runtime-defaults action are preserved."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/DiffViewerSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/DiffViewerSettingsPage.axaml",
+    "status": "parity",
+    "basedOn": "b45fd57c5c2f748d45bddea50acf2a7467f7cbc8",
+    "notes": "Same General and Diff coloring groups, same-named controls, original order, and compact scrollable native layout."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BuildServerIntegrationSettingsPage.axaml.cs",
     "status": "functional",
@@ -1760,11 +1784,17 @@
     "status": "parity",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
   },
+  "src/app/GitUI/Editor/ContinuousScrollEventManager.cs": {
+    "twin": "src/app/GitUI.Avalonia/Editor/ContinuousScrollEventManager.cs",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Same-named Alt/automatic preference gate and shared navigation delay, using Avalonia pointer modifiers at the native FileViewer boundary. Text and image edge-wheel paths share this manager; Shift-wheel remains reserved for horizontal scrolling."
+  },
   "src/app/GitUI/Editor/FileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range/fixed diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. FormViewPatch uses the original ViewFixedPatch boundary so loaded patch context cannot be regenerated. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. The original Find/Find previous/Go-to-line, context-line, entire-file, whitespace, change/occurrence navigation, and selected-line stage/unstage/reset command IDs and persisted hotkeys are functional. Copy, Copy patch/new/old version, Find and Go-to-line context actions are present; Replace stays hidden while the viewer is read-only. The shared PatchManager produces selected/new/reset patches without duplicate UI-specific patch logic, Git apply runs through the repository executable, reset is confirmed through the Avalonia TaskDialog adapter, and PatchApplied lets Commit/RevisionDiff reload safely. Revision and stash views can apply selected or whole patches with conflict recovery. The original cancellation/latest-load boundary covers working-tree files and committed blobs; text, binary detection with bounded hex output, image preview/fallback, submodules, 5 MB deferred preview, file preambles, encoding selection/reload notification, and error display are functional. Every asynchronous text/diff/image/error render executes its complete UI mutation as a cancellable Avalonia dispatcher operation, including when a consumer begins loading on TaskManager's worker thread. AvaloniaEdit built-in definitions provide filename-extension syntax highlighting; remembered syntax/nonprinting/context/whitespace/entire-file settings, line-number override, text/glyph EOL markers, and settings-backed vertical ruler are functional. Dark syntax foregrounds remain independent of semantic diff rendering. Revision-aware consumers retain their external-difftool callback and F3 invokes it when present."
+    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range/fixed diffs, old/new line-number mapping, semantic line and inline coloring, revision-aware Git diff loading, Escape handling, and settings-backed top/bottom continuous scrolling through the same-named manager for both text and image modes. FormViewPatch uses the original ViewFixedPatch boundary so loaded patch context cannot be regenerated. For blame: plain-text mode, mapped navigation, and a separate full-width background renderer. The original Find/Find previous/Go-to-line, context-line, entire-file, whitespace, change/occurrence navigation, and selected-line stage/unstage/reset command IDs and persisted hotkeys are functional. Copy, Copy patch/new/old version, Find and Go-to-line context actions are present; Replace stays hidden while the viewer is read-only. The shared PatchManager produces selected/new/reset patches without duplicate UI-specific patch logic, Git apply runs through the repository executable, reset is confirmed through the Avalonia TaskDialog adapter, and PatchApplied lets Commit/RevisionDiff reload safely. Revision and stash views can apply selected or whole patches with conflict recovery. The original cancellation/latest-load boundary covers working-tree files and committed blobs; text, binary detection with bounded hex output, image preview/fallback, submodules, 5 MB deferred preview, file preambles, encoding selection/reload notification, and error display are functional. Every asynchronous text/diff/image/error render executes its complete UI mutation as a cancellable Avalonia dispatcher operation, including when a consumer begins loading on TaskManager's worker thread. AvaloniaEdit built-in definitions provide filename-extension syntax highlighting; remembered syntax/nonprinting/context/whitespace/entire-file settings, line-number override, text/glyph EOL markers, and settings-backed vertical ruler are functional. Dark syntax foregrounds remain independent of semantic diff rendering. Revision-aware consumers retain their external-difftool callback and F3 invokes it when present."
   },
   "src/app/GitUI/Editor/FileViewer.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml",
