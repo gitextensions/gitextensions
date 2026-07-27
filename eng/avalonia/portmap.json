@@ -539,6 +539,60 @@
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
     "notes": "Preserves mailmap-aware main/submodule git-log parsing, per-module caching, weekly grouping, callbacks, and intermediate empty weeks. Portable work is cancellable, owned, and synchronously joined on disposal instead of using eager process-global tasks."
   },
+  "src/plugins/Statistics/GitStatistics/FormGitStatistics.cs": {
+    "twin": "src/plugins/Statistics/GitStatistics/FormGitStatistics.axaml.cs",
+    "status": "parity",
+    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
+    "notes": "Portable-only same-named dialog retains commit/contributor and line-count statistics, submodule counting, ignored-directory filters, all original formatted text and XLF identities, and owner-managed loading."
+  },
+  "src/plugins/Statistics/GitStatistics/FormGitStatistics.Designer.cs": {
+    "twin": "src/plugins/Statistics/GitStatistics/FormGitStatistics.axaml",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Same 751x465 resizable four-tab statistics window, 29px summary rows, 286px scrollable text panes, transparent splitter targets, four same-named pie controls, loading overlay, and original field names."
+  },
+  "src/plugins/Statistics/GitStatistics/PieChart/PieChartControl.cs": {
+    "twin": "src/plugins/Statistics/GitStatistics/PieChart/PieChartControl.axaml.cs",
+    "status": "parity",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Native Avalonia same-named chart host retains values, colors, margins, angle, relative height/displacement, shadow and edge modes, per-slice tooltips, hover highlighting, tags, hit testing, and SliceSelected identity."
+  },
+  "src/plugins/Statistics/GitStatistics/PieChart/PieChart3D.cs": {
+    "twin": "src/plugins/Statistics/GitStatistics/PieChart/PieChart3D.NonWindows.cs",
+    "status": "parity",
+    "basedOn": "e5f83d11c3532b904ce139a6f60e8038837718df",
+    "notes": "Native DrawingContext/StreamGeometry chart core retains elliptical sectors, relative depth/displacement, front side and cut surfaces, gradual shading, configurable edges, initial angle, highlighting, and mathematical slice hit testing."
+  },
+  "src/plugins/Statistics/GitStatistics/PieChart/PieSlice.cs": {
+    "twin": "src/plugins/Statistics/GitStatistics/PieChart/PieChart3D.NonWindows.cs",
+    "status": "parity",
+    "basedOn": "71cef2c53042fb7902158c5b092d4cbfc4b17a3a",
+    "notes": "The original GDI slice geometry and painting responsibilities are consolidated into the native chart core's immutable slice records and StreamGeometry builders."
+  },
+  "src/plugins/Statistics/GitStatistics/PieChart/Quadrilateral.cs": {
+    "twin": "src/plugins/Statistics/GitStatistics/PieChart/PieChart3D.NonWindows.cs",
+    "status": "parity",
+    "basedOn": "44073ffb3f59288d3dbac0e3c6c6a17c253d08fb",
+    "notes": "Cut-side quadrilaterals and containment are represented directly by native StreamGeometry and chart-level mathematical hit testing."
+  },
+  "src/plugins/Statistics/GitStatistics/PieChart/GraphicsUtil.cs": {
+    "twin": "src/plugins/Statistics/GitStatistics/PieChart/PieChart3D.NonWindows.cs",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "GDI rectangle fitting helpers are replaced by native Rect/Point calculations inside the chart core."
+  },
+  "src/plugins/Statistics/GitStatistics/PieChart/ColorUtil.cs": {
+    "twin": "src/plugins/Statistics/GitStatistics/PieChart/PieChart3D.NonWindows.cs",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Surface lightness correction is retained with native Avalonia Color channel blending."
+  },
+  "src/plugins/Statistics/GitStatistics/PieChart/EdgeColor.cs": {
+    "twin": "src/plugins/Statistics/GitStatistics/PieChart/PieChart3D.NonWindows.cs",
+    "status": "parity",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "All original EdgeColorType modes are retained by the native chart core without a platform drawing dependency."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "parity",
