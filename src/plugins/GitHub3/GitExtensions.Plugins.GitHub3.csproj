@@ -1,13 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
+    <!-- Avalonia/Linux port: additionally build a cross-platform flavor
+         that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
+    <UseGitExtensionsShims>true</UseGitExtensionsShims>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\..\app\GitExtUtils\Validates.cs" Link="Validates.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\externals\Git.hub\Git.hub\Git.hub.csproj">
+    <ProjectReference Include="..\..\..\externals\Git.hub\Git.hub\Git.hub.csproj"
+                      Condition="'$(TargetFramework)' == 'net10.0-windows'">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
       <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\externals\Git.hub.Portable\Git.hub.Portable.csproj"
+                      Condition="'$(TargetFramework)' == 'net10.0'">
+      <PrivateAssets>build;buildTransitive</PrivateAssets>
     </ProjectReference>
     <ProjectReference Include="..\..\app\GitCommands\GitCommands.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
@@ -38,6 +52,20 @@
   <ItemGroup>
     <!-- Resources -->
     <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Remove="Properties\Resources.Designer.cs" />
+    <EmbeddedResource Remove="Properties\Resources.resx" />
+    <None Remove="Resources\IconGitHub.png" />
+    <Compile Include="..\..\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
+    <EmbeddedResource Include="Resources\IconGitHub.png"
+                      LogicalName="GitExtensions.Plugins.GitHub3.IconGitHub.png" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
+    <Compile Remove="Properties\Resources.NonWindows.cs" />
   </ItemGroup>
 
 </Project>
