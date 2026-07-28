@@ -13,7 +13,7 @@ public static class PowerShellHelper
         EnvironmentConfiguration.SetEnvironmentVariables();
 
         IExecutable executable = new Executable(executableName, workingDir);
-        executable.Start(arguments, createWindow: !runInBackground);
+        _ = executable.Start(arguments, createWindow: !runInBackground);
     }
 
     internal static string GetExecutableName()

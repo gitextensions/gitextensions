@@ -9,8 +9,8 @@ public sealed class GravatarProvider : IAvatarProvider, IDisposable
     private const string _rating = "g";
 
     private readonly IAvatarDownloader _downloader;
-    private readonly MD5 _md5 = MD5.Create();
     private readonly string _queryString;
+    private readonly SHA256 _sha256 = SHA256.Create();
 
     public GravatarProvider(
         IAvatarDownloader downloader,
@@ -50,13 +50,13 @@ public sealed class GravatarProvider : IAvatarProvider, IDisposable
 
     public void Dispose()
     {
-        _md5.Dispose();
+        _sha256.Dispose();
     }
 
     private string ComputeHash(string email)
     {
         byte[] emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());
-        byte[] hashBytes = _md5.ComputeHash(emailBytes);
+        byte[] hashBytes = _sha256.ComputeHash(emailBytes);
         return HexString.FromByteArray(hashBytes);
     }
 

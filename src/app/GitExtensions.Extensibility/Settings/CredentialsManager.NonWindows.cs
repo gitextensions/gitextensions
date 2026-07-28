@@ -176,11 +176,17 @@ internal readonly record struct GitCredentialProcessResult(int ExitCode, string 
 
 internal sealed class GitCredentialProcess : IGitCredentialProcess
 {
+    private static readonly string? GitExecutablePath = ResolveGitExecutablePath();
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(30);
 
     public GitCredentialProcessResult Run(string operation, string input, string? workingDirectory)
     {
-        ProcessStartInfo startInfo = new("git")
+        if (GitExecutablePath is null)
+        {
+            return new GitCredentialProcessResult(-1, string.Empty);
+        }
+
+        ProcessStartInfo startInfo = new(GitExecutablePath)
         {
             CreateNoWindow = true,
             RedirectStandardError = true,
@@ -243,6 +249,33 @@ internal sealed class GitCredentialProcess : IGitCredentialProcess
         {
             process?.Dispose();
         }
+    }
+
+    private static string? ResolveGitExecutablePath()
+    {
+        string executableName = OperatingSystem.IsWindows() ? "git.exe" : "git";
+        string? path = Environment.GetEnvironmentVariable("PATH");
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return null;
+        }
+
+        foreach (string pathEntry in path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            string directory = pathEntry.Trim().Trim('"');
+            if (!Path.IsPathFullyQualified(directory))
+            {
+                continue;
+            }
+
+            string candidate = Path.Combine(directory, executableName);
+            if (File.Exists(candidate))
+            {
+                return Path.GetFullPath(candidate);
+            }
+        }
+
+        return null;
     }
 
     private static void TryKill(Process? process)
