@@ -133,7 +133,8 @@ public sealed partial class FormAddSubmodule : GitModuleForm
             return [];
         }
 
-        GitArgumentBuilder gitArguments = new("ls-remote") { "--heads", url.ToPosixPath().Quote() };
+        string normalizedUrl = url.Replace('\\', '/');
+        GitArgumentBuilder gitArguments = new("ls-remote") { "--heads", normalizedUrl.Quote() };
         string heads = gitExecutable.GetOutput(gitArguments);
         return heads.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
                     .Select(head =>

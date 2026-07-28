@@ -266,6 +266,7 @@ public sealed class ConsoleAndOutputTests
     {
         ServiceContainer serviceContainer = new();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(serviceContainer);
+        serviceContainer.AddService<IGitExecutorProvider>(Substitute.For<IGitExecutorProvider>());
         GitUI.ServiceContainerRegistry.RegisterServices(serviceContainer);
         return serviceContainer;
     }
@@ -274,7 +275,7 @@ public sealed class ConsoleAndOutputTests
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
-        module.IsValidGitWorkingDir().Returns(false);
+        module.IsValidGitWorkingDir().Returns(true);
 
         IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
         appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
