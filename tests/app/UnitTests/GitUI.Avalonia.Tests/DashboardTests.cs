@@ -1,6 +1,9 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -85,6 +88,61 @@ public sealed class DashboardTests
         transition.Should().NotBeNull();
         Path.TrimEndingDirectorySeparator(transition!.GitModule.WorkingDir)
             .Should().Be(Path.TrimEndingDirectorySeparator(repositoryPath));
+    }
+
+    [AvaloniaTest]
+    public void Single_clicking_a_valid_dashboard_repository_should_raise_the_module_transition()
+    {
+        string repositoryPath = FindRepositoryRoot();
+        Repository repository = new(repositoryPath);
+        IRepositoryHistoryUIService history = CreateHistory(
+            new RepositoryHistorySnapshot(
+                [new RepositoryHistoryEntry(repository, "selected", "main", IsFavourite: false, IsAnchored: false)],
+                []));
+        history.CanOpenRepository(repositoryPath).Returns(true);
+        IGitExecutorProvider executorProvider = Substitute.For<IGitExecutorProvider>();
+        IGitExecutor executor = Substitute.For<IGitExecutor>();
+        executor.WorkingDir.Returns(repositoryPath);
+        executor.GetGitDirectory().Returns(Path.Join(repositoryPath, ".git"));
+        executorProvider.GetExecutor(repositoryPath).Returns(executor);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.GetService(typeof(IGitExecutorProvider)).Returns(executorProvider);
+        UserRepositoriesList list = new();
+        GitModuleEventArgs? transition = null;
+        list.GitModuleChanged += (_, e) => transition = e;
+        list.Initialize(history, () => commands);
+        list.ShowRecentRepositories(reloadData: false);
+        Window window = new()
+        {
+            Width = 560,
+            Height = 260,
+            Content = list,
+        };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            ListBoxItem repositoryRow = list.GetVisualDescendants()
+                .OfType<ListBoxItem>()
+                .Single(item => item.Content is UserRepositoriesList.RepositoryListItem { Repository: not null });
+            Avalonia.Point clickPoint = Avalonia.VisualExtensions.TranslatePoint(
+                repositoryRow,
+                new Avalonia.Point(repositoryRow.Bounds.Width / 2, repositoryRow.Bounds.Height / 2),
+                window) ?? throw new InvalidOperationException("The repository row position was not available.");
+
+            window.MouseDown(clickPoint, MouseButton.Left, RawInputModifiers.None);
+            window.MouseUp(clickPoint, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            transition.Should().NotBeNull("WinForms uses ItemActivation.OneClick for this list");
+            Path.TrimEndingDirectorySeparator(transition!.GitModule.WorkingDir)
+                .Should().Be(Path.TrimEndingDirectorySeparator(repositoryPath));
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]

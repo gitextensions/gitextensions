@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -8,7 +9,9 @@ using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
+using Microsoft.Win32;
 using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs.SettingsDialog;
 
@@ -20,6 +23,9 @@ public sealed class CommonLogic : Translate
 {
     internal const string PresetGitEditorEnvVariableName = "GIT_EDITOR";
     internal const string AmbientGitEditorEnvVariableName = "EDITOR";
+
+    private static readonly TranslationString _cantReadRegistry =
+        new("Git Extensions has insufficient permissions to check the registry.");
 
     public readonly DistributedSettingsSet DistributedSettingsSet;
     public readonly GitConfigSettingsSet GitConfigSettingsSet;
@@ -71,6 +77,27 @@ public sealed class CommonLogic : Translate
             yield return Environment.GetEnvironmentVariable("VISUAL");
             yield return Environment.GetEnvironmentVariable(AmbientGitEditorEnvVariableName);
         }
+    }
+
+    [SupportedOSPlatform("windows")]
+    public static string GetRegistryValue(RegistryKey root, string subkey, string? key = null)
+    {
+        string? value = null;
+        try
+        {
+            using RegistryKey? registryKey = root.OpenSubKey(subkey, writable: false);
+            value = registryKey?.GetValue(key) as string;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            MessageBoxes.Show(
+                _cantReadRegistry.Text,
+                TranslatedStrings.Error,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error);
+        }
+
+        return value ?? string.Empty;
     }
 
     public static void FillEncodings(ComboBox combo)
