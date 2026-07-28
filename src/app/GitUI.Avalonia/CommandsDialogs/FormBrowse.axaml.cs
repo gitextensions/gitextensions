@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -154,7 +154,6 @@ public sealed partial class FormBrowse : GitModuleForm
         repoObjectsTree.Initialize(RevisionGrid.SetAndApplyBranchFilter, OpenRepository);
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
         RevisionGrid.RevisionsLoading += RefreshLeftPanel;
-        RevisionGrid.RevisionFilterRequested += (_, _) => ToolStripFilters.SetFocus();
         ToolStripFilters.Bind(() => Module, RevisionGrid);
         revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => string.Empty, RefreshGitStatusMonitor);
         fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => string.Empty, RefreshGitStatusMonitor);
@@ -252,6 +251,9 @@ public sealed partial class FormBrowse : GitModuleForm
         HotkeysEnabled = true;
         LoadHotkeys(HotkeySettingsName);
         _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
+        ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys ?? []);
+        ToolStripFilters.RefreshRevisionGridShortcutKeys(
+            UICommands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(RevisionGridControl.HotkeySettingsName));
         LoadUserMenu();
     }
 
@@ -882,6 +884,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void RefreshLeftPanel(object? sender, UserControls.RevisionGrid.RevisionLoadEventArgs e)
     {
+        ToolStripFilters.RefreshRevisionFunction(e.GetRefs);
         IGitModule module = Module;
         string workingDirectory = module.WorkingDir;
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
@@ -1638,6 +1641,9 @@ public sealed partial class FormBrowse : GitModuleForm
 
         LoadHotkeys(HotkeySettingsName);
         _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
+        ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys ?? []);
+        ToolStripFilters.RefreshRevisionGridShortcutKeys(
+            UICommands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(RevisionGridControl.HotkeySettingsName));
         LoadUserMenu();
         AvatarService.UpdateAvatarInitialFontsSettings();
         RevisionGrid.ApplyColumnSettings();

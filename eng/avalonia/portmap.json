@@ -1557,13 +1557,25 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "WinForms-shaped quick-filter twin bound to IRevisionGridFilter: all/current/filtered branches, branch-type completion, commit/committer/author/diff text filters, programmatic SetRevisionFilter, reflog, first-parent and reset actions. The not-yet-ported advanced date/limit dialog is intentionally absent; its primary funnel action focuses the functional quick text filter. Existing FormBrowse translation and tooltip keys are reused explicitly."
+    "notes": "WinForms-shaped quick-filter twin bound to IRevisionGridFilter: all/current/filtered branches; cached, type-filtered and text-filtered branch completion with no-results and invalid-ref handling; commit/committer/author/diff text filters; the three original exclusion templates; persisted 30-entry history promotion; programmatic branch/revision filters; reflog, first-parent and reset actions; shortcut tooltips/gestures; and the original active/inactive funnel split behavior. The advanced action opens the native same-named FormRevisionFilter twin. Existing FormBrowse translation identities are reused explicitly."
   },
   "src/app/GitUI/UserControls/FilterToolBar.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Compact 25px Avalonia toolbar layout with the original field names, ordering, split menus and icons."
+    "notes": "Compact 25px Avalonia toolbar layout with the original field names, ordering, split menus, advanced-filter menu entry, reset states and icons."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormRevisionFilter.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormRevisionFilter.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named advanced revision-filter dialog mutating the shared FilterInfo only on OK. Date range, author/committer/message/diff text, ignore-case, commit limit, path/branch/current/reflog, first-parent, merge, decoration and history options preserve the original enablement and raw-value behavior."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/FormRevisionFilter.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormRevisionFilter.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Fixed native Avalonia dialog retaining the original 17-row field order, control names, mnemonic labels, tooltips and single OK action."
   },
   "src/app/GitUI/UserControls/RevisionGrid/FilterInfo.cs": {
     "twin": "src/app/GitUI/UserControls/RevisionGrid/FilterInfo.cs",
