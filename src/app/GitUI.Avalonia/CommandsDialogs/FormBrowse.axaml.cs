@@ -247,10 +247,17 @@ public sealed partial class FormBrowse : GitModuleForm
         InitializeOutputHistory();
         branchSelect.Click += BranchSelectClick;
         branchSelect.AddHandler(
+            PointerPressedEvent,
+            BranchSelectPointerPressed,
+            RoutingStrategies.Tunnel);
+        branchSelect.AddHandler(
             PointerReleasedEvent,
             BranchSelectPointerReleased,
             RoutingStrategies.Tunnel);
-        BranchSelectFlyout.Opening += (_, _) => PopulateBranchSelector();
+        branchSelect.AddHandler(
+            KeyDownEvent,
+            BranchSelectKeyDown,
+            RoutingStrategies.Tunnel);
         toolStripWorktrees.Click += ManageWorktreeToolStripMenuItemClick;
         WorktreeFlyout.Opening += (_, _) => PopulateWorktreeSelector();
         toolStripButtonPull.Click += ToolStripButtonPullClick;
@@ -979,13 +986,23 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void BranchSelectClick(object? sender, EventArgs e)
     {
+        PopulateBranchSelector();
         branchSelect.ShowDropDown();
     }
 
     private void PopulateBranchSelector()
     {
         BranchSelectFlyout.Items.Clear();
-        MenuItem checkout = new() { Header = checkoutBranchToolStripMenuItem.Header, Icon = checkoutBranchToolStripMenuItem.Icon };
+        MenuItem checkout = new()
+        {
+            Header = checkoutBranchToolStripMenuItem.Header,
+            Icon = new Image
+            {
+                Width = 16,
+                Height = 16,
+                Source = Images.BranchCheckout,
+            },
+        };
         checkout.Click += (_, _) => QueueBranchCheckout();
         BranchSelectFlyout.Items.Add(checkout);
         BranchSelectFlyout.Items.Add(new Separator());
@@ -1022,6 +1039,14 @@ public sealed partial class FormBrowse : GitModuleForm
         Dispatcher.UIThread.Post(() => UICommands.StartCheckoutBranch(this, branch));
     }
 
+    private void BranchSelectPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (e.GetCurrentPoint(branchSelect).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed)
+        {
+            PopulateBranchSelector();
+        }
+    }
+
     private void BranchSelectPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         if (e.InitialPressMouseButton != MouseButton.Right)
@@ -1031,6 +1056,14 @@ public sealed partial class FormBrowse : GitModuleForm
 
         CheckoutBranchToolStripMenuItemClick(sender, e);
         e.Handled = true;
+    }
+
+    private void BranchSelectKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F4 || (e.Key == Key.Down && (e.KeyModifiers & KeyModifiers.Alt) != 0))
+        {
+            PopulateBranchSelector();
+        }
     }
 
     private MenuFlyout BranchSelectFlyout => (MenuFlyout)branchSelect.Flyout!;
