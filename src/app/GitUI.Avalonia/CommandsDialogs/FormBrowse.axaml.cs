@@ -2,12 +2,12 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Platform.Storage;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Gpg;
 using GitCommands.Remotes;
 using GitCommands.Submodules;
-using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -65,7 +65,6 @@ public sealed partial class FormBrowse : GitModuleForm
     private bool _gpgInfoLoaded;
     private bool _hasRuntimeCommands;
     private int _gpgInfoLoadVersion;
-    private bool _updatingWorkingDirectories;
     private IReadOnlyList<GitWorktree> _worktrees = [];
     private IConsoleShellRunner? _terminal;
     private TabItem? _consoleTabPage;
@@ -99,6 +98,8 @@ public sealed partial class FormBrowse : GitModuleForm
         CreateTag = 43,
         Rebase = 44,
         ManageWorkTrees = 49,
+        OpenRepo = 45,
+        CloseRepository = 15,
 
         // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
         // so refresh joins the same command dispatcher without changing persisted upstream IDs.
@@ -221,8 +222,13 @@ public sealed partial class FormBrowse : GitModuleForm
         stashPopToolStripMenuItem.Click += (_, _) => UICommands.StashPop(this);
         manageStashesToolStripMenuItem.Click += StashToolStripMenuItemClick;
         createAStashToolStripMenuItem.Click += (_, _) => UICommands.StartStashDialog(this, manageStashes: false);
-        _NO_TRANSLATE_WorkingDir.SelectionChanged += WorkingDirectorySelectionChanged;
-        _NO_TRANSLATE_WorkingDir.KeyUp += WorkingDirectoryKeyUp;
+        _NO_TRANSLATE_WorkingDir.Initialize(
+            () => UICommands,
+            ChangeWorkingDirectory,
+            path => GitUICommands.LaunchBrowse(path),
+            OpenRepositoryDialog,
+            () => ChangeWorkingDirectory(string.Empty),
+            ConfigureRecentRepositories);
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
         _gitStatusMonitor = new GitStatusMonitor(this, () => WindowState == WindowState.Minimized);
         _gitStatusMonitor.GitStatusMonitorStateChanged += GitStatusMonitorStateChanged;
@@ -245,6 +251,7 @@ public sealed partial class FormBrowse : GitModuleForm
         InitializeComplete();
         HotkeysEnabled = true;
         LoadHotkeys(HotkeySettingsName);
+        _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         LoadUserMenu();
     }
 
@@ -326,7 +333,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
         if (isValidWorkingDir)
         {
-            LoadWorkingDirectories();
+            _NO_TRANSLATE_WorkingDir.RefreshContent();
             _aheadBehindDataProvider?.ResetCache();
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
             lblStatus.Text = $"git: {GitVersion.Current}";
@@ -338,7 +345,7 @@ public sealed partial class FormBrowse : GitModuleForm
         {
             _worktrees = [];
             toolStripWorktrees.IsVisible = false;
-            _NO_TRANSLATE_WorkingDir.Text = module.WorkingDir;
+            _NO_TRANSLATE_WorkingDir.RefreshContent();
             lblRepoPath.Text = "No git repository";
             lblStatus.Text = "Start the app inside a repository or pass one on the command line: GitExtensions.Avalonia browse <path>";
             toolStripButtonPush.ResetToDefaultState();
@@ -384,56 +391,14 @@ public sealed partial class FormBrowse : GitModuleForm
         _updateCheckService?.SearchForUpdatesAndShow(this, alwaysShow: true);
     }
 
-    private void LoadWorkingDirectories()
-    {
-        string workingDirectory = Module.WorkingDir;
-        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
-        _loadOperations.FileAndForget(async () =>
-        {
-            IList<Repository> history = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync().WaitAsync(cancellationToken);
-            string[] directories =
-            [
-                workingDirectory,
-                .. history.Select(repository => repository.Path)
-                    .Where(path => !string.Equals(path, workingDirectory, StringComparison.OrdinalIgnoreCase))
-                    .Distinct(StringComparer.OrdinalIgnoreCase),
-            ];
-
-            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            if (!string.Equals(Module.WorkingDir, workingDirectory, StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-
-            _updatingWorkingDirectories = true;
-            _NO_TRANSLATE_WorkingDir.ItemsSource = directories;
-            _NO_TRANSLATE_WorkingDir.Text = workingDirectory;
-            _updatingWorkingDirectories = false;
-        });
-    }
-
-    private void WorkingDirectorySelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (!_updatingWorkingDirectories && _NO_TRANSLATE_WorkingDir.SelectedItem is string path)
-        {
-            ChangeWorkingDirectory(path);
-        }
-    }
-
-    private void WorkingDirectoryKeyUp(object? sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(_NO_TRANSLATE_WorkingDir.Text))
-        {
-            ChangeWorkingDirectory(_NO_TRANSLATE_WorkingDir.Text);
-        }
-    }
-
     private void ChangeWorkingDirectory(string path)
     {
         string normalizedPath;
         try
         {
-            normalizedPath = Path.GetFullPath(path);
+            normalizedPath = string.IsNullOrWhiteSpace(path)
+                ? string.Empty
+                : Path.GetFullPath(path);
         }
         catch (Exception exception) when (exception is ArgumentException or NotSupportedException or PathTooLongException)
         {
@@ -441,7 +406,13 @@ public sealed partial class FormBrowse : GitModuleForm
             return;
         }
 
-        if (string.Equals(normalizedPath, Path.GetFullPath(Module.WorkingDir), StringComparison.OrdinalIgnoreCase))
+        string currentPath = string.IsNullOrWhiteSpace(Module.WorkingDir)
+            ? string.Empty
+            : Path.GetFullPath(Module.WorkingDir);
+        StringComparison pathComparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+        if (string.Equals(normalizedPath, currentPath, pathComparison))
         {
             return;
         }
@@ -453,9 +424,41 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
         RegisterPlugins();
         ChangeTerminalActiveFolder(normalizedPath);
+        if (Module.IsValidGitWorkingDir())
+        {
+            AppSettings.RecentWorkingDir = normalizedPath;
+        }
+
         ReloadRepository();
-        CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
-        _loadOperations.FileAndForget(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(normalizedPath).WaitAsync(cancellationToken));
+    }
+
+    private void OpenRepositoryDialog()
+        => _loadOperations.FileAndForget(OpenRepositoryDialogAsync);
+
+    private async Task OpenRepositoryDialogAsync()
+    {
+        FolderPickerOpenOptions options = new()
+        {
+            AllowMultiple = false,
+        };
+        if (Directory.Exists(Module.WorkingDir))
+        {
+            options.SuggestedStartLocation = await StorageProvider.TryGetFolderFromPathAsync(Module.WorkingDir);
+        }
+
+        IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(options);
+        string? path = folders.FirstOrDefault()?.TryGetLocalPath();
+        if (!string.IsNullOrWhiteSpace(path))
+        {
+            ChangeWorkingDirectory(path);
+        }
+    }
+
+    private void ConfigureRecentRepositories()
+    {
+        using FormRecentReposSettings form = new();
+        form.ShowDialog(this);
+        _NO_TRANSLATE_WorkingDir.RefreshContent();
     }
 
     private void RegisterPlugins()
@@ -1587,6 +1590,8 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.CreateTag: TagToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Rebase: RebaseToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.ManageWorkTrees: ManageWorktreeToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.OpenRepo: OpenRepositoryDialog(); break;
+            case Command.CloseRepository: ChangeWorkingDirectory(string.Empty); break;
             default: return base.ExecuteCommand(command);
         }
 
@@ -1632,6 +1637,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         LoadHotkeys(HotkeySettingsName);
+        _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         LoadUserMenu();
         AvatarService.UpdateAvatarInitialFontsSettings();
         RevisionGrid.ApplyColumnSettings();
@@ -1739,6 +1745,7 @@ public sealed partial class FormBrowse : GitModuleForm
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripWorktrees), "ToolTipText", "Worktrees");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripFileExplorer), "ToolTipText", "File Explorer");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(userShell), "ToolTipText", "Git bash");
+        ((ITranslate)_NO_TRANSLATE_WorkingDir).AddTranslationItems(translation);
     }
 
     public override void TranslateItems(ITranslation translation)
@@ -1753,6 +1760,7 @@ public sealed partial class FormBrowse : GitModuleForm
         SetTranslatedToolTip(toolStripWorktrees, nameof(toolStripWorktrees), "Worktrees");
         SetTranslatedToolTip(toolStripFileExplorer, nameof(toolStripFileExplorer), "File Explorer");
         string terminalText = SetTranslatedToolTip(userShell, nameof(userShell), "Git bash");
+        ((ITranslate)_NO_TRANSLATE_WorkingDir).TranslateItems(translation);
         FetchAllToolbarMenuItem.Header = fetchAllToolStripMenuItem.Header;
         if (UserShellToolStripMenuItem.Header is TextBlock header)
         {

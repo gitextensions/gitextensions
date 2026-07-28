@@ -152,6 +152,9 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
     /// <summary>Gets or sets whether this window dispatches its loaded hotkeys.</summary>
     protected bool HotkeysEnabled { get; set; }
 
+    /// <summary>Gets the currently loaded hotkeys.</summary>
+    protected IReadOnlyList<HotkeyCommand>? Hotkeys => _hotkeys;
+
     /// <summary>Loads the persisted hotkeys for one upstream settings category.</summary>
     protected void LoadHotkeys(string hotkeySettingsName)
     {
