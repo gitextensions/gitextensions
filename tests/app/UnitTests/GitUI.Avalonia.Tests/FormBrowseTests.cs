@@ -423,6 +423,213 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_commands_menu_should_match_the_current_supported_WinForms_inventory()
+    {
+        using FormBrowse form = new();
+
+        string[] actualItems = form.commandsToolStripMenuItem.Items
+            .Select(item => item switch
+            {
+                Separator => "|",
+                MenuItem menuItem => menuItem.Name ?? throw new InvalidOperationException("A Commands menu item has no name."),
+                _ => throw new InvalidOperationException($"Unexpected Commands menu entry: {item?.GetType().Name}"),
+            })
+            .ToArray();
+        actualItems.Should().Equal(
+            "commitToolStripMenuItem",
+            "undoLastCommitToolStripMenuItem",
+            "pullToolStripMenuItem",
+            "pushToolStripMenuItem",
+            "|",
+            "stashToolStripMenuItem",
+            "resetToolStripMenuItem",
+            "|",
+            "branchToolStripMenuItem",
+            "deleteBranchToolStripMenuItem",
+            "checkoutBranchToolStripMenuItem",
+            "mergeBranchToolStripMenuItem",
+            "rebaseToolStripMenuItem",
+            "runMergetoolToolStripMenuItem",
+            "|",
+            "tagToolStripMenuItem",
+            "deleteTagToolStripMenuItem",
+            "|",
+            "cherryPickToolStripMenuItem",
+            "archiveToolStripMenuItem",
+            "toolStripMenuItemReflog",
+            "|",
+            "applyPatchToolStripMenuItem",
+            "patchToolStripMenuItem");
+
+        MenuFlyout pullFlyout = (MenuFlyout)form.toolStripButtonPull.Flyout!;
+        pullFlyout.Items.Should().Contain(form.fetchAllToolStripMenuItem);
+
+        foreach (string unavailableName in new[]
+        {
+            "cleanupToolStripMenuItem",
+            "checkoutToolStripMenuItem",
+            "bisectToolStripMenuItem",
+            "formatPatchToolStripMenuItem",
+        })
+        {
+            form.FindControl<Control>(unavailableName).Should().BeNull(
+                $"{unavailableName} must remain absent until its native dialog exists");
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_commands_menu_should_preserve_translation_identities()
+    {
+        using FormBrowse form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        form.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "undoLastCommitToolStripMenuItem", "Text", "&Undo last commit...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "pushToolStripMenuItem", "Text", "&Push...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "resetToolStripMenuItem", "Text", "&Reset changes...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "runMergetoolToolStripMenuItem", "Text", "&Solve merge conflicts...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "cherryPickToolStripMenuItem", "Text", "Cherr&y pick...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "applyPatchToolStripMenuItem", "Text", "&Apply patch...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "fetchAllToolStripMenuItem", "Text", "Fetch &all");
+    }
+
+    [AvaloniaTest]
+    public async Task FormBrowse_commands_menu_should_route_functional_commands_and_update_selection_state()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(Arg.Any<Type>())
+            .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+        using FormBrowse form = new(commands);
+
+        form.Show();
+        TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+        await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && form.RevisionGrid.SelectedRevision is not null);
+        form.commandsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+
+        new[]
+        {
+            form.commitToolStripMenuItem,
+            form.undoLastCommitToolStripMenuItem,
+            form.pushToolStripMenuItem,
+            form.resetToolStripMenuItem,
+            form.branchToolStripMenuItem,
+            form.deleteBranchToolStripMenuItem,
+            form.checkoutBranchToolStripMenuItem,
+            form.mergeBranchToolStripMenuItem,
+            form.rebaseToolStripMenuItem,
+            form.runMergetoolToolStripMenuItem,
+            form.tagToolStripMenuItem,
+            form.deleteTagToolStripMenuItem,
+            form.cherryPickToolStripMenuItem,
+            form.archiveToolStripMenuItem,
+            form.toolStripMenuItemReflog,
+            form.applyPatchToolStripMenuItem,
+        }.Should().OnlyContain(item => item.IsEnabled);
+
+        form.pushToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.resetToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.runMergetoolToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.cherryPickToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.applyPatchToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartPushDialog(form, pushOnShow: false);
+        commands.Received(1).StartResetChangesDialog(
+            form,
+            Arg.Any<IReadOnlyCollection<GitItemStatus>>(),
+            onlyWorkTree: false);
+        commands.Received(1).StartResolveConflictsDialog(form, offerCommit: true);
+        commands.Received(1).StartCherryPickDialog(
+            form,
+            Arg.Is<IEnumerable<GitRevision>>(revisions => revisions.Single().ObjectId == module.GetCurrentCheckout()));
+        commands.Received(1).StartApplyPatchDialog(form, patchFile: null);
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_commands_menu_should_follow_invalid_and_bare_repository_state()
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(Arg.Any<Type>())
+            .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+
+        using (FormBrowse invalidForm = new(commands))
+        {
+            invalidForm.repositoryToolStripMenuItem.IsVisible.Should().BeFalse();
+            invalidForm.commandsToolStripMenuItem.IsVisible.Should().BeFalse();
+        }
+
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet", "--bare" });
+        using FormBrowse bareForm = new(commands);
+        bareForm.repositoryToolStripMenuItem.IsVisible.Should().BeTrue();
+        bareForm.commandsToolStripMenuItem.IsVisible.Should().BeTrue();
+        bareForm.commandsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+
+        new[]
+        {
+            bareForm.commitToolStripMenuItem,
+            bareForm.undoLastCommitToolStripMenuItem,
+            bareForm.stashToolStripMenuItem,
+            bareForm.resetToolStripMenuItem,
+            bareForm.branchToolStripMenuItem,
+            bareForm.deleteBranchToolStripMenuItem,
+            bareForm.checkoutBranchToolStripMenuItem,
+            bareForm.mergeBranchToolStripMenuItem,
+            bareForm.rebaseToolStripMenuItem,
+            bareForm.runMergetoolToolStripMenuItem,
+            bareForm.cherryPickToolStripMenuItem,
+            bareForm.toolStripMenuItemReflog,
+            bareForm.applyPatchToolStripMenuItem,
+        }.Should().OnlyContain(item => !item.IsEnabled);
+
+        bareForm.pullToolStripMenuItem.IsEnabled.Should().BeTrue();
+        bareForm.pushToolStripMenuItem.IsEnabled.Should().BeTrue();
+        bareForm.patchToolStripMenuItem.IsEnabled.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public async Task FormBrowse_undo_last_commit_should_preserve_changes_in_the_index()
+    {
+        bool originalDontConfirm = AppSettings.DontConfirmUndoLastCommit;
+        FormBrowse? form = null;
+        try
+        {
+            AppSettings.DontConfirmUndoLastCommit = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            ObjectId initialCommit = module.GetCurrentCheckout();
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            await WaitUntilAsync(() => loadingStatus.Text == "2 revisions");
+            bool reloadStarted = false;
+            loadingStatus.PropertyChanged += (_, e) =>
+                reloadStarted |= e.Property == TextBlock.TextProperty && loadingStatus.Text == "Loading…";
+
+            form.undoLastCommitToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            await WaitUntilAsync(() => reloadStarted && loadingStatus.Text == "1 revisions");
+            module.GetCurrentCheckout().Should().Be(initialCommit);
+            module.GitExecutable.GetOutput(new GitArgumentBuilder("diff") { "--cached", "--name-only" })
+                .Should().Contain("tracked.txt");
+        }
+        finally
+        {
+            form?.Close();
+            AppSettings.DontConfirmUndoLastCommit = originalDontConfirm;
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_repository_host_menu_should_preserve_translation_identities()
     {
         using FormBrowse form = new();
