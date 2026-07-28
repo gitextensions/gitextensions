@@ -9,8 +9,6 @@ namespace GitCommandsTests;
 
 public sealed class ExecutableTests
 {
-    private string? _workingDirectory;
-
     [SetUp]
     public void SetUp()
     {
@@ -19,18 +17,12 @@ public sealed class ExecutableTests
     [TearDown]
     public void TearDown()
     {
-        if (_workingDirectory is not null && Directory.Exists(_workingDirectory))
-        {
-            Directory.Delete(_workingDirectory, recursive: true);
-        }
     }
 
     [Test]
     public async Task Process_shall_be_killed_on_cancellation()
     {
         TimeSpan cancelDelay = TimeSpan.FromSeconds(1);
-        _workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.ExecutableTests-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(_workingDirectory);
 
         await TaskScheduler.Default;
 
@@ -38,7 +30,7 @@ public sealed class ExecutableTests
 
         // start a process running for seconds
         (string fileName, string arguments) = GetLongRunningCommand((int)cancelDelay.TotalSeconds + 60);
-        IExecutable executable = new Executable(fileName, _workingDirectory);
+        IExecutable executable = new Executable(fileName);
         IProcess process = executable.Start(arguments, cancellationToken: cts.Token);
         DateTime startedAt = DateTime.Now;
 
@@ -61,8 +53,6 @@ public sealed class ExecutableTests
         }
 
         process.Dispose();
-        Directory.Delete(_workingDirectory);
-        _workingDirectory = null;
 
         TimeSpan durationWaitTimeout = DateTime.Now - startedAt;
         durationWaitTimeout.Should().BeGreaterThan(1.5 * cancelDelay).And.BeLessThan(4 * cancelDelay);
