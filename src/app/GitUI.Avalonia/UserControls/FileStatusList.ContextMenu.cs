@@ -130,6 +130,12 @@ partial class FileStatusList
         bool hasItems = selectedItems.Count > 0;
         bool hasSingleItem = selectedItems.Count == 1;
         bool hasPath = hasItems || SelectedFolder is not null;
+        if (!hasPath && e is System.ComponentModel.CancelEventArgs cancelEventArgs)
+        {
+            cancelEventArgs.Cancel = true;
+            return;
+        }
+
         string? absolutePath = GetSelectedAbsolutePath();
         bool workingFileExists = absolutePath is not null && File.Exists(absolutePath);
 
@@ -168,11 +174,12 @@ partial class FileStatusList
             sepScripts.IsVisible = false;
         }
 
-        _treeContextMenuSeparator.IsVisible = _isFileTreeMode;
-        _collapseAll.IsVisible = _isFileTreeMode;
-        _collapseRootFolders.IsVisible = _isFileTreeMode;
-        _expandAll.IsVisible = _isFileTreeMode;
-        _selectAll.IsVisible = _isFileTreeMode;
+        bool isTree = _isFileTreeMode || _showDiffGroups;
+        _treeContextMenuSeparator.IsVisible = isTree;
+        _collapseAll.IsVisible = isTree;
+        _collapseRootFolders.IsVisible = isTree;
+        _expandAll.IsVisible = isTree;
+        _selectAll.IsVisible = isTree;
     }
 
     private void OpenWorkingDirectoryFile_Click(object? sender, EventArgs e)
@@ -185,6 +192,16 @@ partial class FileStatusList
 
     private void SetTreeExpansion(bool expanded, bool rootOnly)
     {
+        if (_showDiffGroups)
+        {
+            foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>())
+            {
+                SetDiffExpansion(node);
+            }
+
+            return;
+        }
+
         foreach (FileTreeNode node in tvFiles.Items.Cast<FileTreeNode>())
         {
             SetExpansion(node);
@@ -204,6 +221,22 @@ partial class FileStatusList
                 foreach (FileTreeNode child in node.Children)
                 {
                     SetExpansion(child);
+                }
+            }
+        }
+
+        void SetDiffExpansion(DiffTreeNode node)
+        {
+            if (node.Children.Count > 0)
+            {
+                node.IsExpanded = expanded;
+            }
+
+            if (!rootOnly)
+            {
+                foreach (DiffTreeNode child in node.Children)
+                {
+                    SetDiffExpansion(child);
                 }
             }
         }
