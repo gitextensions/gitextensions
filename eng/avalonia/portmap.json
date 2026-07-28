@@ -171,7 +171,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/WorkingDirectoryToolStripSplitButton.cs",
     "status": "functional",
     "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "Same-named native split selector with repository icon/caption, searchable categorised favourites and recent repositories, open/close/configure actions, Ctrl-new-instance behavior, right-click folder picker, configured minimum width, original hotkeys, and original translation keys. Cached branch-name hints and invalid-history cleanup remain with the shared startup/dashboard repository-history service planned for Phase 4.8g."
+    "notes": "Same-named native split selector with repository icon/caption, searchable categorised favourites and recent repositories, open/close/configure actions, Ctrl-new-instance behavior, right-click folder picker, configured minimum width, original hotkeys, and original translation keys. Primary and arrow pointer paths both use the SplitButton's native flyout state, repeated reopening retains a stable search-row host, and right click opens only the folder picker. Cached branch-name hints and invalid-history cleanup remain with the shared startup/dashboard repository-history service planned for Phase 4.8g."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/GitStatusMonitor.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/GitStatusMonitor.cs",
