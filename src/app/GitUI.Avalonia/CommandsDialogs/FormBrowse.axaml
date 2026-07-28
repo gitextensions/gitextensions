@@ -71,28 +71,40 @@
         <MenuItem x:Name="commitToolStripMenuItem" Header="_Commit...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RepoStateClean}" /></MenuItem.Icon>
         </MenuItem>
-        <Separator />
-        <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch...">
-          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
+        <MenuItem x:Name="undoLastCommitToolStripMenuItem" Header="_Undo last commit...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetFileTo}" /></MenuItem.Icon>
         </MenuItem>
+        <MenuItem x:Name="pullToolStripMenuItem" Header="Pull_/Fetch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="pushToolStripMenuItem" Header="_Push...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Push}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="stashToolStripMenuItem" Header="Ma_nage stashes...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="resetToolStripMenuItem" Header="_Reset changes...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
         <MenuItem x:Name="branchToolStripMenuItem" Header="Create _branch...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
         </MenuItem>
         <MenuItem x:Name="deleteBranchToolStripMenuItem" Header="De_lete branch...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchDelete}" /></MenuItem.Icon>
         </MenuItem>
-        <MenuItem x:Name="pullToolStripMenuItem" Header="Pull_/Fetch...">
-          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
+        <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
         </MenuItem>
-        <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all">
-          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PullFetchAll}" /></MenuItem.Icon>
-        </MenuItem>
-        <Separator />
         <MenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge branches...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Merge}" /></MenuItem.Icon>
         </MenuItem>
         <MenuItem x:Name="rebaseToolStripMenuItem" Header="Rebas_e...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="runMergetoolToolStripMenuItem" Header="_Solve merge conflicts...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Unmerged}" /></MenuItem.Icon>
         </MenuItem>
         <Separator />
         <MenuItem x:Name="tagToolStripMenuItem" Header="Create _tag...">
@@ -102,18 +114,19 @@
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
         </MenuItem>
         <Separator />
+        <MenuItem x:Name="cherryPickToolStripMenuItem" Header="Cherr_y pick...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CherryPick}" /></MenuItem.Icon>
+        </MenuItem>
         <MenuItem x:Name="archiveToolStripMenuItem" Header="Archi_ve revision...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ArchiveRevision}" /></MenuItem.Icon>
         </MenuItem>
-        <Separator />
-        <MenuItem x:Name="stashToolStripMenuItem" Header="Ma_nage stashes...">
-          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
-        </MenuItem>
-        <Separator />
         <MenuItem x:Name="toolStripMenuItemReflog" Header="Show reflo_g...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Book}" /></MenuItem.Icon>
         </MenuItem>
         <Separator />
+        <MenuItem x:Name="applyPatchToolStripMenuItem" Header="_Apply patch...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PatchApply}" /></MenuItem.Icon>
+        </MenuItem>
         <MenuItem x:Name="patchToolStripMenuItem" Header="View patc_h file...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PatchView}" /></MenuItem.Icon>
         </MenuItem>
@@ -226,7 +239,9 @@
               <MenuItem x:Name="mergeToolStripMenuItem" Header="Pull - _merge" />
               <MenuItem x:Name="rebaseToolStripMenuItem1" Header="Pull - _rebase" />
               <MenuItem x:Name="fetchToolStripMenuItem" Header="_Fetch" />
-              <MenuItem Tag="fetchAllToolbar" Header="Fetch _all" />
+              <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all">
+                <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.PullFetchAll}" /></MenuItem.Icon>
+              </MenuItem>
               <MenuItem x:Name="fetchPruneAllToolStripMenuItem" Header="F_etch and prune all" />
               <Separator />
               <MenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action">
