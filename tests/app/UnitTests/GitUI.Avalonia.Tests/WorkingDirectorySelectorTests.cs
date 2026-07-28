@@ -1,5 +1,10 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Translations;
@@ -84,6 +89,82 @@ public sealed class WorkingDirectorySelectorTests
             AppSettings.SortTopRepos = originalSortTop;
             AppSettings.SortRecentRepos = originalSortRecent;
             AppSettings.ShorteningRecentRepoPathStrategy = originalShortening;
+        }
+    }
+
+    [AvaloniaTest]
+    public void WorkingDirectoryToolStripSplitButton_primary_and_arrow_clicks_should_open_repository_menu()
+    {
+        WorkingDirectoryToolStripSplitButton selector = new();
+        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        accessor.PrepareDropDown([], []);
+        Window window = new()
+        {
+            Width = 320,
+            Height = 80,
+            Content = selector,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Button[] templateButtons = selector.GetVisualDescendants()
+                .OfType<Button>()
+                .Where(button => button.Name is "PART_PrimaryButton" or "PART_SecondaryButton")
+                .ToArray();
+            Button primaryButton = templateButtons.Single(button => button.Name == "PART_PrimaryButton");
+            Button secondaryButton = templateButtons.Single(button => button.Name == "PART_SecondaryButton");
+
+            Click(window, primaryButton, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            accessor.Menu.IsOpen.Should().BeTrue("the main button mirrors WinForms ButtonClick/ShowDropDown");
+
+            accessor.Menu.Hide();
+            Dispatcher.UIThread.RunJobs();
+            accessor.Menu.IsOpen.Should().BeFalse();
+
+            accessor.PrepareDropDown([], []);
+            Click(window, secondaryButton, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            accessor.Menu.IsOpen.Should().BeTrue("the arrow is the split button's normal flyout trigger");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void WorkingDirectoryToolStripSplitButton_right_click_should_open_repository_picker_only()
+    {
+        WorkingDirectoryToolStripSplitButton selector = new();
+        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        bool openedRepositoryPicker = false;
+        accessor.SetOpenRepositoryAction(() => openedRepositoryPicker = true);
+        accessor.PrepareDropDown([], []);
+        Window window = new()
+        {
+            Width = 320,
+            Height = 80,
+            Content = selector,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Button primaryButton = selector.GetVisualDescendants()
+                .OfType<Button>()
+                .Single(button => button.Name == "PART_PrimaryButton");
+
+            Click(window, primaryButton, MouseButton.Right);
+            Dispatcher.UIThread.RunJobs();
+
+            openedRepositoryPicker.Should().BeTrue();
+            accessor.Menu.IsOpen.Should().BeFalse();
+        }
+        finally
+        {
+            window.Close();
         }
     }
 
@@ -253,5 +334,14 @@ public sealed class WorkingDirectorySelectorTests
                 yield return child;
             }
         }
+    }
+
+    private static void Click(Window window, Control control, MouseButton button)
+    {
+        Point clickPoint = control.TranslatePoint(
+            new Point(control.Bounds.Width / 2, control.Bounds.Height / 2),
+            window) ?? throw new InvalidOperationException("The control position was not available.");
+        window.MouseDown(clickPoint, button, RawInputModifiers.None);
+        window.MouseUp(clickPoint, button, RawInputModifiers.None);
     }
 }
