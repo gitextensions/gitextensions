@@ -157,7 +157,7 @@ public sealed class TerminalLauncherTests
     }
 
     [AvaloniaTest]
-    public void FormBrowse_terminal_menu_should_reuse_the_userShell_translation_key()
+    public void FormBrowse_terminal_menu_and_toolbar_should_preserve_their_original_translation_keys()
     {
         FormBrowse form = new();
         ITranslation translation = Substitute.For<ITranslation>();
@@ -167,14 +167,20 @@ public sealed class TerminalLauncherTests
                 "ToolTipText",
                 Arg.Any<Func<string?>>())
             .Returns("Translated terminal");
+        translation.TranslateItem(
+                nameof(FormBrowse),
+                "gitBashToolStripMenuItem",
+                "Text",
+                Arg.Any<Func<string?>>())
+            .Returns("Translated Git bash menu");
 
         form.AddTranslationItems(translation);
         form.TranslateItems(translation);
 
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "userShell", "ToolTipText", "Git bash");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitBashToolStripMenuItem", "Text", "Git &bash");
         ToolTip.GetTip(form.FindControl<Button>("userShell")!).Should().Be("Translated terminal");
-        MenuItem tools = form.FindControl<MenuItem>("toolsToolStripMenuItem")!;
-        ((TextBlock)tools.Items.OfType<MenuItem>().Single().Header!).Text.Should().Be("Translated terminal");
+        form.FindControl<MenuItem>("gitBashToolStripMenuItem")!.Header.Should().Be("Translated Git bash menu");
     }
 
     private static FormBrowse CreateBrowseForm(ITerminalLauncher launcher)
