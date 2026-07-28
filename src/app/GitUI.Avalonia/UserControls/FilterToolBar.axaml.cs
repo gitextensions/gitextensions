@@ -279,18 +279,7 @@ public sealed partial class FilterToolBar : TranslatedControl
                              (char[]?)null,
                              StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 {
-                    bool wildcardBranchFilter = branch.IndexOfAny(Delimiters.WildcardBranchSearchValues) >= 0;
-                    if (branch.StartsWith("--", StringComparison.Ordinal)
-                        || refs.Any(gitRef => gitRef.LocalName == branch)
-                        || branch.Contains("..", StringComparison.Ordinal)
-                        || wildcardBranchFilter)
-                    {
-                        acceptedFilters.Add(branch);
-                        continue;
-                    }
-
-                    string gitRef = branch.StartsWith('^') ? branch[1..] : branch;
-                    if (!GetModule().RevParse(gitRef).IsZero)
+                    if (IsValidBranchFilter(branch, refs))
                     {
                         acceptedFilters.Add(branch);
                         continue;
@@ -308,6 +297,20 @@ public sealed partial class FilterToolBar : TranslatedControl
         {
             _isApplyingFilter = false;
         }
+    }
+
+    private bool IsValidBranchFilter(string branch, IReadOnlyList<IGitRef> refs)
+    {
+        bool isExpression = branch.StartsWith("--", StringComparison.Ordinal)
+                            || branch.Contains("..", StringComparison.Ordinal)
+                            || branch.IndexOfAny(Delimiters.WildcardBranchSearchValues) >= 0;
+        if (isExpression || refs.Any(gitRef => gitRef.LocalName == branch))
+        {
+            return true;
+        }
+
+        string gitRef = branch.StartsWith('^') ? branch[1..] : branch;
+        return !GetModule().RevParse(gitRef).IsZero;
     }
 
     private void ApplyRevisionFilterIfPopulated()
