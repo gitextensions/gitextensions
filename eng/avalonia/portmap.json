@@ -189,7 +189,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml.cs",
     "status": "functional",
     "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "Same-named searchable recent/favourite repository list over the shared history service, with branch/path hints, invalid-history cleanup, keyboard/double-click opening, category headers, and the original recent-repository settings command. Drag reordering and category-editing context actions remain for the complete Dashboard conformance review."
+    "notes": "Same-named searchable recent/favourite repository list over the shared history service, with branch/path hints, invalid-history cleanup, Enter and original one-click row activation, category headers, and the original recent-repository settings command. Headers, whitespace, and scrollbars cannot activate the current selection. Drag reordering and category-editing context actions remain for the complete Dashboard conformance review."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml",
@@ -1095,7 +1095,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CommonLogic.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves construction of distributed and Git-config setting stores plus editor resolution. Available encodings populate a native Avalonia ComboBox with the original Encoding objects/display names; file pickers remain owned by their consuming pages."
+    "notes": "Preserves construction of distributed and Git-config setting stores, editor resolution, and the Windows registry-read helper consumed by SSH and shell-extension settings. Available encodings populate a native Avalonia ComboBox with the original Encoding objects/display names; file pickers remain owned by their consuming pages."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs",
@@ -1103,17 +1103,35 @@
     "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
     "notes": "Portable Git/editor/install-directory checks and startup auto-repair flow. Git-command solving checks an explicit value, the persisted value, standard Windows installs, then PATH; Linux-tools validation and derivation remain active on Windows and become a deliberate no-op where the separate tools path is inapplicable. The resulting Git/config/distributed settings are saved through the original settings stores."
   },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/ShellExtension/ShellExtensionManager.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/ShellExtension/ShellExtensionManager.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same Windows-only shell-extension file, registry, elevation, registration, and unregistration boundary. Checklist invocation remains operating-system guarded, so the portable assembly never touches the registry or regsvr32 on Linux/macOS."
+  },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "58937dbe78448761e69f47d7170b991c511425ef",
-    "notes": "Same-named startup checklist for Git/recommended version, identity, merge and diff tools, editor, and translation. Repair actions route to the existing native settings pages; checks tolerate unavailable Git/config state while the Git page is being opened and disable startup checking only after all required checks pass. Specialized SSH and Windows integration checks remain for the complete settings conformance review."
+    "notes": "Complete same-named startup checklist for Git supported/recommended version, identity, merge and diff tools, editor, translation, and the original Windows-only install registration, shell extensions, Linux tools, SSH, and obsolete credential-helper checks. Windows-only rows remain absent on Linux/macOS. Status and Repair controls retain their original identities; every repair routes to a real native settings page/service, unavailable Git/config state is tolerated while locating Git, and startup checking disables only after all applicable checks pass."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native scrollable checklist preserves the original status, repair, startup-check, and rescan control identities."
+    "notes": "Native scrollable ten-row checklist preserves the original status, repair, startup-check, and rescan control identities and ordering; the five Windows integration rows are hidden off-Windows."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/SshSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/SshSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Same-named OpenSSH, PuTTY, and custom-client settings boundary with persisted paths, GIT_SSH environment updates, Pageant startup preference, automatic PuTTY discovery, and native executable pickers. PuTTY-only controls remain hidden off-Windows."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/SshSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/SshSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native grouped SSH-client and PuTTY layout preserves all original control and translation identities."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/DistributedSettingsSet.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/DistributedSettingsSet.cs",
@@ -1813,7 +1831,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Reusable list/tree boundary with the original case-insensitive regex filter over current and old names, invalid-input retention/feedback, filtered counts, configurable multi-selection, revision-aware grouping, repository refresh binding, navigation, and WinForms-shaped events. The complete added/removed/modified/renamed/copied/unmerged/range-diff image matrix and asynchronously resolved submodule variants use the shared image cache. File-tree mode builds an ordinal folders-first hierarchy, restores followed selections, and supplies select/expand/collapse actions. The original revision-list SetDiffs, AllItems, and SelectedGitItem surface is available to CommitDiff. FileViewer line/chunk capability is consumed through a callback so unsupported selections remain disabled; custom difftools retain their later owner."
+    "notes": "Reusable list/tree boundary with the original case-insensitive regex filter over current and old names, invalid-input retention/feedback, filtered counts, configurable multi-selection, revision-aware grouping, repository refresh binding, navigation, and WinForms-shaped events. The complete added/removed/modified/renamed/copied/unmerged/range-diff image matrix and asynchronously resolved submodule variants use the shared image cache. File-tree mode builds an ordinal folders-first hierarchy, restores followed selections, and supplies select/expand/collapse actions; both full-tree and grouped-diff trees consume the same compact dotted native-tree template as the left panel. The original revision-list SetDiffs, AllItems, and SelectedGitItem surface is available to CommitDiff. FileViewer line/chunk capability is consumed through a callback so unsupported selections remain disabled; custom difftools retain their later owner."
   },
   "src/app/GitUI/UserControls/FileStatusList.ContextMenu.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.ContextMenu.cs",

@@ -53,6 +53,54 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
+    public void FormSettings_should_register_the_complete_checklist_and_its_ssh_repair_page()
+    {
+        using FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        accessor.InitializePages();
+        ChecklistSettingsPage checklist = accessor.SettingsTreeView.SettingsPages
+            .OfType<ChecklistSettingsPage>()
+            .Single();
+        SshSettingsPage ssh = accessor.SettingsTreeView.SettingsPages
+            .OfType<SshSettingsPage>()
+            .Single();
+
+        checklist.SshSettingsPage.Should().BeSameAs(ssh);
+        string[] originalStatusNames =
+        [
+            "GitFound",
+            "UserNameSet",
+            "MergeTool",
+            "DiffTool",
+            "ShellExtensionsRegistered",
+            "GitBinFound",
+            "GitExtensionsInstall",
+            "SshConfig",
+            "translationConfig",
+            "GcmDetected",
+        ];
+        originalStatusNames.All(name => checklist.FindControl<Button>(name) is not null)
+            .Should().BeTrue();
+        originalStatusNames
+            .Select(name => name == "GcmDetected" ? "GcmDetectedFix" : $"{name}_Fix")
+            .All(name => checklist.FindControl<Button>(name) is not null)
+            .Should().BeTrue();
+
+        ITranslation translation = Substitute.For<ITranslation>();
+        ssh.AddTranslationItems(translation);
+        translation.Received(1).AddTranslationItem(
+            nameof(SshSettingsPage),
+            "label18",
+            "Text",
+            Arg.Is<string>(text => text.StartsWith("OpenSSH is a commandline tool.", StringComparison.Ordinal)));
+        translation.Received(1).AddTranslationItem(
+            nameof(SshSettingsPage),
+            "PlinkBrowse",
+            "Text",
+            "Browse");
+    }
+
+    [AvaloniaTest]
     public void FormSettings_should_host_the_placeholder_and_preserve_dialog_chrome()
     {
         FormSettings form = new();
