@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -1262,6 +1262,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormResetCurrentBranch))
         {
             return (479, 469);
+        }
+
+        if (viewType == typeof(FormRevisionFilter))
+        {
+            return (430, 580);
         }
 
         if (viewType == typeof(FormEdit))
