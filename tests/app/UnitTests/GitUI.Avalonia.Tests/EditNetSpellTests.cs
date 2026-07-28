@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
@@ -45,7 +45,7 @@ public sealed class EditNetSpellTests
 
         control.CheckSpelling();
 
-        File.Exists(Path.Combine(accessor.DictionaryDirectory, "en-US.dic")).Should().BeTrue();
+        File.Exists(Path.Combine(accessor.DictionaryPath, "en-US.dic")).Should().BeTrue();
         accessor.MisspelledWords.Select(range => control.Text[range.Start..range.End])
             .Should().Contain(["sentnce", "misspeling"]);
 

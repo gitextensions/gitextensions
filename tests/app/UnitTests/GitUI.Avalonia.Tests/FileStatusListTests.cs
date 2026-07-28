@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
@@ -223,19 +223,19 @@ public sealed class FileStatusListTests
     [AvaloniaTest]
     public void FileStatusList_should_use_the_complete_primary_status_icon_matrix()
     {
-        FileStatusList.TestAccessor.GetItemImage(new GitItemStatus("added") { IsNew = true })
+        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("added") { IsNew = true })
             .Should().BeSameAs(Images.FileStatusAdded);
-        FileStatusList.TestAccessor.GetItemImage(new GitItemStatus("removed") { IsDeleted = true })
+        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("removed") { IsDeleted = true })
             .Should().BeSameAs(Images.FileStatusRemoved);
-        FileStatusList.TestAccessor.GetItemImage(new GitItemStatus("modified") { IsChanged = true, IsTracked = true })
+        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("modified") { IsChanged = true, IsTracked = true })
             .Should().BeSameAs(Images.FileStatusModified);
-        FileStatusList.TestAccessor.GetItemImage(new GitItemStatus("renamed") { IsRenamed = true, IsTracked = true, RenameCopyPercentage = "100" })
+        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("renamed") { IsRenamed = true, IsTracked = true, RenameCopyPercentage = "100" })
             .Should().BeSameAs(Images.FileStatusRenamed);
-        FileStatusList.TestAccessor.GetItemImage(new GitItemStatus("copied") { IsCopied = true, IsTracked = true })
+        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("copied") { IsCopied = true, IsTracked = true })
             .Should().BeSameAs(Images.FileStatusCopied);
-        FileStatusList.TestAccessor.GetItemImage(new GitItemStatus("unmerged") { IsUnmerged = true, IsTracked = true })
+        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("unmerged") { IsUnmerged = true, IsTracked = true })
             .Should().BeSameAs(Images.Unmerged);
-        FileStatusList.TestAccessor.GetItemImage(new GitItemStatus("range") { IsRangeDiff = true })
+        FileStatusList.TestAccessor.GetItemImageForTesting(new GitItemStatus("range") { IsRangeDiff = true })
             .Should().BeSameAs(Images.DiffR);
 
         GitItemStatus branchDiff = new("branch-diff")
@@ -244,7 +244,7 @@ public sealed class FileStatusListTests
             IsTracked = true,
             DiffStatus = DiffBranchStatus.UnequalChange,
         };
-        FileStatusList.TestAccessor.GetItemImage(branchDiff).Should().BeSameAs(Images.FileStatusModifiedUnequal);
+        FileStatusList.TestAccessor.GetItemImageForTesting(branchDiff).Should().BeSameAs(Images.FileStatusModifiedUnequal);
     }
 
     [AvaloniaTest]
@@ -277,7 +277,7 @@ public sealed class FileStatusListTests
                 removedCommits: null,
                 getCommitData: null,
                 _ => status);
-            FileStatusList.TestAccessor.GetSubmoduleImage(item, resolved).Should().BeSameAs(expected);
+            FileStatusList.TestAccessor.GetSubmoduleImageForTesting(item, resolved).Should().BeSameAs(expected);
         }
     }
 

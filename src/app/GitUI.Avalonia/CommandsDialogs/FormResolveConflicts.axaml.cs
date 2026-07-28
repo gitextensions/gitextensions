@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -1617,18 +1617,18 @@ public partial class FormResolveConflicts : GitModuleForm
         ChooseBase = 4
     }
 
-    protected override bool ExecuteCommand(int cmd)
+    protected override bool ExecuteCommand(int command)
     {
-        Commands command = (Commands)cmd;
+        Commands selectedCommand = (Commands)command;
 
-        switch (command)
+        switch (selectedCommand)
         {
             case Commands.Merge: OpenMergetool_Click(this, EventArgs.Empty); break;
             case Commands.Rescan: Rescan_Click(this, EventArgs.Empty); break;
             case Commands.ChooseBase: ContextChooseBase_Click(this, EventArgs.Empty); break;
             case Commands.ChooseLocal: ContextChooseLocal_Click(this, EventArgs.Empty); break;
             case Commands.ChooseRemote: ContextChooseRemote_Click(this, EventArgs.Empty); break;
-            default: return base.ExecuteCommand(cmd);
+            default: return base.ExecuteCommand(command);
         }
 
         return true;

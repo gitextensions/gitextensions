@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -2093,7 +2093,7 @@ public sealed partial class FormBrowse : GitModuleForm
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripFileExplorer), "ToolTipText", "File Explorer");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(userShell), "ToolTipText", "Git bash");
         _formBrowseMenus?.AddTranslationItems(translation);
-        ((ITranslate)_NO_TRANSLATE_WorkingDir).AddTranslationItems(translation);
+        _NO_TRANSLATE_WorkingDir.AddControlTranslationItems(translation);
     }
 
     public override void TranslateItems(ITranslation translation)
@@ -2109,7 +2109,7 @@ public sealed partial class FormBrowse : GitModuleForm
         SetTranslatedToolTip(toolStripFileExplorer, nameof(toolStripFileExplorer), "File Explorer");
         SetTranslatedToolTip(userShell, nameof(userShell), "Git bash");
         _formBrowseMenus?.TranslateItems(translation);
-        ((ITranslate)_NO_TRANSLATE_WorkingDir).TranslateItems(translation);
+        _NO_TRANSLATE_WorkingDir.TranslateControlItems(translation);
 
         RefreshCommitInfoPositionToolTip();
 

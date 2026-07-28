@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -490,7 +490,8 @@ Diff selection:
 
     internal readonly struct TestAccessor(ScriptsSettingsPage page)
     {
-        public IReadOnlyList<ScriptInfo> Scripts => page._scripts.Select(script => (ScriptInfo)script).ToArray();
+        public IReadOnlyList<ScriptInfo> GetScripts()
+            => page._scripts.Select(script => (ScriptInfo)script).ToArray();
 
         public ListBox List => page.lvScripts;
 

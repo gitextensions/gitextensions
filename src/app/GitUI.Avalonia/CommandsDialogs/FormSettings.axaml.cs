@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using GitCommands;
 using GitCommands.Settings;
@@ -265,7 +265,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
     {
         ISettingsPage settingsPage = e.SettingsPage;
         panelCurrentSettingsPage.Content = settingsPage.GuiControl;
-        _lastSelectedSettingsPageType = settingsPage.GetType();
+        RememberSelectedSettingsPage(settingsPage);
 
         if (settingsPage.GuiControl is not Control control)
         {
@@ -283,6 +283,9 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             control.Focus();
         }
     }
+
+    private static void RememberSelectedSettingsPage(ISettingsPage settingsPage)
+        => _lastSelectedSettingsPageType = settingsPage.GetType();
 
     private bool Save()
     {

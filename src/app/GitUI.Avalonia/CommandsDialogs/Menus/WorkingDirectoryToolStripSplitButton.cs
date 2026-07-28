@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -542,14 +542,14 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                 Source = image,
             };
 
-    void ITranslate.AddTranslationItems(ITranslation translation)
+    internal void AddControlTranslationItems(ITranslation translation)
     {
         TranslationUtils.AddTranslationItemsFromFields(TranslationCategory, this, translation);
         translation.AddTranslationItem(TranslationCategory, "tsmiFavouriteRepositories", "Text", "&Favorite repositories");
         translation.AddTranslationItem(TranslationCategory, "closeToolStripMenuItem", "Text", "&Close repository");
     }
 
-    void ITranslate.TranslateItems(ITranslation translation)
+    internal void TranslateControlItems(ITranslation translation)
     {
         TranslationUtils.TranslateItemsFromFields(TranslationCategory, this, translation);
         _favouriteRepositoriesText = translation.TranslateItem(
@@ -572,6 +572,12 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         ToolTip.SetTip(this, _toolTip.Text);
     }
 
+    void ITranslate.AddTranslationItems(ITranslation translation)
+        => AddControlTranslationItems(translation);
+
+    void ITranslate.TranslateItems(ITranslation translation)
+        => TranslateControlItems(translation);
+
     void IDisposable.Dispose()
     {
     }
@@ -593,7 +599,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         public void FillDropDown(RepositoryHistorySnapshot snapshot)
             => control.FillDropDown(snapshot);
 
-        public void ApplyFilter() => control.ApplyFilter();
+        public void ApplyFilterForTesting() => control.ApplyFilter();
 
         public void ShowDropDown(IList<Repository> favourites, IList<Repository> recent)
         {

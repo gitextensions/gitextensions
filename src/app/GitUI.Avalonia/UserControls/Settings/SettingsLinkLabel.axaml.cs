@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using ResourceManager;
@@ -67,10 +67,12 @@ public sealed partial class SettingsLinkLabel : TranslatedControl
     // and translates Text/ToolTipText in that parent's category.
     public override void AddTranslationItems(ITranslation translation)
     {
+        // The owning settings page supplies this control's translated text and tooltip.
     }
 
     public override void TranslateItems(ITranslation translation)
     {
+        // The owning settings page applies this control's translated text and tooltip.
     }
 
     private void pictureBox_Click(object? sender, EventArgs e)

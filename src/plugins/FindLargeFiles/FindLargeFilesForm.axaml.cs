@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -472,10 +472,10 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
         public Task<IReadOnlyList<GitObject>> FindLargeFilesAsync(CancellationToken cancellationToken = default)
             => form.FindLargeFilesAsync(cancellationToken);
 
-        public string GenerateCommand(IEnumerable<GitObject> gitObjects, bool useWindowsBatch)
+        public string GenerateCommandForTesting(IEnumerable<GitObject> gitObjects, bool useWindowsBatch)
             => FindLargeFilesForm.GenerateCommand(gitObjects, useWindowsBatch);
 
-        public string QuoteForPosixShell(string value)
+        public string QuoteForPosixShellForTesting(string value)
             => FindLargeFilesForm.QuoteForPosixShell(value);
 
         public void SortByPath() => form.SortBy(nameof(GitObject.Path));

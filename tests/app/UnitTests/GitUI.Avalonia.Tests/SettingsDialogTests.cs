@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -445,7 +445,7 @@ public sealed class SettingsDialogTests
             AppSettings.CustomHomeDir.Should().Be(temporaryDirectory);
             AppSettings.UserProfileHomeDir.Should().BeFalse();
             EnvironmentConfiguration.GetHomeDir().Should().Be(temporaryDirectory);
-            FormFixHome.TestAccessor.HasGlobalGitConfig(temporaryDirectory).Should().BeTrue();
+            FormFixHome.TestAccessor.HasGlobalGitConfigForTesting(temporaryDirectory).Should().BeTrue();
         }
         finally
         {
@@ -1457,8 +1457,9 @@ public sealed class SettingsDialogTests
             accessor.MoveDown.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             accessor.Add.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
-            accessor.Scripts.Select(script => script.Name).Should().Equal("Second", "First", "<New Script>");
-            accessor.Scripts[^1].HotkeyCommandIdentifier.Should().Be(9011);
+            IReadOnlyList<ScriptInfo> scriptSnapshot = accessor.GetScripts();
+            scriptSnapshot.Select(script => script.Name).Should().Equal("Second", "First", "<New Script>");
+            scriptSnapshot[^1].HotkeyCommandIdentifier.Should().Be(9011);
             accessor.Delete.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             page.SaveSettings();
 
