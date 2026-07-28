@@ -23,7 +23,7 @@
       </Grid>
 
       <Grid x:Name="panel1" Grid.Row="1">
-        <local:FileStatusList x:Name="Stashed" />
+        <local:FileStatusList x:Name="Stashed" GroupByRevision="True" />
         <Border Background="{DynamicResource ThemeBackgroundBrush}"
                 Opacity="0.9"
                 IsVisible="{Binding IsVisible, ElementName=Loading}">
