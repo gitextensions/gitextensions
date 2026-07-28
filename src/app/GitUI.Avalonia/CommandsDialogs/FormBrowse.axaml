@@ -3,6 +3,7 @@
         xmlns:gitui="clr-namespace:GitUI"
         xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
         xmlns:commandsDialogs="using:GitUI.CommandsDialogs"
+        xmlns:menus="using:GitUI.CommandsDialogs.Menus"
         xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
         xmlns:controls="clr-namespace:GitUI.UserControls"
         xmlns:compat="using:GitUI.Compat"
@@ -170,10 +171,9 @@
             <MenuFlyout />
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
-        <compat:ToolbarComboBox x:Name="_NO_TRANSLATE_WorkingDir"
-                                Width="180"
-                                Height="23"
-                                IsEditable="True" />
+        <menus:WorkingDirectoryToolStripSplitButton x:Name="_NO_TRANSLATE_WorkingDir"
+                                                    Classes="gitextensions-toolbar-button"
+                                                    Height="23" />
         <compat:IconSplitButton x:Name="branchSelect"
                                 Classes="gitextensions-toolbar-button"
                                 Content="Branch"

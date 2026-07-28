@@ -29,6 +29,7 @@ using GitUI.Avatars;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.CommandsDialogs.Menus;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SubmodulesDialog;
@@ -63,6 +64,7 @@ public sealed partial class ParityScreenshotTests
     private const string CaptureEnvironmentVariable = "GITEXT_CAPTURE_PARITY_SHOTS";
     private const string CaptureViewEnvironmentVariable = "GITEXT_CAPTURE_PARITY_VIEW";
     private const string CaptureRepoTreeContextEnvironmentVariable = "GITEXT_CAPTURE_REPO_TREE_CONTEXT";
+    private const string CaptureWorkingDirectoryMenuEnvironmentVariable = "GITEXT_CAPTURE_WORKING_DIRECTORY_MENU";
     private const string AxamlExtension = ".axaml";
     private const string AppSourcePath = "src/App.cs";
     private const string FeatureBranchName = "feature/visual-parity";
@@ -248,7 +250,31 @@ public sealed partial class ParityScreenshotTests
             Dispatcher.UIThread.RunJobs();
             if (view is FormBrowse formBrowse)
             {
-                formBrowse.commandsToolStripMenuItem.IsSubMenuOpen = true;
+                if (Environment.GetEnvironmentVariable(CaptureWorkingDirectoryMenuEnvironmentVariable) == "1")
+                {
+                    WorkingDirectoryToolStripSplitButton selector =
+                        formBrowse.FindControl<WorkingDirectoryToolStripSplitButton>("_NO_TRANSLATE_WorkingDir")!;
+                    selector.GetTestAccessor().ShowDropDown(
+                        [
+                            new Repository(context.WorkingDirectory)
+                            {
+                                Anchor = Repository.RepositoryAnchor.AnchoredInTop,
+                                Category = "Development",
+                            },
+                        ],
+                        [
+                            new Repository(context.WorkingDirectory)
+                            {
+                                Anchor = Repository.RepositoryAnchor.AnchoredInTop,
+                            },
+                            new Repository(Path.GetDirectoryName(context.WorkingDirectory)!),
+                        ]);
+                }
+                else
+                {
+                    formBrowse.commandsToolStripMenuItem.IsSubMenuOpen = true;
+                }
+
                 Dispatcher.UIThread.RunJobs();
             }
             else if (view is FileStatusList fileStatusList)
@@ -376,6 +402,18 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormBrowse))
         {
             return new FormBrowse(context.Commands);
+        }
+
+        if (viewType == typeof(FormRecentReposSettings))
+        {
+            return new FormRecentReposSettings(
+            [
+                new Repository(context.WorkingDirectory)
+                {
+                    Anchor = Repository.RepositoryAnchor.AnchoredInTop,
+                },
+                new Repository(Path.GetDirectoryName(context.WorkingDirectory)!),
+            ]);
         }
 
         if (viewType == typeof(FormUpdates))
@@ -1124,6 +1162,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormBrowse))
         {
             return (1400, 850);
+        }
+
+        if (viewType == typeof(FormRecentReposSettings))
+        {
+            return (700, 430);
         }
 
         if (viewType == typeof(RepoObjectsTree))
