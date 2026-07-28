@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
 using GitCommands;
@@ -197,14 +197,14 @@ public sealed partial class FormStash : GitModuleForm
         return true;
     }
 
-    protected override bool ExecuteCommand(int cmd)
+    protected override bool ExecuteCommand(int command)
     {
-        switch ((Command)cmd)
+        switch ((Command)command)
         {
             case Command.NextStash: return ChangeSelectedStash(next: true);
             case Command.PreviousStash: return ChangeSelectedStash(next: false);
             case Command.Refresh: RefreshAll(); return true;
-            default: return base.ExecuteCommand(cmd);
+            default: return base.ExecuteCommand(command);
         }
     }
 

@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -73,7 +73,7 @@ public sealed class WorkingDirectorySelectorTests
                 .Should().Contain(item => item.Header as string == "_Favorite repositories");
 
             accessor.Filter.Text = "beta";
-            accessor.ApplyFilter();
+            accessor.ApplyFilterForTesting();
 
             repositoryItems.Single(item => ((RecentRepoInfo)item.Tag!).Repo.Path == beta.Path)
                 .IsVisible.Should().BeTrue();
@@ -117,7 +117,7 @@ public sealed class WorkingDirectorySelectorTests
             .Should().Contain(text => text.Text == "feature");
 
         accessor.Filter.Text = "feature";
-        accessor.ApplyFilter();
+        accessor.ApplyFilterForTesting();
 
         repositoryItems.Single(item => ((RepositoryHistoryEntry)item.Tag!).Repository.Path == alpha.Path)
             .IsVisible.Should().BeFalse();
@@ -391,7 +391,7 @@ public sealed class WorkingDirectorySelectorTests
     [Test]
     public void HotkeySettingsManager_should_restore_open_and_close_repository_defaults()
     {
-        HotkeySettings browse = HotkeySettingsManager.CreateDefaultSettings()
+        HotkeySettings browse = HotkeySettingsManager.CreateDefaultSettingsCore(scriptsManager: null)
             .Single(settings => settings.Name == FormBrowse.HotkeySettingsName);
 
         browse.Commands.Should().Contain(command =>
