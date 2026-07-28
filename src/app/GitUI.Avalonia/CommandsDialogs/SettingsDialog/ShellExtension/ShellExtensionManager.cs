@@ -73,7 +73,9 @@ public static class ShellExtensionManager
                 string arguments = string.Format(argumentsPattern, path.Quote());
                 ProcessStartInfo processStartInfo = new()
                 {
-                    FileName = "regsvr32",
+                    FileName = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.System),
+                        "regsvr32.exe"),
                     Arguments = arguments,
                     Verb = "RunAs",
                     UseShellExecute = true,
