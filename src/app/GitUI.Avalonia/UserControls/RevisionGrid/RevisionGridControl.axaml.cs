@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -194,9 +194,6 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
     /// <inheritdoc />
     public event EventHandler<FilterChangedEventArgs>? FilterChanged;
 
-    /// <summary>Occurs when the advanced-filter command should focus the available filter UI.</summary>
-    public event EventHandler? RevisionFilterRequested;
-
     /// <summary>Occurs when the selected revision is double-clicked.</summary>
     public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
 
@@ -337,7 +334,18 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
 
     /// <inheritdoc />
     public void ShowRevisionFilterDialog()
-        => RevisionFilterRequested?.Invoke(this, EventArgs.Empty);
+    {
+        if (!TryGetUICommandsDirect(out IGitUICommands? commands))
+        {
+            return;
+        }
+
+        using FormRevisionFilter form = new(commands, _filterInfo);
+        if (form.ShowDialog(GetOwner()) == WinFormsShims.DialogResult.OK)
+        {
+            RefreshFilteredRevisions();
+        }
+    }
 
     /// <inheritdoc />
     public void ToggleShowOnlyFirstParent()
