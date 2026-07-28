@@ -47,21 +47,42 @@ public partial class App : Application
             string[] args = Environment.GetCommandLineArgs();
             GitModule module = new(Program.ServiceContainer.GetRequiredService<IGitExecutorProvider>(), GetWorkingDir(args));
             GitUICommands commands = new(Program.ServiceContainer, module);
+            desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            desktop.Exit += (_, _) => AppSettings.SaveSettings();
+            Dispatcher.UIThread.Post(() => RunStartup(desktop, commands, args));
+        }
+
+        base.OnFrameworkInitializationCompleted();
+    }
+
+    private static void RunStartup(
+        IClassicDesktopStyleApplicationLifetime desktop,
+        GitUICommands commands,
+        string[] args)
+    {
+        try
+        {
+            StartupCoordinator coordinator = new();
+            if (!coordinator.EnsurePrerequisites(commands, args))
+            {
+                desktop.Shutdown(-1);
+                return;
+            }
+
             if (args.Length <= 1)
             {
                 commands.StartBrowseDialog(owner: null);
             }
             else
             {
-                // A command dialog must be allowed to become visible before the desktop
-                // lifetime decides that there are no windows left. Modal commands shut the
-                // process down explicitly; Browse changes the mode when it becomes MainWindow.
-                desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-                Dispatcher.UIThread.Post(() => RunCommand(desktop, commands, args));
+                RunCommand(desktop, commands, args);
             }
         }
-
-        base.OnFrameworkInitializationCompleted();
+        catch (Exception exception)
+        {
+            ReportUnhandledException(exception);
+            desktop.Shutdown(-1);
+        }
     }
 
     private static void RunCommand(IClassicDesktopStyleApplicationLifetime desktop, GitUICommands commands, string[] args)
@@ -96,7 +117,7 @@ public partial class App : Application
     }
 
     // Twin of GitExtensions/Program.cs GetWorkingDir (keep in sync on upstream drift).
-    private static string? GetWorkingDir(string[] args)
+    internal static string? GetWorkingDir(string[] args)
     {
         string? workingDir = null;
 

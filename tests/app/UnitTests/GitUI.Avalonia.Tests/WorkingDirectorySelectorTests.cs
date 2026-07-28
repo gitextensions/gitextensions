@@ -8,6 +8,7 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Translations;
+using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.Menus;
@@ -90,6 +91,38 @@ public sealed class WorkingDirectorySelectorTests
             AppSettings.SortRecentRepos = originalSortRecent;
             AppSettings.ShorteningRecentRepoPathStrategy = originalShortening;
         }
+    }
+
+    [AvaloniaTest]
+    public void Working_directory_selector_should_show_and_search_shared_branch_hints()
+    {
+        Repository alpha = new(@"C:\repos\alpha");
+        Repository beta = new(@"C:\repos\beta");
+        WorkingDirectoryToolStripSplitButton selector = new();
+        WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
+        accessor.FillDropDown(new RepositoryHistorySnapshot(
+            [
+                new RepositoryHistoryEntry(alpha, "alpha", "main", IsFavourite: false, IsAnchored: false),
+                new RepositoryHistoryEntry(beta, "beta", "feature", IsFavourite: false, IsAnchored: false),
+            ],
+            []));
+
+        MenuItem[] repositoryItems = Flatten(accessor.Menu.Items)
+            .Where(item => item.Tag is RepositoryHistoryEntry)
+            .ToArray();
+        repositoryItems.Should().HaveCount(2);
+        repositoryItems.Single(item => ((RepositoryHistoryEntry)item.Tag!).Repository.Path == beta.Path)
+            .Header.Should().BeOfType<Grid>()
+            .Which.Children.OfType<TextBlock>()
+            .Should().Contain(text => text.Text == "feature");
+
+        accessor.Filter.Text = "feature";
+        accessor.ApplyFilter();
+
+        repositoryItems.Single(item => ((RepositoryHistoryEntry)item.Tag!).Repository.Path == alpha.Path)
+            .IsVisible.Should().BeFalse();
+        repositoryItems.Single(item => ((RepositoryHistoryEntry)item.Tag!).Repository.Path == beta.Path)
+            .IsVisible.Should().BeTrue();
     }
 
     [AvaloniaTest]

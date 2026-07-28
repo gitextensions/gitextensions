@@ -42,6 +42,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private Action? _closeRepository;
     private Action? _configure;
     private Func<IGitUICommands>? _getUICommands;
+    private IRepositoryHistoryUIService? _repositoryHistoryUIService;
     private Action<string>? _launchRepository;
     private Action? _openRepository;
     private Action<string>? _setWorkingDirectory;
@@ -86,6 +87,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     /// <param name="configure">Opens the recent-repository settings dialog.</param>
     public void Initialize(
         Func<IGitUICommands> getUICommands,
+        IRepositoryHistoryUIService repositoryHistoryUIService,
         Action<string> setWorkingDirectory,
         Action<string> launchRepository,
         Action openRepository,
@@ -93,6 +95,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         Action configure)
     {
         ArgumentNullException.ThrowIfNull(getUICommands);
+        ArgumentNullException.ThrowIfNull(repositoryHistoryUIService);
         ArgumentNullException.ThrowIfNull(setWorkingDirectory);
         ArgumentNullException.ThrowIfNull(launchRepository);
         ArgumentNullException.ThrowIfNull(openRepository);
@@ -100,6 +103,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         ArgumentNullException.ThrowIfNull(configure);
 
         _getUICommands = getUICommands;
+        _repositoryHistoryUIService = repositoryHistoryUIService;
         _setWorkingDirectory = setWorkingDirectory;
         _launchRepository = launchRepository;
         _openRepository = openRepository;
@@ -125,8 +129,8 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             return;
         }
 
-        IList<Repository> recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
-            () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
+        IList<Repository> recentRepositoryHistory = _repositoryHistoryUIService?.AddAsMostRecent(path)
+            ?? ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
         RefreshContent(path, recentRepositoryHistory);
     }
 
@@ -155,11 +159,26 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     private void FillDropDown()
     {
+        if (_repositoryHistoryUIService is not null)
+        {
+            RepositoryHistorySnapshot snapshot = _repositoryHistoryUIService.LoadSnapshot();
+            FillDropDown(snapshot);
+            return;
+        }
+
         IList<Repository> favourites = ThreadHelper.JoinableTaskFactory.Run(
             RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
         IList<Repository> recent = ThreadHelper.JoinableTaskFactory.Run(
             RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
         FillDropDown(favourites, recent);
+    }
+
+    private void FillDropDown(RepositoryHistorySnapshot snapshot)
+    {
+        ResetDropDown();
+        AddFavouriteRepositories(snapshot.Favourites);
+        AddRecentRepositories(snapshot.Recent);
+        AddFixedItems();
     }
 
     private void Menu_Opening(object? sender, EventArgs e)
@@ -175,6 +194,15 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     private void FillDropDown(IList<Repository> favourites, IList<Repository> recent)
     {
+        ResetDropDown();
+
+        AddFavouriteRepositories(favourites);
+        AddRecentRepositories(recent);
+        AddFixedItems();
+    }
+
+    private void ResetDropDown()
+    {
         while (_menu.Items.Count > 1)
         {
             _menu.Items.RemoveAt(1);
@@ -183,12 +211,11 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         _fixedItems.Clear();
         _txtFilter.Text = string.Empty;
         _txtFilter.PlaceholderText = _repositorySearchPlaceholder.Text;
-
         _menu.Items.Add(new Separator());
+    }
 
-        AddFavouriteRepositories(favourites);
-        AddRecentRepositories(recent);
-
+    private void AddFixedItems()
+    {
         _menu.Items.Add(new Separator());
         AddFixedItem(_openRepositoryText, Images.RepoOpen, _openRepositoryGesture, _openRepository);
         AddFixedItem(_closeRepositoryText, icon: null, _closeRepositoryGesture, _closeRepository);
@@ -198,6 +225,44 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             Images.RecentRepositories,
             gesture: null,
             _configure);
+    }
+
+    private void AddFavouriteRepositories(IReadOnlyList<RepositoryHistoryEntry> repositories)
+    {
+        if (repositories.Count == 0)
+        {
+            return;
+        }
+
+        MenuItem favourites = new()
+        {
+            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_favouriteRepositoriesText),
+            Icon = CreateIcon(Images.Pin),
+        };
+        foreach (IGrouping<string?, RepositoryHistoryEntry> category in repositories
+                     .GroupBy(item => item.Repository.Category)
+                     .OrderBy(item => item.Key))
+        {
+            MenuItem categoryItem = new() { Header = category.Key ?? string.Empty };
+            int number = 0;
+            foreach (RepositoryHistoryEntry repository in category)
+            {
+                categoryItem.Items.Add(CreateRepositoryItem(repository, ++number));
+            }
+
+            favourites.Items.Add(categoryItem);
+        }
+
+        _menu.Items.Add(favourites);
+    }
+
+    private void AddRecentRepositories(IReadOnlyList<RepositoryHistoryEntry> repositories)
+    {
+        int number = 0;
+        foreach (RepositoryHistoryEntry repository in repositories)
+        {
+            _menu.Items.Add(CreateRepositoryItem(repository, ++number));
+        }
     }
 
     private void AddFavouriteRepositories(IList<Repository> repositories)
@@ -289,6 +354,60 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         return item;
     }
 
+    private MenuItem CreateRepositoryItem(RepositoryHistoryEntry repository, int number)
+    {
+        string numberString = number switch
+        {
+            < 10 => $"_{number}",
+            10 => "1_0",
+            _ => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
+        };
+        MenuItem item = new()
+        {
+            Header = CreateRepositoryHeader(
+                $"{numberString}: {repository.Caption}",
+                repository.BranchName),
+            Tag = repository,
+            Icon = repository.IsAnchored ? CreateIcon(Images.Pin) : null,
+        };
+        ToolTip.SetTip(
+            item,
+            string.IsNullOrWhiteSpace(repository.BranchName)
+                ? repository.Repository.Path
+                : $"{repository.Repository.Path}{Environment.NewLine}{repository.BranchName}");
+        item.PointerPressed += RepositoryItem_PointerPressed;
+        item.KeyDown += RepositoryItem_KeyDown;
+        item.Click += RepositoryItem_Click;
+        return item;
+    }
+
+    private static Control CreateRepositoryHeader(string caption, string? branchName)
+    {
+        Grid header = new()
+        {
+            ColumnDefinitions = new ColumnDefinitions("Auto,18,Auto"),
+            MinWidth = 260,
+        };
+        header.Children.Add(new TextBlock
+        {
+            Text = caption,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+        });
+        if (!string.IsNullOrWhiteSpace(branchName))
+        {
+            TextBlock branch = new()
+            {
+                Text = branchName,
+                Opacity = 0.7,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            };
+            Grid.SetColumn(branch, 2);
+            header.Children.Add(branch);
+        }
+
+        return header;
+    }
+
     private void RepositoryItem_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (sender is MenuItem item)
@@ -307,18 +426,33 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     private void RepositoryItem_Click(object? sender, RoutedEventArgs e)
     {
-        if (sender is not MenuItem { Tag: RecentRepoInfo repository } item)
+        if (sender is not MenuItem item)
         {
             return;
         }
 
         bool openInNewInstance = item.GetValue(OpenInNewInstanceProperty);
         item.ClearValue(OpenInNewInstanceProperty);
-        OpenRepository(repository.Repo.Path, openInNewInstance);
+        string? path = item.Tag switch
+        {
+            RecentRepoInfo repository => repository.Repo.Path,
+            RepositoryHistoryEntry repository => repository.Repository.Path,
+            _ => null,
+        };
+        if (path is not null)
+        {
+            OpenRepository(path, openInNewInstance);
+        }
     }
 
     private void OpenRepository(string path, bool openInNewInstance)
     {
+        if (_repositoryHistoryUIService is not null
+            && !_repositoryHistoryUIService.CanOpenRepository(path))
+        {
+            return;
+        }
+
         if (openInNewInstance)
         {
             _launchRepository?.Invoke(path);
@@ -365,7 +499,14 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             }
         }
 
-        string text = item.Header as string ?? string.Empty;
+        string text = item.Tag switch
+        {
+            RepositoryHistoryEntry repository
+                => $"{repository.Caption} {repository.Repository.Path} {repository.BranchName}",
+            RecentRepoInfo repository
+                => $"{repository.Caption} {repository.Repo.Path}",
+            _ => item.Header as string ?? string.Empty,
+        };
         bool match = string.IsNullOrWhiteSpace(filter)
             || text.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
             || childMatch;
@@ -448,6 +589,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
         public void FillDropDown(IList<Repository> favourites, IList<Repository> recent)
             => control.FillDropDown(favourites, recent);
+
+        public void FillDropDown(RepositoryHistorySnapshot snapshot)
+            => control.FillDropDown(snapshot);
 
         public void ApplyFilter() => control.ApplyFilter();
 
