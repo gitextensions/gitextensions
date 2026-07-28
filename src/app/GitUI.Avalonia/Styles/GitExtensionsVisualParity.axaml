@@ -492,6 +492,10 @@
   <Style Selector="MenuItem">
     <Setter Property="MinHeight" Value="22" />
   </Style>
+  <Style Selector="MenuItem.gitextensions-menu-caption">
+    <Setter Property="FontStyle" Value="Italic" />
+    <Setter Property="Opacity" Value="0.7" />
+  </Style>
   <Style Selector="ContextMenu">
     <!-- ContextMenu owns a private 4px scroller inset in Fluent; setting only the shared
          resource does not affect this presenter variant. -->
