@@ -23,6 +23,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.Compat;
 using GitUI.LeftPanel;
 using GitUI.Properties;
@@ -77,6 +78,32 @@ public sealed class FormBrowseTests
         AppSettings.RevisionGraphShowArtificialCommits = _revisionGraphShowArtificialCommits;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_should_show_dashboard_only_when_the_repository_is_invalid()
+    {
+        GitModule invalidModule = new(
+            _serviceContainer.GetRequiredService<IGitExecutorProvider>(),
+            _workingDirectory);
+        using (FormBrowse dashboardForm = new(new GitUICommands(_serviceContainer, invalidModule)))
+        {
+            dashboardForm.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            dashboardForm.FindControl<Dashboard>("dashboard")!.IsVisible.Should().BeTrue();
+            dashboardForm.FindControl<Grid>("mainContentGrid")!.IsVisible.Should().BeFalse();
+            dashboardForm.FindControl<WrapPanel>("toolPanel")!.IsVisible.Should().BeFalse();
+        }
+
+        invalidModule.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        using FormBrowse repositoryForm = new(new GitUICommands(_serviceContainer, invalidModule));
+        repositoryForm.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        repositoryForm.FindControl<Dashboard>("dashboard")!.IsVisible.Should().BeFalse();
+        repositoryForm.FindControl<Grid>("mainContentGrid")!.IsVisible.Should().BeTrue();
+        repositoryForm.FindControl<WrapPanel>("toolPanel")!.IsVisible.Should().BeTrue();
     }
 
     [AvaloniaTest]

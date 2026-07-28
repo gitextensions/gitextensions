@@ -16,6 +16,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Avatars;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
@@ -51,6 +52,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly IGpgInfoProvider? _controller;
     private readonly IScriptsManager? _scriptsManager;
     private readonly ISubmoduleStatusProvider? _submoduleStatusProvider;
+    private readonly IRepositoryHistoryUIService? _repositoryHistoryUIService;
     private readonly IUpdateCheckService? _updateCheckService;
     private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
@@ -150,11 +152,21 @@ public sealed partial class FormBrowse : GitModuleForm
         _scriptsManager = UICommands.GetService(typeof(IScriptsManager)) as IScriptsManager;
         _submoduleStatusProvider = UICommands.GetService(typeof(ISubmoduleStatusProvider)) as ISubmoduleStatusProvider;
         _updateCheckService = UICommands.GetService(typeof(IUpdateCheckService)) as IUpdateCheckService;
+        _repositoryHistoryUIService = UICommands.GetService(typeof(IRepositoryHistoryUIService)) as IRepositoryHistoryUIService;
         RevisionGrid.UICommandsSource = this;
         RevisionGrid.ShowBuildServerInfo = true;
         revisionDiff.UICommandsSource = this;
         fileTree.UICommandsSource = this;
         repoObjectsTree.UICommandsSource = this;
+        dashboard.UICommandsSource = this;
+        if (_repositoryHistoryUIService is not null)
+        {
+            dashboard.Initialize(_repositoryHistoryUIService);
+            dashboard.GitModuleChanged += (_, e) => ChangeWorkingDirectory(e.GitModule.WorkingDir);
+            dashboard.ConfigureRepositoriesRequested += (_, _) => ConfigureRecentRepositories();
+            dashboard.OpenRepositoryRequested += (_, _) => OpenRepositoryDialog();
+        }
+
         _consoleEmulatorsRegistry = UICommands.GetService(typeof(IConsoleEmulatorsRegistry)) as IConsoleEmulatorsRegistry;
         _controller = gpgInfoProvider ?? new GpgInfoProvider(new GitGpgController(() => Module));
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
@@ -259,6 +271,8 @@ public sealed partial class FormBrowse : GitModuleForm
         createAStashToolStripMenuItem.Click += (_, _) => UICommands.StartStashDialog(this, manageStashes: false);
         _NO_TRANSLATE_WorkingDir.Initialize(
             () => UICommands,
+            _repositoryHistoryUIService
+                ?? throw new InvalidOperationException($"{nameof(IRepositoryHistoryUIService)} is not registered."),
             ChangeWorkingDirectory,
             path => GitUICommands.LaunchBrowse(path),
             OpenRepositoryDialog,
@@ -385,6 +399,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
         if (isValidWorkingDir)
         {
+            ShowRepository();
             _NO_TRANSLATE_WorkingDir.RefreshContent();
             _aheadBehindDataProvider?.ResetCache();
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
@@ -395,6 +410,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
         else
         {
+            ShowDashboard();
             _worktrees = [];
             toolStripWorktrees.IsVisible = false;
             _NO_TRANSLATE_WorkingDir.RefreshContent();
@@ -404,6 +420,23 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         _gitStatusMonitor?.Active = isValidWorkingDir && NeedsGitStatusMonitor();
+    }
+
+    private void ShowDashboard()
+    {
+        mainContentGrid.IsVisible = false;
+        toolPanel.IsVisible = false;
+        dashboard.IsVisible = true;
+        dashboard.RefreshContent();
+        dashboard.Focus();
+    }
+
+    private void ShowRepository()
+    {
+        dashboard.IsVisible = false;
+        mainContentGrid.IsVisible = true;
+        toolPanel.IsVisible = true;
+        _repositoryHistoryUIService?.TriggerBranchNameCacheUpdate(onlyIfEmpty: true);
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -552,7 +585,12 @@ public sealed partial class FormBrowse : GitModuleForm
     {
         using FormRecentReposSettings form = new();
         form.ShowDialog(this);
+        _repositoryHistoryUIService?.Invalidate();
         _NO_TRANSLATE_WorkingDir.RefreshContent();
+        if (dashboard.IsVisible)
+        {
+            dashboard.RefreshContent();
+        }
     }
 
     private void RegisterPlugins()

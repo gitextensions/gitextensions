@@ -131,6 +131,24 @@
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "Same-named image and context-menu controls with the original translation keys."
   },
+  "src/app/GitUI/RepositoryCurrentBranchNameProvider.cs": {
+    "twin": "src/app/GitUI.Avalonia/RepositoryCurrentBranchNameProvider.cs",
+    "status": "parity",
+    "basedOn": "e56f1135bf794be2ced5fc367ba32528a6e8dcc3",
+    "notes": "Same setting-gated native Git branch lookup."
+  },
+  "src/app/GitUI/RepositoryCurrentBranchNameCache.cs": {
+    "twin": "src/app/GitUI.Avalonia/RepositoryCurrentBranchNameCache.cs",
+    "status": "parity",
+    "basedOn": "3d3ca2f1e80bed00e664dffda45d0cd34a8f1b24",
+    "notes": "Same-named current-branch cache with host-native path identity and unknown/detached branch rejection."
+  },
+  "src/app/GitUI/RepositoryHistoryUIService.cs": {
+    "twin": "src/app/GitUI.Avalonia/RepositoryHistoryUIService.cs",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Shared Dashboard and working-directory-selector service over the original recent/favourite model, caption splitting, cached branch hints, invalid-path prompt, and bounded parallel refresh. Invalidation cancels stale cache work and one immutable snapshot keeps both consumers consistent."
+  },
   "src/app/GitUI/Properties/Images.resx": {
     "twin": "src/app/GitUI.Avalonia/Properties/Images.g.cs",
     "status": "parity",
@@ -153,7 +171,37 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "dfdee1b2ae92d832a2ea7420eb4c11aa2cd14420",
-    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The Repository menu restores the current functional WinForms contributions in their original groups: refresh, file explorer with its executable and displayed Ctrl+Shift+O gesture, remotes, submodule management/update/sync, worktrees, all four maintenance commands, and repository settings. Git ignore/info-exclude/attributes/mailmap/sparse editors remain absent with their unported dialogs, while Close remains owned by the future Dashboard/startup tranche. The first loaded repository host owns the same-named top-level menu; fork/clone remains available outside a repository, while view/create pull request and add-upstream resolve the provider relevant to the current repository and preserve the original errors and command boundaries. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, the same-named searchable favourite/recent working-directory split selector, current-branch selector, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The working-directory selector routes open/close and Ctrl-new-instance actions through the original command IDs, records the valid recent working directory once, and opens the native recent-repository settings twin. One same-named GitStatusMonitor status result drives the configurable Commit state/count and artificial-revision counters, while the existing ahead/behind provider drives the same-named Push button's arrow/count text with repository/branch stale-result rejection. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, shared Output history, and the selection-driven Build Report contribution when build-server data exists; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown. Portable plugins load and register through the original lifecycle, including unregister/re-register on repository changes; the Browse menu lists them alphabetically, materializes their embedded portable PNGs, executes them through the original GitUIEventArgs boundary, and routes its settings command to the Plugins root. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including OpenRepo Ctrl+O, CloseRepository Ctrl+W, and ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, GPG, build-server polling, and plugin discovery work use owned lifetime boundaries, so queued notifications and unfinished providers cannot outlive shutdown. The Help menu exposes the original check-for-updates contribution, and the weekly startup check is routed through an injected production-only update service so view tests never contact the network. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The Repository menu restores the current functional WinForms contributions in their original groups: refresh, file explorer with its executable and displayed Ctrl+Shift+O gesture, remotes, submodule management/update/sync, worktrees, all four maintenance commands, and repository settings. Git ignore/info-exclude/attributes/mailmap/sparse editors remain absent with their unported dialogs. The same FormBrowse instance switches between the Dashboard and repository panes when the working directory becomes invalid or valid; Dashboard selections and Open/Close commands use that boundary rather than creating a second shell. The first loaded repository host owns the same-named top-level menu; fork/clone remains available outside a repository, while view/create pull request and add-upstream resolve the provider relevant to the current repository and preserve the original errors and command boundaries. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, the same-named searchable favourite/recent working-directory split selector, current-branch selector, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The working-directory selector routes open/close and Ctrl-new-instance actions through the original command IDs, records the valid recent working directory once, and opens the native recent-repository settings twin. One same-named GitStatusMonitor status result drives the configurable Commit state/count and artificial-revision counters, while the existing ahead/behind provider drives the same-named Push button's arrow/count text with repository/branch stale-result rejection. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, shared Output history, and the selection-driven Build Report contribution when build-server data exists; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown. Portable plugins load and register through the original lifecycle, including unregister/re-register on repository changes; the Browse menu lists them alphabetically, materializes their embedded portable PNGs, executes them through the original GitUIEventArgs boundary, and routes its settings command to the Plugins root. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including OpenRepo Ctrl+O, CloseRepository Ctrl+W, and ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, GPG, build-server polling, and plugin discovery work use owned lifetime boundaries, so queued notifications and unfinished providers cannot outlive shutdown. The Help menu exposes the original check-for-updates contribution, and the weekly startup check is routed through an injected production-only update service so view tests never contact the network. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling."
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Same-named repository-less surface with Create, Open, Clone, contribution links, recent repositories, and transitions back into the owning FormBrowse. The hosted GitHub fork/clone contribution remains owned by the later complete Dashboard conformance review."
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native two-column Dashboard retains the original named logo, start, contribute, and repository-list sections with light/dark semantic palettes."
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml.cs",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Same-named searchable recent/favourite repository list over the shared history service, with branch/path hints, invalid-history cleanup, keyboard/double-click opening, category headers, and the original recent-repository settings command. Drag reordering and category-editing context actions remain for the complete Dashboard conformance review."
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native searchable list layout preserves the original list, heading, search, and configure identities."
+  },
+  "src/app/GitUI/CommandsDialogs/InvalidRepositoryRemover.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/InvalidRepositoryRemover.cs",
+    "status": "parity",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Same remove-selected/remove-all prompt and repository-history mutations through the native TaskDialog host."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormRecentReposSettings.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormRecentReposSettings.axaml.cs",
@@ -171,7 +219,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/WorkingDirectoryToolStripSplitButton.cs",
     "status": "functional",
     "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "Same-named native split selector with repository icon/caption, searchable categorised favourites and recent repositories, open/close/configure actions, Ctrl-new-instance behavior, right-click folder picker, configured minimum width, original hotkeys, and original translation keys. Primary and arrow pointer paths both use the SplitButton's native flyout state, repeated reopening retains a stable non-focusable search-row host so its TextBox receives typed input, and right click opens only the folder picker. Cached branch-name hints and invalid-history cleanup remain with the shared startup/dashboard repository-history service planned for Phase 4.8g."
+    "notes": "Same-named native split selector with repository icon/caption, searchable categorised favourites and recent repositories, open/close/configure actions, Ctrl-new-instance behavior, right-click folder picker, configured minimum width, original hotkeys, and original translation keys. Primary and arrow pointer paths both use the SplitButton's native flyout state, repeated reopening retains a stable non-focusable search-row host so its TextBox receives typed input, and right click opens only the folder picker. The startup/dashboard repository-history service supplies cached branch-name hints and the original invalid-history cleanup prompt to both this selector and the Dashboard."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/GitStatusMonitor.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/GitStatusMonitor.cs",
@@ -1052,8 +1100,20 @@
   "src/app/GitUI/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CheckSettingsLogic.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Portable Git/editor/install-directory checks required by the host and first pages. Git-command solving checks an explicit value, the persisted value, then PATH on native systems; Linux-tools validation and derivation remain active on Windows and become a deliberate no-op where the separate tools path is inapplicable. Remaining Windows-specific auto-repair behavior is deferred with its consuming checklist pages."
+    "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
+    "notes": "Portable Git/editor/install-directory checks and startup auto-repair flow. Git-command solving checks an explicit value, the persisted value, standard Windows installs, then PATH; Linux-tools validation and derivation remain active on Windows and become a deliberate no-op where the separate tools path is inapplicable. The resulting Git/config/distributed settings are saved through the original settings stores."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "58937dbe78448761e69f47d7170b991c511425ef",
+    "notes": "Same-named startup checklist for Git/recommended version, identity, merge and diff tools, editor, and translation. Repair actions route to the existing native settings pages; checks tolerate unavailable Git/config state while the Git page is being opened and disable startup checking only after all required checks pass. Specialized SSH and Windows integration checks remain for the complete settings conformance review."
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.Designer.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native scrollable checklist preserves the original status, repair, startup-check, and rescan control identities."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/DistributedSettingsSet.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/SettingsDialog/DistributedSettingsSet.cs",
@@ -2475,7 +2535,7 @@
   "src/app/GitExtensions/Program.cs": {
     "twin": "src/app/GitExtensions.Avalonia/Program.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Entry point twin (with App.axaml.cs). Startup retains upstream working-directory discovery and routes arguments through GitUICommands.RunCommand. Browse/modeless commands become and visibly open as MainWindow; modal commands run under explicit shutdown and return success/failure through the desktop process exit code. Startup also maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources, loads the shared CSS theme repository through the ThemeModule twin, projects AppColor/KnownColor and semantic brushes into variant dictionaries, and reloads Windows app color mode when the actual platform variant changes."
+    "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
+    "notes": "Entry point twin (with App.axaml.cs and StartupCoordinator.cs). Startup retains upstream working-directory discovery and routes arguments through GitUICommands.RunCommand. An explicit desktop lifetime sequences Git discovery, conditional automatic settings checks/repairs, unresolved checklist display, and then the requested command without exposing a hidden main window or shutting down between dialogs. Browse/modeless commands become and visibly open as MainWindow; modal commands run under explicit shutdown and return success/failure through the desktop process exit code. Startup also maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources, loads the shared CSS theme repository through the ThemeModule twin, projects AppColor/KnownColor and semantic brushes into variant dictionaries, and reloads Windows app color mode when the actual platform variant changes."
   }
 }
