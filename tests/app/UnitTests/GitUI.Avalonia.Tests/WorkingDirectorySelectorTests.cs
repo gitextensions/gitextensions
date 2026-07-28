@@ -296,8 +296,8 @@ public sealed class WorkingDirectorySelectorTests
             nameof(FormBrowse), "_repositorySearchPlaceholder", "Text", "Search repositories...");
         translation.Received(1).AddTranslationItem(
             nameof(FormBrowse), "tsmiFavouriteRepositories", "Text", "&Favorite repositories");
-        translation.Received(1).AddTranslationItem(
-            nameof(FormBrowse), "openToolStripMenuItem", "Text", "Open repository...");
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(FormBrowse), "openToolStripMenuItem", "Text", Arg.Any<string>());
         translation.Received(1).AddTranslationItem(
             nameof(FormBrowse), "closeToolStripMenuItem", "Text", "&Close repository");
     }
