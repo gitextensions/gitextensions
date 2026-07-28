@@ -71,6 +71,8 @@ public class IconSplitButton : SplitButton
         set => SetValue(IconProperty, value);
     }
 
+    public void ShowDropDown() => OpenFlyout();
+
     protected override Type StyleKeyOverride => typeof(SplitButton);
 }
 

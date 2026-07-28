@@ -121,6 +121,42 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task FormBrowse_branch_selector_primary_and_arrow_should_open_the_current_branch_menu()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" });
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        form.Show();
+        TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+        await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
+
+        IconSplitButton branchSelector = form.FindControl<IconSplitButton>("branchSelect")!;
+        Button[] templateButtons = branchSelector.GetVisualDescendants()
+            .OfType<Button>()
+            .Where(button => button.Name is "PART_PrimaryButton" or "PART_SecondaryButton")
+            .ToArray();
+        Button primaryButton = templateButtons.Single(button => button.Name == "PART_PrimaryButton");
+        Button secondaryButton = templateButtons.Single(button => button.Name == "PART_SecondaryButton");
+        MenuFlyout flyout = (MenuFlyout)branchSelector.Flyout!;
+
+        Click(form, primaryButton, MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+
+        flyout.IsOpen.Should().BeTrue();
+        MenuItem[] branchItems = flyout.Items.OfType<MenuItem>().Skip(1).ToArray();
+        branchItems.Select(item => item.Header as string).Should().Contain("feature");
+        branchItems.Should().OnlyContain(item => item.Icon is Image);
+
+        flyout.Hide();
+        Dispatcher.UIThread.RunJobs();
+        Click(form, secondaryButton, MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+
+        flyout.IsOpen.Should().BeTrue("the arrow retains Avalonia's native split-button behavior");
+        flyout.Hide();
+    }
+
+    [AvaloniaTest]
     [NonParallelizable]
     public async Task FormBrowse_should_show_artificial_revisions_and_live_toolbar_status()
     {
@@ -1816,6 +1852,16 @@ public sealed class FormBrowseTests
         }
 
         condition().Should().BeTrue("the repository reload should complete before the timeout");
+    }
+
+    private static void Click(TopLevel topLevel, Control control, MouseButton button)
+    {
+        Avalonia.Point clickPoint = Avalonia.VisualExtensions.TranslatePoint(
+            control,
+            new Avalonia.Point(control.Bounds.Width / 2, control.Bounds.Height / 2),
+            topLevel) ?? throw new InvalidOperationException("The control position was not available.");
+        topLevel.MouseDown(clickPoint, button, RawInputModifiers.None);
+        topLevel.MouseUp(clickPoint, button, RawInputModifiers.None);
     }
 
     private static string HeaderText(TreeViewItem item)

@@ -12,6 +12,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AvaloniaEdit;
 using GitCommands;
 using GitCommands.ExternalLinks;
@@ -65,6 +66,7 @@ public sealed partial class ParityScreenshotTests
     private const string CaptureEnvironmentVariable = "GITEXT_CAPTURE_PARITY_SHOTS";
     private const string CaptureViewEnvironmentVariable = "GITEXT_CAPTURE_PARITY_VIEW";
     private const string CaptureRepoTreeContextEnvironmentVariable = "GITEXT_CAPTURE_REPO_TREE_CONTEXT";
+    private const string CaptureFileStatusTreeEnvironmentVariable = "GITEXT_CAPTURE_FILE_STATUS_TREE";
     private const string CaptureWorkingDirectoryMenuEnvironmentVariable = "GITEXT_CAPTURE_WORKING_DIRECTORY_MENU";
     private const string AxamlExtension = ".axaml";
     private const string AppSourcePath = "src/App.cs";
@@ -286,6 +288,18 @@ public sealed partial class ParityScreenshotTests
                     accessor.UpdateContextMenu();
                     accessor.ContextMenu.Open(accessor.List);
                     Dispatcher.UIThread.RunJobs();
+                }
+                else if (accessor.Tree.IsVisible)
+                {
+                    for (int pass = 0; pass < 3; pass++)
+                    {
+                        foreach (TreeViewItem item in accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>())
+                        {
+                            item.IsExpanded = true;
+                        }
+
+                        Dispatcher.UIThread.RunJobs();
+                    }
                 }
             }
             else if (view is RepoObjectsTree repoObjectsTree)
@@ -1011,12 +1025,18 @@ public sealed partial class ParityScreenshotTests
                             "Working directory",
                             [.. context.ChangedFiles.Skip(splitIndex)]),
                     ],
-                    isFileTreeMode: false);
-                    if (ReferenceEquals(fileStatusList, root))
+                    isFileTreeMode:
+                        Environment.GetEnvironmentVariable(CaptureFileStatusTreeEnvironmentVariable) == "1");
+                    if (ReferenceEquals(fileStatusList, root)
+                        && Environment.GetEnvironmentVariable(CaptureFileStatusTreeEnvironmentVariable) != "1")
                     {
                         fileStatusList.SetFilter("src|CHANGELOG");
                     }
 
+                    break;
+
+                case ChecklistSettingsPage checklist:
+                    SeedChecklist(checklist);
                     break;
 
                 case RevisionGridControl revisionGrid:
@@ -1070,6 +1090,33 @@ public sealed partial class ParityScreenshotTests
 
         await accessor.BlameFile.ViewTextAsync(AppSourcePath, context.SampleBlame);
         blame.BlameAuthor.Initialize(gutter, entries, showAvatars: true);
+    }
+
+    private static void SeedChecklist(ChecklistSettingsPage checklist)
+    {
+        (string Name, string Message, bool Repair)[] rows =
+        [
+            ("GitFound", "Git 2.52.0 is found on your computer.", false),
+            ("UserNameSet", "A username and an email address are configured.", false),
+            ("MergeTool", "There is a mergetool configured: kdiff3", false),
+            ("DiffTool", "There is a difftool configured: kdiff3", false),
+            ("ShellExtensionsRegistered", "Shell extensions are not installed. Run the installer to install the shell extensions.", false),
+            ("GitBinFound", "Linux tools (sh) found on your computer.", false),
+            ("GitExtensionsInstall", "Git Extensions is properly registered.", false),
+            ("SshConfig", "Default SSH client, OpenSSH, will be used.", false),
+            ("translationConfig", "The configured language is English.", false),
+            ("GcmDetected", "Obsolete git-credential-winstore.exe detected", true),
+        ];
+        foreach ((string name, string message, bool repair) in rows)
+        {
+            Button status = GetRequiredControl<Button>(checklist, name);
+            Button fix = GetRequiredControl<Button>(
+                checklist,
+                name == "GcmDetected" ? "GcmDetectedFix" : $"{name}_Fix");
+            status.Content = message;
+            status.IsVisible = true;
+            fix.IsVisible = repair;
+        }
     }
 
     private static void SeedPatchGrid(PatchGrid patchGrid, CaptureContext context)

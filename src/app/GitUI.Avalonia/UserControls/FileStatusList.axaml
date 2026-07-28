@@ -95,6 +95,7 @@
                  IsHitTestVisible="False" />
       <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" />
       <TreeView x:Name="tvDiffFiles"
+                Classes="gitextensions-native-tree"
                 IsVisible="False"
                 Focusable="True"
                 x:CompileBindings="False">
@@ -104,7 +105,11 @@
           </Style>
         </TreeView.Styles>
       </TreeView>
-      <TreeView x:Name="tvFiles" IsVisible="False" Focusable="True" x:CompileBindings="False">
+      <TreeView x:Name="tvFiles"
+                Classes="gitextensions-native-tree"
+                IsVisible="False"
+                Focusable="True"
+                x:CompileBindings="False">
         <TreeView.Styles>
           <Style Selector="TreeViewItem">
             <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />

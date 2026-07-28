@@ -3,9 +3,11 @@ using Avalonia.Controls.Selection;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
+using GitUI.LeftPanel;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using NSubstitute;
@@ -297,6 +299,43 @@ public sealed class FileStatusListTests
             .Select(call => string.Join('.', call.GetArguments().Take(3)))
             .ToArray();
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(emittedKeys.Length);
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_tree_modes_should_share_the_native_hierarchy_connectors()
+    {
+        FileStatusList control = new();
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus first = new("src/folder/first.cs") { IsChanged = true, IsTracked = true };
+        GitItemStatus second = new("src/folder/second.cs") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(
+            [new FileStatusWithDescription(null, revision, "Files", [first, second])],
+            isFileTreeMode: true);
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        Window window = new()
+        {
+            Width = 360,
+            Height = 240,
+            Content = control,
+        };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            accessor.Tree.Classes.Should().Contain("gitextensions-native-tree");
+            TreeViewItem root = accessor.Tree.GetVisualDescendants().OfType<TreeViewItem>().First();
+            root.IsExpanded = true;
+            Dispatcher.UIThread.RunJobs();
+
+            accessor.Tree.GetVisualDescendants()
+                .OfType<TreeConnectorControl>()
+                .Should().NotBeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     private static IEnumerable<FileStatusList.DiffTreeNode> Flatten(FileStatusList.DiffTreeNode node)
