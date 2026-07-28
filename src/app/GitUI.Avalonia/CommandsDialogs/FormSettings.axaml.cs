@@ -95,6 +95,14 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
     {
         base.OnRuntimeLoad(e);
         InitializeSettingsPages();
+
+        if (_checkSettingsLogic is null)
+        {
+            settingsTreeView.GotoPage(settingsPageReference: null);
+            settingsTreeView.Focus();
+            return;
+        }
+
         LoadSettings();
 
         if (_initialPage is null && _lastSelectedSettingsPageType is not null)
