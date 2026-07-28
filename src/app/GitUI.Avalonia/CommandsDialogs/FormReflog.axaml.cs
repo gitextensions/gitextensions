@@ -88,7 +88,7 @@ public sealed partial class FormReflog : GitModuleForm
             .. Module.GetRemoteBranches().Select(gitRef => gitRef.Name).OrderBy(name => name),
         ];
         Branches.ItemsSource = branches;
-        Branches.SelectedIndex = branches.Count == 0 ? -1 : 0;
+        Branches.SelectedIndex = 0;
     }
 
     private void SetRepositoryState(bool isDirtyDir, string currentBranch)

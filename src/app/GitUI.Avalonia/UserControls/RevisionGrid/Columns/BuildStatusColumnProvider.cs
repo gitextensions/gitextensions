@@ -33,7 +33,7 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
         {
             Column.Width = new GridLength(IconColumnWidth);
         }
-        else if (showText && Column.Width.Value == IconColumnWidth)
+        else if (showText && Math.Abs(Column.Width.Value - IconColumnWidth) < 0.001d)
         {
             Column.Width = new GridLength(TextColumnWidth);
         }

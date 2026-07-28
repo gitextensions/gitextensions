@@ -6,6 +6,8 @@ namespace GitUI.LeftPanel;
 
 internal abstract class BaseRefTree : BaseRevisionTree
 {
+    private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
+
     protected BaseRefTree(RepoObjectsTree owner, RepoTreeKind kind, string caption, Avalonia.Media.IImage icon)
         : base(owner, kind, caption, icon)
     {
@@ -63,7 +65,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
         {
             try
             {
-                priority = new Regex($"^({expression})$", RegexOptions.ExplicitCapture);
+                priority = new Regex($"^({expression})$", RegexOptions.ExplicitCapture, RegexTimeout);
             }
             catch (ArgumentException)
             {
@@ -72,8 +74,20 @@ internal abstract class BaseRefTree : BaseRevisionTree
         }
 
         return refs
-            .OrderBy(gitRef => priority?.IsMatch(gitRef.LocalName) == true ? 0 : 1)
+            .OrderBy(gitRef => IsPriorityMatch(priority, gitRef.LocalName) ? 0 : 1)
             .ThenBy(gitRef => gitRef.Name, StringComparer.OrdinalIgnoreCase);
+
+        static bool IsPriorityMatch(Regex? pattern, string branchName)
+        {
+            try
+            {
+                return pattern?.IsMatch(branchName) == true;
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false;
+            }
+        }
     }
 
     private static void AddNode(NodeBase parent, NodeBase child)
