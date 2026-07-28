@@ -23,6 +23,26 @@
         <MenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
         </MenuItem>
+        <MenuItem x:Name="fileExplorerToolStripMenuItem"
+                  Header="File E_xplorer"
+                  HotKey="Ctrl+Shift+O"
+                  InputGesture="Ctrl+Shift+O">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="manageRemoteRepositoriesToolStripMenuItem1" Header="Remo_te repositories...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Remotes}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="manageSubmodulesToolStripMenuItem" Header="Manage _submodules...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.SubmodulesManage}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="updateAllSubmodulesToolStripMenuItem" Header="_Update all submodules">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.SubmodulesUpdate}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="synchronizeAllSubmodulesToolStripMenuItem" Header="Synchronize all su_bmodules">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.SubmodulesSync}" /></MenuItem.Icon>
+        </MenuItem>
         <Separator />
         <MenuItem x:Name="manageWorktreeToolStripMenuItem" Header="Manage _worktrees...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.WorkTree}" /></MenuItem.Icon>
@@ -30,9 +50,21 @@
         <Separator />
         <MenuItem x:Name="gitMaintenanceToolStripMenuItem" Header="_Git maintenance">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Maintenance}" /></MenuItem.Icon>
+          <MenuItem x:Name="compressGitDatabaseToolStripMenuItem" Header="_Compress git database">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CompressGitDatabase}" /></MenuItem.Icon>
+          </MenuItem>
           <MenuItem x:Name="recoverLostObjectsToolStripMenuItem" Header="_Recover lost objects...">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RecoverLostObjects}" /></MenuItem.Icon>
           </MenuItem>
+          <MenuItem x:Name="deleteIndexLockToolStripMenuItem" Header="_Delete index.lock">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.DeleteIndexLock}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="editLocalGitConfigToolStripMenuItem" Header="_Edit .git/config">
+            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.EditGitConfig}" /></MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
+        <MenuItem x:Name="repoSettingsToolStripMenuItem" Header="Rep_ository settings...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
         </MenuItem>
       </MenuItem>
       <MenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
