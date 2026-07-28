@@ -21,6 +21,8 @@ namespace GitUI;
 // revision grouping, and repository-hierarchy boundaries used by its consumers.
 public partial class FileStatusList : GitModuleControl
 {
+    private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
+
     private static readonly TimeSpan FilterThrottleDuration = TimeSpan.FromMilliseconds(250);
 
     private readonly FileStatusDiffCalculator _diffCalculator;
@@ -661,7 +663,10 @@ public partial class FileStatusList : GitModuleControl
         {
             _filter = filterText.Length == 0
                 ? null
-                : new Regex(filterText, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                : new Regex(
+                    filterText,
+                    RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+                    RegexTimeout);
             SetFilterState(filterText.Length == 0 ? FilterState.Empty : FilterState.Valid, toolTip: null);
         }
         catch (ArgumentException exception)
@@ -797,8 +802,16 @@ public partial class FileStatusList : GitModuleControl
         }
 
         string name = item.Name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
-        return _filter.IsMatch(name)
-               || (item.OldName is string oldName && _filter.IsMatch(oldName));
+        try
+        {
+            return _filter.IsMatch(name)
+                   || (item.OldName is string oldName && _filter.IsMatch(oldName));
+        }
+        catch (RegexMatchTimeoutException exception)
+        {
+            SetFilterState(FilterState.Invalid, exception.Message);
+            return false;
+        }
     }
 
     private void SetFilterState(FilterState state, string? toolTip)

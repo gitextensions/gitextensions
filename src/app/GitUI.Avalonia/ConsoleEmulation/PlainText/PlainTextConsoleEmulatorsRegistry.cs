@@ -12,7 +12,7 @@ internal sealed class PlainTextConsoleEmulatorsRegistry : IConsoleEmulatorsRegis
 
     public static PlainTextConsoleEmulatorsRegistry Instance { get; } = new(() => AppSettings.ConEmuConsoleFont);
 
-    private PlainTextConsoleEmulatorsRegistry(Func<WinFormsShims.Font?> consoleFont)
+    internal PlainTextConsoleEmulatorsRegistry(Func<WinFormsShims.Font?> consoleFont)
     {
         _consoleFont = consoleFont;
     }
