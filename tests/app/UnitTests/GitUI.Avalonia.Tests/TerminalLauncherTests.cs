@@ -6,8 +6,10 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
 
@@ -16,6 +18,10 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class TerminalLauncherTests
 {
+    [SetUp]
+    public void SetUp()
+        => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+
     [Test]
     public void Launch_should_prefer_the_configured_linux_terminal()
     {
@@ -196,6 +202,7 @@ public sealed class TerminalLauncherTests
         commands.Module.Returns(module);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
         commands.GetService(typeof(ITerminalLauncher)).Returns(launcher);
 
         return new FormBrowse(commands);

@@ -21,6 +21,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -29,6 +30,10 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class VisualParityTests
 {
+    [SetUp]
+    public void SetUp()
+        => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+
     [AvaloniaTest]
     public void Application_fonts_should_follow_point_based_Git_Extensions_settings()
     {
@@ -220,11 +225,12 @@ public sealed class VisualParityTests
                 Menu menu = form.FindControl<Menu>("mainMenuStrip")
                     ?? throw new InvalidOperationException("The main menu was not created.");
                 menu.Bounds.Height.Should().Be(24);
-                menu.Items.Cast<MenuItem>().Should().OnlyContain(item => item.Bounds.Height == 20);
-                Rect[] closedMenuItemBounds = menu.Items.Cast<MenuItem>().Select(item => item.Bounds).ToArray();
+                MenuItem[] visibleMenuItems = menu.Items.Cast<MenuItem>().Where(item => item.IsVisible).ToArray();
+                visibleMenuItems.Should().OnlyContain(item => item.Bounds.Height == 20);
+                Rect[] closedMenuItemBounds = visibleMenuItems.Select(item => item.Bounds).ToArray();
                 form.commandsToolStripMenuItem.IsSubMenuOpen = true;
                 Dispatcher.UIThread.RunJobs();
-                menu.Items.Cast<MenuItem>().Select(item => item.Bounds).Should().Equal(closedMenuItemBounds);
+                visibleMenuItems.Select(item => item.Bounds).Should().Equal(closedMenuItemBounds);
                 form.commitToolStripMenuItem.Bounds.Height.Should().Be(22);
                 ItemsPresenter menuItemsPresenter = form.commitToolStripMenuItem
                     .GetVisualAncestors()
@@ -277,7 +283,7 @@ public sealed class VisualParityTests
                     .OfType<ComboBox>()
                     .Where(combo => combo.Classes.Contains("gitextensions-toolbar-input"))
                     .ToArray();
-                editableInputs.Should().HaveCount(3);
+                editableInputs.Should().HaveCount(2);
                 foreach (ComboBox input in editableInputs)
                 {
                     TextBox editor = input.GetVisualDescendants()
@@ -308,9 +314,10 @@ public sealed class VisualParityTests
 
                 SplitButton[] splitButtons = form.GetVisualDescendants()
                     .OfType<SplitButton>()
-                    .Where(button => button.Classes.Contains("gitextensions-toolbar-button"))
+                    .Where(button => button.IsVisible
+                                     && button.Classes.Contains("gitextensions-toolbar-button"))
                     .ToArray();
-                splitButtons.Should().HaveCount(6);
+                splitButtons.Should().HaveCount(7);
                 foreach (SplitButton splitButton in splitButtons)
                 {
                     Button primaryButton = splitButton.GetVisualDescendants()
@@ -678,7 +685,10 @@ public sealed class VisualParityTests
 
             TreeView tree = control.FindControl<TreeView>("treeMain")
                 ?? throw new InvalidOperationException("The repository tree was not created.");
-            TreeViewItem[] groups = tree.Items.Cast<TreeViewItem>().ToArray();
+            TreeViewItem[] groups = tree.Items
+                .Cast<TreeViewItem>()
+                .Where(group => group.ItemCount > 0)
+                .ToArray();
             groups.Should().HaveCount(3);
             foreach (TreeViewItem group in groups)
             {

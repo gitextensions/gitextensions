@@ -302,6 +302,25 @@ public sealed class ProcessDialogTests
 
     private static bool HasExited(int processId)
     {
+        if (OperatingSystem.IsLinux())
+        {
+            string statPath = $"/proc/{processId}/stat";
+            try
+            {
+                string stat = File.ReadAllText(statPath);
+                int commandEnd = stat.LastIndexOf(')');
+                if (commandEnd >= 0 && commandEnd + 2 < stat.Length
+                    && stat[commandEnd + 2] is 'Z' or 'X')
+                {
+                    return true;
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                return true;
+            }
+        }
+
         try
         {
             using Process process = Process.GetProcessById(processId);
