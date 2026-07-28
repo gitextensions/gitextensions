@@ -94,6 +94,16 @@
                  Text="No changes"
                  IsHitTestVisible="False" />
       <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" />
+      <TreeView x:Name="tvDiffFiles"
+                IsVisible="False"
+                Focusable="True"
+                x:CompileBindings="False">
+        <TreeView.Styles>
+          <Style Selector="TreeViewItem">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+          </Style>
+        </TreeView.Styles>
+      </TreeView>
       <TreeView x:Name="tvFiles" IsVisible="False" Focusable="True" x:CompileBindings="False">
         <TreeView.Styles>
           <Style Selector="TreeViewItem">
