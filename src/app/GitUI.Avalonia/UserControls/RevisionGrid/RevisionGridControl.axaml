@@ -80,6 +80,10 @@
           <Separator x:Name="sepNavigate" />
           <MenuItem x:Name="navigateToolStripMenuItem" Header="_Navigate">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GotoCommit}" /></MenuItem.Icon>
+            <MenuItem Tag="ToggleBetweenArtificialAndHeadCommits"
+                      Header="_Toggle between artificial and HEAD commits">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.WorkingDirChanges}" /></MenuItem.Icon>
+            </MenuItem>
             <MenuItem Tag="GotoCurrentRevision"
                       Header="Go to c_urrent revision"
                       InputGesture="Ctrl+Shift+C">
@@ -101,14 +105,66 @@
           </MenuItem>
           <MenuItem x:Name="viewToolStripMenuItem" Header="_View">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.AdvancedSettings}" /></MenuItem.Icon>
+            <MenuItem Tag="BranchesToolStripMenuItem"
+                      Header="Branches"
+                      Classes="gitextensions-menu-caption"
+                      IsEnabled="False"
+                      Focusable="False"
+                      IsHitTestVisible="False" />
+            <MenuItem Tag="ShowAllBranches" Header="Show _all branches" InputGesture="Ctrl+Shift+A" ToggleType="Radio">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchLocal}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Tag="ShowCurrentBranchOnly" Header="Show _current branch only" InputGesture="Ctrl+Shift+U" ToggleType="Radio">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchFilter}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Tag="ShowFilteredBranches" Header="Show _filtered branches" InputGesture="Ctrl+Shift+T" ToggleType="Radio">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchFilter}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Tag="ShowReflogReferences" Header="Show _reflog references" InputGesture="Ctrl+Shift+L" ToggleType="CheckBox">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Book}" /></MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Tag="filterToolStripMenuItem" Header="Advanced filter..." InputGesture="Ctrl+I">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.EditFilter}" /></MenuItem.Icon>
+            </MenuItem>
+            <Separator />
             <MenuItem Tag="drawNonrelativesGrayToolStripMenuItem" Header="Draw non relatives gra_y" ToggleType="CheckBox" />
+            <MenuItem Tag="HighlightSelectedBranch"
+                      Header="Highlight selected branch (until refresh)"
+                      InputGesture="Ctrl+Shift+B" />
             <Separator />
+            <MenuItem Tag="CommitsToolStripMenuItem"
+                      Header="Commits"
+                      Classes="gitextensions-menu-caption"
+                      IsEnabled="False"
+                      Focusable="False"
+                      IsHitTestVisible="False" />
+            <MenuItem Tag="showGitNotesToolStripMenuItem" Header="Show git _notes" ToggleType="CheckBox" />
+            <Separator />
+            <MenuItem Tag="Grid_labelsToolStripMenuItem"
+                      Header="Grid labels"
+                      Classes="gitextensions-menu-caption"
+                      IsEnabled="False"
+                      Focusable="False"
+                      IsHitTestVisible="False" />
             <MenuItem Tag="ShowRemoteBranches" Header="Show remote _branches" InputGesture="Ctrl+Shift+R" ToggleType="CheckBox" />
-            <MenuItem Tag="showTagsToolStripMenuItem" Header="Show _tags" ToggleType="CheckBox" />
+            <MenuItem Tag="showTagsToolStripMenuItem" Header="Show _tags" InputGesture="Ctrl+Alt+T" ToggleType="CheckBox" />
             <Separator />
+            <MenuItem Tag="Grid_infoToolStripMenuItem"
+                      Header="Grid info"
+                      Classes="gitextensions-menu-caption"
+                      IsEnabled="False"
+                      Focusable="False"
+                      IsHitTestVisible="False" />
             <MenuItem Tag="showAuthorDateToolStripMenuItem" Header="Sho_w author date" ToggleType="CheckBox" />
             <MenuItem Tag="showRelativeDateToolStripMenuItem" Header="Show relati_ve date" ToggleType="CheckBox" />
             <Separator />
+            <MenuItem Tag="ColumnsToolStripMenuItem"
+                      Header="Columns"
+                      Classes="gitextensions-menu-caption"
+                      IsEnabled="False"
+                      Focusable="False"
+                      IsHitTestVisible="False" />
             <MenuItem Tag="showRevisionGraphColumnToolStripMenuItem" Header="Show revision _graph column" ToggleType="CheckBox" />
             <MenuItem Tag="showGitNotesColumnToolStripMenuItem" Header="Show Git _notes column" ToggleType="CheckBox" />
             <MenuItem Tag="showAuthorNameColumnToolStripMenuItem" Header="Show a_uthor name column" ToggleType="CheckBox" />

@@ -73,6 +73,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private TabItem? _consoleTabPage;
     private OutputHistoryControllerBase? _outputHistoryController;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
+    private FormBrowseMenus? _formBrowseMenus;
 
     public static readonly string HotkeySettingsName = "Browse";
 
@@ -114,6 +115,7 @@ public sealed partial class FormBrowse : GitModuleForm
     public FormBrowse()
     {
         InitializeComponent();
+        _formBrowseMenus = new FormBrowseMenus(mainMenuStrip, RevisionGrid, repositoryToolStripMenuItem);
         InitializeWorkspaceLayout();
         InitializeComplete();
     }
@@ -142,6 +144,7 @@ public sealed partial class FormBrowse : GitModuleForm
         : base(commands, enablePositionRestore: true)
     {
         InitializeComponent();
+        _formBrowseMenus = new FormBrowseMenus(mainMenuStrip, RevisionGrid, repositoryToolStripMenuItem);
 
         _hasRuntimeCommands = true;
         _scriptsManager = UICommands.GetService(typeof(IScriptsManager)) as IScriptsManager;
@@ -286,8 +289,11 @@ public sealed partial class FormBrowse : GitModuleForm
         RefreshMenuShortcutKeys();
         _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys ?? []);
-        ToolStripFilters.RefreshRevisionGridShortcutKeys(
-            UICommands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(RevisionGridControl.HotkeySettingsName));
+        IReadOnlyList<HotkeyCommand> revisionGridHotkeys = UICommands
+            .GetRequiredService<IHotkeySettingsLoader>()
+            .LoadHotkeys(RevisionGridControl.HotkeySettingsName);
+        ToolStripFilters.RefreshRevisionGridShortcutKeys(revisionGridHotkeys);
+        RevisionGrid.RefreshMenuShortcutKeys(revisionGridHotkeys);
         LoadUserMenu();
     }
 
@@ -337,6 +343,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
         refreshToolStripMenuItem.IsEnabled = isValidWorkingDir;
         repositoryToolStripMenuItem.IsVisible = isValidWorkingDir;
+        _formBrowseMenus?.SetVisible(isValidWorkingDir);
         commandsToolStripMenuItem.IsVisible = isValidWorkingDir;
         fileExplorerToolStripMenuItem.IsEnabled = isValidWorkingDir;
         manageRemoteRepositoriesToolStripMenuItem1.IsEnabled = isValidWorkingDir;
@@ -1842,8 +1849,11 @@ public sealed partial class FormBrowse : GitModuleForm
         RefreshMenuShortcutKeys();
         _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys ?? []);
-        ToolStripFilters.RefreshRevisionGridShortcutKeys(
-            UICommands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(RevisionGridControl.HotkeySettingsName));
+        IReadOnlyList<HotkeyCommand> revisionGridHotkeys = UICommands
+            .GetRequiredService<IHotkeySettingsLoader>()
+            .LoadHotkeys(RevisionGridControl.HotkeySettingsName);
+        ToolStripFilters.RefreshRevisionGridShortcutKeys(revisionGridHotkeys);
+        RevisionGrid.RefreshMenuShortcutKeys(revisionGridHotkeys);
         LoadUserMenu();
         AvatarService.UpdateAvatarInitialFontsSettings();
         RevisionGrid.ApplyColumnSettings();
@@ -1943,6 +1953,8 @@ public sealed partial class FormBrowse : GitModuleForm
         _terminal = null;
         _outputHistoryController?.Dispose();
         _outputHistoryController = null;
+        _formBrowseMenus?.Dispose();
+        _formBrowseMenus = null;
         base.OnClosed(e);
     }
 
@@ -1966,6 +1978,7 @@ public sealed partial class FormBrowse : GitModuleForm
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripWorktrees), "ToolTipText", "Worktrees");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(toolStripFileExplorer), "ToolTipText", "File Explorer");
         translation.AddTranslationItem(nameof(FormBrowse), nameof(userShell), "ToolTipText", "Git bash");
+        _formBrowseMenus?.AddTranslationItems(translation);
         ((ITranslate)_NO_TRANSLATE_WorkingDir).AddTranslationItems(translation);
     }
 
@@ -1981,6 +1994,7 @@ public sealed partial class FormBrowse : GitModuleForm
         SetTranslatedToolTip(toolStripWorktrees, nameof(toolStripWorktrees), "Worktrees");
         SetTranslatedToolTip(toolStripFileExplorer, nameof(toolStripFileExplorer), "File Explorer");
         SetTranslatedToolTip(userShell, nameof(userShell), "Git bash");
+        _formBrowseMenus?.TranslateItems(translation);
         ((ITranslate)_NO_TRANSLATE_WorkingDir).TranslateItems(translation);
 
         RefreshCommitInfoPositionToolTip();
