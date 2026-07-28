@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -1220,8 +1220,6 @@ public sealed partial class FormPush : GitModuleForm
     internal sealed class BranchPushRow
     {
         private bool _updating;
-        private TextBox? _local;
-        private TextBox? _remote;
         private CheckBox? _push;
         private CheckBox? _force;
         private CheckBox? _delete;
@@ -1245,8 +1243,6 @@ public sealed partial class FormPush : GitModuleForm
 
         internal void Attach(TextBox local, TextBox remote, CheckBox push, CheckBox force, CheckBox delete, Action changed)
         {
-            _local = local;
-            _remote = remote;
             _push = push;
             _force = force;
             _delete = delete;

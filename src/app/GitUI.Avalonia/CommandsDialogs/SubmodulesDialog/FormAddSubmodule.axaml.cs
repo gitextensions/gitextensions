@@ -1,4 +1,4 @@
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using Avalonia.Controls;
 using GitCommands;
 using GitCommands.Git;
@@ -104,7 +104,7 @@ public sealed partial class FormAddSubmodule : GitModuleForm
 
     private void BranchDropDown(object? sender, EventArgs e)
     {
-        Branch.ItemsSource = LoadRemoteRepoBranches(Module.GitExecutable, GetDirectoryText()).ToArray();
+        Branch.ItemsSource = QueryRemoteRepoBranches(Module.GitExecutable, GetDirectoryText()).ToArray();
     }
 
     private void DirectoryTextUpdate(object? sender, EventArgs e)
@@ -126,7 +126,7 @@ public sealed partial class FormAddSubmodule : GitModuleForm
     /// </remarks>
     /// <param name="gitExecutable">The git executable.</param>
     /// <param name="url">The repo URL; can also be a local path.</param>
-    private static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
+    private static IEnumerable<string> QueryRemoteRepoBranches(IExecutable gitExecutable, string url)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -155,6 +155,6 @@ public sealed partial class FormAddSubmodule : GitModuleForm
         public ComboBox Branch => form.Branch;
 
         public static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
-            => FormAddSubmodule.LoadRemoteRepoBranches(gitExecutable, url);
+            => QueryRemoteRepoBranches(gitExecutable, url);
     }
 }

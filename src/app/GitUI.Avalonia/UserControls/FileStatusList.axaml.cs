@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
@@ -1531,10 +1531,10 @@ public partial class FileStatusList : GitModuleControl
         internal void UpdateContextMenu()
             => control.ItemContextMenu_Opening(control.ItemContextMenu, EventArgs.Empty);
 
-        internal static IImage GetItemImage(GitItemStatus item)
+        internal static IImage GetItemImageForTesting(GitItemStatus item)
             => FileStatusList.GetItemImage(item);
 
-        internal static IImage GetSubmoduleImage(GitItemStatus item, GitSubmoduleStatus? status)
+        internal static IImage GetSubmoduleImageForTesting(GitItemStatus item, GitSubmoduleStatus? status)
             => FileStatusList.GetSubmoduleImage(item, status);
     }
 

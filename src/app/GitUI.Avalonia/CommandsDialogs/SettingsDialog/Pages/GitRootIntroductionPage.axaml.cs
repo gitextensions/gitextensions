@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -19,10 +19,12 @@ public partial class GitRootIntroductionPage : SettingsPageBase
 
     protected override void SettingsToPage()
     {
+        // This informational page has no editable settings to load.
     }
 
     protected override void PageToSettings()
     {
+        // This informational page has no editable settings to save.
     }
 
     protected override SettingsSource GetCurrentSettings()

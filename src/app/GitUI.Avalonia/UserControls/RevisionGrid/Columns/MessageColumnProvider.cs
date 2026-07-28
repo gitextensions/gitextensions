@@ -1,4 +1,4 @@
-using System.Collections.Frozen;
+﻿using System.Collections.Frozen;
 using System.Globalization;
 using System.Text;
 using Avalonia;
@@ -558,7 +558,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             set => throw new NotSupportedException();
         }
 
-        public bool IsTrackingRemote(IGitRef? remoteRef) => false;
+        public bool IsTrackingRemote(IGitRef? remote) => false;
 
         public override bool Equals(object? obj)
             => obj is VirtualRef other && CompleteName == other.CompleteName;

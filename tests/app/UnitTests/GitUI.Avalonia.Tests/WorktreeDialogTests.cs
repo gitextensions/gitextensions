@@ -1,4 +1,4 @@
-using Avalonia.Headless.NUnit;
+﻿using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
@@ -159,8 +159,8 @@ public sealed class WorktreeDialogTests
         string path = Path.Combine(Path.GetTempPath(), "GitExtensions", "Worktree");
         string pathWithTrailingSeparator = path + Path.DirectorySeparatorChar;
 
-        FormManageWorktree.TestAccessor.PathsEqual(path, pathWithTrailingSeparator).Should().BeTrue();
-        FormManageWorktree.TestAccessor.PathsEqual(path, path.ToUpperInvariant()).Should().Be(OperatingSystem.IsWindows());
+        FormManageWorktree.TestAccessor.PathsEqualForTesting(path, pathWithTrailingSeparator).Should().BeTrue();
+        FormManageWorktree.TestAccessor.PathsEqualForTesting(path, path.ToUpperInvariant()).Should().Be(OperatingSystem.IsWindows());
     }
 
     [AvaloniaTest]

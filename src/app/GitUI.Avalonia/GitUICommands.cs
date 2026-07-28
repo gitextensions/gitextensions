@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls.ApplicationLifetimes;
 using GitCommands;
 using GitCommands.Git;
@@ -510,7 +510,10 @@ public sealed class GitUICommands : IGitUICommands
             case "stash":
                 return StartStashDialog();
             case "synchronize":
-                return Commit(arguments) & Pull(arguments) & Push(arguments);
+                bool commitSucceeded = Commit(arguments);
+                bool pullSucceeded = Pull(arguments);
+                bool pushSucceeded = Push(arguments);
+                return commitSucceeded && pullSucceeded && pushSucceeded;
             case "tag":
                 return StartCreateTagDialog();
             case "viewpatch":
