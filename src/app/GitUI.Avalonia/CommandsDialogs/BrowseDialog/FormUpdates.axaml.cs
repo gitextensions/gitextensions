@@ -334,7 +334,10 @@ public sealed partial class FormUpdates : GitExtensionsDialog
                 await using FileStream destination = File.Create(installerPath);
                 await source.CopyToAsync(destination, cancellationToken);
 
-                ProcessStartInfo startInfo = new("msiexec.exe")
+                string msiexecPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.System),
+                    "msiexec.exe");
+                ProcessStartInfo startInfo = new(msiexecPath)
                 {
                     UseShellExecute = false,
                 };
@@ -412,7 +415,13 @@ public sealed partial class FormUpdates : GitExtensionsDialog
 
         try
         {
-            ProcessStartInfo startInfo = new("dotnet")
+            string? dotnetHostPath = GetDotnetHostPath();
+            if (dotnetHostPath is null)
+            {
+                return [];
+            }
+
+            ProcessStartInfo startInfo = new(dotnetHostPath)
             {
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
@@ -439,6 +448,63 @@ public sealed partial class FormUpdates : GitExtensionsDialog
         {
             return [];
         }
+    }
+
+    private static string? GetDotnetHostPath()
+    {
+        string executableName = OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet";
+        string? hostPath = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH");
+        if (!string.IsNullOrWhiteSpace(hostPath)
+            && Path.IsPathFullyQualified(hostPath)
+            && File.Exists(hostPath))
+        {
+            return hostPath;
+        }
+
+        string? dotnetRoot = Environment.GetEnvironmentVariable("DOTNET_ROOT");
+        if (!string.IsNullOrWhiteSpace(dotnetRoot))
+        {
+            hostPath = Path.Combine(dotnetRoot, executableName);
+            if (File.Exists(hostPath))
+            {
+                return hostPath;
+            }
+        }
+
+        if (OperatingSystem.IsWindows())
+        {
+            hostPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                "dotnet",
+                executableName);
+            if (File.Exists(hostPath))
+            {
+                return hostPath;
+            }
+        }
+
+        string? path = Environment.GetEnvironmentVariable("PATH");
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return null;
+        }
+
+        foreach (string pathEntry in path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            string directory = pathEntry.Trim().Trim('"');
+            if (!Path.IsPathFullyQualified(directory))
+            {
+                continue;
+            }
+
+            hostPath = Path.Combine(directory, executableName);
+            if (File.Exists(hostPath))
+            {
+                return Path.GetFullPath(hostPath);
+            }
+        }
+
+        return null;
     }
 
     private static bool UpdateRequired(Version? required, IEnumerable<Version> installed)

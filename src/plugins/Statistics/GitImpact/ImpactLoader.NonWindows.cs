@@ -57,13 +57,12 @@ public sealed class ImpactLoader : IDisposable
 
     private readonly Lock _cacheLock = new();
     private readonly CancellationTokenSequence _cancellationTokenSequence = new();
-    private readonly CancellationTokenSource _closingPluginCancellationToken = new();
+    private CancellationTokenSource? _closingPluginCancellationToken = new();
+    private readonly Lock _lifetimeLock = new();
     private readonly IGitModule _module;
     private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
     private readonly Dictionary<string, List<Commit>> _modulesCommits = new(1);
     private readonly int _firstDayOfWeek = (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
-    private bool _disposed;
-
     public ImpactLoader(IGitModule module)
     {
         _module = module;
@@ -71,36 +70,53 @@ public sealed class ImpactLoader : IDisposable
 
     public void Dispose()
     {
-        if (_disposed)
+        CancellationTokenSource closingPluginCancellationToken;
+        lock (_lifetimeLock)
         {
-            return;
+            if (_closingPluginCancellationToken is null)
+            {
+                return;
+            }
+
+            closingPluginCancellationToken = _closingPluginCancellationToken;
+            _closingPluginCancellationToken = null;
         }
 
-        _disposed = true;
-        _closingPluginCancellationToken.Cancel();
-        Stop();
+        closingPluginCancellationToken.Cancel();
+        _cancellationTokenSequence.CancelCurrent();
         _operations.JoinPendingOperations();
         _cancellationTokenSequence.Dispose();
-        _closingPluginCancellationToken.Dispose();
+        closingPluginCancellationToken.Dispose();
     }
 
     public void Stop()
     {
-        _cancellationTokenSequence.CancelCurrent();
+        lock (_lifetimeLock)
+        {
+            if (_closingPluginCancellationToken is not null)
+            {
+                _cancellationTokenSequence.CancelCurrent();
+            }
+        }
     }
 
     public void Execute()
     {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-        CancellationToken sequenceToken = _cancellationTokenSequence.Next();
-        _operations.FileAndForget(
-            async () =>
-            {
-                using CancellationTokenSource linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
-                    sequenceToken,
-                    _closingPluginCancellationToken.Token);
-                await ExecuteAsync(linkedCancellation.Token);
-            });
+        lock (_lifetimeLock)
+        {
+            CancellationTokenSource closingPluginCancellationToken = _closingPluginCancellationToken
+                ?? throw new ObjectDisposedException(nameof(ImpactLoader));
+            CancellationToken closingPluginToken = closingPluginCancellationToken.Token;
+            CancellationToken sequenceToken = _cancellationTokenSequence.Next();
+            _operations.FileAndForget(
+                async () =>
+                {
+                    using CancellationTokenSource linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+                        sequenceToken,
+                        closingPluginToken);
+                    await ExecuteAsync(linkedCancellation.Token);
+                });
+        }
     }
 
     private bool _showSubmodules;

@@ -14,6 +14,9 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart;
 /// </summary>
 public partial class PieChartControl : UserControl
 {
+    public static readonly StyledProperty<double> InitialAngleProperty =
+        AvaloniaProperty.Register<PieChartControl, double>(nameof(InitialAngle));
+
     private static readonly Color[] DefaultColors =
     [
         Colors.Red,
@@ -36,7 +39,6 @@ public partial class PieChartControl : UserControl
     private double _edgeLineWidth = 1;
     private bool _fitChart;
     private int _highlightedIndex = -1;
-    private double _initialAngle;
     private double _leftMargin;
     private PieChart3D? _pieChart;
     private double[] _relativeSliceDisplacements = [0];
@@ -47,6 +49,11 @@ public partial class PieChartControl : UserControl
     private double _topMargin;
     private decimal[] _values = [];
 
+    static PieChartControl()
+    {
+        AffectsRender<PieChartControl>(InitialAngleProperty);
+    }
+
     public PieChartControl()
     {
         InitializeComponent();
@@ -56,12 +63,8 @@ public partial class PieChartControl : UserControl
 
     public double InitialAngle
     {
-        get => _initialAngle;
-        set
-        {
-            _initialAngle = value;
-            InvalidateVisual();
-        }
+        get => GetValue(InitialAngleProperty);
+        set => SetValue(InitialAngleProperty, value);
     }
 
     public event EventHandler<SliceSelectedArgs>? SliceSelected;
@@ -216,7 +219,7 @@ public partial class PieChartControl : UserControl
             ShadowStyle = _shadowStyle,
             HighlightedIndex = _highlightedIndex,
         };
-        chart.SetInitialAngle(_initialAngle);
+        chart.SetInitialAngle(InitialAngle);
         chart.SetSliceRelativeDisplacements(_relativeSliceDisplacements);
         return chart;
     }

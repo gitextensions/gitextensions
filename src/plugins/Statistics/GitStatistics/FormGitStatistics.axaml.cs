@@ -202,7 +202,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         void LoadLinesOfCodeForModule(IGitModule module)
         {
             string[] filesToCheck = module
-                .GetTree(commitId: default, full: true)
+                .GetTree(commitId: default, full: true, cancellationToken: cancellationToken)
                 .Select(file => Path.Combine(module.WorkingDir, file.Name))
                 .ToArray();
             string directoryFilters = NormalizeDirectoryFilters(DirectoriesToIgnore);

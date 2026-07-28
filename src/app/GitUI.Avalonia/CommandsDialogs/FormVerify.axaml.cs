@@ -494,7 +494,8 @@ public sealed partial class FormVerify : GitModuleForm
             metadata.AddRange(LostObject.GetCommitsMetadata(module, nextBatch.Select(item => item.ObjectId.ToString())));
         }
 
-        for (int i = 0; i < commits.Length && i < metadata.Count; i++)
+        int commitCount = Math.Min(commits.Length, metadata.Count);
+        for (int i = 0; i < commitCount; i++)
         {
             commits[i].FillCommitData(module, metadata[i]);
         }

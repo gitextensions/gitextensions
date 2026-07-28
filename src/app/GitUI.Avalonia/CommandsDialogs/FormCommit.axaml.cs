@@ -26,10 +26,14 @@ public sealed partial class FormCommit : GitModuleForm
 {
     private const string ResetSoftRevision = "HEAD~1";
     private const string FeatCommitType = "feat";
+    private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
 
     private static readonly string[] HeaderCommitTypes = ["build", "chore", "ci", "docs", FeatCommitType, "fix", "perf", "refactor", "style", "test"];
     private static readonly string[] FooterKeywords = ["BREAKING CHANGE", "Co-authored-by", "Reviewed-by"];
-    private static readonly Regex TemplateReplaceRegex = new(@"\{\{(?<pattern>.*?)\}\}(?:\[(?<index>\d+)\])?", RegexOptions.ExplicitCapture);
+    private static readonly Regex TemplateReplaceRegex = new(
+        @"\{\{(?<pattern>.*?)\}\}(?:\[(?<index>\d+)\])?",
+        RegexOptions.ExplicitCapture,
+        RegexTimeout);
 
     private readonly TranslationString _amendCommit = new(
         "You are about to rewrite history." + Environment.NewLine
@@ -828,13 +832,17 @@ public sealed partial class FormCommit : GitModuleForm
         {
             try
             {
-                if (!Regex.IsMatch(GetTextToValidate(message), AppSettings.CommitValidationRegEx)
+                if (!Regex.IsMatch(
+                        GetTextToValidate(message),
+                        AppSettings.CommitValidationRegEx,
+                        RegexOptions.None,
+                        RegexTimeout)
                     && !ConfirmInvalidMessage(_commitMsgRegExNotMatched.Text))
                 {
                     return false;
                 }
             }
-            catch (ArgumentException)
+            catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
             {
             }
         }
@@ -1015,7 +1023,11 @@ public sealed partial class FormCommit : GitModuleForm
                 foreach (Match match in TemplateReplaceRegex.Matches(message))
                 {
                     int groupIndex = int.TryParse(match.Groups["index"].Value, out int parsedIndex) ? parsedIndex : 1;
-                    Match branchMatch = Regex.Match(Module.GetSelectedBranch(), match.Groups["pattern"].Value);
+                    Match branchMatch = Regex.Match(
+                        Module.GetSelectedBranch(),
+                        match.Groups["pattern"].Value,
+                        RegexOptions.None,
+                        RegexTimeout);
                     string replacement = branchMatch.Success && branchMatch.Groups.Count > groupIndex
                         ? branchMatch.Groups[groupIndex].Value
                         : string.Empty;
