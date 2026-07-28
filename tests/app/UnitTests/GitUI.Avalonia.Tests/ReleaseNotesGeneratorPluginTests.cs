@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
@@ -129,7 +129,7 @@ public sealed class ReleaseNotesGeneratorPluginTests
         accessor.CopyActionsEnabled.Should().BeTrue();
         accessor.CreateTextTable(new GitLogLineParser().Parse(accessor.Result.Split('\n')), tabs: true)
             .Should().Contain("\tFix <tag> & output");
-        accessor.CreateHtmlTable(new GitLogLineParser().Parse(accessor.Result.Split('\n')))
+        accessor.CreateHtmlTableForTesting(new GitLogLineParser().Parse(accessor.Result.Split('\n')))
             .Should().Contain("Fix &lt;tag&gt; &amp; output");
     }
 

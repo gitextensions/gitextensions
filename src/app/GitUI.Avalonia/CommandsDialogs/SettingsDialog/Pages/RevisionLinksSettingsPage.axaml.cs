@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -652,7 +652,7 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
         public Task JoinTemplateOperationsAsync(CancellationToken cancellationToken = default)
             => page._templateOperations.JoinPendingOperationsAsync(cancellationToken);
 
-        public static Remote FindRemoteByPreference(IList<Remote> remotes)
+        public static Remote FindRemoteByPreferenceForTesting(IList<Remote> remotes)
             => RevisionLinksSettingsPage.FindRemoteByPreference(remotes);
     }
 }

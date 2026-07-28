@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -57,7 +57,6 @@ public sealed class ImpactLoader : IDisposable
 
     private readonly Lock _cacheLock = new();
     private readonly CancellationTokenSequence _cancellationTokenSequence = new();
-    private readonly CancellationTokenSource _closingPluginCancellationToken = new();
     private readonly Lock _lifetimeLock = new();
     private readonly IGitModule _module;
     private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
@@ -78,13 +77,11 @@ public sealed class ImpactLoader : IDisposable
             }
 
             _disposed = true;
-            _closingPluginCancellationToken.Cancel();
             _cancellationTokenSequence.CancelCurrent();
         }
 
         _operations.JoinPendingOperations();
         _cancellationTokenSequence.Dispose();
-        _closingPluginCancellationToken.Dispose();
     }
 
     public void Stop()
@@ -103,16 +100,9 @@ public sealed class ImpactLoader : IDisposable
         lock (_lifetimeLock)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            CancellationToken closingPluginToken = _closingPluginCancellationToken.Token;
             CancellationToken sequenceToken = _cancellationTokenSequence.Next();
             _operations.FileAndForget(
-                async () =>
-                {
-                    using CancellationTokenSource linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
-                        sequenceToken,
-                        closingPluginToken);
-                    await ExecuteAsync(linkedCancellation.Token);
-                });
+                async () => await ExecuteAsync(sequenceToken));
         }
     }
 
@@ -224,73 +214,70 @@ public sealed class ImpactLoader : IDisposable
         int estimatedCommitCount = lines.Count / linePerCommitEstimationInGitLogOutput;
         List<Commit> commitsBatch = new(estimatedCommitCount);
 
-        using List<string>.Enumerator lineEnumerator = lines.GetEnumerator();
-
-        // Analyze commit listing
-        while (!token.IsCancellationRequested && lineEnumerator.MoveNext())
+        for (int lineIndex = 0; lineIndex < lines.Count && !token.IsCancellationRequested; lineIndex++)
         {
-            // Read line
-            string line = lineEnumerator.Current;
-
-            // Look for commit delimiters
-            if (!line.StartsWith("--- ", StringComparison.Ordinal))
+            if (!TryParseCommitHeader(lines[lineIndex], out string author, out DateOnly date))
             {
                 continue;
             }
 
-            // Strip "--- "
-            line = line[4..];
-
-            // Split date and author
-            string[] header = line.Split([" --- "], 2, StringSplitOptions.RemoveEmptyEntries);
-
-            if (header.Length != 2)
-            {
-                continue;
-            }
-
-            // Save author in variable
-            string author = header[1].TrimEnd('\r');
-
-            // Parse commit date
-            DateOnly date = DateOnly.Parse(header[0], CultureInfo.InvariantCulture);
-
-            // Calculate first day of the commit week
             DateOnly week = date.AddDays(_firstDayOfWeek - (int)date.DayOfWeek);
-
-            // Reset commit data
-            int commits = 1;
             int added = 0;
             int deleted = 0;
-
-            // Parse commit lines
-            while (lineEnumerator.MoveNext()
-                   && (line = lineEnumerator.Current) is not null
-                   && !line.StartsWith("--- ", StringComparison.Ordinal)
+            while (lineIndex + 1 < lines.Count
+                   && !lines[lineIndex + 1].StartsWith("--- ", StringComparison.Ordinal)
                    && !token.IsCancellationRequested)
             {
-                string[] fileLine = line.TrimEnd('\r').Split(Delimiters.Tab);
-                if (fileLine.Length >= 2)
-                {
-                    if (fileLine[0] != "-")
-                    {
-                        added += int.Parse(fileLine[0], CultureInfo.InvariantCulture);
-                    }
-
-                    if (fileLine[1] != "-")
-                    {
-                        deleted += int.Parse(fileLine[1], CultureInfo.InvariantCulture);
-                    }
-                }
+                lineIndex++;
+                AccumulateFileStats(lines[lineIndex], ref added, ref deleted);
             }
 
             if (!token.IsCancellationRequested)
             {
-                commitsBatch.Add(new Commit(week, author, new DataPoint(commits, added, deleted)));
+                commitsBatch.Add(new Commit(week, author, new DataPoint(commits: 1, added, deleted)));
             }
         }
 
         return commitsBatch;
+    }
+
+    private static bool TryParseCommitHeader(string line, out string author, out DateOnly date)
+    {
+        author = string.Empty;
+        date = default;
+        if (!line.StartsWith("--- ", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        string[] header = line[4..].Split([" --- "], 2, StringSplitOptions.RemoveEmptyEntries);
+        if (header.Length != 2
+            || !DateOnly.TryParse(header[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+        {
+            return false;
+        }
+
+        author = header[1].TrimEnd('\r');
+        return true;
+    }
+
+    private static void AccumulateFileStats(string line, ref int added, ref int deleted)
+    {
+        string[] fileLine = line.TrimEnd('\r').Split(Delimiters.Tab);
+        if (fileLine.Length < 2)
+        {
+            return;
+        }
+
+        if (fileLine[0] != "-")
+        {
+            added += int.Parse(fileLine[0], CultureInfo.InvariantCulture);
+        }
+
+        if (fileLine[1] != "-")
+        {
+            deleted += int.Parse(fileLine[1], CultureInfo.InvariantCulture);
+        }
     }
 
     public static void AddIntermediateEmptyWeeks(

@@ -25,7 +25,6 @@ public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSet
     private readonly TranslationString _infoNoApiTokenMessage = new("Unable to retrieve build definition information without API token. Field will be left blank.");
     private readonly TranslationString _failToExtractDataFromClipboardCaption = new("Could not extract data");
 
-    private string? _defaultProjectName;
     private IEnumerable<string?>? _remotes;
 
     private bool _isUpdating;
@@ -48,7 +47,6 @@ public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSet
 
     public void Initialize(string defaultProjectName, IEnumerable<string?> remotes)
     {
-        _defaultProjectName = defaultProjectName;
         _remotes = remotes;
     }
 

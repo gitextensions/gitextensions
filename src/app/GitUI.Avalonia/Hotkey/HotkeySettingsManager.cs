@@ -1,4 +1,4 @@
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
 using GitUI.CommandsDialogs;
@@ -158,9 +158,9 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
     }
 
     public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
-        => CreateDefaultSettings(_scriptsManager);
+        => CreateDefaultSettingsCore(_scriptsManager);
 
-    internal static IReadOnlyList<HotkeySettings> CreateDefaultSettings(IScriptsManager? scriptsManager = null)
+    internal static IReadOnlyList<HotkeySettings> CreateDefaultSettingsCore(IScriptsManager? scriptsManager)
     {
         HotkeyCommand Hk<TCommand>(TCommand command, WinFormsShims.Keys key)
             where TCommand : struct, Enum

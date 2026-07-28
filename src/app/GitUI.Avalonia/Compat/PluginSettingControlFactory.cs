@@ -325,7 +325,7 @@ internal static class PluginSettingControlFactory
         WinFormsShims.Control model = setting.CustomControl
             ?? setting.TextBoxCreator?.Invoke()
             ?? throw new InvalidOperationException("Pseudo setting did not supply a control model.");
-        ShimControlAdapter adapter = ShimControlAdapter.Create(model);
+        ShimControlAdapter adapter = ShimControlAdapter.CreateAdapter(model);
         return new DelegateBinding(
             adapter.Control,
             setting.Caption,
@@ -335,7 +335,7 @@ internal static class PluginSettingControlFactory
 
     private static PluginSettingBinding CreateCustomBinding(ISettingControlBinding binding)
     {
-        ShimControlAdapter adapter = ShimControlAdapter.Create(binding.GetControl());
+        ShimControlAdapter adapter = ShimControlAdapter.CreateAdapter(binding.GetControl());
         return new DelegateBinding(
             adapter.Control,
             binding.Caption(),
@@ -459,7 +459,7 @@ internal static class PluginSettingControlFactory
 
         internal abstract void Save();
 
-        internal static ShimControlAdapter Create(WinFormsShims.Control model)
+        internal static ShimControlAdapter CreateAdapter(WinFormsShims.Control model)
             => model switch
             {
                 WinFormsShims.TextBox textBox => new TextBoxAdapter(textBox),

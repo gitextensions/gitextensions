@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -1173,7 +1173,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     /// <summary>
     ///  Moves the caret to the given one-based line and scrolls it into view.
     /// </summary>
-    public void GoToLine(int line)
+    public void GoToLine(int lineNumber)
     {
         TextDocument? document = TextEditor.Document;
         if (document is null || document.LineCount == 0)
@@ -1181,7 +1181,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
             return;
         }
 
-        int documentLine = FindDocumentLine(line);
+        int documentLine = FindDocumentLine(lineNumber);
         documentLine = Math.Clamp(documentLine, 1, document.LineCount);
         TextEditor.TextArea.Caret.Position = new TextViewPosition(documentLine, column: 1);
         TextEditor.ScrollToLine(documentLine);
@@ -2185,9 +2185,9 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         IgnoreAllWhitespace = 15,
     }
 
-    protected override bool ExecuteCommand(int cmd)
+    protected override bool ExecuteCommand(int command)
     {
-        switch ((Command)cmd)
+        switch ((Command)command)
         {
             case Command.Find:
                 Find(replace: false);
@@ -2276,7 +2276,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
                 IgnoreAllWhitespaceChangesToolStripMenuItem_Click(this, EventArgs.Empty);
                 break;
             default:
-                return base.ExecuteCommand(cmd);
+                return base.ExecuteCommand(command);
         }
 
         return true;

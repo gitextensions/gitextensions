@@ -64,7 +64,7 @@
   <DockPanel>
     <Grid DockPanel.Dock="Top"
           Height="25"
-          ColumnDefinitions="*,23,Auto">
+          ColumnDefinitions="*,Auto,Auto,Auto">
       <TextBox x:Name="cboFilterComboBox"
                Grid.Column="0"
                MinHeight="23"
@@ -80,8 +80,19 @@
                Height="16"
                Source="/Resources/Icons/DeleteText.png" />
       </Button>
+      <Button x:Name="btnRefresh"
+              Grid.Column="2"
+              Classes="gitextensions-toolbar-button gitextensions-icon-only"
+              Width="23"
+              Height="23"
+              IsVisible="False"
+              ToolTip.Tip="Refresh artificial commit">
+        <Image Width="16"
+               Height="16"
+               Source="{x:Static properties:Images.ReloadRevisions}" />
+      </Button>
       <TextBlock x:Name="lblCount"
-                 Grid.Column="2"
+                 Grid.Column="3"
                  Margin="6,0,4,0"
                  MinWidth="44"
                  Opacity="0.7"

@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
@@ -46,7 +46,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private Dictionary<string, string> _diffCache = [];
     private IReadOnlyList<HostedRemoteRow> _hostedRemotes = [];
     private bool _isFirstLoad;
-    private IReadOnlyList<IPullRequestInformation> _pullRequestsInfo = [];
 
     [GeneratedRegex(@"(?:\n|^)diff --git ", RegexOptions.ExplicitCapture)]
     private static partial Regex DiffCommandRegex { get; }
@@ -202,7 +201,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
             }
 
             _isFirstLoad = false;
-            _pullRequestsInfo = pullRequests;
             _pullRequestsList.ItemsSource = rows;
             _pullRequestsList.SelectedIndex = rows.Length > 0 ? 0 : -1;
         }
@@ -849,7 +847,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             form.StartSelectedPullRequestLoad();
         }
 
-        public static IReadOnlyList<GitItemStatus> ParseDiff(
+        public static IReadOnlyList<GitItemStatus> ParseDiffForTesting(
             string diff,
             string baseSha,
             string headSha)

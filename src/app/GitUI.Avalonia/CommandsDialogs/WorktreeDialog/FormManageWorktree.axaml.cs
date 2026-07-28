@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -270,6 +270,6 @@ public partial class FormManageWorktree : GitExtensionsDialog
         public void SetWorktrees(IReadOnlyList<GitWorktree> worktrees, string? selectedPath = null)
             => form.ApplyWorktrees(worktrees, selectedPath);
 
-        public static bool PathsEqual(string first, string second) => FormManageWorktree.PathsEqual(first, second);
+        public static bool PathsEqualForTesting(string first, string second) => FormManageWorktree.PathsEqual(first, second);
     }
 }

@@ -109,11 +109,11 @@ public sealed class GitImpactPluginTests
         IList<ImpactLoader.Commit> commits = await loaded.Task.WaitAsync(TimeSpan.FromSeconds(15));
         await exited.Task.WaitAsync(TimeSpan.FromSeconds(15));
 
-        ImpactLoader.Commit commit = commits.Should().ContainSingle().Which;
-        commit.Author.Should().Be("Avalonia Test");
-        commit.Data.Commits.Should().Be(1);
-        commit.Data.AddedLines.Should().Be(2);
-        commit.Data.DeletedLines.Should().Be(0);
+        commits.Should().HaveCount(2);
+        commits.Should().OnlyContain(commit => commit.Author == "Avalonia Test");
+        commits.Sum(commit => commit.Data.Commits).Should().Be(2);
+        commits.Sum(commit => commit.Data.AddedLines).Should().Be(3);
+        commits.Sum(commit => commit.Data.DeletedLines).Should().Be(0);
     }
 
     [AvaloniaTest]
@@ -187,6 +187,9 @@ public sealed class GitImpactPluginTests
         File.WriteAllText(Path.Combine(_workingDirectory, "impact.txt"), "one\ntwo\n");
         module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "impact.txt" }).Should().BeTrue();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
+        File.AppendAllText(Path.Combine(_workingDirectory, "impact.txt"), "three\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "impact.txt" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "second" }).Should().BeTrue();
         return module;
     }
 }

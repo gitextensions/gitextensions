@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -221,6 +221,6 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
 
         public bool ApplySettings() => form.ApplySettings();
 
-        public static bool HasGlobalGitConfig(string path) => FormFixHome.HasGlobalGitConfig(path);
+        public static bool HasGlobalGitConfigForTesting(string path) => FormFixHome.HasGlobalGitConfig(path);
     }
 }

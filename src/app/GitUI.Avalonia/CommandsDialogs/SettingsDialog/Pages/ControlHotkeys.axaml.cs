@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
@@ -150,7 +150,7 @@ internal partial class ControlHotkeys : GitExtensionsControl
 
     private void bResetToDefaults_Click(object? sender, EventArgs e)
     {
-        Settings = HotkeySettingsManager.CreateDefaultSettings();
+        Settings = GitUI.Hotkey.HotkeySettingsManager.CreateDefaultSettingsCore(scriptsManager: null);
     }
 
     private void ConfigureLists()
