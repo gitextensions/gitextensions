@@ -328,7 +328,6 @@ public sealed class Executable : IExecutable
                         {
                             // Directly kill the process because Ctrl+C does not reach the git process how we start it
                             _process.Kill();
-                            _process.WaitForExit();
 
                             OperationCanceledException ex = new("Process killed");
                             _logOperation.LogProcessEnd(ex);
