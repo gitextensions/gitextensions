@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility;
 using Microsoft;
@@ -29,11 +30,17 @@ public class InitialsAvatarProvider : IAvatarProvider
     }
 
     /// <inheritdoc/>
-    public Task<byte[]?> GetAvatarAsync(string email, string? name, int imageSize)
+    public async Task<byte[]?> GetAvatarAsync(string email, string? name, int imageSize)
     {
         (string initials, int colorIndex) = GetInitialsAndColorIndex(email, name);
         (IBrush foregroundBrush, Avalonia.Media.Color backgroundColor) = _avatarColors[colorIndex];
-        return Task.FromResult<byte[]?>(DrawText(initials, foregroundBrush, backgroundColor, imageSize));
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            return DrawText(initials, foregroundBrush, backgroundColor, imageSize);
+        }
+
+        return await Dispatcher.UIThread.InvokeAsync(
+            () => DrawText(initials, foregroundBrush, backgroundColor, imageSize));
     }
 
     public bool PerformsIo => false;
