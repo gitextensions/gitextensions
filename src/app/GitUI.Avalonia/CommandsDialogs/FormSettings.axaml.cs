@@ -129,6 +129,8 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         IServiceProvider serviceProvider = TryGetUICommands(out IGitUICommands? commands)
             ? commands
             : EmptyServiceProvider.Instance;
+        ChecklistSettingsPage checklistSettingsPage =
+            SettingsPageBase.Create<ChecklistSettingsPage>(this, serviceProvider);
         SettingsPlaceholderPage placeholder = new(serviceProvider);
         placeholder.InitForHost(this);
         settingsTreeView.AddSettingsPage(
@@ -137,7 +139,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             icon: null,
             asRoot: true);
         settingsTreeView.AddSettingsPage(
-            SettingsPageBase.Create<ChecklistSettingsPage>(this, serviceProvider),
+            checklistSettingsPage,
             GitExtensionsSettingsGroup.GetPageReference(),
             Images.StatusBadgeSuccess);
         settingsTreeView.AddSettingsPage(
@@ -196,6 +198,13 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             SettingsPageBase.Create<DiffViewerSettingsPage>(this, serviceProvider),
             DetailedSettingsPage.GetPageReference(),
             Images.Diff);
+        SshSettingsPage sshSettingsPage =
+            SettingsPageBase.Create<SshSettingsPage>(this, serviceProvider);
+        settingsTreeView.AddSettingsPage(
+            sshSettingsPage,
+            GitExtensionsSettingsGroup.GetPageReference(),
+            Images.Key);
+        checklistSettingsPage.SshSettingsPage = sshSettingsPage;
 
         GitSettingsGroup gitSettingsGroup = new();
         settingsTreeView.AddSettingsPage(gitSettingsGroup, parentPageReference: null, Images.GitLogo16);

@@ -44,7 +44,7 @@ public enum SortDirection
     Descending
 }
 
-public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, IRevisionGridFilter, IRevisionGridUpdate
+public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisionGridInfo, IRevisionGridFilter, IRevisionGridUpdate
 {
     public static readonly string HotkeySettingsName = "RevisionGrid";
 
@@ -1780,6 +1780,9 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo, 
             return false;
         }
     }
+
+    bool ICheckRefs.Contains(ObjectId objectId)
+        => _revisions.Any(revision => revision.ObjectId == objectId);
 
     internal TestAccessor GetTestAccessor() => new(this);
 

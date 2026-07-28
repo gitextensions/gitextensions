@@ -96,6 +96,7 @@
     <Compile Include="..\GitUI\UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" Link="UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\ArtificialCommitChangeCount.cs" Link="UserControls\RevisionGrid\ArtificialCommitChangeCount.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\FilterInfo.cs" Link="UserControls\RevisionGrid\FilterInfo.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\ICheckRefs.cs" Link="UserControls\RevisionGrid\ICheckRefs.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\IRevisionGridFilter.cs" Link="UserControls\RevisionGrid\IRevisionGridFilter.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionFilter.cs" Link="UserControls\RevisionGrid\RevisionFilter.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\FilterChangedEventArgs.cs" Link="UserControls\RevisionGrid\FilterChangedEventArgs.cs" />

@@ -119,6 +119,17 @@ public sealed class StartupCoordinatorTests
         bool result = page.CheckSettings();
 
         result.Should().BeFalse();
+        string[] windowsOnlyRows =
+        [
+            "ShellExtensionsRegistered",
+            "GitBinFound",
+            "GitExtensionsInstall",
+            "SshConfig",
+        ];
+        windowsOnlyRows
+            .Select(name => Avalonia.Controls.ControlExtensions
+                .FindControl<Avalonia.Controls.Button>(page, name)!.IsVisible)
+            .Should().OnlyContain(isVisible => isVisible == OperatingSystem.IsWindows());
     }
 
     [Test]

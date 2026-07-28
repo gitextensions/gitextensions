@@ -1,8 +1,10 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -28,7 +30,10 @@ public partial class UserRepositoriesList : TranslatedControl
             (item, _) => CreateRow(item),
             supportsRecycling: false);
         listView1.ContainerPrepared += ListView1_ContainerPrepared;
-        listView1.DoubleTapped += (_, _) => OpenSelected();
+        listView1.AddHandler(
+            PointerReleasedEvent,
+            ListView1_PointerReleased,
+            RoutingStrategies.Tunnel);
         listView1.KeyDown += (_, e) =>
         {
             if (e.Key == Key.Enter)
@@ -201,6 +206,19 @@ public partial class UserRepositoriesList : TranslatedControl
         e.Container.IsEnabled = !isHeader;
         e.Container.Focusable = !isHeader;
         e.Container.IsHitTestVisible = !isHeader;
+    }
+
+    private void ListView1_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (e.InitialPressMouseButton != MouseButton.Left
+            || e.Source is not Control source
+            || (source as ListBoxItem ?? source.FindAncestorOfType<ListBoxItem>()) is null)
+        {
+            return;
+        }
+
+        OpenSelected();
+        e.Handled = true;
     }
 
     private void OpenSelected()
