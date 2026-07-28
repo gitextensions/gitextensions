@@ -30,6 +30,7 @@ partial class FileStatusList
         _refreshParent = refreshParent;
         _stage = stage;
         _unstage = unstage;
+        btnRefresh.IsVisible = canAutoRefresh;
     }
 
     /// <summary>
@@ -69,6 +70,7 @@ partial class FileStatusList
         tsmiStageFile.Click += (_, _) => _stage?.Invoke();
         tsmiUnstageFile.Click += (_, _) => _unstage?.Invoke();
         tsmiCherryPickChanges.Click += (_, _) => _cherryPickChanges?.Invoke();
+        btnRefresh.Click += (_, _) => _refreshParent?.Invoke();
         tsmiOpenWorkingDirectoryFile.Click += OpenWorkingDirectoryFile_Click;
         tsmiCopyPaths.Click += CopyPaths_Click;
         tsmiShowInFolder.Click += ShowInFolder_Click;

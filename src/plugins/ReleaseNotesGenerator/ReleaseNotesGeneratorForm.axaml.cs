@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -215,7 +215,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
         public string Result => form.textBoxResult.Text ?? string.Empty;
         public string RevisionCount => form.labelRevCount.Text ?? string.Empty;
 
-        public string CreateHtmlTable(IEnumerable<LogLine> lines) => ReleaseNotesGeneratorForm.CreateHtmlTable(lines);
+        public string CreateHtmlTableForTesting(IEnumerable<LogLine> lines) => ReleaseNotesGeneratorForm.CreateHtmlTable(lines);
         public string CreateTextTable(IEnumerable<LogLine> lines, bool tabs) => form.CreateTextTable(lines, separateColumnWithTabInsteadOfSpaces: tabs);
         public void Generate(string from, string to)
         {

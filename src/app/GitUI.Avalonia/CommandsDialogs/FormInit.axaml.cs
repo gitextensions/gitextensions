@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
@@ -132,7 +132,7 @@ public sealed partial class FormInit : GitExtensionsDialog
 
         public Avalonia.Controls.ComboBox DirectoryCombo => _form._NO_TRANSLATE_Directory;
 
-        public bool IsRootedDirectoryPath(string path)
+        public bool IsRootedDirectoryPathForTesting(string path)
         {
             return FormInit.IsRootedDirectoryPath(path);
         }

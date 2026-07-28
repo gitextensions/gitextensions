@@ -18,8 +18,6 @@ public partial class Dashboard : GitModuleControl
     private readonly TranslationString _issues = new("Issues");
     private readonly TranslationString _openRepository = new("Open repository");
     private readonly TranslationString _translate = new("Translate");
-    private IRepositoryHistoryUIService? _repositoryHistoryUIService;
-
     public Dashboard()
     {
         InitializeComponent();
@@ -43,7 +41,6 @@ public partial class Dashboard : GitModuleControl
 
     public void Initialize(IRepositoryHistoryUIService repositoryHistoryUIService)
     {
-        _repositoryHistoryUIService = repositoryHistoryUIService;
         userRepositoriesList.Initialize(repositoryHistoryUIService, () => UICommands);
         userRepositoriesList.ConfigureRequested += (_, _) => ConfigureRepositoriesRequested?.Invoke(this, EventArgs.Empty);
         userRepositoriesList.GitModuleChanged += OnModuleChanged;

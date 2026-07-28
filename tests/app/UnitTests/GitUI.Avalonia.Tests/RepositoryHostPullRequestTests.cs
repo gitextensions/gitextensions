@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
@@ -165,7 +165,7 @@ public sealed class RepositoryHostPullRequestTests
     [Test]
     public void ViewPullRequestsForm_should_split_provider_diff_into_file_rows()
     {
-        IReadOnlyList<GitItemStatus> items = ViewPullRequestsForm.TestAccessor.ParseDiff(
+        IReadOnlyList<GitItemStatus> items = ViewPullRequestsForm.TestAccessor.ParseDiffForTesting(
             Diff,
             BaseSha,
             HeadSha);
