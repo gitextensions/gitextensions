@@ -245,6 +245,7 @@ public sealed class WorkingDirectorySelectorTests
         bool originalSortTop = AppSettings.SortTopRepos;
         bool originalSortRecent = AppSettings.SortRecentRepos;
         ShorteningRecentRepoPathStrategy originalShortening = AppSettings.ShorteningRecentRepoPathStrategy;
+        FormRecentReposSettings? form = null;
         try
         {
             AppSettings.MaxTopRepositories = 1;
@@ -257,7 +258,7 @@ public sealed class WorkingDirectorySelectorTests
             Repository first = new(@"C:\repos\first");
             Repository second = new(@"C:\repos\second");
             IList<Repository>? saved = null;
-            FormRecentReposSettings form = new(
+            form = new(
                 [first, second],
                 repositories =>
                 {
@@ -307,12 +308,38 @@ public sealed class WorkingDirectorySelectorTests
         }
         finally
         {
+            form?.Close();
             AppSettings.MaxTopRepositories = originalMaximum;
             AppSettings.RecentRepositoriesHistorySize = originalHistorySize;
             AppSettings.RecentReposComboMinWidth = originalWidth;
             AppSettings.HideTopRepositoriesFromRecentList.Value = originalHideTop;
             AppSettings.SortTopRepos = originalSortTop;
             AppSettings.SortRecentRepos = originalSortRecent;
+            AppSettings.ShorteningRecentRepoPathStrategy = originalShortening;
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public void FormRecentReposSettings_should_ignore_detached_radio_group_transitions()
+    {
+        ShorteningRecentRepoPathStrategy originalShortening = AppSettings.ShorteningRecentRepoPathStrategy;
+        FormRecentReposSettings? first = null;
+        FormRecentReposSettings? second = null;
+        try
+        {
+            AppSettings.ShorteningRecentRepoPathStrategy = ShorteningRecentRepoPathStrategy.MiddleDots;
+            first = new FormRecentReposSettings([]);
+
+            AppSettings.ShorteningRecentRepoPathStrategy = ShorteningRecentRepoPathStrategy.None;
+            Action constructSecondForm = () => second = new FormRecentReposSettings([]);
+
+            constructSecondForm.Should().NotThrow();
+        }
+        finally
+        {
+            first?.Close();
+            second?.Close();
             AppSettings.ShorteningRecentRepoPathStrategy = originalShortening;
         }
     }
@@ -340,19 +367,25 @@ public sealed class WorkingDirectorySelectorTests
     {
         ITranslation translation = Substitute.For<ITranslation>();
         FormRecentReposSettings form = new([]);
+        try
+        {
+            form.AddTranslationItems(translation);
 
-        form.AddTranslationItems(translation);
-
-        translation.Received(1).AddTranslationItem(
-            nameof(FormRecentReposSettings), "$this", "Text", "Recent repositories settings");
-        translation.Received(1).AddTranslationItem(
-            nameof(FormRecentReposSettings), "maxRecentRepositories", "Text", "Maximum number of top repositories");
-        translation.Received(1).AddTranslationItem(
-            nameof(FormRecentReposSettings), "shorteningGB", "Text", "Shortening strategy");
-        translation.Received(1).AddTranslationItem(
-            nameof(FormRecentReposSettings), "anchorToTopReposToolStripMenuItem", "Text", "Anchor to top repositories");
-        translation.Received(1).AddTranslationItem(
-            nameof(FormRecentReposSettings), "removeRecentToolStripMenuItem", "Text", "Remove from recent repositories");
+            translation.Received(1).AddTranslationItem(
+                nameof(FormRecentReposSettings), "$this", "Text", "Recent repositories settings");
+            translation.Received(1).AddTranslationItem(
+                nameof(FormRecentReposSettings), "maxRecentRepositories", "Text", "Maximum number of top repositories");
+            translation.Received(1).AddTranslationItem(
+                nameof(FormRecentReposSettings), "shorteningGB", "Text", "Shortening strategy");
+            translation.Received(1).AddTranslationItem(
+                nameof(FormRecentReposSettings), "anchorToTopReposToolStripMenuItem", "Text", "Anchor to top repositories");
+            translation.Received(1).AddTranslationItem(
+                nameof(FormRecentReposSettings), "removeRecentToolStripMenuItem", "Text", "Remove from recent repositories");
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [Test]
