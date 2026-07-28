@@ -47,7 +47,7 @@ public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
         }
 
         string path = Path.Join(_cacheDir, $"{email}.{imageSize}px.png");
-        byte[]? image = ReadImage();
+        byte[]? image = ReadImage(path);
 
         if (image is not null)
         {
@@ -58,72 +58,72 @@ public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
 
         if (image is not null)
         {
-            WriteImage(image);
+            WriteImage(path, image);
         }
 
         return image;
+    }
 
-        bool HasExpired()
+    private bool HasExpired(string path)
+    {
+        IFileInfo info = _fileSystem.FileInfo.New(path);
+
+        if (!info.Exists)
         {
-            IFileInfo info = _fileSystem.FileInfo.New(path);
+            return true;
+        }
 
-            if (!info.Exists)
-            {
-                return true;
-            }
-
-            if (AppSettings.AvatarProvider == AvatarProvider.None)
-            {
-                return false;
-            }
-
-            if (info.LastWriteTime < DateTime.Now.AddDays(-_cacheDays))
-            {
-                TryDelete();
-                return true;
-            }
-
+        if (AppSettings.AvatarProvider == AvatarProvider.None)
+        {
             return false;
         }
 
-        byte[]? ReadImage()
+        if (info.LastWriteTime < DateTime.Now.AddDays(-_cacheDays))
         {
-            if (HasExpired())
-            {
-                return null;
-            }
-
-            try
-            {
-                byte[] imageData = _fileSystem.File.ReadAllBytes(path);
-                return AvatarImage.GetPixelSize(imageData) is null ? null : imageData;
-            }
-            catch
-            {
-                return null;
-            }
+            TryDelete(path);
+            return true;
         }
 
-        void TryDelete()
+        return false;
+    }
+
+    private byte[]? ReadImage(string path)
+    {
+        if (HasExpired(path))
         {
-            try
-            {
-                _fileSystem.File.Delete(path);
-            }
-            catch
-            {
-            }
+            return null;
         }
 
-        void WriteImage(byte[] imageData)
+        try
         {
-            try
-            {
-                _fileSystem.File.WriteAllBytes(path, imageData);
-            }
-            catch
-            {
-            }
+            byte[] imageData = _fileSystem.File.ReadAllBytes(path);
+            return AvatarImage.GetPixelSize(imageData) is null ? null : imageData;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private void TryDelete(string path)
+    {
+        try
+        {
+            _fileSystem.File.Delete(path);
+        }
+        catch
+        {
+        }
+    }
+
+    private void WriteImage(string path, byte[] imageData)
+    {
+        try
+        {
+            _fileSystem.File.WriteAllBytes(path, imageData);
+        }
+        catch
+        {
         }
     }
 

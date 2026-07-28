@@ -1473,15 +1473,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
             }
         }
 
-        int caretLine = TextEditor.TextArea.Caret.Line;
-        int currentBlockStart = blockStarts.LastOrDefault(line => line <= caretLine);
-        bool caretIsInChangeBlock = changedLines.Contains(caretLine)
-                                    && currentBlockStart > 0;
-        int target = fromTop
-            ? blockStarts[0]
-            : searchBackward
-                ? blockStarts.LastOrDefault(line => line < (caretIsInChangeBlock ? currentBlockStart : caretLine))
-                : blockStarts.FirstOrDefault(line => line > caretLine);
+        int target = FindTargetChangeBlock(changedLines, blockStarts, searchBackward, fromTop);
         if (target <= 0)
         {
             return;
@@ -1489,16 +1481,40 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
         TextEditor.TextArea.Caret.Position = new TextViewPosition(target, 1);
         TextEditor.ScrollToLine(Math.Max(1, target - NumberOfContextLines - 1));
-
-        bool IsChangeLine(DiffLineInfo info)
-            => _viewMode == ViewMode.RangeDiff
-                ? info.LineType == DiffLineType.Header
-                : info.LineType is DiffLineType.Plus
-                    or DiffLineType.Minus
-                    or DiffLineType.MinusLeft
-                    or DiffLineType.PlusRight
-                    or DiffLineType.MinusPlus;
     }
+
+    private int FindTargetChangeBlock(
+        IReadOnlyCollection<int> changedLines,
+        IReadOnlyList<int> blockStarts,
+        bool searchBackward,
+        bool fromTop)
+    {
+        if (fromTop)
+        {
+            return blockStarts[0];
+        }
+
+        int caretLine = TextEditor.TextArea.Caret.Line;
+        if (!searchBackward)
+        {
+            return blockStarts.FirstOrDefault(line => line > caretLine);
+        }
+
+        int currentBlockStart = blockStarts.LastOrDefault(line => line <= caretLine);
+        int searchBefore = changedLines.Contains(caretLine) && currentBlockStart > 0
+            ? currentBlockStart
+            : caretLine;
+        return blockStarts.LastOrDefault(line => line < searchBefore);
+    }
+
+    private bool IsChangeLine(DiffLineInfo info)
+        => _viewMode == ViewMode.RangeDiff
+            ? info.LineType == DiffLineType.Header
+            : info.LineType is DiffLineType.Plus
+                or DiffLineType.Minus
+                or DiffLineType.MinusLeft
+                or DiffLineType.PlusRight
+                or DiffLineType.MinusPlus;
 
     /// <summary>Applies every displayed change from a revision or stash to the worktree/index.</summary>
     public void CherryPickAllChanges()
