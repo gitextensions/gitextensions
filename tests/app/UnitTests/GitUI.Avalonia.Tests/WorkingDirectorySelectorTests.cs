@@ -97,7 +97,9 @@ public sealed class WorkingDirectorySelectorTests
     {
         WorkingDirectoryToolStripSplitButton selector = new();
         WorkingDirectoryToolStripSplitButton.TestAccessor accessor = selector.GetTestAccessor();
-        accessor.PrepareDropDown([], []);
+        Repository alpha = new(@"C:\repos\alpha");
+        Repository beta = new(@"C:\repos\beta");
+        accessor.PrepareDropDown([], [alpha, beta]);
         Window window = new()
         {
             Width = 320,
@@ -118,6 +120,21 @@ public sealed class WorkingDirectorySelectorTests
             Click(window, primaryButton, MouseButton.Left);
             Dispatcher.UIThread.RunJobs();
             accessor.Menu.IsOpen.Should().BeTrue("the main button mirrors WinForms ButtonClick/ShowDropDown");
+
+            TopLevel popup = TopLevel.GetTopLevel(accessor.Filter)
+                ?? throw new InvalidOperationException("The repository flyout was not attached to a top level.");
+            Click(popup, accessor.Filter, MouseButton.Left);
+            popup.KeyTextInput("beta");
+            Dispatcher.UIThread.RunJobs();
+
+            accessor.Filter.Text.Should().Be("beta");
+            MenuItem[] repositoryItems = Flatten(accessor.Menu.Items)
+                .Where(item => item.Tag is RecentRepoInfo)
+                .ToArray();
+            repositoryItems.Single(item => ((RecentRepoInfo)item.Tag!).Repo.Path == alpha.Path)
+                .IsVisible.Should().BeFalse();
+            repositoryItems.Single(item => ((RecentRepoInfo)item.Tag!).Repo.Path == beta.Path)
+                .IsVisible.Should().BeTrue();
 
             accessor.Menu.Hide();
             Dispatcher.UIThread.RunJobs();
@@ -336,12 +353,12 @@ public sealed class WorkingDirectorySelectorTests
         }
     }
 
-    private static void Click(Window window, Control control, MouseButton button)
+    private static void Click(TopLevel topLevel, Control control, MouseButton button)
     {
         Point clickPoint = control.TranslatePoint(
             new Point(control.Bounds.Width / 2, control.Bounds.Height / 2),
-            window) ?? throw new InvalidOperationException("The control position was not available.");
-        window.MouseDown(clickPoint, button, RawInputModifiers.None);
-        window.MouseUp(clickPoint, button, RawInputModifiers.None);
+            topLevel) ?? throw new InvalidOperationException("The control position was not available.");
+        topLevel.MouseDown(clickPoint, button, RawInputModifiers.None);
+        topLevel.MouseUp(clickPoint, button, RawInputModifiers.None);
     }
 }

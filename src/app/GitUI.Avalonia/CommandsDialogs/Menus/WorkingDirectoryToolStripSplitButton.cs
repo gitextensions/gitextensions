@@ -60,8 +60,10 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         ToolTip.SetTip(this, _toolTip.Text);
         TranslationCompat.SetUseToolTipText(this, true);
 
+        // A focusable MenuItem consumes the pointer focus intended for its TextBox header.
         _filterHost = new MenuItem
         {
+            Focusable = false,
             Header = _txtFilter,
             StaysOpenOnClick = true,
         };
