@@ -57,7 +57,7 @@ public sealed class ImpactLoader : IDisposable
 
     private readonly Lock _cacheLock = new();
     private readonly CancellationTokenSequence _cancellationTokenSequence = new();
-    private CancellationTokenSource? _closingPluginCancellationToken = new();
+    private readonly CancellationTokenSource _closingPluginCancellationToken = new();
     private readonly Lock _lifetimeLock = new();
     private readonly IGitModule _module;
     private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
@@ -70,30 +70,28 @@ public sealed class ImpactLoader : IDisposable
 
     public void Dispose()
     {
-        CancellationTokenSource closingPluginCancellationToken;
         lock (_lifetimeLock)
         {
-            if (_closingPluginCancellationToken is null)
+            if (_disposed)
             {
                 return;
             }
 
-            closingPluginCancellationToken = _closingPluginCancellationToken;
-            _closingPluginCancellationToken = null;
+            _disposed = true;
+            _closingPluginCancellationToken.Cancel();
+            _cancellationTokenSequence.CancelCurrent();
         }
 
-        closingPluginCancellationToken.Cancel();
-        _cancellationTokenSequence.CancelCurrent();
         _operations.JoinPendingOperations();
         _cancellationTokenSequence.Dispose();
-        closingPluginCancellationToken.Dispose();
+        _closingPluginCancellationToken.Dispose();
     }
 
     public void Stop()
     {
         lock (_lifetimeLock)
         {
-            if (_closingPluginCancellationToken is not null)
+            if (!_disposed)
             {
                 _cancellationTokenSequence.CancelCurrent();
             }
@@ -104,9 +102,8 @@ public sealed class ImpactLoader : IDisposable
     {
         lock (_lifetimeLock)
         {
-            CancellationTokenSource closingPluginCancellationToken = _closingPluginCancellationToken
-                ?? throw new ObjectDisposedException(nameof(ImpactLoader));
-            CancellationToken closingPluginToken = closingPluginCancellationToken.Token;
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            CancellationToken closingPluginToken = _closingPluginCancellationToken.Token;
             CancellationToken sequenceToken = _cancellationTokenSequence.Next();
             _operations.FileAndForget(
                 async () =>
@@ -119,6 +116,7 @@ public sealed class ImpactLoader : IDisposable
         }
     }
 
+    private bool _disposed;
     private bool _showSubmodules;
 
     public bool ShowSubmodules
