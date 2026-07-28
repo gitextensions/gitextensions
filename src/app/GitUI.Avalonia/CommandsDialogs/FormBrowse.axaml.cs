@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitCommands.Git;
@@ -22,8 +23,10 @@ using GitUI.Compat;
 using GitUI.ConsoleEmulation;
 using GitUI.HelperDialogs;
 using GitUI.Models;
+using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
@@ -242,6 +245,10 @@ public sealed partial class FormBrowse : GitModuleForm
         FillTerminalTab();
         InitializeOutputHistory();
         branchSelect.Click += BranchSelectClick;
+        branchSelect.AddHandler(
+            PointerReleasedEvent,
+            BranchSelectPointerReleased,
+            RoutingStrategies.Tunnel);
         BranchSelectFlyout.Opening += (_, _) => PopulateBranchSelector();
         toolStripWorktrees.Click += ManageWorktreeToolStripMenuItemClick;
         WorktreeFlyout.Opening += (_, _) => PopulateWorktreeSelector();
@@ -971,8 +978,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void BranchSelectClick(object? sender, EventArgs e)
     {
-        PopulateBranchSelector();
-        branchSelect.Flyout?.ShowAt(branchSelect);
+        branchSelect.ShowDropDown();
     }
 
     private void PopulateBranchSelector()
@@ -984,10 +990,37 @@ public sealed partial class FormBrowse : GitModuleForm
         BranchSelectFlyout.Items.Add(new Separator());
         foreach (IGitRef branch in Module.GetRefs(RefsFilter.Heads).Take(100))
         {
-            MenuItem item = new() { Header = branch.Name, IsEnabled = !branch.ObjectId.IsZero };
+            if (branch.ObjectId.IsZero)
+            {
+                throw new InvalidOperationException($"Branch '{branch.Name}' has no ObjectId.");
+            }
+
+            bool isBranchVisible = ((ICheckRefs)RevisionGrid).Contains(branch.ObjectId);
+            MenuItem item = new()
+            {
+                Header = branch.Name,
+                Icon = new Image
+                {
+                    Width = 16,
+                    Height = 16,
+                    Source = isBranchVisible ? Images.Branch : Images.EyeClosed,
+                },
+                Opacity = isBranchVisible ? 1 : 0.55,
+            };
             item.Click += (_, _) => UICommands.StartCheckoutBranch(this, branch.Name);
             BranchSelectFlyout.Items.Add(item);
         }
+    }
+
+    private void BranchSelectPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (e.InitialPressMouseButton != MouseButton.Right)
+        {
+            return;
+        }
+
+        CheckoutBranchToolStripMenuItemClick(sender, e);
+        e.Handled = true;
     }
 
     private MenuFlyout BranchSelectFlyout => (MenuFlyout)branchSelect.Flyout!;
