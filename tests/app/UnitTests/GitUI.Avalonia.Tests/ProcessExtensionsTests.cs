@@ -44,7 +44,9 @@ public sealed class ProcessExtensionsTests
             process.TerminateTree();
 
             await process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
-            SpinWait.SpinUntil(() => childProcessIds.All(HasExited), TimeSpan.FromSeconds(5)).Should().BeTrue();
+            SpinWait.SpinUntil(
+                () => childProcessIds.All(ProcessTestHelper.HasExited),
+                TimeSpan.FromSeconds(5)).Should().BeTrue();
         }
         finally
         {
@@ -53,42 +55,10 @@ public sealed class ProcessExtensionsTests
                 process.Kill(entireProcessTree: true);
             }
 
-            foreach (int processId in childProcessIds.Where(processId => !HasExited(processId)))
+            foreach (int processId in childProcessIds.Where(processId => !ProcessTestHelper.HasExited(processId)))
             {
                 Process.GetProcessById(processId).Kill();
             }
-        }
-    }
-
-    private static bool HasExited(int processId)
-    {
-        if (OperatingSystem.IsLinux())
-        {
-            string statPath = $"/proc/{processId}/stat";
-            try
-            {
-                string stat = File.ReadAllText(statPath);
-                int commandEnd = stat.LastIndexOf(')');
-                if (commandEnd >= 0 && commandEnd + 2 < stat.Length
-                    && stat[commandEnd + 2] is 'Z' or 'X')
-                {
-                    return true;
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                return true;
-            }
-        }
-
-        try
-        {
-            using Process process = Process.GetProcessById(processId);
-            return process.HasExited;
-        }
-        catch (ArgumentException)
-        {
-            return true;
         }
     }
 }
