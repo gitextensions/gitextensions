@@ -11,6 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 internal sealed class AvatarColumnProvider : ColumnProvider
 {
     private readonly IAvatarProvider _avatarProvider;
+    private int _cacheVersion;
 
     public AvatarColumnProvider(
         RevisionGridControl revisionGridView,
@@ -19,7 +20,10 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         : base("Avatar", new GridLength(32), minimumWidth: 32, resizable: false)
     {
         _avatarProvider = avatarProvider;
-        _ = new CacheRefreshSubscription(revisionGridView, avatarCacheCleaner);
+        _ = new CacheRefreshSubscription(
+            revisionGridView,
+            avatarCacheCleaner,
+            () => Interlocked.Increment(ref _cacheVersion));
     }
 
     public override void ApplySettings()
@@ -43,7 +47,10 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         }
         else
         {
-            image.Load(revision.AuthorEmail ?? string.Empty, revision.Author);
+            image.Load(
+                revision.AuthorEmail ?? string.Empty,
+                revision.Author,
+                Volatile.Read(ref _cacheVersion));
         }
 
         UpdateToolTip(control, revision);
@@ -61,9 +68,10 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         return true;
     }
 
-    private sealed class AvatarCell : Image
+    internal sealed class AvatarCell : Image
     {
         private readonly IAvatarProvider _avatarProvider;
+        private int _cacheVersion = -1;
         private string? _email;
         private string? _name;
         private int _requestVersion;
@@ -72,24 +80,39 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         {
             _avatarProvider = avatarProvider;
             Stretch = Avalonia.Media.Stretch.Uniform;
-            AttachedToVisualTree += (_, _) => Reload();
-            DetachedFromVisualTree += (_, _) => ResetForDetach();
         }
 
         public void Clear()
         {
+            if (_email is null && _name is null && Source is null)
+            {
+                return;
+            }
+
             _email = null;
             _name = null;
+            _cacheVersion = -1;
             _requestVersion++;
             ReplaceSource(null);
         }
 
-        public void Load(string email, string? name)
+        public void Load(string email, string? name, int cacheVersion)
         {
+            bool identityChanged = _email != email || _name != name;
+            if (!identityChanged && _cacheVersion == cacheVersion)
+            {
+                return;
+            }
+
             _email = email;
             _name = name;
+            _cacheVersion = cacheVersion;
             int requestVersion = ++_requestVersion;
-            ReplaceSource(null);
+            if (identityChanged)
+            {
+                ReplaceSource(null);
+            }
+
             ThreadHelper.FileAndForget(() => LoadAsync(email, name, requestVersion));
         }
 
@@ -117,31 +140,22 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             Source = bitmap;
             previous?.Dispose();
         }
-
-        private void Reload()
-        {
-            if (_email is not null)
-            {
-                Load(_email, _name);
-            }
-        }
-
-        private void ResetForDetach()
-        {
-            _requestVersion++;
-            ReplaceSource(null);
-        }
     }
 
     private sealed class CacheRefreshSubscription
     {
         private readonly IAvatarCacheCleaner _avatarCacheCleaner;
+        private readonly Action _invalidateCacheVersion;
         private readonly WeakReference<RevisionGridControl> _revisionGridView;
 
-        public CacheRefreshSubscription(RevisionGridControl revisionGridView, IAvatarCacheCleaner avatarCacheCleaner)
+        public CacheRefreshSubscription(
+            RevisionGridControl revisionGridView,
+            IAvatarCacheCleaner avatarCacheCleaner,
+            Action invalidateCacheVersion)
         {
             _revisionGridView = new WeakReference<RevisionGridControl>(revisionGridView);
             _avatarCacheCleaner = avatarCacheCleaner;
+            _invalidateCacheVersion = invalidateCacheVersion;
             _avatarCacheCleaner.CacheCleared += OnCacheCleared;
         }
 
@@ -149,6 +163,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         {
             if (_revisionGridView.TryGetTarget(out RevisionGridControl? revisionGridView))
             {
+                _invalidateCacheVersion();
                 revisionGridView.RefreshRealizedRows();
                 return;
             }
