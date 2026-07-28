@@ -137,6 +137,10 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             icon: null,
             asRoot: true);
         settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<ChecklistSettingsPage>(this, serviceProvider),
+            GitExtensionsSettingsGroup.GetPageReference(),
+            Images.StatusBadgeSuccess);
+        settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<GeneralSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
             Images.GeneralSettings);

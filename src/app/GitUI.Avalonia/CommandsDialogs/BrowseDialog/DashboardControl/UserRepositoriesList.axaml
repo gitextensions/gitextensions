@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList">
+  <Grid RowDefinitions="Auto,Auto,*" Margin="20">
+    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <TextBlock x:Name="lblRecentRepositories"
+                 FontSize="22"
+                 Text="Recent repositories"
+                 VerticalAlignment="Center" />
+      <compat:IconButton x:Name="mnuConfigure"
+                         Grid.Column="1"
+                         Classes="gitextensions-icon-button"
+                         Content="Recent repositories _settings"
+                         Icon="{x:Static properties:Images.Settings}"
+                         Padding="7,3"
+                         VerticalAlignment="Center" />
+    </Grid>
+    <TextBox x:Name="textBoxSearch"
+             Grid.Row="1"
+             PlaceholderText="Search repositories..."
+             Margin="0,0,0,10" />
+    <ListBox x:Name="listView1"
+             Grid.Row="2"
+             Background="{DynamicResource ThemeBackgroundBrush}"
+             BorderThickness="0"
+             SelectionMode="Single" />
+  </Grid>
+</UserControl>

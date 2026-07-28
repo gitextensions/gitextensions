@@ -29,6 +29,7 @@ using GitUI.Avatars;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.Menus;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -883,6 +884,34 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task SeedStandaloneControlAsync(Control root, CaptureContext context)
     {
+        if (root is Dashboard dashboard)
+        {
+            IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
+            history.LoadSnapshot().Returns(new RepositoryHistorySnapshot(
+                [
+                    new RepositoryHistoryEntry(
+                        new Repository(context.WorkingDirectory),
+                        "gitextensions",
+                        MainBranchName,
+                        IsFavourite: false,
+                        IsAnchored: true),
+                ],
+                [
+                    new RepositoryHistoryEntry(
+                        new Repository(Path.GetDirectoryName(context.WorkingDirectory)!)
+                        {
+                            Category = "Development",
+                        },
+                        "avalonia-port",
+                        FeatureBranchName,
+                        IsFavourite: true,
+                        IsAnchored: false),
+                ]));
+            dashboard.Initialize(history);
+            dashboard.RefreshContent();
+            return;
+        }
+
         if (root is RevisionGpgInfoControl revisionGpgInfo)
         {
             revisionGpgInfo.DisplayGpgInfo(new GpgInfo(
