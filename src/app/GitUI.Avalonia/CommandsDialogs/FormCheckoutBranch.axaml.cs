@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -438,16 +438,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
         }
         else
         {
-            _remoteName = GitRefName.GetRemoteName(branch, Module.GetRemoteNames());
-            _localBranchName = Module.GetLocalTrackingBranchName(_remoteName, branch) ?? "";
-            string remoteBranchName = _remoteName.Length > 0 ? branch[(_remoteName.Length + 1)..] : branch;
-            _newLocalBranchName = string.Concat(_remoteName, "_", remoteBranchName);
-            int i = 2;
-            while (LocalBranchExists(_newLocalBranchName))
-            {
-                _newLocalBranchName = string.Concat(_remoteName, "_", _localBranchName, "_", i.ToString());
-                i++;
-            }
+            SetRemoteBranchNames(branch);
         }
 
         bool existsLocalBranch = LocalBranchExists(_localBranchName);
@@ -483,17 +474,27 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
                 }
             });
         }
+    }
 
-        return;
-
-        bool LocalBranchExists(string name)
+    private void SetRemoteBranchNames(string branch)
+    {
+        _remoteName = GitRefName.GetRemoteName(branch, Module.GetRemoteNames());
+        _localBranchName = Module.GetLocalTrackingBranchName(_remoteName, branch) ?? "";
+        string remoteBranchName = _remoteName.Length > 0 ? branch[(_remoteName.Length + 1)..] : branch;
+        _newLocalBranchName = string.Concat(_remoteName, "_", remoteBranchName);
+        int suffix = 2;
+        while (LocalBranchExists(_newLocalBranchName))
         {
-            return GetLocalBranches().Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            _newLocalBranchName = string.Concat(_remoteName, "_", _localBranchName, "_", suffix.ToString());
+            suffix++;
         }
     }
 
     private IEnumerable<IGitRef> GetLocalBranches()
         => _localBranches ??= Module.GetRefs(RefsFilter.Heads);
+
+    private bool LocalBranchExists(string name)
+        => GetLocalBranches().Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
     private IEnumerable<IGitRef> GetRemoteBranches()
         => _remoteBranches ??= Module.GetRefs(RefsFilter.Remotes);
