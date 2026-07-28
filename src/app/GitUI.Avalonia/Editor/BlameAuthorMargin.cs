@@ -254,46 +254,54 @@ public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
                 break;
             }
 
-            double y = visualLine.VisualTop - textView.ScrollOffset.Y;
-
-            foreach ((int startLine, int endLine, IBrush brush) in _highlights)
-            {
-                if (index >= startLine && index <= endLine)
-                {
-                    context.FillRectangle(brush, new Avalonia.Rect(0, y, Bounds.Width, visualLine.Height));
-                    break;
-                }
-            }
-
-            if (index < _blameLines.Length)
-            {
-                context.FillRectangle(
-                    _brushs[_blameLines[index].AgeBucketIndex],
-                    new Avalonia.Rect(0, y, AgeBucketMarkerWidth, visualLine.Height));
-            }
-
-            double textX = AgeBucketMarkerWidth + TextPadding;
-            if (_showAvatars)
-            {
-                double avatarSize = Math.Min(AvatarSize, visualLine.Height);
-                if (index < _avatars.Length && _avatars[index] is Bitmap avatar)
-                {
-                    double imageY = y + ((visualLine.Height - avatarSize) / 2);
-                    context.DrawImage(
-                        avatar,
-                        new Avalonia.Rect(avatar.Size),
-                        new Avalonia.Rect(AgeBucketMarkerWidth, imageY, avatarSize, avatarSize));
-                }
-
-                textX += AvatarSize + TextPadding;
-            }
-
-            string text = _authorLines[index];
-            if (!string.IsNullOrEmpty(text))
-            {
-                context.DrawText(CreateFormattedText(text), new Avalonia.Point(textX, y));
-            }
+            RenderLine(context, textView, visualLine, index);
         }
+    }
+
+    private void RenderLine(DrawingContext context, TextView textView, VisualLine visualLine, int index)
+    {
+        double y = visualLine.VisualTop - textView.ScrollOffset.Y;
+        (int startLine, int endLine, IBrush brush) highlight =
+            _highlights.FirstOrDefault(item => index >= item.StartLine && index <= item.EndLine);
+        if (highlight.brush is not null)
+        {
+            context.FillRectangle(highlight.brush, new Avalonia.Rect(0, y, Bounds.Width, visualLine.Height));
+        }
+
+        if (index < _blameLines.Length)
+        {
+            context.FillRectangle(
+                _brushs[_blameLines[index].AgeBucketIndex],
+                new Avalonia.Rect(0, y, AgeBucketMarkerWidth, visualLine.Height));
+        }
+
+        double textX = RenderAvatar(context, visualLine, index, y);
+        string text = _authorLines[index];
+        if (!string.IsNullOrEmpty(text))
+        {
+            context.DrawText(CreateFormattedText(text), new Avalonia.Point(textX, y));
+        }
+    }
+
+    private double RenderAvatar(DrawingContext context, VisualLine visualLine, int index, double y)
+    {
+        double textX = AgeBucketMarkerWidth + TextPadding;
+        if (!_showAvatars)
+        {
+            return textX;
+        }
+
+        double avatarSize = Math.Min(AvatarSize, visualLine.Height);
+        if (index < _avatars.Length && _avatars[index] is Bitmap avatar)
+        {
+            double imageY = y + ((visualLine.Height - avatarSize) / 2);
+            context.DrawImage(
+                avatar,
+                new Avalonia.Rect(avatar.Size),
+                new Avalonia.Rect(AgeBucketMarkerWidth, imageY, avatarSize, avatarSize));
+        }
+
+        return textX + AvatarSize + TextPadding;
     }
 
     private void ReplaceAvatars(Bitmap?[] avatars)
