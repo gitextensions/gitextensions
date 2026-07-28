@@ -19,8 +19,8 @@ public partial class ImpactControl : UserControl, IDisposable
     private const double BlockHalfWidth = BlockWidth / 2;
     private const double TransitionWidth = 50;
     private const double TransitionHalfWidth = TransitionWidth / 2;
-    private const double LinesFontSize = 10 * 96 / 72;
-    private const double WeekFontSize = 8 * 96 / 72;
+    private const double LinesFontSize = 10 * 96d / 72d;
+    private const double WeekFontSize = 8 * 96d / 72d;
     private const double ScrollBarHeight = 16;
     private const double WheelScrollDistance = 120;
     private const double DarkBackgroundLuminanceThreshold = 0.35;

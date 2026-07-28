@@ -34,6 +34,7 @@ public sealed partial class FormPush : GitModuleForm
     private const string TagTabToolTip = "Push tags to remote repository";
     private const string PushToRemoteToolTip = "Remote repository to push to";
     private const string PushToUrlToolTip = "Url to push to";
+    private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
 
     private readonly TranslationString _branchNewForRemote = new(
         "The branch you are about to push seems to be a new branch for the remote."
@@ -505,7 +506,10 @@ public sealed partial class FormPush : GitModuleForm
             return false;
         }
 
-        Regex rejected = new($"! \\[rejected\\]\\s*((?<currBranch>{Regex.Escape(_currentBranchName)})|.*) -> ");
+        Regex rejected = new(
+            $"! \\[rejected\\]\\s*((?<currBranch>{Regex.Escape(_currentBranchName)})|.*) -> ",
+            RegexOptions.None,
+            RegexTimeout);
         Match match = rejected.Match(form.GetOutputString());
         if (!match.Success || Module.IsBareRepository())
         {
@@ -1034,7 +1038,7 @@ public sealed partial class FormPush : GitModuleForm
 
         return Path.IsPathRooted(destination)
             || Uri.IsWellFormedUriString(destination, UriKind.Absolute)
-            || Regex.IsMatch(destination, @"^[^\s@]+@[^\s:]+:.+$");
+            || Regex.IsMatch(destination, @"^[^\s@]+@[^\s:]+:.+$", RegexOptions.None, RegexTimeout);
     }
 
     private void PopulateRecursiveSubmoduleOptions(ITranslation? translation = null)

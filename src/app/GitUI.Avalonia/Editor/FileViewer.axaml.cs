@@ -399,13 +399,19 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     public void ViewText(string? fileName, string text, Action? openWithDifftool = null)
     {
         ThreadHelper.JoinableTaskFactory.Run(
-            () => ViewTextAsync(fileName, text, item: null, line: null, openWithDifftool));
+            () => ViewTextAsync(
+                fileName,
+                text,
+                item: null,
+                line: null,
+                openWithDifftool,
+                cancellationToken: CancellationToken.None));
     }
 
     /// <summary>
     ///  Clears the viewer.
     /// </summary>
-    public Task ClearAsync() => ViewTextAsync(string.Empty, string.Empty);
+    public Task ClearAsync() => ViewTextAsync(string.Empty, string.Empty, cancellationToken: CancellationToken.None);
 
     private void SetText(string? text)
     {
@@ -1736,7 +1742,8 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         ExecutionResult result = Module.GitExecutable.Execute(
             args,
             inputWriter => inputWriter.BaseStream.Write(patch),
-            throwOnErrorExit: false);
+            throwOnErrorExit: false,
+            cancellationToken: CancellationToken.None);
         string output = result.AllOutput.Trim();
         if (!result.ExitedSuccessfully
             && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, GetOwner(), false, false)))
