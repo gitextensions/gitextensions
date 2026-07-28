@@ -424,7 +424,10 @@ public sealed class FormPullTests
             process.Ok.IsEnabled.Should().BeTrue("the conflicting pull process should finish");
             process.ErrorOccurred().Should().BeTrue();
             process.Close();
-            module.InTheMiddleOfConflictedMerge().Should().BeTrue();
+            module.InTheMiddleOfConflictedMerge().Should().BeTrue(
+                "the pull should fail because of the expected content conflict, but its output was:{0}{1}",
+                Environment.NewLine,
+                process.GetOutputString());
             accessor.CheckMergeConflictsOnError(form).Should().BeTrue();
             _messageBoxes.Messages.Should().NotBeEmpty("the failed pull should offer the shared conflict-resolution flow");
         }

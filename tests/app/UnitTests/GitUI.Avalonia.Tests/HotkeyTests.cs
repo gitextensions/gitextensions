@@ -535,12 +535,13 @@ public sealed class HotkeyTests
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
-        module.IsValidGitWorkingDir().Returns(false);
+        module.IsValidGitWorkingDir().Returns(true);
 
         ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
         IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
         appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
         IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
+        IRepositoryHistoryUIService repositoryHistory = Substitute.For<IRepositoryHistoryUIService>();
         loader.LoadHotkeys(FormBrowse.HotkeySettingsName).Returns(browseHotkeys);
         loader.LoadHotkeys(RevisionGridControl.HotkeySettingsName).Returns(revisionHotkeys);
         loader.LoadHotkeys(FormSettings.HotkeySettingsName).Returns(scriptHotkeys ?? []);
@@ -550,6 +551,7 @@ public sealed class HotkeyTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(repositoryHistory);
         commands.GetService(typeof(IScriptsManager)).Returns(scriptsManager);
         commands.GetService(typeof(IScriptsRunner)).Returns(scriptsRunner);
 

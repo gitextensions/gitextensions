@@ -13,6 +13,7 @@ using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.LeftPanel;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
 
@@ -21,6 +22,10 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class ViewConstructionTests
 {
+    [SetUp]
+    public void SetUp()
+        => ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+
     [Test]
     public void Translator_should_find_the_shared_translations()
     {
@@ -135,6 +140,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem refresh = form.FindControl<MenuItem>("refreshToolStripMenuItem")
@@ -288,6 +294,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem commit = form.FindControl<MenuItem>("commitToolStripMenuItem")
@@ -315,6 +322,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem stash = form.FindControl<MenuItem>("stashToolStripMenuItem")
@@ -342,6 +350,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem merge = form.FindControl<MenuItem>("mergeBranchToolStripMenuItem")
@@ -359,6 +368,7 @@ public sealed class ViewConstructionTests
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
         module.IsValidGitWorkingDir().Returns(false);
+        module.GetEffectiveSettings().Returns(AppSettings.SettingsContainer);
 
         ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
         IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
@@ -369,6 +379,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem rebase = form.FindControl<MenuItem>("rebaseToolStripMenuItem")
@@ -403,6 +414,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem pull = form.FindControl<MenuItem>("pullToolStripMenuItem")
@@ -432,6 +444,7 @@ public sealed class ViewConstructionTests
             commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
             commands.GetService(typeof(IAppTitleGenerator)).Returns(titleGenerator);
             commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+            commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
             FormBrowse form = new(commands);
             Button commit = form.FindControl<Button>("toolStripButtonCommit")!;
@@ -472,6 +485,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem checkout = form.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
@@ -499,6 +513,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem createBranch = form.FindControl<MenuItem>("branchToolStripMenuItem")
@@ -526,6 +541,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem deleteBranch = form.FindControl<MenuItem>("deleteBranchToolStripMenuItem")
@@ -553,6 +569,7 @@ public sealed class ViewConstructionTests
         commands.RepoChangedNotifier.Returns(notifier);
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
 
         FormBrowse form = new(commands);
         MenuItem createTag = form.FindControl<MenuItem>("tagToolStripMenuItem")

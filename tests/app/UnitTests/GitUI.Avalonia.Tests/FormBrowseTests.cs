@@ -126,12 +126,14 @@ public sealed class FormBrowseTests
     {
         bool originalAlwaysShowCheckout = AppSettings.AlwaysShowCheckoutBranchDlg;
         bool originalCheckForUncommittedChanges = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
+        bool originalCloseProcessDialog = AppSettings.CloseProcessDialog;
         GitModule module = CreateRepositoryWithInitialCommit();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" });
         try
         {
             AppSettings.AlwaysShowCheckoutBranchDlg = false;
             AppSettings.CheckForUncommittedChangesInCheckoutBranch = true;
+            AppSettings.CloseProcessDialog = true;
             using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
             form.Show();
             TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
@@ -174,6 +176,7 @@ public sealed class FormBrowseTests
         {
             AppSettings.AlwaysShowCheckoutBranchDlg = originalAlwaysShowCheckout;
             AppSettings.CheckForUncommittedChangesInCheckoutBranch = originalCheckForUncommittedChanges;
+            AppSettings.CloseProcessDialog = originalCloseProcessDialog;
         }
     }
 
