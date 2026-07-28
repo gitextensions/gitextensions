@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage">
+  <ScrollViewer>
+    <StackPanel Margin="12" Spacing="6">
+      <TextBlock x:Name="label11"
+                 Text="The checklist below validates the basic settings needed for Git Extensions to work properly."
+                 TextWrapping="Wrap"
+                 Margin="0,0,0,8" />
+      <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+        <Button x:Name="GitFound" Grid.Row="0" HorizontalContentAlignment="Left" />
+        <Button x:Name="GitFound_Fix" Grid.Row="0" Grid.Column="1" Content="Repair" />
+        <Button x:Name="UserNameSet" Grid.Row="1" HorizontalContentAlignment="Left" />
+        <Button x:Name="UserNameSet_Fix" Grid.Row="1" Grid.Column="1" Content="Repair" />
+        <Button x:Name="MergeTool" Grid.Row="2" HorizontalContentAlignment="Left" />
+        <Button x:Name="MergeTool_Fix" Grid.Row="2" Grid.Column="1" Content="Repair" />
+        <Button x:Name="DiffTool" Grid.Row="3" HorizontalContentAlignment="Left" />
+        <Button x:Name="DiffTool_Fix" Grid.Row="3" Grid.Column="1" Content="Repair" />
+        <Button x:Name="translationConfig" Grid.Row="4" HorizontalContentAlignment="Left" />
+        <Button x:Name="translationConfig_Fix" Grid.Row="4" Grid.Column="1" Content="Repair" />
+      </Grid>
+      <CheckBox x:Name="CheckAtStartup"
+                Content="Check settings at startup (disables automatically if all settings are correct)" />
+      <Button x:Name="Rescan"
+              Content="Save and rescan"
+              HorizontalAlignment="Left"
+              Margin="0,6,0,0" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

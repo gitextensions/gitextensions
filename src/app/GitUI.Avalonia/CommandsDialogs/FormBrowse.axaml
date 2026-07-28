@@ -4,6 +4,7 @@
         xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
         xmlns:commandsDialogs="using:GitUI.CommandsDialogs"
         xmlns:menus="using:GitUI.CommandsDialogs.Menus"
+        xmlns:dashboard="using:GitUI.CommandsDialogs.BrowseDialog.DashboardControl"
         xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
         xmlns:controls="clr-namespace:GitUI.UserControls"
         xmlns:compat="using:GitUI.Compat"
@@ -338,10 +339,11 @@
     </WrapPanel>
     <TextBlock x:Name="lblRepoPath" IsVisible="False" />
     <TextBlock x:Name="lblStatus" IsVisible="False" />
-    <Grid x:Name="mainContentGrid"
-          ColumnDefinitions="260,0,*"
-          RowDefinitions="*,0,0"
-          Margin="6,0,6,6">
+    <Grid>
+      <Grid x:Name="mainContentGrid"
+            ColumnDefinitions="260,0,*"
+            RowDefinitions="*,0,0"
+            Margin="6,0,6,6">
       <Border x:Name="leftPanel" Grid.Column="0" Classes="gitextensions-section">
         <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" />
       </Border>
@@ -401,6 +403,8 @@
               Grid.ColumnSpan="3"
               Classes="gitextensions-section"
               IsVisible="False" />
+      </Grid>
+      <dashboard:Dashboard x:Name="dashboard" IsVisible="False" />
     </Grid>
   </DockPanel>
 </Window>

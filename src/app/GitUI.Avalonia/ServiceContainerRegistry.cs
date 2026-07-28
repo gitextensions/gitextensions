@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.Design;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.PlainText;
@@ -42,5 +44,13 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IOutputHistoryProvider>(outputHistoryModel);
         serviceContainer.AddService<IOutputHistoryRecorder>(outputHistoryModel);
         serviceContainer.AddService<ITerminalLauncher>(new TerminalLauncher());
+
+        IRepositoryCurrentBranchNameCache branchNameCache = new RepositoryCurrentBranchNameCache(
+            new RepositoryCurrentBranchNameProvider(serviceContainer.GetRequiredService<IGitExecutorProvider>()));
+        IInvalidRepositoryRemover invalidRepositoryRemover = new InvalidRepositoryRemover();
+        serviceContainer.AddService<IRepositoryCurrentBranchNameCache>(branchNameCache);
+        serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);
+        serviceContainer.AddService<IRepositoryHistoryUIService>(
+            new RepositoryHistoryUIService(branchNameCache, invalidRepositoryRemover));
     }
 }

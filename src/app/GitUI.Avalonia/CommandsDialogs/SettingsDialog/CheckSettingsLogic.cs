@@ -8,6 +8,17 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
 {
     public readonly CommonLogic CommonLogic = commonLogic;
 
+    public bool AutoSolveAllSettings()
+    {
+        bool valid = SolveGitCommand();
+        valid = SolveLinuxToolsDir() && valid;
+        valid = SolveGitExtensionsDir() && valid;
+        valid = SolveEditor(CommonLogic) && valid;
+        CommonLogic.GitConfigSettingsSet.Save();
+        CommonLogic.DistributedSettingsSet.Save();
+        return valid;
+    }
+
     public static bool SolveEditor(CommonLogic commonLogic)
     {
         if (string.IsNullOrEmpty(commonLogic.GetGlobalEditor()))
