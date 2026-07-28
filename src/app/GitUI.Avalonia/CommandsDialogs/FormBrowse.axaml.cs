@@ -41,6 +41,8 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly TranslationString _buildReportTabCaption = new("Build Report");
     private readonly TranslationString _commitButtonText = new("Commit");
     private readonly TranslationString _indexLockCantDelete = new("Failed to delete index.lock");
+    private readonly TranslationString _undoLastCommitText = new("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
+    private readonly TranslationString _undoLastCommitCaption = new("Undo last commit");
     private readonly TranslationString _noReposHostPluginLoaded = new("No repository host plugin loaded.");
     private readonly TranslationString _noReposHostFound = new("Could not find any relevant repository hosts for the currently open repository.");
 
@@ -177,19 +179,25 @@ public sealed partial class FormBrowse : GitModuleForm
         deleteIndexLockToolStripMenuItem.Click += deleteIndexLockToolStripMenuItem_Click;
         editLocalGitConfigToolStripMenuItem.Click += EditLocalGitConfigToolStripMenuItemClick;
         repoSettingsToolStripMenuItem.Click += RepoSettingsToolStripMenuItemClick;
+        commandsToolStripMenuItem.SubmenuOpened += CommandsToolStripMenuItem_SubmenuOpened;
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
+        undoLastCommitToolStripMenuItem.Click += undoLastCommitToolStripMenuItem_Click;
+        pushToolStripMenuItem.Click += PushToolStripMenuItemClick;
+        resetToolStripMenuItem.Click += ResetToolStripMenuItem_Click;
         checkoutBranchToolStripMenuItem.Click += CheckoutBranchToolStripMenuItemClick;
         branchToolStripMenuItem.Click += CreateBranchToolStripMenuItemClick;
         deleteBranchToolStripMenuItem.Click += DeleteBranchToolStripMenuItemClick;
         pullToolStripMenuItem.Click += PullToolStripMenuItemClick;
-        fetchAllToolStripMenuItem.Click += fetchAllToolStripMenuItem_Click;
         mergeBranchToolStripMenuItem.Click += MergeBranchToolStripMenuItemClick;
         rebaseToolStripMenuItem.Click += RebaseToolStripMenuItemClick;
+        runMergetoolToolStripMenuItem.Click += RunMergetoolToolStripMenuItemClick;
         tagToolStripMenuItem.Click += TagToolStripMenuItemClick;
         deleteTagToolStripMenuItem.Click += DeleteTagToolStripMenuItemClick;
+        cherryPickToolStripMenuItem.Click += CherryPickToolStripMenuItemClick;
         archiveToolStripMenuItem.Click += ArchiveToolStripMenuItemClick;
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
         toolStripMenuItemReflog.Click += toolStripMenuItemReflog_Click;
+        applyPatchToolStripMenuItem.Click += ApplyPatchToolStripMenuItemClick;
         patchToolStripMenuItem.Click += PatchToolStripMenuItemClick;
         _forkCloneRepositoryToolStripMenuItem.Click += _forkCloneMenuItem_Click;
         _viewPullRequestsToolStripMenuItem.Click += _viewPullRequestsToolStripMenuItem_Click;
@@ -218,7 +226,7 @@ public sealed partial class FormBrowse : GitModuleForm
         mergeToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.Merge, isSilent: true);
         rebaseToolStripMenuItem1.Click += (_, _) => DoPull(GitPullAction.Rebase, isSilent: true);
         fetchToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.Fetch, isSilent: true);
-        FetchAllToolbarMenuItem.Click += (_, _) => DoPull(GitPullAction.FetchAll, isSilent: true);
+        fetchAllToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.FetchAll, isSilent: true);
         fetchPruneAllToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.FetchPruneAll, isSilent: true);
         defaultPullDialogToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.None);
         defaultPullMergeToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.Merge);
@@ -312,6 +320,8 @@ public sealed partial class FormBrowse : GitModuleForm
         Title = appTitleGenerator.Generate(module.WorkingDir, isValidWorkingDir, branchName);
 
         refreshToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        repositoryToolStripMenuItem.IsVisible = isValidWorkingDir;
+        commandsToolStripMenuItem.IsVisible = isValidWorkingDir;
         fileExplorerToolStripMenuItem.IsEnabled = isValidWorkingDir;
         manageRemoteRepositoriesToolStripMenuItem1.IsEnabled = isValidWorkingDir;
         commitToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
@@ -886,11 +896,6 @@ public sealed partial class FormBrowse : GitModuleForm
             .OfType<MenuItem>()
             .Single(item => item.Tag as string == "userShell");
 
-    private MenuItem FetchAllToolbarMenuItem
-        => ((MenuFlyout)toolStripButtonPull.Flyout!).Items
-            .OfType<MenuItem>()
-            .Single(item => item.Tag as string == "fetchAllToolbar");
-
     private void RepoObjectsTree_SelectionChanged(object? sender, EventArgs e)
     {
         if (repoObjectsTree.SelectedRevisionObjectId is ObjectId objectId)
@@ -1378,9 +1383,78 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartCheckoutBranch(this);
     }
 
+    private void CommandsToolStripMenuItem_SubmenuOpened(object? sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+        bool singleNormalCommit = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
+        bool hasWorkingTree = !Module.IsBareRepository();
+
+        branchToolStripMenuItem.IsEnabled =
+        deleteBranchToolStripMenuItem.IsEnabled =
+        mergeBranchToolStripMenuItem.IsEnabled =
+        checkoutBranchToolStripMenuItem.IsEnabled =
+        cherryPickToolStripMenuItem.IsEnabled =
+            singleNormalCommit && hasWorkingTree;
+
+        rebaseToolStripMenuItem.IsEnabled =
+            selectedRevisions.Count is (1 or 2)
+            && selectedRevisions.All(revision => !revision.IsArtificial)
+            && hasWorkingTree;
+
+        tagToolStripMenuItem.IsEnabled =
+        deleteTagToolStripMenuItem.IsEnabled =
+        archiveToolStripMenuItem.IsEnabled =
+            singleNormalCommit;
+
+        commitToolStripMenuItem.IsEnabled =
+        undoLastCommitToolStripMenuItem.IsEnabled =
+        runMergetoolToolStripMenuItem.IsEnabled =
+        stashToolStripMenuItem.IsEnabled =
+        resetToolStripMenuItem.IsEnabled =
+        toolStripMenuItemReflog.IsEnabled =
+        applyPatchToolStripMenuItem.IsEnabled =
+            hasWorkingTree;
+    }
+
     private void CommitToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartCommitDialog(this);
+    }
+
+    private void undoLastCommitToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (!AppSettings.DontConfirmUndoLastCommit
+            && MessageBoxes.Show(
+                this,
+                _undoLastCommitText.Text,
+                _undoLastCommitCaption.Text,
+                WinFormsShims.MessageBoxButtons.YesNo,
+                WinFormsShims.MessageBoxIcon.Warning) != WinFormsShims.DialogResult.Yes)
+        {
+            return;
+        }
+
+        ArgumentString arguments = Commands.Reset(ResetMode.Soft, "HEAD~1");
+        Module.GitExecutable.RunCommand(arguments);
+        RefreshToolStripMenuItemClick(refreshToolStripMenuItem, EventArgs.Empty);
+        RefreshGitStatusMonitor();
+    }
+
+    private void PushToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartPushDialog(this, pushOnShow: false);
+    }
+
+    private void ResetToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        UICommands.StartResetChangesDialog(this, Module.GetWorkTreeFiles(), onlyWorkTree: false);
+        RefreshGitStatusMonitor();
+        revisionDiff.RefreshArtificial();
+    }
+
+    private void RunMergetoolToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartResolveConflictsDialog(this);
     }
 
     private void CreateBranchToolStripMenuItemClick(object? sender, EventArgs e)
@@ -1445,20 +1519,6 @@ public sealed partial class FormBrowse : GitModuleForm
         };
     }
 
-    private void fetchAllToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        ArgumentString arguments = new GitArgumentBuilder("fetch")
-        {
-            "--all",
-            "--progress",
-        };
-
-        if (UICommands.StartGitCommandProcessDialog(this, arguments))
-        {
-            UICommands.RepoChangedNotifier.Notify();
-        }
-    }
-
     private void StashToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartStashDialog(this);
@@ -1505,6 +1565,12 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartDeleteTagDialog(this, null);
     }
 
+    private void CherryPickToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
+        UICommands.StartCherryPickDialog(this, revisions);
+    }
+
     private void ArchiveToolStripMenuItemClick(object? sender, EventArgs e)
     {
         IReadOnlyList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
@@ -1517,6 +1583,11 @@ public sealed partial class FormBrowse : GitModuleForm
         GitRevision mainRevision = revisions[0];
         GitRevision? diffRevision = revisions.Count == 2 ? revisions[1] : null;
         UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
+    }
+
+    private void ApplyPatchToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartApplyPatchDialog(this);
     }
 
     private void userShell_Click(object? sender, EventArgs e)
@@ -1840,7 +1911,6 @@ public sealed partial class FormBrowse : GitModuleForm
         SetTranslatedToolTip(toolStripFileExplorer, nameof(toolStripFileExplorer), "File Explorer");
         string terminalText = SetTranslatedToolTip(userShell, nameof(userShell), "Git bash");
         ((ITranslate)_NO_TRANSLATE_WorkingDir).TranslateItems(translation);
-        FetchAllToolbarMenuItem.Header = fetchAllToolStripMenuItem.Header;
         if (UserShellToolStripMenuItem.Header is TextBlock header)
         {
             header.Text = terminalText;
