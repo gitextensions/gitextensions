@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
@@ -35,7 +35,7 @@ public sealed partial class EditNetSpell : GitModuleControl
     private readonly TranslationString _markIllFormedLinesText = new("Mark ill formed lines");
     private readonly TranslationString _autoCompletionText = new("Provide auto completion");
 
-    private static WordDictionary? _wordDictionary;
+    private WordDictionary? _wordDictionary;
 
     private readonly DispatcherTimer _spellCheckTimer;
     private readonly Spelling _spelling;
@@ -507,7 +507,7 @@ public sealed partial class EditNetSpell : GitModuleControl
 
         public ContextMenu ContextMenu => control.SpellCheckContextMenu;
 
-        public string DictionaryDirectory => EditNetSpell.DictionaryDirectory;
+        public string DictionaryPath => EditNetSpell.DictionaryDirectory;
 
         public int RenderedMisspellingCount => control.SpellCheckAdorner.RenderedMisspellingCount;
 

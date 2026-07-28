@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
@@ -125,8 +125,8 @@ public sealed class FindLargeFilesPluginTests
                 Delete = true,
             };
 
-            string windowsCommand = accessor.GenerateCommand([gitObject], useWindowsBatch: true);
-            string posixCommand = accessor.GenerateCommand([gitObject], useWindowsBatch: false);
+            string windowsCommand = accessor.GenerateCommandForTesting([gitObject], useWindowsBatch: true);
+            string posixCommand = accessor.GenerateCommandForTesting([gitObject], useWindowsBatch: false);
 
             windowsCommand.Should().StartWith("SET gitexe=\"/opt/Git Tools/git\"");
             windowsCommand.Should().Contain("%gitexe% filter-branch");
@@ -137,7 +137,7 @@ public sealed class FindLargeFilesPluginTests
             posixCommand.Should().Contain("\"$gitexe\" filter-branch --index-filter");
             posixCommand.Should().Contain("while IFS= read -r ref; do");
             posixCommand.Should().NotContain("%gitexe%", "POSIX shells do not expand batch variables");
-            accessor.QuoteForPosixShell("folder/it's large.bin")
+            accessor.QuoteForPosixShellForTesting("folder/it's large.bin")
                 .Should().Be("'folder/it'\"'\"'s large.bin'");
 
             if (!OperatingSystem.IsWindows())

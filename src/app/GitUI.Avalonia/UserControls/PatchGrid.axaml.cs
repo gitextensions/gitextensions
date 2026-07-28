@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
@@ -285,10 +285,14 @@ public partial class PatchGrid : GitModuleControl
                 switch (key)
                 {
                     case "From":
-                        if (value.IndexOf('<') > 0)
+                        int addressStart = value.IndexOf('<');
+                        if (addressStart >= 0)
                         {
                             string author = RFC2047Decoder.Parse(value);
-                            patchFile.Author = author[..author.IndexOf('<')].Trim();
+                            int decodedAddressStart = author.IndexOf('<');
+                            patchFile.Author = decodedAddressStart >= 0
+                                ? author[..decodedAddressStart].Trim()
+                                : author;
                         }
                         else
                         {
@@ -297,8 +301,9 @@ public partial class PatchGrid : GitModuleControl
 
                         break;
                     case "Date":
-                        patchFile.Date = value.IndexOf('+') > 0
-                            ? value[..value.IndexOf('+')].Trim()
+                        int timeZoneStart = value.IndexOf('+');
+                        patchFile.Date = timeZoneStart >= 0
+                            ? value[..timeZoneStart].Trim()
                             : value;
                         break;
                     case "Subject":

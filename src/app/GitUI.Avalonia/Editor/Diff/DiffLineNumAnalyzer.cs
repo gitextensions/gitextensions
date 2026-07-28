@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using AvaloniaEdit.Document;
 
 namespace GitUI.Editor.Diff;
@@ -15,7 +15,6 @@ public partial class DiffLineNumAnalyzer
         bool isGitWordDiff = false)
     {
         DiffLinesInfo result = new();
-        int lineNumberInDiff = 0;
         int leftLineNumber = DiffLineInfo.NotApplicableLineNum;
         int rightLineNumber = DiffLineInfo.NotApplicableLineNum;
         bool foundHunk = false;
@@ -28,20 +27,21 @@ public partial class DiffLineNumAnalyzer
                 break;
             }
 
-            ++lineNumberInDiff;
             string lineText = document.GetText(line.Offset, line.Length);
             if (lineText.StartsWith("@@", StringComparison.Ordinal))
             {
-                Match match = DiffRegex.Match(lineText);
-                if (!match.Success)
+                if (!TryCreateHunkInfo(
+                        line,
+                        lineText,
+                        out DiffLineInfo hunk,
+                        out leftLineNumber,
+                        out rightLineNumber))
                 {
                     continue;
                 }
 
-                leftLineNumber = int.Parse(match.Groups["leftStart"].ValueSpan);
-                rightLineNumber = int.Parse(match.Groups["rightStart"].ValueSpan);
                 foundHunk = true;
-                result.Add(CreateInfo(line, DiffLineType.Header));
+                result.Add(hunk);
                 continue;
             }
 
@@ -53,111 +53,149 @@ public partial class DiffLineNumAnalyzer
             IReadOnlyList<DiffTextMarker> lineMarkers =
                 [.. allTextMarkers.Where(marker => marker.Offset < line.EndOffset && marker.EndOffset >= line.Offset)];
 
+            DiffLineInfo info;
             if (isCombinedDiff)
             {
-                DiffLineInfo combined = CreateInfo(line, DiffLineType.Context);
-                if (IsMinusLineInCombinedDiff(lineText))
-                {
-                    combined.LineType = DiffLineType.Minus;
-                    combined.LineSegment = new SimpleSegment(line.Offset, line.Length);
-                }
-                else
-                {
-                    combined.RightLineNumber = rightLineNumber++;
-                    if (IsPlusLineInCombinedDiff(lineText))
-                    {
-                        combined.LineType = DiffLineType.Plus;
-                        combined.LineSegment = new SimpleSegment(line.Offset, line.Length);
-                    }
-                }
-
-                result.Add(combined);
-                continue;
+                info = CreateCombinedInfo(line, lineText, ref rightLineNumber);
             }
-
-            if (lineText.StartsWith('\\'))
+            else if (lineText.StartsWith('\\'))
             {
-                result.Add(CreateInfo(line, DiffLineType.Header));
-                continue;
+                info = CreateInfo(line, DiffLineType.Header);
             }
-
-            if (isGitWordDiff)
+            else if (isGitWordDiff)
             {
-                bool hasRemoved = lineMarkers.Any(marker => marker.Kind is DiffMarkerKind.Removed or DiffMarkerKind.MovedRemoved);
-                bool hasAdded = lineMarkers.Any(marker => marker.Kind is DiffMarkerKind.Added or DiffMarkerKind.MovedAdded);
-                DiffLineType type = (hasRemoved, hasAdded) switch
-                {
-                    (true, true) => DiffLineType.MinusPlus,
-                    (true, false) => DiffLineType.MinusLeft,
-                    (false, true) => DiffLineType.PlusRight,
-                    _ => DiffLineType.Context,
-                };
-
-                DiffLineInfo word = CreateInfo(line, type);
-                if (hasRemoved)
-                {
-                    word.LeftLineNumber = leftLineNumber++;
-                }
-
-                if (hasAdded)
-                {
-                    word.RightLineNumber = rightLineNumber++;
-                }
-
-                if (!hasRemoved && !hasAdded)
-                {
-                    word.LeftLineNumber = leftLineNumber++;
-                    word.RightLineNumber = rightLineNumber++;
-                }
-
-                result.Add(word);
-                continue;
-            }
-
-            if (lineText.StartsWith("-", StringComparison.Ordinal))
-            {
-                DiffLineInfo removed = CreateInfo(line, DiffLineType.Minus);
-                removed.LeftLineNumber = leftLineNumber++;
-                removed.LineSegment = new SimpleSegment(line.Offset, line.Length);
-                removed.IsMovedLine = lineMarkers.Any(marker => marker.Kind == DiffMarkerKind.MovedRemoved);
-                result.Add(removed);
-            }
-            else if (lineText.StartsWith("+", StringComparison.Ordinal))
-            {
-                DiffLineInfo added = CreateInfo(line, DiffLineType.Plus);
-                added.RightLineNumber = rightLineNumber++;
-                added.LineSegment = new SimpleSegment(line.Offset, line.Length);
-                added.IsMovedLine = lineMarkers.Any(marker => marker.Kind == DiffMarkerKind.MovedAdded);
-                result.Add(added);
+                info = CreateWordDiffInfo(line, lineMarkers, ref leftLineNumber, ref rightLineNumber);
             }
             else
             {
-                DiffLineInfo context = CreateInfo(line, DiffLineType.Context);
-                context.LeftLineNumber = leftLineNumber++;
-                context.RightLineNumber = rightLineNumber++;
-                result.Add(context);
+                info = CreateOrdinaryInfo(line, lineText, lineMarkers, ref leftLineNumber, ref rightLineNumber);
             }
+
+            result.Add(info);
         }
 
         return result;
-
-        static DiffLineInfo CreateInfo(DocumentLine line, DiffLineType type)
-            => new()
-            {
-                LineNumInDiff = line.LineNumber,
-                LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
-                RightLineNumber = DiffLineInfo.NotApplicableLineNum,
-                LineType = type,
-            };
-
-        static bool IsPlusLineInCombinedDiff(string line)
-            => line.StartsWith("++", StringComparison.Ordinal)
-                || line.StartsWith("+ ", StringComparison.Ordinal)
-                || line.StartsWith(" +", StringComparison.Ordinal);
-
-        static bool IsMinusLineInCombinedDiff(string line)
-            => line.StartsWith("--", StringComparison.Ordinal)
-                || line.StartsWith("- ", StringComparison.Ordinal)
-                || line.StartsWith(" -", StringComparison.Ordinal);
     }
+
+    private static bool TryCreateHunkInfo(
+        DocumentLine line,
+        string lineText,
+        out DiffLineInfo info,
+        out int leftLineNumber,
+        out int rightLineNumber)
+    {
+        Match match = DiffRegex.Match(lineText);
+        if (!match.Success)
+        {
+            info = null!;
+            leftLineNumber = DiffLineInfo.NotApplicableLineNum;
+            rightLineNumber = DiffLineInfo.NotApplicableLineNum;
+            return false;
+        }
+
+        leftLineNumber = int.Parse(match.Groups["leftStart"].ValueSpan);
+        rightLineNumber = int.Parse(match.Groups["rightStart"].ValueSpan);
+        info = CreateInfo(line, DiffLineType.Header);
+        return true;
+    }
+
+    private static DiffLineInfo CreateCombinedInfo(DocumentLine line, string lineText, ref int rightLineNumber)
+    {
+        DiffLineInfo info = CreateInfo(line, DiffLineType.Context);
+        if (IsMinusLineInCombinedDiff(lineText))
+        {
+            info.LineType = DiffLineType.Minus;
+            info.LineSegment = new SimpleSegment(line.Offset, line.Length);
+            return info;
+        }
+
+        info.RightLineNumber = rightLineNumber++;
+        if (IsPlusLineInCombinedDiff(lineText))
+        {
+            info.LineType = DiffLineType.Plus;
+            info.LineSegment = new SimpleSegment(line.Offset, line.Length);
+        }
+
+        return info;
+    }
+
+    private static DiffLineInfo CreateWordDiffInfo(
+        DocumentLine line,
+        IReadOnlyList<DiffTextMarker> lineMarkers,
+        ref int leftLineNumber,
+        ref int rightLineNumber)
+    {
+        bool hasRemoved = lineMarkers.Any(marker => marker.Kind is DiffMarkerKind.Removed or DiffMarkerKind.MovedRemoved);
+        bool hasAdded = lineMarkers.Any(marker => marker.Kind is DiffMarkerKind.Added or DiffMarkerKind.MovedAdded);
+        DiffLineType type = (hasRemoved, hasAdded) switch
+        {
+            (true, true) => DiffLineType.MinusPlus,
+            (true, false) => DiffLineType.MinusLeft,
+            (false, true) => DiffLineType.PlusRight,
+            _ => DiffLineType.Context,
+        };
+
+        DiffLineInfo info = CreateInfo(line, type);
+        if (hasRemoved || !hasAdded)
+        {
+            info.LeftLineNumber = leftLineNumber++;
+        }
+
+        if (hasAdded || !hasRemoved)
+        {
+            info.RightLineNumber = rightLineNumber++;
+        }
+
+        return info;
+    }
+
+    private static DiffLineInfo CreateOrdinaryInfo(
+        DocumentLine line,
+        string lineText,
+        IReadOnlyList<DiffTextMarker> lineMarkers,
+        ref int leftLineNumber,
+        ref int rightLineNumber)
+    {
+        if (lineText.StartsWith("-", StringComparison.Ordinal))
+        {
+            DiffLineInfo removed = CreateInfo(line, DiffLineType.Minus);
+            removed.LeftLineNumber = leftLineNumber++;
+            removed.LineSegment = new SimpleSegment(line.Offset, line.Length);
+            removed.IsMovedLine = lineMarkers.Any(marker => marker.Kind == DiffMarkerKind.MovedRemoved);
+            return removed;
+        }
+
+        if (lineText.StartsWith("+", StringComparison.Ordinal))
+        {
+            DiffLineInfo added = CreateInfo(line, DiffLineType.Plus);
+            added.RightLineNumber = rightLineNumber++;
+            added.LineSegment = new SimpleSegment(line.Offset, line.Length);
+            added.IsMovedLine = lineMarkers.Any(marker => marker.Kind == DiffMarkerKind.MovedAdded);
+            return added;
+        }
+
+        DiffLineInfo context = CreateInfo(line, DiffLineType.Context);
+        context.LeftLineNumber = leftLineNumber++;
+        context.RightLineNumber = rightLineNumber++;
+        return context;
+    }
+
+    private static DiffLineInfo CreateInfo(DocumentLine line, DiffLineType type)
+        => new()
+        {
+            LineNumInDiff = line.LineNumber,
+            LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
+            RightLineNumber = DiffLineInfo.NotApplicableLineNum,
+            LineType = type,
+        };
+
+    private static bool IsPlusLineInCombinedDiff(string line)
+        => line.StartsWith("++", StringComparison.Ordinal)
+            || line.StartsWith("+ ", StringComparison.Ordinal)
+            || line.StartsWith(" +", StringComparison.Ordinal);
+
+    private static bool IsMinusLineInCombinedDiff(string line)
+        => line.StartsWith("--", StringComparison.Ordinal)
+            || line.StartsWith("- ", StringComparison.Ordinal)
+            || line.StartsWith(" -", StringComparison.Ordinal);
 }
