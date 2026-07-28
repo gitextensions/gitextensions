@@ -558,6 +558,220 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_navigate_and_view_menus_should_match_the_supported_revision_grid_inventory()
+    {
+        using FormBrowse form = new();
+        MenuItem navigate = GetMainMenuItem(form, "navigateToolStripMenuItem");
+        MenuItem view = GetMainMenuItem(form, "viewToolStripMenuItem");
+
+        form.mainMenuStrip.Items.OfType<MenuItem>().Select(item => item.Name).Should().Equal(
+            "fileToolStripMenuItem",
+            "repositoryToolStripMenuItem",
+            "navigateToolStripMenuItem",
+            "viewToolStripMenuItem",
+            "commandsToolStripMenuItem",
+            "_repositoryHostsToolStripMenuItem",
+            "pluginsToolStripMenuItem",
+            "toolsToolStripMenuItem",
+            "helpToolStripMenuItem");
+        GetTaggedItemNames(navigate).Should().Equal(
+            "ToggleBetweenArtificialAndHeadCommits",
+            "GotoCurrentRevision",
+            "|",
+            "GotoChildCommit",
+            "GotoParentCommit",
+            "GotoFirstParentCommit",
+            "GotoLastParentCommit");
+        GetTaggedItemNames(view).Should().Equal(
+            "BranchesToolStripMenuItem",
+            "ShowAllBranches",
+            "ShowCurrentBranchOnly",
+            "ShowFilteredBranches",
+            "ShowReflogReferences",
+            "|",
+            "filterToolStripMenuItem",
+            "|",
+            "drawNonrelativesGrayToolStripMenuItem",
+            "HighlightSelectedBranch",
+            "|",
+            "CommitsToolStripMenuItem",
+            "showGitNotesToolStripMenuItem",
+            "|",
+            "Grid_labelsToolStripMenuItem",
+            "ShowRemoteBranches",
+            "showTagsToolStripMenuItem",
+            "|",
+            "Grid_infoToolStripMenuItem",
+            "showAuthorDateToolStripMenuItem",
+            "showRelativeDateToolStripMenuItem",
+            "|",
+            "ColumnsToolStripMenuItem",
+            "showRevisionGraphColumnToolStripMenuItem",
+            "showGitNotesColumnToolStripMenuItem",
+            "showAuthorNameColumnToolStripMenuItem",
+            "showDateColumnToolStripMenuItem",
+            "showIdColumnToolStripMenuItem");
+
+        string[] unsupportedCommands =
+        [
+            "GotoCommit",
+            "GotoMergeBaseCommit",
+            "NavigateBackward",
+            "NavigateForward",
+            "QuickSearch",
+            "ShowArtificialCommits",
+            "ShowStashes",
+            "ShowSessionCheckpoints",
+            "showBuildStatusIconToolStripMenuItem",
+            "showAuthorAvatarColumnToolStripMenuItem",
+            "AuthorDateSort",
+            "SaveAsDefault",
+            "toolbarsMenuItem",
+        ];
+        GetTaggedItemNames(navigate)
+            .Concat(GetTaggedItemNames(view))
+            .Should().NotContain(unsupportedCommands);
+
+        foreach (string captionTag in new[]
+        {
+            "BranchesToolStripMenuItem",
+            "CommitsToolStripMenuItem",
+            "Grid_labelsToolStripMenuItem",
+            "Grid_infoToolStripMenuItem",
+            "ColumnsToolStripMenuItem",
+        })
+        {
+            MenuItem caption = GetTaggedMenuItem(view, captionTag);
+            caption.IsEnabled.Should().BeFalse();
+            caption.IsHitTestVisible.Should().BeFalse();
+            caption.Classes.Should().Contain("gitextensions-menu-caption");
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_navigate_and_view_menus_should_preserve_translation_ownership()
+    {
+        using FormBrowse form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+        translation.TranslateItem(
+                nameof(FormBrowse),
+                "navigateToolStripMenuItem",
+                "Text",
+                Arg.Any<Func<string?>>())
+            .Returns("&Navigate translated");
+        translation.TranslateItem(
+                "RevisionGrid",
+                "ShowRemoteBranches",
+                "Text",
+                Arg.Any<Func<string?>>())
+            .Returns("Translated remote &branches");
+
+        form.RevisionGrid.AddTranslationItems(translation);
+        form.AddTranslationItems(translation);
+        form.RevisionGrid.TranslateItems(translation);
+        form.TranslateItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse), "navigateToolStripMenuItem", "Text", "&Navigate");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse), "viewToolStripMenuItem", "Text", "&View");
+        translation.Received(1).AddTranslationItem(
+            "RevisionGrid", "BranchesToolStripMenuItem", "Text", "Branches");
+        translation.Received(1).AddTranslationItem(
+            "RevisionGrid", "ShowRemoteBranches", "Text", "Show remote &branches");
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(FormBrowse), "ShowRemoteBranches", "Text", Arg.Any<string>());
+
+        MenuItem navigate = GetMainMenuItem(form, "navigateToolStripMenuItem");
+        MenuItem view = GetMainMenuItem(form, "viewToolStripMenuItem");
+        navigate.Header.Should().Be("_Navigate translated");
+        GetTaggedMenuItem(view, "ShowRemoteBranches").Header.Should().Be("Translated remote _branches");
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_view_menu_should_share_revision_grid_command_state_and_routing()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_workingDirectory);
+        module.IsValidGitWorkingDir().Returns(true);
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(Arg.Any<Type>())
+            .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+
+        bool originalShowRemoteBranches = AppSettings.ShowRemoteBranches;
+        try
+        {
+            AppSettings.ShowRemoteBranches = false;
+            using FormBrowse form = new(commands);
+            MenuItem view = GetMainMenuItem(form, "viewToolStripMenuItem");
+            MenuItem mainRemote = GetTaggedMenuItem(view, "ShowRemoteBranches");
+            MenuItem contextRemote = GetTaggedMenuItem(form.RevisionGrid.ViewMenuItem, "ShowRemoteBranches");
+
+            view.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+            mainRemote.IsChecked.Should().BeFalse();
+            contextRemote.IsChecked.Should().BeFalse();
+            mainRemote.InputGesture.Should().Be(new KeyGesture(Key.R, KeyModifiers.Control | KeyModifiers.Shift));
+
+            mainRemote.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            AppSettings.ShowRemoteBranches.Should().BeTrue();
+            mainRemote.IsChecked.Should().BeTrue();
+            contextRemote.IsChecked.Should().BeTrue();
+
+            AppSettings.ShowRemoteBranches = false;
+            view.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+            mainRemote.IsChecked.Should().BeFalse();
+            contextRemote.IsChecked.Should().BeFalse();
+        }
+        finally
+        {
+            AppSettings.ShowRemoteBranches = originalShowRemoteBranches;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormBrowse_navigate_menu_should_route_through_the_revision_grid_selection()
+    {
+        bool originalShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
+        try
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "dirty");
+            ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            commands.RepoChangedNotifier.Returns(notifier);
+            commands.GetService(Arg.Any<Type>())
+                .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+            using FormBrowse form = new(commands);
+            form.Show();
+            await WaitUntilAsync(() => form.RevisionGrid.SelectedRevision?.IsArtificial == true);
+
+            MenuItem navigate = GetMainMenuItem(form, "navigateToolStripMenuItem");
+            MenuItem goToCurrent = GetTaggedMenuItem(navigate, "GotoCurrentRevision");
+            MenuItem toggleArtificial = GetTaggedMenuItem(navigate, "ToggleBetweenArtificialAndHeadCommits");
+            navigate.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+            goToCurrent.IsEnabled.Should().BeTrue();
+
+            goToCurrent.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            form.RevisionGrid.SelectedRevision!.ObjectId.Should().Be(module.GetCurrentCheckout());
+
+            navigate.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+            toggleArtificial.IsEnabled.Should().BeTrue();
+            toggleArtificial.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            form.RevisionGrid.SelectedRevision!.IsArtificial.Should().BeTrue();
+        }
+        finally
+        {
+            AppSettings.RevisionGraphShowArtificialCommits = originalShowArtificialCommits;
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_commands_menu_should_match_the_current_supported_WinForms_inventory()
     {
         using FormBrowse form = new();
@@ -1579,4 +1793,25 @@ public sealed class FormBrowseTests
 
     private static string HeaderText(TreeViewItem item)
         => ((TextBlock)((StackPanel)item.Header!).Children[1]).Text!;
+
+    private static MenuItem GetMainMenuItem(FormBrowse form, string name)
+        => form.mainMenuStrip.Items
+            .OfType<MenuItem>()
+            .Single(item => item.Name == name);
+
+    private static MenuItem GetTaggedMenuItem(MenuItem parent, string tag)
+        => parent.Items
+            .OfType<MenuItem>()
+            .Single(item => item.Tag as string == tag);
+
+    private static string[] GetTaggedItemNames(MenuItem parent)
+        => parent.Items
+            .Select(item => item switch
+            {
+                Separator => "|",
+                MenuItem menuItem => menuItem.Tag as string
+                    ?? throw new InvalidOperationException("A shared menu command has no tag."),
+                _ => throw new InvalidOperationException($"Unexpected shared menu entry: {item?.GetType().Name}"),
+            })
+            .ToArray();
 }
