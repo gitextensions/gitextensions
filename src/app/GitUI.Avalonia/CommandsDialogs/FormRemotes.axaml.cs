@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using GitCommands;
@@ -472,8 +472,7 @@ Inactive remote is completely invisible to git.");
             // disable the control while saving
             tabControl1.IsEnabled = false;
 
-            if ((string.IsNullOrEmpty(remotePushUrl) && checkBoxSepPushUrl.IsChecked == true) ||
-                (!string.IsNullOrEmpty(remotePushUrl) && remotePushUrl.Equals(remoteUrl, StringComparison.OrdinalIgnoreCase)))
+            if (ShouldUseFetchUrlForPush(remoteUrl, remotePushUrl))
             {
                 checkBoxSepPushUrl.IsChecked = false;
             }
@@ -545,6 +544,11 @@ Inactive remote is completely invisible to git.");
             Initialize(remote);
         }
     }
+
+    private bool ShouldUseFetchUrlForPush(string remoteUrl, string remotePushUrl)
+        => (string.IsNullOrEmpty(remotePushUrl) && checkBoxSepPushUrl.IsChecked == true)
+            || (!string.IsNullOrEmpty(remotePushUrl)
+                && remotePushUrl.Equals(remoteUrl, StringComparison.OrdinalIgnoreCase));
 
     private void NewClick(object sender, EventArgs e)
     {

@@ -119,22 +119,19 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
             return;
         }
 
-        Dictionary<string, HotkeyCommand> defaultCommands = [];
-        foreach (HotkeySettings setting in defaultSettings)
-        {
-            if (setting.Commands is null || setting.Name is null)
-            {
-                continue;
-            }
-
-            foreach (HotkeyCommand command in setting.Commands)
-            {
-                defaultCommands.Add(CalcDictionaryKey(setting.Name, command.CommandCode), command);
-            }
-        }
+        Dictionary<string, HotkeyCommand> defaultCommands = CreateCommandLookup(defaultSettings);
 
         foreach (HotkeySettings setting in loadedSettings)
         {
+            MergeSetting(defaultCommands, setting);
+        }
+    }
+
+    private static Dictionary<string, HotkeyCommand> CreateCommandLookup(IEnumerable<HotkeySettings> settings)
+    {
+        Dictionary<string, HotkeyCommand> commands = [];
+        foreach (HotkeySettings setting in settings)
+        {
             if (setting.Commands is null || setting.Name is null)
             {
                 continue;
@@ -142,20 +139,33 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
 
             foreach (HotkeyCommand command in setting.Commands)
             {
-                if (defaultCommands.TryGetValue(
-                        CalcDictionaryKey(setting.Name, command.CommandCode),
-                        out HotkeyCommand? defaultCommand))
-                {
-                    defaultCommand.KeyData = command.KeyData;
-                }
+                commands.Add(CalcDictionaryKey(setting.Name, command.CommandCode), command);
             }
         }
 
-        return;
-
-        static string CalcDictionaryKey(string settingName, int commandCode)
-            => settingName + ":" + commandCode;
+        return commands;
     }
+
+    private static void MergeSetting(Dictionary<string, HotkeyCommand> defaultCommands, HotkeySettings setting)
+    {
+        if (setting.Commands is null || setting.Name is null)
+        {
+            return;
+        }
+
+        foreach (HotkeyCommand command in setting.Commands)
+        {
+            if (defaultCommands.TryGetValue(
+                    CalcDictionaryKey(setting.Name, command.CommandCode),
+                    out HotkeyCommand? defaultCommand))
+            {
+                defaultCommand.KeyData = command.KeyData;
+            }
+        }
+    }
+
+    private static string CalcDictionaryKey(string settingName, int commandCode)
+        => settingName + ":" + commandCode;
 
     public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
         => CreateDefaultSettingsCore(_scriptsManager);
