@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog;
@@ -75,6 +75,32 @@ public sealed partial class SettingsPageHeader : TranslatedControl
             return;
         }
 
+        WireLocalSettingsEvents(localSettingsPage);
+
+        if (localSettingsPage is IDistributedSettingsPage distributedSettingsPage)
+        {
+            WireDistributedSettingsEvent(distributedSettingsPage);
+        }
+        else
+        {
+            SetVisible(false, DistributedRB, arrowDistributed);
+        }
+
+        if (localSettingsPage is IGitConfigSettingsPage gitConfigSettingsPage)
+        {
+            WireSystemSettingsEvent(gitConfigSettingsPage);
+        }
+        else
+        {
+            SetVisible(false, SystemRB, arrowSystem);
+        }
+
+        EffectiveRB.IsChecked = true;
+        ReadOnly = true;
+    }
+
+    private void WireLocalSettingsEvents(ILocalSettingsPage localSettingsPage)
+    {
         LocalRB.IsCheckedChanged += (_, _) =>
         {
             if (LocalRB.IsChecked == true)
@@ -93,41 +119,30 @@ public sealed partial class SettingsPageHeader : TranslatedControl
                 ReadOnly = true;
             }
         };
+    }
 
-        if (localSettingsPage is IDistributedSettingsPage distributedSettingsPage)
+    private void WireDistributedSettingsEvent(IDistributedSettingsPage distributedSettingsPage)
+    {
+        DistributedRB.IsCheckedChanged += (_, _) =>
         {
-            DistributedRB.IsCheckedChanged += (_, _) =>
+            if (DistributedRB.IsChecked == true)
             {
-                if (DistributedRB.IsChecked == true)
-                {
-                    distributedSettingsPage.SetDistributedSettings();
-                    ReadOnly = false;
-                }
-            };
-        }
-        else
-        {
-            SetVisible(false, DistributedRB, arrowDistributed);
-        }
+                distributedSettingsPage.SetDistributedSettings();
+                ReadOnly = false;
+            }
+        };
+    }
 
-        if (localSettingsPage is IGitConfigSettingsPage gitConfigSettingsPage)
+    private void WireSystemSettingsEvent(IGitConfigSettingsPage gitConfigSettingsPage)
+    {
+        SystemRB.IsCheckedChanged += (_, _) =>
         {
-            SystemRB.IsCheckedChanged += (_, _) =>
+            if (SystemRB.IsChecked == true)
             {
-                if (SystemRB.IsChecked == true)
-                {
-                    gitConfigSettingsPage.SetSystemSettings();
-                    ReadOnly = true;
-                }
-            };
-        }
-        else
-        {
-            SetVisible(false, SystemRB, arrowSystem);
-        }
-
-        EffectiveRB.IsChecked = true;
-        ReadOnly = true;
+                gitConfigSettingsPage.SetSystemSettings();
+                ReadOnly = true;
+            }
+        };
     }
 
     private void SetArrowEmphasis(bool emphasized)

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Submodules;
@@ -82,50 +82,7 @@ internal sealed class SubmoduleTree : Tree
 
         foreach (SubmoduleInfo info in result.AllSubmodules.OrderBy(info => NormalizePath(info.Path).Length))
         {
-            string path = NormalizePath(info.Path);
-            KeyValuePair<string, SubmoduleNode> parent = moduleNodes
-                .Where(pair => IsChildPath(pair.Key, path))
-                .OrderByDescending(pair => pair.Key.Length)
-                .FirstOrDefault();
-            if (parent.Value is null)
-            {
-                continue;
-            }
-
-            string relativePath = Path.GetRelativePath(parent.Key, path).Replace(Path.DirectorySeparatorChar, '/');
-            string[] parts = relativePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length == 0)
-            {
-                continue;
-            }
-
-            NodeBase parentNode = parent.Value;
-            foreach (string folder in parts[..^1])
-            {
-                SubmoduleFolderNode? folderNode = parentNode.TreeViewNode.Items
-                    .Cast<TreeViewItem>()
-                    .Select(item => item.Tag)
-                    .OfType<SubmoduleFolderNode>()
-                    .FirstOrDefault(node => _pathComparer.Equals(node.Name, folder));
-                if (folderNode is null)
-                {
-                    folderNode = new SubmoduleFolderNode(this, parentNode, folder);
-                    parentNode.TreeViewNode.Items.Add(folderNode.TreeViewNode);
-                }
-
-                parentNode = folderNode;
-            }
-
-            SubmoduleNode node = new(
-                this,
-                parentNode,
-                info,
-                info.Bold,
-                info.Bold ? result.CurrentSubmoduleStatus : null,
-                relativePath,
-                parent.Key);
-            parentNode.TreeViewNode.Items.Add(node.TreeViewNode);
-            moduleNodes[path] = node;
+            AddSubmodule(result, info, moduleNodes);
         }
 
         CompactSingleChildFolderChains(topNode.TreeViewNode.Items.Cast<TreeViewItem>());
@@ -138,6 +95,62 @@ internal sealed class SubmoduleTree : Tree
         }
 
         OwnerControl.RestoreSelectedNodes(this, selected);
+    }
+
+    private void AddSubmodule(
+        SubmoduleInfoResult result,
+        SubmoduleInfo info,
+        Dictionary<string, SubmoduleNode> moduleNodes)
+    {
+        string path = NormalizePath(info.Path);
+        KeyValuePair<string, SubmoduleNode> parent = moduleNodes
+            .Where(pair => IsChildPath(pair.Key, path))
+            .OrderByDescending(pair => pair.Key.Length)
+            .FirstOrDefault();
+        if (parent.Value is null)
+        {
+            return;
+        }
+
+        string relativePath = Path.GetRelativePath(parent.Key, path).Replace(Path.DirectorySeparatorChar, '/');
+        string[] parts = relativePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0)
+        {
+            return;
+        }
+
+        NodeBase parentNode = GetOrCreateFolderPath(parent.Value, parts[..^1]);
+        SubmoduleNode node = new(
+            this,
+            parentNode,
+            info,
+            info.Bold,
+            info.Bold ? result.CurrentSubmoduleStatus : null,
+            relativePath,
+            parent.Key);
+        parentNode.TreeViewNode.Items.Add(node.TreeViewNode);
+        moduleNodes[path] = node;
+    }
+
+    private NodeBase GetOrCreateFolderPath(NodeBase parentNode, IEnumerable<string> folders)
+    {
+        foreach (string folder in folders)
+        {
+            SubmoduleFolderNode? folderNode = parentNode.TreeViewNode.Items
+                .Cast<TreeViewItem>()
+                .Select(item => item.Tag)
+                .OfType<SubmoduleFolderNode>()
+                .FirstOrDefault(node => _pathComparer.Equals(node.Name, folder));
+            if (folderNode is null)
+            {
+                folderNode = new SubmoduleFolderNode(this, parentNode, folder);
+                parentNode.TreeViewNode.Items.Add(folderNode.TreeViewNode);
+            }
+
+            parentNode = folderNode;
+        }
+
+        return parentNode;
     }
 
     public void UpdateSubmodule(IWin32Window owner, SubmoduleNode node)
