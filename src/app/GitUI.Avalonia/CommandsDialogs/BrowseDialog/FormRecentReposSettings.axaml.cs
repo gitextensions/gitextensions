@@ -170,22 +170,36 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private ShorteningRecentRepoPathStrategy GetShorteningStrategy()
     {
+        if (TryGetShorteningStrategy(out ShorteningRecentRepoPathStrategy strategy))
+        {
+            return strategy;
+        }
+
+        throw new InvalidOperationException("Cannot determine the shortening strategy.");
+    }
+
+    private bool TryGetShorteningStrategy(out ShorteningRecentRepoPathStrategy strategy)
+    {
         if (dontShortenRB.IsChecked == true)
         {
-            return ShorteningRecentRepoPathStrategy.None;
+            strategy = ShorteningRecentRepoPathStrategy.None;
+            return true;
         }
 
         if (mostSigDirRB.IsChecked == true)
         {
-            return ShorteningRecentRepoPathStrategy.MostSignDir;
+            strategy = ShorteningRecentRepoPathStrategy.MostSignDir;
+            return true;
         }
 
         if (middleDotRB.IsChecked == true)
         {
-            return ShorteningRecentRepoPathStrategy.MiddleDots;
+            strategy = ShorteningRecentRepoPathStrategy.MiddleDots;
+            return true;
         }
 
-        throw new InvalidOperationException("Cannot determine the shortening strategy.");
+        strategy = default;
+        return false;
     }
 
     private void RefreshRepos()
@@ -220,7 +234,7 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private void sortTopRepos_CheckedChanged(object? sender, EventArgs e)
     {
-        if (!_updating)
+        if (!_updating && TryGetShorteningStrategy(out _))
         {
             RefreshRepos();
         }
