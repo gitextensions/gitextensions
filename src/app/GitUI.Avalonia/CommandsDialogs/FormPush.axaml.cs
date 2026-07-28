@@ -447,6 +447,12 @@ public sealed partial class FormPush : GitModuleForm
             return Commands.PushTag(destination, pushAllTags ? string.Empty : tag, pushAllTags, GetForcePushOption());
         }
 
+        List<GitPushAction> pushActions = CreateMultiplePushActions();
+        return pushActions.Count == 0 ? "" : Commands.PushMultiple(destination, pushActions);
+    }
+
+    private List<GitPushAction> CreateMultiplePushActions()
+    {
         List<GitPushAction> pushActions = [];
         foreach (BranchPushRow row in _branchRows)
         {
@@ -466,7 +472,7 @@ public sealed partial class FormPush : GitModuleForm
             }
         }
 
-        return pushActions.Count == 0 ? "" : Commands.PushMultiple(destination, pushActions);
+        return pushActions;
     }
 
     private ForcePushOptions GetForcePushOption()
@@ -955,13 +961,7 @@ public sealed partial class FormPush : GitModuleForm
                 && aheadBehindData.TryGetValue(head.Name, out aheadBehind)
                 && GitRefName.GetRemoteName(aheadBehind.RemoteRef) == remote;
             string destination = isAheadRemote ? GitRefName.GetRemoteBranch(aheadBehind.RemoteRef) : remoteName;
-            string ahead = isAheadRemote
-                ? aheadBehindData![head.Name].ToDisplay()
-                : !isKnownAtRemote
-                    ? string.Empty
-                    : head.ObjectId == remoteBranch!.ObjectId
-                        ? "="
-                        : "<>";
+            string ahead = GetAheadDisplay(head, remoteBranch, isKnownAtRemote, isAheadRemote, aheadBehind);
             _branchRows.Add(new BranchPushRow(head.Name, destination, ahead));
         }
 
@@ -969,6 +969,26 @@ public sealed partial class FormPush : GitModuleForm
         {
             _branchRows.Add(new BranchPushRow(localBranch: string.Empty, remoteHead.LocalName, ahead: string.Empty));
         }
+    }
+
+    private static string GetAheadDisplay(
+        IGitRef localHead,
+        IGitRef? remoteHead,
+        bool isKnownAtRemote,
+        bool isAheadRemote,
+        AheadBehindData aheadBehind)
+    {
+        if (isAheadRemote)
+        {
+            return aheadBehind.ToDisplay();
+        }
+
+        if (!isKnownAtRemote)
+        {
+            return string.Empty;
+        }
+
+        return localHead.ObjectId == remoteHead!.ObjectId ? "=" : "<>";
     }
 
     private Control CreateBranchRow(BranchPushRow row)
