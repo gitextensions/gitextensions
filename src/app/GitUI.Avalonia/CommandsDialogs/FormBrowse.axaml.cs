@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Gpg;
@@ -985,7 +986,7 @@ public sealed partial class FormBrowse : GitModuleForm
     {
         BranchSelectFlyout.Items.Clear();
         MenuItem checkout = new() { Header = checkoutBranchToolStripMenuItem.Header, Icon = checkoutBranchToolStripMenuItem.Icon };
-        checkout.Click += CheckoutBranchToolStripMenuItemClick;
+        checkout.Click += (_, _) => QueueBranchCheckout();
         BranchSelectFlyout.Items.Add(checkout);
         BranchSelectFlyout.Items.Add(new Separator());
         foreach (IGitRef branch in Module.GetRefs(RefsFilter.Heads).Take(100))
@@ -1007,9 +1008,18 @@ public sealed partial class FormBrowse : GitModuleForm
                 },
                 Opacity = isBranchVisible ? 1 : 0.55,
             };
-            item.Click += (_, _) => UICommands.StartCheckoutBranch(this, branch.Name);
+            item.Click += (_, _) => QueueBranchCheckout(branch.Name);
             BranchSelectFlyout.Items.Add(item);
         }
+    }
+
+    private void QueueBranchCheckout(string branch = "")
+    {
+        BranchSelectFlyout.Hide();
+
+        // MenuFlyout raises Click before it finishes dismissing its popup. The checkout flow
+        // may synchronously show a modal dialog, so let the popup complete first.
+        Dispatcher.UIThread.Post(() => UICommands.StartCheckoutBranch(this, branch));
     }
 
     private void BranchSelectPointerReleased(object? sender, PointerReleasedEventArgs e)

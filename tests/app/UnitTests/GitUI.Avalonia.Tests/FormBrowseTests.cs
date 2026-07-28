@@ -121,39 +121,58 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
-    public async Task FormBrowse_branch_selector_primary_and_arrow_should_open_the_current_branch_menu()
+    [NonParallelizable]
+    public async Task FormBrowse_branch_selector_should_open_and_checkout_the_selected_branch()
     {
+        bool originalAlwaysShowCheckout = AppSettings.AlwaysShowCheckoutBranchDlg;
+        bool originalCheckForUncommittedChanges = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
         GitModule module = CreateRepositoryWithInitialCommit();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" });
-        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
-        form.Show();
-        TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
-        await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
+        try
+        {
+            AppSettings.AlwaysShowCheckoutBranchDlg = false;
+            AppSettings.CheckForUncommittedChangesInCheckoutBranch = true;
+            using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
 
-        IconSplitButton branchSelector = form.FindControl<IconSplitButton>("branchSelect")!;
-        Button[] templateButtons = branchSelector.GetVisualDescendants()
-            .OfType<Button>()
-            .Where(button => button.Name is "PART_PrimaryButton" or "PART_SecondaryButton")
-            .ToArray();
-        Button primaryButton = templateButtons.Single(button => button.Name == "PART_PrimaryButton");
-        Button secondaryButton = templateButtons.Single(button => button.Name == "PART_SecondaryButton");
-        MenuFlyout flyout = (MenuFlyout)branchSelector.Flyout!;
+            IconSplitButton branchSelector = form.FindControl<IconSplitButton>("branchSelect")!;
+            Button[] templateButtons = branchSelector.GetVisualDescendants()
+                .OfType<Button>()
+                .Where(button => button.Name is "PART_PrimaryButton" or "PART_SecondaryButton")
+                .ToArray();
+            Button primaryButton = templateButtons.Single(button => button.Name == "PART_PrimaryButton");
+            Button secondaryButton = templateButtons.Single(button => button.Name == "PART_SecondaryButton");
+            MenuFlyout flyout = (MenuFlyout)branchSelector.Flyout!;
 
-        Click(form, primaryButton, MouseButton.Left);
-        Dispatcher.UIThread.RunJobs();
+            Click(form, primaryButton, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
 
-        flyout.IsOpen.Should().BeTrue();
-        MenuItem[] branchItems = flyout.Items.OfType<MenuItem>().Skip(1).ToArray();
-        branchItems.Select(item => item.Header as string).Should().Contain("feature");
-        branchItems.Should().OnlyContain(item => item.Icon is Image);
+            flyout.IsOpen.Should().BeTrue();
+            MenuItem[] branchItems = flyout.Items.OfType<MenuItem>().Skip(1).ToArray();
+            branchItems.Select(item => item.Header as string).Should().Contain("feature");
+            branchItems.Should().OnlyContain(item => item.Icon is Image);
 
-        flyout.Hide();
-        Dispatcher.UIThread.RunJobs();
-        Click(form, secondaryButton, MouseButton.Left);
-        Dispatcher.UIThread.RunJobs();
+            flyout.Hide();
+            Dispatcher.UIThread.RunJobs();
+            Click(form, secondaryButton, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
 
-        flyout.IsOpen.Should().BeTrue("the arrow retains Avalonia's native split-button behavior");
-        flyout.Hide();
+            flyout.IsOpen.Should().BeTrue("the arrow retains Avalonia's native split-button behavior");
+            MenuItem feature = flyout.Items
+                .OfType<MenuItem>()
+                .Single(item => item.Header as string == "feature");
+            feature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            await WaitUntilAsync(() => module.GetSelectedBranch() == "feature");
+            await WaitUntilAsync(() => branchSelector.Content as string == "feature");
+        }
+        finally
+        {
+            AppSettings.AlwaysShowCheckoutBranchDlg = originalAlwaysShowCheckout;
+            AppSettings.CheckForUncommittedChangesInCheckoutBranch = originalCheckForUncommittedChanges;
+        }
     }
 
     [AvaloniaTest]
