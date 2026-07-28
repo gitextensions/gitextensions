@@ -7,6 +7,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitExtensionsTests;
@@ -82,6 +83,139 @@ public sealed class FileStatusListTests
             accessor.ContextMenu.Close();
             window.Close();
         }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_render_revision_summary_as_a_separate_non_file_parent()
+    {
+        FileStatusList control = new() { GroupByRevision = true };
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus first = new("src/first.cs") { IsChanged = true, IsTracked = true };
+        GitItemStatus second = new("readme.md") { IsChanged = true, IsTracked = true };
+
+        control.SetDiffs(
+            [new FileStatusWithDescription(null, revision, "Diff with parent", [first, second])],
+            isFileTreeMode: false);
+
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        FileStatusList.DiffTreeNode header = accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>().Single();
+        header.Text.Should().Be("(2) Diff with parent");
+        header.IsGroupHeader.Should().BeTrue();
+        header.Item.Should().BeNull();
+        header.IsExpanded.Should().BeTrue();
+        header.Children.SelectMany(Flatten).Count(node => node.Item is not null).Should().Be(2);
+        accessor.DiffTree.IsVisible.Should().BeTrue();
+        accessor.List.IsVisible.Should().BeFalse();
+        control.SelectedGitItem.Should().Be(first);
+
+        accessor.DiffTree.SelectedItem = header;
+
+        control.SelectedGitItem.Should().BeNull("a revision summary is not a file selection");
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_promote_a_single_ordinary_group_and_keep_its_summary_out_of_file_rows()
+    {
+        FileStatusList control = new();
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus item = new("src/only.cs") { IsChanged = true, IsTracked = true };
+
+        control.SetDiffs(
+            [new FileStatusWithDescription(null, revision, "Diff with parent", [item])],
+            isFileTreeMode: false);
+
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        accessor.DiffTree.IsVisible.Should().BeFalse();
+        accessor.List.IsVisible.Should().BeTrue();
+        accessor.List.ItemCount.Should().Be(1);
+        accessor.List.Items.Cast<object>().Single().Should().NotBeOfType<FileStatusList.DiffTreeNode>();
+        control.SelectedGitItem.Should().Be(item);
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_preserve_empty_and_range_groups_and_filtered_counts()
+    {
+        FileStatusList control = new() { GroupByRevision = true };
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus source = new("src/source.cs") { IsChanged = true, IsTracked = true };
+        GitItemStatus documentation = new("docs/readme.md") { IsChanged = true, IsTracked = true };
+        GitItemStatus range = new("range-diff") { IsRangeDiff = true };
+        FileStatusWithDescription[] groups =
+        [
+            new(null, revision, "Changes", [source, documentation]),
+            new(null, revision, "No changes", []),
+            new(null, revision, "Range", [range], iconName: nameof(Images.DiffR)),
+        ];
+
+        control.SetDiffs(groups, isFileTreeMode: false);
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        FileStatusList.DiffTreeNode[] roots = [.. accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
+        roots.Should().HaveCount(3);
+        roots[0].Text.Should().Be("(2) Changes");
+        roots[1].Text.Should().Be("(0) No changes");
+        roots[1].Children.Should().BeEmpty();
+        roots[2].Item?.Item.Should().Be(range, "a range-diff marker remains a selectable root like WinForms");
+        roots[2].IsGroupHeader.Should().BeFalse();
+        accessor.NoFilesLabel.IsVisible.Should().BeFalse();
+
+        control.SetFilter("source").Should().Be(2, "range-diff markers remain visible through file filters");
+
+        roots = [.. accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
+        roots[0].Text.Should().Be("(1/2) Changes");
+        roots[1].Text.Should().Be("(0) No changes");
+        roots[2].Item?.Item.Should().Be(range);
+        control.GitItemFilteredStatuses.Should().Equal(source, range);
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_expand_grep_results_and_collapse_the_other_revision_groups()
+    {
+        FileStatusList control = new() { GroupByRevision = true };
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus ordinary = new("src/source.cs") { IsChanged = true, IsTracked = true };
+        GitItemStatus match = new("src/match.cs") { IsChanged = true, IsTracked = true, GrepString = "needle" };
+
+        control.SetDiffs(
+        [
+            new FileStatusWithDescription(null, revision, "Diff with parent", [ordinary]),
+            new FileStatusWithDescription(null, revision, "grep: needle", [match], iconName: nameof(FileStatusDiffCalculator.GitGrepIconName)),
+        ],
+        isFileTreeMode: false);
+
+        FileStatusList.DiffTreeNode[] roots =
+        [
+            .. control.GetTestAccessor().DiffTree.Items.Cast<FileStatusList.DiffTreeNode>(),
+        ];
+        roots[0].IsExpanded.Should().BeFalse();
+        roots[1].IsExpanded.Should().BeTrue();
+        roots[1].Image.Should().BeSameAs(Images.ViewFile);
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_restore_the_same_multi_parent_file_when_paths_are_equal()
+    {
+        FileStatusList control = new() { GroupByRevision = true };
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus firstParent = new("src/shared.cs") { IsChanged = true, IsTracked = true };
+        GitItemStatus secondParent = new("src/shared.cs") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(
+        [
+            new FileStatusWithDescription(null, revision, "Parent 1", [firstParent]),
+            new FileStatusWithDescription(null, revision, "Parent 2", [secondParent]),
+        ],
+        isFileTreeMode: false);
+
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        FileStatusList.DiffTreeNode secondNode = accessor.DiffTree.Items
+            .Cast<FileStatusList.DiffTreeNode>()
+            .ElementAt(1)
+            .Children.SelectMany(Flatten)
+            .Single(node => node.Item is not null);
+        accessor.DiffTree.SelectedItem = secondNode;
+
+        control.SetFilter("shared").Should().Be(2);
+
+        control.SelectedGitItem.Should().BeSameAs(secondParent);
     }
 
     [AvaloniaTest]
@@ -163,5 +297,14 @@ public sealed class FileStatusListTests
             .Select(call => string.Join('.', call.GetArguments().Take(3)))
             .ToArray();
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(emittedKeys.Length);
+    }
+
+    private static IEnumerable<FileStatusList.DiffTreeNode> Flatten(FileStatusList.DiffTreeNode node)
+    {
+        yield return node;
+        foreach (FileStatusList.DiffTreeNode child in node.Children.SelectMany(Flatten))
+        {
+            yield return child;
+        }
     }
 }

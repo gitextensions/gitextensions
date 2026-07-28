@@ -280,9 +280,12 @@ public sealed partial class ParityScreenshotTests
             else if (view is FileStatusList fileStatusList)
             {
                 FileStatusList.TestAccessor accessor = fileStatusList.GetTestAccessor();
-                accessor.UpdateContextMenu();
-                accessor.ContextMenu.Open(accessor.List);
-                Dispatcher.UIThread.RunJobs();
+                if (accessor.List.IsVisible)
+                {
+                    accessor.UpdateContextMenu();
+                    accessor.ContextMenu.Open(accessor.List);
+                    Dispatcher.UIThread.RunJobs();
+                }
             }
             else if (view is RepoObjectsTree repoObjectsTree)
             {
@@ -964,7 +967,22 @@ public sealed partial class ParityScreenshotTests
                     break;
 
                 case FileStatusList fileStatusList:
-                    fileStatusList.SetDiffs(context.ChangedFiles);
+                    int splitIndex = Math.Max(1, context.ChangedFiles.Count / 2);
+                    fileStatusList.GroupByRevision = true;
+                    fileStatusList.SetDiffs(
+                    [
+                        new FileStatusWithDescription(
+                            null,
+                            context.HeadRevision,
+                            "Diff with parent",
+                            [.. context.ChangedFiles.Take(splitIndex)]),
+                        new FileStatusWithDescription(
+                            null,
+                            context.HeadRevision,
+                            "Working directory",
+                            [.. context.ChangedFiles.Skip(splitIndex)]),
+                    ],
+                    isFileTreeMode: false);
                     if (ReferenceEquals(fileStatusList, root))
                     {
                         fileStatusList.SetFilter("src|CHANGELOG");

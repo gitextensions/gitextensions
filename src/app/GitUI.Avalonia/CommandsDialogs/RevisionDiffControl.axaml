@@ -6,7 +6,7 @@
              x:Class="GitUI.CommandsDialogs.RevisionDiffControl">
   <Grid x:Name="DiffSplitContainer" ColumnDefinitions="380,0,*">
     <Border Grid.Column="0" Classes="gitextensions-section">
-      <gitui:FileStatusList x:Name="DiffFiles" />
+      <gitui:FileStatusList x:Name="DiffFiles" GroupByRevision="True" />
     </Border>
     <GridSplitter x:Name="DiffSplitter" Grid.Column="1" ResizeDirection="Columns" />
     <Border Grid.Column="2" Classes="gitextensions-section">
