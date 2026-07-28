@@ -171,6 +171,8 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
             new HotkeySettings(
                 FormBrowse.HotkeySettingsName,
                 Hk(FormBrowse.Command.GitBash, WinFormsShims.Keys.Control | WinFormsShims.Keys.G),
+                Hk(FormBrowse.Command.OpenRepo, WinFormsShims.Keys.Control | WinFormsShims.Keys.O),
+                Hk(FormBrowse.Command.CloseRepository, WinFormsShims.Keys.Control | WinFormsShims.Keys.W),
                 Hk(FormBrowse.Command.FocusRevisionGrid, WinFormsShims.Keys.Control | WinFormsShims.Keys.D1),
                 Hk(FormBrowse.Command.FocusCommitInfo, WinFormsShims.Keys.Control | WinFormsShims.Keys.D2),
                 Hk(FormBrowse.Command.FocusDiff, WinFormsShims.Keys.Control | WinFormsShims.Keys.D3),
