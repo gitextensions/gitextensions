@@ -19,6 +19,23 @@
   </Window.Styles>
   <DockPanel>
     <Menu x:Name="mainMenuStrip" DockPanel.Dock="Top">
+      <MenuItem x:Name="fileToolStripMenuItem" Header="_Start">
+        <MenuItem x:Name="initNewRepositoryToolStripMenuItem" Header="_Create new repository...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RepoCreate}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="openToolStripMenuItem" Header="_Open...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RepoOpen}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="cloneToolStripMenuItem" Header="C_lone repository...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CloneRepoGit}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="exitToolStripMenuItem"
+                  Header="E_xit"
+                  HotKey="Ctrl+Q"
+                  InputGesture="Ctrl+Q" />
+      </MenuItem>
       <MenuItem x:Name="repositoryToolStripMenuItem" Header="_Repository">
         <MenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
@@ -153,14 +170,35 @@
         </MenuItem>
       </MenuItem>
       <MenuItem x:Name="toolsToolStripMenuItem" Header="_Tools">
-        <MenuItem Tag="userShell">
+        <MenuItem x:Name="gitBashToolStripMenuItem" Header="Git _bash">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GitForWindows}" /></MenuItem.Icon>
-          <MenuItem.Header>
-            <TextBlock Text="Git bash" />
-          </MenuItem.Header>
+        </MenuItem>
+        <MenuItem x:Name="gitGUIToolStripMenuItem" Header="Git _GUI">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GitGui}" /></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem x:Name="kGitToolStripMenuItem" Header="Git_K">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Gitk}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="settingsToolStripMenuItem" Header="_Settings...">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
         </MenuItem>
       </MenuItem>
       <MenuItem x:Name="helpToolStripMenuItem" Header="_Help">
+        <MenuItem x:Name="userManualToolStripMenuItem" Header="User _manual">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GotoManual}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="translateToolStripMenuItem" Header="_Translate">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Translate}" /></MenuItem.Icon>
+        </MenuItem>
+        <Separator />
+        <MenuItem x:Name="tsmiTelemetryEnabled"
+                  Header="_Yes, I allow telemetry"
+                  ToggleType="CheckBox" />
+        <MenuItem x:Name="reportAnIssueToolStripMenuItem" Header="_Report an issue">
+          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BugReport}" /></MenuItem.Icon>
+        </MenuItem>
         <MenuItem x:Name="checkForUpdatesToolStripMenuItem" Header="Check for _updates">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CheckForUpdates}" /></MenuItem.Icon>
         </MenuItem>

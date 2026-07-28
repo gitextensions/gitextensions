@@ -405,7 +405,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         TranslationUtils.AddTranslationItemsFromFields(TranslationCategory, this, translation);
         translation.AddTranslationItem(TranslationCategory, "tsmiFavouriteRepositories", "Text", "&Favorite repositories");
-        translation.AddTranslationItem(TranslationCategory, "openToolStripMenuItem", "Text", "Open repository...");
         translation.AddTranslationItem(TranslationCategory, "closeToolStripMenuItem", "Text", "&Close repository");
     }
 
@@ -422,7 +421,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                 TranslationCategory,
                 "openToolStripMenuItem",
                 "Text",
-                () => "Open repository...") ?? "Open repository...");
+                () => "&Open...") ?? "&Open...");
         _closeRepositoryText = AvaloniaTranslationUtils.ToAvaloniaMnemonics(
             translation.TranslateItem(
                 TranslationCategory,
