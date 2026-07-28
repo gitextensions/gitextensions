@@ -163,7 +163,9 @@ public sealed class FormBrowseTests
             MenuItem feature = flyout.Items
                 .OfType<MenuItem>()
                 .Single(item => item.Header as string == "feature");
-            feature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            TopLevel popup = TopLevel.GetTopLevel(feature)
+                ?? throw new InvalidOperationException("The branch flyout did not render.");
+            Click(popup, feature, MouseButton.Left);
 
             await WaitUntilAsync(() => module.GetSelectedBranch() == "feature");
             await WaitUntilAsync(() => branchSelector.Content as string == "feature");
