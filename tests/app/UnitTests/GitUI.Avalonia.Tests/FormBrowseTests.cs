@@ -423,6 +423,141 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_start_tools_and_help_menus_should_match_the_current_supported_WinForms_inventory()
+    {
+        using FormBrowse form = new();
+
+        GetItemNames(form.fileToolStripMenuItem).Should().Equal(
+            "initNewRepositoryToolStripMenuItem",
+            "openToolStripMenuItem",
+            "|",
+            "cloneToolStripMenuItem",
+            "|",
+            "exitToolStripMenuItem");
+        GetItemNames(form.toolsToolStripMenuItem).Should().Equal(
+            "gitBashToolStripMenuItem",
+            "gitGUIToolStripMenuItem",
+            "kGitToolStripMenuItem",
+            "|",
+            "settingsToolStripMenuItem");
+        GetItemNames(form.helpToolStripMenuItem).Should().Equal(
+            "userManualToolStripMenuItem",
+            "|",
+            "translateToolStripMenuItem",
+            "|",
+            "tsmiTelemetryEnabled",
+            "reportAnIssueToolStripMenuItem",
+            "checkForUpdatesToolStripMenuItem");
+
+        foreach (string unavailableName in new[]
+        {
+            "tsmiFavouriteRepositories",
+            "tsmiRecentRepositories",
+            "PuTTYToolStripMenuItem",
+            "gitcommandLogToolStripMenuItem",
+            "changelogToolStripMenuItem",
+            "donateToolStripMenuItem",
+            "aboutToolStripMenuItem",
+        })
+        {
+            form.FindControl<Control>(unavailableName).Should().BeNull(
+                $"{unavailableName} must remain absent until its shared owner or native dialog exists");
+        }
+
+        return;
+
+        static string[] GetItemNames(MenuItem parent)
+            => parent.Items
+                .Select(item => item switch
+                {
+                    Separator => "|",
+                    MenuItem menuItem => menuItem.Name
+                        ?? throw new InvalidOperationException($"A {parent.Name} child has no name."),
+                    _ => throw new InvalidOperationException(
+                        $"Unexpected {parent.Name} entry: {item?.GetType().Name}"),
+                })
+                .ToArray();
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_start_tools_and_help_menus_should_preserve_translation_identities()
+    {
+        using FormBrowse form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        form.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "fileToolStripMenuItem", "Text", "&Start");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "initNewRepositoryToolStripMenuItem", "Text", "&Create new repository...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "openToolStripMenuItem", "Text", "&Open...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "cloneToolStripMenuItem", "Text", "C&lone repository...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitBashToolStripMenuItem", "Text", "Git &bash");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitGUIToolStripMenuItem", "Text", "Git &GUI");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "kGitToolStripMenuItem", "Text", "Git&K");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "settingsToolStripMenuItem", "Text", "&Settings...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "userManualToolStripMenuItem", "Text", "User &manual");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "translateToolStripMenuItem", "Text", "&Translate");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "tsmiTelemetryEnabled", "Text", "&Yes, I allow telemetry");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "reportAnIssueToolStripMenuItem", "Text", "&Report an issue");
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_start_tools_and_help_menus_should_route_commands_and_refresh_state()
+    {
+        bool isBare = false;
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(_workingDirectory);
+        module.IsValidGitWorkingDir().Returns(false);
+        module.IsBareRepository().Returns(_ => isBare);
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(Arg.Any<Type>())
+            .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+        using FormBrowse form = new(commands);
+
+        form.initNewRepositoryToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.cloneToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.gitGUIToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.kGitToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.settingsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.tsmiTelemetryEnabled.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartInitializeDialog(
+            form,
+            null,
+            Arg.Any<EventHandler<GitModuleEventArgs>>());
+        commands.Received(1).StartCloneDialog(
+            form,
+            string.Empty,
+            false,
+            Arg.Any<EventHandler<GitModuleEventArgs>>());
+        module.Received(1).RunGui();
+        module.Received(1).RunGitK();
+        commands.Received(1).StartSettingsDialog(form, null);
+        commands.Received(1).StartGeneralSettingsDialog(form);
+
+        form.toolsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+        form.gitGUIToolStripMenuItem.IsEnabled.Should().BeTrue();
+        isBare = true;
+        form.toolsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+        form.gitGUIToolStripMenuItem.IsEnabled.Should().BeFalse();
+
+        bool? originalTelemetry = AppSettings.TelemetryEnabled;
+        try
+        {
+            AppSettings.TelemetryEnabled = true;
+            form.helpToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+            form.tsmiTelemetryEnabled.IsChecked.Should().BeTrue();
+        }
+        finally
+        {
+            AppSettings.TelemetryEnabled = originalTelemetry;
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_commands_menu_should_match_the_current_supported_WinForms_inventory()
     {
         using FormBrowse form = new();

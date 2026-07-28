@@ -79,6 +79,8 @@ public sealed partial class FormBrowse : GitModuleForm
     internal enum Command
     {
         GitBash = 0,
+        GitGui = 1,
+        GitGitK = 2,
         FocusRevisionGrid = 3,
         FocusCommitInfo = 4,
         FocusDiff = 5,
@@ -179,6 +181,10 @@ public sealed partial class FormBrowse : GitModuleForm
         deleteIndexLockToolStripMenuItem.Click += deleteIndexLockToolStripMenuItem_Click;
         editLocalGitConfigToolStripMenuItem.Click += EditLocalGitConfigToolStripMenuItemClick;
         repoSettingsToolStripMenuItem.Click += RepoSettingsToolStripMenuItemClick;
+        initNewRepositoryToolStripMenuItem.Click += InitNewRepositoryToolStripMenuItemClick;
+        openToolStripMenuItem.Click += OpenToolStripMenuItemClick;
+        cloneToolStripMenuItem.Click += CloneToolStripMenuItemClick;
+        exitToolStripMenuItem.Click += ExitToolStripMenuItemClick;
         commandsToolStripMenuItem.SubmenuOpened += CommandsToolStripMenuItem_SubmenuOpened;
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         undoLastCommitToolStripMenuItem.Click += undoLastCommitToolStripMenuItem_Click;
@@ -204,6 +210,16 @@ public sealed partial class FormBrowse : GitModuleForm
         _createPullRequestsToolStripMenuItem.Click += _createPullRequestToolStripMenuItem_Click;
         _addUpstreamRemoteToolStripMenuItem.Click += _addUpstreamRemoteToolStripMenuItem_Click;
         pluginSettingsToolStripMenuItem.Click += PluginSettingsToolStripMenuItemClick;
+        toolsToolStripMenuItem.SubmenuOpened += ToolsToolStripMenuItem_SubmenuOpened;
+        gitBashToolStripMenuItem.Click += userShell_Click;
+        gitGUIToolStripMenuItem.Click += GitGuiToolStripMenuItemClick;
+        kGitToolStripMenuItem.Click += KGitToolStripMenuItemClick;
+        settingsToolStripMenuItem.Click += OnShowSettingsClick;
+        helpToolStripMenuItem.SubmenuOpened += HelpToolStripMenuItem_SubmenuOpened;
+        userManualToolStripMenuItem.Click += UserManualToolStripMenuItemClick;
+        translateToolStripMenuItem.Click += TranslateToolStripMenuItemClick;
+        tsmiTelemetryEnabled.Click += TsmiTelemetryEnabledClick;
+        reportAnIssueToolStripMenuItem.Click += ReportAnIssueToolStripMenuItemClick;
         checkForUpdatesToolStripMenuItem.Click += checkForUpdatesToolStripMenuItem_Click;
         RefreshButton.Click += RefreshToolStripMenuItemClick;
         toggleLeftPanel.Click += ToggleLeftPanelClick;
@@ -221,7 +237,6 @@ public sealed partial class FormBrowse : GitModuleForm
         toolStripFileExplorer.Click += FileExplorerToolStripMenuItemClick;
         userShell.Click += userShell_Click;
         EditSettings.Click += OnShowSettingsClick;
-        UserShellToolStripMenuItem.Click += userShell_Click;
         pullToolStripMenuItem1.Click += (_, _) => DoPull(AppSettings.FormPullAction, isSilent: false);
         mergeToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.Merge, isSilent: true);
         rebaseToolStripMenuItem1.Click += (_, _) => DoPull(GitPullAction.Rebase, isSilent: true);
@@ -268,6 +283,7 @@ public sealed partial class FormBrowse : GitModuleForm
         InitializeComplete();
         HotkeysEnabled = true;
         LoadHotkeys(HotkeySettingsName);
+        RefreshMenuShortcutKeys();
         _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys ?? []);
         ToolStripFilters.RefreshRevisionGridShortcutKeys(
@@ -418,6 +434,48 @@ public sealed partial class FormBrowse : GitModuleForm
     private void checkForUpdatesToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         _updateCheckService?.SearchForUpdatesAndShow(this, alwaysShow: true);
+    }
+
+    private void InitNewRepositoryToolStripMenuItemClick(object? sender, EventArgs e)
+        => UICommands.StartInitializeDialog(this, gitModuleChanged: StartMenuGitModuleChanged);
+
+    private void OpenToolStripMenuItemClick(object? sender, EventArgs e)
+        => OpenRepositoryDialog();
+
+    private void CloneToolStripMenuItemClick(object? sender, EventArgs e)
+        => UICommands.StartCloneDialog(this, string.Empty, false, StartMenuGitModuleChanged);
+
+    private void ExitToolStripMenuItemClick(object? sender, EventArgs e)
+        => Close();
+
+    private void StartMenuGitModuleChanged(object? sender, GitModuleEventArgs e)
+        => ChangeWorkingDirectory(e.GitModule.WorkingDir);
+
+    private void ToolsToolStripMenuItem_SubmenuOpened(object? sender, EventArgs e)
+        => gitGUIToolStripMenuItem.IsEnabled = !Module.IsBareRepository();
+
+    private void GitGuiToolStripMenuItemClick(object? sender, EventArgs e)
+        => Module.RunGui();
+
+    private void KGitToolStripMenuItemClick(object? sender, EventArgs e)
+        => Module.RunGitK();
+
+    private void HelpToolStripMenuItem_SubmenuOpened(object? sender, EventArgs e)
+        => tsmiTelemetryEnabled.IsChecked = AppSettings.TelemetryEnabled ?? false;
+
+    private void UserManualToolStripMenuItemClick(object? sender, EventArgs e)
+        => OsShellUtil.OpenUrlInDefaultBrowser(AppSettings.DocumentationBaseUrl);
+
+    private void TranslateToolStripMenuItemClick(object? sender, EventArgs e)
+        => OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/gitextensions/gitextensions/wiki/Translations");
+
+    private void TsmiTelemetryEnabledClick(object? sender, EventArgs e)
+        => UICommands.StartGeneralSettingsDialog(this);
+
+    private void ReportAnIssueToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UserEnvironmentInformation.CopyInformation();
+        OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/gitextensions/gitextensions/issues");
     }
 
     private void ChangeWorkingDirectory(string path)
@@ -890,11 +948,6 @@ public sealed partial class FormBrowse : GitModuleForm
     private MenuFlyout BranchSelectFlyout => (MenuFlyout)branchSelect.Flyout!;
 
     private MenuFlyout WorktreeFlyout => (MenuFlyout)toolStripWorktrees.Flyout!;
-
-    private MenuItem UserShellToolStripMenuItem
-        => toolsToolStripMenuItem.Items
-            .OfType<MenuItem>()
-            .Single(item => item.Tag as string == "userShell");
 
     private void RepoObjectsTree_SelectionChanged(object? sender, EventArgs e)
     {
@@ -1687,6 +1740,8 @@ public sealed partial class FormBrowse : GitModuleForm
         switch ((Command)command)
         {
             case Command.GitBash: userShell_Click(this, EventArgs.Empty); break;
+            case Command.GitGui: Module.RunGui(); break;
+            case Command.GitGitK: Module.RunGitK(); break;
             case Command.FocusRevisionGrid: RevisionGrid.Focus(); break;
             case Command.FocusCommitInfo:
                 if (AppSettings.CommitInfoPosition == CommitInfoPosition.BelowList)
@@ -1784,6 +1839,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         LoadHotkeys(HotkeySettingsName);
+        RefreshMenuShortcutKeys();
         _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys ?? []);
         ToolStripFilters.RefreshRevisionGridShortcutKeys(
@@ -1797,6 +1853,21 @@ public sealed partial class FormBrowse : GitModuleForm
         _gitStatusMonitor?.Active = Module.IsValidGitWorkingDir() && NeedsGitStatusMonitor();
         RefreshGitStatusMonitor();
         RefreshPushButton(Module, Module.IsValidGitWorkingDir() ? Module.GetSelectedBranch() : string.Empty);
+    }
+
+    private void RefreshMenuShortcutKeys()
+    {
+        openToolStripMenuItem.InputGesture = GetMenuGesture(Command.OpenRepo);
+        gitBashToolStripMenuItem.InputGesture = GetMenuGesture(Command.GitBash);
+        gitGUIToolStripMenuItem.InputGesture = GetMenuGesture(Command.GitGui);
+        kGitToolStripMenuItem.InputGesture = GetMenuGesture(Command.GitGitK);
+        settingsToolStripMenuItem.InputGesture = GetMenuGesture(Command.OpenSettings);
+
+        return;
+
+        KeyGesture? GetMenuGesture(Command command)
+            => KeysMapper.ToKeyGesture(
+                Hotkeys?.FirstOrDefault(hotkey => hotkey.CommandCode == (int)command)?.KeyData);
     }
 
     /// <summary>
@@ -1909,12 +1980,8 @@ public sealed partial class FormBrowse : GitModuleForm
         SetTranslatedToolTip(toolStripSplitStash, nameof(toolStripSplitStash), "Manage stashes");
         SetTranslatedToolTip(toolStripWorktrees, nameof(toolStripWorktrees), "Worktrees");
         SetTranslatedToolTip(toolStripFileExplorer, nameof(toolStripFileExplorer), "File Explorer");
-        string terminalText = SetTranslatedToolTip(userShell, nameof(userShell), "Git bash");
+        SetTranslatedToolTip(userShell, nameof(userShell), "Git bash");
         ((ITranslate)_NO_TRANSLATE_WorkingDir).TranslateItems(translation);
-        if (UserShellToolStripMenuItem.Header is TextBlock header)
-        {
-            header.Text = terminalText;
-        }
 
         RefreshCommitInfoPositionToolTip();
 

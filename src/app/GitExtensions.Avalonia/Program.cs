@@ -1,6 +1,7 @@
 using System.ComponentModel.Design;
 using Avalonia;
 using GitCommands;
+using GitUI;
 
 namespace GitExtensions;
 
@@ -15,6 +16,7 @@ internal static class Program
 
         AppSettings.SetDocumentationBaseUrl(AppSettings.ProductVersion);
         AppTitleGenerator.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.Branch);
+        UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
 
         int exitCode = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 

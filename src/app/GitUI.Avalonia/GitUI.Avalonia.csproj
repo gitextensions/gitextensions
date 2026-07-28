@@ -159,6 +159,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\GitUI\UserEnvironmentInformation.cs"
+             Link="UserEnvironmentInformation.cs" />
     <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\GitExtensions.Extensibility\GitExtensions.Extensibility.csproj" />
     <ProjectReference Include="..\GitExtensions.Shims.WinForms\GitExtensions.Shims.WinForms.csproj" />
