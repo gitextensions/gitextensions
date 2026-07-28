@@ -31,6 +31,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         """);
 
     private readonly HashSet<MenuItem> _fixedItems = [];
+    private readonly MenuItem _filterHost;
     private readonly MenuFlyout _menu = new();
     private readonly TextBox _txtFilter = new()
     {
@@ -59,11 +60,17 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         ToolTip.SetTip(this, _toolTip.Text);
         TranslationCompat.SetUseToolTipText(this, true);
 
-        Click += (_, _) => _menu.ShowAt(this);
+        _filterHost = new MenuItem
+        {
+            Header = _txtFilter,
+            StaysOpenOnClick = true,
+        };
+        _menu.Items.Add(_filterHost);
+        Click += (_, _) => OpenFlyout();
         _menu.Opening += Menu_Opening;
         _txtFilter.TextChanged += (_, _) => ApplyFilter();
         _txtFilter.KeyDown += TxtFilter_KeyDown;
-        AddHandler(PointerPressedEvent, MouseUpHandler, RoutingStrategies.Tunnel);
+        AddHandler(PointerReleasedEvent, MouseUpHandler, RoutingStrategies.Tunnel);
     }
 
     /// <summary>
@@ -166,17 +173,15 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
     private void FillDropDown(IList<Repository> favourites, IList<Repository> recent)
     {
-        _menu.Items.Clear();
+        while (_menu.Items.Count > 1)
+        {
+            _menu.Items.RemoveAt(1);
+        }
+
         _fixedItems.Clear();
         _txtFilter.Text = string.Empty;
         _txtFilter.PlaceholderText = _repositorySearchPlaceholder.Text;
 
-        MenuItem filterHost = new()
-        {
-            Header = _txtFilter,
-            StaysOpenOnClick = true,
-        };
-        _menu.Items.Add(filterHost);
         _menu.Items.Add(new Separator());
 
         AddFavouriteRepositories(favourites);
@@ -375,9 +380,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
         }
     }
 
-    private void MouseUpHandler(object? sender, PointerPressedEventArgs e)
+    private void MouseUpHandler(object? sender, PointerReleasedEventArgs e)
     {
-        if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
+        if (e.InitialPressMouseButton == MouseButton.Right)
         {
             _openRepository?.Invoke();
             e.Handled = true;
@@ -447,9 +452,14 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
 
         public void ShowDropDown(IList<Repository> favourites, IList<Repository> recent)
         {
+            PrepareDropDown(favourites, recent);
+            control._menu.ShowAt(control);
+        }
+
+        public void PrepareDropDown(IList<Repository> favourites, IList<Repository> recent)
+        {
             control.FillDropDown(favourites, recent);
             control._dropDownPreparedForTest = true;
-            control._menu.ShowAt(control);
         }
 
         public void RefreshContent(string path, IList<Repository> recent)
@@ -460,6 +470,9 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
             control._setWorkingDirectory = setWorkingDirectory;
             control._launchRepository = launchRepository;
         }
+
+        public void SetOpenRepositoryAction(Action openRepository)
+            => control._openRepository = openRepository;
 
         public void OpenRepository(string path, bool openInNewInstance)
             => control.OpenRepository(path, openInNewInstance);
