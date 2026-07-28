@@ -78,7 +78,10 @@ jobs:
       run: dotnet test tests/app/UnitTests/GitCommands.Tests/GitCommands.Tests.csproj -f net10.0
 
     - name: Run Avalonia headless tests
-      run: dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj
+      run: >-
+        dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj
+        --blame-hang
+        --blame-hang-timeout 2m
 
     - name: Build tiers (net10.0-windows compile check)
       run: |

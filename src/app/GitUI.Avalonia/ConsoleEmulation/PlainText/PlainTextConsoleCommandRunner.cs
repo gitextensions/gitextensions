@@ -175,7 +175,7 @@ public sealed class PlainTextConsoleCommandRunner : UserControl, IPlainTextConso
 
             foreach ((string name, string value) in envVariables)
             {
-                startInfo.EnvironmentVariables.Add(name, value);
+                startInfo.EnvironmentVariables[name] = value;
             }
 
             _process = new() { StartInfo = startInfo, EnableRaisingEvents = true };

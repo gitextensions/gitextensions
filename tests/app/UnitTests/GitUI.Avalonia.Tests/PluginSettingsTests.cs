@@ -295,6 +295,7 @@ public sealed class PluginSettingsTests
         commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(hotkeySettingsLoader);
+        commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
         return new FormBrowse(commands);
     }
 

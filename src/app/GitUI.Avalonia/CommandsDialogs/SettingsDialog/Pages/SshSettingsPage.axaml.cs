@@ -9,6 +9,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public sealed partial class SshSettingsPage : SettingsPageWithHeader
 {
+    public SshSettingsPage()
+        : this(EmptyServiceProvider.Instance)
+    {
+    }
+
     public SshSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
     {

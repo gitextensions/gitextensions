@@ -28,6 +28,7 @@ public sealed class ScriptsEngineTests
     {
         using ServiceContainer services = new();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(services);
+        services.AddService<IGitExecutorProvider>(Substitute.For<IGitExecutorProvider>());
 
         GitUI.ServiceContainerRegistry.RegisterServices(services);
 

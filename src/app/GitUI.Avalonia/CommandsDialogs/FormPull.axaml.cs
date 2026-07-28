@@ -564,9 +564,20 @@ public sealed partial class FormPull : GitExtensionsDialog
                 Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArgument(), Unshallow.IsChecked == true, Prune.IsChecked == true, PruneTags.IsChecked == true));
         }
 
+        ArgumentString arguments = Module.PullCmd(
+            source,
+            curRemoteBranch,
+            Rebase.IsChecked == true,
+            GetTagsArgument(),
+            Unshallow.IsChecked == true);
+        if (Merge.IsChecked == true)
+        {
+            arguments = $"-c pull.rebase=false {arguments}";
+        }
+
         FormRemoteProcess form = new(
             UICommands,
-            Module.PullCmd(source, curRemoteBranch, Rebase.IsChecked == true, GetTagsArgument(), Unshallow.IsChecked == true))
+            arguments)
         {
             HandleOnExitCallback = HandlePullOnExit,
         };
