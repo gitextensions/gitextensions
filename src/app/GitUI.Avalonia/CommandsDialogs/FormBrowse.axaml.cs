@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -40,6 +40,7 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly TranslationString _outputHistoryTabCaption = new("Output");
     private readonly TranslationString _buildReportTabCaption = new("Build Report");
     private readonly TranslationString _commitButtonText = new("Commit");
+    private readonly TranslationString _indexLockCantDelete = new("Failed to delete index.lock");
     private readonly TranslationString _noReposHostPluginLoaded = new("No repository host plugin loaded.");
     private readonly TranslationString _noReposHostFound = new("Could not find any relevant repository hosts for the currently open repository.");
 
@@ -165,8 +166,17 @@ public sealed partial class FormBrowse : GitModuleForm
         CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectionChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
+        fileExplorerToolStripMenuItem.Click += FileExplorerToolStripMenuItemClick;
+        manageRemoteRepositoriesToolStripMenuItem1.Click += ManageRemoteRepositoriesToolStripMenuItemClick;
+        manageSubmodulesToolStripMenuItem.Click += ManageSubmodulesToolStripMenuItemClick;
+        updateAllSubmodulesToolStripMenuItem.Click += UpdateAllSubmodulesToolStripMenuItemClick;
+        synchronizeAllSubmodulesToolStripMenuItem.Click += SynchronizeAllSubmodulesToolStripMenuItemClick;
         manageWorktreeToolStripMenuItem.Click += ManageWorktreeToolStripMenuItemClick;
+        compressGitDatabaseToolStripMenuItem.Click += CompressGitDatabaseToolStripMenuItemClick;
         recoverLostObjectsToolStripMenuItem.Click += recoverLostObjectsToolStripMenuItemClick;
+        deleteIndexLockToolStripMenuItem.Click += deleteIndexLockToolStripMenuItem_Click;
+        editLocalGitConfigToolStripMenuItem.Click += EditLocalGitConfigToolStripMenuItemClick;
+        repoSettingsToolStripMenuItem.Click += RepoSettingsToolStripMenuItemClick;
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         checkoutBranchToolStripMenuItem.Click += CheckoutBranchToolStripMenuItemClick;
         branchToolStripMenuItem.Click += CreateBranchToolStripMenuItemClick;
@@ -302,6 +312,8 @@ public sealed partial class FormBrowse : GitModuleForm
         Title = appTitleGenerator.Generate(module.WorkingDir, isValidWorkingDir, branchName);
 
         refreshToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        fileExplorerToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        manageRemoteRepositoriesToolStripMenuItem1.IsEnabled = isValidWorkingDir;
         commitToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         checkoutBranchToolStripMenuItem.IsEnabled = isValidWorkingDir;
         branchToolStripMenuItem.IsEnabled = isValidWorkingDir;
@@ -317,6 +329,11 @@ public sealed partial class FormBrowse : GitModuleForm
         toolStripMenuItemReflog.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         manageWorktreeToolStripMenuItem.IsEnabled = isValidWorkingDir;
         gitMaintenanceToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        repoSettingsToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        bool enableWorkingTreeCommands = isValidWorkingDir && !module.IsBareRepository();
+        manageSubmodulesToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        updateAllSubmodulesToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
+        synchronizeAllSubmodulesToolStripMenuItem.IsEnabled = enableWorkingTreeCommands;
         RefreshButton.IsEnabled = isValidWorkingDir;
         branchSelect.IsEnabled = isValidWorkingDir;
         toolStripButtonPull.IsEnabled = isValidWorkingDir;
@@ -930,9 +947,65 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
+    private void ManageRemoteRepositoriesToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartRemotesDialog(this);
+    }
+
+    private void ManageSubmodulesToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartSubmodulesDialog(this);
+        UpdateSubmodulesStructure();
+    }
+
+    private void UpdateAllSubmodulesToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartUpdateSubmodulesDialog(this);
+        UpdateSubmodulesStructure();
+    }
+
+    private void SynchronizeAllSubmodulesToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartSyncSubmodulesDialog(this);
+        UpdateSubmodulesStructure();
+    }
+
+    private void CompressGitDatabaseToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        FormProcess.ReadDialog(this, UICommands, arguments: "gc", Module.WorkingDir, input: null, useDialogSettings: true);
+    }
+
     private void recoverLostObjectsToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartVerifyDatabaseDialog(this);
+    }
+
+    private void deleteIndexLockToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            Module.UnlockIndex(includeSubmodules: true);
+        }
+        catch (FileDeleteException exception)
+        {
+            throw new UserExternalOperationException(
+                _indexLockCantDelete.Text,
+                new ExternalOperationException(
+                    arguments: exception.FileName,
+                    workingDirectory: Module.WorkingDir,
+                    innerException: exception));
+        }
+    }
+
+    private void EditLocalGitConfigToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        string fileName = Path.Combine(Module.ResolveGitInternalPath("config"));
+        UICommands.StartFileEditorDialog(fileName, showWarning: true);
+    }
+
+    private void RepoSettingsToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartRepoSettingsDialog(this);
     }
 
     private void PopulateWorktreeSelector()

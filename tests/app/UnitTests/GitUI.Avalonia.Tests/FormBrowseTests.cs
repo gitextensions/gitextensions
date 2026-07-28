@@ -326,7 +326,100 @@ public sealed class FormBrowseTests
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "toolStripWorktrees", "ToolTipText", "Worktrees");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "archiveToolStripMenuItem", "Text", "Archi&ve revision...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitMaintenanceToolStripMenuItem", "Text", "&Git maintenance");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "compressGitDatabaseToolStripMenuItem", "Text", "&Compress git database");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "recoverLostObjectsToolStripMenuItem", "Text", "&Recover lost objects...");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "deleteIndexLockToolStripMenuItem", "Text", "&Delete index.lock");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "editLocalGitConfigToolStripMenuItem", "Text", "&Edit .git/config");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "repoSettingsToolStripMenuItem", "Text", "Rep&ository settings...");
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_repository_menu_should_match_the_current_supported_WinForms_inventory()
+    {
+        using FormBrowse form = new();
+
+        string[] actualItems = form.repositoryToolStripMenuItem.Items
+            .Select(item => item switch
+            {
+                Separator => "|",
+                MenuItem menuItem => menuItem.Name ?? throw new InvalidOperationException("A repository menu item has no name."),
+                _ => throw new InvalidOperationException($"Unexpected repository menu entry: {item?.GetType().Name}"),
+            })
+            .ToArray();
+        actualItems.Should().Equal(
+            "refreshToolStripMenuItem",
+            "fileExplorerToolStripMenuItem",
+            "|",
+            "manageRemoteRepositoriesToolStripMenuItem1",
+            "|",
+            "manageSubmodulesToolStripMenuItem",
+            "updateAllSubmodulesToolStripMenuItem",
+            "synchronizeAllSubmodulesToolStripMenuItem",
+            "|",
+            "manageWorktreeToolStripMenuItem",
+            "|",
+            "gitMaintenanceToolStripMenuItem",
+            "repoSettingsToolStripMenuItem");
+
+        KeyGesture fileExplorerShortcut = new(Key.O, KeyModifiers.Control | KeyModifiers.Shift);
+        form.fileExplorerToolStripMenuItem.HotKey.Should().BeEquivalentTo(fileExplorerShortcut);
+        form.fileExplorerToolStripMenuItem.InputGesture.Should().BeEquivalentTo(fileExplorerShortcut);
+
+        MenuItem maintenance = form.gitMaintenanceToolStripMenuItem;
+        maintenance.Items.OfType<MenuItem>().Select(item => item.Name).Should().Equal(
+            "compressGitDatabaseToolStripMenuItem",
+            "recoverLostObjectsToolStripMenuItem",
+            "deleteIndexLockToolStripMenuItem",
+            "editLocalGitConfigToolStripMenuItem");
+
+        foreach (string unavailableName in new[]
+        {
+            "editgitignoreToolStripMenuItem1",
+            "editgitinfoexcludeToolStripMenuItem",
+            "editGitAttributesToolStripMenuItem",
+            "editmailmapToolStripMenuItem",
+            "menuitemSparse",
+            "closeToolStripMenuItem",
+        })
+        {
+            form.FindControl<Control>(unavailableName).Should().BeNull(
+                $"{unavailableName} must remain absent until its native dialog or Dashboard action exists");
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_repository_menu_should_route_ported_dialog_commands_and_preserve_bare_repository_state()
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet", "--bare" });
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(Arg.Any<Type>())
+            .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+        using FormBrowse form = new(commands);
+
+        form.manageRemoteRepositoriesToolStripMenuItem1.IsEnabled.Should().BeTrue();
+        form.manageSubmodulesToolStripMenuItem.IsEnabled.Should().BeFalse();
+        form.updateAllSubmodulesToolStripMenuItem.IsEnabled.Should().BeFalse();
+        form.synchronizeAllSubmodulesToolStripMenuItem.IsEnabled.Should().BeFalse();
+        form.gitMaintenanceToolStripMenuItem.IsEnabled.Should().BeTrue();
+        form.repoSettingsToolStripMenuItem.IsEnabled.Should().BeTrue();
+
+        form.manageRemoteRepositoriesToolStripMenuItem1.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.manageSubmodulesToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.updateAllSubmodulesToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.synchronizeAllSubmodulesToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.recoverLostObjectsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        form.repoSettingsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartRemotesDialog(form);
+        commands.Received(1).StartSubmodulesDialog(form);
+        commands.Received(1).StartUpdateSubmodulesDialog(form);
+        commands.Received(1).StartSyncSubmodulesDialog(form);
+        commands.Received(1).StartVerifyDatabaseDialog(form);
+        commands.Received(1).StartRepoSettingsDialog(form);
     }
 
     [AvaloniaTest]
