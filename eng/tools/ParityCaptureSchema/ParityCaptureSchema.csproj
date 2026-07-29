@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>GitExtensions.ParityCapture</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The shared schema is deliberately platform-neutral so the Avalonia capture
+         harness can reference it and execute on Linux in P0.2. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="tree.schema.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
