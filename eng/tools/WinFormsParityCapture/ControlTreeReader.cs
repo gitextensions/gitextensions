@@ -249,42 +249,41 @@ internal sealed class ControlTreeReader
                 continue;
             }
 
-            for (Type? type = current.GetType(); type is not null; type = type.BaseType)
+            Type type = current.GetType();
+            foreach (FieldInfo field in type.GetFields(
+                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
             {
-                foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+                object? value;
+                try
                 {
-                    object? value;
-                    try
+                    value = field.GetValue(current);
+                }
+                catch (TargetInvocationException)
+                {
+                    continue;
+                }
+
+                if (value is null || value is string || value.GetType().IsValueType || ReferenceEquals(value, current))
+                {
+                    continue;
+                }
+
+                if (value is ToolTip toolTip && !_toolTips.Contains(toolTip))
+                {
+                    _toolTips.Add(toolTip);
+                }
+
+                if (value is Control or ToolStripItem or DataGridViewColumn or ColumnHeader)
+                {
+                    if (!_fieldNames.TryGetValue(value, out List<string>? names))
                     {
-                        value = field.GetValue(current);
-                    }
-                    catch (TargetInvocationException)
-                    {
-                        continue;
+                        names = [];
+                        _fieldNames.Add(value, names);
                     }
 
-                    if (value is null || value is string || value.GetType().IsValueType)
+                    if (!names.Contains(field.Name, StringComparer.Ordinal))
                     {
-                        continue;
-                    }
-
-                    if (value is ToolTip toolTip && !_toolTips.Contains(toolTip))
-                    {
-                        _toolTips.Add(toolTip);
-                    }
-
-                    if (value is Control or ToolStripItem or DataGridViewColumn or ColumnHeader)
-                    {
-                        if (!_fieldNames.TryGetValue(value, out List<string>? names))
-                        {
-                            names = [];
-                            _fieldNames.Add(value, names);
-                        }
-
-                        if (!names.Contains(field.Name, StringComparer.Ordinal))
-                        {
-                            names.Add(field.Name);
-                        }
+                        names.Add(field.Name);
                     }
                 }
             }

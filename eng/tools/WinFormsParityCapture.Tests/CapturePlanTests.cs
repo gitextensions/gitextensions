@@ -1,4 +1,5 @@
 ﻿using AwesomeAssertions;
+using GitExtensions.ParityCapture;
 using NUnit.Framework;
 
 namespace WinFormsParityCapture.Tests;
