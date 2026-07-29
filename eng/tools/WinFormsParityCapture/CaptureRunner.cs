@@ -158,7 +158,7 @@ internal static class CaptureRunner
         try
         {
             using WinFormsBootstrap bootstrap = WinFormsBootstrap.Create(repositoryPath, profile, theme, isolationRoot);
-            using Control root = ComponentFactory.Create(componentType, bootstrap.Commands);
+            using Control root = ComponentFactory.Create(component, bootstrap.Commands);
             try
             {
                 PrepareControl(root, monitor, scale, dpiMode);
