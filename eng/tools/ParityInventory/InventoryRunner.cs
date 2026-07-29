@@ -42,14 +42,7 @@ internal static class InventoryRunner
         Directory.CreateDirectory(
             Path.GetDirectoryName(output)
             ?? throw new InvalidDataException($"Output file '{output}' has no parent directory."));
-        JsonSerializerOptions serializerOptions = new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
-        string json = JsonSerializer.Serialize(report, serializerOptions).Replace("\r\n", "\n", StringComparison.Ordinal);
-        File.WriteAllText(output, json + "\n");
+        File.WriteAllText(output, InventoryJson.Serialize(report));
         return report;
     }
 }

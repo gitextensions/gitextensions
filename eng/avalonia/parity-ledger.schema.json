@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gitextensions.github.io/schemas/avalonia-parity-ledger-v1.json",
+  "title": "Git Extensions Avalonia parity ledger",
+  "description": "One six-axis proof entry per portmap source-to-twin mapping.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "analyzedCommit",
+    "axisOrder",
+    "components"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "parity-ledger.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "analyzedCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "axisOrder": {
+      "const": [
+        "structural",
+        "functional",
+        "visual",
+        "themingAndColor",
+        "behavioralState",
+        "platform"
+      ]
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/component"
+      }
+    }
+  },
+  "$defs": {
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "twin",
+        "complete",
+        "axes"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "pattern": "^src/"
+        },
+        "twin": {
+          "type": "string",
+          "pattern": "^src/"
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "axes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "structural",
+            "functional",
+            "visual",
+            "themingAndColor",
+            "behavioralState",
+            "platform"
+          ],
+          "properties": {
+            "structural": {
+              "$ref": "#/$defs/axis"
+            },
+            "functional": {
+              "$ref": "#/$defs/axis"
+            },
+            "visual": {
+              "$ref": "#/$defs/axis"
+            },
+            "themingAndColor": {
+              "$ref": "#/$defs/axis"
+            },
+            "behavioralState": {
+              "$ref": "#/$defs/axis"
+            },
+            "platform": {
+              "$ref": "#/$defs/axis"
+            }
+          }
+        }
+      }
+    },
+    "axis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "verifiedOn",
+        "commit",
+        "evidence",
+        "platforms",
+        "findingCount",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "verified",
+            "partial",
+            "gap",
+            "unverified",
+            "notApplicable"
+          ]
+        },
+        "verifiedOn": {
+          "type": "string",
+          "format": "date"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "windows",
+              "linux-wayland",
+              "linux-x11",
+              "flatpak",
+              "macos"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "findingCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
