@@ -54,6 +54,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- P0.2 deliberately references the platform-neutral parity contract so both capture
+         emitters compile against one schema; the Windows-only tool stays outside both solutions. -->
+    <ProjectReference Include="..\..\..\..\eng\tools\ParityCaptureSchema\ParityCaptureSchema.csproj" />
     <ProjectReference Include="..\..\..\..\eng\tools\ImagesResxToAvalonia\ImagesResxToAvalonia.csproj" />
     <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
     <ProjectReference Include="..\..\..\..\src\app\GitExtensions.Avalonia\GitExtensions.Avalonia.csproj" />
@@ -71,6 +74,15 @@
     <ProjectReference Include="..\..\..\..\src\plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\Statistics\GitImpact\GitExtensions.Plugins.GitImpact.csproj" />
     <ProjectReference Include="..\..\..\..\src\plugins\Statistics\GitStatistics\GitExtensions.Plugins.GitStatistics.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\eng\tools\WinFormsParityCapture\Profiles\reference.settings.json"
+          Link="Profiles\reference.settings.json"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\..\..\eng\tools\WinFormsParityCapture\Themes\parity-custom.css"
+          Link="Themes\parity-custom.css"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
