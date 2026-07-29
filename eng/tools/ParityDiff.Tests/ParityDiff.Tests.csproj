@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- This tooling test assembly is platform-neutral; the repository-wide assembly
+         metadata declares Windows support for shipping assemblies. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ParityCaptureSchema\ParityCaptureSchema.csproj" />
+    <ProjectReference Include="..\ParityDiff\ParityDiff.csproj" />
+  </ItemGroup>
+
+</Project>
