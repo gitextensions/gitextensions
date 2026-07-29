@@ -37,6 +37,82 @@ internal static class SourceInventoryReader
             throw new InvalidDataException($"Type '{typeName}' was not found below '{fullRoot}'.");
         }
 
+        return CreateInventory(root, className, englishKeys, isTwin, parts);
+    }
+
+    public static SourceInventory ReadFiles(
+        string root,
+        string typeName,
+        IReadOnlySet<string> englishKeys,
+        bool isTwin,
+        IEnumerable<string> files)
+    {
+        string fullRoot = Path.GetFullPath(root);
+        string className = typeName[(typeName.LastIndexOf('.') + 1)..];
+        List<MutablePart> parts = [];
+        foreach (string file in files.Select(Path.GetFullPath).Distinct(StringComparer.Ordinal)
+                     .OrderBy(path => path, StringComparer.Ordinal))
+        {
+            if (file.EndsWith(".axaml", StringComparison.OrdinalIgnoreCase))
+            {
+                if (isTwin)
+                {
+                    ReadAxaml(fullRoot, file, typeName, englishKeys, parts);
+                }
+            }
+            else if (file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+            {
+                ReadCSharp(fullRoot, file, typeName, className, isTwin, parts);
+            }
+        }
+
+        if (parts.Count == 0)
+        {
+            throw new InvalidDataException($"Type '{typeName}' was not found in the supplied files.");
+        }
+
+        return CreateInventory(root, className, englishKeys, isTwin, parts);
+    }
+
+    public static IReadOnlyList<string> DiscoverTopLevelClassNames(string file)
+    {
+        if (!File.Exists(file))
+        {
+            return [];
+        }
+
+        if (file.EndsWith(".axaml", StringComparison.OrdinalIgnoreCase))
+        {
+            XDocument document = XDocument.Load(file);
+            XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+            string? className = (string?)document.Root?.Attribute(x + "Class");
+            return string.IsNullOrWhiteSpace(className) ? [] : [className];
+        }
+
+        if (!file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+        {
+            return [];
+        }
+
+        SyntaxTree tree = CSharpSyntaxTree.ParseText(
+            File.ReadAllText(file),
+            new CSharpParseOptions(LanguageVersion.Preview));
+        return tree.GetCompilationUnitRoot().DescendantNodes()
+            .OfType<ClassDeclarationSyntax>()
+            .Where(declaration => !declaration.Ancestors().OfType<TypeDeclarationSyntax>().Any())
+            .Select(GetTypeName)
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(name => name, StringComparer.Ordinal)
+            .ToArray();
+    }
+
+    private static SourceInventory CreateInventory(
+        string root,
+        string className,
+        IReadOnlySet<string> englishKeys,
+        bool isTwin,
+        List<MutablePart> parts)
+    {
         List<TranslationKeyEntry> keys = parts.SelectMany(part => part.TranslationKeys)
             .GroupBy(entry => (entry.Key, entry.Origin))
             .Select(group => group.First() with { InEnglishCatalog = englishKeys.Contains(group.Key.Key) })
@@ -118,7 +194,10 @@ internal static class SourceInventoryReader
         }
     }
 
-    private static bool MatchesType(ClassDeclarationSyntax declaration, string typeName)
+    private static bool MatchesType(ClassDeclarationSyntax declaration, string typeName) =>
+        string.Equals(GetTypeName(declaration), typeName, StringComparison.Ordinal);
+
+    private static string GetTypeName(ClassDeclarationSyntax declaration)
     {
         string namespaceName = string.Join(
             ".",
@@ -128,7 +207,7 @@ internal static class SourceInventoryReader
         string candidate = string.IsNullOrEmpty(namespaceName)
             ? declaration.Identifier.ValueText
             : $"{namespaceName}.{declaration.Identifier.ValueText}";
-        return string.Equals(candidate, typeName, StringComparison.Ordinal);
+        return candidate;
     }
 
     private static void ExtractMembers(ClassDeclarationSyntax declaration, MutablePart part)
