@@ -3,6 +3,7 @@ using System.Reflection;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.ParityCapture;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;

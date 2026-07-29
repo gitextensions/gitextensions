@@ -6,7 +6,8 @@
 public enum CaptureDpiMode
 {
     NativeMonitor,
-    DpiChangeMessage
+    DpiChangeMessage,
+    HeadlessRenderScale
 }
 
 /// <summary>
@@ -17,6 +18,7 @@ public enum CaptureMethod
     DrawToBitmap,
     PrintWindow,
     ScreenGrab,
+    HeadlessSkia,
     Unsupported
 }
 
