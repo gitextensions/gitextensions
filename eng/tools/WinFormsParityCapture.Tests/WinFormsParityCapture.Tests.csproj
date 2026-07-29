@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ParityCaptureSchema\ParityCaptureSchema.csproj" />
+    <ProjectReference Include="..\WinFormsParityCapture\WinFormsParityCapture.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\WinFormsParityCapture\capture-plan.json" Link="capture-plan.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\ParityCaptureSchema\tree.schema.json" Link="tree.schema.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
