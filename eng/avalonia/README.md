@@ -26,3 +26,36 @@ Place owner-supplied WinForms screenshots in the likewise excluded
 diff, commit, and dialog captures during a visual-parity review. Relevant run-time dialogs
 use the seeded repository and real constructors; standalone controls receive representative
 refs, revisions, changes, patches, and text without opening external programs.
+
+## Proof ledger and baseline
+
+`portmap.json` records which source twins exist. `parity-ledger.json` records what has actually
+been proven for each mapping on the structural, functional, visual, theming/color,
+behavioral/state, and platform axes. Its versioned contract is
+`parity-ledger.schema.json`. A portmap entry may say `parity` only when its ledger entry is
+complete and every applicable axis is `verified`.
+
+Regenerate the deterministic functional baseline and ledger from the repository root:
+
+```powershell
+dotnet run --project eng/tools/ParityInventory -- sweep `
+  --portmap eng/avalonia/portmap.json `
+  --original-root src/app/GitUI `
+  --twin-root src/app/GitUI.Avalonia `
+  --translations src/app/GitUI/Translation/English.xlf `
+  --analyzed-commit (git rev-parse HEAD) `
+  --output eng/avalonia/parity-evidence/P0.5/functional-findings.json
+
+dotnet run --project eng/tools/ParityInventory -- ledger `
+  --portmap eng/avalonia/portmap.json `
+  --functional eng/avalonia/parity-evidence/P0.5/functional-findings.json `
+  --visual eng/avalonia/parity-evidence/P0.3/findings.json `
+  --reference eng/avalonia/parity-evidence/P0.1/winforms/manifest.json `
+  --analyzed-commit (git rev-parse HEAD) `
+  --verified-on 2026-07-29 `
+  --ledger-output eng/avalonia/parity-ledger.json `
+  --baseline-output eng/avalonia/parity-evidence/P0.5/baseline-report.json
+```
+
+The evidence folder is local and excluded from Git. The ledger is committed so stale or
+missing proof cannot be mistaken for parity.
