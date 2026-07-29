@@ -1,0 +1,387 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gitextensions.github.io/parity/tree.schema.json",
+  "title": "Git Extensions parity control-tree capture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [ "schemaVersion", "component", "capture", "image", "surfaces" ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "component": { "$ref": "#/$defs/component" },
+    "capture": { "$ref": "#/$defs/capture" },
+    "image": { "$ref": "#/$defs/image" },
+    "surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/surface" }
+    }
+  },
+  "$defs": {
+    "nullableString": {
+      "type": [ "string", "null" ]
+    },
+    "nullableBoolean": {
+      "type": [ "boolean", "null" ]
+    },
+    "nullableInteger": {
+      "type": [ "integer", "null" ]
+    },
+    "nullableNumber": {
+      "type": [ "number", "null" ]
+    },
+    "argb": {
+      "type": [ "string", "null" ],
+      "pattern": "^#[0-9A-F]{8}$"
+    },
+    "resolvedArgb": {
+      "type": "string",
+      "pattern": "^#[0-9A-F]{8}$"
+    },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "typeName", "assemblyName" ],
+      "properties": {
+        "typeName": { "type": "string", "minLength": 1 },
+        "assemblyName": { "type": "string", "minLength": 1 }
+      }
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "framework", "theme", "scalePercent", "dpi", "dpiMode", "state", "stateStatus", "stateNote" ],
+      "properties": {
+        "framework": {
+          "enum": [ "winforms", "avalonia" ]
+        },
+        "theme": { "$ref": "#/$defs/theme" },
+        "scalePercent": {
+          "enum": [ 100, 125, 150, 200 ]
+        },
+        "dpi": { "$ref": "#/$defs/dpi" },
+        "dpiMode": {
+          "enum": [ "nativeMonitor", "dpiChangeMessage" ]
+        },
+        "state": { "type": "string", "minLength": 1 },
+        "stateStatus": { "const": "captured" },
+        "stateNote": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "kind", "sourceSha256" ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [ "builtin", "custom" ]
+        },
+        "sourceSha256": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{64}$"
+        }
+      }
+    },
+    "dpi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "x", "y" ],
+      "properties": {
+        "x": { "type": "integer", "minimum": 1 },
+        "y": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "widthPx", "heightPx", "captureMethod" ],
+      "properties": {
+        "widthPx": { "type": "integer", "minimum": 1 },
+        "heightPx": { "type": "integer", "minimum": 1 },
+        "captureMethod": {
+          "enum": [ "drawToBitmap", "printWindow", "screenGrab" ]
+        }
+      }
+    },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "role", "screenBoundsPx", "root" ],
+      "properties": {
+        "role": { "type": "string", "minLength": 1 },
+        "screenBoundsPx": { "$ref": "#/$defs/rectangleInteger" },
+        "root": { "$ref": "#/$defs/node" }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "fieldName",
+        "fieldAliases",
+        "name",
+        "type",
+        "controlKind",
+        "boundsPx",
+        "boundsDip",
+        "clientSizePx",
+        "clientSizeDip",
+        "padding",
+        "margin",
+        "font",
+        "colors",
+        "borderStyle",
+        "flatStyle",
+        "borderWidthDip",
+        "cornerRadiusDip",
+        "anchor",
+        "dock",
+        "autoSize",
+        "alignment",
+        "text",
+        "toolTip",
+        "translationSource",
+        "tabIndex",
+        "tabStop",
+        "enabled",
+        "visible",
+        "focused",
+        "readOnly",
+        "checkState",
+        "selected",
+        "expanded",
+        "columns",
+        "children"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "fieldName": { "$ref": "#/$defs/nullableString" },
+        "fieldAliases": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "name": { "$ref": "#/$defs/nullableString" },
+        "type": { "type": "string", "minLength": 1 },
+        "controlKind": { "type": "string", "minLength": 1 },
+        "boundsPx": { "$ref": "#/$defs/rectangleInteger" },
+        "boundsDip": { "$ref": "#/$defs/rectangleNumber" },
+        "clientSizePx": { "$ref": "#/$defs/sizeInteger" },
+        "clientSizeDip": { "$ref": "#/$defs/sizeNumber" },
+        "padding": { "$ref": "#/$defs/thicknessPair" },
+        "margin": { "$ref": "#/$defs/thicknessPair" },
+        "font": {
+          "oneOf": [
+            { "$ref": "#/$defs/font" },
+            { "type": "null" }
+          ]
+        },
+        "colors": { "$ref": "#/$defs/colors" },
+        "borderStyle": { "$ref": "#/$defs/nullableString" },
+        "flatStyle": { "$ref": "#/$defs/nullableString" },
+        "borderWidthDip": { "$ref": "#/$defs/nullableNumber" },
+        "cornerRadiusDip": {
+          "oneOf": [
+            { "$ref": "#/$defs/cornerRadius" },
+            { "type": "null" }
+          ]
+        },
+        "anchor": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "dock": { "$ref": "#/$defs/nullableString" },
+        "autoSize": { "$ref": "#/$defs/nullableBoolean" },
+        "alignment": { "$ref": "#/$defs/nullableString" },
+        "text": { "$ref": "#/$defs/nullableString" },
+        "toolTip": { "$ref": "#/$defs/nullableString" },
+        "translationSource": { "$ref": "#/$defs/nullableString" },
+        "tabIndex": { "$ref": "#/$defs/nullableInteger" },
+        "tabStop": { "$ref": "#/$defs/nullableBoolean" },
+        "enabled": { "$ref": "#/$defs/nullableBoolean" },
+        "visible": { "$ref": "#/$defs/nullableBoolean" },
+        "focused": { "$ref": "#/$defs/nullableBoolean" },
+        "readOnly": { "$ref": "#/$defs/nullableBoolean" },
+        "checkState": { "$ref": "#/$defs/nullableString" },
+        "selected": { "$ref": "#/$defs/nullableBoolean" },
+        "expanded": { "$ref": "#/$defs/nullableBoolean" },
+        "columns": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/column" }
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/node" }
+        }
+      }
+    },
+    "column": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fieldName",
+        "name",
+        "type",
+        "index",
+        "displayIndex",
+        "widthPx",
+        "widthDip",
+        "visible",
+        "resizable",
+        "sortMode",
+        "alignment",
+        "headerText",
+        "headerAlignment",
+        "colors"
+      ],
+      "properties": {
+        "fieldName": { "$ref": "#/$defs/nullableString" },
+        "name": { "$ref": "#/$defs/nullableString" },
+        "type": { "type": "string", "minLength": 1 },
+        "index": { "type": "integer", "minimum": 0 },
+        "displayIndex": { "type": "integer", "minimum": 0 },
+        "widthPx": { "type": "integer", "minimum": 0 },
+        "widthDip": { "type": "number", "minimum": 0 },
+        "visible": { "type": "boolean" },
+        "resizable": { "$ref": "#/$defs/nullableBoolean" },
+        "sortMode": { "$ref": "#/$defs/nullableString" },
+        "alignment": { "$ref": "#/$defs/nullableString" },
+        "headerText": { "$ref": "#/$defs/nullableString" },
+        "headerAlignment": { "$ref": "#/$defs/nullableString" },
+        "colors": { "$ref": "#/$defs/colors" }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "foreground",
+        "background",
+        "border",
+        "selectionForeground",
+        "selectionBackground",
+        "inactiveSelectionForeground",
+        "inactiveSelectionBackground",
+        "disabledForeground",
+        "disabledBackground",
+        "gridLine",
+        "additional"
+      ],
+      "properties": {
+        "foreground": { "$ref": "#/$defs/argb" },
+        "background": { "$ref": "#/$defs/argb" },
+        "border": { "$ref": "#/$defs/argb" },
+        "selectionForeground": { "$ref": "#/$defs/argb" },
+        "selectionBackground": { "$ref": "#/$defs/argb" },
+        "inactiveSelectionForeground": { "$ref": "#/$defs/argb" },
+        "inactiveSelectionBackground": { "$ref": "#/$defs/argb" },
+        "disabledForeground": { "$ref": "#/$defs/argb" },
+        "disabledBackground": { "$ref": "#/$defs/argb" },
+        "gridLine": { "$ref": "#/$defs/argb" },
+        "additional": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/resolvedArgb" }
+        }
+      }
+    },
+    "font": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "family", "emSize", "unit", "sizePoints", "sizeDip", "style" ],
+      "properties": {
+        "family": { "type": "string", "minLength": 1 },
+        "emSize": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": { "type": "string", "minLength": 1 },
+        "sizePoints": { "type": "number", "exclusiveMinimum": 0 },
+        "sizeDip": { "type": "number", "exclusiveMinimum": 0 },
+        "style": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "rectangleInteger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "x", "y", "width", "height" ],
+      "properties": {
+        "x": { "type": "integer" },
+        "y": { "type": "integer" },
+        "width": { "type": "integer", "minimum": 0 },
+        "height": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "rectangleNumber": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "x", "y", "width", "height" ],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number", "minimum": 0 },
+        "height": { "type": "number", "minimum": 0 }
+      }
+    },
+    "sizeInteger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "width", "height" ],
+      "properties": {
+        "width": { "type": "integer", "minimum": 0 },
+        "height": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "sizeNumber": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "width", "height" ],
+      "properties": {
+        "width": { "type": "number", "minimum": 0 },
+        "height": { "type": "number", "minimum": 0 }
+      }
+    },
+    "thicknessInteger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "left", "top", "right", "bottom" ],
+      "properties": {
+        "left": { "type": "integer" },
+        "top": { "type": "integer" },
+        "right": { "type": "integer" },
+        "bottom": { "type": "integer" }
+      }
+    },
+    "thicknessNumber": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "left", "top", "right", "bottom" ],
+      "properties": {
+        "left": { "type": "number" },
+        "top": { "type": "number" },
+        "right": { "type": "number" },
+        "bottom": { "type": "number" }
+      }
+    },
+    "thicknessPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "px", "dip" ],
+      "properties": {
+        "px": { "$ref": "#/$defs/thicknessInteger" },
+        "dip": { "$ref": "#/$defs/thicknessNumber" }
+      }
+    },
+    "cornerRadius": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "topLeft", "topRight", "bottomRight", "bottomLeft" ],
+      "properties": {
+        "topLeft": { "type": "number", "minimum": 0 },
+        "topRight": { "type": "number", "minimum": 0 },
+        "bottomRight": { "type": "number", "minimum": 0 },
+        "bottomLeft": { "type": "number", "minimum": 0 }
+      }
+    }
+  }
+}

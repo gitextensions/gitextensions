@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "settingsProfile": "Profiles/reference.settings.json",
+  "scales": [
+    100,
+    125,
+    150,
+    200
+  ],
+  "themes": [
+    {
+      "id": "light",
+      "kind": "builtin",
+      "file": "invariant.css",
+      "isBuiltin": true
+    },
+    {
+      "id": "dark",
+      "kind": "builtin",
+      "file": "dark.css",
+      "isBuiltin": true
+    },
+    {
+      "id": "parity-custom",
+      "kind": "custom",
+      "file": "parity-custom.css",
+      "isBuiltin": true
+    }
+  ],
+  "components": [
+    {
+      "typeName": "GitUI.CommandsDialogs.FormBrowse",
+      "states": [
+        {
+          "id": "normal",
+          "kind": "normal"
+        },
+        {
+          "id": "revision-grid.focused",
+          "kind": "focus",
+          "targetField": "RevisionGrid"
+        },
+        {
+          "id": "repository-tree.expanded",
+          "kind": "expanded",
+          "targetField": "repoObjectsTree"
+        },
+        {
+          "id": "main-menu.open",
+          "kind": "menuOpen",
+          "targetField": "mainMenuStrip"
+        }
+      ]
+    },
+    {
+      "typeName": "GitUI.CommandsDialogs.FormCommit",
+      "states": [
+        {
+          "id": "normal",
+          "kind": "normal"
+        },
+        {
+          "id": "commit.focused",
+          "kind": "focus",
+          "targetField": "Commit"
+        },
+        {
+          "id": "commit.hover",
+          "kind": "hover",
+          "targetField": "Commit"
+        },
+        {
+          "id": "commit.pressed",
+          "kind": "pressed",
+          "targetField": "Commit"
+        },
+        {
+          "id": "commit.disabled",
+          "kind": "disabled",
+          "targetField": "Commit"
+        },
+        {
+          "id": "amend.checked",
+          "kind": "checked",
+          "targetField": "Amend"
+        },
+        {
+          "id": "options-menu.open",
+          "kind": "menuOpen",
+          "targetField": "tsmiOptions"
+        }
+      ]
+    },
+    {
+      "typeName": "GitUI.CommandsDialogs.FormSettings",
+      "states": [
+        {
+          "id": "normal",
+          "kind": "normal"
+        },
+        {
+          "id": "ok.focused",
+          "kind": "focus",
+          "targetField": "buttonOk"
+        },
+        {
+          "id": "ok.hover",
+          "kind": "hover",
+          "targetField": "buttonOk"
+        },
+        {
+          "id": "ok.pressed",
+          "kind": "pressed",
+          "targetField": "buttonOk"
+        },
+        {
+          "id": "ok.disabled",
+          "kind": "disabled",
+          "targetField": "buttonOk"
+        }
+      ]
+    }
+  ]
+}
