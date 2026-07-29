@@ -55,9 +55,9 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 namespace GitExtensionsTests;
 
 /// <summary>
-///  Discovers every ported AXAML view and, on request, captures it with headless Skia in
-///  both supported theme variants. The PNG output is a local review artifact rather than
-///  a golden test input, so normal test runs validate the inventory without rewriting it.
+///  Discovers every ported AXAML view and, on request, captures a declared parity matrix
+///  with headless Skia. PNG and control-tree output are local review artifacts rather than
+///  golden test inputs, so normal test runs validate the inventory without rewriting it.
 /// </summary>
 [TestFixture]
 public sealed partial class ParityScreenshotTests
@@ -92,107 +92,14 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(CaptureCategory)]
-    public async Task Capture_every_ported_view_in_light_and_dark()
+    public async Task Capture_declared_parity_matrix()
     {
         if (Environment.GetEnvironmentVariable(CaptureEnvironmentVariable) != "1")
         {
             return;
         }
 
-        AvaloniaSynchronizationContext.InstallIfNeeded();
-        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
-        WinFormsShims.ShimHost.MessageBoxHost = new StubMessageBoxHost();
-
-        string outputDirectory = GetOutputDirectory();
-        string? viewFilter = Environment.GetEnvironmentVariable(CaptureViewEnvironmentVariable);
-        if (string.IsNullOrWhiteSpace(viewFilter))
-        {
-            foreach (string themeName in new[] { "Light", "Dark" })
-            {
-                string themeDirectory = Path.Combine(outputDirectory, themeName);
-                if (Directory.Exists(themeDirectory))
-                {
-                    TestDirectory.Delete(themeDirectory);
-                }
-            }
-        }
-
-        Directory.CreateDirectory(outputDirectory);
-        string manifestFileName = string.IsNullOrWhiteSpace(viewFilter) ? "manifest.json" : "manifest-targeted.json";
-        File.Delete(Path.Combine(outputDirectory, manifestFileName));
-        IReadOnlyList<ViewDescriptor> views = GetViewDescriptors();
-        if (!string.IsNullOrWhiteSpace(viewFilter))
-        {
-            views = views
-                .Where(view => view.ClassName.Contains(viewFilter, StringComparison.OrdinalIgnoreCase)
-                               || view.RelativePath.Contains(viewFilter, StringComparison.OrdinalIgnoreCase))
-                .ToArray();
-            views.Should().NotBeEmpty($"{CaptureViewEnvironmentVariable} should match at least one ported view");
-        }
-
-        List<ManifestEntry> manifest = [];
-
-        using CaptureContext context = new();
-        (string Name, ThemeVariant Variant)[] themes =
-        [
-            ("Light", ThemeVariant.Light),
-            ("Dark", ThemeVariant.Dark),
-        ];
-        (string Name, double Factor)[] scales =
-        [
-            ("100", 1),
-            ("125", 1.25),
-            ("150", 1.5),
-            ("200", 2),
-        ];
-
-        ThemeId originalTheme = AppSettings.ThemeId;
-        string originalDictionary = AppSettings.Dictionary;
-        bool originalMarkIllFormedLines = AppSettings.MarkIllFormedLinesInCommitMsg;
-        try
-        {
-            AppSettings.Dictionary = "en-US";
-            AppSettings.MarkIllFormedLinesInCommitMsg = true;
-            foreach ((string themeName, ThemeVariant themeVariant) in themes)
-            {
-                AppSettings.ThemeId = themeVariant == ThemeVariant.Dark
-                    ? ThemeId.DefaultDark
-                    : ThemeId.DefaultLight;
-                AvaloniaThemeSettings.ApplyAppSettings();
-
-                foreach ((string scaleName, double scaleFactor) in scales)
-                {
-                    foreach (ViewDescriptor view in views)
-                    {
-                        ManifestEntry entry = await CaptureViewAsync(
-                            context,
-                            view,
-                            themeName,
-                            themeVariant,
-                            scaleName,
-                            scaleFactor,
-                            outputDirectory);
-                        manifest.Add(entry);
-                    }
-                }
-            }
-        }
-        finally
-        {
-            AppSettings.ThemeId = originalTheme;
-            AppSettings.Dictionary = originalDictionary;
-            AppSettings.MarkIllFormedLinesInCommitMsg = originalMarkIllFormedLines;
-            AvaloniaThemeSettings.ApplyAppSettings();
-        }
-
-        string manifestPath = Path.Combine(outputDirectory, manifestFileName);
-        File.WriteAllText(
-            manifestPath,
-            JsonSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true }));
-
-        manifest.Should().HaveCount(views.Count * themes.Length * scales.Length);
-        manifest.Should().OnlyContain(entry => File.Exists(Path.Combine(outputDirectory, entry.File)));
-        await TestContext.Progress.WriteLineAsync($"Captured {manifest.Count} parity screenshots in {outputDirectory}");
+        await CaptureParityPlanAsync();
     }
 
     private static async Task<ManifestEntry> CaptureViewAsync(

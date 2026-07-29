@@ -55,7 +55,11 @@ public sealed class CaptureDocumentTests
         definitions.GetProperty("column").GetProperty("additionalProperties").GetBoolean().Should().BeFalse();
         definitions.GetProperty("colors").GetProperty("additionalProperties").GetBoolean().Should().BeFalse();
         definitions.GetProperty("capture").GetProperty("properties").GetProperty("dpiMode")
-            .GetProperty("enum").GetArrayLength().Should().Be(2);
+            .GetProperty("enum").EnumerateArray().Select(value => value.GetString()).Should()
+            .Equal("nativeMonitor", "dpiChangeMessage", "headlessRenderScale");
+        definitions.GetProperty("image").GetProperty("properties").GetProperty("captureMethod")
+            .GetProperty("enum").EnumerateArray().Select(value => value.GetString()).Should()
+            .Equal("drawToBitmap", "printWindow", "screenGrab", "headlessSkia");
         definitions.GetProperty("image").GetProperty("properties").TryGetProperty("file", out _).Should().BeFalse();
     }
 

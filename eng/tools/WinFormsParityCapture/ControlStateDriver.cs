@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 
+using GitExtensions.ParityCapture;
+
 namespace WinFormsParityCapture;
 
 internal sealed class ControlStateDriver : IDisposable

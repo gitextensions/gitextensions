@@ -60,7 +60,7 @@
         },
         "dpi": { "$ref": "#/$defs/dpi" },
         "dpiMode": {
-          "enum": [ "nativeMonitor", "dpiChangeMessage" ]
+          "enum": [ "nativeMonitor", "dpiChangeMessage", "headlessRenderScale" ]
         },
         "state": { "type": "string", "minLength": 1 },
         "stateStatus": { "const": "captured" },
@@ -99,7 +99,7 @@
         "widthPx": { "type": "integer", "minimum": 1 },
         "heightPx": { "type": "integer", "minimum": 1 },
         "captureMethod": {
-          "enum": [ "drawToBitmap", "printWindow", "screenGrab" ]
+          "enum": [ "drawToBitmap", "printWindow", "screenGrab", "headlessSkia" ]
         }
       }
     },
