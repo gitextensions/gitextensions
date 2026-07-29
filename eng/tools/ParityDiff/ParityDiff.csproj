@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>GitExtensions.ParityDiff</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ParityCaptureSchema\ParityCaptureSchema.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="parity-diff.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
