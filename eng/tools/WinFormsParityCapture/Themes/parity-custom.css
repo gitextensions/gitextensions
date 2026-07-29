@@ -1,0 +1,8 @@
+/* Deterministic custom theme used only by WinFormsParityCapture's isolated worker. */
+@import url("dark.css");
+
+.PanelBackground { color: #2B2D3A; }
+.EditorBackground { color: #252734; }
+.Selection { color: #365F9D; }
+.InactiveSelectionHighlight { color: #4A5267; }
+.GraphBranch1 { color: #F06595; }
