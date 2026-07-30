@@ -1903,14 +1903,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 116,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -2033,14 +2037,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 73,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -2748,14 +2756,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 609,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -3487,14 +3499,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 172,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -3942,14 +3958,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 91,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -4746,14 +4766,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 165,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -5396,14 +5420,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 65,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -5526,14 +5554,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 171,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -5656,14 +5688,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 131,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -5786,14 +5822,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 84,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -9426,14 +9466,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 147,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -19330,14 +19374,17 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 129,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. P0.8b verified the original 386-by-336 design surface in the Windows IDE previewer; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -19395,14 +19442,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 129,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -19460,14 +19511,17 @@
       "axes": {
         "structural": {
           "status": "unverified",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "note": "This mapping could not be represented by the class-oriented P0.4 inventory. P0.8b verified that the internal AXAML control's public parameterless constructor renders in the Windows out-of-process IDE previewer."
         },
         "functional": {
           "status": "unverified",
@@ -24465,14 +24519,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 450,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -26610,14 +26668,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 105,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -26805,14 +26867,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 74,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -27130,14 +27196,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 88,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",
@@ -27585,14 +27655,18 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-29",
-          "commit": "e3a5618fe5ba816fee470c8b000079c895189ab1",
+          "verifiedOn": "2026-07-30",
+          "commit": "13c2fb41c2ed82e0a20ac32200d6f21c98bbe706",
           "evidence": [
-            "eng/avalonia/parity-evidence/P0.5/functional-findings.json"
+            "eng/avalonia/parity-evidence/P0.5/functional-findings.json",
+            "eng/avalonia/parity-evidence/P0.8b/previewability.json",
+            "eng/avalonia/parity-evidence/P0.8b/vscode-preview-walk.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 100,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P0.4 source inventory found structural/member differences. The P0.8b no-services construction sweep and Windows IDE preview passed; the existing structural findings remain open."
         },
         "functional": {
           "status": "gap",

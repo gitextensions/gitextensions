@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -12,6 +12,11 @@ namespace GitUI.SpellChecker;
 
 internal sealed class SpellCheckAdorner : Control
 {
+    // Avalonia's out-of-process previewer constructs AXAML controls from a generated assembly.
+    public SpellCheckAdorner()
+    {
+    }
+
     public TextBox? TextBox { get; set; }
 
     public List<TextPos> IllFormedLines { get; } = [];

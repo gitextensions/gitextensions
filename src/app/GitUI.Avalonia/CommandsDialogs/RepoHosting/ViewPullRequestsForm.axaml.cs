@@ -34,7 +34,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private readonly TranslationString _strRemoteIgnore = new("Remote ignored");
 
     private readonly IRepositoryHostPlugin? _gitHoster;
-    private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSequence _pullRequestsSequence = new();
     private readonly CancellationTokenSequence _detailsSequence = new();
     private readonly CancellationTokenSequence _discussionSequence = new();

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Threading;
 using GitExtensions.Extensibility;
@@ -28,7 +28,9 @@ public partial class CreatePullRequestForm : GitModuleForm
     private IReadOnlyList<IHostedRemote> _hostedRemotes = [];
     private string? _currentBranch;
     private string? _prevTitle;
-    private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSequence _targetBranchesSequence = new();
     private readonly CancellationTokenSequence _sourceBranchesSequence = new();
     private readonly CancellationTokenSequence _titleSequence = new();

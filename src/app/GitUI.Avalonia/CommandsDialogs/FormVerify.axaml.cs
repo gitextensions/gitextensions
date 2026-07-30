@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -40,7 +40,9 @@ public sealed partial class FormVerify : GitModuleForm
     private readonly List<LostObject> _filteredLostObjects = [];
     private readonly HashSet<ObjectId> _selectedObjectIds = [];
     private readonly CancellationTokenSequence _typeDetectionSequence = new();
-    private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _loadOperations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly IGitTagController? _gitTagController;
 
     private LostObject? _previewedItem;
