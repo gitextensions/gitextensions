@@ -48,6 +48,8 @@ terminal can start correctly when Git Extensions was launched from a Snap-hosted
 - [Git](https://git-scm.com/) available on `PATH`
 - On Linux, `setsid` from util-linux for reliable process-tree cleanup (included by standard
   desktop distributions; descendant traversal remains available when it is absent)
+- On minimal Linux installations, the desktop libraries required by Avalonia:
+  `libice6`, `libsm6`, `libfontconfig1`, `libwayland-client0`, `libxkbcommon0`, and `libegl1`
 - On macOS, the Xcode Command Line Tools (`cc`) to build the process-group launcher
 - A desktop environment:
   - Windows 10 or later
@@ -94,6 +96,11 @@ property is used on Windows, it must remain before that separator:
 ```
 dotnet run --project src/app/GitExtensions.Avalonia -p:BuildAvalonia=true -- browse .
 ```
+
+On Linux, a session with `WAYLAND_DISPLAY` set uses Avalonia's native Wayland backend.
+An X11-only session, or an explicit launch with `WAYLAND_DISPLAY` unset, uses the X11
+backend. Both paths are exercised by the development runtime harness under `eng/avalonia`.
+The development Flatpak is Wayland-only; it does not expose an X11 socket to the application.
 
 The Avalonia application uses the shared MEF plugin infrastructure, but scans the separate
 `UserPlugins.Avalonia` directory under the Git Extensions local application-data folder.

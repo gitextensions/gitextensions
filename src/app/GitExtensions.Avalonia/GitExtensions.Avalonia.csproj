@@ -3,6 +3,7 @@
   <PropertyGroup>
     <!-- Avalonia twin of the GitExtensions entry point. -->
     <OutputType>Exe</OutputType>
+    <IsPublishable>true</IsPublishable>
     <TargetFramework>net10.0</TargetFramework>
     <UseWindowsForms>false</UseWindowsForms>
     <RootNamespace>GitExtensions</RootNamespace>
@@ -16,6 +17,7 @@
              CopyToPublishDirectory="PreserveNewest" />
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Wayland" />
     <PackageReference Include="GitInfo">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
