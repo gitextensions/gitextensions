@@ -27,7 +27,8 @@ for arg in "$@"; do
 done
 
 if [[ -f "$marker_file" ]]; then
-    last_sync="$(cat "$marker_file")"
+    # The Windows checkout uses CRLF; strip it so WSL does not pass a trailing CR to git.
+    last_sync="$(tr -d '\r\n' < "$marker_file")"
 else
     # First run: the merge base of this branch and the upstream ref.
     last_sync="$(git merge-base HEAD "$upstream_ref")"
@@ -55,13 +56,19 @@ portmap = {
 }
 infrastructure = {"Directory.Build.props", "Directory.Build.targets", "Directory.Packages.props"}
 
-ported, infra, unported = [], [], []
+ported, windows_only, infra, unported = [], [], [], []
 for line in os.environ["CHANGED"].splitlines():
     if not line.strip():
         continue
     status, _, path = line.partition("\t")
     if path in portmap:
-        ported.append((status, path, portmap[path]))
+        entry = portmap[path]
+        if "twin" in entry:
+            ported.append((status, path, entry))
+        elif entry["status"] == "windowsOnly":
+            windows_only.append((status, path, entry))
+        else:
+            unported.append(path)
     elif path in infrastructure:
         infra.append((status, path))
     else:
@@ -77,6 +84,12 @@ if ported:
 else:
     print("== No ported file changed upstream.")
 print()
+if windows_only:
+    print(f"== Windows-only classified files changed ({len(windows_only)}) — review the classification and substitute:")
+    for status, path, entry in windows_only:
+        print(f"  [{status}] {path}")
+        print(f"        substitute: {entry['substitute']}")
+    print()
 if infra:
     print(f"== Build infrastructure changed ({len(infra)}) — check the port's conditional blocks survive:")
     for status, path in infra:
