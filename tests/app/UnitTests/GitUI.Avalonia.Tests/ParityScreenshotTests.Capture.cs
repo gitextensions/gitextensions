@@ -181,6 +181,8 @@ public sealed partial class ParityScreenshotTests
         Directory.CreateDirectory(settingsDirectory);
         AppSettings.TestAccessor accessor = AppSettings.GetTestAccessor();
         Lazy<string?> originalApplicationDataPath = accessor.ApplicationDataPath;
+        string userSettingsPath = AppSettings.SettingsFilePath;
+        SettingsFileSnapshot userSettingsSnapshot = SettingsFileSnapshot.Take(userSettingsPath);
         try
         {
             accessor.ApplicationDataPath = new Lazy<string?>(() => settingsDirectory);
@@ -204,6 +206,7 @@ public sealed partial class ParityScreenshotTests
         finally
         {
             accessor.ApplicationDataPath = originalApplicationDataPath;
+            userSettingsSnapshot.AssertUnchanged(userSettingsPath);
             TestDirectory.Delete(settingsDirectory);
         }
     }
@@ -244,7 +247,6 @@ public sealed partial class ParityScreenshotTests
             "capture repositories must be throwaway directories outside the working tree");
         CaptureSettingsProfile profile = LoadCaptureSettingsProfile(plan);
         CaptureSettingsSnapshot settingsSnapshot = CaptureSettingsSnapshot.Take(profile);
-        SettingsFileSnapshot settingsFileSnapshot = SettingsFileSnapshot.Take(AppSettings.SettingsFilePath);
         try
         {
             ApplyCaptureProfile(profile);
@@ -274,7 +276,6 @@ public sealed partial class ParityScreenshotTests
         finally
         {
             settingsSnapshot.Restore();
-            settingsFileSnapshot.AssertUnchanged(AppSettings.SettingsFilePath);
         }
 
         CaptureSetManifest manifest = new()
