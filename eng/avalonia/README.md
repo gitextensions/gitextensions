@@ -29,9 +29,12 @@ refs, revisions, changes, patches, and text without opening external programs.
 
 ## Proof ledger and baseline
 
-`portmap.json` records which source twins exist. `parity-ledger.json` records what has actually
-been proven for each mapping on the structural, functional, visual, theming/color,
-behavioral/state, and platform axes. Its versioned contract is
+`portmap.json` records source twins plus every known `unported` and `windowsOnly` GitUI C#
+source. Non-twin entries carry their owning tranche or a justification and named substitute,
+and the P0.7 tests fail when a new source has no classification. The inventory and ledger tools
+ignore those non-twin entries. `parity-ledger.json` records what has actually been proven for
+each mapping on the structural, functional, visual, theming/color, behavioral/state, and
+platform axes. Its versioned contract is
 `parity-ledger.schema.json`. A portmap entry may say `parity` only when its ledger entry is
 complete and every applicable axis is `verified`.
 
