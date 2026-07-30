@@ -20,7 +20,8 @@ internal static class InventoryRunner
             options.TypeName,
             englishKeys,
             isTwin: true);
-        IReadOnlyList<FunctionalFinding> findings = InventoryComparer.Compare(original, twin);
+        InventoryComparison comparison = InventoryComparer.Compare(original, twin);
+        IReadOnlyList<FunctionalFinding> findings = comparison.Findings;
         InventoryReport report = new()
         {
             SchemaVersion = InventoryReport.CurrentSchemaVersion,
@@ -33,9 +34,11 @@ internal static class InventoryRunner
                 FindingsByCategory = findings
                     .GroupBy(finding => finding.Category, StringComparer.Ordinal)
                     .OrderBy(group => group.Key, StringComparer.Ordinal)
-                    .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal)
+                    .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal),
+                AdaptedCommentCount = comparison.AdaptedComments.Count
             },
-            Findings = findings
+            Findings = findings,
+            AdaptedComments = comparison.AdaptedComments
         };
 
         string output = Path.GetFullPath(options.OutputFile);

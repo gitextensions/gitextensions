@@ -5,7 +5,7 @@ namespace GitExtensions.ParityInventory;
 // parity-scaffolding: Supplies the stable interchange contract consumed by later parity tooling.
 internal sealed record InventoryReport
 {
-    public const int CurrentSchemaVersion = 1;
+    public const int CurrentSchemaVersion = 2;
 
     public required int SchemaVersion { get; init; }
 
@@ -18,6 +18,8 @@ internal sealed record InventoryReport
     public required InventorySummary Summary { get; init; }
 
     public required IReadOnlyList<FunctionalFinding> Findings { get; init; }
+
+    public required IReadOnlyList<CommentAdaptation> AdaptedComments { get; init; }
 }
 
 // parity-scaffolding: Describes one side of a source-level parity comparison.
@@ -42,6 +44,8 @@ internal sealed record SourceInventory
     public required IReadOnlyList<TranslationStringEntry> TranslationStrings { get; init; }
 
     public required IReadOnlyList<TranslationKeyEntry> TranslationKeys { get; init; }
+
+    public required IReadOnlyList<CommentEntry> Comments { get; init; }
 }
 
 // parity-scaffolding: Records a source partial and its expected corresponding path.
@@ -125,12 +129,58 @@ internal sealed record TranslationKeyEntry
     public required bool InEnglishCatalog { get; init; }
 }
 
+// parity-scaffolding: Anchors one normalized C# comment to the member whose reasoning it describes.
+internal sealed record CommentEntry
+{
+    public required string Part { get; init; }
+
+    public required string Anchor { get; init; }
+
+    public required string Placement { get; init; }
+
+    public required int Order { get; init; }
+
+    public required string Kind { get; init; }
+
+    public required int Line { get; init; }
+
+    public required string Text { get; init; }
+}
+
+// parity-scaffolding: Records a conservative framework-name adaptation without calling it a gap.
+internal sealed record CommentAdaptation
+{
+    public required string Path { get; init; }
+
+    public required string OriginalPart { get; init; }
+
+    public required int OriginalLine { get; init; }
+
+    public required string TwinPart { get; init; }
+
+    public required int TwinLine { get; init; }
+
+    public required string OriginalText { get; init; }
+
+    public required string TwinText { get; init; }
+}
+
+// parity-scaffolding: Carries both parity gaps and legitimate comment adaptations.
+internal sealed record InventoryComparison
+{
+    public required IReadOnlyList<FunctionalFinding> Findings { get; init; }
+
+    public required IReadOnlyList<CommentAdaptation> AdaptedComments { get; init; }
+}
+
 // parity-scaffolding: Summarizes a deterministic inventory comparison.
 internal sealed record InventorySummary
 {
     public required int FindingCount { get; init; }
 
     public required IReadOnlyDictionary<string, int> FindingsByCategory { get; init; }
+
+    public required int AdaptedCommentCount { get; init; }
 }
 
 // parity-scaffolding: Describes one concrete functional gap between original and twin.
