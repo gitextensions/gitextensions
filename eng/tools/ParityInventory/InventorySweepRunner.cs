@@ -65,8 +65,9 @@ internal static class InventorySweepRunner
                     englishKeys,
                     isTwin: true,
                     work.TwinFiles);
-                IReadOnlyList<FunctionalFinding> findings = InventoryComparer.Compare(original, twin);
-                InventoryReport report = CreateReport(work.TypeName, original, twin, findings);
+                InventoryComparison comparison = InventoryComparer.Compare(original, twin);
+                IReadOnlyList<FunctionalFinding> findings = comparison.Findings;
+                InventoryReport report = CreateReport(work.TypeName, original, twin, comparison);
                 string relativeReport = $"types/{Sanitize(work.TypeName)}.functional-findings.json";
                 string reportFile = Path.Combine(
                     outputDirectory,
@@ -81,7 +82,8 @@ internal static class InventorySweepRunner
                     OriginalPartCount = original.Parts.Count,
                     TwinPartCount = twin.Parts.Count,
                     FindingCount = findings.Count,
-                    FindingsByCategory = report.Summary.FindingsByCategory
+                    FindingsByCategory = report.Summary.FindingsByCategory,
+                    AdaptedCommentCount = comparison.AdaptedComments.Count
                 });
             }
             catch (InvalidDataException)
@@ -133,7 +135,8 @@ internal static class InventorySweepRunner
                 FindingCount = allFindings.Length,
                 FindingsByCategory = allFindings.GroupBy(finding => finding.Category, StringComparer.Ordinal)
                     .OrderBy(group => group.Key, StringComparer.Ordinal)
-                    .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal)
+                    .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal),
+                AdaptedCommentCount = reports.Values.Sum(report => report.AdaptedComments.Count)
             },
             Mappings = mappingResults.OrderBy(mapping => mapping.Source, StringComparer.Ordinal).ToArray(),
             Types = typeResults.Values.OrderBy(type => type.TypeName, StringComparer.Ordinal).ToArray(),
@@ -181,7 +184,7 @@ internal static class InventorySweepRunner
         string typeName,
         SourceInventory original,
         SourceInventory twin,
-        IReadOnlyList<FunctionalFinding> findings) =>
+        InventoryComparison comparison) =>
         new()
         {
             SchemaVersion = InventoryReport.CurrentSchemaVersion,
@@ -190,12 +193,14 @@ internal static class InventorySweepRunner
             Twin = twin,
             Summary = new InventorySummary
             {
-                FindingCount = findings.Count,
-                FindingsByCategory = findings.GroupBy(finding => finding.Category, StringComparer.Ordinal)
+                FindingCount = comparison.Findings.Count,
+                FindingsByCategory = comparison.Findings.GroupBy(finding => finding.Category, StringComparer.Ordinal)
                     .OrderBy(group => group.Key, StringComparer.Ordinal)
-                    .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal)
+                    .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal),
+                AdaptedCommentCount = comparison.AdaptedComments.Count
             },
-            Findings = findings
+            Findings = comparison.Findings,
+            AdaptedComments = comparison.AdaptedComments
         };
 
     private static IReadOnlyList<PortMapMapping> ReadPortMap(string path)
