@@ -210,12 +210,18 @@ internal static class InventorySweepRunner
             }
 
             JsonElement value = property.Value;
+            string status = value.GetProperty("status").GetString()
+                ?? throw new InvalidDataException($"Portmap entry '{property.Name}' has no status.");
+            if (status is "unported" or "windowsOnly")
+            {
+                continue;
+            }
+
             mappings.Add(new PortMapMapping(
                 property.Name,
                 value.GetProperty("twin").GetString()
                     ?? throw new InvalidDataException($"Portmap entry '{property.Name}' has no twin."),
-                value.GetProperty("status").GetString()
-                    ?? throw new InvalidDataException($"Portmap entry '{property.Name}' has no status."),
+                status,
                 value.TryGetProperty("notes", out JsonElement notes) ? notes.GetString() : null));
         }
 

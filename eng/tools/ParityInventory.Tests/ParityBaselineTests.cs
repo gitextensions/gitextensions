@@ -46,7 +46,8 @@ public sealed class ParityBaselineTests
         using JsonDocument ledger = JsonDocument.Parse(
             File.ReadAllText(Path.Combine(root, "eng", "avalonia", "parity-ledger.json")));
         JsonElement[] mappings = portMap.RootElement.EnumerateObject()
-            .Where(property => !property.NameEquals("//"))
+            .Where(property => !property.NameEquals("//")
+                && property.Value.TryGetProperty("twin", out _))
             .Select(property => property.Value)
             .ToArray();
         JsonElement[] components = ledger.RootElement.GetProperty("components").EnumerateArray().ToArray();
@@ -174,6 +175,15 @@ internal sealed class BaselineFixture : IDisposable
                 "twin": "{{Normalize(interfaceTwin)}}",
                 "status": "functional",
                 "basedOn": "0000000000000000000000000000000000000000"
+              },
+              "{{Normalize(Path.Combine(original, "Planned.cs"))}}": {
+                "status": "unported",
+                "plannedIn": "P2.1"
+              },
+              "{{Normalize(Path.Combine(original, "Native.cs"))}}": {
+                "status": "windowsOnly",
+                "justification": "The fixture models a platform-specific source.",
+                "substitute": "The fixture's portable implementation."
               }
             }
             """;
