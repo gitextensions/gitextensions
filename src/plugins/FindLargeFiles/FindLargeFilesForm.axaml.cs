@@ -30,7 +30,9 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
     private readonly IGitModule? _gitModule;
     private readonly Dictionary<string, GitObject> _list = [];
     private readonly List<GitObject> _gitObjects = [];
-    private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSource _scanCancellation = new();
     private string? _sortColumn;
     private bool _sortAscending = true;

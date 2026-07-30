@@ -23,7 +23,9 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
 {
     private readonly TranslationString _addTemplate = new("Add {0} templates");
     private ExternalLinksManager? _externalLinksManager;
-    private readonly TaskManager _templateOperations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _templateOperations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly MenuFlyout _templateFlyout;
     private CancellationTokenSource _lifetimeCancellationTokenSource = new();
 

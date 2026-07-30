@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -31,11 +31,14 @@ public partial class FormRecentReposSettings : GitExtensionsForm
     private decimal _previousValue;
     private bool _updating;
 
+    // Avalonia's designer must not read or mutate repository history.
     public FormRecentReposSettings()
         : this(
-            ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync),
-            RepositoryHistoryManager.Locals.SaveRecentHistoryAsync,
-            RepositoryHistoryManager.Locals.RemoveRecentAsync)
+            Design.IsDesignMode
+                ? []
+                : ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync),
+            Design.IsDesignMode ? null : RepositoryHistoryManager.Locals.SaveRecentHistoryAsync,
+            Design.IsDesignMode ? null : RepositoryHistoryManager.Locals.RemoveRecentAsync)
     {
     }
 

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using GitCommands;
@@ -134,7 +134,8 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
     {
         base.OnOpened(e);
 
-        if (!_runtimeLoadRaised)
+        // Avalonia's preview host opens the window; design mode must never start runtime work.
+        if (!Design.IsDesignMode && !_runtimeLoadRaised)
         {
             _runtimeLoadRaised = true;
             OnRuntimeLoad(e);
