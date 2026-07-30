@@ -439,6 +439,13 @@ public sealed partial class EditNetSpell : GitModuleControl
             return true;
         }
 
+        // The Avalonia previewer attaches this control to a command-less design-time form.
+        if (Design.IsDesignMode)
+        {
+            commands = null;
+            return false;
+        }
+
         commands = this.GetLogicalAncestors().OfType<IGitUICommandsSource>().FirstOrDefault()?.UICommands;
         return commands is not null;
     }

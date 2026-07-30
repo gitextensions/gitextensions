@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using GitCommands;
@@ -18,7 +18,9 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 {
     private readonly FileStatusDiffCalculator _diffCalculator;
     private readonly CancellationTokenSequence _setDiffSequence = new();
-    private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
     private IRevisionGridInfo? _revisionGridInfo;
     private IRevisionGridUpdate? _revisionGridUpdate;

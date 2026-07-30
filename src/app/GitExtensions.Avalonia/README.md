@@ -76,6 +76,25 @@ a shared engine project itself for `net10.0` on Windows (for example
 passed explicitly. IDE design-time builds do not read `.rsp` files, so on Windows open
 `GitExtensions.Avalonia.slnx` rather than an individual Avalonia project.
 
+### AXAML previewer
+
+The VS Code Avalonia previewer currently requires the classic solution format and design-time
+plugin references. Launch its dedicated workspace from PowerShell so both properties are
+available to the editor process. Exit every running VS Code process first; a new window owned
+by an existing process does not inherit these variables.
+
+```powershell
+$env:BuildAvalonia = "true"
+$env:BuildAvaloniaDesigner = "true"
+code --new-window eng/avalonia/GitExtensions.Avalonia.code-workspace
+Remove-Item Env:BuildAvalonia
+Remove-Item Env:BuildAvaloniaDesigner
+```
+
+`BuildAvaloniaDesigner` changes only the design-time dependency graph. Normal application and
+solution builds continue to place bundled plugins below `Plugins` for MEF discovery without
+referencing them from the entry assembly.
+
 The Avalonia application builds on all three operating systems with the commands above;
 the git submodules are not required for it. Building the complete solution including the
 Windows Forms application additionally requires the submodules

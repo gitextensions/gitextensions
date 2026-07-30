@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -26,7 +26,9 @@ public sealed partial class FormReflog : GitModuleForm
     private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new("You have changes in your working directory that could be lost.\n\nDo you want to continue?");
     private readonly TranslationString _continueResetCurrentBranchCaptionText = new("Changes not committed...");
     private readonly CancellationTokenSequence _loadSequence = new();
-    private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _loadOperations = GitUI.Compat.DesignTimeTaskManager.Create();
 
     private IReadOnlyList<RefLine> _refLines = [];
     private string? _currentBranch;
