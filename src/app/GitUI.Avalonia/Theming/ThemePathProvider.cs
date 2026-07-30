@@ -30,7 +30,13 @@ public class ThemePathProvider : IThemePathProvider
 
         // in portable version appDirectory and userDirectory are same,
         // hence we don't have a separate directory for user themes
-        UserThemesDirectory = string.Equals(appDirectory, userDirectory, StringComparison.OrdinalIgnoreCase)
+        // Path identity is case-sensitive on Linux and case-insensitive on Windows and default macOS volumes.
+        UserThemesDirectory = string.Equals(
+            appDirectory,
+            userDirectory,
+            OperatingSystem.IsWindows() || OperatingSystem.IsMacOS()
+                ? StringComparison.OrdinalIgnoreCase
+                : StringComparison.Ordinal)
             ? null
             : Path.Join(userDirectory!, Subdirectory);
 

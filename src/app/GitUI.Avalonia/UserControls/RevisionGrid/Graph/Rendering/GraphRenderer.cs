@@ -3,6 +3,8 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
+using GitUI.Compat;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft;
 using AvaloniaRect = Avalonia.Rect;
@@ -114,9 +116,11 @@ internal static class GraphRenderer
                 {
                     nodeRect.Inflate(1, 1);
 
-                    // Upstream uses SystemColors.WindowText; a mid-gray works on both theme variants
-                    // until the theming twin provides the actual foreground color.
-                    Pen pen = new(Brushes.Gray, 2);
+                    // Avalonia resolves the original SystemColors.WindowText semantic through the shared theme boundary.
+                    System.Drawing.Color outlineColor = AvaloniaThemeResources.ResolveSystemColor(
+                        ThemeModule.Settings,
+                        System.Drawing.KnownColor.WindowText);
+                    Pen pen = new(new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(outlineColor)), 2);
                     if (square)
                     {
                         g.DrawRectangle(brush: null, pen, ToAvalonia(nodeRect));

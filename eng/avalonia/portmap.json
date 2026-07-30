@@ -1042,7 +1042,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "All revision-graph settings plus repository-backed built-in and user-defined theme discovery, validation, colorblind variation, system-visual-style selection, restart indication, and theme-folder actions retain the original member and controller contracts. Folder actions use the portable platform shell instead of the WinForms Explorer-only helper."
+    "notes": "All revision-graph settings plus repository-backed built-in and user-defined theme discovery, validation, colorblind variation, system-visual-style selection, restart indication, and theme-folder actions retain the original member, handler, and controller contracts. Avalonia's transient empty selection while replacing ItemsSource is ignored. Folder actions use the portable platform shell instead of the WinForms Explorer-only helper."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.axaml",
@@ -1817,7 +1817,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/Rendering/GraphRenderer.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Covered by golden-image tests in GitUI.Avalonia.Tests."
+    "notes": "Covered by golden-image tests in GitUI.Avalonia.Tests. The artificial-commit outline resolves the original SystemColors.WindowText semantic through the shared theme boundary."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Graph/Rendering/SegmentRenderer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/Rendering/SegmentRenderer.cs",
@@ -2001,7 +2001,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffViewerLineNumberControl.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "AvaloniaEdit AbstractMargin with separate old/new columns, semantic gutter backgrounds, and bold current-line numbers."
+    "notes": "AvaloniaEdit AbstractMargin with separate old/new columns, semantic gutter backgrounds, and bold current-line numbers. Configurable and system-color fallbacks resolve through the shared AppColor/theme boundary rather than local literals."
   },
   "src/app/GitUI/Editor/IFileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/IFileViewer.cs",
@@ -2520,7 +2520,7 @@
     "twin": "src/app/GitUI.Avalonia/Theming/ThemePathProvider.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same path and user/portable theme contract. The Avalonia twin obtains its application themes directory from AppContext.BaseDirectory because the side-by-side executable is intentionally named GitExtensions.Avalonia rather than GitExtensions.exe; the WinForms provider and executable-name assertion remain unchanged."
+    "notes": "Same path and user/portable theme contract, with case-insensitive path identity on Windows/default macOS volumes and case-sensitive identity on Linux. The Avalonia twin obtains its application themes directory from AppContext.BaseDirectory because the side-by-side executable is intentionally named GitExtensions.Avalonia rather than GitExtensions.exe; the WinForms provider and executable-name assertion remain unchanged."
   },
   "src/app/GitUI/Theming/ThemePersistence.cs": {
     "twin": "src/app/GitUI/Theming/ThemePersistence.cs",
@@ -2538,7 +2538,7 @@
     "twin": "src/app/GitUI.Avalonia/Theming/ThemeModule.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves CSS repository loading, invariant fallback, default migration, platform color-mode selection, variations, and invalid-theme recovery. Avalonia projects the loaded colors through its Compat resource adapter; WinForms system-color and legacy editor mutation are intentionally absent."
+    "notes": "Preserves CSS repository loading, invariant fallback, default migration, platform color-mode selection, variations, and invalid-theme recovery. The loaded ThemeSettings also drive the portable subset of the original ColorHelper computations before Avalonia projects colors through its Compat resource adapter; WinForms system-color and legacy editor mutation are intentionally absent."
   },
   "src/app/GitUI/Theming/AppColorExtension.cs": {
     "twin": "src/app/GitUI.Avalonia/Theming/AppColorExtension.cs",
