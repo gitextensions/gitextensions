@@ -1042,13 +1042,8 @@ public sealed class VisualParityTests
                 .Should().Be(Color.FromArgb(expected.A, expected.R, expected.G, expected.B));
         }
 
-        foreach (System.Drawing.KnownColor name in Enum.GetValues<System.Drawing.KnownColor>())
+        foreach (System.Drawing.KnownColor name in AvaloniaThemeResources.MappedSystemColors)
         {
-            if (!System.Drawing.Color.FromKnownColor(name).IsSystemColor)
-            {
-                continue;
-            }
-
             application.TryGetResource(
                 AvaloniaThemeResources.KnownColorPrefix + name + "Brush",
                 themeVariant,

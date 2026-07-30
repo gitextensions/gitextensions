@@ -3,6 +3,9 @@ using Avalonia.Media;
 using AvaloniaEdit;
 using AvaloniaEdit.Editing;
 using AvaloniaEdit.Rendering;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Compat;
+using GitUI.Theming;
 using MediaColor = Avalonia.Media.Color;
 
 namespace GitUI.Editor.Diff;
@@ -86,9 +89,9 @@ public class DiffViewerLineNumberControl : AbstractMargin
             return;
         }
 
-        IBrush background = GetBrush("GitExtensionsDiffLineNumberBackgroundBrush", Colors.Gainsboro);
-        IBrush numberBrush = GetBrush("GitExtensionsDiffLineNumberBrush", Colors.DimGray);
-        IBrush selectedBrush = GetBrush("GitExtensionsDiffLineNumberSelectedBrush", Colors.Black);
+        IBrush background = GetBrush("GitExtensionsDiffLineNumberBackgroundBrush", GetAppColor(AppColor.LineNumberBackground));
+        IBrush numberBrush = GetBrush("GitExtensionsDiffLineNumberBrush", GetSystemColor(System.Drawing.KnownColor.GrayText));
+        IBrush selectedBrush = GetBrush("GitExtensionsDiffLineNumberSelectedBrush", GetSystemColor(System.Drawing.KnownColor.WindowText));
         context.FillRectangle(background, new Avalonia.Rect(Bounds.Size));
 
         (double backgroundSplit, double rightNumberX) = _showLeftColumn
@@ -128,9 +131,9 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
     private void DrawSemanticBackground(DrawingContext context, Avalonia.Rect row, double leftWidth, DiffLineInfo info)
     {
-        IBrush removed = GetBrush("GitExtensionsDiffRemovedBrush", MediaColor.Parse("#FFC8C8"));
-        IBrush added = GetBrush("GitExtensionsDiffAddedBrush", MediaColor.Parse("#C8FFC8"));
-        IBrush section = GetBrush("GitExtensionsDiffSectionBrush", MediaColor.Parse("#E6E6E6"));
+        IBrush removed = GetBrush("GitExtensionsDiffRemovedBrush", GetAppColor(AppColor.AnsiTerminalRedBackNormal));
+        IBrush added = GetBrush("GitExtensionsDiffAddedBrush", GetAppColor(AppColor.AnsiTerminalGreenBackNormal));
+        IBrush section = GetBrush("GitExtensionsDiffSectionBrush", GetAppColor(AppColor.DiffSection));
         switch (info.LineType)
         {
             case DiffLineType.Header:
@@ -169,6 +172,12 @@ public class DiffViewerLineNumberControl : AbstractMargin
             brush);
 
     private IBrush GetBrush(string key, MediaColor fallback) => DiffBrushes.Get(this, key, fallback);
+
+    private static MediaColor GetAppColor(AppColor name)
+        => AvaloniaThemeResources.ToMediaColor(AvaloniaThemeResources.ResolveAppColor(ThemeModule.Settings, name));
+
+    private static MediaColor GetSystemColor(System.Drawing.KnownColor name)
+        => AvaloniaThemeResources.ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, name));
 
     private void TextView_VisualLinesChanged(object? sender, EventArgs e) => InvalidateVisual();
 }

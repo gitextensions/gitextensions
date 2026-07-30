@@ -15,6 +15,10 @@ public static class ThemeModule
     public static void Load()
     {
         Settings = LoadThemeSettings(Repository);
+
+        // AvaloniaThemeSettings owns the framework color-mode update because Avalonia exposes
+        // the actual platform variant instead of WinForms' Application.SetColorMode API.
+        ColorHelper.ThemeSettings = Settings;
     }
 
     private static ThemeSettings LoadThemeSettings(IThemeRepository repository)
@@ -34,6 +38,7 @@ public static class ThemeModule
         ThemeId themeId = AppSettings.ThemeId;
         if (string.IsNullOrEmpty(themeId.Name))
         {
+            // Migrate from default invariant/light to Windows default color mode
             themeId = ThemeId.WindowsAppColorModeId;
             AppSettings.ThemeId = themeId;
         }
@@ -41,6 +46,8 @@ public static class ThemeModule
         bool systemVisualStyle = AppSettings.UseSystemVisualStyle;
         if (themeId == ThemeId.WindowsAppColorModeId)
         {
+            // fix systemVisualStyle for WindowsAppColorModeId mode (always for DefaultLight)
+            // This is also how it is presented in Settings
             themeId = ThemeId.ColorModeThemeId;
             systemVisualStyle = themeId == ThemeId.DefaultLight;
         }
@@ -48,6 +55,7 @@ public static class ThemeModule
         string[] variations = AppSettings.ThemeVariations;
         if (themeId == ThemeId.DefaultLight)
         {
+            // default/invariant/light theme
             return CreateFallbackSettings(invariantTheme, variations);
         }
 
@@ -73,7 +81,10 @@ public static class ThemeModule
 
     internal static class TestAccessor
     {
-        public static void ReloadThemeSettings(IThemeRepository repository) =>
+        public static void ReloadThemeSettings(IThemeRepository repository)
+        {
             Settings = LoadThemeSettings(repository);
+            ColorHelper.ThemeSettings = Settings;
+        }
     }
 }

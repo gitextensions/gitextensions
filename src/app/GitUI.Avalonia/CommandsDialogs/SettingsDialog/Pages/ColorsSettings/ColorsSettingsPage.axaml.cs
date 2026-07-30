@@ -9,40 +9,56 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
-public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSettingsPage
+public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSettingsPage
 {
     private readonly ColorsSettingsPageController _controller;
-    private readonly List<FormattedThemeId> _themeIds = [];
 
-    private static readonly TranslationString FormatBuiltinThemeName = new("{0}");
-    private static readonly TranslationString FormatUserDefinedThemeName = new("{0}, user-defined");
+    private static readonly TranslationString FormatBuiltinThemeName =
+        new("{0}");
+
+    private static readonly TranslationString FormatUserDefinedThemeName =
+        new("{0}, user-defined");
 
     private MenuFlyout cmsOpenThemeFolders => (MenuFlyout)sbOpenThemeFolder.Flyout!;
+
+    public ColorsSettingsPage(IServiceProvider serviceProvider)
+        : base(serviceProvider)
+    {
+        InitializeComponent();
+
+        _NO_TRANSLATE_cbSelectTheme.SelectionChanged += ComboBoxTheme_SelectedIndexChanged;
+        chkUseSystemVisualStyle.IsCheckedChanged += ChkUseSystemVisualStyle_CheckedChanged;
+        chkColorblind.IsCheckedChanged += ChkColorblind_CheckedChanged;
+        sbOpenThemeFolder.Click += SbOpenThemeFolder_Click;
+        tsmiApplicationFolder.Click += tsmiApplicationFolder_Click;
+        tsmiUserFolder.Click += tsmiUserFolder_Click;
+        _controller = new ColorsSettingsPageController(this, new ThemeRepository(), new ThemePathProvider());
+        InitializeComplete();
+    }
 
     public ColorsSettingsPage()
         : this(EmptyServiceProvider.Instance)
     {
     }
 
-    public ColorsSettingsPage(IServiceProvider serviceProvider)
-        : base(serviceProvider)
-    {
-        InitializeComponent();
-        _controller = new ColorsSettingsPageController(this, new ThemeRepository(), new ThemePathProvider());
-        WireEvents();
-        InitializeComplete();
-    }
-
     public ThemeId SelectedThemeId
     {
-        get => (_NO_TRANSLATE_cbSelectTheme.SelectedItem as FormattedThemeId)?.ThemeId
-            ?? ThemeId.WindowsAppColorModeId;
+        get
+        {
+            return ((FormattedThemeId)_NO_TRANSLATE_cbSelectTheme.SelectedItem!).ThemeId;
+        }
         set
         {
-            int index = _themeIds.FindIndex(item => item.ThemeId == value);
+            FormattedThemeId formattedThemeId = new(value);
+            int index = _NO_TRANSLATE_cbSelectTheme.Items.IndexOf(formattedThemeId);
             if (index < 0)
             {
-                FormattedThemeId formattedThemeId = new(value);
+                // Handle case when selected theme is missing gracefully.
+                // It may happen in a following scenario:
+                // - user creates custom theme and selects it in this settings page
+                // - user saves app settings
+                // - user deletes the file with custom theme
+                // on first install; suppress MessageBox
                 string theme = formattedThemeId.ToString();
                 if (!string.IsNullOrWhiteSpace(theme))
                 {
@@ -59,7 +75,10 @@ public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColors
 
     public string[] SelectedThemeVariations
     {
-        get => chkColorblind.IsChecked == true ? [ThemeVariations.Colorblind] : ThemeVariations.None;
+        get => chkColorblind.IsChecked == true
+            ? [ThemeVariations.Colorblind]
+            : ThemeVariations.None;
+
         set => chkColorblind.IsChecked = value.Contains(ThemeVariations.Colorblind);
     }
 
@@ -81,26 +100,27 @@ public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColors
         set => chkUseSystemVisualStyle.IsEnabled = value;
     }
 
-    public static SettingsPageReference GetPageReference()
-        => new SettingsPageReferenceByType(typeof(ColorsSettingsPage));
-
     public void ShowThemeLoadingErrorMessage(ThemeId themeId, string[] variations, Exception ex)
     {
         Trace.WriteLine($"Failed to load theme {themeId.Name}: {ex}");
-        string variationsText = string.Concat(variations.Select(variation => "." + variation));
+        string variationsStr = string.Concat(variations.Select(_ => "." + _));
         string identifier = new FormattedThemeId(themeId).ToString();
         AppSettings.ThemeId = ThemeId.DefaultLight;
         WinFormsShims.IWin32Window? owner = TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window;
-        MessageBoxes.ShowError(owner, $"Failed to load theme {identifier}{variationsText}: {ex.Message}"
+        MessageBoxes.ShowError(owner, $"Failed to load theme {identifier}{variationsStr}: {ex.Message}"
             + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
     }
 
-    public void PopulateThemeMenu(IEnumerable<ThemeId> themeIds)
+    public override void OnPageShown()
     {
-        _themeIds.Clear();
-        _themeIds.AddRange(themeIds.Select(themeId => new FormattedThemeId(themeId)));
-        _NO_TRANSLATE_cbSelectTheme.ItemsSource = null;
-        _NO_TRANSLATE_cbSelectTheme.ItemsSource = _themeIds;
+        base.OnPageShown();
+
+        // Avalonia settings pages are shown inside a header control rather than receiving the
+        // WinForms OnRuntimeLoad callback.
+        if (!IsSettingsLoaded)
+        {
+            LoadSettings();
+        }
     }
 
     protected override void SettingsToPage()
@@ -129,15 +149,39 @@ public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColors
         base.PageToSettings();
     }
 
-    private void WireEvents()
+    public void PopulateThemeMenu(IEnumerable<ThemeId> themeIds)
     {
-        _NO_TRANSLATE_cbSelectTheme.SelectionChanged += (_, _) => _controller.HandleSelectedThemeChanged();
-        chkUseSystemVisualStyle.IsCheckedChanged += (_, _) => _controller.HandleUseSystemVisualStyleChanged();
-        chkColorblind.IsCheckedChanged += (_, _) => _controller.HandleUseColorblindVariationChanged();
-        sbOpenThemeFolder.Click += (_, _) => sbOpenThemeFolder.Flyout?.ShowAt(sbOpenThemeFolder);
-        tsmiApplicationFolder.Click += (_, _) => _controller.ShowAppThemesDirectory();
-        tsmiUserFolder.Click += (_, _) => _controller.ShowUserThemesDirectory();
+        _NO_TRANSLATE_cbSelectTheme.ItemsSource = themeIds
+            .Select(id => new FormattedThemeId(id))
+            .ToArray();
     }
+
+    private void ComboBoxTheme_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        // Avalonia reports the transient empty selection while ItemsSource is replaced.
+        if (_NO_TRANSLATE_cbSelectTheme.SelectedItem is not null)
+        {
+            _controller.HandleSelectedThemeChanged();
+        }
+    }
+
+    private void ChkUseSystemVisualStyle_CheckedChanged(object? sender, EventArgs e) =>
+        _controller.HandleUseSystemVisualStyleChanged();
+
+    private void ChkColorblind_CheckedChanged(object? sender, EventArgs e) =>
+        _controller.HandleUseColorblindVariationChanged();
+
+    private void tsmiApplicationFolder_Click(object? sender, EventArgs e)
+        => _controller.ShowAppThemesDirectory();
+
+    private void tsmiUserFolder_Click(object? sender, EventArgs e) =>
+        _controller.ShowUserThemesDirectory();
+
+    private void SbOpenThemeFolder_Click(object? sender, EventArgs e) =>
+        sbOpenThemeFolder.ShowDropDown();
+
+    public static SettingsPageReference GetPageReference()
+        => new SettingsPageReferenceByType(typeof(ColorsSettingsPage));
 
     internal TestAccessor GetTestAccessor() => new(this);
 
@@ -168,9 +212,38 @@ public sealed partial class ColorsSettingsPage : SettingsPageWithHeader, IColors
         public CheckBox UseSystemVisualStyle => page.chkUseSystemVisualStyle;
     }
 
-    private sealed record FormattedThemeId(ThemeId ThemeId)
+    private readonly struct FormattedThemeId
     {
-        public override string ToString()
-            => string.Format(ThemeId.IsBuiltin ? FormatBuiltinThemeName.Text : FormatUserDefinedThemeName.Text, ThemeId.Name);
+        public FormattedThemeId(ThemeId themeId)
+        {
+            ThemeId = themeId;
+        }
+
+        public ThemeId ThemeId { get; }
+
+        public override bool Equals(object? obj) =>
+            obj is FormattedThemeId other && Equals(other);
+
+        public override readonly int GetHashCode() =>
+            ThemeId.GetHashCode();
+
+        public static bool operator ==(FormattedThemeId left, FormattedThemeId right) =>
+            left.Equals(right);
+
+        public static bool operator !=(FormattedThemeId left, FormattedThemeId right) =>
+            !left.Equals(right);
+
+        public override readonly string ToString()
+        {
+            if (ThemeId.IsBuiltin)
+            {
+                return string.Format(FormatBuiltinThemeName.Text, ThemeId.Name);
+            }
+
+            return string.Format(FormatUserDefinedThemeName.Text, ThemeId.Name);
+        }
+
+        private readonly bool Equals(FormattedThemeId other) =>
+            ThemeId.Equals(other.ThemeId);
     }
 }
