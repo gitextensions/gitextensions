@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -37,7 +37,9 @@ public sealed partial class FormUpdates : GitExtensionsDialog
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly Version _currentVersion;
     private readonly Func<CancellationToken, Task<string>> _loadReleases;
-    private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private bool _alwaysShow;
     private bool _updateFound;
     private string _netRuntimeDownloadUrl = string.Empty;

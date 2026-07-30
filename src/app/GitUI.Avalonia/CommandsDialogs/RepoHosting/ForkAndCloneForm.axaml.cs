@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -39,7 +39,9 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     private readonly IGitUICommands? _commands;
     private readonly IRepositoryHostPlugin? _gitHoster;
     private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
-    private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSequence _myReposSequence = new();
     private readonly CancellationTokenSequence _searchSequence = new();
     private readonly CancellationTokenSource _lifetimeCancellation = new();

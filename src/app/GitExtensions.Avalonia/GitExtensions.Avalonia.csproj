@@ -28,7 +28,8 @@
     <ProjectReference Include="..\GitUI.Avalonia\GitUI.Avalonia.csproj" />
     <!-- Build the currently portable bundled plugins when GitExtensions.Avalonia is the
          entry project. Their own output contract places them below TargetDir\Plugins;
-         they are discovered by MEF at runtime rather than referenced by the app. -->
+         they are discovered by MEF at runtime rather than referenced by the app. Design-time
+         builds expose them as references so the Avalonia previewer can resolve plugin views. -->
     <ProjectReference Include="..\..\plugins\AutoCompileSubmodules\GitExtensions.Plugins.AutoCompileSubmodules.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
@@ -77,6 +78,11 @@
     <ProjectReference Include="..\..\plugins\BuildServerIntegration\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DesignTimeBuild)' == 'true' or '$(BuildAvaloniaDesigner)' == 'true'">
+    <ProjectReference Update="..\..\plugins\**\*.csproj"
+                      ReferenceOutputAssembly="true" />
   </ItemGroup>
 
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">

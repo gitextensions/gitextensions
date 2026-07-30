@@ -60,7 +60,9 @@ public sealed partial class FormBrowse : GitModuleForm
     private readonly IUpdateCheckService? _updateCheckService;
     private readonly CancellationTokenSequence _gpgInfoLoadSequence = new();
     private readonly CancellationTokenSource _loadOperationsCancellationTokenSource = new();
-    private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _loadOperations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly SplitterManager? _splitterManager;
     private readonly GitStatusMonitor? _gitStatusMonitor;
     private GridLength _commitInfoWidth = new(490);

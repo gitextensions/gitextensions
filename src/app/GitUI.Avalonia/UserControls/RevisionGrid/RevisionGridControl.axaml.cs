@@ -85,7 +85,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     ];
 
     private readonly CancellationTokenSequence _refreshSequence = new();
-    private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly FilterInfo _filterInfo = new();
     private readonly AuthorRevisionHighlighting _authorHighlighting = new();
     private readonly List<ColumnProvider> _columnProviders = [];

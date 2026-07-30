@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -41,7 +41,9 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
     private readonly IGitUICommands? _gitUiCommands;
     private readonly IGitPlugin? _gitPlugin;
     private readonly GitBranchOutputCommandParser _commandOutputParser;
-    private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private CancellationTokenSource? _refreshCancellation;
     private string? _sortColumn;
     private bool _sortAscending = true;
