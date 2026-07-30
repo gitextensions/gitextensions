@@ -1147,7 +1147,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormFilePrompt))
         {
-            return (549, 94);
+            return (549, 78);
         }
 
         if (viewType == typeof(FormQuickItemSelector))
@@ -1167,7 +1167,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormRecentReposSettings))
         {
-            return (700, 430);
+            return (684, 361);
         }
 
         if (viewType == typeof(RepoObjectsTree))
