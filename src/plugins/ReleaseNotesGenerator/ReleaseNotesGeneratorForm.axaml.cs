@@ -24,7 +24,9 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
     private const string MostRecentHint = "most recent changes are listed on top";
     private readonly IGitLogLineParser _gitLogLineParser = new GitLogLineParser();
     private readonly GitUIEventArgs? _gitUiCommands;
-    private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private IEnumerable<LogLine> _lastGeneratedLogLines = [];
 
     public ReleaseNotesGeneratorForm()

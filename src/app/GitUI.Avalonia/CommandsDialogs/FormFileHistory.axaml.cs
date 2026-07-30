@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
@@ -21,7 +21,9 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     private readonly CancellationTokenSequence _viewChangesSequence = new();
     private readonly IFullPathResolver _fullPathResolver;
     private readonly ObjectId _initialSelectedId = default;
-    private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly List<Task> _viewTasks = [];
 
     private string? _commitInfoTabPageText;

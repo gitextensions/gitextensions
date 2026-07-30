@@ -1,0 +1,11 @@
+{
+    "folders": [
+        {
+            "path": "../.."
+        }
+    ],
+    "settings": {
+        "avalonia.solutionPath": "eng/avalonia/GitExtensions.Avalonia.sln",
+        "dotnet.defaultSolution": "eng/avalonia/GitExtensions.Avalonia.sln"
+    }
+}

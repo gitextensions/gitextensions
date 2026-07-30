@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Media;
 using GitCommands;
@@ -32,7 +32,9 @@ public partial class FormGitStatistics : GitExtensionsFormBase
     private readonly bool _countSubmodules;
     private readonly IGitModule _module;
     private readonly IGitExecutorProvider _executorProvider;
-    private readonly TaskManager _operations = ThreadHelper.CreateTaskManager();
+
+    // Avalonia's designer constructs views before the application initializes ThreadHelper.
+    private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSource _lifetimeCancellation = new();
 
     private LineCounter? _lineCounter;
@@ -68,7 +70,13 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         string codeFilePattern,
         bool countSubmodules)
     {
-        ThreadHelper.ThrowIfNotOnUIThread();
+        // Avalonia's designer does not run the entry point that creates the UI-thread context.
+#pragma warning disable VSTHRD108 // The runtime path retains the original unconditional thread-affinity check.
+        if (!Design.IsDesignMode)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+        }
+#pragma warning restore VSTHRD108
 
         _executorProvider = executorProvider;
         _module = module;
@@ -83,6 +91,13 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         SetPieStyle(LinesOfCodeExtensionPie);
         SetPieStyle(LinesOfCodePie);
         SetPieStyle(TestCodePie);
+
+        // The runtime loader reveals the tabs after repository statistics are available.
+        if (Design.IsDesignMode)
+        {
+            Tabs.IsVisible = true;
+            LoadingLabel.IsVisible = false;
+        }
 
         InitializeComplete();
     }
