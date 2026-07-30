@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -159,7 +160,14 @@ internal static class SourceInventoryReader
                 .OrderBy(entry => entry.Name, StringComparer.Ordinal)
                 .ThenBy(entry => entry.Part, StringComparer.Ordinal)
                 .ToArray(),
-            TranslationKeys = keys
+            TranslationKeys = keys,
+            Comments = parts.SelectMany(part => part.Comments)
+                .OrderBy(entry => entry.Part, StringComparer.Ordinal)
+                .ThenBy(entry => entry.Line)
+                .ThenBy(entry => entry.Anchor, StringComparer.Ordinal)
+                .ThenBy(entry => entry.Placement, StringComparer.Ordinal)
+                .ThenBy(entry => entry.Order)
+                .ToArray()
         };
     }
 
@@ -190,8 +198,131 @@ internal static class SourceInventoryReader
             ExtractSettings(declaration, part);
             ExtractTranslationStrings(declaration, className, part);
             ExtractDesignerTranslationKeys(declaration, className, part);
+            ExtractComments(declaration, tree, part);
             parts.Add(part);
         }
+    }
+
+    private static void ExtractComments(
+        ClassDeclarationSyntax declaration,
+        SyntaxTree tree,
+        MutablePart part)
+    {
+        foreach (SyntaxTrivia trivia in declaration.DescendantTrivia(descendIntoTrivia: true)
+                     .Where(IsComment)
+                     .OrderBy(item => item.SpanStart))
+        {
+            MemberDeclarationSyntax? member = trivia.Token.Parent?.AncestorsAndSelf()
+                .OfType<MemberDeclarationSyntax>()
+                .FirstOrDefault(candidate =>
+                    candidate != declaration
+                    && candidate.AncestorsAndSelf().Contains(declaration));
+            string anchor = member is null ? "$type" : GetCommentAnchor(declaration, member);
+            string placement = member switch
+            {
+                null => "leading",
+                _ when trivia.Span.End <= member.SpanStart => "leading",
+                _ when trivia.SpanStart >= member.Span.End => "trailing",
+                _ => "body"
+            };
+            int order = part.Comments.Count(comment =>
+                comment.Anchor == anchor && comment.Placement == placement);
+            int line = tree.GetLineSpan(trivia.Span).StartLinePosition.Line + 1;
+            part.Comments.Add(new CommentEntry
+            {
+                Part = part.Path,
+                Anchor = anchor,
+                Placement = placement,
+                Order = order,
+                Kind = GetCommentKind(trivia),
+                Line = line,
+                Text = NormalizeCommentText(trivia)
+            });
+        }
+    }
+
+    private static bool IsComment(SyntaxTrivia trivia) =>
+        trivia.IsKind(SyntaxKind.SingleLineCommentTrivia)
+        || trivia.IsKind(SyntaxKind.MultiLineCommentTrivia)
+        || trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia)
+        || trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia);
+
+    private static string GetCommentAnchor(
+        ClassDeclarationSyntax declaration,
+        MemberDeclarationSyntax member)
+    {
+        return string.Join(
+            "/",
+            member.AncestorsAndSelf()
+                .OfType<MemberDeclarationSyntax>()
+                .TakeWhile(candidate => candidate != declaration)
+                .Reverse()
+                .Select(GetMemberAnchor));
+    }
+
+    private static string GetMemberAnchor(MemberDeclarationSyntax member) =>
+        member switch
+        {
+            FieldDeclarationSyntax field => $"field:{string.Join(",", field.Declaration.Variables.Select(variable => variable.Identifier.ValueText))}",
+            EventFieldDeclarationSyntax eventField => $"event:{string.Join(",", eventField.Declaration.Variables.Select(variable => variable.Identifier.ValueText))}",
+            PropertyDeclarationSyntax property => $"property:{property.Identifier.ValueText}",
+            IndexerDeclarationSyntax indexer => $"indexer:this{Normalize(indexer.ParameterList)}",
+            EventDeclarationSyntax eventDeclaration => $"event:{eventDeclaration.Identifier.ValueText}",
+            MethodDeclarationSyntax method => $"method:{method.Identifier.ValueText}{Normalize(method.ParameterList)}",
+            ConstructorDeclarationSyntax constructor => $"constructor:{constructor.Identifier.ValueText}{Normalize(constructor.ParameterList)}",
+            DestructorDeclarationSyntax destructor =>
+                $"destructor:{destructor.Identifier.ValueText}{Normalize(destructor.ParameterList)}",
+            OperatorDeclarationSyntax operatorDeclaration =>
+                $"operator:{operatorDeclaration.OperatorToken.ValueText}{Normalize(operatorDeclaration.ParameterList)}",
+            ConversionOperatorDeclarationSyntax conversion =>
+                $"conversion:{conversion.ImplicitOrExplicitKeyword.ValueText}:"
+                + $"{Normalize(conversion.Type)}{Normalize(conversion.ParameterList)}",
+            EnumDeclarationSyntax enumDeclaration => $"enum:{enumDeclaration.Identifier.ValueText}",
+            ClassDeclarationSyntax nestedClass => $"class:{nestedClass.Identifier.ValueText}",
+            StructDeclarationSyntax nestedStruct => $"struct:{nestedStruct.Identifier.ValueText}",
+            InterfaceDeclarationSyntax nestedInterface => $"interface:{nestedInterface.Identifier.ValueText}",
+            DelegateDeclarationSyntax nestedDelegate =>
+                $"delegate:{nestedDelegate.Identifier.ValueText}{Normalize(nestedDelegate.ParameterList)}",
+            _ => member.Kind().ToString()
+        };
+
+    private static string GetCommentKind(SyntaxTrivia trivia) =>
+        trivia.Kind() switch
+        {
+            SyntaxKind.SingleLineCommentTrivia => "singleLine",
+            SyntaxKind.MultiLineCommentTrivia => "multiLine",
+            SyntaxKind.SingleLineDocumentationCommentTrivia => "xmlDoc",
+            SyntaxKind.MultiLineDocumentationCommentTrivia => "xmlDoc",
+            _ => throw new InvalidOperationException($"Trivia '{trivia.Kind()}' is not a comment.")
+        };
+
+    private static string NormalizeCommentText(SyntaxTrivia trivia)
+    {
+        string text = trivia.ToFullString().Replace("\r\n", "\n", StringComparison.Ordinal);
+        string[] lines = text.Split('\n');
+        for (int index = 0; index < lines.Length; index++)
+        {
+            string line = lines[index].Trim();
+            if (line.StartsWith("///", StringComparison.Ordinal))
+            {
+                line = line[3..];
+            }
+            else if (line.StartsWith("//", StringComparison.Ordinal))
+            {
+                line = line[2..];
+            }
+            else
+            {
+                line = line.TrimStart('/', '*').TrimEnd('/', '*');
+            }
+
+            lines[index] = line.Trim();
+        }
+
+        return Regex.Replace(
+            string.Join(" ", lines.Where(line => line.Length > 0)),
+            @"\s+",
+            " ").Trim();
     }
 
     private static bool MatchesType(ClassDeclarationSyntax declaration, string typeName) =>
@@ -701,5 +832,7 @@ internal static class SourceInventoryReader
         public List<TranslationStringEntry> TranslationStrings { get; } = [];
 
         public List<TranslationKeyEntry> TranslationKeys { get; } = [];
+
+        public List<CommentEntry> Comments { get; } = [];
     }
 }

@@ -21,7 +21,9 @@ internal static class Program
                 InventorySweepResult sweep = InventorySweepRunner.Run(SweepOptions.Parse(args));
                 Console.WriteLine(
                     $"Assessed {sweep.Summary.MappingCount} mappings and {sweep.Summary.AnalyzedTypeCount} class types; "
-                    + $"wrote {sweep.Summary.FindingCount} findings to {Path.GetFullPath(sweep.OutputFile)}.");
+                    + $"wrote {sweep.Summary.FindingCount} findings and recorded "
+                    + $"{sweep.Summary.AdaptedCommentCount} adapted comments at "
+                    + $"{Path.GetFullPath(sweep.OutputFile)}.");
                 return 0;
             }
 
@@ -29,7 +31,8 @@ internal static class Program
             InventoryReport report = InventoryRunner.Run(options);
             Console.WriteLine(
                 $"Compared {report.Original.Parts.Count} original and {report.Twin.Parts.Count} twin parts; "
-                + $"wrote {report.Summary.FindingCount} findings to "
+                + $"wrote {report.Summary.FindingCount} findings and recorded "
+                + $"{report.Summary.AdaptedCommentCount} adapted comments at "
                 + $"{Path.GetFullPath(options.OutputFile)}.");
             return 0;
         }
