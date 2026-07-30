@@ -16,53 +16,133 @@ internal static class AvaloniaThemeResources
     internal const string AppColorPrefix = "GitExtensionsAppColor";
     internal const string KnownColorPrefix = "GitExtensionsKnownColor";
 
+    // Keep this list explicit: adding an AppColor must fail the theming-capability tests until
+    // the Avalonia resource boundary deliberately accepts it.
+    internal static IReadOnlyList<AppColor> MappedAppColors { get; } =
+    [
+        AppColor.PanelBackground,
+        AppColor.EditorBackground,
+        AppColor.LineNumberBackground,
+        AppColor.AuthoredHighlight,
+        AppColor.Selection,
+        AppColor.HighlightAllOccurences,
+        AppColor.InactiveSelectionHighlight,
+        AppColor.GraphBranch1,
+        AppColor.GraphBranch2,
+        AppColor.GraphBranch3,
+        AppColor.GraphBranch4,
+        AppColor.GraphBranch5,
+        AppColor.GraphBranch6,
+        AppColor.GraphBranch7,
+        AppColor.GraphBranch8,
+        AppColor.GraphNonRelativeBranch,
+        AppColor.Branch,
+        AppColor.RemoteBranch,
+        AppColor.Tag,
+        AppColor.OtherTag,
+        AppColor.DiffSection,
+        AppColor.AnsiTerminalBlackForeNormal,
+        AppColor.AnsiTerminalBlackBackNormal,
+        AppColor.AnsiTerminalBlackForeBold,
+        AppColor.AnsiTerminalBlackBackBold,
+        AppColor.AnsiTerminalRedForeNormal,
+        AppColor.AnsiTerminalRedBackNormal,
+        AppColor.AnsiTerminalRedForeBold,
+        AppColor.AnsiTerminalRedBackBold,
+        AppColor.AnsiTerminalGreenForeNormal,
+        AppColor.AnsiTerminalGreenBackNormal,
+        AppColor.AnsiTerminalGreenForeBold,
+        AppColor.AnsiTerminalGreenBackBold,
+        AppColor.AnsiTerminalYellowForeNormal,
+        AppColor.AnsiTerminalYellowBackNormal,
+        AppColor.AnsiTerminalYellowForeBold,
+        AppColor.AnsiTerminalYellowBackBold,
+        AppColor.AnsiTerminalBlueForeNormal,
+        AppColor.AnsiTerminalBlueBackNormal,
+        AppColor.AnsiTerminalBlueForeBold,
+        AppColor.AnsiTerminalBlueBackBold,
+        AppColor.AnsiTerminalMagentaForeNormal,
+        AppColor.AnsiTerminalMagentaBackNormal,
+        AppColor.AnsiTerminalMagentaForeBold,
+        AppColor.AnsiTerminalMagentaBackBold,
+        AppColor.AnsiTerminalCyanForeNormal,
+        AppColor.AnsiTerminalCyanBackNormal,
+        AppColor.AnsiTerminalCyanForeBold,
+        AppColor.AnsiTerminalCyanBackBold,
+        AppColor.AnsiTerminalWhiteForeNormal,
+        AppColor.AnsiTerminalWhiteBackNormal,
+        AppColor.AnsiTerminalWhiteForeBold,
+        AppColor.AnsiTerminalWhiteBackBold,
+    ];
+
+    // This is the complete SystemColors inventory consumed by the WinForms GitUI source.
+    // The source audit fails when that inventory changes without a matching semantic resource.
+    internal static IReadOnlyList<KnownColor> MappedSystemColors { get; } =
+    [
+        KnownColor.ActiveCaption,
+        KnownColor.AppWorkspace,
+        KnownColor.ButtonFace,
+        KnownColor.Control,
+        KnownColor.ControlDark,
+        KnownColor.ControlDarkDark,
+        KnownColor.ControlLight,
+        KnownColor.ControlLightLight,
+        KnownColor.ControlText,
+        KnownColor.GradientActiveCaption,
+        KnownColor.GrayText,
+        KnownColor.Highlight,
+        KnownColor.HighlightText,
+        KnownColor.HotTrack,
+        KnownColor.InactiveCaption,
+        KnownColor.Info,
+        KnownColor.InfoText,
+        KnownColor.Window,
+        KnownColor.WindowFrame,
+        KnownColor.WindowText,
+    ];
+
     public static void Apply(Application application, ThemeSettings settings)
     {
         bool isDark = settings.Theme.SystemColorMode == GitExtensions.Shims.WinForms.SystemColorMode.Dark;
         ResourceDictionary resources = GetThemeResources(application, isDark ? ThemeVariant.Dark : ThemeVariant.Light);
 
-        foreach (AppColor name in Enum.GetValues<AppColor>())
+        foreach (AppColor name in MappedAppColors)
         {
-            DrawingColor color = GetAppColor(settings, name);
+            DrawingColor color = ResolveAppColor(settings, name);
             PublishColor(resources, AppColorPrefix + name, color);
         }
 
-        foreach (KnownColor name in Enum.GetValues<KnownColor>())
+        foreach (KnownColor name in MappedSystemColors)
         {
-            if (!DrawingColor.FromKnownColor(name).IsSystemColor)
-            {
-                continue;
-            }
-
-            PublishColor(resources, KnownColorPrefix + name, GetKnownColor(settings, name, isDark));
+            PublishColor(resources, KnownColorPrefix + name, ResolveSystemColor(settings, name));
         }
 
-        DrawingColor panel = GetAppColor(settings, AppColor.PanelBackground);
-        DrawingColor editor = GetAppColor(settings, AppColor.EditorBackground);
-        DrawingColor selection = GetAppColor(settings, AppColor.Selection);
-        DrawingColor windowText = GetKnownColor(settings, KnownColor.WindowText, isDark);
-        DrawingColor grayText = GetKnownColor(settings, KnownColor.GrayText, isDark);
-        DrawingColor sectionBorder = Lerp(panel, windowText, isDark ? 0.14f : 0.18f);
-        DrawingColor treeConnector = Lerp(panel, windowText, isDark ? 0.38f : 0.46f);
-        DrawingColor refLabelBackground = isDark ? Lerp(panel, DrawingColor.Black, 0.36f) : panel;
-        DrawingColor removedBackground = GetAppColor(settings, AppColor.AnsiTerminalRedBackNormal);
-        DrawingColor addedBackground = GetAppColor(settings, AppColor.AnsiTerminalGreenBackNormal);
-        DrawingColor removedForeground = GetAppColor(settings, AppColor.AnsiTerminalRedForeNormal);
-        DrawingColor addedForeground = GetAppColor(settings, AppColor.AnsiTerminalGreenForeNormal);
-        DrawingColor movedRemovedForeground = GetAppColor(settings, AppColor.AnsiTerminalMagentaForeNormal);
-        DrawingColor movedAddedForeground = GetAppColor(settings, AppColor.AnsiTerminalBlueForeNormal);
-        DrawingColor dimmedRemovedBackground = Dim(Dim(removedBackground, editor), editor);
-        DrawingColor dimmedAddedBackground = Dim(Dim(addedBackground, editor), editor);
+        DrawingColor panel = ResolveAppColor(settings, AppColor.PanelBackground);
+        DrawingColor editor = ResolveAppColor(settings, AppColor.EditorBackground);
+        DrawingColor selection = ResolveAppColor(settings, AppColor.Selection);
+        DrawingColor windowText = ResolveSystemColor(settings, KnownColor.WindowText);
+        DrawingColor grayText = ResolveSystemColor(settings, KnownColor.GrayText);
+        DrawingColor sectionBorder = ColorHelper.Lerp(panel, windowText, isDark ? 0.14f : 0.18f);
+        DrawingColor treeConnector = ColorHelper.Lerp(panel, windowText, isDark ? 0.38f : 0.46f);
+        DrawingColor refLabelBackground = isDark ? ColorHelper.Lerp(panel, DrawingColor.Black, 0.36f) : panel;
+        DrawingColor removedBackground = ResolveAppColor(settings, AppColor.AnsiTerminalRedBackNormal);
+        DrawingColor addedBackground = ResolveAppColor(settings, AppColor.AnsiTerminalGreenBackNormal);
+        DrawingColor removedForeground = ResolveAppColor(settings, AppColor.AnsiTerminalRedForeNormal);
+        DrawingColor addedForeground = ResolveAppColor(settings, AppColor.AnsiTerminalGreenForeNormal);
+        DrawingColor movedRemovedForeground = ResolveAppColor(settings, AppColor.AnsiTerminalMagentaForeNormal);
+        DrawingColor movedAddedForeground = ResolveAppColor(settings, AppColor.AnsiTerminalBlueForeNormal);
+        DrawingColor dimmedRemovedBackground = removedBackground.DimColor().DimColor();
+        DrawingColor dimmedAddedBackground = addedBackground.DimColor().DimColor();
         DrawingColor resetSoft = DrawingColor.FromArgb(128, 255, 128);
         DrawingColor resetMixed = DrawingColor.FromArgb(255, 255, 128);
         DrawingColor resetHard = DrawingColor.FromArgb(255, 128, 128);
         DrawingColor warningPanel = DrawingColor.FromArgb(230, 99, 99);
         if (isDark)
         {
-            resetSoft = Dim(resetSoft, editor);
-            resetMixed = Dim(resetMixed, editor);
-            resetHard = Dim(resetHard, editor);
-            warningPanel = Dim(warningPanel, panel);
+            resetSoft = resetSoft.DimColor();
+            resetMixed = resetMixed.DimColor();
+            resetHard = resetHard.DimColor();
+            warningPanel = warningPanel.DimColor();
         }
 
         SetBrush(resources, "ThemeBackgroundBrush", panel);
@@ -73,15 +153,15 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsPaneBorderBrush", sectionBorder);
         SetBrush(resources, "GitExtensionsSectionBorderBrush", sectionBorder);
         SetBrush(resources, "GitExtensionsRefLabelBackgroundBrush", refLabelBackground);
-        SetBrush(resources, "GitExtensionsBranchRefBrush", GetAppColor(settings, AppColor.Branch));
-        SetBrush(resources, "GitExtensionsRemoteBranchRefBrush", GetAppColor(settings, AppColor.RemoteBranch));
-        SetBrush(resources, "GitExtensionsTagRefBrush", GetAppColor(settings, AppColor.Tag));
-        SetBrush(resources, "GitExtensionsOtherRefBrush", GetAppColor(settings, AppColor.OtherTag));
+        SetBrush(resources, "GitExtensionsBranchRefBrush", ResolveAppColor(settings, AppColor.Branch));
+        SetBrush(resources, "GitExtensionsRemoteBranchRefBrush", ResolveAppColor(settings, AppColor.RemoteBranch));
+        SetBrush(resources, "GitExtensionsTagRefBrush", ResolveAppColor(settings, AppColor.Tag));
+        SetBrush(resources, "GitExtensionsOtherRefBrush", ResolveAppColor(settings, AppColor.OtherTag));
         SetBrush(resources, "GitExtensionsTreeConnectorBrush", treeConnector);
-        SetBrush(resources, "GitExtensionsInactiveSelectionBackgroundBrush", GetAppColor(settings, AppColor.InactiveSelectionHighlight));
+        SetBrush(resources, "GitExtensionsInactiveSelectionBackgroundBrush", ResolveAppColor(settings, AppColor.InactiveSelectionHighlight));
 
         SetBrush(resources, "GitExtensionsSelectionBackgroundBrush", selection);
-        SetBrush(resources, "GitExtensionsSelectionPointerOverBackgroundBrush", Lerp(selection, windowText, 0.08f));
+        SetBrush(resources, "GitExtensionsSelectionPointerOverBackgroundBrush", ColorHelper.Lerp(selection, windowText, 0.08f));
         SetBrush(resources, "GitExtensionsSelectionForegroundBrush", windowText);
 
         SetBrush(resources, "GitExtensionsValidFilterBackgroundBrush", isDark ? dimmedAddedBackground : addedBackground);
@@ -89,33 +169,33 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsResetSoftBackgroundBrush", resetSoft);
         SetBrush(resources, "GitExtensionsResetMixedBackgroundBrush", resetMixed);
         SetBrush(resources, "GitExtensionsResetHardBackgroundBrush", resetHard);
-        SetBrush(resources, "GitExtensionsResetSoftForegroundBrush", GetTextColor(resetSoft, windowText));
-        SetBrush(resources, "GitExtensionsResetMixedForegroundBrush", GetTextColor(resetMixed, windowText));
-        SetBrush(resources, "GitExtensionsResetHardForegroundBrush", GetTextColor(resetHard, windowText));
+        SetBrush(resources, "GitExtensionsResetSoftForegroundBrush", resetSoft.GetTextColor());
+        SetBrush(resources, "GitExtensionsResetMixedForegroundBrush", resetMixed.GetTextColor());
+        SetBrush(resources, "GitExtensionsResetHardForegroundBrush", resetHard.GetTextColor());
         SetBrush(resources, "GitExtensionsWarningPanelBackgroundBrush", warningPanel);
-        SetBrush(resources, "GitExtensionsWarningPanelForegroundBrush", GetTextColor(warningPanel, windowText));
+        SetBrush(resources, "GitExtensionsWarningPanelForegroundBrush", warningPanel.GetTextColor());
         SetBrush(resources, "GitExtensionsDiffEditorBackgroundBrush", editor);
         SetBrush(resources, "GitExtensionsDiffTextBrush", windowText);
-        SetBrush(resources, "GitExtensionsDiffLineNumberBackgroundBrush", GetAppColor(settings, AppColor.LineNumberBackground));
+        SetBrush(resources, "GitExtensionsDiffLineNumberBackgroundBrush", ResolveAppColor(settings, AppColor.LineNumberBackground));
         SetBrush(resources, "GitExtensionsDiffLineNumberBrush", grayText);
         SetBrush(resources, "GitExtensionsDiffLineNumberSelectedBrush", windowText);
-        SetBrush(resources, "GitExtensionsDiffSectionBrush", GetAppColor(settings, AppColor.DiffSection));
+        SetBrush(resources, "GitExtensionsDiffSectionBrush", ResolveAppColor(settings, AppColor.DiffSection));
         SetBrush(resources, "GitExtensionsDiffRemovedBrush", removedBackground);
         SetBrush(resources, "GitExtensionsDiffAddedBrush", addedBackground);
         SetBrush(resources, "GitExtensionsDiffRemovedDimBrush", dimmedRemovedBackground);
         SetBrush(resources, "GitExtensionsDiffAddedDimBrush", dimmedAddedBackground);
-        SetBrush(resources, "GitExtensionsDiffMovedRemovedBrush", GetAppColor(settings, AppColor.AnsiTerminalMagentaBackNormal));
-        SetBrush(resources, "GitExtensionsDiffMovedAddedBrush", GetAppColor(settings, AppColor.AnsiTerminalBlueBackNormal));
+        SetBrush(resources, "GitExtensionsDiffMovedRemovedBrush", ResolveAppColor(settings, AppColor.AnsiTerminalMagentaBackNormal));
+        SetBrush(resources, "GitExtensionsDiffMovedAddedBrush", ResolveAppColor(settings, AppColor.AnsiTerminalBlueBackNormal));
         SetBrush(resources, "GitExtensionsDiffRemovedForegroundBrush", removedForeground);
         SetBrush(resources, "GitExtensionsDiffAddedForegroundBrush", addedForeground);
-        SetBrush(resources, "GitExtensionsDiffRemovedDimForegroundBrush", Dim(removedForeground, editor));
-        SetBrush(resources, "GitExtensionsDiffAddedDimForegroundBrush", Dim(addedForeground, editor));
+        SetBrush(resources, "GitExtensionsDiffRemovedDimForegroundBrush", removedForeground.DimColor());
+        SetBrush(resources, "GitExtensionsDiffAddedDimForegroundBrush", addedForeground.DimColor());
         SetBrush(resources, "GitExtensionsDiffMovedRemovedForegroundBrush", movedRemovedForeground);
         SetBrush(resources, "GitExtensionsDiffMovedAddedForegroundBrush", movedAddedForeground);
 
         DrawingColor blameHighlight = isDark
-            ? Lerp(editor, DrawingColor.White, 0.08f)
-            : GetKnownColor(settings, KnownColor.ControlLight, isDark: false);
+            ? ColorHelper.Lerp(editor, DrawingColor.White, 0.08f)
+            : ResolveSystemColor(settings, KnownColor.ControlLight);
         SetBrush(resources, "GitExtensionsBlameHighlightBrush", blameHighlight);
         SetBrush(resources, "GitExtensionsBlameAuthorBrush", grayText);
     }
@@ -133,14 +213,15 @@ internal static class AvaloniaThemeResources
         return created;
     }
 
-    private static DrawingColor GetAppColor(ThemeSettings settings, AppColor name)
+    internal static DrawingColor ResolveAppColor(ThemeSettings settings, AppColor name)
     {
         DrawingColor color = settings.Theme.GetColor(name);
         return color.IsEmpty ? settings.InvariantTheme.GetColor(name) : color;
     }
 
-    private static DrawingColor GetKnownColor(ThemeSettings settings, KnownColor name, bool isDark)
+    internal static DrawingColor ResolveSystemColor(ThemeSettings settings, KnownColor name)
     {
+        bool isDark = settings.Theme.SystemColorMode == GitExtensions.Shims.WinForms.SystemColorMode.Dark;
         DrawingColor color = settings.Theme.GetColor(name);
         if (!color.IsEmpty)
         {
@@ -220,64 +301,6 @@ internal static class AvaloniaThemeResources
     private static void SetBrush(ResourceDictionary resources, string key, MediaColor color)
         => resources[key] = new SolidColorBrush(color);
 
-    private static MediaColor ToMediaColor(DrawingColor color)
+    internal static MediaColor ToMediaColor(DrawingColor color)
         => MediaColor.FromArgb(color.A, color.R, color.G, color.B);
-
-    private static DrawingColor Lerp(DrawingColor from, DrawingColor to, float amount)
-    {
-        byte a = (byte)Math.Round(from.A + ((to.A - from.A) * amount));
-        byte r = (byte)Math.Round(from.R + ((to.R - from.R) * amount));
-        byte g = (byte)Math.Round(from.G + ((to.G - from.G) * amount));
-        byte b = (byte)Math.Round(from.B + ((to.B - from.B) * amount));
-        return DrawingColor.FromArgb(a, r, g, b);
-    }
-
-    private static DrawingColor GetTextColor(DrawingColor background, DrawingColor preferred)
-    {
-        const double minimumContrastRatio = 4.5;
-
-        if (GetContrastRatio(background, preferred) >= minimumContrastRatio)
-        {
-            return preferred;
-        }
-
-        DrawingColor black = DrawingColor.Black;
-        DrawingColor white = DrawingColor.White;
-        return GetContrastRatio(background, black) >= GetContrastRatio(background, white)
-            ? black
-            : white;
-    }
-
-    private static double GetContrastRatio(DrawingColor first, DrawingColor second)
-    {
-        double firstLuminance = GetRelativeLuminance(first);
-        double secondLuminance = GetRelativeLuminance(second);
-        return (Math.Max(firstLuminance, secondLuminance) + 0.05)
-            / (Math.Min(firstLuminance, secondLuminance) + 0.05);
-    }
-
-    private static double GetRelativeLuminance(DrawingColor color)
-        => (0.2126 * SrgbLinearize(color.R))
-            + (0.7152 * SrgbLinearize(color.G))
-            + (0.0722 * SrgbLinearize(color.B));
-
-    private static DrawingColor Dim(DrawingColor color, DrawingColor background)
-    {
-        byte r = SrgbDelinearize((SrgbLinearize(color.R) + SrgbLinearize(background.R)) * 0.5);
-        byte g = SrgbDelinearize((SrgbLinearize(color.G) + SrgbLinearize(background.G)) * 0.5);
-        byte b = SrgbDelinearize((SrgbLinearize(color.B) + SrgbLinearize(background.B)) * 0.5);
-        return DrawingColor.FromArgb(color.A, r, g, b);
-    }
-
-    private static double SrgbLinearize(byte channel)
-    {
-        double normalized = channel / 255.0;
-        return normalized <= 0.04045 ? normalized / 12.92 : Math.Pow((normalized + 0.055) / 1.055, 2.4);
-    }
-
-    private static byte SrgbDelinearize(double linear)
-    {
-        double normalized = linear <= 0.0031308 ? 12.92 * linear : (1.055 * Math.Pow(linear, 1.0 / 2.4)) - 0.055;
-        return (byte)Math.Round(Math.Clamp(normalized * 255.0, 0.0, 255.0));
-    }
 }
