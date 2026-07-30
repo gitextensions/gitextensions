@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 
 namespace GitUI;
@@ -33,7 +33,7 @@ public readonly struct FormBusyScope : IDisposable
     {
         bool wasEnabled = form.IsEnabled;
         form.IsEnabled = false;
-        WaitCursorScope waitCursor = WaitCursorScope.Enter(cursor);
+        WaitCursorScope waitCursor = WaitCursorScope.Enter(cursor, form);
         return new FormBusyScope(form, wasEnabled, waitCursor);
     }
 

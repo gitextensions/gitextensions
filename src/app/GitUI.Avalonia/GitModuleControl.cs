@@ -9,7 +9,7 @@ using ResourceManager;
 namespace GitUI;
 
 /// <summary>Base control that obtains Git UI commands from its containing form.</summary>
-public class GitModuleControl : GitExtensionsControl, IWin32Window
+public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32Window
 {
     private IGitUICommandsSource? _uiCommandsSource;
 
@@ -37,7 +37,7 @@ public class GitModuleControl : GitExtensionsControl, IWin32Window
 
             ArgumentNullException.ThrowIfNull(value);
             _uiCommandsSource = value;
-            UICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(value));
+            OnUICommandsSourceSet(value);
         }
     }
 
@@ -98,4 +98,10 @@ public class GitModuleControl : GitExtensionsControl, IWin32Window
 
     protected virtual IScriptOptionsProvider? GetScriptOptionsProvider()
         => null;
+
+    /// <summary>Raises the <see cref="UICommandsSourceSet"/> event.</summary>
+    protected virtual void OnUICommandsSourceSet(IGitUICommandsSource source)
+    {
+        UICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(source));
+    }
 }
