@@ -28,7 +28,18 @@ internal static class Program
     ///  Also used by the Avalonia designer/previewer tooling, which discovers it by name.
     /// </summary>
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
-            .UsePlatformDetect()
-            .LogToTrace();
+    {
+        AppBuilder builder = AppBuilder.Configure<App>()
+            .UsePlatformDetect();
+
+        if (ShouldUseWayland(OperatingSystem.IsLinux(), Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")))
+        {
+            builder = builder.UseWayland();
+        }
+
+        return builder.LogToTrace();
+    }
+
+    internal static bool ShouldUseWayland(bool isLinux, string? waylandDisplay)
+        => isLinux && !string.IsNullOrWhiteSpace(waylandDisplay);
 }
