@@ -1,0 +1,30 @@
+{
+  "id": "com.github.gitextensions.GitExtensions.Avalonia.Devel",
+  "runtime": "org.freedesktop.Sdk",
+  "runtime-version": "25.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "GitExtensions.Avalonia",
+  "finish-args": [
+    "--share=ipc",
+    "--share=network",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=~/.local/share/gitextensions-parity-smoke"
+  ],
+  "modules": [
+    {
+      "name": "gitextensions-avalonia",
+      "buildsystem": "simple",
+      "build-commands": [
+        "mkdir -p /app/bin",
+        "cp -a . /app/bin/"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": "publish"
+        }
+      ]
+    }
+  ]
+}
