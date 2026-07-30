@@ -1,9 +1,10 @@
 {
   "//": [
-    "Map of Windows Forms sources to their Avalonia twins. One entry per ported source file.",
-    "status: scaffolded (compiles, layout unfinished) | functional (works, reduced feature set) | parity (feature-complete twin).",
-    "basedOn: the upstream commit the twin was last synchronized with.",
-    "eng/avalonia/upstream-drift.sh joins upstream diffs against this map; keep it accurate when porting or syncing."
+    "Complete classification of GitUI C# sources plus mappings for other port inputs.",
+    "Twin status: scaffolded (compiles, layout unfinished) | functional (works, reduced feature set) | parity (feature-complete twin).",
+    "Non-twin status: unported (plannedIn is mandatory) | windowsOnly (justification and substitute are mandatory).",
+    "Twin entries require twin and basedOn; non-twin entries must not declare either field.",
+    "eng/avalonia/upstream-drift.sh joins upstream diffs against this map; keep it accurate when porting, classifying, or syncing."
   ],
   "src/app/GitUI/Avatars/AvatarDownloader.cs": {
     "twin": "src/app/GitUI.Avalonia/Avatars/AvatarDownloader.cs",
@@ -2555,5 +2556,1292 @@
     "status": "functional",
     "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
     "notes": "Entry point twin (with App.axaml.cs and StartupCoordinator.cs). Startup retains upstream working-directory discovery and routes arguments through GitUICommands.RunCommand. An explicit desktop lifetime sequences Git discovery, conditional automatic settings checks/repairs, unresolved checklist display, and then the requested command without exposing a hidden main window or shutting down between dialogs. Browse/modeless commands become and visibly open as MainWindow; modal commands run under explicit shutdown and return success/failure through the desktop process exit code. Startup also maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources, loads the shared CSS theme repository through the ThemeModule twin, projects AppColor/KnownColor and semantic brushes into variant dictionaries, and reloads Windows app color mode when the actual platform variant changes."
+  },
+  "src/app/GitUI/AutoCompletion/AutoCompleteRegexes.cs": {
+    "status": "unported",
+    "plannedIn": "P2.4"
+  },
+  "src/app/GitUI/AutoCompletion/AutoCompleteWord.cs": {
+    "status": "unported",
+    "plannedIn": "P2.4"
+  },
+  "src/app/GitUI/AutoCompletion/CommitAutoCompleteProvider.cs": {
+    "status": "unported",
+    "plannedIn": "P2.4"
+  },
+  "src/app/GitUI/AutoCompletion/CommitMessageMetadataProvider.cs": {
+    "status": "unported",
+    "plannedIn": "P2.4"
+  },
+  "src/app/GitUI/AutoCompletion/IAutoCompleteProvider.cs": {
+    "status": "unported",
+    "plannedIn": "P2.4"
+  },
+  "src/app/GitUI/BitmapExtensions.cs": {
+    "status": "windowsOnly",
+    "justification": "This helper exists for GDI handles, WinForms message filtering, or DataGridView binding and is not a portable UI contract.",
+    "substitute": "Avalonia bitmap ownership, routed pointer input, and collection-specific native sorting."
+  },
+  "src/app/GitUI/BrowseForPrivateKey.cs": {
+    "status": "windowsOnly",
+    "justification": "PuTTY, pageant, plink, and .ppk loading are Windows-only SSH integrations.",
+    "substitute": "OpenSSH with the platform ssh-agent through GitCommands."
+  },
+  "src/app/GitUI/CommandsDialogs/AboutBoxDialog/FormContributors.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/DashboardTheme.cs": {
+    "status": "unported",
+    "plannedIn": "P4.5"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/FormDashboardCategoryTitle.cs": {
+    "status": "unported",
+    "plannedIn": "P4.5"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/FormDashboardCategoryTitle.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P4.5"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesListController.cs": {
+    "status": "unported",
+    "plannedIn": "P4.5"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBisect.cs": {
+    "status": "unported",
+    "plannedIn": "P5.5"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBisect.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.5"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseUtil.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormChangeLog.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormChangeLog.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormDonate.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormDonate.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGitCommandLog.cs": {
+    "status": "unported",
+    "plannedIn": "P5.3"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGitCommandLog.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.3"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGoToCommit.cs": {
+    "status": "unported",
+    "plannedIn": "P5.1"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGoToCommit.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.1"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormOpenDirectory.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/FormOpenDirectory.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/GitFileTreeComparer.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/MenuCommand.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/BrowseDialog/MenuCommandsBase.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.cs": {
+    "status": "unported",
+    "plannedIn": "P5.7"
+  },
+  "src/app/GitUI/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.7"
+  },
+  "src/app/GitUI/CommandsDialogs/CommitDialog/WordWrapper.cs": {
+    "status": "unported",
+    "plannedIn": "P5.7"
+  },
+  "src/app/GitUI/CommandsDialogs/DataGridViewCheckBoxHeaderCell.cs": {
+    "status": "windowsOnly",
+    "justification": "The select-all header is a custom-painted WinForms DataGridView cell.",
+    "substitute": "The native Avalonia header checkbox and list selection logic in FormVerify."
+  },
+  "src/app/GitUI/CommandsDialogs/EnvironmentInfo.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/EnvironmentInfo.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/FileStatusListContextMenuController.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/CommandsDialogs/FormAbout.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/FormAbout.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/FormAddToGitIgnore.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/FormAddToGitIgnore.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/FormBlame.cs": {
+    "status": "unported",
+    "plannedIn": "P5.3"
+  },
+  "src/app/GitUI/CommandsDialogs/FormBlame.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.3"
+  },
+  "src/app/GitUI/CommandsDialogs/FormBrowse.InitCommitDetails.cs": {
+    "status": "unported",
+    "plannedIn": "P4.1"
+  },
+  "src/app/GitUI/CommandsDialogs/FormBrowse.InitMenusAndToolbars.cs": {
+    "status": "unported",
+    "plannedIn": "P4.1"
+  },
+  "src/app/GitUI/CommandsDialogs/FormBrowse.InitRevisionGrid.cs": {
+    "status": "unported",
+    "plannedIn": "P4.1"
+  },
+  "src/app/GitUI/CommandsDialogs/FormBrowse.UpdateTargets.cs": {
+    "status": "unported",
+    "plannedIn": "P4.1"
+  },
+  "src/app/GitUI/CommandsDialogs/FormCheckoutRevision.cs": {
+    "status": "unported",
+    "plannedIn": "P5.1"
+  },
+  "src/app/GitUI/CommandsDialogs/FormCheckoutRevision.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.1"
+  },
+  "src/app/GitUI/CommandsDialogs/FormCleanupRepository.cs": {
+    "status": "unported",
+    "plannedIn": "P5.5"
+  },
+  "src/app/GitUI/CommandsDialogs/FormCleanupRepository.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.5"
+  },
+  "src/app/GitUI/CommandsDialogs/FormCommandlineHelp.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/FormCommandlineHelp.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/CommandsDialogs/FormCompareToBranch.cs": {
+    "status": "unported",
+    "plannedIn": "P5.2"
+  },
+  "src/app/GitUI/CommandsDialogs/FormCompareToBranch.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.2"
+  },
+  "src/app/GitUI/CommandsDialogs/FormDeleteRemoteBranch.cs": {
+    "status": "unported",
+    "plannedIn": "P5.6"
+  },
+  "src/app/GitUI/CommandsDialogs/FormDeleteRemoteBranch.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.6"
+  },
+  "src/app/GitUI/CommandsDialogs/FormDiff.cs": {
+    "status": "unported",
+    "plannedIn": "P5.2"
+  },
+  "src/app/GitUI/CommandsDialogs/FormDiff.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.2"
+  },
+  "src/app/GitUI/CommandsDialogs/FormFileHistoryController.cs": {
+    "status": "unported",
+    "plannedIn": "P5.9"
+  },
+  "src/app/GitUI/CommandsDialogs/FormFormatPatch.cs": {
+    "status": "unported",
+    "plannedIn": "P5.2"
+  },
+  "src/app/GitUI/CommandsDialogs/FormFormatPatch.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.2"
+  },
+  "src/app/GitUI/CommandsDialogs/FormGitAttributes.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/FormGitAttributes.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/FormGitIgnore.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/FormGitIgnore.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/FormLog.cs": {
+    "status": "unported",
+    "plannedIn": "P5.3"
+  },
+  "src/app/GitUI/CommandsDialogs/FormLog.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.3"
+  },
+  "src/app/GitUI/CommandsDialogs/FormMailMap.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/FormMailMap.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/FormSparseWorkingCopy.cs": {
+    "status": "unported",
+    "plannedIn": "P5.5"
+  },
+  "src/app/GitUI/CommandsDialogs/FormSparseWorkingCopyViewModel.cs": {
+    "status": "unported",
+    "plannedIn": "P5.5"
+  },
+  "src/app/GitUI/CommandsDialogs/FormVerify.SortableLostObjectsList.cs": {
+    "status": "unported",
+    "plannedIn": "P5.9"
+  },
+  "src/app/GitUI/CommandsDialogs/GitIgnoreDialog/GitIgnoreModel.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/GitIgnoreDialog/GitLocalExcludeModel.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/GitIgnoreDialog/IGitIgnoreDialogModel.cs": {
+    "status": "unported",
+    "plannedIn": "P5.4"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/CopyPathsToolStripMenuItem.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/CopyPathsToolStripMenuItem.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/HelpToolStripMenuItem.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/HelpToolStripMenuItem.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/SettingsChangedEventArgs.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/StartToolStripMenuItem.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/StartToolStripMenuItem.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/ToolsToolStripMenuItem.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/ToolsToolStripMenuItem.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/Menus/ToolStripMenuItemEx.cs": {
+    "status": "unported",
+    "plannedIn": "P4.2"
+  },
+  "src/app/GitUI/CommandsDialogs/RememberFileContextMenuController.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/CommandsDialogs/RepoHosting/DiscussionHtmlCreator.cs": {
+    "status": "unported",
+    "plannedIn": "P7.2"
+  },
+  "src/app/GitUI/CommandsDialogs/RevisionDiffContoller.ContextMenuSelectionInfo.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/CommandsDialogs/RevisionDiffController.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SearchControl.cs": {
+    "status": "unported",
+    "plannedIn": "P5.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SearchControl.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SearchWindow.cs": {
+    "status": "unported",
+    "plannedIn": "P5.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SearchWindow.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P6.1"
+  },
+  "src/app/GitUI/CommitInfo/CommitInfoHeader.cs": {
+    "status": "unported",
+    "plannedIn": "P2.3"
+  },
+  "src/app/GitUI/CommitInfo/CommitInfoHeader.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P2.3"
+  },
+  "src/app/GitUI/CommitInfo/RefsFormatter.cs": {
+    "status": "unported",
+    "plannedIn": "P2.3"
+  },
+  "src/app/GitUI/ConsoleEmulation/ConEmu/ConEmuConsoleCommandRunner.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/ConEmu/ConEmuConsoleEmulator.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/ConEmu/ConEmuConsoleShellRunner.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/ConsoleEmulatorsRegistry.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/Mintty/MinttyCommandRunner.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/Mintty/MinttyConsoleEmulator.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/Mintty/MinttyConsoleRuntime.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/Mintty/MinttyControl.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/Mintty/MinttySession.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/Mintty/MinttyShellRunner.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/Mintty/MinttyStartInfo.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/ConsoleEmulation/Mintty/NativeMethods.cs": {
+    "status": "windowsOnly",
+    "justification": "The original registry and ConEmu or Mintty hosts embed Windows terminal HWNDs and depend on Windows process APIs.",
+    "substitute": "PlainTextConsoleEmulatorsRegistry with the redirected platform shell and external terminal launcher."
+  },
+  "src/app/GitUI/Design/ExecutableFileNameEditor.cs": {
+    "status": "windowsOnly",
+    "justification": "These types customize the WinForms PropertyGrid and Windows executable picker used by its design-time editor.",
+    "substitute": "The native Scripts settings editor and StorageProvider file picker."
+  },
+  "src/app/GitUI/Design/PropertyOrderAttribute.cs": {
+    "status": "windowsOnly",
+    "justification": "These types customize the WinForms PropertyGrid and Windows executable picker used by its design-time editor.",
+    "substitute": "The native Scripts settings editor and StorageProvider file picker."
+  },
+  "src/app/GitUI/Design/PropertySorter.cs": {
+    "status": "windowsOnly",
+    "justification": "These types customize the WinForms PropertyGrid and Windows executable picker used by its design-time editor.",
+    "substitute": "The native Scripts settings editor and StorageProvider file picker."
+  },
+  "src/app/GitUI/Editor/CommitMessageHighlightingStrategy.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/Diff/AnsiEscapeUtilities.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/Diff/DifftasticHighlightService.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/Diff/GrepHighlightService.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/Diff/HighlightInfo.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/Diff/ITextHighlightService.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/Diff/LineSegmentGetter.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/Diff/Segment.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/Diff/TextHighlightService.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/FileViewerInternal.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/FileViewerInternal.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/FormFindInCommitFilesGitGrep.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/FormFindInCommitFilesGitGrep.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/GitHighlightingStrategyBase.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/RebaseTodoHighlightingStrategy.cs": {
+    "status": "unported",
+    "plannedIn": "P2.2"
+  },
+  "src/app/GitUI/Editor/RichTextBoxXhtmlSupportExtension.cs": {
+    "status": "windowsOnly",
+    "justification": "The XHTML renderer and clipboard bridge depend on WinForms RichTextBox, GDI text metrics, and Windows messages.",
+    "substitute": "Avalonia text rendering plus the platform-native rich HTML clipboard format."
+  },
+  "src/app/GitUI/FindFilePredicateProvider.cs": {
+    "status": "unported",
+    "plannedIn": "P4.1"
+  },
+  "src/app/GitUI/FormExtensions.cs": {
+    "status": "unported",
+    "plannedIn": "P1.1"
+  },
+  "src/app/GitUI/FormPuttyError.cs": {
+    "status": "windowsOnly",
+    "justification": "PuTTY, pageant, plink, and .ppk loading are Windows-only SSH integrations.",
+    "substitute": "OpenSSH with the platform ssh-agent through GitCommands."
+  },
+  "src/app/GitUI/FormPuttyError.Designer.cs": {
+    "status": "windowsOnly",
+    "justification": "PuTTY, pageant, plink, and .ppk loading are Windows-only SSH integrations.",
+    "substitute": "OpenSSH with the platform ssh-agent through GitCommands."
+  },
+  "src/app/GitUI/GitExtensionsDialog.Designer.cs": {
+    "status": "windowsOnly",
+    "justification": "WinForms can inherit base-form visual controls, while Avalonia windows cannot inherit a visual tree.",
+    "substitute": "The same MainPanel and ControlsPanel chrome declared in each dialog AXAML."
+  },
+  "src/app/GitUI/GitUIExtensions.cs": {
+    "status": "unported",
+    "plannedIn": "P1.1"
+  },
+  "src/app/GitUI/GlobalSuppressions.cs": {
+    "status": "windowsOnly",
+    "justification": "The suppressions describe WinForms-only framework and generated-code analyzer findings and carry no runtime behavior.",
+    "substitute": "No runtime substitute; the Avalonia project keeps only its own targeted analyzer configuration."
+  },
+  "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.cs": {
+    "status": "unported",
+    "plannedIn": "P5.6"
+  },
+  "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P5.6"
+  },
+  "src/app/GitUI/Infrastructure/Plink.cs": {
+    "status": "windowsOnly",
+    "justification": "PuTTY, pageant, plink, and .ppk loading are Windows-only SSH integrations.",
+    "substitute": "OpenSSH with the platform ssh-agent through GitCommands."
+  },
+  "src/app/GitUI/Infrastructure/PuttyHelpers.cs": {
+    "status": "windowsOnly",
+    "justification": "PuTTY, pageant, plink, and .ppk loading are Windows-only SSH integrations.",
+    "substitute": "OpenSSH with the platform ssh-agent through GitCommands."
+  },
+  "src/app/GitUI/Infrastructure/Telemetry/AppEnvironmentTelemetryInitializer.cs": {
+    "status": "windowsOnly",
+    "justification": "The original AppInsights desktop telemetry pipeline is deliberately disabled outside the WinForms application.",
+    "substitute": "No-op telemetry behavior."
+  },
+  "src/app/GitUI/Infrastructure/Telemetry/AppInfoTelemetryInitializer.cs": {
+    "status": "windowsOnly",
+    "justification": "The original AppInsights desktop telemetry pipeline is deliberately disabled outside the WinForms application.",
+    "substitute": "No-op telemetry behavior."
+  },
+  "src/app/GitUI/Infrastructure/Telemetry/DiagnosticsClient.cs": {
+    "status": "windowsOnly",
+    "justification": "The original AppInsights desktop telemetry pipeline is deliberately disabled outside the WinForms application.",
+    "substitute": "No-op telemetry behavior."
+  },
+  "src/app/GitUI/Infrastructure/Telemetry/FormBrowseDiagnosticsReporter.cs": {
+    "status": "windowsOnly",
+    "justification": "The original AppInsights desktop telemetry pipeline is deliberately disabled outside the WinForms application.",
+    "substitute": "No-op telemetry behavior."
+  },
+  "src/app/GitUI/Infrastructure/Telemetry/MonitorsTelemetryInitializer.cs": {
+    "status": "windowsOnly",
+    "justification": "The original AppInsights desktop telemetry pipeline is deliberately disabled outside the WinForms application.",
+    "substitute": "No-op telemetry behavior."
+  },
+  "src/app/GitUI/Infrastructure/Telemetry/ThemingTelemetryInitializer.cs": {
+    "status": "windowsOnly",
+    "justification": "The original AppInsights desktop telemetry pipeline is deliberately disabled outside the WinForms application.",
+    "substitute": "No-op telemetry behavior."
+  },
+  "src/app/GitUI/Interops/BOOL.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/CHARRANGE.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/COLORREF.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/DT.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/DTBGOPTS.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/DTT_CALLBACK_PROC.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/DTT.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/DTTOPTS.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/FORMATRANGE.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/Gdi32/CreateSolidBrush.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/Gdi32/DeleteObject.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/Kernel32/GetLongPathNameW.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/Kernel32/GetShortPathNameW.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/Libraries.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/LOGFONT.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/LVGA.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/LVGF.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/LVGS.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/LVHITTESTFLAGS.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/Messages.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/POINT.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/RECT.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/SB.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/SBH.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/TEXTSHADOWTYPE.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/User32/DestroyIcon.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/User32/GetActiveWindow.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/User32/GetScrollPos.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/User32/GetWindowDC.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/User32/PostMessageW.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/User32/RegisterWindowMessageW.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/User32/ReleaseDC.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/User32/SendMessageW.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/User32/ShowCaret.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/UxTheme/SetWindowTheme.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/Interops/WinInet/InternetGetConnectedState.cs": {
+    "status": "windowsOnly",
+    "justification": "Win32, GDI, UxTheme, and WinInet interop has no portable ABI and only supports WinForms-native rendering or Windows integration.",
+    "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/ContextMenuExtensions.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/GitRefsSortByContextMenuItem.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/GitRefsSortOrderContextMenuItem.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/IMenuItemFactory.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/IMenuItemsGenerator.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/LocalBranchMenuItems.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/MenuItemKey.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/MenuItemsGenerator.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/MenuItemsStrings.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/RemoteBranchMenuItems.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/ContextMenu/TagMenuItems.cs": {
+    "status": "unported",
+    "plannedIn": "P4.4"
+  },
+  "src/app/GitUI/LeftPanel/Interfaces/ICanDelete.cs": {
+    "status": "unported",
+    "plannedIn": "P4.3"
+  },
+  "src/app/GitUI/LeftPanel/Interfaces/ICanRename.cs": {
+    "status": "unported",
+    "plannedIn": "P4.3"
+  },
+  "src/app/GitUI/LeftPanel/Interfaces/IGitRefActions.cs": {
+    "status": "unported",
+    "plannedIn": "P4.3"
+  },
+  "src/app/GitUI/LeftPanel/Interfaces/INode.cs": {
+    "status": "unported",
+    "plannedIn": "P4.3"
+  },
+  "src/app/GitUI/LeftPanel/NodeExtensions.cs": {
+    "status": "unported",
+    "plannedIn": "P4.3"
+  },
+  "src/app/GitUI/LeftPanel/Nodes.cs": {
+    "status": "unported",
+    "plannedIn": "P4.3"
+  },
+  "src/app/GitUI/LeftPanel/RepoObjectsTree.Command.cs": {
+    "status": "unported",
+    "plannedIn": "P4.3"
+  },
+  "src/app/GitUI/LeftPanel/RepoObjectsTree.ContextActions.cs": {
+    "status": "unported",
+    "plannedIn": "P4.3"
+  },
+  "src/app/GitUI/LeftPanel/RepoObjectsTree.SettingsContextMenu.cs": {
+    "status": "unported",
+    "plannedIn": "P4.3"
+  },
+  "src/app/GitUI/MouseWheelRedirector.cs": {
+    "status": "windowsOnly",
+    "justification": "This helper exists for GDI handles, WinForms message filtering, or DataGridView binding and is not a portable UI contract.",
+    "substitute": "Avalonia bitmap ownership, routed pointer input, and collection-specific native sorting."
+  },
+  "src/app/GitUI/NBugReports/BugReportInvoker.cs": {
+    "status": "unported",
+    "plannedIn": "P1.7"
+  },
+  "src/app/GitUI/NBugReports/ExceptionExtensions.cs": {
+    "status": "unported",
+    "plannedIn": "P1.7"
+  },
+  "src/app/GitUI/NBugReports/OperationInfo.cs": {
+    "status": "unported",
+    "plannedIn": "P1.7"
+  },
+  "src/app/GitUI/NBugReports/UIReporter.cs": {
+    "status": "unported",
+    "plannedIn": "P1.7"
+  },
+  "src/app/GitUI/Properties/Images.Designer.cs": {
+    "status": "windowsOnly",
+    "justification": "These generated accessors materialize WinForms System.Drawing resources.",
+    "substitute": "The Avalonia Properties/Images.g.cs and native resource loading boundary."
+  },
+  "src/app/GitUI/Properties/Resources.Designer.cs": {
+    "status": "windowsOnly",
+    "justification": "These generated accessors materialize WinForms System.Drawing resources.",
+    "substitute": "The Avalonia Properties/Images.g.cs and native resource loading boundary."
+  },
+  "src/app/GitUI/ScriptsEngine/SplitButton.cs": {
+    "status": "windowsOnly",
+    "justification": "The original split button is a WinForms visual-style and GDI-painted control.",
+    "substitute": "Avalonia Button and ContextMenu composition with native keyboard and pointer routing."
+  },
+  "src/app/GitUI/Shells/BashShell.cs": {
+    "status": "windowsOnly",
+    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
+    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+  },
+  "src/app/GitUI/Shells/CmdShell.cs": {
+    "status": "windowsOnly",
+    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
+    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+  },
+  "src/app/GitUI/Shells/ConEmuControlExtensions.cs": {
+    "status": "windowsOnly",
+    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
+    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+  },
+  "src/app/GitUI/Shells/IShellDescriptor.cs": {
+    "status": "windowsOnly",
+    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
+    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+  },
+  "src/app/GitUI/Shells/PowerShellShell.cs": {
+    "status": "windowsOnly",
+    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
+    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+  },
+  "src/app/GitUI/Shells/PwshShell.cs": {
+    "status": "windowsOnly",
+    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
+    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+  },
+  "src/app/GitUI/Shells/ShellDescriptor.cs": {
+    "status": "windowsOnly",
+    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
+    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+  },
+  "src/app/GitUI/Shells/ShellProvider.cs": {
+    "status": "windowsOnly",
+    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
+    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+  },
+  "src/app/GitUI/SortableBindingList.cs": {
+    "status": "windowsOnly",
+    "justification": "This helper exists for GDI handles, WinForms message filtering, or DataGridView binding and is not a portable UI contract.",
+    "substitute": "Avalonia bitmap ownership, routed pointer input, and collection-specific native sorting."
+  },
+  "src/app/GitUI/SpellChecker/TextBoxHelper.cs": {
+    "status": "windowsOnly",
+    "justification": "The baseline calculation sends RichEdit Windows messages and measures through a GDI device context.",
+    "substitute": "Avalonia text-layout metrics used by the native spell-check editor."
+  },
+  "src/app/GitUI/TaskbarProgress.cs": {
+    "status": "windowsOnly",
+    "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
+    "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
+  },
+  "src/app/GitUI/Theming/HighlightingExtension.cs": {
+    "status": "unported",
+    "plannedIn": "P1.3"
+  },
+  "src/app/GitUI/Theming/SystemBrushesCache.cs": {
+    "status": "unported",
+    "plannedIn": "P1.3"
+  },
+  "src/app/GitUI/Theming/ThemeBasedHighlighting.cs": {
+    "status": "unported",
+    "plannedIn": "P1.3"
+  },
+  "src/app/GitUI/UserControls/AccessibleDataGridViewTextBoxCell.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/BranchSelector.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/BranchSelector.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/CaseSensitiveComboBox.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/EnterEventArgs.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/FileStatusItemExtensions.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.DelayedExpansion.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.FileIcons.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.GitGrepState.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.GroupBy.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.GroupKey.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.IStatusSorter.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.MissingIcon.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.StatusSorter.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.Toolbar.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/FileStatusList.TreeContextMenu.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/InteractiveGitActionControl.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/InteractiveGitActionControl.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/ListViewGroupHitInfo.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/ListViewGroupMouseEventArgs.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/MenuStripEx.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/MultiSelectTreeView.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/NativeListView.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/NativeTreeView.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/NativeTreeViewDoubleClickDecorator.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/NativeTreeViewExplorerNavigationDecorator.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/PathFormatter.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/PictureBoxEx.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/CellStyle.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/MultilineIndicator.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Columns/RefLabelHitInfo.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/EmptyRepoControl.cs": {
+    "status": "unported",
+    "plannedIn": "P3.2"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/EmptyRepoControl.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P3.2"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/ErrorControl.cs": {
+    "status": "unported",
+    "plannedIn": "P3.2"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/Graph/Rendering/GraphCache.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/IndexWatcher.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/LoadingControl.cs": {
+    "status": "unported",
+    "plannedIn": "P3.2"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/MenuUtil.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/NavigationHistory.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/ParentChildNavigationHistory.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/QuickSearchProvider.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionDataGridView.BackgroundUpdater.cs": {
+    "status": "unported",
+    "plannedIn": "P3.4"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionDataGridView.cs": {
+    "status": "unported",
+    "plannedIn": "P3.4"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionGridMenuCommands.cs": {
+    "status": "unported",
+    "plannedIn": "P3.3"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionGridToolTipProvider.cs": {
+    "status": "unported",
+    "plannedIn": "P3.3"
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/VisibleRowRange.cs": {
+    "status": "unported",
+    "plannedIn": "P3.1"
+  },
+  "src/app/GitUI/UserControls/Settings/SettingsCheckBox.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/Settings/SettingsCheckBox.Designer.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/SortDiffListContextMenuItem.cs": {
+    "status": "unported",
+    "plannedIn": "P2.1"
+  },
+  "src/app/GitUI/UserControls/TextBoxEx.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/TextBoxSilencer.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/ToolStripEx.cs": {
+    "status": "windowsOnly",
+    "justification": "This type customizes WinForms-native controls, accessibility objects, messages, painting, or menu activation.",
+    "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
+  },
+  "src/app/GitUI/UserControls/TreeViewExtensions.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/WaitSpinner.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/WatermarkComboBox.cs": {
+    "status": "unported",
+    "plannedIn": "P2.5"
+  },
+  "src/app/GitUI/UserControls/WebBrowserControl.cs": {
+    "status": "windowsOnly",
+    "justification": "The original uses the Windows registry and Internet Explorer WebBrowser control.",
+    "substitute": "Default-browser links opened through the platform URI service or XDG portal."
+  },
+  "src/app/GitUI/UserManual/SingleHtmlUserManual.cs": {
+    "status": "unported",
+    "plannedIn": "P5.8"
+  },
+  "src/app/GitUI/VisualStudioIntegration.cs": {
+    "status": "windowsOnly",
+    "justification": "EnvDTE automation is available only to Visual Studio on Windows.",
+    "substitute": "No IDE automation integration."
+  },
+  "src/app/GitUI/WebBrowserEmulationMode.cs": {
+    "status": "windowsOnly",
+    "justification": "The original uses the Windows registry and Internet Explorer WebBrowser control.",
+    "substitute": "Default-browser links opened through the platform URI service or XDG portal."
+  },
+  "src/app/GitUI/WindowPositionList.cs": {
+    "status": "unported",
+    "plannedIn": "P1.1"
+  },
+  "src/app/GitUI/WindowPositionManager.cs": {
+    "status": "unported",
+    "plannedIn": "P1.1"
+  },
+  "src/app/GitUI/WindowsJumpListManager.cs": {
+    "status": "windowsOnly",
+    "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
+    "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
+  },
+  "src/app/GitUI/WindowsThumbnailToolbarButton.cs": {
+    "status": "windowsOnly",
+    "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
+    "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
+  },
+  "src/app/GitUI/WindowsThumbnailToolbarButtons.cs": {
+    "status": "windowsOnly",
+    "justification": "Jump lists, taskbar progress, and thumbnail toolbar buttons are Windows shell features with no portable equivalent selected for the port.",
+    "substitute": "No taskbar or Dock integration; the same operations remain available inside the application."
   }
 }
