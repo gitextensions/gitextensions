@@ -214,7 +214,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormRecentReposSettings.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native Avalonia layout preserves the original control names and compact fixed-dialog organization."
+    "notes": "Native Avalonia layout preserves the original control names and measured 684x361 fixed-dialog organization, including 23px numeric fields, 19px checks/radios, compact margins, and a WinForms-shaped vertical spinner."
   },
   "src/app/GitUI/CommandsDialogs/Menus/WorkingDirectoryToolStripSplitButton.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/WorkingDirectoryToolStripSplitButton.cs",
@@ -1573,7 +1573,8 @@
   "src/app/GitUI/ScriptsEngine/FormFilePrompt.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/ScriptsEngine/FormFilePrompt.axaml",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native Avalonia layout preserves the original control names and measured 549x78 client geometry, including the 8px dialog inset, 21px path field, and 115x25 action buttons."
   },
   "src/app/GitUI/Plugin/GitPluginSettingsContainer.cs": {
     "twin": "src/app/GitUI/Plugin/GitPluginSettingsContainer.cs",

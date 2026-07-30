@@ -36,6 +36,77 @@
       <x:Double x:Key="MenuFlyoutThemeMinHeight">0</x:Double>
       <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
 
+      <StreamGeometry x:Key="GitExtensionsSpinnerIncreaseIcon">M0,4 L4,0 L8,4</StreamGeometry>
+      <StreamGeometry x:Key="GitExtensionsSpinnerDecreaseIcon">M0,0 L4,4 L8,0</StreamGeometry>
+      <ControlTheme x:Key="GitExtensionsCompactSpinnerButtonTheme"
+                    TargetType="RepeatButton">
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+              <ContentPresenter Content="{TemplateBinding Content}"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center" />
+            </Border>
+          </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+          <Setter Property="Background" Value="{DynamicResource RepeatButtonBackgroundPointerOver}" />
+        </Style>
+        <Style Selector="^:pressed">
+          <Setter Property="Background" Value="{DynamicResource RepeatButtonBackgroundPressed}" />
+        </Style>
+      </ControlTheme>
+      <ControlTheme x:Key="GitExtensionsCompactButtonSpinnerTheme"
+                    TargetType="ButtonSpinner">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+              <Grid ColumnDefinitions="*,18"
+                    RowDefinitions="*,*">
+                <ContentPresenter x:Name="PART_ContentPresenter"
+                                  Grid.RowSpan="2"
+                                  Content="{TemplateBinding Content}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                <RepeatButton x:Name="PART_IncreaseButton"
+                              Grid.Column="1"
+                              Theme="{StaticResource GitExtensionsCompactSpinnerButtonTheme}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="1,0,0,1">
+                  <PathIcon Width="8"
+                            Height="4"
+                            Foreground="{TemplateBinding Foreground}"
+                            Data="{StaticResource GitExtensionsSpinnerIncreaseIcon}" />
+                </RepeatButton>
+                <RepeatButton x:Name="PART_DecreaseButton"
+                              Grid.Row="1"
+                              Grid.Column="1"
+                              Theme="{StaticResource GitExtensionsCompactSpinnerButtonTheme}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="1,0,0,0">
+                  <PathIcon Width="8"
+                            Height="4"
+                            Foreground="{TemplateBinding Foreground}"
+                            Data="{StaticResource GitExtensionsSpinnerDecreaseIcon}" />
+                </RepeatButton>
+              </Grid>
+            </Border>
+          </ControlTemplate>
+        </Setter>
+      </ControlTheme>
+
       <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
           <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
@@ -194,6 +265,8 @@
 
   <Style Selector="TextBox">
     <Setter Property="MinHeight" Value="23" />
+    <Setter Property="Padding" Value="3,1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
   <Style Selector="TextBox.file-filter-active">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsValidFilterBackgroundBrush}" />
@@ -203,6 +276,8 @@
   </Style>
   <Style Selector="ComboBox">
     <Setter Property="MinHeight" Value="23" />
+    <Setter Property="Padding" Value="4,1,0,1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
   <Style Selector="ComboBox.gitextensions-toolbar-input">
     <!-- Fluent's default 5/7px padding and 32px arrow column are touch metrics. Keep the
@@ -225,6 +300,30 @@
   <Style Selector="Button.gitextensions-dialog-action">
     <Setter Property="MinWidth" Value="75" />
     <Setter Property="MinHeight" Value="25" />
+    <Setter Property="Padding" Value="4,1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="CheckBox">
+    <Setter Property="Height" Value="19" />
+    <Setter Property="MinHeight" Value="19" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="RadioButton">
+    <Setter Property="Height" Value="19" />
+    <Setter Property="MinHeight" Value="19" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="NumericUpDown">
+    <Setter Property="Height" Value="23" />
+    <Setter Property="MinHeight" Value="23" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Padding" Value="3,1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="NumericUpDown /template/ ButtonSpinner#PART_Spinner">
+    <Setter Property="Theme" Value="{StaticResource GitExtensionsCompactButtonSpinnerTheme}" />
   </Style>
   <!-- Button.Content must stay a string so AvaloniaTranslationUtils can continue mapping
        the original control .Text key. These templates add the original raster icon without
