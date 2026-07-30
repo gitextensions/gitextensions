@@ -2,6 +2,9 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Compat;
+using GitUI.Theming;
 using MediaColor = Avalonia.Media.Color;
 
 namespace GitUI.Editor.Diff;
@@ -62,8 +65,8 @@ internal sealed class DiffBackgroundRenderer : IBackgroundRenderer
             foreach (DiffInlineMarker marker in service.InlineMarkers)
             {
                 IBrush dimBrush = marker.IsRemoved
-                    ? GetBrush("GitExtensionsDiffRemovedDimBrush", MediaColor.Parse("#FFF1F1"))
-                    : GetBrush("GitExtensionsDiffAddedDimBrush", MediaColor.Parse("#F1FFF1"));
+                    ? GetBrush("GitExtensionsDiffRemovedDimBrush", GetDimmedAppColor(AppColor.AnsiTerminalRedBackNormal, count: 2))
+                    : GetBrush("GitExtensionsDiffAddedDimBrush", GetDimmedAppColor(AppColor.AnsiTerminalGreenBackNormal, count: 2));
                 DrawSegment(textView, drawingContext, marker.Offset, marker.Length, dimBrush);
             }
         }
@@ -73,7 +76,7 @@ internal sealed class DiffBackgroundRenderer : IBackgroundRenderer
     {
         if (info.LineType == DiffLineType.Header)
         {
-            return GetBrush("GitExtensionsDiffSectionBrush", MediaColor.Parse("#E6E6E6"));
+            return GetBrush("GitExtensionsDiffSectionBrush", GetAppColor(AppColor.DiffSection));
         }
 
         if (!useBackgroundColoring)
@@ -84,11 +87,11 @@ internal sealed class DiffBackgroundRenderer : IBackgroundRenderer
         return info.LineType switch
         {
             DiffLineType.Minus => info.IsMovedLine
-                ? GetBrush("GitExtensionsDiffMovedRemovedBrush", MediaColor.Parse("#F6CEFF"))
-                : GetBrush("GitExtensionsDiffRemovedBrush", MediaColor.Parse("#FFC8C8")),
+                ? GetBrush("GitExtensionsDiffMovedRemovedBrush", GetAppColor(AppColor.AnsiTerminalMagentaBackNormal))
+                : GetBrush("GitExtensionsDiffRemovedBrush", GetAppColor(AppColor.AnsiTerminalRedBackNormal)),
             DiffLineType.Plus => info.IsMovedLine
-                ? GetBrush("GitExtensionsDiffMovedAddedBrush", MediaColor.Parse("#C8D0F4"))
-                : GetBrush("GitExtensionsDiffAddedBrush", MediaColor.Parse("#C8FFC8")),
+                ? GetBrush("GitExtensionsDiffMovedAddedBrush", GetAppColor(AppColor.AnsiTerminalBlueBackNormal))
+                : GetBrush("GitExtensionsDiffAddedBrush", GetAppColor(AppColor.AnsiTerminalGreenBackNormal)),
             _ => null,
         };
     }
@@ -96,10 +99,10 @@ internal sealed class DiffBackgroundRenderer : IBackgroundRenderer
     private IBrush GetMarkerBrush(DiffMarkerKind kind)
         => kind switch
         {
-            DiffMarkerKind.Removed => GetBrush("GitExtensionsDiffRemovedBrush", MediaColor.Parse("#FFC8C8")),
-            DiffMarkerKind.Added => GetBrush("GitExtensionsDiffAddedBrush", MediaColor.Parse("#C8FFC8")),
-            DiffMarkerKind.MovedRemoved => GetBrush("GitExtensionsDiffMovedRemovedBrush", MediaColor.Parse("#F6CEFF")),
-            DiffMarkerKind.MovedAdded => GetBrush("GitExtensionsDiffMovedAddedBrush", MediaColor.Parse("#C8D0F4")),
+            DiffMarkerKind.Removed => GetBrush("GitExtensionsDiffRemovedBrush", GetAppColor(AppColor.AnsiTerminalRedBackNormal)),
+            DiffMarkerKind.Added => GetBrush("GitExtensionsDiffAddedBrush", GetAppColor(AppColor.AnsiTerminalGreenBackNormal)),
+            DiffMarkerKind.MovedRemoved => GetBrush("GitExtensionsDiffMovedRemovedBrush", GetAppColor(AppColor.AnsiTerminalMagentaBackNormal)),
+            DiffMarkerKind.MovedAdded => GetBrush("GitExtensionsDiffMovedAddedBrush", GetAppColor(AppColor.AnsiTerminalBlueBackNormal)),
             _ => Brushes.Transparent,
         };
 
@@ -118,4 +121,18 @@ internal sealed class DiffBackgroundRenderer : IBackgroundRenderer
     }
 
     private IBrush GetBrush(string key, MediaColor fallback) => DiffBrushes.Get(_owner, key, fallback);
+
+    private static MediaColor GetAppColor(AppColor name)
+        => AvaloniaThemeResources.ToMediaColor(AvaloniaThemeResources.ResolveAppColor(ThemeModule.Settings, name));
+
+    private static MediaColor GetDimmedAppColor(AppColor name, int count)
+    {
+        System.Drawing.Color color = AvaloniaThemeResources.ResolveAppColor(ThemeModule.Settings, name);
+        for (int index = 0; index < count; index++)
+        {
+            color = color.DimColor();
+        }
+
+        return AvaloniaThemeResources.ToMediaColor(color);
+    }
 }

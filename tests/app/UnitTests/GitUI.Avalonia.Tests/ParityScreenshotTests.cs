@@ -1320,6 +1320,11 @@ public sealed partial class ParityScreenshotTests
             return (791, 760);
         }
 
+        if (viewType == typeof(ColorsSettingsPage))
+        {
+            return (1527, 599);
+        }
+
         if (typeof(Window).IsAssignableFrom(viewType))
         {
             return (900, 620);

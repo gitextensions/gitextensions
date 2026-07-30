@@ -2,6 +2,7 @@
 using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 namespace WinFormsParityCapture;
 
@@ -14,6 +15,8 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormBrowse" => new FormBrowse(commands, new BrowseArguments()),
             "GitUI.CommandsDialogs.FormCommit" => new FormCommit(commands),
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
+            "GitUI.CommandsDialogs.SettingsDialog.Pages.ColorsSettingsPage" =>
+                new ColorsSettingsPage(GitUICommands.EmptyServiceProvider),
             _ => CreateParameterless(component.TypeName)
         };
         foreach ((string fieldName, string text) in component.TextValues)
