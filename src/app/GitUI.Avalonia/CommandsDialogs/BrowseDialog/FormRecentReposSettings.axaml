@@ -2,10 +2,10 @@
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:gitui="using:GitUI"
                          x:Class="GitUI.CommandsDialogs.BrowseDialog.FormRecentReposSettings"
-                         Width="700"
-                         Height="430"
-                         MinWidth="700"
-                         MinHeight="430"
+                         Width="684"
+                         Height="361"
+                         MinWidth="684"
+                         MinHeight="361"
                          CanResize="False"
                          WindowStartupLocation="CenterOwner"
                          Title="Recent repositories settings">
@@ -16,27 +16,31 @@
             Margin="8"
             ColumnDefinitions="*,Auto"
             RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
-            RowSpacing="4">
+            RowSpacing="0">
         <TextBlock x:Name="maxRecentRepositories"
+                   Classes="gitextensions-dialog-label"
                    VerticalAlignment="Center"
                    Text="Maximum number of top repositories" />
         <NumericUpDown x:Name="_NO_TRANSLATE_maxRecentRepositories"
                        Grid.Column="1"
-                       Width="100"
-                       Height="24"
+                       Width="61"
+                       Height="23"
                        MinHeight="0"
+                       Margin="3"
                        Maximum="1000000" />
 
         <TextBlock x:Name="lblRecentRepositoriesHistorySize"
                    Grid.Row="1"
+                   Classes="gitextensions-dialog-label"
                    VerticalAlignment="Center"
                    Text="Maximum number of recent repositories" />
         <NumericUpDown x:Name="_NO_TRANSLATE_RecentRepositoriesHistorySize"
                        Grid.Row="1"
                        Grid.Column="1"
-                       Width="100"
-                       Height="24"
+                       Width="61"
+                       Height="23"
                        MinHeight="0"
+                       Margin="3"
                        Minimum="10"
                        Maximum="999"
                        Value="10" />
@@ -44,58 +48,58 @@
         <CheckBox x:Name="hideTopRepositoriesFromRecentList"
                   Grid.Row="2"
                   Grid.ColumnSpan="2"
+                  Margin="3"
                   Content="Hide top repositories from recent repositories list" />
         <CheckBox x:Name="sortTopRepos"
                   Grid.Row="3"
                   Grid.ColumnSpan="2"
+                  Margin="3"
                   Content="Sort top repositories alphabetically" />
         <CheckBox x:Name="sortRecentRepos"
                   Grid.Row="4"
                   Grid.ColumnSpan="2"
+                  Margin="3"
                   Content="Sort recent repositories alphabetically" />
 
         <HeaderedContentControl x:Name="shorteningGB"
                                 Grid.Row="5"
                                 Grid.ColumnSpan="2"
                                 Classes="gitextensions-group-box"
+                                Margin="3"
                                 Header="Shortening strategy">
           <StackPanel>
             <RadioButton x:Name="dontShortenRB"
                          GroupName="ShorteningStrategy"
-                         Height="24"
-                         MinHeight="0"
-                         Margin="0"
+                         Margin="3"
                          Content="Do not shorten  " />
             <RadioButton x:Name="middleDotRB"
                          GroupName="ShorteningStrategy"
-                         Height="24"
-                         MinHeight="0"
-                         Margin="0"
+                         Margin="3"
                          Content="Replace middle part with dots " />
             <RadioButton x:Name="mostSigDirRB"
                          GroupName="ShorteningStrategy"
-                         Height="24"
-                         MinHeight="0"
-                         Margin="0"
+                         Margin="3"
                          Content="The most significant directory " />
           </StackPanel>
         </HeaderedContentControl>
 
         <TextBlock x:Name="comboMinWidthLabel"
                    Grid.Row="6"
+                   Classes="gitextensions-dialog-label"
                    VerticalAlignment="Center"
                    Text="Combobox minimum width (0 = Autosize)" />
         <NumericUpDown x:Name="comboMinWidthEdit"
                        Grid.Row="6"
                        Grid.Column="1"
-                       Width="100"
-                       Height="24"
+                       Width="61"
+                       Height="23"
                        MinHeight="0"
+                       Margin="3"
                        Maximum="800" />
         <TextBlock x:Name="comboMinWidthNote"
                    Grid.Row="7"
                    Grid.ColumnSpan="2"
-                   Margin="12,0,0,0"
+                   Margin="15,3,3,3"
                    TextWrapping="Wrap"
                    Text="NB: The width of the columns helps to visualise how the repository name will be shown in the combobox." />
       </Grid>
@@ -108,7 +112,6 @@
                 Classes="gitextensions-section"
                 Padding="4,2">
           <TextBlock x:Name="TopLabel"
-                     FontWeight="Bold"
                      Text="Top repositories" />
         </Border>
         <ListBox x:Name="TopLB"
@@ -119,7 +122,6 @@
                 Classes="gitextensions-section"
                 Padding="4,2">
           <TextBlock x:Name="label1"
-                     FontWeight="Bold"
                      Text="Recent repositories" />
         </Border>
         <ListBox x:Name="RecentLB"
