@@ -1299,14 +1299,14 @@
   "src/app/GitUI/FormBusyScope.cs": {
     "twin": "src/app/GitUI.Avalonia/FormBusyScope.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Introduced upstream by 97cfa7b44. Avalonia windows have no IsDisposed; re-enabling unconditionally is safe."
+    "basedOn": "97cfa7b44261e046e576d28c5c68ccc04e84f460",
+    "notes": "Disables the requested Avalonia window and nests through WaitCursorScope. Avalonia windows have no IsDisposed; re-enabling unconditionally is safe."
   },
   "src/app/GitUI/WaitCursorScope.cs": {
     "twin": "src/app/GitUI.Avalonia/WaitCursorScope.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "WinForms swaps one global Cursor.Current; the twin swaps the cursor of every open window and restores on dispose, nesting like the original."
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "WinForms swaps one global Cursor.Current; the twin swaps every open Avalonia window and always includes the explicitly requested owner, then restores each prior cursor on dispose so nested scopes match the original."
   },
   "src/app/GitUI/CommandsDialogs/FormCreateBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateBranch.axaml.cs",
@@ -2284,19 +2284,19 @@
   "src/app/GitUI/GitExtensionsForm.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsForm.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "No window-position persistence yet."
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Restores and saves persisted size, state, and visible screen position through the same WindowPositions.xml contract. Avalonia keeps logical dimensions stable through DPI changes. Wayland restores size/state but delegates top-level placement to the compositor, centering as the explicit fallback."
   },
   "src/app/ResourceManager/GitExtensionsFormBase.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsFormBase.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys; window hotkeys use persisted shim Keys through KeysMapper and ExecuteCommand(int), expose the original protected Hotkeys collection and shortcut-tooltip helper, and retain shared Escape-to-close for dialogs."
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys; window hotkeys use persisted shim Keys through KeysMapper and ExecuteCommand(int). The base supplies title/icon, default and cancel button routing, synchronous modal ownership, activation notification, Escape handling, and one-shot runtime load."
   },
   "src/app/ResourceManager/GitExtensionsControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsControl.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
     "notes": "Retains the WinForms-shaped persisted hotkey table, shortcut display and text-edit-key classification; containing Avalonia forms route key events to controls explicitly."
   },
   "src/app/ResourceManager/TranslatedControl.cs": {
@@ -2314,14 +2314,14 @@
   "src/app/GitUI/GitModuleForm.cs": {
     "twin": "src/app/GitUI.Avalonia/GitModuleForm.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "UICommands/Module plus the shared IGitUICommandsSource contract, script runner/default provider, central script-command dispatch, and lazy user-script hotkey routing through the original Scripts settings category."
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "UICommands/Module plus the shared IGitUICommandsSource contract, lazy required hotkey/script services, central script-command dispatch, lazy user-script hotkey routing through the original Scripts settings category, and activation-time Git settings invalidation. Services resolve on first use so design/test construction can provide only the surface it exercises."
   },
   "src/app/GitUI/GitModuleControl.cs": {
     "twin": "src/app/GitUI.Avalonia/GitModuleControl.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Command-source discovery, Module/UICommands access and control-hotkey service discovery. Script commands use the original runner and walk the logical ancestors for the nearest same-named options provider; the control supplies the WinForms-shaped owner handle expected by shared services."
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Implements the original IGitModuleControl contract with command-source discovery, Module/UICommands access, overridable source-set notification, and control-hotkey service discovery. Script commands use the original runner and walk logical ancestors for the nearest same-named options provider; the control supplies the WinForms-shaped owner handle expected by shared services."
   },
   "src/app/GitUI/IGitUICommandsSource.cs": {
     "twin": "src/app/GitUI/IGitUICommandsSource.cs",
@@ -2350,7 +2350,7 @@
   "src/app/GitUI/GitExtensionsDialog.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsDialog.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "basedOn": "efcb96d6b25e03fed701a82ccc7b19fddfb25d97",
     "notes": "MainPanel/ControlsPanel chrome is declared per-dialog in axaml, not inherited; shared visual-parity classes supply the standard 12px content margin, 32px action row, and 75x25 action-button minimums."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/ForkAndCloneForm.cs": {
@@ -3133,8 +3133,10 @@
     "plannedIn": "P4.1"
   },
   "src/app/GitUI/FormExtensions.cs": {
-    "status": "unported",
-    "plannedIn": "P1.1"
+    "twin": "src/app/GitUI.Avalonia/FormExtensions.cs",
+    "status": "functional",
+    "basedOn": "c78547aec9b69bdbf645f723026ac012cabea95a",
+    "notes": "ForceActivate briefly toggles Avalonia Window.Topmost before Activate; Avalonia has no separate portable BringToFront API."
   },
   "src/app/GitUI/FormPuttyError.cs": {
     "status": "windowsOnly",
@@ -3152,8 +3154,9 @@
     "substitute": "The same MainPanel and ControlsPanel chrome declared in each dialog AXAML."
   },
   "src/app/GitUI/GitUIExtensions.cs": {
-    "status": "unported",
-    "plannedIn": "P1.1"
+    "status": "windowsOnly",
+    "justification": "This aggregation is coupled to WinForms TabPage, LoadingControl overlays, TreeNode collections, ContainerControl focus, and the WinForms FileViewer surface; a single same-shaped cross-platform extension class would recreate those toolkit types.",
+    "substitute": "FileViewer owns ViewChangesAsync; Avalonia item collections, logical trees, FocusManager, and each view's explicit loading state replace the remaining helpers at their call sites. No Avalonia source calls the WinForms extension API."
   },
   "src/app/GitUI/GlobalSuppressions.cs": {
     "status": "windowsOnly",
@@ -3822,12 +3825,16 @@
     "substitute": "Default-browser links opened through the platform URI service or XDG portal."
   },
   "src/app/GitUI/WindowPositionList.cs": {
-    "status": "unported",
-    "plannedIn": "P1.1"
+    "twin": "src/app/GitUI.Avalonia/WindowPositionList.cs",
+    "status": "functional",
+    "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
+    "notes": "Preserves the WindowPositions.xml file, type/property names, 96-DPI default, corrupt-file fallback, and add-or-update behavior; the state enum maps to Avalonia WindowState with the same Normal/Maximized serialized names."
   },
   "src/app/GitUI/WindowPositionManager.cs": {
-    "status": "unported",
-    "plannedIn": "P1.1"
+    "twin": "src/app/GitUI.Avalonia/WindowPositionManager.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Preserves the 10-percent screen-presence heuristic, DPI-tagged bounds, normal/maximized state, centered-dialog location preservation, and corrupt-settings fallback. Wayland compositors own placement, so that backend preserves the last meaningful location while saving size/state."
   },
   "src/app/GitUI/WindowsJumpListManager.cs": {
     "status": "windowsOnly",

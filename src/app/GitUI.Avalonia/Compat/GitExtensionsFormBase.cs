@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -12,20 +13,29 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace ResourceManager;
 
-// Twin of ResourceManager/GitExtensionsFormBase.cs: provides xlf translation for windows
-// plus the WinForms form idioms the ported code-behind relies on (Text, DialogResult,
-// synchronous ShowDialog, AcceptButton, OnRuntimeLoad, and hotkey dispatch). Theming arrives later.
+// NOTE do not make this class abstract as it breaks the Avalonia designer
+
+/// <summary>
+/// Base class for all Git Extensions forms.
+/// </summary>
+/// <remarks>
+/// Deriving from this class requires a call to <see cref="InitializeComplete"/> at
+/// the end of the constructor. Omitting this call with result in a runtime exception.
+/// </remarks>
 public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Window
 {
     private WinFormsShims.DialogResult _dialogResult = WinFormsShims.DialogResult.None;
     private bool _isShownModally;
     private bool _runtimeLoadRaised;
     private Button? _acceptButton;
+    private Button? _cancelButton;
     private IReadOnlyList<HotkeyCommand> _hotkeys = [];
 
+    /// <summary>Creates a new <see cref="GitExtensionsFormBase"/> indicating position restore.</summary>
     public GitExtensionsFormBase()
     {
         Icon = Images.ApplicationIcon;
+        Activated += GitExtensionsFormBase_Activated;
     }
 
     /// <summary>The window title, under its WinForms name so ported code compiles unchanged.</summary>
@@ -78,6 +88,13 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
                 value.IsDefault = true;
             }
         }
+    }
+
+    /// <summary>The button activated by Escape, under the WinForms property name.</summary>
+    public Button? CancelButton
+    {
+        get => _cancelButton;
+        set => _cancelButton = value;
     }
 
     /// <summary>Setting focuses the control; <see langword="null"/> clears nothing (WinForms parity).</summary>
@@ -142,6 +159,23 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
         }
     }
 
+    private void GitExtensionsFormBase_Activated(object? sender, EventArgs e)
+    {
+        if (!Design.IsDesignMode)
+        {
+            OnApplicationActivated();
+            if (WindowState == WindowState.Minimized
+                && Owner is null
+                && AppSettings.WorkaroundActivateFromMinimize)
+            {
+                // Application occasionally requires explicit "restore" in Taskbar.
+                // See https://github.com/gitextensions/gitextensions/pull/10119.
+                System.Diagnostics.Trace.WriteLine("WindowState is unexpectedly Minimized in OnApplicationActivated(), restoring.");
+                WindowState = WindowState.Normal;
+            }
+        }
+    }
+
     /// <summary>
     ///  Called once when the window is first shown, like the WinForms
     ///  <c>GitExtensionsFormBase.OnRuntimeLoad</c> (which forms override to start work).
@@ -150,31 +184,66 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
     {
     }
 
-    /// <summary>Gets or sets whether this window dispatches its loaded hotkeys.</summary>
+    /// <summary>
+    /// Notifies whenever the application becomes active.
+    /// </summary>
+    protected virtual void OnApplicationActivated()
+    {
+    }
+
+    protected bool IsDesignMode => Design.IsDesignMode;
+
+    /// <summary>
+    ///  Gets or sets a value that specifies if the hotkeys are used.
+    /// </summary>
     protected bool HotkeysEnabled { get; set; }
 
-    /// <summary>Gets the currently loaded hotkeys.</summary>
+    /// <summary>
+    ///  Gets the currently loaded hotkeys.
+    /// </summary>
     protected IReadOnlyList<HotkeyCommand>? Hotkeys => _hotkeys;
 
-    /// <summary>Loads the persisted hotkeys for one upstream settings category.</summary>
+    /// <summary>
+    ///  Loads hotkeys for the specified configuration setting.
+    /// </summary>
+    /// <param name="hotkeySettingsName">The setting name.</param>
     protected void LoadHotkeys(string hotkeySettingsName)
+    {
+        _hotkeys = GetHotkeys(hotkeySettingsName);
+    }
+
+    /// <summary>
+    ///  Loads hotkeys for the specified configuration setting.
+    /// </summary>
+    /// <param name="hotkeySettingsName">The setting name.</param>
+    protected IReadOnlyList<HotkeyCommand> GetHotkeys(string hotkeySettingsName)
     {
         if (!HotkeysEnabled || !TryGetUICommands(out IGitUICommands? commands))
         {
-            _hotkeys = [];
-            return;
+            return [];
         }
 
-        _hotkeys = commands.GetService(typeof(IHotkeySettingsLoader)) is IHotkeySettingsLoader loader
+        return commands.GetService(typeof(IHotkeySettingsLoader)) is IHotkeySettingsLoader loader
             ? loader.LoadHotkeys(hotkeySettingsName)
             : [];
     }
+
+    protected WinFormsShims.Keys GetShortcutKeys<T>(T commandCode)
+        where T : struct, Enum
+        => _hotkeys.GetShortcutKey(commandCode);
+
+    protected string GetShortcutKeyDisplayString<T>(T commandCode)
+        where T : struct, Enum
+        => _hotkeys.GetShortcutDisplay(commandCode);
 
     protected string GetShortcutKeyTooltipString<T>(T commandCode)
         where T : struct, Enum
         => _hotkeys.GetShortcutToolTip(commandCode);
 
-    /// <summary>Dispatches a WinForms-compatible key value through the loaded command table.</summary>
+    /// <summary>
+    /// Checks if the form wants to handle the key and executes that hotkey
+    /// (without propagating an unhandled key to the base class function as in <cref>ProcessCmdKey</cref>).
+    /// </summary>
     public virtual bool ProcessHotkey(WinFormsShims.Keys keyData)
     {
         if (!HotkeysEnabled)
@@ -186,14 +255,23 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
         return hotkey is not null && ExecuteCommand(hotkey.CommandCode);
     }
 
-    /// <summary>Attempts to expose this window's Git UI command service.</summary>
+    /// <summary>
+    ///  Attempts to find an instance of <see cref="IGitUICommands"/>.
+    /// </summary>
+    /// <param name="commands">
+    ///  The instance of <see cref="IGitUICommands"/> directly assigned form
+    ///  (if the form implements <see cref="IGitModuleForm"/>); <see langword="null"/>, otherwise.
+    /// </param>
+    /// <returns>
+    ///  <see langword="true"/>, if an instance of <see cref="IGitUICommands"/> is found; <see langword="false"/>, otherwise.
+    /// </returns>
     public virtual bool TryGetUICommands([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out IGitUICommands? commands)
     {
         commands = null;
         return false;
     }
 
-    /// <summary>Handles a loaded hotkey command.</summary>
+    /// <summary>Override this method to handle form-specific Hotkey commands.</summary>
     protected virtual bool ExecuteCommand(int command)
     {
         return false;
@@ -211,9 +289,24 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
             return;
         }
 
+        if (keyData == WinFormsShims.Keys.Enter && AcceptButton is { IsEnabled: true } acceptButton)
+        {
+            acceptButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, acceptButton));
+            e.Handled = true;
+            return;
+        }
+
         if (CloseOnEscape && keyData == WinFormsShims.Keys.Escape)
         {
-            Close();
+            if (CancelButton is { IsEnabled: true } cancelButton)
+            {
+                cancelButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, cancelButton));
+            }
+            else
+            {
+                Close();
+            }
+
             e.Handled = true;
             return;
         }
@@ -221,8 +314,13 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
         base.OnKeyDown(e);
     }
 
-    /// <summary>Performs post-initialisation tasks such as translation.</summary>
-    /// <remarks>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</remarks>
+    /// <summary>Performs post-initialisation tasks such as translation and DPI scaling.</summary>
+    /// <remarks>
+    /// <para>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</para>
+    /// <para>Requiring this extra life-cycle event allows preparing the UI after any call to <c>InitializeComponent</c>,
+    /// but before it is show. Both the WinForms <c>Load</c> and <c>Shown</c> events occur too late for
+    /// operations that effect layout.</para>
+    /// </remarks>
     protected void InitializeComplete()
     {
         Translator.Translate(this, AppSettings.CurrentTranslation);
