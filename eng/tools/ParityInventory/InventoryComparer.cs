@@ -3,7 +3,7 @@
 // parity-scaffolding: Produces concrete source-parity findings from two extracted inventories.
 internal static class InventoryComparer
 {
-    public static IReadOnlyList<FunctionalFinding> Compare(SourceInventory original, SourceInventory twin)
+    public static InventoryComparison Compare(SourceInventory original, SourceInventory twin)
     {
         List<FunctionalFinding> findings = [];
         CompareParts(original, twin, findings);
@@ -19,6 +19,8 @@ internal static class InventoryComparer
             "translations", "translation.string", findings);
         CompareSet(original.TranslationKeys, twin.TranslationKeys, item => item.Key,
             "translations", "translation.key", findings);
+        InventoryComparison commentComparison = CommentInventoryComparer.Compare(original, twin);
+        findings.AddRange(commentComparison.Findings);
 
         foreach (TranslationKeyEntry entry in twin.TranslationKeys.Where(item => !item.InEnglishCatalog))
         {
@@ -31,13 +33,17 @@ internal static class InventoryComparer
                 entry.Origin));
         }
 
-        return findings
-            .OrderBy(finding => finding.Category, StringComparer.Ordinal)
-            .ThenBy(finding => finding.Code, StringComparer.Ordinal)
-            .ThenBy(finding => finding.Path, StringComparer.Ordinal)
-            .ThenBy(finding => finding.OriginalValue, StringComparer.Ordinal)
-            .ThenBy(finding => finding.TwinValue, StringComparer.Ordinal)
-            .ToArray();
+        return new InventoryComparison
+        {
+            Findings = findings
+                .OrderBy(finding => finding.Category, StringComparer.Ordinal)
+                .ThenBy(finding => finding.Code, StringComparer.Ordinal)
+                .ThenBy(finding => finding.Path, StringComparer.Ordinal)
+                .ThenBy(finding => finding.OriginalValue, StringComparer.Ordinal)
+                .ThenBy(finding => finding.TwinValue, StringComparer.Ordinal)
+                .ToArray(),
+            AdaptedComments = commentComparison.AdaptedComments
+        };
     }
 
     private static void CompareParts(
