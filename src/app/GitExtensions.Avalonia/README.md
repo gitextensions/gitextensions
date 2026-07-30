@@ -91,6 +91,17 @@ Remove-Item Env:BuildAvalonia
 Remove-Item Env:BuildAvaloniaDesigner
 ```
 
+On Linux or macOS, launch the same preview workspace from a shell:
+
+```console
+BuildAvalonia=true BuildAvaloniaDesigner=true \
+  code --new-window eng/avalonia/GitExtensions.Avalonia.code-workspace
+```
+
+Open an `.axaml` file and choose **Show Preview** from the Avalonia extension. The preview
+workspace uses `eng/avalonia/GitExtensions.Avalonia.sln`, because the Avalonia language server
+does not currently consume the repository's `.slnx` solution.
+
 `BuildAvaloniaDesigner` changes only the design-time dependency graph. Normal application and
 solution builds continue to place bundled plugins below `Plugins` for MEF discovery without
 referencing them from the entry assembly.
@@ -114,6 +125,30 @@ property is used on Windows, it must remain before that separator:
 
 ```
 dotnet run --project src/app/GitExtensions.Avalonia -p:BuildAvalonia=true -- browse .
+```
+
+## Debugging
+
+Build and launch the application with debug symbols from the repository root:
+
+```console
+dotnet run --project src/app/GitExtensions.Avalonia \
+  --configuration Debug -- browse .
+```
+
+On Windows the explicit-property form is:
+
+```powershell
+dotnet run --project src/app/GitExtensions.Avalonia `
+  -p:BuildAvalonia=true --configuration Debug -- browse .
+```
+
+For breakpoint debugging, open `GitExtensions.Avalonia.slnx` in Visual Studio or VS Code,
+select `GitExtensions.Avalonia` as the startup project, and use `browse .` as the application
+arguments. The equivalent executable launched by the debugger is:
+
+```console
+dotnet artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/GitExtensions.Avalonia.dll browse .
 ```
 
 On Linux, a session with `WAYLAND_DISPLAY` set uses Avalonia's native Wayland backend.

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 
@@ -20,6 +20,9 @@ public readonly struct WaitCursorScope : IDisposable
     /// Starts a new scope, recording each open window's cursor and setting a wait cursor.
     /// </summary>
     public static WaitCursorScope Enter(Cursor? cursor = null)
+        => Enter(cursor, requiredWindow: null);
+
+    internal static WaitCursorScope Enter(Cursor? cursor, Window? requiredWindow)
     {
         List<(Window Window, Cursor? Cursor)> cursorsAtStartOfScope = [];
         Cursor waitCursor = cursor ?? new Cursor(StandardCursorType.Wait);
@@ -31,6 +34,13 @@ public readonly struct WaitCursorScope : IDisposable
                 cursorsAtStartOfScope.Add((window, window.Cursor));
                 window.Cursor = waitCursor;
             }
+        }
+
+        if (requiredWindow is not null
+            && cursorsAtStartOfScope.All(item => item.Window != requiredWindow))
+        {
+            cursorsAtStartOfScope.Add((requiredWindow, requiredWindow.Cursor));
+            requiredWindow.Cursor = waitCursor;
         }
 
         return new WaitCursorScope(cursorsAtStartOfScope);

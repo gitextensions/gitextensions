@@ -15,6 +15,8 @@ namespace GitUI;
 /// <summary>Base window that provides access to the module and <see cref="IGitUICommands"/>.</summary>
 public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceManager.IGitModuleForm, IScriptOptionsForm
 {
+    private bool _isReactivation;
+    private IHotkeySettingsLoader? _hotkeySettingsLoader;
     private IScriptsRunner? _scriptsRunner;
     private IReadOnlyList<HotkeyCommand> _scriptHotkeys = [];
     private bool _scriptHotkeysLoaded;
@@ -28,6 +30,7 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
     }
 
     protected GitModuleForm(IGitUICommands? commands, bool enablePositionRestore)
+        : base(enablePositionRestore)
     {
         if (commands is not null)
         {
@@ -44,11 +47,15 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
             ArgumentNullException.ThrowIfNull(value);
             IGitUICommands? oldCommands = _uiCommands;
             _uiCommands = value;
+            _hotkeySettingsLoader = null;
             _scriptsRunner = null;
             _scriptHotkeysLoaded = false;
-            UICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
+            OnUICommandsChanged(new GitUICommandsChangedEventArgs(oldCommands));
         }
     }
+
+    public IHotkeySettingsLoader HotkeySettingsReader
+        => _hotkeySettingsLoader ??= UICommands.GetRequiredService<IHotkeySettingsLoader>();
 
     /// <summary>Gets the module of the currently set <see cref="UICommands"/>.</summary>
     public IGitModule Module => UICommands.Module;
@@ -95,6 +102,25 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
         return script is not null
             ? ScriptsRunner.RunScript(script, this, UICommands, GetScriptOptionsProvider())
             : base.ExecuteCommand(command);
+    }
+
+    protected override void OnApplicationActivated()
+    {
+        base.OnApplicationActivated();
+
+        if (_isReactivation && _uiCommands is IGitUICommands uiCommands)
+        {
+            uiCommands.Module.InvalidateGitSettings();
+        }
+        else
+        {
+            _isReactivation = true;
+        }
+    }
+
+    protected virtual void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
+    {
+        UICommandsChanged?.Invoke(this, e);
     }
 
     public override bool TryGetUICommands([NotNullWhen(true)] out IGitUICommands? commands)
