@@ -2,6 +2,9 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Compat;
+using GitUI.Theming;
 using MediaColor = Avalonia.Media.Color;
 
 namespace GitUI.Editor.Diff;
@@ -35,10 +38,10 @@ internal sealed class DiffTextColorizer : DocumentColorizingTransformer
             {
                 DiffLineType.Minus => GetBrush(
                     info.IsMovedLine ? "GitExtensionsDiffMovedRemovedForegroundBrush" : "GitExtensionsDiffRemovedForegroundBrush",
-                    Colors.IndianRed),
+                    GetAppColor(info.IsMovedLine ? AppColor.AnsiTerminalMagentaForeNormal : AppColor.AnsiTerminalRedForeNormal)),
                 DiffLineType.Plus => GetBrush(
                     info.IsMovedLine ? "GitExtensionsDiffMovedAddedForegroundBrush" : "GitExtensionsDiffAddedForegroundBrush",
-                    Colors.SeaGreen),
+                    GetAppColor(info.IsMovedLine ? AppColor.AnsiTerminalBlueForeNormal : AppColor.AnsiTerminalGreenForeNormal)),
                 _ => null,
             };
             if (lineBrush is not null)
@@ -53,11 +56,11 @@ internal sealed class DiffTextColorizer : DocumentColorizingTransformer
             int end = Math.Min(marker.EndOffset, line.EndOffset);
             IBrush markerBrush = marker.Kind switch
             {
-                DiffMarkerKind.Removed => GetBrush("GitExtensionsDiffRemovedForegroundBrush", Colors.IndianRed),
-                DiffMarkerKind.Added => GetBrush("GitExtensionsDiffAddedForegroundBrush", Colors.SeaGreen),
-                DiffMarkerKind.MovedRemoved => GetBrush("GitExtensionsDiffMovedRemovedForegroundBrush", Colors.Magenta),
-                DiffMarkerKind.MovedAdded => GetBrush("GitExtensionsDiffMovedAddedForegroundBrush", Colors.Blue),
-                _ => Brushes.Black,
+                DiffMarkerKind.Removed => GetBrush("GitExtensionsDiffRemovedForegroundBrush", GetAppColor(AppColor.AnsiTerminalRedForeNormal)),
+                DiffMarkerKind.Added => GetBrush("GitExtensionsDiffAddedForegroundBrush", GetAppColor(AppColor.AnsiTerminalGreenForeNormal)),
+                DiffMarkerKind.MovedRemoved => GetBrush("GitExtensionsDiffMovedRemovedForegroundBrush", GetAppColor(AppColor.AnsiTerminalMagentaForeNormal)),
+                DiffMarkerKind.MovedAdded => GetBrush("GitExtensionsDiffMovedAddedForegroundBrush", GetAppColor(AppColor.AnsiTerminalBlueForeNormal)),
+                _ => new SolidColorBrush(GetSystemColor(System.Drawing.KnownColor.WindowText)),
             };
             ChangeLinePart(start, end, element => element.TextRunProperties.SetForegroundBrush(markerBrush));
         }
@@ -67,11 +70,21 @@ internal sealed class DiffTextColorizer : DocumentColorizingTransformer
             int start = Math.Max(marker.Offset, line.Offset);
             int end = Math.Min(marker.Offset + marker.Length, line.EndOffset);
             IBrush dimBrush = marker.IsRemoved
-                ? GetBrush("GitExtensionsDiffRemovedDimForegroundBrush", Colors.Gray)
-                : GetBrush("GitExtensionsDiffAddedDimForegroundBrush", Colors.Gray);
+                ? GetBrush("GitExtensionsDiffRemovedDimForegroundBrush", GetDimmedAppColor(AppColor.AnsiTerminalRedForeNormal))
+                : GetBrush("GitExtensionsDiffAddedDimForegroundBrush", GetDimmedAppColor(AppColor.AnsiTerminalGreenForeNormal));
             ChangeLinePart(start, end, element => element.TextRunProperties.SetForegroundBrush(dimBrush));
         }
     }
 
     private IBrush GetBrush(string key, MediaColor fallback) => DiffBrushes.Get(_owner, key, fallback);
+
+    private static MediaColor GetAppColor(AppColor name)
+        => AvaloniaThemeResources.ToMediaColor(AvaloniaThemeResources.ResolveAppColor(ThemeModule.Settings, name));
+
+    private static MediaColor GetDimmedAppColor(AppColor name)
+        => AvaloniaThemeResources.ToMediaColor(
+            AvaloniaThemeResources.ResolveAppColor(ThemeModule.Settings, name).DimColor());
+
+    private static MediaColor GetSystemColor(System.Drawing.KnownColor name)
+        => AvaloniaThemeResources.ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, name));
 }

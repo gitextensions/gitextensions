@@ -54,6 +54,7 @@ internal sealed class ColorsSettingsPageController
         if (_page.SelectedThemeId != ThemeId.WindowsAppColorModeId
             && _page.SelectedThemeId != ThemeId.DefaultLight)
         {
+            // set only if UseSystemVisualStyle is not overridden
             AppSettings.UseSystemVisualStyle = _page.UseSystemVisualStyle;
         }
     }
@@ -69,6 +70,7 @@ internal sealed class ColorsSettingsPageController
 
         if (_page.SelectedThemeId == ThemeId.WindowsAppColorModeId)
         {
+            // Display the value forced in ThemeModule.LoadThemeSettings(),
             _page.UseSystemVisualStyle = ThemeId.ColorModeThemeId == ThemeId.DefaultLight
                 || _page.SelectedThemeId == ThemeId.DefaultLight;
         }
@@ -81,12 +83,13 @@ internal sealed class ColorsSettingsPageController
         {
             try
             {
+                // override default (at least dark in .NET10 requires overrides).
                 Theme theme = _themeRepository.GetTheme(_page.SelectedThemeId, _page.SelectedThemeVariations);
                 _page.UseSystemVisualStyle = theme.SystemColorMode == GitExtensions.Shims.WinForms.SystemColorMode.Classic;
             }
             catch (Exception)
             {
-                // Validation and the translated error message are handled in EndUpdateThemeSettings().
+                // ignore, popup in EndUpdateThemeSettings()
             }
         }
 
@@ -128,6 +131,7 @@ internal sealed class ColorsSettingsPageController
 
         if (themeId == ThemeId.DefaultLight)
         {
+            // invariant, already loaded.
             return;
         }
 
@@ -141,13 +145,20 @@ internal sealed class ColorsSettingsPageController
         }
     }
 
-    public void ShowAppThemesDirectory() => OsShellUtil.Open(_themePathProvider.AppThemesDirectory);
+    public void ShowAppThemesDirectory()
+    {
+        // Avalonia uses the portable shell boundary instead of the Explorer-only selector.
+        OsShellUtil.Open(_themePathProvider.AppThemesDirectory);
+    }
 
     public void ShowUserThemesDirectory()
     {
         if (_themePathProvider.UserThemesDirectory is not null)
         {
+            // Make sure the directory exists before we try to open it
             Directory.CreateDirectory(_themePathProvider.UserThemesDirectory);
+
+            // Avalonia uses the portable shell boundary instead of the Explorer-only selector.
             OsShellUtil.Open(_themePathProvider.UserThemesDirectory);
         }
     }
