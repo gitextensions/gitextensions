@@ -87,7 +87,7 @@ public class ToolStripPushButton : ToolStripButton
             _button = button;
         }
 
-        public string GetButtonText() => _button.Text!;
+        public string? GetButtonText() => _button.Text;
         public int GetButtonWidth() => _button.Width;
     }
 }
