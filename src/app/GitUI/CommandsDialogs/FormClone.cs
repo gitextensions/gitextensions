@@ -7,6 +7,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
@@ -397,8 +398,9 @@ public partial class FormClone : GitExtensionsDialog
         }
         else
         {
+            Validates.NotNull(branchList.Result);
             string text = _NO_TRANSLATE_Branches.Text;
-            List<string> names = [.. _defaultBranchItems, .. branchList.Result!.Select(o => o.LocalName!)];
+            List<string> names = [.. _defaultBranchItems, .. branchList.Result.Select(branch => branch.LocalName)];
             _NO_TRANSLATE_Branches.DataSource = names;
             if (names.Any(a => a == text))
             {
