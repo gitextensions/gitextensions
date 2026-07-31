@@ -180,7 +180,7 @@ public partial class FormRebase : GitExtensionsDialog
     {
         cboBranches.ItemTemplate = CreateRefTemplate();
         cboTo.ItemTemplate = CreateRefTemplate();
-        PanelLeftImage.Image1 = Properties.Images.HelpCommandRebase;
+        PanelLeftImage.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
         PanelLeftImage.IsOnHoverShowImage2 = false;
         btnSolveMergeconflicts.Content = $"There are unresolved merge conflicts{Environment.NewLine}";
     }

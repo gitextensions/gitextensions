@@ -119,8 +119,8 @@ public partial class FormMergeBranch : GitModuleForm
             "ours",
             "subtree",
         };
-        helpImageDisplayUserControl1.Image1 = Properties.Images.HelpCommandMerge;
-        helpImageDisplayUserControl1.Image2 = Properties.Images.HelpCommandMergeFastForward;
+        helpImageDisplayUserControl1.Image1 = Properties.Images.HelpCommandMerge.AdaptLightness();
+        helpImageDisplayUserControl1.Image2 = Properties.Images.HelpCommandMergeFastForward.AdaptLightness();
     }
 
     private void OkClick(object? sender, EventArgs e)

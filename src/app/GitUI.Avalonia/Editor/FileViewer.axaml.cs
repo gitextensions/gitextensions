@@ -76,6 +76,15 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     public FileViewer()
     {
         InitializeComponent();
+        ignoreWhitespaceAtEol.Icon = Properties.Images.WhitespaceIgnoreEol.AdaptLightness();
+        ignoreWhiteSpaces.Icon = Properties.Images.WhitespaceIgnore.AdaptLightness();
+        ignoreAllWhitespaces.Icon = Properties.Images.WhitespaceIgnoreAll.AdaptLightness();
+        Bitmap showWhitespaceImage = Properties.Images.ShowWhitespace.AdaptLightness();
+        ((Image)showNonPrintChars.Content!).Source = showWhitespaceImage;
+        ((Image)showNonprintableCharactersToolStripMenuItem.Icon!).Source = showWhitespaceImage;
+        Bitmap syntaxHighlightingImage = ((Bitmap)((Image)showSyntaxHighlighting.Content!).Source!).AdaptLightness();
+        ((Image)showSyntaxHighlighting.Content!).Source = syntaxHighlightingImage;
+        ((Image)showSyntaxHighlightingToolStripMenuItem.Icon!).Source = syntaxHighlightingImage;
 
         _diffViewerLineNumberControl = new DiffViewerLineNumberControl(TextEditor);
         _diffViewerLineNumberControl.Clear();
