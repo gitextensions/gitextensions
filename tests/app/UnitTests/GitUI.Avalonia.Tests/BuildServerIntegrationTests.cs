@@ -21,10 +21,12 @@ using GitExtensions.Plugins.GitHubActionsIntegration;
 using GitExtensions.Plugins.GitHubActionsIntegration.Settings;
 using GitExtensions.Plugins.GitlabIntegration;
 using GitExtensions.Plugins.GitlabIntegration.Settings;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
+using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -855,7 +857,7 @@ public sealed class BuildServerIntegrationTests
             provider.Column.Resizable.Should().BeTrue();
             provider.Column.Width.Should().Be(new GridLength(150));
             cell.Text.Should().Be("❌Failed");
-            cell.Foreground.Should().BeSameAs(Brushes.DarkRed);
+            GetColor(cell.Foreground).Should().Be(AdaptExpected(Colors.DarkRed));
             ToolTip.GetTip(cell).Should().Be("Build failed");
 
             AppSettings.ShowBuildStatusTextColumn = false;
@@ -868,6 +870,32 @@ public sealed class BuildServerIntegrationTests
             AppSettings.ShowBuildStatusIconColumn = originalShowIcon;
             AppSettings.ShowBuildStatusTextColumn = originalShowText;
             AppSettings.ShowRevisionGridTooltips.Value = originalShowTooltips;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Build_status_column_should_use_the_original_selected_and_unselected_status_palette()
+    {
+        BuildStatusColumnProvider provider = new(_ => { });
+        BuildStatusColumnProvider.BuildStatusTextBlock cell =
+            provider.CreateCell().Should().BeOfType<BuildStatusColumnProvider.BuildStatusTextBlock>().Subject;
+        (BuildStatus Status, Color Normal, Color Selected)[] cases =
+        [
+            (BuildStatus.Success, Colors.DarkGreen, Colors.LightGreen),
+            (BuildStatus.Failure, Colors.DarkRed, Colors.Red),
+            (BuildStatus.InProgress, Colors.Blue, Color.FromRgb(130, 180, 240)),
+            (BuildStatus.Unstable, Colors.OrangeRed, Colors.OrangeRed),
+            (BuildStatus.Stopped, Colors.Gray, Colors.LightGray),
+        ];
+
+        foreach ((BuildStatus status, Color normal, Color selected) in cases)
+        {
+            cell.SelectedForTest = false;
+            cell.Status = status;
+            GetColor(cell.Foreground).Should().Be(AdaptExpected(normal));
+
+            cell.SelectedForTest = true;
+            GetColor(cell.Foreground).Should().Be(AdaptExpected(selected));
         }
     }
 
@@ -996,6 +1024,22 @@ public sealed class BuildServerIntegrationTests
             await stream.WriteAsync(responseHeader, cancellationToken);
             await stream.WriteAsync(body, cancellationToken);
         }
+    }
+
+    private static Color GetColor(IBrush? brush)
+        => brush.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+
+    private static Color AdaptExpected(Color color)
+    {
+        System.Drawing.Color original = System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
+        System.Drawing.Color background = ThemeModule.Settings.Theme.GetColor(AppColor.PanelBackground);
+        if (background.IsEmpty)
+        {
+            background = ThemeModule.Settings.InvariantTheme.GetColor(AppColor.PanelBackground);
+        }
+
+        System.Drawing.Color adapted = original.AdaptForeColor(background);
+        return Color.FromArgb(adapted.A, adapted.R, adapted.G, adapted.B);
     }
 
     private sealed class TestSettingsSource : SettingsSource
