@@ -129,14 +129,14 @@ public sealed class FormPushTests
                 ?? throw new InvalidOperationException("The create-pull-request checkbox was not created.");
             Button push = form.FindControl<Button>("Push")
                 ?? throw new InvalidOperationException("Push button was not created.");
-            TextBlock labelFrom = form.FindControl<TextBlock>("labelFrom")
+            Label labelFrom = form.FindControl<Label>("labelFrom")
                 ?? throw new InvalidOperationException("Branch label was not created.");
-            TextBlock labelTo = form.FindControl<TextBlock>("labelTo")
+            Label labelTo = form.FindControl<Label>("labelTo")
                 ?? throw new InvalidOperationException("Remote-branch label was not created.");
 
             remotes.SelectedItem.Should().Be("origin");
-            labelFrom.Text.Should().Be("Branch to push");
-            labelTo.Text.Should().Be("to");
+            labelFrom.Content.Should().Be("_Branch to push");
+            labelTo.Content.Should().Be("_to");
             (branch.SelectedItem as string ?? branch.Text).Should().Be(module.GetSelectedBranch());
             remoteBranch.Text.Should().Be(branch.Text);
             push.IsEnabled.Should().BeTrue();

@@ -66,7 +66,7 @@
                     Spacing="10">
           <TextBlock x:Name="lblGlobalConfigPath"
                      TextWrapping="Wrap"
-                     Text="By default, the global config file is located in the location stored in the environment variable %HOME%.&#10;(This can be overridden by setting %GIT_CONFIG_GLOBAL%.)" />
+                     Text="By default, the global config file is located in the location stored in the environment variable %HOME%.&#10;(This can be overridden by setting %GIT__CONFIG__GLOBAL%.)" />
           <TextBlock x:Name="_NO_TRANSLATE_lblPortableGlobalConfigPath"
                      TextWrapping="Wrap"
                      IsVisible="False" />

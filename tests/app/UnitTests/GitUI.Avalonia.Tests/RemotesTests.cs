@@ -67,7 +67,7 @@ public sealed class RemotesTests
         form.GetTestAccessor().RemoteName.Should().NotBeNull();
         form.GetTestAccessor().Save.Should().NotBeNull();
         form.FindControl<ComboBox>("Url").Should().NotBeNull();
-        form.FindControl<TextBlock>("labelPushUrl")!.IsVisible.Should().BeFalse("the push url row shows only with a separate push url");
+        form.FindControl<Label>("labelPushUrl")!.IsVisible.Should().BeFalse("the push url row shows only with a separate push url");
         form.FindControl<ListBox>("RemoteBranches").Should().NotBeNull();
     }
 

@@ -772,7 +772,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same Paths and Environment groups and same-named controls in a compact scrollable Avalonia layout. Git-for-Windows-only controls are hidden on native Unix systems."
+    "notes": "Same Paths and Environment groups and same-named controls in a compact scrollable Avalonia layout. Git-for-Windows-only controls are hidden on native Unix systems. The literal %GIT_CONFIG_GLOBAL% placeholder escapes Avalonia access-key underscores so the displayed environment-variable name remains unchanged."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/GitConfigBaseSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/GitConfigBaseSettingsPage.cs",
@@ -1084,7 +1084,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same root replacement, hierarchy, initial/programmatic navigation, selected-page event, AND-keyword search, cycling foundation, and page enumeration over native Avalonia TreeViewItems. Unknown references fall back to the first root while their pages are incrementally ported."
+    "notes": "Same root replacement, hierarchy, initial/programmatic navigation, selected-page event, AND-keyword search, cycling foundation, and page enumeration over native Avalonia TreeViewItems. Unknown references fall back to the first root while their pages are incrementally ported. Its standalone construction path explicitly projects WinForms input and automation metadata."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml",
@@ -1342,7 +1342,7 @@
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetCurrentBranch.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Resets the current branch through the shared soft, mixed, keep, merge, and hard git-reset commands. Retains hard-reset confirmation, submodule update behavior, branch/revision summary, mode-specific Git documentation, and the original theme-aware reset palette. Revision-grid, repository-tree, GitUICommands, and reflog contributions are live."
+    "notes": "Resets the current branch through the shared soft, mixed, keep, merge, and hard git-reset commands. Retains hard-reset confirmation, submodule update behavior, branch/revision summary, mode-specific Git documentation, and the original theme-aware reset palette. Revision-grid, repository-tree, GitUICommands, and reflog contributions are live. Multiline reset choices use native AccessText so the original radio-button mnemonics remain active."
   },
   "src/app/GitUI/HelperDialogs/FormEdit.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormEdit.axaml.cs",
@@ -1390,7 +1390,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormClone.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "URL/destination/subdirectory with live location info, clipboard URL suggestion, current-remote prefill, remote branch listing on dropdown (default remote-HEAD / no-checkout items) with the original busy cursor and direct native Git/OpenSSH error reporting, shallow-clone and submodule options, repository type, open-after-clone question, and history updates; clone execution uses FormRemoteProcess with OpenSSH. StartCloneDialog is live. The PuTTY pieces (Load SSH key and registry/key-agent recovery) remain intentionally omitted, and the ShowInTaskbar test is replaced by the dialog invocation itself; history combos hold path strings rather than Repository objects."
+    "notes": "URL/destination/subdirectory with live location info, clipboard URL suggestion, current-remote prefill, remote branch listing on dropdown (default remote-HEAD / no-checkout items) with the original busy cursor and direct native Git/OpenSSH error reporting, shallow-clone and submodule options, repository type, open-after-clone question, and history updates; clone execution uses FormRemoteProcess with OpenSSH. StartCloneDialog is live. The PuTTY pieces (Load SSH key and registry/key-agent recovery) remain intentionally omitted, and the ShowInTaskbar test is replaced by the dialog invocation itself; history combos hold path strings rather than Repository objects. Native Labels target the same-named inputs and preserve the original access keys."
   },
   "src/app/GitUI/CommandsDialogs/FormRemotes.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRemotes.axaml.cs",
@@ -1643,7 +1643,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Compact 25px Avalonia toolbar layout with the original field names, ordering, split menus, advanced-filter menu entry, reset states and icons."
+    "notes": "Compact 25px Avalonia toolbar layout with the original field names, ordering, split menus, advanced-filter menu entry, reset states and icons. Native Labels route the branch and filter mnemonics to their original input targets."
   },
   "src/app/GitUI/UserControls/RevisionGrid/FormRevisionFilter.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormRevisionFilter.axaml.cs",
@@ -2292,7 +2292,7 @@
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsFormBase.cs",
     "status": "functional",
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys; window hotkeys use persisted shim Keys through KeysMapper and ExecuteCommand(int). The base supplies title/icon, default and cancel button routing, synchronous modal ownership, activation notification, Escape handling, and one-shot runtime load."
+    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys; window hotkeys use persisted shim Keys through KeysMapper and ExecuteCommand(int), mapping Control to Command on macOS. The base supplies title/icon, default and cancel button routing, synchronous modal ownership, activation notification, Escape handling, and one-shot runtime load. Initialization projects generated Designer TabIndex/TabStop/AccessibleName metadata, automation identifiers and names, and Apps/Shift+F10 context-menu routing."
   },
   "src/app/ResourceManager/GitExtensionsControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsControl.cs",
@@ -2304,7 +2304,7 @@
     "twin": "src/app/GitUI.Avalonia/Compat/TranslatedControl.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys."
+    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys. Initialization also projects the generated WinForms input and accessibility metadata into each control subtree."
   },
   "src/app/GitExtUtils/GitUI/DpiUtil.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/DpiUtil.cs",

@@ -175,17 +175,17 @@ public sealed class FormPullTests
                 ?? throw new InvalidOperationException("Remote branch field was not created.");
             Button pull = form.FindControl<Button>("Pull")
                 ?? throw new InvalidOperationException("Pull button was not created.");
-            TextBlock localBranchLabel = form.FindControl<TextBlock>("lblLocalBranch")
+            Label localBranchLabel = form.FindControl<Label>("lblLocalBranch")
                 ?? throw new InvalidOperationException("Local branch label was not created.");
-            TextBlock remoteBranchLabel = form.FindControl<TextBlock>("lblRemoteBranch")
+            Label remoteBranchLabel = form.FindControl<Label>("lblRemoteBranch")
                 ?? throw new InvalidOperationException("Remote branch label was not created.");
 
             remotes.SelectedItem.Should().Be("origin");
             localBranch.Text.Should().BeEmpty("fetch mode may target a separately named local branch");
             localBranch.IsEnabled.Should().BeTrue();
             remoteBranch.Text.Should().Be(module.GetSelectedBranch());
-            localBranchLabel.Text.Should().Be("Local branch");
-            remoteBranchLabel.Text.Should().Be("Remote branch");
+            localBranchLabel.Content.Should().Be("_Local branch");
+            remoteBranchLabel.Content.Should().Be("Rem_ote branch");
             pull.Content.Should().Be("_Fetch");
             pull.IsEnabled.Should().BeTrue();
             form.Title.Should().StartWith("Fetch (");

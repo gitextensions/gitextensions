@@ -57,7 +57,8 @@
                      VerticalContentAlignment="Center"
                      Background="{DynamicResource GitExtensionsResetMixedBackgroundBrush}"
                      Foreground="{DynamicResource GitExtensionsResetMixedForegroundBrush}">
-          <TextBlock Text="_Keep: update working directory to the commit &#10;(abort if there are local changes), reset index" />
+          <AccessText Text="_Keep: update working directory to the commit &#10;(abort if there are local changes), reset index"
+                      TextWrapping="Wrap" />
         </RadioButton>
         <RadioButton x:Name="Merge"
                      Grid.Row="3"
@@ -68,7 +69,8 @@
                      VerticalContentAlignment="Center"
                      Background="{DynamicResource GitExtensionsResetMixedBackgroundBrush}"
                      Foreground="{DynamicResource GitExtensionsResetMixedForegroundBrush}">
-          <TextBlock Text="_Merge: update working directory to the commit and keep local changes &#10;(abort if there are conflicts), reset index" />
+          <AccessText Text="_Merge: update working directory to the commit and keep local changes &#10;(abort if there are conflicts), reset index"
+                      TextWrapping="Wrap" />
         </RadioButton>
         <RadioButton x:Name="Hard"
                      Grid.Row="4"
@@ -79,7 +81,8 @@
                      VerticalContentAlignment="Center"
                      Background="{DynamicResource GitExtensionsResetHardBackgroundBrush}"
                      Foreground="{DynamicResource GitExtensionsResetHardForegroundBrush}">
-          <TextBlock Text="_Hard: reset working directory and index&#10;(discard ALL local changes, even uncommitted changes)" />
+          <AccessText Text="_Hard: reset working directory and index&#10;(discard ALL local changes, even uncommitted changes)"
+                      TextWrapping="Wrap" />
         </RadioButton>
       </Grid>
     </HeaderedContentControl>
