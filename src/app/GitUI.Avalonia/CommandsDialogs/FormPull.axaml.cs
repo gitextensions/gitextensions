@@ -835,8 +835,8 @@ public sealed partial class FormPull : GitExtensionsDialog
 
         localBranch.IsEnabled = false;
         localBranch.Text = _branch;
-        PanelLeftImage.Image1 = Properties.Images.HelpPullMerge;
-        PanelLeftImage.Image2 = Properties.Images.HelpPullMergeFastForward;
+        PanelLeftImage.Image1 = Properties.Images.HelpPullMerge.AdaptLightness();
+        PanelLeftImage.Image2 = Properties.Images.HelpPullMergeFastForward.AdaptLightness();
         PanelLeftImage.IsOnHoverShowImage2 = true;
         AllTags.IsEnabled = false;
         Prune.IsEnabled = false;
@@ -859,7 +859,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
         localBranch.IsEnabled = false;
         localBranch.Text = _branch;
-        PanelLeftImage.Image1 = Properties.Images.HelpPullRebase;
+        PanelLeftImage.Image1 = Properties.Images.HelpPullRebase.AdaptLightness();
         PanelLeftImage.IsOnHoverShowImage2 = false;
         AllTags.IsEnabled = false;
         Prune.IsEnabled = false;
@@ -882,7 +882,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
         localBranch.IsEnabled = true;
         localBranch.Text = string.Empty;
-        PanelLeftImage.Image1 = Properties.Images.HelpPullFetch;
+        PanelLeftImage.Image1 = Properties.Images.HelpPullFetch.AdaptLightness();
         PanelLeftImage.IsOnHoverShowImage2 = false;
         AllTags.IsEnabled = true;
         Prune.IsEnabled = true;

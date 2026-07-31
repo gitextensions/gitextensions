@@ -154,7 +154,7 @@
     "twin": "src/app/GitUI.Avalonia/Properties/Images.g.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "All file-backed images are deterministically generated as same-named cached Avalonia Bitmap properties and packaged from their existing tracked files; the setup logo also supplies the shared application WindowIcon. The generator/completeness test detects Images.resx drift, missing package resources, decode failures, and exceptional property-to-filename mappings."
+    "notes": "All file-backed images are deterministically generated as same-named cached Avalonia Bitmap properties and packaged byte-for-byte from their existing tracked files; the setup logo also supplies the shared application WindowIcon. The generator/completeness test detects Images.resx drift, missing package resources, decode failures, and exceptional property-to-filename mappings. Shared button and menu presentations render icons at 16 DIP without resizing the source bitmap. Call sites where WinForms uses AdaptLightness apply the identical LightnessCorrection computation to immutable Avalonia bitmaps and cache variants by resolved WindowText/Window ARGB pair; assets the original leaves unchanged are not recolored. FormStatus preserves the original waiting/success/error window-icon exception."
   },
   "src/app/GitUI/SplitterManager.cs": {
     "twin": "src/app/GitUI.Avalonia/SplitterManager.cs",

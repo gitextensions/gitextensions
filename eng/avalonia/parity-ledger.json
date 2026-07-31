@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "43d7a7286343294ca59f0e5cc980de6347e501bf",
+  "analyzedCommit": "877b15500b7f3581aaffaef7a5ac274a36c7b6b5",
   "axisOrder": [
     "structural",
     "functional",
@@ -17054,62 +17054,95 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "status": "verified",
+          "verifiedOn": "2026-07-31",
+          "commit": "877b15500b7f3581aaffaef7a5ac274a36c7b6b5",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P1.4/image-scope.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "note": "Images.g.cs is generated from Images.resx, and the exact generated API plus all 266 source mappings are asserted."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "status": "verified",
+          "verifiedOn": "2026-07-31",
+          "commit": "877b15500b7f3581aaffaef7a5ac274a36c7b6b5",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P1.4/image-scope.json",
+            "eng/avalonia/parity-evidence/P1.4/previewability.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 0,
+          "note": "Every generated image resolves, caches, packages the exact source bytes, and is consumed through the shared image boundary."
+        },
+        "visual": {
+          "status": "verified",
+          "verifiedOn": "2026-07-31",
+          "commit": "877b15500b7f3581aaffaef7a5ac274a36c7b6b5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.4/image-scope.json",
+            "eng/avalonia/parity-evidence/P1.4/visual-full/report.md"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 0,
+          "note": "Exact source pixels, 16-DIP slots, 100/200-percent rendering, file-status palettes, window icons, and representative captures are verified for the image-resource scope. Aggregate whole-form image findings are screenshot-size and inherited layout differences owned by later component/template tranches."
+        },
+        "themingAndColor": {
+          "status": "verified",
+          "verifiedOn": "2026-07-31",
+          "commit": "877b15500b7f3581aaffaef7a5ac274a36c7b6b5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.4/image-scope.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 0,
+          "note": "The 33 Images.resx foreground resources used by original AdaptLightness/AdaptImageLightness call sites reproduce its exact resolved light, dark, and custom-theme algorithm while preserving alpha and caching immutable variants."
+        },
+        "behavioralState": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-07-31",
+          "commit": "877b15500b7f3581aaffaef7a5ac274a36c7b6b5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.4/image-scope.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
-        },
-        "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
-        },
-        "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "The Images.resx mapping contains immutable image resources rather than an interactive control; consuming controls own their interaction-state matrices."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-07-31",
+          "commit": "877b15500b7f3581aaffaef7a5ac274a36c7b6b5",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.4/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P1.4/wayland-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P1.4/x11-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P1.4/flatpak-runtime/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, the Wayland backend under nested Weston, nested X11, and a Wayland-only confined Flatpak smoke passed; macOS remains unavailable."
         }
       }
     },
