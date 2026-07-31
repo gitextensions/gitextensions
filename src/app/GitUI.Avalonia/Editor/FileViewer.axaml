@@ -51,19 +51,18 @@
                     Header="S_how nonprinting characters"
                     ToggleType="CheckBox">
             <MenuItem.Icon>
-              <TextBlock Width="16"
-                         Text="¶"
-                         TextAlignment="Center" />
+              <Image Width="16"
+                     Height="16"
+                     Source="{x:Static properties:Images.ShowWhitespace}" />
             </MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="showSyntaxHighlightingToolStripMenuItem"
                     Header="Show synta_x highlighting"
                     ToggleType="CheckBox">
             <MenuItem.Icon>
-              <TextBlock Width="16"
-                         FontSize="8"
-                         Text="&lt;/&gt;"
-                         TextAlignment="Center" />
+              <Image Width="16"
+                     Height="16"
+                     Source="/Resources/Icons/SyntaxHighlighting.png" />
             </MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="ignoreWhitespaceAtEolToolStripMenuItem"
@@ -134,16 +133,15 @@
                            Icon="{x:Static properties:Images.ShowEntireFile}" />
         <Button x:Name="showNonPrintChars"
                 Classes="gitextensions-toolbar-button">
-          <TextBlock Width="16"
-                     Text="¶"
-                     TextAlignment="Center" />
+          <Image Width="16"
+                 Height="16"
+                 Source="{x:Static properties:Images.ShowWhitespace}" />
         </Button>
         <Button x:Name="showSyntaxHighlighting"
                 Classes="gitextensions-toolbar-button">
-          <TextBlock Width="16"
-                     FontSize="8"
-                     Text="&lt;/&gt;"
-                     TextAlignment="Center" />
+          <Image Width="16"
+                 Height="16"
+                 Source="/Resources/Icons/SyntaxHighlighting.png" />
         </Button>
         <compat:IconButton x:Name="ignoreWhitespaceAtEol"
                            Classes="gitextensions-toolbar-button image-only"

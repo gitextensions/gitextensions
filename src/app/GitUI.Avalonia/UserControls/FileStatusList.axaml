@@ -8,14 +8,14 @@
                 Header="_Stage selected"
                 IsVisible="False">
         <MenuItem.Icon>
-          <Image Source="{x:Static properties:Images.Stage}" />
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.Stage}" />
         </MenuItem.Icon>
       </MenuItem>
       <MenuItem x:Name="tsmiUnstageFile"
                 Header="_Unstage selected"
                 IsVisible="False">
         <MenuItem.Icon>
-          <Image Source="{x:Static properties:Images.Unstage}" />
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.Unstage}" />
         </MenuItem.Icon>
       </MenuItem>
       <MenuItem x:Name="tsmiCherryPickChanges"
@@ -27,7 +27,7 @@
       <MenuItem x:Name="tsmiCopyPaths"
                 Header="Copy _path(s)">
         <MenuItem.Icon>
-          <Image Source="{x:Static properties:Images.CopyToClipboard}" />
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.CopyToClipboard}" />
         </MenuItem.Icon>
       </MenuItem>
       <MenuItem x:Name="tsmiShowInFolder"
@@ -56,7 +56,7 @@
       <MenuItem x:Name="tsmiRunScript"
                 Header="Run script">
         <MenuItem.Icon>
-          <Image Source="{x:Static properties:Images.Console}" />
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.Console}" />
         </MenuItem.Icon>
       </MenuItem>
     </ContextMenu>
