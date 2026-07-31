@@ -17,7 +17,7 @@
         Margin="8">
     <Grid.ContextMenu>
       <ContextMenu x:Name="FileHistoryContextMenu">
-        <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" />
+        <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" Header="Copy to clipboard" />
         <Separator />
         <MenuItem x:Name="openWithDifftoolToolStripMenuItem"
                   Header="Open with difftool"

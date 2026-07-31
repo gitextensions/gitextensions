@@ -89,7 +89,7 @@
         <StackPanel x:Name="tableLayoutPanel5"
                     Margin="8,4,8,8">
           <CheckBox x:Name="chkCommitAndPushForcedWhenAmend"
-                    Content="Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked" />
+                    Content="Push forced with lease when Commit &amp; Push action is performed with Amend option checked" />
         </StackPanel>
       </GroupBox>
 

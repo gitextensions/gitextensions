@@ -118,14 +118,15 @@
 
         <GroupBox x:Name="_NO_TRANSLATE_gbxScriptBehaviour" Header="Script behaviour">
           <StackPanel Margin="8,4,8,8" Spacing="4">
-            <CheckBox x:Name="chkAskConfirmation" Content="Ask confirmation" />
-            <CheckBox x:Name="chkRunInBackground" Content="Run in background" />
-            <CheckBox x:Name="chkIsPowerShell" Content="Is PowerShell script" />
+            <CheckBox x:Name="chkAskConfirmation" compat:TranslationCompat.TranslateText="False" Content="Ask confirmation" />
+            <CheckBox x:Name="chkRunInBackground" compat:TranslationCompat.TranslateText="False" Content="Run in background" />
+            <CheckBox x:Name="chkIsPowerShell" compat:TranslationCompat.TranslateText="False" Content="Is PowerShell script" />
           </StackPanel>
         </GroupBox>
 
         <GroupBox x:Name="_NO_TRANSLATE_gbxScriptContext" Header="Script context">
           <CheckBox x:Name="chkAddToRevisionGridContextMenu"
+                    compat:TranslationCompat.TranslateText="False"
                     Margin="8,4,8,8"
                     Content="Show in RevisionGrid" />
         </GroupBox>

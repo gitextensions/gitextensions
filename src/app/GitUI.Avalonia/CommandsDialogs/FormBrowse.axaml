@@ -118,7 +118,7 @@
         <MenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge branches...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Merge}" /></MenuItem.Icon>
         </MenuItem>
-        <MenuItem x:Name="rebaseToolStripMenuItem" Header="Rebas_e...">
+        <MenuItem x:Name="rebaseToolStripMenuItem" Header="R_ebase...">
           <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
         </MenuItem>
         <MenuItem x:Name="runMergetoolToolStripMenuItem" Header="_Solve merge conflicts...">
@@ -247,6 +247,8 @@
         </SplitButton>
         <Border Classes="gitextensions-toolbar-separator" />
         <compat:IconSplitButton x:Name="toolStripWorktrees"
+                                compat:TranslationCompat.TranslateText="False"
+                                compat:TranslationCompat.UseToolTipText="True"
                                 Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                 Content="Worktrees"
                                 Icon="{x:Static properties:Images.WorkTree}"
@@ -284,17 +286,18 @@
               <MenuItem x:Name="fetchPruneAllToolStripMenuItem" Header="F_etch and prune all" />
               <Separator />
               <MenuItem x:Name="setDefaultPullButtonActionToolStripMenuItem" Header="Set _default Pull button action">
-                <MenuItem x:Name="defaultPullDialogToolStripMenuItem" Header="Open pull dialog" ToggleType="Radio" />
-                <MenuItem x:Name="defaultPullMergeToolStripMenuItem" Header="Pull - merge" ToggleType="Radio" />
-                <MenuItem x:Name="defaultPullRebaseToolStripMenuItem" Header="Pull - rebase" ToggleType="Radio" />
-                <MenuItem x:Name="defaultPullFetchToolStripMenuItem" Header="Fetch" ToggleType="Radio" />
-                <MenuItem x:Name="defaultPullFetchAllToolStripMenuItem" Header="Fetch all" ToggleType="Radio" />
-                <MenuItem x:Name="defaultPullFetchPruneAllToolStripMenuItem" Header="Fetch and prune all" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullDialogToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Open pull dialog" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullMergeToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Pull - merge" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullRebaseToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Pull - rebase" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullFetchToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Fetch" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullFetchAllToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Fetch all" ToggleType="Radio" />
+                <MenuItem x:Name="defaultPullFetchPruneAllToolStripMenuItem" compat:TranslationCompat.TranslateText="False" Header="Fetch and prune all" ToggleType="Radio" />
               </MenuItem>
             </MenuFlyout>
           </compat:IconSplitButton.Flyout>
         </compat:IconSplitButton>
         <commandsDialogs:ToolStripPushButton x:Name="toolStripButtonPush"
+                                            compat:TranslationCompat.TranslateToolTip="False"
                                             Classes="gitextensions-toolbar-button gitextensions-icon-only"
                                             Content="Push"
                                             Icon="{x:Static properties:Images.Push}" />
@@ -326,6 +329,7 @@
           <Image Width="16" Height="16" Source="{x:Static properties:Images.GitForWindows}" />
         </Button>
         <compat:IconButton x:Name="EditSettings"
+                           compat:TranslationCompat.TranslateText="False"
                            Classes="gitextensions-toolbar-button gitextensions-icon-only"
                            Content="Settings"
                            Icon="{x:Static properties:Images.Settings}" />

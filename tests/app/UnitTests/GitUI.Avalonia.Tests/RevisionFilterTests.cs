@@ -207,7 +207,7 @@ public sealed class RevisionFilterTests
             "FormBrowse",
             "tsmiAdvancedFilter",
             "Text",
-            "&Advanced filter...");
+            "&Advanced filter");
         toolbarTranslation.Received(1).AddTranslationItem(
             "FormBrowse",
             "tsmiResetAllFilters",

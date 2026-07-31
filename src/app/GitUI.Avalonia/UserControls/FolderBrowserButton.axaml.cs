@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using GitCommands;
+using GitExtensions.Extensibility.Translations.Xliff;
 using Microsoft;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -8,6 +9,7 @@ namespace GitUI.UserControls;
 
 // Twin of GitUI/UserControls/FolderBrowserButton.cs. PathShowingControl retains the
 // original any-Control boundary for the TextBox and ComboBox consumers in ported dialogs.
+[LocalizableProperties]
 public partial class FolderBrowserButton : GitExtensionsControl
 {
     private string _text = "Bro&wse...";

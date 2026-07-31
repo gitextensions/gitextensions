@@ -43,6 +43,7 @@
               Content="Push tag to '{0}'" />
 
     <ComboBox x:Name="annotate"
+              compat:TranslationCompat.TranslateText="False"
               Grid.Row="3"
               Grid.Column="1"
               Width="220"
