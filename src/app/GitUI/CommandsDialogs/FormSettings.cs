@@ -146,6 +146,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<FormBrowseRepoSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.BranchFolder);
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<CommitDialogSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.CommitSummary);
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DiffViewerSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.Diff);
+        settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AiFilterSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.FunnelExclamation);
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<BlameViewerSettingsPage>(this, serviceProvider), detailedSettingsPage, Images.Blame);
 
         SshSettingsPage sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this, serviceProvider);

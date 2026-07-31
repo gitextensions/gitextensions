@@ -445,6 +445,12 @@ public sealed partial class FileStatusList : GitModuleControl
     [DefaultValue(false)]
     public bool CanUseFindInCommitFilesGitGrep { get; set; }
 
+    /// <summary>
+    ///  Indicates whether the AI-based diff filter button is enabled for this control.
+    /// </summary>
+    [DefaultValue(false)]
+    public bool CanUseAiFilter { get; set; }
+
     private void SetFindInCommitFilesGitGrepVisibility(bool visible)
     {
         if (!CanUseFindInCommitFilesGitGrep || cboFindInCommitFilesGitGrep.Visible == visible)
@@ -1130,6 +1136,12 @@ public sealed partial class FileStatusList : GitModuleControl
 
     private void UpdateFileStatusListView(IReadOnlyList<FileStatusWithDescription> items, bool updateCausedByFilter = false, GitGrepState gitGrepState = GitGrepState.Unknown, CancellationToken cancellationToken = default)
     {
+        if (!updateCausedByFilter)
+        {
+            // The set of files changed, so any previous AI classification no longer applies.
+            ClearAiFilterState();
+        }
+
         HashSet<GitItemStatus>? previouslySelectedItems = null;
         if (updateCausedByFilter)
         {
@@ -1912,6 +1924,11 @@ public sealed partial class FileStatusList : GitModuleControl
         }
 
         if (!IsDiffStatusMatch(item.DiffStatus))
+        {
+            return false;
+        }
+
+        if (_aiFilterActive && _aiHiddenItems.Contains(item))
         {
             return false;
         }
