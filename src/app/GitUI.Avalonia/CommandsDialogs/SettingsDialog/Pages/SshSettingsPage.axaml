@@ -21,7 +21,7 @@
                    Grid.ColumnSpan="2"
                    Padding="8"
                    Background="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}"
-                   Text="OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users,&#xA;but requires the PuTTY authentication client to run in the background.&#xA;When OpenSSH is used, command line dialogs are shown!"
+                     Text="OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users,&#xA;but requires the PuTTY authentication client to run  in the background.&#xA;When OpenSSH is used, command line dialogs are shown!&#xA;"
                    TextWrapping="Wrap" />
         <RadioButton x:Name="OpenSSH"
                      Grid.Row="1"

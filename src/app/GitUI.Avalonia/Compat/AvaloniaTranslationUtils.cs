@@ -35,18 +35,46 @@ internal static class AvaloniaTranslationUtils
 
     public static void AddTranslationItemsFromFields(string category, object host, ITranslation translation)
     {
+        if (host.GetType().IsDefined(typeof(UntranslatedAttribute), inherit: true))
+        {
+            return;
+        }
+
         List<(string Name, object Item)> sharedItems = [];
         foreach ((string name, object item) in TranslationUtils.GetObjFields(host, "$this"))
         {
-            bool hasText = TryGetAvaloniaText(item, out string? text, out bool convertMnemonics);
-            bool hasToolTip = item is Control control && ToolTip.GetTip(control) is string;
+            if (name.StartsWith("_NO_TRANSLATE_", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (name != "$this" && item is Window)
+            {
+                continue;
+            }
+
+            bool hostHasWinFormsText = name == "$this"
+                && item is not Window
+                && item.GetType().GetProperty("Text")?.PropertyType == typeof(string);
+            string? text = null;
+            bool convertMnemonics = false;
+            bool isAvaloniaText = !hostHasWinFormsText
+                && TryGetAvaloniaText(item, out text, out convertMnemonics);
+            bool hasText = isAvaloniaText
+                && (item is not Control textControl || TranslationCompat.GetTranslateText(textControl));
+            bool suppressSharedText = item is Control sharedTextControl
+                && !TranslationCompat.GetTranslateText(sharedTextControl);
+            bool hasToolTip = item is Control control
+                && TranslationCompat.GetTranslateToolTip(control)
+                && ToolTip.GetTip(control) is string;
             if (item is TextBox { PlaceholderText: string placeholderText }
+                && TranslationCompat.GetTranslateWatermark((TextBox)item)
                 && placeholderText.Any(char.IsLetter))
             {
                 translation.AddTranslationItem(category, name, "Watermark", placeholderText);
             }
 
-            if (!hasText && !hasToolTip)
+            if (!isAvaloniaText && !hasToolTip && !suppressSharedText)
             {
                 sharedItems.Add((name, item));
                 continue;
@@ -71,25 +99,55 @@ internal static class AvaloniaTranslationUtils
 
     public static void TranslateItemsFromFields(string category, object host, ITranslation translation)
     {
+        if (host.GetType().IsDefined(typeof(UntranslatedAttribute), inherit: true))
+        {
+            return;
+        }
+
         List<(string Name, object Item)> sharedItems = [];
         foreach ((string name, object item) in TranslationUtils.GetObjFields(host, "$this"))
         {
-            bool hasText = TryGetAvaloniaText(item, out string? text, out bool convertMnemonics);
-            bool hasToolTip = item is Control control && ToolTip.GetTip(control) is string;
+            if (name.StartsWith("_NO_TRANSLATE_", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (name != "$this" && item is Window)
+            {
+                continue;
+            }
+
+            bool hostHasWinFormsText = name == "$this"
+                && item is not Window
+                && item.GetType().GetProperty("Text")?.PropertyType == typeof(string);
+            string? text = null;
+            bool convertMnemonics = false;
+            bool isAvaloniaText = !hostHasWinFormsText
+                && TryGetAvaloniaText(item, out text, out convertMnemonics);
+            bool hasText = isAvaloniaText
+                && (item is not Control textControl || TranslationCompat.GetTranslateText(textControl));
+            bool suppressSharedText = item is Control sharedTextControl
+                && !TranslationCompat.GetTranslateText(sharedTextControl);
+            bool hasToolTip = item is Control control
+                && TranslationCompat.GetTranslateToolTip(control)
+                && ToolTip.GetTip(control) is string;
             if (item is TextBox { PlaceholderText: string placeholderText })
             {
-                string? translatedPlaceholder = translation.TranslateItem(
-                    category,
-                    name,
-                    "Watermark",
-                    () => placeholderText);
-                if (!string.IsNullOrEmpty(translatedPlaceholder))
+                if (TranslationCompat.GetTranslateWatermark((TextBox)item))
                 {
-                    ((TextBox)item).PlaceholderText = translatedPlaceholder;
+                    string? translatedPlaceholder = translation.TranslateItem(
+                        category,
+                        name,
+                        "Watermark",
+                        () => placeholderText);
+                    if (!string.IsNullOrEmpty(translatedPlaceholder))
+                    {
+                        ((TextBox)item).PlaceholderText = translatedPlaceholder;
+                    }
                 }
             }
 
-            if (!hasText && !hasToolTip)
+            if (!isAvaloniaText && !hasToolTip && !suppressSharedText)
             {
                 sharedItems.Add((name, item));
                 continue;
@@ -139,6 +197,10 @@ internal static class AvaloniaTranslationUtils
                 return true;
             case MenuItem menuItem:
                 text = menuItem.Header as string;
+                return true;
+            case TabItem tabItem:
+                text = tabItem.Header as string;
+                convertMnemonics = false;
                 return true;
             case HeaderedContentControl headeredContentControl:
                 text = headeredContentControl.Header as string;
@@ -225,6 +287,7 @@ internal static class AvaloniaTranslationUtils
     {
         const string escapedUnderscore = "\u0001";
         return text
+            .Replace("&", "&&", StringComparison.Ordinal)
             .Replace("__", escapedUnderscore, StringComparison.Ordinal)
             .Replace('_', '&')
             .Replace(escapedUnderscore, "_", StringComparison.Ordinal);
@@ -262,11 +325,38 @@ internal static class AvaloniaTranslationUtils
 /// </summary>
 public sealed class TranslationCompat : AvaloniaObject
 {
+    public static readonly AttachedProperty<bool> TranslateTextProperty =
+        AvaloniaProperty.RegisterAttached<TranslationCompat, Control, bool>("TranslateText", defaultValue: true);
+
+    public static readonly AttachedProperty<bool> TranslateToolTipProperty =
+        AvaloniaProperty.RegisterAttached<TranslationCompat, Control, bool>("TranslateToolTip", defaultValue: true);
+
+    public static readonly AttachedProperty<bool> TranslateWatermarkProperty =
+        AvaloniaProperty.RegisterAttached<TranslationCompat, TextBox, bool>("TranslateWatermark", defaultValue: true);
+
     public static readonly AttachedProperty<bool> UseToolTipTextProperty =
         AvaloniaProperty.RegisterAttached<TranslationCompat, Control, bool>("UseToolTipText");
 
     public static readonly AttachedProperty<string?> ToolTipPropertyNameProperty =
         AvaloniaProperty.RegisterAttached<TranslationCompat, Control, string?>("ToolTipPropertyName");
+
+    public static bool GetTranslateText(Control control)
+        => control.GetValue(TranslateTextProperty);
+
+    public static void SetTranslateText(Control control, bool value)
+        => control.SetValue(TranslateTextProperty, value);
+
+    public static bool GetTranslateToolTip(Control control)
+        => control.GetValue(TranslateToolTipProperty);
+
+    public static void SetTranslateToolTip(Control control, bool value)
+        => control.SetValue(TranslateToolTipProperty, value);
+
+    public static bool GetTranslateWatermark(TextBox textBox)
+        => textBox.GetValue(TranslateWatermarkProperty);
+
+    public static void SetTranslateWatermark(TextBox textBox, bool value)
+        => textBox.SetValue(TranslateWatermarkProperty, value);
 
     public static bool GetUseToolTipText(Control control)
         => control.GetValue(UseToolTipTextProperty);
@@ -280,3 +370,7 @@ public sealed class TranslationCompat : AvaloniaObject
     public static void SetToolTipPropertyName(Control control, string? value)
         => control.SetValue(ToolTipPropertyNameProperty, value);
 }
+
+/// <summary>Marks an Avalonia twin whose WinForms original does not participate in XLF translation.</summary>
+[AttributeUsage(AttributeTargets.Class, Inherited = true)]
+internal sealed class UntranslatedAttribute : Attribute;

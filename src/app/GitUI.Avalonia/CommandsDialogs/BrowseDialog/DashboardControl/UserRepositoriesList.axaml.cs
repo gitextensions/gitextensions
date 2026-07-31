@@ -8,6 +8,7 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
@@ -45,10 +46,17 @@ public partial class UserRepositoriesList : TranslatedControl
         textBoxSearch.TextChanged += (_, _) => ShowRecentRepositories(reloadData: false);
         mnuConfigure.Click += (_, _) => ConfigureRequested?.Invoke(this, EventArgs.Empty);
         InitializeComplete();
+        textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
     }
 
     public event EventHandler? ConfigureRequested;
     public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
+
+    public override void TranslateItems(ITranslation translation)
+    {
+        base.TranslateItems(translation);
+        textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
+    }
 
     public void Initialize(IRepositoryHistoryUIService repositoryHistoryUIService, Func<IGitUICommands> getUICommands)
     {

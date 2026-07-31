@@ -48,7 +48,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     private Action<string>? _setWorkingDirectory;
     private KeyGesture? _closeRepositoryGesture;
     private KeyGesture? _openRepositoryGesture;
-    private string _closeRepositoryText = "Close repository";
+    private string _closeRepositoryText = "Close (go to Dashboard)";
     private string _favouriteRepositoriesText = "&Favorite repositories";
     private string _openRepositoryText = "Open repository";
 
@@ -546,7 +546,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         TranslationUtils.AddTranslationItemsFromFields(TranslationCategory, this, translation);
         translation.AddTranslationItem(TranslationCategory, "tsmiFavouriteRepositories", "Text", "&Favorite repositories");
-        translation.AddTranslationItem(TranslationCategory, "closeToolStripMenuItem", "Text", "&Close repository");
+        translation.AddTranslationItem(TranslationCategory, "closeToolStripMenuItem", "Text", "&Close (go to Dashboard)");
     }
 
     internal void TranslateControlItems(ITranslation translation)
@@ -568,7 +568,7 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
                 TranslationCategory,
                 "closeToolStripMenuItem",
                 "Text",
-                () => "&Close repository") ?? "&Close repository");
+                () => "&Close (go to Dashboard)") ?? "&Close (go to Dashboard)");
         ToolTip.SetTip(this, _toolTip.Text);
     }
 

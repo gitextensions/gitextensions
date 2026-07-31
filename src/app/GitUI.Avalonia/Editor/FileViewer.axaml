@@ -13,15 +13,15 @@
       <compat:ThemeAwareTextEditor.ContextMenu>
         <ContextMenu x:Name="contextMenu">
           <MenuItem x:Name="stageSelectedLinesToolStripMenuItem"
-                    Header="Stage selected lines">
+              Header="Stage selected line(s)">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stage}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="unstageSelectedLinesToolStripMenuItem"
-                    Header="Unstage selected lines">
+              Header="Unstage selected line(s)">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Unstage}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="resetSelectedLinesToolStripMenuItem"
-                    Header="Reset selected lines">
+              Header="Reset selected line(s)">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="copyToolStripMenuItem"

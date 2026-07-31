@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
         x:Class="GitUI.UserControls.RevisionGrid.FormRevisionFilter"
         Width="430"
         Height="580"
@@ -114,10 +115,12 @@
                Content="_Diff contains"
                Target="{Binding #DiffContent}" />
         <CheckBox x:Name="DiffContentCheck"
+                  compat:TranslationCompat.TranslateToolTip="False"
                   Grid.Row="5"
                   Grid.Column="1"
                   VerticalAlignment="Center" />
         <TextBox x:Name="DiffContent"
+                 compat:TranslationCompat.TranslateToolTip="False"
                  Grid.Row="5"
                  Grid.Column="2"
                  Height="25"
