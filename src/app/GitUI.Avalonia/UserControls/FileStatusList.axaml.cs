@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -1448,11 +1449,11 @@ public partial class FileStatusList : GitModuleControl
         {
             return item.DiffStatus switch
             {
-                DiffBranchStatus.OnlyAChange => Images.FileStatusRenamedOnlyA,
-                DiffBranchStatus.OnlyBChange => Images.FileStatusRenamedOnlyB,
-                DiffBranchStatus.SameChange => Images.FileStatusRenamedSame,
-                DiffBranchStatus.UnequalChange => Images.FileStatusRenamedUnequal,
-                _ => Images.FileStatusRenamed,
+                DiffBranchStatus.OnlyAChange => Images.FileStatusRenamedOnlyA.AdaptLightness(),
+                DiffBranchStatus.OnlyBChange => Images.FileStatusRenamedOnlyB.AdaptLightness(),
+                DiffBranchStatus.SameChange => Images.FileStatusRenamedSame.AdaptLightness(),
+                DiffBranchStatus.UnequalChange => Images.FileStatusRenamedUnequal.AdaptLightness(),
+                _ => Images.FileStatusRenamed.AdaptLightness(),
             };
         }
 
