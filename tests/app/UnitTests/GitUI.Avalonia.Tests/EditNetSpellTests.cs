@@ -1,9 +1,11 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.SpellChecker;
 using NSubstitute;
@@ -161,4 +163,43 @@ public sealed class EditNetSpellTests
             window.Close();
         }
     }
+
+    [AvaloniaTest]
+    public void EditNetSpell_should_use_the_original_adapted_spell_check_colors()
+    {
+        EditNetSpell control = new();
+        Window window = new()
+        {
+            Width = 400,
+            Height = 200,
+            Content = control,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+            Color background = accessor.TextBox.Background
+                .Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+            System.Drawing.Color drawingBackground = System.Drawing.Color.FromArgb(
+                background.A,
+                background.R,
+                background.G,
+                background.B);
+            System.Drawing.Color expectedMark =
+                System.Drawing.Color.FromArgb(120, 255, 255, 0).AdaptBackColor();
+            System.Drawing.Color expectedWave =
+                System.Drawing.Color.Red.AdaptForeColor(drawingBackground);
+
+            accessor.IllFormedMarkColor.Should().Be(ToMediaColor(expectedMark));
+            accessor.SpellingWaveColor.Should().Be(ToMediaColor(expectedWave));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static Color ToMediaColor(System.Drawing.Color color)
+        => Color.FromArgb(color.A, color.R, color.G, color.B);
 }

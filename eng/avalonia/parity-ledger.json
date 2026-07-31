@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "9af64b5cc4c2a6f12a47f8a0d5c5461e7b0217b5",
+  "analyzedCommit": "43d7a7286343294ca59f0e5cc980de6347e501bf",
   "axisOrder": [
     "structural",
     "functional",
@@ -18,7 +18,7 @@
       "axes": {
         "structural": {
           "status": "verified",
-          "verifiedOn": "2026-07-30",
+          "verifiedOn": "2026-07-31",
           "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
           "evidence": [
             "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
@@ -19514,17 +19514,24 @@
           "note": "visual layout has not been captured for this mapped view"
         },
         "themingAndColor": {
-          "status": "unverified",
+          "status": "partial",
           "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "commit": "43d7a7286343294ca59f0e5cc980de6347e501bf",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.3b/"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 1,
+          "note": "Exact theme-adapted spelling-wave and ill-formed-mark colors are test-backed. The broader framework-control aggregate belongs to P1.7/P1.7b; native 96 DPI and macOS remain unverified."
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-07-30",
+          "verifiedOn": "2026-07-31",
           "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
           "evidence": [],
           "platforms": [],
@@ -24714,17 +24721,24 @@
           "note": "visual layout has not been captured for this mapped view"
         },
         "themingAndColor": {
-          "status": "unverified",
+          "status": "partial",
           "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "commit": "43d7a7286343294ca59f0e5cc980de6347e501bf",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.3b/"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 1,
+          "note": "Exact alternating-row, authored-row, ref-label, build-status, graph, diff, and blame content colors are test-backed with reviewed renderer goldens and the representative theme/scale matrix. Framework-control colors belong to P1.7/P1.7b; native 96 DPI and macOS remain unverified, and later component tranches still own their full state audits."
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-07-30",
+          "verifiedOn": "2026-07-31",
           "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
           "evidence": [],
           "platforms": [],
@@ -27899,17 +27913,24 @@
           "note": "visual layout has not been captured for this mapped view"
         },
         "themingAndColor": {
-          "status": "unverified",
+          "status": "partial",
           "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "commit": "43d7a7286343294ca59f0e5cc980de6347e501bf",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.3b/"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 1,
+          "note": "Chart palette inputs use the original AdaptBackColor computation and renderer goldens pass on Windows and Linux. The statistics window was not available to the three-form reference harness, and macOS remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
-          "verifiedOn": "2026-07-30",
+          "verifiedOn": "2026-07-31",
           "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
           "evidence": [],
           "platforms": [],
@@ -28289,13 +28310,20 @@
           "note": "visual layout has not been captured for this mapped view"
         },
         "themingAndColor": {
-          "status": "unverified",
+          "status": "partial",
           "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "commit": "43d7a7286343294ca59f0e5cc980de6347e501bf",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.3b/"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 1,
+          "note": "Slice adaptation, highlight, shadow-gradient, edge thresholds, correction factors, and integer truncation match the original and renderer goldens pass on Windows and Linux. The statistics window was not available to the three-form reference harness, and macOS remains unverified."
         },
         "behavioralState": {
           "status": "unverified",

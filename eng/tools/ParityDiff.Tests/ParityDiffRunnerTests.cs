@@ -1,4 +1,4 @@
-using AwesomeAssertions;
+﻿using AwesomeAssertions;
 using GitExtensions.ParityCapture;
 using NUnit.Framework;
 
@@ -128,6 +128,42 @@ public sealed class ParityDiffRunnerTests
             .Should().Contain("control.missing", "control.extra");
     }
 
+    [TestCase(2, 2, 1, 0, 0)]
+    [TestCase(2, 1, 1, 1, 0)]
+    [TestCase(1, 2, 1, 0, 1)]
+    public void Run_should_report_duplicate_field_identities_without_aborting(
+        int referenceCount,
+        int candidateCount,
+        int expectedDuplicateFindings,
+        int expectedMissingFindings,
+        int expectedExtraFindings)
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = RepeatTarget(fixture.CreateDocument("light"), referenceCount);
+        CaptureDocument candidate = RepeatTarget(fixture.CreateDocument("light"), candidateCount);
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityDiffResult result = fixture.Run();
+
+        CaptureComparison comparison = result.Captures.Should().ContainSingle().Subject;
+        comparison.Status.Should().Be("compared");
+        ParityFinding duplicate = comparison.Findings
+            .Should().ContainSingle(finding => finding.Code == "control.duplicateIdentity").Subject;
+        duplicate.Path.Should().Be("surface[primary]/control[btnTarget]");
+        duplicate.ReferenceValue.Should().Be(referenceCount.ToString());
+        duplicate.CandidateValue.Should().Be(candidateCount.ToString());
+        comparison.Findings.Count(finding => finding.Code == "control.duplicateIdentity")
+            .Should().Be(expectedDuplicateFindings);
+        comparison.Findings.Count(finding => finding.Code == "control.missing")
+            .Should().Be(expectedMissingFindings);
+        comparison.Findings.Count(finding => finding.Code == "control.extra")
+            .Should().Be(expectedExtraFindings);
+        comparison.Findings.Where(finding => finding.Code is "control.missing" or "control.extra")
+            .Select(finding => finding.Path)
+            .Should().OnlyContain(path => path == "surface[primary]/control[btnTarget][2]");
+    }
+
     [Test]
     public void Run_should_apply_ssim_and_per_pixel_channel_budgets()
     {
@@ -182,6 +218,28 @@ public sealed class ParityDiffRunnerTests
                 surface with
                 {
                     Root = root with { Children = [transform(target)] }
+                }
+            ]
+        };
+    }
+
+    private static CaptureDocument RepeatTarget(CaptureDocument document, int count)
+    {
+        CaptureSurface surface = document.Surfaces.Single();
+        CaptureNode root = surface.Root;
+        CaptureNode target = root.Children.Single();
+        return document with
+        {
+            Surfaces =
+            [
+                surface with
+                {
+                    Root = root with
+                    {
+                        Children = Enumerable.Range(1, count)
+                            .Select(index => target with { Id = $"{target.Id}/{index}" })
+                            .ToArray()
+                    }
                 }
             ]
         };

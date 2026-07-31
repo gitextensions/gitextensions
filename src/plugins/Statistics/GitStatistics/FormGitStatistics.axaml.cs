@@ -1,14 +1,15 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Media;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Plugins.GitStatistics.PieChart;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using ResourceManager;
-using AvaloniaApplication = Avalonia.Application;
 using Color = Avalonia.Media.Color;
+using DrawingColor = System.Drawing.Color;
 
 namespace GitExtensions.Plugins.GitStatistics;
 
@@ -320,32 +321,12 @@ public partial class FormGitStatistics : GitExtensionsFormBase
     private void TabsSelectedIndexChanged(object? sender, SelectionChangedEventArgs e)
         => FormGitStatisticsSizeChanged(sender, EventArgs.Empty);
 
-    private Color AdaptChartColor(Color color)
+    private static Color AdaptChartColor(Color color)
     {
-        if (AvaloniaApplication.Current is not { } application
-            || !application.TryGetResource(
-                "GitExtensionsPanelBackgroundBrush",
-                ActualThemeVariant,
-                out object? resource)
-            || resource is not ISolidColorBrush background
-            || GetLuminance(background.Color) >= 0.35
-            || GetLuminance(color) >= 0.25)
-        {
-            return color;
-        }
-
-        return Color.FromArgb(
-            color.A,
-            Blend(color.R),
-            Blend(color.G),
-            Blend(color.B));
-
-        static byte Blend(byte channel)
-            => (byte)Math.Round(channel + ((byte.MaxValue - channel) * 0.35));
+        DrawingColor original = DrawingColor.FromArgb(color.A, color.R, color.G, color.B);
+        DrawingColor adapted = original.AdaptBackColor();
+        return Color.FromArgb(adapted.A, adapted.R, adapted.G, adapted.B);
     }
-
-    private static double GetLuminance(Color color)
-        => ((0.2126 * color.R) + (0.7152 * color.G) + (0.0722 * color.B)) / byte.MaxValue;
 
     private static double GetRatio(int value, int total)
         => total == 0 ? 0 : (double)value / total;

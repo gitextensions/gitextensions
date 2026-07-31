@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -145,6 +145,21 @@ internal static class AvaloniaThemeResources
             warningPanel = warningPanel.DimColor();
         }
 
+        DrawingColor alternatingRow = panel.MakeDarkerBy(isDark ? -0.018 : 0.025);
+        DrawingColor blameHighlight = isDark
+            ? editor.MakeDarkerBy(-0.06)
+            : ResolveSystemColor(settings, KnownColor.ControlLight);
+        DrawingColor[] blameAges =
+        [
+            DrawingColor.FromArgb(247, 252, 245).AdaptBackColor(),
+            DrawingColor.FromArgb(199, 233, 192).AdaptBackColor(),
+            DrawingColor.FromArgb(161, 217, 155).AdaptBackColor(),
+            DrawingColor.FromArgb(116, 196, 118).AdaptBackColor(),
+            DrawingColor.FromArgb(65, 171, 93).AdaptBackColor(),
+            DrawingColor.FromArgb(35, 139, 69).AdaptBackColor(),
+            DrawingColor.FromArgb(0, 68, 27).AdaptBackColor(),
+        ];
+
         SetBrush(resources, "ThemeBackgroundBrush", panel);
         SetBrush(resources, "ThemeForegroundBrush", windowText);
         SetBrush(resources, "ThemeBorderLowBrush", sectionBorder);
@@ -163,6 +178,8 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsSelectionBackgroundBrush", selection);
         SetBrush(resources, "GitExtensionsSelectionPointerOverBackgroundBrush", ColorHelper.Lerp(selection, windowText, 0.08f));
         SetBrush(resources, "GitExtensionsSelectionForegroundBrush", windowText);
+        SetBrush(resources, "GitExtensionsRevisionAlternatingRowBrush", alternatingRow);
+        SetBrush(resources, "GitExtensionsRevisionAuthoredBrush", ResolveAppColor(settings, AppColor.AuthoredHighlight));
 
         SetBrush(resources, "GitExtensionsValidFilterBackgroundBrush", isDark ? dimmedAddedBackground : addedBackground);
         SetBrush(resources, "GitExtensionsInvalidFilterBackgroundBrush", isDark ? dimmedRemovedBackground : removedBackground);
@@ -193,11 +210,12 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsDiffMovedRemovedForegroundBrush", movedRemovedForeground);
         SetBrush(resources, "GitExtensionsDiffMovedAddedForegroundBrush", movedAddedForeground);
 
-        DrawingColor blameHighlight = isDark
-            ? ColorHelper.Lerp(editor, DrawingColor.White, 0.08f)
-            : ResolveSystemColor(settings, KnownColor.ControlLight);
         SetBrush(resources, "GitExtensionsBlameHighlightBrush", blameHighlight);
         SetBrush(resources, "GitExtensionsBlameAuthorBrush", grayText);
+        for (int index = 0; index < blameAges.Length; index++)
+        {
+            SetBrush(resources, $"GitExtensionsBlameAge{index}Brush", blameAges[index]);
+        }
     }
 
     private static ResourceDictionary GetThemeResources(Application application, ThemeVariant variant)
