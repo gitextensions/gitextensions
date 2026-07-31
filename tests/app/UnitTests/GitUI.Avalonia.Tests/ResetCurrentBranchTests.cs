@@ -1,5 +1,6 @@
 using System.ComponentModel.Design;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -208,7 +209,8 @@ public sealed class ResetCurrentBranchTests
         return;
 
         static string AccessorText(RadioButton radioButton)
-            => radioButton.Content.Should().BeOfType<TextBlock>().Which.Text ?? string.Empty;
+            => (radioButton.Content.Should().BeOfType<AccessText>().Which.Text ?? string.Empty)
+                .Replace("_", string.Empty, StringComparison.Ordinal);
     }
 
     private (GitModule Module, GitRevision Target) CreateRepositoryWithResetTarget()
