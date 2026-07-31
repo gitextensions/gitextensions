@@ -1,5 +1,6 @@
 using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations.Xliff;
 using GitUIPluginInterfaces;
 
 namespace GitUI.LeftPanel;
@@ -14,6 +15,7 @@ internal enum RepoTreeKind
     Stashes,
 }
 
+[LocalizableProperties]
 internal abstract class Tree : NodeBase
 {
     protected Tree(RepoObjectsTree owner, RepoTreeKind kind, string caption, IImage icon)

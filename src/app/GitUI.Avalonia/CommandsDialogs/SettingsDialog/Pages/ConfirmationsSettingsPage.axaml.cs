@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
-using GitExtensions.Extensibility.Translations;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
@@ -95,27 +94,6 @@ public partial class ConfirmationsSettingsPage : SettingsPageWithHeader
 
     private static bool? ToBooleanInverted(bool? state)
         => state.HasValue ? !state.Value : null;
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        translation.AddTranslationItem(
-            nameof(ConfirmationsSettingsPage),
-            "$this",
-            "Text",
-            Text ?? "Confirmations");
-    }
-
-    public override void TranslateItems(ITranslation translation)
-    {
-        base.TranslateItems(translation);
-        string neutralText = Text ?? "Confirmations";
-        Text = translation.TranslateItem(
-            nameof(ConfirmationsSettingsPage),
-            "$this",
-            "Text",
-            () => neutralText) ?? neutralText;
-    }
 
     internal TestAccessor GetTestAccessor() => new(this);
 

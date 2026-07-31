@@ -30,7 +30,7 @@
                  TextAlignment="Right"
                  TextWrapping="Wrap"
                  IsVisible="False"
-                 Text="Changes on the selected page will be saved instantly.&#10;Therefore the Cancel button does NOT revert any changes made." />
+                   Text="Changes on the selected page will be saved instantly. &#10;Therefore the Cancel button does NOT revert any changes made." />
       <StackPanel Grid.Column="1"
                   Orientation="Horizontal"
                   Spacing="6"

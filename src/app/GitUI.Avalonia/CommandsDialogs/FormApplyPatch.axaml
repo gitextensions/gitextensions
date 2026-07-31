@@ -104,7 +104,7 @@
               Classes="gitextensions-dialog-action"
               MinWidth="125"
               MinHeight="78"
-              Content="There are unresolved merge conflicts"
+                      Content="There are unresolved merge conflicts&#10;"
               IsVisible="False" />
     </StackPanel>
   </Grid>

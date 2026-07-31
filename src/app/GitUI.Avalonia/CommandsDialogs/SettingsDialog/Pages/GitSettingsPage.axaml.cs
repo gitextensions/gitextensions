@@ -9,12 +9,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public sealed partial class GitSettingsPage : SettingsPageWithHeader
 {
+    private const string PortableGitCommand = "Command used to run git";
+    private const string PortableGlobalConfigPath =
+        "By default, the global config file is located in the location stored in the environment variable $HOME.\n(This can be overridden by setting $GIT_CONFIG_GLOBAL.)";
+    private const string SelectGitExecutable = "Select Git executable";
+
     private readonly TranslationString _envIsSetToString = new("{0} is set to: {1}");
     private readonly TranslationString _envIsNotSetString = new("{0} is not set.");
-    private readonly TranslationString _portableGitCommand = new("Command used to run git");
-    private readonly TranslationString _portableGlobalConfigPath = new(
-        "By default, the global config file is located in the location stored in the environment variable $HOME.\n(This can be overridden by setting $GIT_CONFIG_GLOBAL.)");
-    private readonly TranslationString _selectGitExecutable = new("Select Git executable");
 
     public GitSettingsPage()
         : this(EmptyServiceProvider.Instance)
@@ -94,14 +95,14 @@ public sealed partial class GitSettingsPage : SettingsPageWithHeader
 
         label50.IsVisible = false;
         lblGitCommand.IsVisible = false;
-        _NO_TRANSLATE_lblPortableGitCommand.Text = _portableGitCommand.Text;
+        _NO_TRANSLATE_lblPortableGitCommand.Text = PortableGitCommand;
         _NO_TRANSLATE_lblPortableGitCommand.IsVisible = true;
         lblShPath.IsVisible = false;
         LinuxToolsDir.IsVisible = false;
         BrowseLinuxToolsDir.IsVisible = false;
         downloadGitForWindows.IsVisible = false;
         lblGlobalConfigPath.IsVisible = false;
-        _NO_TRANSLATE_lblPortableGlobalConfigPath.Text = _portableGlobalConfigPath.Text;
+        _NO_TRANSLATE_lblPortableGlobalConfigPath.Text = PortableGlobalConfigPath;
         _NO_TRANSLATE_lblPortableGlobalConfigPath.IsVisible = true;
     }
 
@@ -116,7 +117,7 @@ public sealed partial class GitSettingsPage : SettingsPageWithHeader
         FilePickerOpenOptions options = new()
         {
             AllowMultiple = false,
-            Title = _selectGitExecutable.Text,
+            Title = SelectGitExecutable,
             FileTypeFilter =
             [
                 new FilePickerFileType("Git")

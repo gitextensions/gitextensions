@@ -536,11 +536,6 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
         base.AddTranslationItems(translation);
         translation.AddTranslationItem(
             nameof(RevisionLinksSettingsPage),
-            "$this",
-            "Text",
-            Text ?? "Revision links");
-        translation.AddTranslationItem(
-            nameof(RevisionLinksSettingsPage),
             nameof(CaptionCol),
             "HeaderText",
             "Caption");
@@ -554,12 +549,6 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
     public override void TranslateItems(ITranslation translation)
     {
         base.TranslateItems(translation);
-        string neutralText = Text ?? "Revision links";
-        Text = translation.TranslateItem(
-            nameof(RevisionLinksSettingsPage),
-            "$this",
-            "Text",
-            () => neutralText) ?? neutralText;
         TranslateHeader(translation, CaptionCol, nameof(CaptionCol), "Caption");
         TranslateHeader(translation, URICol, nameof(URICol), "URI");
         foreach (MenuItem item in _templateFlyout.Items.OfType<MenuItem>())

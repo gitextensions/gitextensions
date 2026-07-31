@@ -18,8 +18,8 @@
                          VerticalAlignment="Center" />
     </Grid>
     <TextBox x:Name="textBoxSearch"
+             compat:TranslationCompat.TranslateWatermark="False"
              Grid.Row="1"
-             PlaceholderText="Search repositories..."
              Margin="0,0,0,10" />
     <ListBox x:Name="listView1"
              Grid.Row="2"

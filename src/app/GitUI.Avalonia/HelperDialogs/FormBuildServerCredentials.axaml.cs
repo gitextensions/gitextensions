@@ -1,8 +1,11 @@
+using GitUI.Compat;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 
 namespace GitUI.HelperDialogs;
 
+// The original is a plain Form and deliberately has no XLF translation surface.
+[Untranslated]
 public sealed partial class FormBuildServerCredentials : GitExtensionsFormBase
 {
     public FormBuildServerCredentials()
