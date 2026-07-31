@@ -1,5 +1,6 @@
 <settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:compat="using:GitUI.Compat"
                                  xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
                                  x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.GeneralSettingsPage"
                                  Text="General">
@@ -60,7 +61,7 @@
 
           <Grid Grid.Row="9" Grid.ColumnSpan="3" ColumnDefinitions="Auto,Auto,Auto,*" Margin="0,1,0,0">
             <TextBlock x:Name="lblDefaultPullAction" Margin="3,4,12,4" VerticalAlignment="Center" Text="Default pull action" />
-            <ComboBox x:Name="cboDefaultPullAction" Grid.Column="1" MinWidth="170" Margin="0,1,24,1" />
+            <ComboBox x:Name="cboDefaultPullAction" compat:TranslationCompat.TranslateText="False" Grid.Column="1" MinWidth="170" Margin="0,1,24,1" />
             <TextBlock x:Name="lblQuickSearchTimeout" Grid.Column="2" Margin="3,4,8,4" VerticalAlignment="Center" Text="Revision grid quick search timeout [ms]" />
             <NumericUpDown x:Name="RevisionGridQuickSearchTimeout"
                            Grid.Column="3"

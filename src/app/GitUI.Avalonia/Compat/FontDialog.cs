@@ -1,4 +1,5 @@
 using Avalonia.Media;
+using GitExtensions.Extensibility.Translations.Xliff;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Compat;
@@ -6,6 +7,7 @@ namespace GitUI.Compat;
 /// <summary>
 ///  Provides a reusable WinForms-shaped font-dialog boundary over a fresh Avalonia window.
 /// </summary>
+[LocalizableProperties]
 public sealed class FontDialog
 {
     public WinFormsShims.Font Font { get; set; } = new(FontManager.Current.DefaultFontFamily.Name, 9);

@@ -237,6 +237,7 @@
                          MinWidth="100"
                          Content="P_ull" />
       <compat:IconButton x:Name="Push"
+                         compat:TranslationCompat.TranslateText="False"
                          Classes="gitextensions-dialog-action"
                          Grid.Column="2"
                          MinWidth="100"

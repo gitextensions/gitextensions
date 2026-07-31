@@ -4,7 +4,6 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Extensions;
 using GitExtensions.Extensibility.Settings;
-using GitExtensions.Extensibility.Translations;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
@@ -170,27 +169,6 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
 
     private void BuildServerType_SelectedIndexChanged(object? sender, EventArgs e)
         => ActivateBuildServerSettingsControl();
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        translation.AddTranslationItem(
-            nameof(BuildServerIntegrationSettingsPage),
-            "$this",
-            "Text",
-            Text ?? "Build server integration");
-    }
-
-    public override void TranslateItems(ITranslation translation)
-    {
-        base.TranslateItems(translation);
-        string neutralText = Text ?? "Build server integration";
-        Text = translation.TranslateItem(
-            nameof(BuildServerIntegrationSettingsPage),
-            "$this",
-            "Text",
-            () => neutralText) ?? neutralText;
-    }
 
     internal TestAccessor GetTestAccessor() => new(this);
 

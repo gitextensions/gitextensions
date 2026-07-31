@@ -493,7 +493,7 @@ public sealed class SettingsDialogTests
         form.GotoPage(GitConfigSettingsPage.GetPageReference());
         SettingsPageHeader configHeader = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
         configHeader.GetTestAccessor().Page.Should().BeSameAs(configPage);
-        configPage.GetTitle().Should().Be("Git config");
+        configPage.GetTitle().Should().Be("Config");
 
         form.GotoPage(new SettingsPageReferenceByType(typeof(GitConfigAdvancedSettingsPage)));
         SettingsPageHeader advancedHeader = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;

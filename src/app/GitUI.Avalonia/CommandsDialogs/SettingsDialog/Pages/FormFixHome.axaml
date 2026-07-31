@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
         x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.FormFixHome"
         Width="620"
         Height="240"
@@ -20,7 +21,7 @@
                    Grid.ColumnSpan="3"
                    Margin="0,0,0,4"
                    TextWrapping="Wrap"
-                   Text="The global config file located in the location stored environment variable %HOME%.&#10;By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty.&#10;Change the default behaviour only if you experience problems." />
+                   Text="The global config file located in the location stored environment variable %HOME%. &#10;By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. &#10;Change the default behaviour only if you experience problems." />
         <TextBlock x:Name="_NO_TRANSLATE_portableHomeDescription"
                    Grid.ColumnSpan="3"
                    Margin="0,0,0,4"
@@ -45,6 +46,7 @@
                  Margin="8,0,6,0"
                  MaxLength="250" />
         <Button x:Name="otherHomeBrowse"
+                compat:TranslationCompat.TranslateText="False"
                 Grid.Row="3"
                 Grid.Column="2"
                 MinWidth="130"

@@ -140,6 +140,7 @@
                       <TextBox x:Name="toolAuthor" />
                       <Separator Margin="0,4" />
                       <ComboBox x:Name="gpgSignCommitToolStripComboBox"
+                                compat:TranslationCompat.TranslateText="False"
                                 SelectedIndex="0">
                         <ComboBoxItem Content="Git default GPG signing" />
                         <ComboBoxItem Content="Do not sign commit" />
@@ -190,11 +191,11 @@
             <compat:IconButton x:Name="btnResetAllChanges"
                                Margin="0,0,6,0"
                                Icon="{x:Static properties:Images.ResetWorkingDirChanges}"
-                               Content="Reset _all changes"
+                               Content="_Reset all changes"
                                IsEnabled="False" />
             <compat:IconButton x:Name="btnResetUnstagedChanges"
                                Icon="{x:Static properties:Images.ResetWorkingDirChanges}"
-                               Content="Reset _unstaged changes"
+                               Content="Reset u_nstaged changes"
                                IsEnabled="False" />
           </WrapPanel>
 
@@ -207,6 +208,7 @@
                                Content="_Commit"
                                IsEnabled="False" />
             <compat:IconButton x:Name="CommitAndPush"
+                               compat:TranslationCompat.TranslateText="False"
                                Margin="6,0,0,0"
                                Icon="{x:Static properties:Images.ArrowUp}"
                                Content="Commit &amp; _push"

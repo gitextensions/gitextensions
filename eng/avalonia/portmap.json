@@ -766,7 +766,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves Git-command and Linux-tools path load/save, validation, native executable/folder browsing, Git download routing, environment reporting, and the Change HOME workflow. Linux and macOS show native Git and global-config terminology while retaining the original translation identities; Windows behavior remains unchanged."
+    "notes": "Preserves Git-command and Linux-tools path load/save, validation, native executable/folder browsing, Git download routing, environment reporting, and the Change HOME workflow. Linux and macOS retain every applicable original translation identity; their native-Git label, global-config explanation, and executable-picker title remain explicitly outside XLF because the original sources describe git.cmd/git.exe and Windows environment syntax. Windows behavior remains unchanged."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GitSettingsPage.axaml",
@@ -844,7 +844,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.axaml.cs",
     "status": "functional",
     "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "Preserves the modeless title/content contract, initial caret position, owner relationship, and theme-aware SystemColors.Info presentation used by the scripts argument cheat sheet."
+    "notes": "Preserves the modeless title/content contract, initial caret position, owner relationship, and theme-aware SystemColors.Info presentation used by the scripts argument cheat sheet. Like the original plain Form, the dialog emits no XLF keys; its title and content arrive already translated from the caller."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SimpleHelpDisplayDialog.axaml",
@@ -856,7 +856,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormFixHome.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves persisted default, user-profile, and custom HOME selection, readable-directory validation, native folder browsing, and global Git-config detection. The WinForms-only candidate-directory scan and informational message cascade remain omitted; users select the desired HOME directly."
+    "notes": "Preserves persisted default, user-profile, and custom HOME selection, readable-directory validation, native folder browsing, and global Git-config detection. The WinForms-only candidate-directory scan and informational message cascade remain omitted; users select the desired HOME directly. The portable HOME explanation stays outside XLF because the original translated source describes Windows-only HOMEDRIVE/HOMEPATH behavior."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormFixHome.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormFixHome.axaml",
@@ -892,7 +892,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "All script fields, event values, enablement, order, add/delete/move behavior, argument help, built-in/custom icon selection, XML persistence, and stable hotkey identifiers retain the original contracts. Avalonia uses explicit code-behind-owned field controls because it has no PropertyGrid; unsupported desktop associated icons remain persisted but may have no preview."
+    "notes": "All script fields, event values, enablement, order, add/delete/move behavior, argument help, built-in/custom icon selection, XML persistence, and stable hotkey identifiers retain the original contracts. Avalonia uses explicit code-behind-owned field controls because it has no PropertyGrid; the four property-editor captions remain outside XLF like the original PropertyGrid metadata. Unsupported desktop associated icons remain persisted but may have no preview."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.ScriptInfoProxy.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.ScriptInfoProxy.cs",
@@ -1432,7 +1432,7 @@
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormBuildServerCredentials.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named guest, username/password, and bearer-token prompt with the original control and translation identities."
+    "notes": "Same-named guest, username/password, and bearer-token prompt with the original controls. Like the original plain Form, it emits no XLF keys."
   },
   "src/app/GitUI/CommandsDialogs/FormDeleteTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteTag.axaml.cs",
@@ -1557,7 +1557,7 @@
     "twin": "src/app/GitUI.Avalonia/ScriptsEngine/SimplePrompt.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves dynamic caption/label/default value, focused input, OK result and Escape selection-clearing/cancel behavior."
+    "notes": "Preserves dynamic caption/label/default value, focused input, OK result and Escape selection-clearing/cancel behavior. Like the original plain Form, it emits no XLF keys."
   },
   "src/app/GitUI/ScriptsEngine/SimplePrompt.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/ScriptsEngine/SimplePrompt.axaml",
@@ -1598,7 +1598,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickItemSelector.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves sorting consumers, first-item selection, eight-row scroll threshold, measured bounded width, manual location, double-click acceptance and Escape cancellation."
+    "notes": "Preserves sorting consumers, first-item selection, eight-row scroll threshold, measured bounded width, manual location, double-click acceptance and Escape cancellation. The dynamic title/action surface emits no XLF keys, matching the original."
   },
   "src/app/GitUI/UserControls/RevisionGrid/FormQuickItemSelector.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormQuickItemSelector.axaml",

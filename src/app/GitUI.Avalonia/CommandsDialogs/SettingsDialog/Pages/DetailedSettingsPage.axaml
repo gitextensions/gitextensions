@@ -9,7 +9,7 @@
                 Margin="8"
                 Spacing="6">
       <GroupBox x:Name="gbRevisionGraph"
-                Header="Revision graph">
+                Header="_Revision graph">
         <StackPanel x:Name="tlpnlRevisionGraph"
                     Margin="8,4,8,8">
           <CheckBox x:Name="chkMergeGraphLanesHavingCommonParent"
@@ -22,7 +22,7 @@
       </GroupBox>
 
       <GroupBox x:Name="PushWindowGB"
-                Header="Push window">
+                Header="_Push window">
         <StackPanel x:Name="tableLayoutPanel1"
                     Margin="8,4,8,8">
           <CheckBox x:Name="chkRemotesFromServer"
@@ -31,7 +31,7 @@
       </GroupBox>
 
       <GroupBox x:Name="mergeWindowGroup"
-                Header="Merge window">
+                Header="_Merge window">
         <StackPanel x:Name="tableLayoutPanel4"
                     Margin="8,4,8,8">
           <StackPanel x:Name="flowLayoutPanel1"

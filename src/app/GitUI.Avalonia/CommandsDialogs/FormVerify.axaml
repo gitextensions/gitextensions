@@ -18,7 +18,7 @@
                   Spacing="5">
         <TextBlock x:Name="label2"
                    TextWrapping="Wrap"
-                   Text="By default only unreferenced objects that are older than&#10;2 weeks are removed when cleaning up the database. All&#10;other object are only deleted when you run &quot;Remove all&#10;dangling objects&quot;&#10;&#10;Check commits you want to recover and press Recover button&#10;Context menu for additional operations" />
+                   Text="By default only unreferenced objects that are older than &#10;2 weeks are removed when cleaning up the database. All&#10;other object are only deleted when you run &quot;Remove all&#10;dangling objects&quot;&#10;&#10;Check commits you want to recover and press Recover button&#10;Context menu for additional operations" />
         <TextBlock x:Name="label1"
                    Margin="0,5,0,0"
                    Text="Double-click on a row for quick view" />
@@ -40,15 +40,15 @@
                   Grid.Row="1"
                   Grid.ColumnSpan="2"
                   IsChecked="True"
-                  Content="Do not consider commits that are referenced only by an entry in a&#10;reflog to be reachable." />
+                  Content="Do not consider commits that are referenced only by an entry in a &#10;reflog to be reachable." />
         <CheckBox x:Name="Unreachable"
                   Grid.Row="2"
                   Grid.ColumnSpan="2"
-                  Content="Print out objects that exist but that aren't readable from any of the reference&#10;nodes." />
+                  Content="Print out objects that exist but that aren't readable from any of the reference &#10;nodes.&#10;" />
         <CheckBox x:Name="FullCheck"
                   Grid.Row="3"
                   Grid.ColumnSpan="2"
-                  Content="Check not just objects in GIT__OBJECT__DIRECTORY ($GIT__DIR/objects),&#10;but also the ones found in alternate object pools." />
+                  Content="Check not just objects in GIT__OBJECT__DIRECTORY ($GIT__DIR/objects), &#10;but also the ones found in alternate object pools.&#10;" />
       </Grid>
     </Grid>
 
