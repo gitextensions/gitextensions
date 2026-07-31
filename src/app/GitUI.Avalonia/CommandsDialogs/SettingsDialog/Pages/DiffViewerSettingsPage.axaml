@@ -1,5 +1,6 @@
 <settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:compat="using:GitUI.Compat"
                                  xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
                                  x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.DiffViewerSettingsPage"
                                  Text="Diff viewer">
@@ -22,6 +23,7 @@
           <CheckBox x:Name="chkRememberShowEntireFilePreference"
                     Content="Remember the 'Show entire file' preference" />
           <CheckBox x:Name="chkRememberDiffAppearancePreference"
+                    compat:TranslationCompat.TranslateToolTip="False"
                     Content="Remember the 'Diff appearance' preference" />
           <CheckBox x:Name="chkRememberNumberOfContextLines"
                     Content="Remember the 'Number of context lines' preference" />
@@ -34,8 +36,10 @@
           <CheckBox x:Name="chkOpenSubmoduleDiffInSeparateWindow"
                     Content="Open Submodule Diff in separate window" />
           <CheckBox x:Name="chkShowDiffForAllParents"
+                    compat:TranslationCompat.TranslateToolTip="False"
                     Content="Show file differences for all parents in browse dialog" />
           <CheckBox x:Name="chkShowAllCustomDiffTools"
+                    compat:TranslationCompat.TranslateToolTip="False"
                     Content="Show all available difftools" />
           <StackPanel Orientation="Horizontal"
                       Spacing="8">
@@ -56,8 +60,10 @@
         <StackPanel x:Name="tlpnlDiffColoring"
                     Margin="8,4,8,8">
           <CheckBox x:Name="chkUseGitColoring"
+                    compat:TranslationCompat.TranslateToolTip="False"
                     Content="Git coloring" />
           <CheckBox x:Name="chkUseGEThemeGitColoring"
+                    compat:TranslationCompat.TranslateToolTip="False"
                     Content="Reverse background color" />
         </StackPanel>
       </GroupBox>
