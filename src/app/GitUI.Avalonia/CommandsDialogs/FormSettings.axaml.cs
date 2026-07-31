@@ -169,7 +169,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<AppearanceFontsSettingsPage>(this, serviceProvider),
             AppearanceSettingsPage.GetPageReference(),
-            Images.Font);
+            Images.Font.AdaptLightness());
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<ConsoleStyleSettingsPage>(this, serviceProvider),
             AppearanceSettingsPage.GetPageReference(),
@@ -177,7 +177,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<RevisionLinksSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
-            Images.Link);
+            Images.Link.AdaptLightness());
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),

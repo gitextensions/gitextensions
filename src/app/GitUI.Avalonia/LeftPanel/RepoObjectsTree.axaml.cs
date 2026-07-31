@@ -35,6 +35,7 @@ public partial class RepoObjectsTree : GitModuleControl
     public RepoObjectsTree()
     {
         InitializeComponent();
+        tsbCollapseAll.Icon = Images.CollapseAll.AdaptLightness();
         _submoduleTree = new SubmoduleTree(this);
         _worktreeTree = new WorktreeTree(this);
         CreateContextActions();
@@ -452,7 +453,7 @@ public partial class RepoObjectsTree : GitModuleControl
         AddAction(RepoAction.RebaseLocal, "BranchMenuItemsStrings", "Rebase", "&Rebase current branch on this branch...", Images.Rebase);
         AddAction(RepoAction.RebaseRemote, "RemoteBranchMenuItemsStrings", "Rebase", "&Rebase current branch on this remote branch...", Images.Rebase);
         AddAction(RepoAction.RebaseTag, "TagMenuItemsStrings", "Rebase", "&Rebase current branch on this tag revision...", Images.Rebase);
-        AddAction(RepoAction.CreateBranch, "MenuItemsStrings", "CreateBranch", "Create &branch...", Images.Branch);
+        AddAction(RepoAction.CreateBranch, "MenuItemsStrings", "CreateBranch", "Create &branch...", Images.Branch.AdaptLightness());
         AddAction(RepoAction.Reset, "MenuItemsStrings", "Reset", "Re&set current branch to here...", Images.ResetCurrentBranchToHere);
         AddAction(RepoAction.RenameBranch, "MenuItemsStrings", "Rename", "R&ename branch...", Images.Renamed);
         AddAction(RepoAction.DeleteBranch, "BranchMenuItemsStrings", "Delete", "&Delete branch...", Images.BranchDelete);
@@ -461,16 +462,16 @@ public partial class RepoObjectsTree : GitModuleControl
         AddAction(RepoAction.FetchMerge, nameof(RepoObjectsTree), "mnubtnPullFromRemoteBranch", "Fetch && Merge (&Pull)", Images.Pull);
         AddAction(RepoAction.FetchCheckout, nameof(RepoObjectsTree), "mnubtnRemoteBranchFetchAndCheckout", "&Fetch && Checkout", Images.BranchCheckout);
         AddAction(RepoAction.FetchRebase, nameof(RepoObjectsTree), "mnubtnFetchRebase", "Fetch && Re&base", Images.Rebase);
-        AddAction(RepoAction.FetchCreate, nameof(RepoObjectsTree), "mnubtnFetchCreateBranch", "Fetc&h && Create Branch", Images.Branch);
+        AddAction(RepoAction.FetchCreate, nameof(RepoObjectsTree), "mnubtnFetchCreateBranch", "Fetc&h && Create Branch", Images.Branch.AdaptLightness());
         AddAction(RepoAction.CreateInFolder, nameof(RepoObjectsTree), "mnubtnCreateBranch", "Create Branch...", Images.BranchCreate);
         AddAction(RepoAction.DeleteFolderBranches, nameof(RepoObjectsTree), "mnubtnDeleteAllBranches", "Delete All", Images.BranchDelete);
         AddAction(RepoAction.ManageRemotes, nameof(RepoObjectsTree), "mnuBtnManageRemotesFromRootNode", "&Manage...", Images.Remotes);
         AddAction(RepoAction.FetchAllRemotes, nameof(RepoObjectsTree), "mnuBtnFetchAllRemotes", "Fetch all remotes", Images.PullFetchAll);
         AddAction(RepoAction.PruneAllRemotes, nameof(RepoObjectsTree), "mnuBtnPruneAllRemotes", "Fetch and prune all remotes", Images.PullFetchPruneAll);
         AddAction(RepoAction.ManageRemote, nameof(RepoObjectsTree), "mnubtnManageRemotes", "&Manage...", Images.Remotes);
-        AddAction(RepoAction.EnableRemote, nameof(RepoObjectsTree), "mnubtnEnableRemote", "&Activate", Images.EyeOpened);
-        AddAction(RepoAction.EnableRemoteAndFetch, nameof(RepoObjectsTree), "mnubtnEnableRemoteAndFetch", "A&ctivate and fetch", Images.RemoteEnableAndFetch);
-        AddAction(RepoAction.DisableRemote, nameof(RepoObjectsTree), "mnubtnDisableRemote", "&Deactivate", Images.EyeClosed);
+        AddAction(RepoAction.EnableRemote, nameof(RepoObjectsTree), "mnubtnEnableRemote", "&Activate", Images.EyeOpened.AdaptLightness());
+        AddAction(RepoAction.EnableRemoteAndFetch, nameof(RepoObjectsTree), "mnubtnEnableRemoteAndFetch", "A&ctivate and fetch", Images.RemoteEnableAndFetch.AdaptLightness());
+        AddAction(RepoAction.DisableRemote, nameof(RepoObjectsTree), "mnubtnDisableRemote", "&Deactivate", Images.EyeClosed.AdaptLightness());
         AddAction(RepoAction.FetchRemote, nameof(RepoObjectsTree), "mnubtnFetchAllBranchesFromARemote", "&Fetch", Images.PullFetch);
         AddAction(RepoAction.PruneRemote, nameof(RepoObjectsTree), "mnuBtnPruneAllBranchesFromARemote", "Fetch and &prune", Images.PullFetchPrune);
         AddAction(RepoAction.OpenRemoteUrl, nameof(RepoObjectsTree), "mnuBtnOpenRemoteUrlInBrowser", "Open remote Url", Images.Globe);
@@ -482,8 +483,8 @@ public partial class RepoObjectsTree : GitModuleControl
         AddAction(RepoAction.ResetSubmodule, nameof(RepoObjectsTree), "mnubtnResetSubmodule", "&Reset", Images.ResetWorkingDirChanges);
         AddAction(RepoAction.StashSubmodule, nameof(RepoObjectsTree), "mnubtnStashSubmodule", "&Stash", Images.Stash);
         AddAction(RepoAction.CommitSubmodule, nameof(RepoObjectsTree), "mnubtnCommitSubmodule", "&Commit", Images.RepoStateDirtySubmodules);
-        AddAction(RepoAction.Collapse, nameof(RepoObjectsTree), "mnubtnCollapse", "Collapse", Images.CollapseAll);
-        AddAction(RepoAction.Expand, nameof(RepoObjectsTree), "mnubtnExpand", "Expand", Images.ExpandAll);
+        AddAction(RepoAction.Collapse, nameof(RepoObjectsTree), "mnubtnCollapse", "Collapse", Images.CollapseAll.AdaptLightness());
+        AddAction(RepoAction.Expand, nameof(RepoObjectsTree), "mnubtnExpand", "Expand", Images.ExpandAll.AdaptLightness());
         AddAction(RepoAction.MoveUp, nameof(RepoObjectsTree), "mnubtnMoveUp", "Move Up", Images.ArrowUp);
         AddAction(RepoAction.MoveDown, nameof(RepoObjectsTree), "mnubtnMoveDown", "Move Down", Images.ArrowDown);
     }

@@ -47,6 +47,7 @@ public sealed partial class FormSubmodules : GitModuleForm
 
     private void WireControls()
     {
+        Pull.Icon = Properties.Images.Pull.AdaptLightness();
         Submodules.ItemTemplate = new FuncDataTemplate<IGitSubmoduleInfo>(
             (submodule, _) =>
             {

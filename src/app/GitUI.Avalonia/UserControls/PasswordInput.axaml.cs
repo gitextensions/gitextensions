@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.VisualTree;
+using GitUI.Compat;
 using ResourceManager;
 
 namespace GitUI.UserControls;
@@ -13,6 +14,7 @@ public partial class PasswordInput : TranslatedControl
     public PasswordInput()
     {
         InitializeComponent();
+        ShowPassword.Icon = Properties.Images.EyeClosed.AdaptLightness();
 
         SendInput.Click += SendInput_Click;
         ShowPassword.Click += ShowPassword_Click;
@@ -34,8 +36,8 @@ public partial class PasswordInput : TranslatedControl
     {
         Password.RevealPassword = !Password.RevealPassword;
         ShowPassword.Icon = Password.RevealPassword
-            ? Properties.Images.EyeOpened
-            : Properties.Images.EyeClosed;
+            ? Properties.Images.EyeOpened.AdaptLightness()
+            : Properties.Images.EyeClosed.AdaptLightness();
         Password.Focus();
     }
 
