@@ -103,7 +103,7 @@
               <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GoToLastParentCommit}" /></MenuItem.Icon>
             </MenuItem>
           </MenuItem>
-          <MenuItem x:Name="viewToolStripMenuItem" Header="_View">
+      <MenuItem x:Name="viewToolStripMenuItem" Header="View">
             <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.AdvancedSettings}" /></MenuItem.Icon>
             <MenuItem Tag="BranchesToolStripMenuItem"
                       Header="Branches"

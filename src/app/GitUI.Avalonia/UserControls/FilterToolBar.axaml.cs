@@ -41,7 +41,7 @@ public sealed partial class FilterToolBar : TranslatedControl
         (nameof(tsddbtnRevisionFilter), "Text", "Filter type"),
         (nameof(tsmiResetPathFilters), "Text", "Reset &path filter"),
         (nameof(tsmiResetAllFilters), "Text", "&Reset revision filters"),
-        (nameof(tsmiAdvancedFilter), "Text", "&Advanced filter..."),
+        (nameof(tsmiAdvancedFilter), "Text", "&Advanced filter"),
         (nameof(tsmiShowBranchesAll), "Text", "&All branches"),
         (nameof(tsmiShowBranchesAll), "ToolTipText", "Show all branches"),
         (nameof(tsmiShowBranchesCurrent), "Text", "&Current branch only"),

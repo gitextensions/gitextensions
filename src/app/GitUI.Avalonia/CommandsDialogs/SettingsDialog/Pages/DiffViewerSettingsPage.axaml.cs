@@ -85,7 +85,6 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
     {
         base.AddTranslationItems(translation);
         AddToolTip(nameof(chkRememberDiffAppearancePreference), DiffAppearanceToolTip);
-        AddToolTip(nameof(chkShowDiffForAllParents), TranslatedStrings.ShowDiffForAllParentsTooltip);
         AddToolTip(nameof(chkShowAllCustomDiffTools), ShowAllDiffToolsToolTip);
         AddToolTip(nameof(chkUseGitColoring), GitColoringToolTip);
         AddToolTip(nameof(chkUseGEThemeGitColoring), ReverseGitColoringToolTip);

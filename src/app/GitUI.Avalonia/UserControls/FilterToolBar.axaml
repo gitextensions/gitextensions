@@ -16,7 +16,7 @@
           <MenuItem x:Name="tsmiResetPathFilters" Header="Reset _path filter" IsEnabled="False" />
           <MenuItem x:Name="tsmiResetAllFilters" Header="_Reset revision filters" IsEnabled="False" />
           <Separator />
-          <MenuItem x:Name="tsmiAdvancedFilter" Header="_Advanced filter..." />
+  <MenuItem x:Name="tsmiAdvancedFilter" Header="_Advanced filter" />
         </MenuFlyout>
       </compat:IconSplitButton.Flyout>
     </compat:IconSplitButton>

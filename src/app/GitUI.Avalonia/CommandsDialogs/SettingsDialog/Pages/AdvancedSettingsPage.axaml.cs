@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
-using GitExtensions.Extensibility.Translations;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
@@ -73,27 +72,6 @@ public partial class AdvancedSettingsPage : SettingsPageWithHeader
     {
         chkAutoNormaliseBranchName.IsCheckedChanged += (_, _) =>
             cboAutoNormaliseSymbol.IsEnabled = chkAutoNormaliseBranchName.IsChecked == true;
-    }
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        translation.AddTranslationItem(
-            nameof(AdvancedSettingsPage),
-            "$this",
-            "Text",
-            Text ?? "Advanced");
-    }
-
-    public override void TranslateItems(ITranslation translation)
-    {
-        base.TranslateItems(translation);
-        string neutralText = Text ?? "Advanced";
-        Text = translation.TranslateItem(
-            nameof(AdvancedSettingsPage),
-            "$this",
-            "Text",
-            () => neutralText) ?? neutralText;
     }
 
     internal TestAccessor GetTestAccessor() => new(this);

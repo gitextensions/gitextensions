@@ -7,6 +7,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public sealed partial class FormFixHome : GitExtensionsFormBase
 {
+    private const string PortableHomeDescription =
+        "The global config file is located using the HOME environment variable.\nChange the default behaviour only if you experience problems.";
+
     private readonly TranslationString _gitGlobalConfigNotFound = new(
         "The environment variable HOME does not point to a directory that contains the global git config file:" + Environment.NewLine
         + "\" {0} \"" + Environment.NewLine + Environment.NewLine
@@ -15,9 +18,6 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
     private readonly TranslationString _noHomeDirectorySpecified = new("Please enter a HOME directory.");
     private readonly TranslationString _homeNotAccessible = new(
         "The environment variable HOME points to a directory that is not accessible:" + Environment.NewLine + "\"{0}\"");
-    private readonly TranslationString _portableHomeDescription = new(
-        "The global config file is located using the HOME environment variable.\nChange the default behaviour only if you experience problems.");
-
     public FormFixHome()
     {
         InitializeComponent();
@@ -28,7 +28,7 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
         if (!OperatingSystem.IsWindows())
         {
             label51.IsVisible = false;
-            _NO_TRANSLATE_portableHomeDescription.Text = _portableHomeDescription.Text;
+            _NO_TRANSLATE_portableHomeDescription.Text = PortableHomeDescription;
             _NO_TRANSLATE_portableHomeDescription.IsVisible = true;
             userprofileHome.IsVisible = false;
         }
