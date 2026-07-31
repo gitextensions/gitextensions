@@ -518,6 +518,10 @@ public sealed partial class EditNetSpell : GitModuleControl
 
         public int RenderedMisspellingCount => control.SpellCheckAdorner.RenderedMisspellingCount;
 
+        public Avalonia.Media.Color IllFormedMarkColor => control.SpellCheckAdorner.IllFormedMarkColor;
+
+        public Avalonia.Media.Color SpellingWaveColor => control.SpellCheckAdorner.SpellingWaveColor;
+
         public void OpenContextMenu() => control.SpellCheckContextMenuOpening(control.SpellCheckContextMenu, new CancelEventArgs());
     }
 }

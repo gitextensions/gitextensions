@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -15,10 +15,12 @@ using GitExtensions.Extensibility.Translations;
 using GitExtensions.Plugins.GitStatistics;
 using GitExtensions.Plugins.GitStatistics.PieChart;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.Compat;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using DrawingColor = System.Drawing.Color;
 
 namespace GitExtensionsTests;
 
@@ -148,6 +150,19 @@ public sealed class GitStatisticsPluginTests
 
             PieChartControl.TestAccessor accessor = control.GetTestAccessor();
             accessor.SliceCount.Should().Be(2);
+            DrawingColor originalSliceColor = DrawingColor.FromArgb(
+                Colors.DodgerBlue.A,
+                Colors.DodgerBlue.R,
+                Colors.DodgerBlue.G,
+                Colors.DodgerBlue.B);
+            DrawingColor adaptedSliceColor = originalSliceColor.AdaptBackColor();
+            Color expectedSliceColor = Color.FromArgb(
+                adaptedSliceColor.A,
+                adaptedSliceColor.R,
+                adaptedSliceColor.G,
+                adaptedSliceColor.B);
+            accessor.GetSliceColor(0).Should().Be(expectedSliceColor);
+            accessor.GetEdgeColor(0).Should().Be(CorrectLightness(expectedSliceColor, -0.3));
             Point hitPoint = accessor.GetSliceHitPoint(0);
             accessor.FindSlice(hitPoint).Should().Be(0);
 
@@ -192,5 +207,21 @@ public sealed class GitStatisticsPluginTests
         module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "Sample.cs" }).Should().BeTrue();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
         return module;
+    }
+
+    private static Color CorrectLightness(Color color, double correctionFactor)
+    {
+        static byte Correct(byte channel, double correctionFactor)
+        {
+            double value = correctionFactor < 0
+                ? channel * (1 + correctionFactor)
+                : ((byte.MaxValue - channel) * correctionFactor) + channel;
+            return (byte)(int)value;
+        }
+
+        return Color.FromRgb(
+            Correct(color.R, correctionFactor),
+            Correct(color.G, correctionFactor),
+            Correct(color.B, correctionFactor));
     }
 }
