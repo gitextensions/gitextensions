@@ -123,6 +123,9 @@ public sealed partial class FormBrowse : GitModuleForm
     public FormBrowse()
     {
         InitializeComponent();
+        ((Image)recoverLostObjectsToolStripMenuItem.Icon!).Source = Images.RecoverLostObjects.AdaptLightness();
+        ((Image)translateToolStripMenuItem.Icon!).Source = Images.Translate.AdaptLightness();
+        branchSelect.Icon = Images.Branch.AdaptLightness();
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip, RevisionGrid, repositoryToolStripMenuItem);
         InitializeWorkspaceLayout();
         InitializeComplete();
@@ -1023,7 +1026,7 @@ public sealed partial class FormBrowse : GitModuleForm
                 {
                     Width = 16,
                     Height = 16,
-                    Source = isBranchVisible ? Images.Branch : Images.EyeClosed,
+                    Source = (isBranchVisible ? Images.Branch : Images.EyeClosed).AdaptLightness(),
                 },
                 Opacity = isBranchVisible ? 1 : 0.55,
             };

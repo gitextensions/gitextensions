@@ -3,6 +3,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -51,9 +52,9 @@ public partial class Dashboard : GitModuleControl
         createItem.Content = CreateLinkContent(Images.RepoCreate, _createRepository.Text);
         openItem.Content = CreateLinkContent(Images.RepoOpen, _openRepository.Text);
         cloneItem.Content = CreateLinkContent(Images.CloneRepoGit, _cloneRepository.Text);
-        developItem.Content = CreateLinkContent(Images.Develop, _develop.Text);
+        developItem.Content = CreateLinkContent(Images.Develop.AdaptLightness(), _develop.Text);
         donateItem.Content = CreateLinkContent(Images.DollarSign, _donate.Text);
-        translateItem.Content = CreateLinkContent(Images.Translate, _translate.Text);
+        translateItem.Content = CreateLinkContent(Images.Translate.AdaptLightness(), _translate.Text);
         issuesItem.Content = CreateLinkContent(Images.Bug, _issues.Text);
         userRepositoriesList.ShowRecentRepositories(reloadData: false);
     }

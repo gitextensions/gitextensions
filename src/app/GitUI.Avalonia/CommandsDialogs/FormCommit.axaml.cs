@@ -117,6 +117,7 @@ public sealed partial class FormCommit : GitModuleForm
     public FormCommit()
     {
         InitializeComponent();
+        toolStripStatusBranchIcon.Source = Properties.Images.Branch.AdaptLightness();
         InitializeComplete();
     }
 
@@ -131,6 +132,7 @@ public sealed partial class FormCommit : GitModuleForm
         _editedCommit = editedCommit;
 
         InitializeComponent();
+        toolStripStatusBranchIcon.Source = Properties.Images.Branch.AdaptLightness();
 
         _currentFilesList = Unstaged;
         Unstaged.SelectionMode = SelectionMode.Multiple;

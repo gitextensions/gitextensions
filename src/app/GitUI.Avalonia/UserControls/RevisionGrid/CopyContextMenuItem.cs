@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using GitExtensions.Extensibility;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 
@@ -51,13 +52,13 @@ public sealed class CopyContextMenuItem : MenuItem
         }
 
         _itemNumber = 0;
-        AddRefItems(TranslatedStrings.Branches, branchNames, Images.Branch);
+        AddRefItems(TranslatedStrings.Branches, branchNames, Images.Branch.AdaptLightness());
         AddRefItems(TranslatedStrings.Tags, tagNames, Images.Tag);
 
         int count = revisions.Count;
         AddRevisionItem(ResourceManager.TranslatedStrings.GetCommitHash(count), revision => revision.Guid, Images.CommitId, 'C');
         AddRevisionItem(ResourceManager.TranslatedStrings.GetMessage(count), revision => revision.Body ?? revision.Subject, Images.Message, 'M');
-        AddRevisionItem(ResourceManager.TranslatedStrings.GetAuthor(count), revision => $"{revision.Author} <{revision.AuthorEmail}>", Images.Author, 'A');
+        AddRevisionItem(ResourceManager.TranslatedStrings.GetAuthor(count), revision => $"{revision.Author} <{revision.AuthorEmail}>", Images.Author.AdaptLightness(), 'A');
 
         if (count == 1 && revisions[0].AuthorDate == revisions[0].CommitDate)
         {

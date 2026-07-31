@@ -5,6 +5,8 @@ using System.Text.Json;
 using System.Xml.Linq;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using GitUI.HelperDialogs;
+using GitUI.Properties;
 
 namespace GitExtensionsTests;
 
@@ -109,6 +111,13 @@ public sealed class PreviewabilityTests
 
             if (control is Window window)
             {
+                // FormStatus follows the original by replacing the app icon with operation-state badges.
+                if (window is not FormStatus && !ReferenceEquals(window.Icon, Images.ApplicationIcon))
+                {
+                    throw new InvalidOperationException(
+                        $"The AXAML window '{view.ClassName}' does not use the Git Extensions application icon.");
+                }
+
                 window.Close();
             }
 
