@@ -3,8 +3,10 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Text.Json;
 using System.Xml.Linq;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
 
@@ -16,6 +18,7 @@ namespace GitExtensionsTests;
 public sealed class PreviewabilityTests
 {
     private const string EvidencePathEnvironmentVariable = "GITEXT_PREVIEWABILITY_REPORT";
+    private const string InputAccessibilityEvidencePathEnvironmentVariable = "GITEXT_INPUT_ACCESSIBILITY_REPORT";
 
     [AvaloniaTest]
     [Category("P0_8B")]
@@ -87,6 +90,71 @@ public sealed class PreviewabilityTests
 
         inaccessibleTypes.Should().BeEmpty(
             "the out-of-process Avalonia previewer constructs markup controls from a generated assembly");
+    }
+
+    [AvaloniaTest]
+    [Category("P1_5")]
+    public void Every_actionable_control_in_every_constructible_view_should_have_an_automation_name()
+    {
+        IReadOnlyList<ViewDescriptor> views = GetViewDescriptors();
+        List<string> unnamedControls = [];
+        int actionableCount = 0;
+        bool originalDesignMode = Design.IsDesignMode;
+        SetDesignMode(true);
+        try
+        {
+            foreach (ViewDescriptor view in views.Where(view => view.ViewType is not null))
+            {
+                Control control = (Control)(Activator.CreateInstance(view.ViewType!)
+                    ?? throw new InvalidOperationException($"Activator returned null for '{view.ClassName}'."));
+                foreach (Control actionable in InputAccessibility.EnumerateControls(control).Where(InputAccessibility.IsActionable))
+                {
+                    actionableCount++;
+                    string? automationName = AutomationProperties.GetName(actionable);
+                    if (string.IsNullOrWhiteSpace(automationName) || automationName == "Control")
+                    {
+                        unnamedControls.Add(
+                            $"{view.Path}: {actionable.GetType().Name}#{actionable.Name ?? "<unnamed>"}");
+                    }
+                }
+
+                if (control is Window window)
+                {
+                    window.Close();
+                }
+
+                if (control is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+        }
+        finally
+        {
+            SetDesignMode(originalDesignMode);
+        }
+
+        string? evidencePath = Environment.GetEnvironmentVariable(InputAccessibilityEvidencePathEnvironmentVariable);
+        if (!string.IsNullOrWhiteSpace(evidencePath))
+        {
+            string fullEvidencePath = Path.GetFullPath(evidencePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullEvidencePath)!);
+            File.WriteAllText(
+                fullEvidencePath,
+                JsonSerializer.Serialize(
+                    new
+                    {
+                        schemaVersion = 1,
+                        viewCount = views.Count(view => view.ViewType is not null),
+                        actionableControlCount = actionableCount,
+                        unnamedControlCount = unnamedControls.Count,
+                    },
+                    new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine);
+        }
+
+        actionableCount.Should().BeGreaterThan(0);
+        unnamedControls.Should().BeEmpty(
+            "every actionable control exposed by a constructible AXAML view needs a useful automation name");
     }
 
     private static PreviewabilityResult Construct(ViewDescriptor view)

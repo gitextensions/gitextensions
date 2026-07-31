@@ -27,6 +27,8 @@
       <x:Double x:Key="GitExtensionsTreeViewItemIndent">18</x:Double>
       <Thickness x:Key="GitExtensionsTreeViewChevronMargin">4,0</Thickness>
 
+      <compat:WinFormsFocusAdornerTemplate x:Key="GitExtensionsFocusAdorner" />
+
       <!-- WinForms MenuStrip is a compact desktop control: 24px bar, 20px top-level
            items, and 22px dropdown rows. Fluent's defaults are intentionally roomier. -->
       <x:Double x:Key="MenuBarHeight">24</x:Double>
@@ -504,6 +506,7 @@
   </Style>
   <Style Selector="Label.gitextensions-dialog-label">
     <Setter Property="Margin" Value="3" />
+    <Setter Property="Padding" Value="0" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 
@@ -572,6 +575,7 @@
   <Style Selector="ListBoxItem">
     <Setter Property="MinHeight" Value="24" />
     <Setter Property="Padding" Value="6,2" />
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
   </Style>
   <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background"
@@ -586,6 +590,7 @@
 
   <Style Selector="TreeViewItem">
     <Setter Property="MinHeight" Value="24" />
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
   </Style>
   <Style Selector="TreeViewItem:selected /template/ Border#PART_LayoutRoot">
     <Setter Property="Background"
@@ -662,6 +667,12 @@
 
   <Style Selector="MenuItem">
     <Setter Property="MinHeight" Value="22" />
+  </Style>
+  <Style Selector="Button">
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
+  </Style>
+  <Style Selector="TabItem">
+    <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
   </Style>
   <Style Selector="MenuItem.gitextensions-menu-caption">
     <Setter Property="FontStyle" Value="Italic" />
