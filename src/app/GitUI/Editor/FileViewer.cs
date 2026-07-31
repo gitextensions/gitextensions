@@ -751,7 +751,7 @@ public partial class FileViewer : GitModuleControl
                     return CreateImage(file.Name, stream);
                 }
             }
-            catch
+            catch (Exception ex) when (ex is not OperationCanceledException)
             {
             }
 
