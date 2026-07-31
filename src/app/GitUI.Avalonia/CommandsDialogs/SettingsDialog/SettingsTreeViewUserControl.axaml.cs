@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using GitExtensions.Extensibility.Settings;
+using GitUI.Compat;
 
 namespace GitUI.CommandsDialogs.SettingsDialog;
 
@@ -20,6 +21,9 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
         textBoxFind.TextChanged += textBoxFind_TextChanged;
         textBoxFind.KeyDown += textBoxFind_KeyDown;
         treeView1.SelectionChanged += treeView1_SelectionChanged;
+
+        // Avalonia requires automation properties to be projected explicitly for this standalone control.
+        InputAccessibility.Apply(this);
     }
 
     public event EventHandler<SettingsPageSelectedEventArgs>? SettingsPageSelected;

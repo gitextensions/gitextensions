@@ -7,6 +7,10 @@ namespace GitUI.Compat;
 internal static class KeysMapper
 {
     public static KeyGesture? ToKeyGesture(WinFormsShims.Keys? keyData)
+        => ToKeyGesture(keyData, OperatingSystem.IsMacOS());
+
+    // parity-scaffolding: Verifies the macOS Command projection on Windows and Linux test hosts.
+    internal static KeyGesture? ToKeyGesture(WinFormsShims.Keys? keyData, bool useMetaForControl)
     {
         if (keyData is null)
         {
@@ -69,7 +73,7 @@ internal static class KeysMapper
 
         if (keyData.Value.HasFlag(WinFormsShims.Keys.Control))
         {
-            modifiers |= OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+            modifiers |= useMetaForControl ? KeyModifiers.Meta : KeyModifiers.Control;
         }
 
         if (keyData.Value.HasFlag(WinFormsShims.Keys.Alt))

@@ -365,8 +365,8 @@ public sealed partial class FormClone : GitExtensionsDialog
         bool destinationUnfilled = string.IsNullOrEmpty(toText) || toText.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) >= 0;
         bool subDirectoryUnfilled = string.IsNullOrEmpty(newDirectoryText) || newDirectoryText.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) >= 0;
 
-        string destinationDirectory = destinationUnfilled ? $@"[{AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(destinationLabel.Text ?? "")}]" : toText;
-        string destinationSubDirectory = subDirectoryUnfilled ? $@"[{AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(subdirectoryLabel.Text ?? "")}]" : newDirectoryText;
+        string destinationDirectory = destinationUnfilled ? $@"[{AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(destinationLabel.Content as string ?? "")}]" : toText;
+        string destinationSubDirectory = subDirectoryUnfilled ? $@"[{AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(subdirectoryLabel.Content as string ?? "")}]" : newDirectoryText;
 
         string destinationPath = Path.Combine(destinationDirectory, destinationSubDirectory);
 
