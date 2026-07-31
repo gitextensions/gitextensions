@@ -203,14 +203,14 @@ partial class AppearanceSettingsPage
         truncatePathMethod.Name = "truncatePathMethod";
         truncatePathMethod.Size = new Size(362, 23);
         truncatePathMethod.TabIndex = 4;
-        // 
+        //
         // gbLanguages
-        // 
+        //
         gbLanguages.AutoSize = true;
         gbLanguages.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         gbLanguages.Controls.Add(tlpnlLanguage);
         gbLanguages.Dock = DockStyle.Fill;
-        gbLanguages.Location = new Point(3, 405);
+        gbLanguages.Location = new Point(3, 505);
         gbLanguages.Name = "gbLanguages";
         gbLanguages.Padding = new Padding(8);
         gbLanguages.Size = new Size(1480, 90);

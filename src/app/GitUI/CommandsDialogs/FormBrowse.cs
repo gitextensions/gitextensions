@@ -232,6 +232,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
     public RevisionGridControl RevisionGridControl => RevisionGrid;
+    public ContextMenuStrip RepoObjectsTreeContextMenu => repoObjectsTree.MainContextMenu;
+    internal ToolStripPanel TopToolStripPanel => toolPanel.TopToolStripPanel;
 
     /// <summary>
     /// Open Browse - main GUI including dashboard.
@@ -285,6 +287,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitCountArtificial(out _gitStatusMonitor);
 
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
+        mainMenuStrip.Font = AppSettings.MenuFont;
 
         RevisionGrid.SuspendRefreshRevisions();
 
@@ -327,6 +330,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         toolStripButtonPush.ResetToDefaultState();
         repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid);
+        repoObjectsTree.ContextMenuStateUpdated += (s, e) => SyncToolbarButtonStatesFromContextMenu(repoObjectsTree.MainContextMenu);
         revisionDiff.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
         fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: null, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor, requestBlame: _isFileHistoryMode);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
@@ -486,6 +490,17 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
 
+        // Refresh toolbar menus with custom toolbars
+        Dictionary<string, ToolStrip> dynamicToolbars = toolPanel.TopToolStripPanel.Controls
+            .OfType<ToolStrip>()
+            .Where(toolStrip => toolStrip.Name.StartsWith("ToolStripCustom"))
+            .ToDictionary(toolStrip => toolStrip.Name);
+
+        if (dynamicToolbars.Count > 0)
+        {
+            _formBrowseMenus.RefreshToolbarsMenu(dynamicToolbars);
+        }
+
         RefreshSplitViewLayout();
         LayoutRevisionInfo();
         SetSplitterPositions();
@@ -555,6 +570,15 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             // Show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
             _repositoryHostsToolStripMenuItem.Visible = PluginRegistry.GitHosters.Count != 0;
         }
+    }
+
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+
+        // Post via BeginInvoke so WinForms finishes its first layout pass (and the
+        // ToolStripPanel gets its real width) before we reorganize the toolbars.
+        BeginInvoke(ReorganizeToolbars);
     }
 
     protected override void OnActivated(EventArgs e)
@@ -877,6 +901,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
                 ToolStripMenuItem item = new()
                 {
+                    Name = $"plugin_{plugin.Name?.Replace(' ', '_')}",
                     Text = plugin.Name,
                     Image = plugin.Icon,
                     Tag = plugin
@@ -1045,6 +1070,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
             LoadUserMenu();
             toolStripButtonLevelUp.Image = validBrowseDir && Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
+            toolStripButtonLevelUp.Text = toolStripButtonLevelUp.ToolTipText;
 
             if (validBrowseDir)
             {
@@ -1421,6 +1447,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private void DeleteBranchToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartDeleteBranchDialog(this, string.Empty);
+    }
+
+    private void RenameBranchMainToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        UICommands.StartRenameDialog(this, Module.GetSelectedBranch());
     }
 
     private void DeleteTagToolStripMenuItemClick(object sender, EventArgs e)
@@ -2363,6 +2394,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         cleanupToolStripMenuItem.Enabled =
         toolStripMenuItemReflog.Enabled =
         applyPatchToolStripMenuItem.Enabled =
+        renameBranchMainToolStripMenuItem.Enabled =
             !Module.IsBareRepository();
     }
 
@@ -2700,7 +2732,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
         else
         {
-            toolStripButtonLevelUp.ShowDropDown();
+            // Use sender so that the dropdown opens beneath whichever button was clicked
+            // (the original on the Standard toolbar or a clone on a custom toolbar).
+            ((ToolStripSplitButton?)sender)?.ShowDropDown();
         }
     }
 

@@ -121,6 +121,14 @@ This action will be performed without warning while checking out branch.</source
         <source>Code font</source>
         <target />
       </trans-unit>
+      <trans-unit id="labelMenu.Text">
+        <source>Menu font</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="menuFontChangeButton.Text">
+        <source>font name</source>
+        <target />
+      </trans-unit>
       <trans-unit id="monospaceFontChangeButton.Text">
         <source>font name</source>
         <target />
@@ -2749,18 +2757,6 @@ compare with first:</source>
         <source>Refresh</source>
         <target />
       </trans-unit>
-      <trans-unit id="ToolStripFilters.Text">
-        <source>Filters</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="ToolStripMain.Text">
-        <source>Standard</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="ToolStripScripts.Text">
-        <source>Scripts</source>
-        <target />
-      </trans-unit>
       <trans-unit id="TreeTabPage.Text">
         <source>File tree</source>
         <target />
@@ -3204,6 +3200,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="refreshToolStripMenuItem.Text">
         <source>&amp;Refresh</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="renameBranchMainToolStripMenuItem.Text">
+        <source>R&amp;ename branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="repoSettingsToolStripMenuItem.Text">
@@ -10142,6 +10142,50 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="ResetTooltip.Text">
         <source>Reset current branch to here</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ToolbarsSettingsPage" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Toolbars</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonLocateToolbar.Text">
+        <source>Locate</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonShowAllIconText.Text">
+        <source>For all icons</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonShowIconText.Text">
+        <source>For this icon</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonToolbarLayout.Text">
+        <source>Layout</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelAvailable.Text">
+        <source>Available actions:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelNoFormBrowse.Text">
+        <source>Please open a repository window to customize toolbars.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelPosition.Text">
+        <source>Set toolbars position:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelShow.Text">
+        <source>Show icon text (*):</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelToolbar.Text">
+        <source>Toolbar:</source>
         <target />
       </trans-unit>
     </body>
