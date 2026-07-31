@@ -5,7 +5,11 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
 using Avalonia.VisualTree;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Compat;
+using GitUI.Theming;
 using Color = Avalonia.Media.Color;
+using DrawingColor = System.Drawing.Color;
 using Point = Avalonia.Point;
 
 namespace GitUI.SpellChecker;
@@ -27,6 +31,21 @@ internal sealed class SpellCheckAdorner : Control
 
     internal int RenderedMisspellingCount { get; private set; }
 
+    internal Color IllFormedMarkColor
+        => AvaloniaThemeResources.ToMediaColor(
+            DrawingColor.FromArgb(120, 255, 255, 0).AdaptBackColor());
+
+    internal Color SpellingWaveColor
+    {
+        get
+        {
+            DrawingColor background = TextBox?.Background is ISolidColorBrush brush
+                ? DrawingColor.FromArgb(brush.Color.A, brush.Color.R, brush.Color.G, brush.Color.B)
+                : AvaloniaThemeResources.ResolveAppColor(ThemeModule.Settings, AppColor.EditorBackground);
+            return AvaloniaThemeResources.ToMediaColor(DrawingColor.Red.AdaptForeColor(background));
+        }
+    }
+
     public override void Render(DrawingContext context)
     {
         base.Render(context);
@@ -40,7 +59,7 @@ internal sealed class SpellCheckAdorner : Control
 
         using (context.PushClip(new Rect(Bounds.Size)))
         {
-            IBrush markBrush = new SolidColorBrush(Color.FromArgb(70, 255, 255, 0));
+            IBrush markBrush = new SolidColorBrush(IllFormedMarkColor);
             foreach (TextPos range in IllFormedLines)
             {
                 DrawRange(context, layout, origin, range, markBrush, drawWave: false);
@@ -52,7 +71,7 @@ internal sealed class SpellCheckAdorner : Control
                 context.DrawRectangle(markBrush, null, new Rect(origin.X, origin.Y, Bounds.Width - origin.X, firstPosition.Height));
             }
 
-            IPen spellingPen = new Pen(Brushes.Red, 1);
+            IPen spellingPen = new Pen(new SolidColorBrush(SpellingWaveColor), 1);
             foreach (TextPos range in MisspelledWords)
             {
                 DrawRange(context, layout, origin, range, spellingPen.Brush!, drawWave: true);

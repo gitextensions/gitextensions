@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using GitExtensions.ParityCapture;
 
 namespace GitExtensions.ParityDiff;
@@ -255,27 +255,47 @@ internal static class CaptureComparer
     {
         List<CaptureNode> referenceNodes = Flatten(referenceRoot).Where(node => node.FieldName is not null).ToList();
         List<CaptureNode> candidateNodes = Flatten(candidateRoot).Where(node => node.FieldName is not null).ToList();
-        Dictionary<string, CaptureNode> candidatesByField = candidateNodes
-            .ToDictionary(node => node.FieldName!, StringComparer.Ordinal);
+        Dictionary<string, List<CaptureNode>> candidatesByField = candidateNodes
+            .GroupBy(node => node.FieldName!, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.ToList(), StringComparer.Ordinal);
+        Dictionary<string, int> referenceCounts = GetFieldCounts(referenceNodes);
+        Dictionary<string, int> candidateCounts = GetFieldCounts(candidateNodes);
+        Dictionary<CaptureNode, int> referenceOccurrences = GetFieldOccurrences(referenceNodes);
+        Dictionary<CaptureNode, int> candidateOccurrences = GetFieldOccurrences(candidateNodes);
+        ReportDuplicateFields(referenceCounts, candidateCounts, surfacePath, findings);
+
         HashSet<CaptureNode> matchedCandidates = new(ReferenceEqualityComparer.Instance);
         foreach (CaptureNode referenceNode in referenceNodes)
         {
             CaptureNode? candidateNode = null;
             bool aliased = false;
-            if (candidatesByField.TryGetValue(referenceNode.FieldName!, out CaptureNode? exact))
+            if (candidatesByField.TryGetValue(referenceNode.FieldName!, out List<CaptureNode>? exactMatches))
             {
-                candidateNode = exact;
-            }
-            else
-            {
-                candidateNode = candidateNodes.SingleOrDefault(
-                    node => !matchedCandidates.Contains(node)
-                            && (node.FieldAliases.Contains(referenceNode.FieldName!, StringComparer.Ordinal)
-                                || referenceNode.FieldAliases.Contains(node.FieldName!, StringComparer.Ordinal)));
-                aliased = candidateNode is not null;
+                candidateNode = exactMatches.FirstOrDefault(node => !matchedCandidates.Contains(node));
             }
 
-            string path = $"{surfacePath}/control[{referenceNode.FieldName}]";
+            if (candidateNode is null)
+            {
+                CaptureNode[] aliasMatches = candidateNodes
+                    .Where(node => !matchedCandidates.Contains(node)
+                                   && (node.FieldAliases.Contains(referenceNode.FieldName!, StringComparer.Ordinal)
+                                       || referenceNode.FieldAliases.Contains(node.FieldName!, StringComparer.Ordinal)))
+                    .Take(2)
+                    .ToArray();
+                if (aliasMatches.Length == 1)
+                {
+                    candidateNode = aliasMatches[0];
+                    aliased = true;
+                }
+            }
+
+            int referenceCount = referenceCounts[referenceNode.FieldName!];
+            int candidateCount = candidateCounts.GetValueOrDefault(referenceNode.FieldName!);
+            string path = GetControlPath(
+                surfacePath,
+                referenceNode.FieldName!,
+                referenceOccurrences[referenceNode],
+                Math.Max(referenceCount, candidateCount));
             if (candidateNode is null)
             {
                 candidateNode = FindRenameCandidate(referenceNode, candidateNodes, matchedCandidates);
@@ -311,13 +331,71 @@ internal static class CaptureComparer
 
         foreach (CaptureNode candidateNode in candidateNodes.Where(node => !matchedCandidates.Contains(node)))
         {
+            string fieldName = candidateNode.FieldName!;
             findings.Add(CreateFinding(
                 ControlCategory,
                 "control.extra",
-                $"{surfacePath}/control[{candidateNode.FieldName}]",
+                GetControlPath(
+                    surfacePath,
+                    fieldName,
+                    candidateOccurrences[candidateNode],
+                    Math.Max(referenceCounts.GetValueOrDefault(fieldName), candidateCounts[fieldName])),
                 "The candidate field is absent from the reference.",
                 null,
-                candidateNode.FieldName));
+                fieldName));
+        }
+    }
+
+    private static Dictionary<string, int> GetFieldCounts(IEnumerable<CaptureNode> nodes) =>
+        nodes.GroupBy(node => node.FieldName!, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+
+    private static Dictionary<CaptureNode, int> GetFieldOccurrences(IEnumerable<CaptureNode> nodes)
+    {
+        Dictionary<string, int> counts = new(StringComparer.Ordinal);
+        Dictionary<CaptureNode, int> occurrences = new(ReferenceEqualityComparer.Instance);
+        foreach (CaptureNode node in nodes)
+        {
+            string fieldName = node.FieldName!;
+            int occurrence = counts.GetValueOrDefault(fieldName) + 1;
+            counts[fieldName] = occurrence;
+            occurrences[node] = occurrence;
+        }
+
+        return occurrences;
+    }
+
+    private static string GetControlPath(
+        string surfacePath,
+        string fieldName,
+        int occurrence,
+        int count) =>
+        count > 1
+            ? $"{surfacePath}/control[{fieldName}][{occurrence}]"
+            : $"{surfacePath}/control[{fieldName}]";
+
+    private static void ReportDuplicateFields(
+        IReadOnlyDictionary<string, int> referenceCounts,
+        IReadOnlyDictionary<string, int> candidateCounts,
+        string surfacePath,
+        ICollection<ParityFinding> findings)
+    {
+        string[] duplicateFields = referenceCounts.Keys
+            .Concat(candidateCounts.Keys)
+            .Distinct(StringComparer.Ordinal)
+            .Where(fieldName => referenceCounts.GetValueOrDefault(fieldName) > 1
+                                || candidateCounts.GetValueOrDefault(fieldName) > 1)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        foreach (string fieldName in duplicateFields)
+        {
+            findings.Add(CreateFinding(
+                ControlCategory,
+                "control.duplicateIdentity",
+                $"{surfacePath}/control[{fieldName}]",
+                "The field identity is duplicated; repeated controls are joined in stable tree order.",
+                referenceCounts.GetValueOrDefault(fieldName).ToString(CultureInfo.InvariantCulture),
+                candidateCounts.GetValueOrDefault(fieldName).ToString(CultureInfo.InvariantCulture)));
         }
     }
 

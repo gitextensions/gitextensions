@@ -1,6 +1,9 @@
 using Avalonia;
 using Avalonia.Media;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using Color = Avalonia.Media.Color;
+using DrawingColor = System.Drawing.Color;
 using Point = Avalonia.Point;
 using Size = Avalonia.Size;
 
@@ -51,6 +54,13 @@ public sealed class PieChart3D
 
     internal int SliceCount => _slices.Count;
 
+    internal Color GetSliceColor(int index) => _slices[index].Color;
+
+    internal Color GetEdgeColor(int index)
+        => CreatePen(_slices[index].Color)?.Brush is ISolidColorBrush brush
+            ? brush.Color
+            : Colors.Transparent;
+
     public void SetInitialAngle(double value)
     {
         _initialAngle = value;
@@ -79,7 +89,7 @@ public sealed class PieChart3D
         foreach (Slice slice in _slices)
         {
             Color color = slice.Index == HighlightedIndex
-                ? AdjustLightness(slice.Color, 0.22)
+                ? AdjustLightness(slice.Color, 0.3)
                 : slice.Color;
             drawingContext.DrawGeometry(
                 new SolidColorBrush(color),
@@ -155,6 +165,7 @@ public sealed class PieChart3D
             Point center = new(
                 baseCenter.X + (Math.Cos(middleAngle) * displacement),
                 baseCenter.Y + (Math.Sin(middleAngle) * displacement));
+            Color sliceColor = AdaptBackColor(_sliceColors[index % _sliceColors.Length]);
             slices.Add(new Slice(
                 index,
                 startAngle,
@@ -163,7 +174,7 @@ public sealed class PieChart3D
                 radiusX,
                 radiusY,
                 depth,
-                _sliceColors[index % _sliceColors.Length]));
+                sliceColor));
             startAngle += sweepAngle;
         }
 
@@ -197,7 +208,7 @@ public sealed class PieChart3D
 
             Color sideColor = ShadowStyle == ShadowStyle.NoShadow
                 ? slice.Color
-                : AdjustLightness(slice.Color, ShadowStyle == ShadowStyle.UniformShadow ? -0.24 : -0.34);
+                : AdjustLightness(slice.Color, -0.3);
             IBrush brush = ShadowStyle == ShadowStyle.GradualShadow
                 ? new LinearGradientBrush
                 {
@@ -206,7 +217,8 @@ public sealed class PieChart3D
                     GradientStops =
                     [
                         new GradientStop(AdjustLightness(slice.Color, -0.15), 0),
-                        new GradientStop(AdjustLightness(slice.Color, -0.45), 1),
+                        new GradientStop(slice.Color, 0.1),
+                        new GradientStop(AdjustLightness(slice.Color, -0.3), 1),
                     ],
                 }
                 : new SolidColorBrush(sideColor);
@@ -299,18 +311,18 @@ public sealed class PieChart3D
         Color edgeColor = EdgeColorType switch
         {
             EdgeColorType.SurfaceColor => surfaceColor,
-            EdgeColorType.DarkerThanSurface => AdjustLightness(surfaceColor, -0.2),
-            EdgeColorType.DarkerDarkerThanSurface => AdjustLightness(surfaceColor, -0.4),
-            EdgeColorType.LighterThanSurface => AdjustLightness(surfaceColor, 0.2),
-            EdgeColorType.LighterLighterThanSurface => AdjustLightness(surfaceColor, 0.4),
-            EdgeColorType.FullContrast => GetLuminance(surfaceColor) > 0.5 ? Colors.Black : Colors.White,
-            EdgeColorType.Contrast => GetLuminance(surfaceColor) > 0.5
-                ? AdjustLightness(surfaceColor, -0.25)
-                : AdjustLightness(surfaceColor, 0.25),
-            EdgeColorType.EnhancedContrast => GetLuminance(surfaceColor) > 0.5
-                ? AdjustLightness(surfaceColor, -0.45)
-                : AdjustLightness(surfaceColor, 0.45),
-            _ => GetLuminance(surfaceColor) > 0.5 ? Colors.Black : Colors.White,
+            EdgeColorType.DarkerThanSurface => AdjustLightness(surfaceColor, -0.3),
+            EdgeColorType.DarkerDarkerThanSurface => AdjustLightness(surfaceColor, -0.5),
+            EdgeColorType.LighterThanSurface => AdjustLightness(surfaceColor, 0.3),
+            EdgeColorType.LighterLighterThanSurface => AdjustLightness(surfaceColor, 0.5),
+            EdgeColorType.FullContrast => GetBrightness(surfaceColor) > 0.4 ? Colors.Black : Colors.White,
+            EdgeColorType.Contrast => GetBrightness(surfaceColor) > 0.4
+                ? AdjustLightness(surfaceColor, -0.3)
+                : AdjustLightness(surfaceColor, 0.3),
+            EdgeColorType.EnhancedContrast => GetBrightness(surfaceColor) > 0.4
+                ? AdjustLightness(surfaceColor, -0.5)
+                : AdjustLightness(surfaceColor, 0.5),
+            _ => GetSystemWindowTextColor(),
         };
         return new Pen(new SolidColorBrush(edgeColor), EdgeLineWidth);
     }
@@ -354,18 +366,34 @@ public sealed class PieChart3D
             double value = factor >= 0
                 ? channel + ((byte.MaxValue - channel) * factor)
                 : channel * (1 + factor);
-            return (byte)Math.Clamp(Math.Round(value), byte.MinValue, byte.MaxValue);
+            return (byte)Math.Clamp((int)value, byte.MinValue, byte.MaxValue);
         }
 
-        return Color.FromArgb(
-            color.A,
+        return Color.FromRgb(
             Adjust(color.R, factor),
             Adjust(color.G, factor),
             Adjust(color.B, factor));
     }
 
-    private static double GetLuminance(Color color)
-        => ((0.2126 * color.R) + (0.7152 * color.G) + (0.0722 * color.B)) / byte.MaxValue;
+    private static double GetBrightness(Color color)
+    {
+        byte max = Math.Max(color.R, Math.Max(color.G, color.B));
+        byte min = Math.Min(color.R, Math.Min(color.G, color.B));
+        return (max + min) / (2d * byte.MaxValue);
+    }
+
+    private static Color AdaptBackColor(Color color)
+    {
+        DrawingColor original = DrawingColor.FromArgb(color.A, color.R, color.G, color.B);
+        DrawingColor adapted = original.AdaptBackColor();
+        return Color.FromArgb(adapted.A, adapted.R, adapted.G, adapted.B);
+    }
+
+    private static Color GetSystemWindowTextColor()
+    {
+        DrawingColor color = ThemeModule.Settings.Theme.GetNonEmptyColor(System.Drawing.KnownColor.WindowText);
+        return Color.FromArgb(color.A, color.R, color.G, color.B);
+    }
 
     private sealed record Slice(
         int Index,

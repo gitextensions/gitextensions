@@ -12,6 +12,10 @@ plus declared per-pixel and maximum-channel-delta budgets. Tolerance values live
 `parity-diff.json`, with deliberate per-component overrides. Resolved colors always have zero
 tolerance.
 
+Repeated control field identities are reported as `control.duplicateIdentity` findings instead
+of aborting the comparison. Repeated controls are paired in stable control-tree order, and an
+occurrence suffix in subsequent finding paths identifies each repeated control.
+
 ```powershell
 dotnet run --project eng/tools/ParityDiff -- compare `
   --reference eng/avalonia/parity-shots/winforms/manifest.json `
