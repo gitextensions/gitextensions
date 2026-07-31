@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "877b15500b7f3581aaffaef7a5ac274a36c7b6b5",
+  "analyzedCommit": "dd45350c60936a8d7453e3d588e4989e0d9709e3",
   "axisOrder": [
     "structural",
     "functional",
@@ -1097,13 +1097,21 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "gap",
+          "verifiedOn": "2026-07-31",
+          "commit": "dd45350c60936a8d7453e3d588e4989e0d9709e3",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.5/input-accessibility.json",
+            "eng/avalonia/parity-evidence/P1.5/visual-full/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 2925,
+          "note": "P1.5 verifies generated input metadata, focus routing, hotkeys, context-menu keys, list/tree navigation, and the automation-name sweep. The focused capture still reports tab/focus tree differences, including Avalonia's semantic TabItem focus delegation, and the complete interaction-state matrix remains open."
         },
         "platform": {
           "status": "unverified",
@@ -1162,13 +1170,21 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "gap",
+          "verifiedOn": "2026-07-31",
+          "commit": "dd45350c60936a8d7453e3d588e4989e0d9709e3",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.5/input-accessibility.json",
+            "eng/avalonia/parity-evidence/P1.5/visual-full/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 666,
+          "note": "P1.5 verifies generated input metadata, focus geometry/routing, hotkeys, context-menu keys, list/tree navigation, and the automation-name sweep. The focused capture retains diagnostic tab-order findings and the complete interaction-state matrix remains open."
         },
         "platform": {
           "status": "unverified",
@@ -4445,16 +4461,21 @@
         },
         "behavioralState": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-07-31",
+          "commit": "dd45350c60936a8d7453e3d588e4989e0d9709e3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/visual-cumulative-final-findings.json"
+            "eng/avalonia/parity-evidence/P1.2/visual-cumulative-final-findings.json",
+            "eng/avalonia/parity-evidence/P1.5/input-accessibility.json",
+            "eng/avalonia/parity-evidence/P1.5/visual-full/findings.json"
           ],
           "platforms": [
-            "windows"
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
           ],
-          "findingCount": 333,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 234,
+          "note": "P1.5 verifies generated input metadata, focus routing, hotkeys, context-menu keys, list/tree navigation, and the automation-name sweep. The focused capture retains diagnostic tab-order findings and the complete interaction-state matrix remains open."
         },
         "platform": {
           "status": "unverified",
@@ -4522,16 +4543,21 @@
         },
         "behavioralState": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-07-31",
+          "commit": "dd45350c60936a8d7453e3d588e4989e0d9709e3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/visual-cumulative-final-findings.json"
+            "eng/avalonia/parity-evidence/P1.2/visual-cumulative-final-findings.json",
+            "eng/avalonia/parity-evidence/P1.5/input-accessibility.json",
+            "eng/avalonia/parity-evidence/P1.5/visual-full/findings.json"
           ],
           "platforms": [
-            "windows"
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
           ],
-          "findingCount": 333,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 234,
+          "note": "P1.5 verifies generated input metadata, focus routing, hotkeys, context-menu keys, list/tree navigation, and the automation-name sweep. The focused capture retains diagnostic tab-order findings and the complete interaction-state matrix remains open."
         },
         "platform": {
           "status": "unverified",

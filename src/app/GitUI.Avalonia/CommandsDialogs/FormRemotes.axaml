@@ -43,16 +43,20 @@
                 RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                 ColumnSpacing="8" RowSpacing="6"
                 VerticalAlignment="Top">
-            <TextBlock x:Name="label1"
-                       Text="_Name"
-                       VerticalAlignment="Center" />
+            <Label x:Name="label1"
+                   Padding="0"
+                   Content="_Name"
+                   Target="{Binding #RemoteName}"
+                   VerticalAlignment="Center" />
             <TextBox x:Name="RemoteName"
                      Grid.Column="1" Grid.ColumnSpan="2" />
 
-            <TextBlock x:Name="label2"
-                       Grid.Row="1"
-                       Text="_Url"
-                       VerticalAlignment="Center" />
+            <Label x:Name="label2"
+                   Grid.Row="1"
+                   Padding="0"
+                   Content="_Url"
+                   Target="{Binding #Url}"
+                   VerticalAlignment="Center" />
             <ComboBox x:Name="Url"
                       Grid.Row="1" Grid.Column="1"
                       HorizontalAlignment="Stretch"
@@ -64,11 +68,13 @@
                       Grid.Row="2" Grid.Column="1"
                       Content="Sep_arate Push Url" />
 
-            <TextBlock x:Name="labelPushUrl"
-                       Grid.Row="3"
-                       Text="_Push Url"
-                       IsVisible="False"
-                       VerticalAlignment="Center" />
+            <Label x:Name="labelPushUrl"
+                   Grid.Row="3"
+                   Padding="0"
+                   Content="_Push Url"
+                   Target="{Binding #comboBoxPushUrl}"
+                   IsVisible="False"
+                   VerticalAlignment="Center" />
             <ComboBox x:Name="comboBoxPushUrl"
                       Grid.Row="3" Grid.Column="1"
                       HorizontalAlignment="Stretch"
@@ -151,25 +157,31 @@
               ColumnDefinitions="Auto,*,Auto"
               RowDefinitions="Auto,Auto,Auto"
               ColumnSpacing="8" RowSpacing="6">
-          <TextBlock x:Name="label4"
-                     Text="_Local branch name"
-                     VerticalAlignment="Center" />
+          <Label x:Name="label4"
+                 Padding="0"
+                 Content="_Local branch name"
+                 Target="{Binding #LocalBranchNameEdit}"
+                 VerticalAlignment="Center" />
           <TextBox x:Name="LocalBranchNameEdit"
                    Grid.Column="1"
                    IsReadOnly="True" />
 
-          <TextBlock x:Name="label5"
-                     Grid.Row="1"
-                     Text="_Remote repository"
-                     VerticalAlignment="Center" />
+          <Label x:Name="label5"
+                 Grid.Row="1"
+                 Padding="0"
+                 Content="_Remote repository"
+                 Target="{Binding #RemoteRepositoryCombo}"
+                 VerticalAlignment="Center" />
           <ComboBox x:Name="RemoteRepositoryCombo"
                     Grid.Row="1" Grid.Column="1"
                     HorizontalAlignment="Stretch" />
 
-          <TextBlock x:Name="label6"
-                     Grid.Row="2"
-                     Text="_Default merge with"
-                     VerticalAlignment="Center" />
+          <Label x:Name="label6"
+                 Grid.Row="2"
+                 Padding="0"
+                 Content="_Default merge with"
+                 Target="{Binding #DefaultMergeWithCombo}"
+                 VerticalAlignment="Center" />
           <ComboBox x:Name="DefaultMergeWithCombo"
                     Grid.Row="2" Grid.Column="1"
                     HorizontalAlignment="Stretch"

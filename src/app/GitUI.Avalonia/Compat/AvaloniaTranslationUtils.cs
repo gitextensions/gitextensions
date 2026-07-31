@@ -23,7 +23,7 @@ internal static class AvaloniaTranslationUtils
                 ContentControl { Content: TextBlock contentTextBlock } => contentTextBlock,
                 _ => null,
             };
-            if (textBlock?.Text is not string text)
+            if (textBlock is AccessText || textBlock?.Text is not string text)
             {
                 continue;
             }
@@ -183,11 +183,17 @@ internal static class AvaloniaTranslationUtils
             case HeaderedItemsControl headeredItemsControl:
                 headeredItemsControl.Header = text;
                 break;
+            case ContentControl { Content: AccessText accessText }:
+                accessText.Text = text;
+                break;
             case ContentControl { Content: TextBlock contentTextBlock }:
                 contentTextBlock.Text = RemoveAvaloniaMnemonics(text);
                 break;
             case ContentControl contentControl:
                 contentControl.Content = text;
+                break;
+            case AccessText accessText:
+                accessText.Text = text;
                 break;
             case TextBlock textBlock:
                 // TextBlock has no access-key presenter. Keep the marker in AXAML so the

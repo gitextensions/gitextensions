@@ -26,6 +26,7 @@ public partial class FontDialogWindow : GitExtensionsFormBase
         chkItalic.IsChecked = font.Italic;
         WireEvents();
         UpdatePreview();
+        InitializeComplete();
     }
 
     internal WinFormsShims.Font SelectedFont { get; private set; }
