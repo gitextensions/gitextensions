@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
@@ -449,7 +449,7 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
-    public void Ref_labels_should_use_contrast_safe_theme_colors_and_a_neutral_capsule()
+    public void Ref_labels_should_use_the_WinForms_derived_text_outline_and_selected_capsule_colors()
     {
         AssertRefLabelRendering(
             ThemeVariant.Light,
@@ -460,7 +460,7 @@ public sealed class VisualParityTests
             ThemeVariant.Dark,
             CreateRef("main", isHead: true),
             Color.Parse("#7FE28A"),
-            Color.Parse("#202020"));
+            Color.Parse("#323232"));
         AssertRefLabelRendering(
             ThemeVariant.Light,
             CreateRef("origin/main", isRemote: true),
@@ -470,7 +470,7 @@ public sealed class VisualParityTests
             ThemeVariant.Dark,
             CreateRef("origin/main", isRemote: true),
             Color.Parse("#FD9797"),
-            Color.Parse("#202020"));
+            Color.Parse("#323232"));
         AssertRefLabelRendering(
             ThemeVariant.Light,
             CreateRef("v1.0", isTag: true),
@@ -480,7 +480,7 @@ public sealed class VisualParityTests
             ThemeVariant.Dark,
             CreateRef("v1.0", isTag: true),
             Color.Parse("#40BAF7"),
-            Color.Parse("#202020"));
+            Color.Parse("#323232"));
     }
 
     [AvaloniaTest]
@@ -787,6 +787,7 @@ public sealed class VisualParityTests
             GetResourceBrushColor(application, "GitExtensionsKnownColorWindowTextBrush", ThemeVariant.Light).Should().Be(Colors.Black);
             GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Light).Should().Be(Color.Parse("#C3C3FF"));
             AssertPublishedThemeColors(application, ThemeVariant.Light);
+            AssertDerivedThemeColors(application, ThemeVariant.Light);
             RevisionGraphLaneColor.NonRelativeColor.ToArgb().Should().Be(
                 System.Drawing.ColorTranslator.FromHtml("#D3D3D3").ToArgb());
 
@@ -804,6 +805,7 @@ public sealed class VisualParityTests
             GetResourceBrushColor(application, "GitExtensionsKnownColorWindowTextBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#F0F0F0"));
             GetResourceBrushColor(application, "GitExtensionsSelectionBackgroundBrush", ThemeVariant.Dark).Should().Be(Color.Parse("#00009B"));
             AssertPublishedThemeColors(application, ThemeVariant.Dark);
+            AssertDerivedThemeColors(application, ThemeVariant.Dark);
             RevisionGraphLaneColor.NonRelativeColor.ToArgb().Should().Be(
                 System.Drawing.ColorTranslator.FromHtml("#707070").ToArgb());
 
@@ -967,6 +969,20 @@ public sealed class VisualParityTests
 
             GetColor(label.RefBrush).Should().Be(expectedForeground);
             GetColor(label.CapsuleBackgroundBrush).Should().Be(expectedBackground);
+            System.Drawing.Color head = System.Drawing.Color.FromArgb(
+                expectedForeground.A,
+                expectedForeground.R,
+                expectedForeground.G,
+                expectedForeground.B);
+            System.Drawing.Color windowBackground = System.Drawing.Color.FromArgb(
+                expectedBackground.A,
+                expectedBackground.R,
+                expectedBackground.G,
+                expectedBackground.B);
+            GetColor(label.TextBrush).Should().Be(ToMediaColor(
+                GitExtUtils.GitUI.Theming.ColorHelper.Lerp(head, System.Drawing.Color.Black, 0.25F)));
+            GetColor(label.OutlineBrush).Should().Be(ToMediaColor(
+                GitExtUtils.GitUI.Theming.ColorHelper.Lerp(head, windowBackground, 0.5F)));
             label.Bounds.Height.Should().Be(24);
             label.FontSize.Should().BeGreaterThan(11);
             label.Shape.Should().Be(gitRef.IsTag ? RefLabelShape.PointLeft : RefLabelShape.Rect);
@@ -1006,6 +1022,9 @@ public sealed class VisualParityTests
 
     private static Color GetColor(IBrush? brush)
         => brush.Should().BeAssignableTo<ISolidColorBrush>().Which.Color;
+
+    private static Color ToMediaColor(System.Drawing.Color color)
+        => Color.FromArgb(color.A, color.R, color.G, color.B);
 
     private static T GetResource<T>(Application application, string key)
     {
@@ -1049,6 +1068,50 @@ public sealed class VisualParityTests
                 themeVariant,
                 out object? resource).Should().BeTrue();
             resource.Should().BeOfType<SolidColorBrush>();
+        }
+    }
+
+    private static void AssertDerivedThemeColors(Application application, ThemeVariant themeVariant)
+    {
+        ThemeSettings settings = ThemeModule.Settings;
+        bool isDark = settings.Theme.SystemColorMode == WinFormsShims.SystemColorMode.Dark;
+        System.Drawing.Color panel = AvaloniaThemeResources.ResolveAppColor(settings, AppColor.PanelBackground);
+        System.Drawing.Color editor = AvaloniaThemeResources.ResolveAppColor(settings, AppColor.EditorBackground);
+        System.Drawing.Color removed = AvaloniaThemeResources.ResolveAppColor(
+            settings,
+            AppColor.AnsiTerminalRedBackNormal);
+        System.Drawing.Color added = AvaloniaThemeResources.ResolveAppColor(
+            settings,
+            AppColor.AnsiTerminalGreenBackNormal);
+
+        GetResourceBrushColor(application, "GitExtensionsRevisionAlternatingRowBrush", themeVariant)
+            .Should().Be(ToMediaColor(panel.MakeDarkerBy(isDark ? -0.018 : 0.025)));
+        GetResourceBrushColor(application, "GitExtensionsRevisionAuthoredBrush", themeVariant)
+            .Should().Be(ToMediaColor(AvaloniaThemeResources.ResolveAppColor(settings, AppColor.AuthoredHighlight)));
+        GetResourceBrushColor(application, "GitExtensionsDiffRemovedDimBrush", themeVariant)
+            .Should().Be(ToMediaColor(removed.DimColor().DimColor()));
+        GetResourceBrushColor(application, "GitExtensionsDiffAddedDimBrush", themeVariant)
+            .Should().Be(ToMediaColor(added.DimColor().DimColor()));
+        GetResourceBrushColor(application, "GitExtensionsBlameHighlightBrush", themeVariant)
+            .Should().Be(ToMediaColor(
+                isDark
+                    ? editor.MakeDarkerBy(-0.06)
+                    : AvaloniaThemeResources.ResolveSystemColor(settings, System.Drawing.KnownColor.ControlLight)));
+
+        System.Drawing.Color[] blameAges =
+        [
+            System.Drawing.Color.FromArgb(247, 252, 245),
+            System.Drawing.Color.FromArgb(199, 233, 192),
+            System.Drawing.Color.FromArgb(161, 217, 155),
+            System.Drawing.Color.FromArgb(116, 196, 118),
+            System.Drawing.Color.FromArgb(65, 171, 93),
+            System.Drawing.Color.FromArgb(35, 139, 69),
+            System.Drawing.Color.FromArgb(0, 68, 27),
+        ];
+        for (int index = 0; index < blameAges.Length; index++)
+        {
+            GetResourceBrushColor(application, $"GitExtensionsBlameAge{index}Brush", themeVariant)
+                .Should().Be(ToMediaColor(blameAges[index].AdaptBackColor()));
         }
     }
 }

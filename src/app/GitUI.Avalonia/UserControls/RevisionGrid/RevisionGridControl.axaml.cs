@@ -1932,11 +1932,14 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private sealed class RevisionRowControl : Grid
     {
         private readonly List<(ColumnProvider Provider, Control Cell)> _cells = [];
+        private readonly RevisionGridControl _owner;
 
         public RevisionRowControl(RevisionGridControl owner)
         {
+            _owner = owner;
             Height = RowHeight;
             Classes.Add("revision-row");
+            AttachedToVisualTree += (_, _) => UpdateColorClasses();
 
             foreach (ColumnProvider provider in owner._columnProviders)
             {
@@ -1964,6 +1967,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             {
                 RefreshCells();
             }
+
+            UpdateColorClasses();
         }
 
         public void RefreshCells()
@@ -1977,6 +1982,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             {
                 provider.UpdateCell(cell, revision);
             }
+
+            UpdateColorClasses();
         }
 
         public void ApplyColumnLayout()
@@ -1988,6 +1995,30 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                 ColumnDefinitions[provider.Index].MinWidth = isVisible ? provider.Column.MinimumWidth : 0;
                 cell.IsVisible = isVisible;
             }
+        }
+
+        private void UpdateColorClasses()
+        {
+            if (DataContext is not GitRevision revision)
+            {
+                Classes.Set("revision-authored", false);
+                Classes.Set("revision-alternate", false);
+                return;
+            }
+
+            Classes.Set(
+                "revision-authored",
+                AppSettings.HighlightAuthoredRevisions
+                    && !revision.IsArtificial
+                    && _owner._authorHighlighting.IsHighlighted(revision));
+
+            ListBoxItem? container = this.FindAncestorOfType<ListBoxItem>();
+            int rowIndex = container is null ? -1 : _owner.lstRevisions.IndexFromContainer(container);
+            Classes.Set(
+                "revision-alternate",
+                AppSettings.RevisionGraphDrawAlternateBackColor
+                    && rowIndex >= 0
+                    && rowIndex % 2 == 0);
         }
     }
 

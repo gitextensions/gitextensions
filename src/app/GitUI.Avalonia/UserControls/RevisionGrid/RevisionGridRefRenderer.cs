@@ -1,14 +1,18 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Compat;
 using DrawingColor = System.Drawing.Color;
 using MediaColor = Avalonia.Media.Color;
 using Point = Avalonia.Point;
 using Size = Avalonia.Size;
+using ThemingColorHelper = GitExtUtils.GitUI.Theming.ColorHelper;
 
 namespace GitUI.UserControls.RevisionGrid;
 
@@ -341,6 +345,8 @@ internal static class RevisionGridRefRenderer
 
         public bool IsDashed { get; }
 
+        public bool IsRowSelected { get; set; }
+
         public bool IsHighlighted
         {
             get => _isHighlighted;
@@ -361,7 +367,18 @@ internal static class RevisionGridRefRenderer
         public IBrush RefBrush => _refBrush ?? GetResourceBrush(_brushResourceKey, Brushes.Gray);
 
         public IBrush CapsuleBackgroundBrush
-            => GetResourceBrush("GitExtensionsRefLabelBackgroundBrush", Brushes.White);
+            => GetResourceBrush(
+                AvaloniaThemeResources.KnownColorPrefix + System.Drawing.KnownColor.Window + "Brush",
+                GetResourceBrush("GitExtensionsPanelBackgroundBrush", Brushes.White));
+
+        internal IBrush TextBrush => new SolidColorBrush(
+            ToMediaColor(ThemingColorHelper.Lerp(ToDrawingColor(RefBrush), DrawingColor.Black, 0.25F)));
+
+        internal IBrush OutlineBrush => new SolidColorBrush(
+            ToMediaColor(ThemingColorHelper.Lerp(
+                ToDrawingColor(RefBrush),
+                ToDrawingColor(CapsuleBackgroundBrush),
+                Fill ? 0.83F : 0.5F)));
 
         protected override Size MeasureOverride(Size availableSize)
         {
@@ -397,11 +414,38 @@ internal static class RevisionGridRefRenderer
             double top = (Bounds.Height - _backgroundHeight) / 2;
             Rect capsuleBounds = new(0.5, top + 0.5, Math.Max(0, _labelWidth - 1), _backgroundHeight - 1);
             StreamGeometry geometry = CreateGeometry(capsuleBounds, Shape, PointWidth);
-            Pen outline = new(
-                refBrush,
-                IsHighlighted ? 2 : 1,
-                IsDashed ? DashedLine : null);
-            context.DrawGeometry(Fill ? refBrush : CapsuleBackgroundBrush, outline, geometry);
+            DrawingColor drawingRefColor = ToDrawingColor(refBrush);
+            DrawingColor windowColor = ToDrawingColor(CapsuleBackgroundBrush);
+            IBrush? background = Fill
+                ? new LinearGradientBrush
+                {
+                    StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                    EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+                    GradientStops =
+                    [
+                        new GradientStop(
+                            ToMediaColor(ThemingColorHelper.Lerp(drawingRefColor, windowColor, 0.92F)),
+                            0),
+                        new GradientStop(
+                            ToMediaColor(ThemingColorHelper.Lerp(
+                                ThemingColorHelper.Lerp(drawingRefColor, windowColor, 0.92F),
+                                windowColor,
+                                0.9F)),
+                            1),
+                    ],
+                }
+                : IsRowSelected || this.FindAncestorOfType<ListBoxItem>()?.IsSelected == true
+                    ? CapsuleBackgroundBrush
+                    : null;
+            Pen outline = new(OutlineBrush, 1, IsDashed ? DashedLine : null);
+            context.DrawGeometry(background, outline, geometry);
+            if (IsHighlighted)
+            {
+                context.DrawGeometry(
+                    null,
+                    new Pen(refBrush, 1, IsDashed ? DashedLine : null),
+                    geometry);
+            }
 
             double iconXOffset = Shape is RefLabelShape.NotchLeft or RefLabelShape.PointLeft
                 ? PointWidth
@@ -416,7 +460,10 @@ internal static class RevisionGridRefRenderer
                 + iconWidth
                 + PaddingLeftRight
                 - (Shape == RefLabelShape.PointLeft ? PointWidth / 2 : 0);
-            FormattedText formattedText = CreateFormattedText(Fill ? CapsuleBackgroundBrush : refBrush);
+            FormattedText formattedText = CreateFormattedText(
+                Fill
+                    ? refBrush
+                    : TextBrush);
             context.DrawText(formattedText, new Point(textX, capsuleBounds.Y + PaddingTopBottom - 1));
         }
 
@@ -452,8 +499,16 @@ internal static class RevisionGridRefRenderer
                     ActualThemeVariant,
                     out object? resource) == true
                 && resource is IBrush brush
-                    ? brush
-                    : fallback;
+                ? brush
+                : fallback;
+
+        private static DrawingColor ToDrawingColor(IBrush brush)
+            => brush is ISolidColorBrush solid
+                ? DrawingColor.FromArgb(solid.Color.A, solid.Color.R, solid.Color.G, solid.Color.B)
+                : DrawingColor.Gray;
+
+        private static MediaColor ToMediaColor(DrawingColor color)
+            => AvaloniaThemeResources.ToMediaColor(color);
 
         private static StreamGeometry CreateGeometry(
             Rect bounds,

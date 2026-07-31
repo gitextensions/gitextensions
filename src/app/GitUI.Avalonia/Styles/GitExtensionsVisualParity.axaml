@@ -119,6 +119,10 @@
                            Color="#E6E6E6" />
           <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
                            Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionAlternatingRowBrush"
+                           Color="#F9F9F9" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionAuthoredBrush"
+                           Color="#FFFFC8" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsPaneBorderBrush"
@@ -186,6 +190,10 @@
                            Color="#3A3A3A" />
           <SolidColorBrush x:Key="GitExtensionsPanelBackgroundBrush"
                            Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionAlternatingRowBrush"
+                           Color="#373737" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionAuthoredBrush"
+                           Color="#665E00" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsPaneBorderBrush"
@@ -590,6 +598,14 @@
   <Style Selector="TreeViewItem:selected:pointerover /template/ Border#PART_LayoutRoot">
     <Setter Property="Background"
             Value="{DynamicResource GitExtensionsSelectionPointerOverBackgroundBrush}" />
+  </Style>
+  <Style Selector="Grid.revision-row.revision-alternate">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsRevisionAlternatingRowBrush}" />
+  </Style>
+  <Style Selector="Grid.revision-row.revision-authored">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsRevisionAuthoredBrush}" />
   </Style>
   <!-- Fluent deliberately omits the dotted hierarchy drawn by WinForms NativeTreeView.
        Keep Fluent's selection states and template part names, but share one desktop tree
