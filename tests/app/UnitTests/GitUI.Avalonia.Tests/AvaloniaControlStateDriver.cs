@@ -6,6 +6,7 @@ using Avalonia.Headless;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitExtensions.ParityCapture;
 
 namespace GitExtensionsTests;
@@ -155,14 +156,25 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
     private void Focus(object target)
     {
-        if (target is not Control { Focusable: true } control)
+        if (target is not Control control)
         {
             throw new AvaloniaCaptureStateUnsupportedException("The focused state requires a focusable Control.");
         }
 
-        control.Focus();
+        Control? focusTarget = control.Focusable
+            ? control
+            : control.GetVisualDescendants()
+                .OfType<Control>()
+                .FirstOrDefault(candidate => candidate.Focusable && candidate.IsEffectivelyVisible);
+        if (focusTarget is null)
+        {
+            throw new AvaloniaCaptureStateUnsupportedException(
+                "The focused state requires a focusable Control or generated focusable descendant.");
+        }
+
+        focusTarget.Focus(NavigationMethod.Tab);
         Dispatcher.UIThread.RunJobs();
-        if (!control.IsFocused)
+        if (!focusTarget.IsFocused)
         {
             throw new AvaloniaCaptureStateUnsupportedException("The headless focus manager did not focus the requested Control.");
         }

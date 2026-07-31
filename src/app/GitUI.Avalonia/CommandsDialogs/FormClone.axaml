@@ -13,9 +13,10 @@
           ColumnDefinitions="Auto,*,100"
           RowDefinitions="Auto,Auto,Auto,Auto"
           ColumnSpacing="8" RowSpacing="6">
-      <TextBlock x:Name="repositoryLabel"
-                 Classes="gitextensions-dialog-label"
-                 Text="Repository to _clone:" />
+      <Label x:Name="repositoryLabel"
+             Classes="gitextensions-dialog-label"
+             Content="Repository to _clone:"
+             Target="{Binding #_NO_TRANSLATE_From}" />
       <ComboBox x:Name="_NO_TRANSLATE_From"
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
@@ -27,10 +28,11 @@
                          Icon="{x:Static properties:Images.BrowseFileExplorer}"
                          Content="_Browse" />
 
-      <TextBlock x:Name="destinationLabel"
-                 Classes="gitextensions-dialog-label"
-                 Grid.Row="1"
-                 Text="_Destination:" />
+      <Label x:Name="destinationLabel"
+             Classes="gitextensions-dialog-label"
+             Grid.Row="1"
+             Content="_Destination:"
+             Target="{Binding #_NO_TRANSLATE_To}" />
       <ComboBox x:Name="_NO_TRANSLATE_To"
                 Grid.Row="1" Grid.Column="1"
                 HorizontalAlignment="Stretch"
@@ -42,18 +44,20 @@
                          Icon="{x:Static properties:Images.BrowseFileExplorer}"
                          Content="B_rowse" />
 
-      <TextBlock x:Name="subdirectoryLabel"
-                 Classes="gitextensions-dialog-label"
-                 Grid.Row="2"
-                 Text="_Subdirectory to create:" />
+      <Label x:Name="subdirectoryLabel"
+             Classes="gitextensions-dialog-label"
+             Grid.Row="2"
+             Content="_Subdirectory to create:"
+             Target="{Binding #_NO_TRANSLATE_NewDirectory}" />
       <TextBox x:Name="_NO_TRANSLATE_NewDirectory"
                Grid.Row="2" Grid.Column="1"
                HorizontalAlignment="Stretch" />
 
-      <TextBlock x:Name="brachLabel"
-                 Classes="gitextensions-dialog-label"
-                 Grid.Row="3"
-                 Text="Br_anch:" />
+      <Label x:Name="brachLabel"
+             Classes="gitextensions-dialog-label"
+             Grid.Row="3"
+             Content="Br_anch:"
+             Target="{Binding #_NO_TRANSLATE_Branches}" />
       <ComboBox x:Name="_NO_TRANSLATE_Branches"
                 Grid.Row="3" Grid.Column="1"
                 HorizontalAlignment="Stretch"

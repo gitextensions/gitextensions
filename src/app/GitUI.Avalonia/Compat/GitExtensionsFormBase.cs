@@ -325,6 +325,7 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
     {
         Translator.Translate(this, AppSettings.CurrentTranslation);
         AvaloniaTranslationUtils.RemoveTextBlockMnemonicMarkers(this);
+        InputAccessibility.Apply(this);
     }
 
     void IDisposable.Dispose()

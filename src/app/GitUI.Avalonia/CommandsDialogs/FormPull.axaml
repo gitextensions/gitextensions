@@ -75,24 +75,26 @@
                                   Header="Branch">
             <Grid ColumnDefinitions="Auto,*"
                   RowDefinitions="Auto,Auto">
-              <TextBlock x:Name="lblLocalBranch"
-                         Classes="gitextensions-dialog-label"
-                         Width="130"
-                         Text="_Local branch">
+              <Label x:Name="lblLocalBranch"
+                     Classes="gitextensions-dialog-label"
+                     Width="130"
+                     Content="_Local branch"
+                     Target="{Binding #localBranch}">
                 <ToolTip.Tip>Local branch to create or reset to the remote branch selected.</ToolTip.Tip>
-              </TextBlock>
+              </Label>
               <TextBox x:Name="localBranch"
                        Grid.Column="1"
                        Width="288"
                        HorizontalAlignment="Left" />
-              <TextBlock x:Name="lblRemoteBranch"
-                         Classes="gitextensions-dialog-label"
-                         Grid.Row="1"
-                         Width="130"
-                         Margin="0,6,0,0"
-                         Text="Rem_ote branch">
+              <Label x:Name="lblRemoteBranch"
+                     Classes="gitextensions-dialog-label"
+                     Grid.Row="1"
+                     Width="130"
+                     Margin="0,6,0,0"
+                     Content="Rem_ote branch"
+                     Target="{Binding #Branches}">
                 <ToolTip.Tip>Remote branch to pull. Leave empty to pull all branches.</ToolTip.Tip>
-              </TextBlock>
+              </Label>
               <ComboBox x:Name="Branches"
                         Grid.Row="1"
                         Grid.Column="1"

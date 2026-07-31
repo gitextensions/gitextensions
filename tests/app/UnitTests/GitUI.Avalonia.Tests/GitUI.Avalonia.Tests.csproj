@@ -39,6 +39,8 @@
              Link="CommandsDialogs\BrowseDialog\ReleaseVersionTests.cs" />
     <Compile Include="..\GitUI.Tests\LeftPanel\WorktreeTreeTests.cs"
              Link="LeftPanel\WorktreeTreeTests.cs" />
+    <Compile Include="..\..\..\..\eng\tools\WinFormsInputParityToAvalonia\InputMetadataGenerator.cs"
+             Link="Parity\InputMetadataGenerator.cs" />
   </ItemGroup>
 
   <ItemGroup>

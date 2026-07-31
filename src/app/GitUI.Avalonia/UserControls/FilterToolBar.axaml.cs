@@ -566,7 +566,7 @@ public sealed partial class FilterToolBar : TranslatedControl
         public ToggleButton ShowOnlyFirstParent => _control.tsmiShowOnlyFirstParent;
         public ToggleButton ShowReflog => _control.tsbShowReflog;
         public ToolbarComboBox RevisionFilter => _control.tstxtRevisionFilter;
-        public TextBlock RevisionFilterLabel => _control.tslblRevisionFilter;
+        public Label RevisionFilterLabel => _control.tslblRevisionFilter;
         public IconSplitButton AdvancedFilter => _control.tsbtnAdvancedFilter;
         public MenuItem AdvancedFilterMenuItem => _control.tsmiAdvancedFilter;
         public MenuItem ResetPathFilters => _control.tsmiResetPathFilters;
