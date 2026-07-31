@@ -229,3 +229,4 @@ YYYY/MM/DD, github id, Full name, email
 2026/05/04, Henr1k80, Henrik Gedionsen, Henrik.Gedionsen[.@)gmail.com
 2026/05/06, LeeRedfield, Chiong Ngek Lee, chiongngeklee@gmail.com
 2026/06/01, becm, Marc Becker, becm@gmx.de
+2026/06/29, xen2, Virgile Bello, virgile.bello(at)gmail.com
