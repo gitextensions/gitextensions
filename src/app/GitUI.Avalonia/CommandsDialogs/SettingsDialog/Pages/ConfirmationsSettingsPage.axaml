@@ -6,16 +6,14 @@
                                  MinHeight="440"
                                  Text="Confirmations">
   <settings:SettingsPageWithHeader.Styles>
-    <Style Selector="CheckBox">
-      <Setter Property="Margin" Value="0,-4" />
-    </Style>
     <Style Selector="TextBlock.confirmation-group">
       <Setter Property="Margin" Value="0,5,0,1" />
       <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
   </settings:SettingsPageWithHeader.Styles>
 
-  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+  <ScrollViewer Classes="gitextensions-compact-checkboxes"
+                HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
     <Grid x:Name="tlpnlMain"
           Margin="8">

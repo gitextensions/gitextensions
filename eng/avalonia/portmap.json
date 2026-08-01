@@ -184,7 +184,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native two-column Dashboard retains the original named logo, start, contribute, and repository-list sections with light/dark semantic palettes."
+    "notes": "Native two-column Dashboard retains the original named logo, start, contribute, and repository-list sections with light/dark semantic palettes. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml.cs",
@@ -292,7 +292,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsLinkLabel.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Compact same-named link and optional 16px information icon."
+    "notes": "Compact same-named link and optional 16px information icon. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/UserControls/Settings/ToolTipIcon.cs": {
     "twin": "src/app/GitUI/UserControls/Settings/ToolTipIcon.cs",
@@ -370,7 +370,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Plugins/PluginSettingsPage.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Scrollable compact caption/control rows replace AutoLayoutSettingsPage's generated table while retaining the original empty-state label and translation identity."
+    "notes": "Scrollable compact caption/control rows replace AutoLayoutSettingsPage's generated table while retaining the original empty-state label and translation identity. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/SettingControlBindings/BoolSettingControlBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
@@ -472,7 +472,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same Performance, Behaviour, and Telemetry groups and same-named controls in a compact scrollable Avalonia layout; wider native spinners keep the full numeric values visible."
+    "notes": "Same Performance, Behaviour, and Telemetry groups and same-named controls in a compact scrollable Avalonia layout; wider native spinners keep the full numeric values visible. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/DetailedSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/DetailedSettingsPage.axaml.cs",
@@ -874,7 +874,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same visible General, Author images, and Language group boundaries and same-named controls in a compact scrollable layout. Appearance is the original tree parent of Sorting, Colors, Fonts, and Console style."
+    "notes": "Same visible General, Author images, and Language group boundaries and same-named controls in a compact scrollable layout. Appearance is the original tree parent of Sorting, Colors, Fonts, and Console style. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.axaml.cs",
@@ -886,7 +886,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/SortingSettingsPage.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same five-row Sorting group and same-named controls, with fixed-width selectors and text inputs plus bare 16-DIP information images matching the original PictureBox presentation."
+    "notes": "Same five-row Sorting group and same-named controls, with fixed-width selectors and text inputs plus bare 16-DIP information images matching the original PictureBox presentation. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ScriptsSettingsPage.axaml.cs",
@@ -916,7 +916,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AdvancedSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves the original group and control names, order, translation identities, manual links, explanatory tooltips, and dependent replacement-symbol selector. The Updates group is visible now that FormUpdates and both Browse contributions are functional; only the unavailable alternate console-emulator row remains hidden."
+    "notes": "Preserves the original group and control names, order, translation identities, manual links, explanatory tooltips, and dependent replacement-symbol selector. The Updates group is visible now that FormUpdates and both Browse contributions are functional; only the unavailable alternate console-emulator row remains hidden. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/AppearanceFontsSettingsPage.axaml.cs",
@@ -940,7 +940,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ConfirmationsSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves all original names, group labels, checkbox order, three-state controls, and translation identities in a native scrollable settings surface."
+    "notes": "Preserves all original names, group labels, checkbox order, three-state controls, and translation identities in a native scrollable settings surface. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ConsoleStyleSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ConsoleStyleSettingsPage.axaml.cs",
@@ -964,7 +964,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/RevisionLinksSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Same split category/detail layout, control names, revision-links manual target, and CaptionCol/URICol HeaderText identities. The editable DataGridView is represented by a typed editable ListBox."
+    "notes": "Same split category/detail layout, control names, revision-links manual target, and CaptionCol/URICol HeaderText identities. The editable DataGridView is represented by a typed editable ListBox. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/HotkeysSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/HotkeysSettingsPage.axaml.cs",
@@ -988,7 +988,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ControlHotkeys.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves the two-list layout, fixed 222-DIP command column, original control names, button metrics, and existing Text translation identities."
+    "notes": "Preserves the two-list layout, fixed 222-DIP command column, original control names, button metrics, and existing Text translation identities. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/TextboxHotkey.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/TextboxHotkey.cs",
@@ -1048,7 +1048,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPage.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same Revision graph and Theme groups and same-named controls in a compact scrollable layout. The theme selector, whole-button folder flyout, colorblind variation, system visual style, and restart notice are functional and visible under the original conditions."
+    "notes": "Same Revision graph and Theme groups and same-named controls in a compact scrollable layout. The theme selector, whole-button folder flyout, colorblind variation, system visual style, and restart notice are functional and visible under the original conditions. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPageController.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ColorsSettings/ColorsSettingsPageController.cs",
@@ -1180,7 +1180,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionGpgInfoControl.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "The original tableLayoutPanel1, commitSignPicture, tagSignPicture, txtCommitGpgInfo, and txtTagGpgInfo identities map to a two-row Avalonia grid; the tag row collapses when no tag exists and otherwise shares the available height equally."
+    "notes": "The original tableLayoutPanel1, commitSignPicture, tagSignPicture, txtCommitGpgInfo, and txtTagGpgInfo identities map to a two-row Avalonia grid; the tag row collapses when no tag exists and otherwise shares the available height equally. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/UserControls/OutputHistoryControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/OutputHistoryControl.axaml.cs",
@@ -1643,7 +1643,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FilterToolBar.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Compact 25px Avalonia toolbar layout with the original field names, ordering, split menus, advanced-filter menu entry, reset states and icons. Native Labels route the branch and filter mnemonics to their original input targets."
+    "notes": "Compact 25px Avalonia toolbar layout with the original field names, ordering, split menus, advanced-filter menu entry, reset states and icons. Native Labels route the branch and filter mnemonics to their original input targets. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/UserControls/RevisionGrid/FormRevisionFilter.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/FormRevisionFilter.axaml.cs",
@@ -1845,7 +1845,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Compact filter/count row, empty-state label, status list, repository tree, and same-named context items preserve existing translation identities. The active/invalid filter backgrounds are semantic light/dark resources; later toolbar/search commands remain absent rather than inert."
+    "notes": "Compact filter/count row, empty-state label, status list, repository tree, and same-named context items preserve existing translation identities. The active/invalid filter backgrounds are semantic light/dark resources; later toolbar/search commands remain absent rather than inert. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs": {
     "twin": "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs",
@@ -1910,7 +1910,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "AvaloniaEdit surface with the functional original context-menu identities for selected-line stage/unstage/reset, Copy and Copy patch/new/old version, context-line count, entire-file and whitespace options, nonprinting/syntax toggles, Find, Replace (hidden while read-only), and Go to line. The centered no-upscale image surface and original large-preview link identity remain. The compact hover toolbar restores change navigation, context-line count, entire-file, nonprinting, syntax, whitespace, and encoding actions with the original names and shared icons."
+    "notes": "AvaloniaEdit surface with the functional original context-menu identities for selected-line stage/unstage/reset, Copy and Copy patch/new/old version, context-line count, entire-file and whitespace options, nonprinting/syntax toggles, Find, Replace (hidden while read-only), and Go to line. The centered no-upscale image surface and original large-preview link identity remain. The compact hover toolbar restores change navigation, context-line count, entire-file, nonprinting, syntax, whitespace, and encoding actions with the original names and shared icons. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/Editor/ViewMode.cs": {
     "twin": "src/app/GitUI/Editor/ViewMode.cs",
@@ -2364,7 +2364,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ForkAndCloneForm.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native 744x552 two-tab layout with source column metrics, shared dialog/group styles, clone destination, protocol, parent-remote, depth, and action controls; no ListView or ColumnHeader shim types are introduced."
+    "notes": "Native 744x552 two-tab layout with source column metrics, shared dialog/group styles, clone destination, protocol, parent-remote, depth, and action controls; no ListView or ColumnHeader shim types are introduced. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/CreatePullRequestForm.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/CreatePullRequestForm.axaml.cs",
@@ -2388,7 +2388,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native 754x511 split layout preserves the repository selector, five-column pull-request list, action rail, Diff/Comments tabs, FileStatusList/FileViewer and EditNetSpell boundaries. Discussion entries use typed Avalonia rows instead of the WinForms WebBrowser/GDI HTML renderer, while the four translated header identities and literal # header remain unchanged."
+    "notes": "Native 754x511 split layout preserves the repository selector, five-column pull-request list, action rail, Diff/Comments tabs, FileStatusList/FileViewer and EditNetSpell boundaries. Discussion entries use typed Avalonia rows instead of the WinForms WebBrowser/GDI HTML renderer, while the four translated header identities and literal # header remain unchanged. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/GitUICommands.cs": {
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",

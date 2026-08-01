@@ -14,8 +14,7 @@
             Height="16"
             Padding="0"
             IsVisible="False">
-      <Image Width="16"
-             Height="16"
+      <Image Classes="gitextensions-icon-16"
              Source="{x:Static properties:Images.Information}" />
     </Button>
   </StackPanel>

@@ -11,17 +11,13 @@
     <Grid ColumnDefinitions="232,6,222,*">
       <TextBlock x:Name="lHotkeyableItems"
                  Text="Hotkeyable Items" />
-      <Border Grid.Column="2"
-              Padding="6,3"
-              BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+      <Border Classes="gitextensions-list-header-cell" Grid.Column="2"
               BorderThickness="1,1,1,0">
         <TextBlock x:Name="columnCommand"
                    FontWeight="SemiBold"
                    Text="Command" />
       </Border>
-      <Border Grid.Column="3"
-              Padding="6,3"
-              BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+      <Border Classes="gitextensions-list-header-cell" Grid.Column="3"
               BorderThickness="0,1,1,0">
         <TextBlock x:Name="columnKey"
                    FontWeight="SemiBold"
@@ -31,22 +27,12 @@
 
     <Grid Grid.Row="1"
           ColumnDefinitions="232,6,*">
-      <ListBox x:Name="cmbSettings">
-        <ListBox.Styles>
-          <Style Selector="ListBoxItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-          </Style>
-        </ListBox.Styles>
-      </ListBox>
+      <ListBox x:Name="cmbSettings"
+               Classes="gitextensions-stretch-items" />
       <ListBox x:Name="listMappings"
+               Classes="gitextensions-stretch-items"
                Grid.Column="2"
-               SelectionMode="Single">
-        <ListBox.Styles>
-          <Style Selector="ListBoxItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-          </Style>
-        </ListBox.Styles>
-      </ListBox>
+               SelectionMode="Single" />
     </Grid>
 
     <Grid Grid.Row="2"

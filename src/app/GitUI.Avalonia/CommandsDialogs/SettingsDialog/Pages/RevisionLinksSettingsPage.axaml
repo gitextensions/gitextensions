@@ -17,13 +17,8 @@
                  Margin="2,0,2,4"
                  Text="Categories" />
       <ListBox x:Name="_NO_TRANSLATE_Categories"
-               Grid.Row="1">
-        <ListBox.Styles>
-          <Style Selector="ListBoxItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-          </Style>
-        </ListBox.Styles>
-      </ListBox>
+               Classes="gitextensions-stretch-items"
+               Grid.Row="1" />
       <StackPanel x:Name="toolStripManageCategories"
                   Grid.Row="2"
                   Height="25"
@@ -48,7 +43,6 @@
 
     <GridSplitter Grid.Column="1"
                   Width="6"
-                  Background="Transparent"
                   ResizeDirection="Columns" />
 
     <Grid x:Name="_NO_TRANSLATE_DetailPanel"
@@ -179,10 +173,10 @@
           </Border>
         </Grid>
         <ListBox x:Name="LinksGrid"
+                 Classes="gitextensions-stretch-items"
                  Grid.Row="2">
           <ListBox.Styles>
             <Style Selector="ListBoxItem">
-              <Setter Property="HorizontalContentAlignment" Value="Stretch" />
               <Setter Property="Padding" Value="2" />
             </Style>
           </ListBox.Styles>

@@ -218,13 +218,8 @@
             </Border>
           </Grid>
           <ListBox x:Name="BranchGrid"
-                   Grid.Row="1">
-            <ListBox.Styles>
-              <Style Selector="ListBoxItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-              </Style>
-            </ListBox.Styles>
-          </ListBox>
+                   Classes="gitextensions-stretch-items"
+                   Grid.Row="1" />
         </Grid>
       </TabItem>
     </TabControl>

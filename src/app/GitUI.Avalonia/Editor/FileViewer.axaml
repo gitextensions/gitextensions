@@ -14,15 +14,15 @@
         <ContextMenu x:Name="contextMenu">
           <MenuItem x:Name="stageSelectedLinesToolStripMenuItem"
               Header="Stage selected line(s)">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stage}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stage}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="unstageSelectedLinesToolStripMenuItem"
               Header="Unstage selected line(s)">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Unstage}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Unstage}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="resetSelectedLinesToolStripMenuItem"
               Header="Reset selected line(s)">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="copyToolStripMenuItem"
                     Header="_Copy"
@@ -36,23 +36,22 @@
           <Separator x:Name="toolStripSeparator1" />
           <MenuItem x:Name="increaseNumberOfLinesToolStripMenuItem"
                     Header="_Increase the number of lines of context">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.NumberOfLinesIncrease}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.NumberOfLinesIncrease}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="decreaseNumberOfLinesToolStripMenuItem"
                     Header="_Decrease the number of lines of context">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.NumberOfLinesDecrease}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.NumberOfLinesDecrease}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="showEntireFileToolStripMenuItem"
                     Header="Show _entire file"
                     ToggleType="CheckBox">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ShowEntireFile}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ShowEntireFile}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="showNonprintableCharactersToolStripMenuItem"
                     Header="S_how nonprinting characters"
                     ToggleType="CheckBox">
             <MenuItem.Icon>
-              <Image Width="16"
-                     Height="16"
+              <Image Classes="gitextensions-icon-16"
                      Source="{x:Static properties:Images.ShowWhitespace}" />
             </MenuItem.Icon>
           </MenuItem>
@@ -60,8 +59,7 @@
                     Header="Show synta_x highlighting"
                     ToggleType="CheckBox">
             <MenuItem.Icon>
-              <Image Width="16"
-                     Height="16"
+              <Image Classes="gitextensions-icon-16"
                      Source="/Resources/Icons/SyntaxHighlighting.png" />
             </MenuItem.Icon>
           </MenuItem>
@@ -133,14 +131,12 @@
                            Icon="{x:Static properties:Images.ShowEntireFile}" />
         <Button x:Name="showNonPrintChars"
                 Classes="gitextensions-toolbar-button">
-          <Image Width="16"
-                 Height="16"
+          <Image Classes="gitextensions-icon-16"
                  Source="{x:Static properties:Images.ShowWhitespace}" />
         </Button>
         <Button x:Name="showSyntaxHighlighting"
                 Classes="gitextensions-toolbar-button">
-          <Image Width="16"
-                 Height="16"
+          <Image Classes="gitextensions-icon-16"
                  Source="/Resources/Icons/SyntaxHighlighting.png" />
         </Button>
         <compat:IconButton x:Name="ignoreWhitespaceAtEol"
