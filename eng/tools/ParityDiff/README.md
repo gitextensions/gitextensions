@@ -25,3 +25,17 @@ dotnet run --project eng/tools/ParityDiff -- compare `
 ```
 
 The tool and its test project belong to neither repository solution.
+
+The aggregate color mode compares only explicitly declared `semantic.*` roles. The role catalog
+gives every role one framework-neutral meaning; missing, ambiguous, or undeclared roles are
+findings, so the mode cannot make a report empty by silently omitting a measurement. Ordinary
+control properties remain in the full diagnostic report because a WinForms control property and
+an Avalonia template brush are not necessarily the same measurement.
+
+```powershell
+dotnet run --project eng/tools/ParityDiff -- compare-colors `
+  --reference eng/avalonia/parity-shots/winforms/manifest.json `
+  --candidate eng/avalonia/parity-shots/avalonia/manifest.json `
+  --roles eng/tools/ParityDiff/color-roles.json `
+  --output eng/avalonia/parity-evidence/P1.7b/colors
+```
