@@ -5,9 +5,9 @@ namespace GitCommands.Settings;
 /// <summary>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for <see langword="string"/>.
 /// </summary>
-public sealed class Setting_String : Setting<string>
+public sealed class TextSetting : Setting<string>
 {
-    public Setting_String(SettingsPath settingsSource, string name, string defaultValue)
+    public TextSetting(SettingsPath settingsSource, string name, string defaultValue)
         : base(
             settingsSource,
             name,
@@ -21,9 +21,9 @@ public sealed class Setting_String : Setting<string>
 /// <summary>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for nullable <see langword="string"/>.
 /// </summary>
-public sealed class Setting_NullableString : Setting<string?>
+public sealed class NullableTextSetting : Setting<string?>
 {
-    public Setting_NullableString(SettingsPath settingsSource, string name)
+    public NullableTextSetting(SettingsPath settingsSource, string name)
         : base(
             settingsSource,
             name,
@@ -37,9 +37,9 @@ public sealed class Setting_NullableString : Setting<string?>
 /// <summary>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for <see langword="bool"/>.
 /// </summary>
-public sealed class Setting_Bool : Setting<bool>
+public sealed class BooleanSetting : Setting<bool>
 {
-    public Setting_Bool(SettingsPath settingsSource, string name, bool defaultValue)
+    public BooleanSetting(SettingsPath settingsSource, string name, bool defaultValue)
         : base(
             settingsSource,
             name,
@@ -54,9 +54,9 @@ public sealed class Setting_Bool : Setting<bool>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for <see langword="bool"/>
 ///  which is stored inverted for backwards compatibility with historical settings files.
 /// </summary>
-public sealed class Setting_InvertedBool : Setting<bool>
+public sealed class InvertedBooleanSetting : Setting<bool>
 {
-    public Setting_InvertedBool(SettingsPath settingsSource, string name, bool defaultValue)
+    public InvertedBooleanSetting(SettingsPath settingsSource, string name, bool defaultValue)
         : base(
             settingsSource,
             name,
@@ -70,9 +70,9 @@ public sealed class Setting_InvertedBool : Setting<bool>
 /// <summary>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for <see langword="bool?"/>.
 /// </summary>
-public sealed class Setting_NullableBool : Setting<bool?>
+public sealed class NullableBooleanSetting : Setting<bool?>
 {
-    public Setting_NullableBool(SettingsPath settingsSource, string name)
+    public NullableBooleanSetting(SettingsPath settingsSource, string name)
         : base(
             settingsSource,
             name,
@@ -86,9 +86,9 @@ public sealed class Setting_NullableBool : Setting<bool?>
 /// <summary>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for <see langword="int"/>.
 /// </summary>
-public sealed class Setting_Int : Setting<int>
+public sealed class IntegerSetting : Setting<int>
 {
-    public Setting_Int(SettingsPath settingsSource, string name, int defaultValue)
+    public IntegerSetting(SettingsPath settingsSource, string name, int defaultValue)
         : base(
             settingsSource,
             name,
@@ -102,9 +102,9 @@ public sealed class Setting_Int : Setting<int>
 /// <summary>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for <see langword="float"/>.
 /// </summary>
-public sealed class Setting_Float : Setting<float>
+public sealed class FloatSetting : Setting<float>
 {
-    public Setting_Float(SettingsPath settingsSource, string name, float defaultValue)
+    public FloatSetting(SettingsPath settingsSource, string name, float defaultValue)
         : base(
             settingsSource,
             name,
@@ -119,10 +119,10 @@ public sealed class Setting_Float : Setting<float>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for <see langword="enum"/> types.
 /// </summary>
 /// <typeparam name="TEnum">The enum type.</typeparam>
-public sealed class Setting_Enum<TEnum> : Setting<TEnum>
+public sealed class EnumSetting<TEnum> : Setting<TEnum>
     where TEnum : struct, Enum
 {
-    public Setting_Enum(SettingsPath settingsSource, string name, TEnum defaultValue)
+    public EnumSetting(SettingsPath settingsSource, string name, TEnum defaultValue)
         : base(
             settingsSource,
             name,

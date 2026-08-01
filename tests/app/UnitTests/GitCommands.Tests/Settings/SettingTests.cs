@@ -120,7 +120,7 @@ internal sealed class SettingTests
         T storedValue = default;
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = Guid.NewGuid().ToString();
 
@@ -157,7 +157,7 @@ internal sealed class SettingTests
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        Setting_String setting = new(settingsPath, settingName, settingDefault);
+        TextSetting setting = new(settingsPath, settingName, settingDefault);
 
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
@@ -179,7 +179,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, settingDefault);
+            TextSetting setting = new(settingsPath, settingName, settingDefault);
 
             setting.Value = value;
 
@@ -195,7 +195,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, settingDefault);
+            TextSetting setting = new(settingsPath, settingName, settingDefault);
 
             setting.Value.Should().Be(value);
         });
@@ -210,7 +210,7 @@ internal sealed class SettingTests
         AppSettingsPath settingsPath = new(pathName);
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_NullableString setting = new(settingsPath, settingName);
+            NullableTextSetting setting = new(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -226,7 +226,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_NullableString setting = new(settingsPath, settingName);
+            NullableTextSetting setting = new(settingsPath, settingName);
 
             setting.Value.Should().Be(value);
         });
@@ -242,7 +242,7 @@ internal sealed class SettingTests
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        Setting_NullableBool setting = new(settingsPath, settingName);
+        NullableBooleanSetting setting = new(settingsPath, settingName);
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
@@ -259,7 +259,7 @@ internal sealed class SettingTests
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        Setting_NullableBool setting = new(settingsPath, settingName);
+        NullableBooleanSetting setting = new(settingsPath, settingName);
 
         setting.Value = value;
         setting.Should().NotBeNull();
@@ -278,7 +278,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_Bool setting = new(settingsPath, settingName, defaultValue);
+            BooleanSetting setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -293,7 +293,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = Guid.NewGuid().ToString();
 
@@ -309,7 +309,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_Bool setting = new(settingsPath, settingName, defaultValue);
+            BooleanSetting setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -324,7 +324,7 @@ internal sealed class SettingTests
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        Setting_Bool setting = new(settingsPath, settingName, defaultValue);
+        BooleanSetting setting = new(settingsPath, settingName, defaultValue);
 
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
@@ -346,7 +346,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_Bool setting = new(settingsPath, settingName, defaultValue);
+            BooleanSetting setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value = value;
 
@@ -362,7 +362,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_Bool setting = new(settingsPath, settingName, defaultValue);
+            BooleanSetting setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(value);
         });
@@ -381,7 +381,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = storedValue;
 
@@ -397,7 +397,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_Bool setting = new(settingsPath, settingName, !expected);
+            BooleanSetting setting = new(settingsPath, settingName, !expected);
 
             setting.Value.Should().Be(expected);
         });
@@ -416,7 +416,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = storedValue;
 
@@ -432,7 +432,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_Bool setting = new(settingsPath, settingName, defaultValue);
+            BooleanSetting setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -449,7 +449,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_Bool setting = new(settingsPath, settingName, !value);
+            BooleanSetting setting = new(settingsPath, settingName, !value);
 
             setting.Value = value;
 
@@ -465,7 +465,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value.Should().Be(expectedStoredString);
         });
@@ -484,7 +484,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = storedValue;
 
@@ -500,7 +500,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_NullableBool setting = new(settingsPath, settingName);
+            NullableBooleanSetting setting = new(settingsPath, settingName);
 
             setting.Value.Should().Be(expected);
         });
@@ -519,7 +519,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = storedValue;
 
@@ -535,7 +535,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_NullableBool setting = new(settingsPath, settingName);
+            NullableBooleanSetting setting = new(settingsPath, settingName);
 
             setting.Value.Should().BeNull();
         });
@@ -553,7 +553,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_NullableBool setting = new(settingsPath, settingName);
+            NullableBooleanSetting setting = new(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -569,7 +569,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_NullableBool setting = new(settingsPath, settingName);
+            NullableBooleanSetting setting = new(settingsPath, settingName);
 
             setting.Value.Should().Be(value);
         });
@@ -587,7 +587,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_NullableBool setting = new(settingsPath, settingName);
+            NullableBooleanSetting setting = new(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -603,7 +603,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_NullableString setting = new(settingsPath, settingName);
+            NullableTextSetting setting = new(settingsPath, settingName);
 
             setting.Value.Should().Be(expectedStoredString);
         });
@@ -673,7 +673,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = Guid.NewGuid().ToString();
 
@@ -759,7 +759,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = Guid.NewGuid().ToString();
 
@@ -828,7 +828,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_Int setting = new(settingsPath, settingName, defaultValue);
+            IntegerSetting setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -843,7 +843,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = Guid.NewGuid().ToString();
 
@@ -859,7 +859,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_Int setting = new(settingsPath, settingName, defaultValue);
+            IntegerSetting setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -912,7 +912,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_Float setting = new(settingsPath, settingName, defaultValue);
+            FloatSetting setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -927,7 +927,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = Guid.NewGuid().ToString();
 
@@ -943,7 +943,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_Float setting = new(settingsPath, settingName, defaultValue);
+            FloatSetting setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -1016,7 +1016,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_NullableString setting = new(settingsPath, settingName);
+            NullableTextSetting setting = new(settingsPath, settingName);
 
             string? storedValue = setting.Value;
             storedValue.Should().Be(value?.ToString());
@@ -1034,7 +1034,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_Enum<TestEnum> setting = new(settingsPath, settingName, defaultValue);
+            EnumSetting<TestEnum> setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -1049,7 +1049,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_String setting = new(settingsPath, settingName, string.Empty);
+            TextSetting setting = new(settingsPath, settingName, string.Empty);
 
             setting.Value = Guid.NewGuid().ToString();
 
@@ -1065,7 +1065,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            Setting_Enum<TestEnum> setting = new(settingsPath, settingName, defaultValue);
+            EnumSetting<TestEnum> setting = new(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -1141,10 +1141,10 @@ internal sealed class SettingTests
     {
         Type type = typeof(T);
         return
-              type == typeof(string) ? (ISetting<T>)(object)new Setting_String(path, name, (string)(object)defaultValue)
-            : type == typeof(bool) ? (ISetting<T>)(object)new Setting_Bool(path, name, (bool)(object)defaultValue)
-            : type == typeof(int) ? (ISetting<T>)(object)new Setting_Int(path, name, (int)(object)defaultValue)
-            : type == typeof(float) ? (ISetting<T>)(object)new Setting_Float(path, name, (float)(object)defaultValue)
+              type == typeof(string) ? (ISetting<T>)(object)new TextSetting(path, name, (string)(object)defaultValue)
+            : type == typeof(bool) ? (ISetting<T>)(object)new BooleanSetting(path, name, (bool)(object)defaultValue)
+            : type == typeof(int) ? (ISetting<T>)(object)new IntegerSetting(path, name, (int)(object)defaultValue)
+            : type == typeof(float) ? (ISetting<T>)(object)new FloatSetting(path, name, (float)(object)defaultValue)
             : new Setting<T>(
                 path,
                 name,
@@ -1195,8 +1195,8 @@ internal sealed class SettingTests
     {
         Type type = typeof(T);
         return
-            type == typeof(string) ? (ISetting<T?>)(object)new Setting_NullableString(path, name)
-            : type == typeof(bool) ? (ISetting<T?>)(object)new Setting_NullableBool(path, name)
+            type == typeof(string) ? (ISetting<T?>)(object)new NullableTextSetting(path, name)
+            : type == typeof(bool) ? (ISetting<T?>)(object)new NullableBooleanSetting(path, name)
             : new Setting<T?>(
                 path,
                 name,
