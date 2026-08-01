@@ -286,6 +286,27 @@ internal sealed class AvaloniaControlTreeReader
         AddAdditional("caret", GetPropertyValue(control, "CaretBrush"));
         AddAdditional("pointerOverBackground", GetPropertyValue(control, "PointerOverBackground"));
         AddAdditional("pressedBackground", GetPropertyValue(control, "PressedBackground"));
+        if (ReferenceEquals(control, _root))
+        {
+            AddSemantic("semantic.app.panel.background", "GitExtensionsPanelBackgroundBrush");
+            AddSemantic("semantic.app.selection.background", "GitExtensionsSelectionBackgroundBrush");
+            AddSemantic("semantic.system.control.background", "GitExtensionsControlBackgroundBrush");
+            AddSemantic("semantic.system.control.foreground", "GitExtensionsControlForegroundBrush");
+            AddSemantic("semantic.system.control.disabledForeground", "GitExtensionsDisabledForegroundBrush");
+            AddSemantic("semantic.system.highlight.background", "GitExtensionsHighlightBackgroundBrush");
+            AddSemantic("semantic.system.highlight.foreground", "GitExtensionsHighlightForegroundBrush");
+            AddSemantic("semantic.system.inactiveSelection.background", "GitExtensionsSystemInactiveSelectionBackgroundBrush");
+            AddSemantic("semantic.system.inactiveSelection.foreground", "GitExtensionsInactiveSelectionForegroundBrush");
+            AddSemantic("semantic.system.tooltip.background", "GitExtensionsToolTipBackgroundBrush");
+            AddSemantic("semantic.system.tooltip.foreground", "GitExtensionsToolTipForegroundBrush");
+            AddSemantic("semantic.system.window.background", "GitExtensionsWindowBackgroundBrush");
+            AddSemantic("semantic.system.window.foreground", "GitExtensionsWindowTextBrush");
+            AddSemantic("semantic.system.control.border", "GitExtensionsControlBorderBrush");
+            AddSemantic("semantic.app.pane.border", "GitExtensionsPaneBorderBrush");
+            AddSemantic("semantic.app.reset.soft.background", "GitExtensionsResetSoftBackgroundBrush");
+            AddSemantic("semantic.app.reset.mixed.background", "GitExtensionsResetMixedBackgroundBrush");
+            AddSemantic("semantic.app.reset.hard.background", "GitExtensionsResetHardBackgroundBrush");
+        }
 
         return new CaptureColors
         {
@@ -312,6 +333,17 @@ internal sealed class AvaloniaControlTreeReader
             {
                 additional[name] = color;
             }
+        }
+
+        void AddSemantic(string role, string resourceKey)
+        {
+            if (!_root.TryFindResource(resourceKey, _root.ActualThemeVariant, out object? resource)
+                || BrushToArgb(resource) is not { } color)
+            {
+                throw new InvalidDataException($"Semantic color role '{role}' did not resolve from '{resourceKey}'.");
+            }
+
+            additional[role] = color;
         }
     }
 

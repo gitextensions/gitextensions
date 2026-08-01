@@ -39,6 +39,10 @@
              Link="CommandsDialogs\BrowseDialog\ReleaseVersionTests.cs" />
     <Compile Include="..\GitUI.Tests\LeftPanel\WorktreeTreeTests.cs"
              Link="LeftPanel\WorktreeTreeTests.cs" />
+    <Compile Include="..\GitUI.Tests\NBugReports\BugReportInvokerTests.cs"
+             Link="NBugReports\BugReportInvokerTests.cs" />
+    <Compile Include="..\GitUI.Tests\NBugReports\UIReporterTests.cs"
+             Link="NBugReports\UIReporterTests.cs" />
     <Compile Include="..\..\..\..\eng\tools\WinFormsInputParityToAvalonia\InputMetadataGenerator.cs"
              Link="Parity\InputMetadataGenerator.cs" />
   </ItemGroup>
@@ -47,6 +51,7 @@
     <!-- Exact WinForms-shaped aliases required by the unchanged shared script tests. -->
     <Using Include="GitExtensions.Shims.WinForms.IWin32Window" Alias="IWin32Window" />
     <Using Include="GitExtensions.Shims.WinForms.DialogResult" Alias="DialogResult" />
+    <Using Include="GitUI.Compat" />
   </ItemGroup>
 
   <ItemGroup>
