@@ -124,7 +124,7 @@ public sealed class VisualParityTests
             frame.BorderThickness.Should().Be(new Thickness(1, 0, 1, 1));
             frame.CornerRadius.Should().Be(new CornerRadius(0));
             header.Content.Should().Be("Repository type");
-            GetColor(frame.BorderBrush).Should().Be(Color.Parse("#D2D2D2"));
+            GetColor(frame.BorderBrush).Should().Be(Color.Parse("#E0E0E0"));
         }
         finally
         {
@@ -907,6 +907,9 @@ public sealed class VisualParityTests
                 .OfType<Border>()
                 .Single(border => border.Name == "PART_LayoutRoot");
 
+            listItem.Focus();
+            Dispatcher.UIThread.RunJobs();
+
             listItem.MinHeight.Should().Be(24);
             listItem.Padding.Should().Be(new Thickness(6, 2));
             GetColor(listPresenter.Background).Should().Be(selectionColor);
@@ -914,6 +917,15 @@ public sealed class VisualParityTests
             GetColor(treeLayoutRoot.Background).Should().Be(selectionColor);
             GetColor(editor.TextArea.SelectionBrush).Should().Be(selectionColor);
             GetColor(editor.TextArea.SelectionForeground).Should().Be(selectionForegroundColor);
+
+            treeItem.Focus();
+            Dispatcher.UIThread.RunJobs();
+            Application application = Application.Current
+                ?? throw new InvalidOperationException("The Avalonia application was not created.");
+            GetColor(listPresenter.Background).Should().Be(
+                GetResourceBrushColor(application, "GitExtensionsInactiveSelectionBackgroundBrush", themeVariant));
+            GetColor(listPresenter.Foreground).Should().Be(
+                GetResourceBrushColor(application, "GitExtensionsInactiveSelectionForegroundBrush", themeVariant));
         }
         finally
         {

@@ -1,7 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using GitExtensions.ParityCapture;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 
 namespace WinFormsParityCapture;
 
@@ -10,9 +12,11 @@ internal sealed class ControlTreeReader
     private readonly Dictionary<object, List<string>> _fieldNames = new(ReferenceEqualityComparer.Instance);
     private readonly List<ToolTip> _toolTips = [];
     private readonly decimal _dipFactor;
+    private readonly Control _root;
 
     public ControlTreeReader(Control root, int dpi)
     {
+        _root = root;
         _dipFactor = 96m / dpi;
         IndexFields(root);
     }
@@ -117,6 +121,11 @@ internal sealed class ControlTreeReader
             border = ColorToArgb(button.FlatAppearance.BorderColor);
         }
 
+        if (ReferenceEquals(control, _root))
+        {
+            AddSemanticColorRoles(additional);
+        }
+
         return new CaptureColors
         {
             Foreground = ColorToArgb(control.ForeColor),
@@ -131,6 +140,100 @@ internal sealed class ControlTreeReader
             GridLine = gridLine,
             Additional = additional
         };
+    }
+
+    private static void AddSemanticColorRoles(IDictionary<string, string> colors)
+    {
+        AddApp("semantic.app.panel.background", AppColor.PanelBackground);
+        AddApp("semantic.app.selection.background", AppColor.Selection);
+        AddSystem("semantic.system.control.background", KnownColor.Control);
+        AddSystem("semantic.system.control.foreground", KnownColor.ControlText);
+        AddSystem("semantic.system.control.disabledForeground", KnownColor.GrayText);
+        AddSystem("semantic.system.highlight.background", KnownColor.Highlight);
+        AddSystem("semantic.system.highlight.foreground", KnownColor.HighlightText);
+        AddSystem("semantic.system.inactiveSelection.background", KnownColor.InactiveCaption);
+        AddSystem("semantic.system.inactiveSelection.foreground", KnownColor.InactiveCaptionText);
+        AddSystem("semantic.system.tooltip.background", KnownColor.Info);
+        AddSystem("semantic.system.tooltip.foreground", KnownColor.InfoText);
+        AddSystem("semantic.system.window.background", KnownColor.Window);
+        AddSystem("semantic.system.window.foreground", KnownColor.WindowText);
+        AddSystem("semantic.system.control.border", KnownColor.ControlDark);
+        AddColor("semantic.app.pane.border", OtherColors.PanelBorderColor);
+        AddColor("semantic.app.reset.soft.background", OtherColors.BrightGreen);
+        AddColor("semantic.app.reset.mixed.background", OtherColors.BrightYellow);
+        AddColor("semantic.app.reset.hard.background", OtherColors.BrightRed);
+
+        void AddApp(string role, AppColor name)
+        {
+            Color color = ThemeModule.Settings.Theme.GetColor(name);
+            AddColor(role, color.IsEmpty ? ThemeModule.Settings.InvariantTheme.GetColor(name) : color);
+        }
+
+        void AddSystem(string role, KnownColor name)
+        {
+            AddColor(role, ResolveSystemColor(name));
+        }
+
+        void AddColor(string role, Color color)
+        {
+            colors[role] = ColorToArgb(color)
+                ?? throw new InvalidDataException($"Semantic color role '{role}' did not resolve to ARGB.");
+        }
+    }
+
+    private static Color ResolveSystemColor(KnownColor name)
+    {
+        Color color = ThemeModule.Settings.Theme.GetColor(name);
+        if (!color.IsEmpty)
+        {
+            return color;
+        }
+
+        if (ThemeModule.Settings.Theme.SystemColorMode == SystemColorMode.Dark
+            && TryGetDarkSystemColor(name, out color))
+        {
+            return color;
+        }
+
+        color = ThemeModule.Settings.InvariantTheme.GetColor(name);
+        return color.IsEmpty ? Color.FromKnownColor(name) : color;
+    }
+
+    private static bool TryGetDarkSystemColor(KnownColor name, out Color color)
+    {
+        string? value = name switch
+        {
+            KnownColor.Control => "#202020",
+            KnownColor.ControlDark => "#4A4A4A",
+            KnownColor.ControlText => "#FFFFFF",
+            KnownColor.GrayText => "#969696",
+            KnownColor.Highlight => "#2864B4",
+            KnownColor.HighlightText => "#000000",
+            KnownColor.InactiveCaption => "#374B5A",
+            KnownColor.InactiveCaptionText => "#BEBEBE",
+            KnownColor.Info => "#50503C",
+            KnownColor.InfoText => "#BEBEBE",
+            KnownColor.Window => "#323232",
+            KnownColor.WindowText => "#F0F0F0",
+            _ => null,
+        };
+
+        color = value is null ? Color.Empty : ColorTranslator.FromHtml(value);
+        return !color.IsEmpty;
+    }
+
+    // parity-scaffolding: Exposes deterministic semantic-color resolution to the capture-tool tests.
+    internal readonly struct TestAccessor
+    {
+        internal static Color ResolveSystemColor(KnownColor name, bool isDark)
+        {
+            if (isDark && TryGetDarkSystemColor(name, out Color color))
+            {
+                return color;
+            }
+
+            return Color.FromKnownColor(name);
+        }
     }
 
     private CaptureColors GetColors(DataGridViewCellStyle style) =>
