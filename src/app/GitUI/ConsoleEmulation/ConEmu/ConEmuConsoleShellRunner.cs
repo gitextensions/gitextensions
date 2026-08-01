@@ -12,7 +12,6 @@ namespace GitUI.ConsoleEmulation.ConEmu;
 /// </summary>
 internal sealed class ConEmuConsoleShellRunner(IShellProvider shellProvider, ConsoleEmulatorSettings settings) : IConsoleShellRunner
 {
-    private readonly ConsoleEmulatorSettings _settings = settings;
     private readonly ConEmuControl _conEmu = new()
     {
         Dock = DockStyle.Fill,
@@ -63,14 +62,14 @@ internal sealed class ConEmuConsoleShellRunner(IShellProvider shellProvider, Con
 
         try
         {
-            Validates.NotNull(_settings.Font);
+            Validates.NotNull(settings.Font);
 
             _conEmu.Start(
                 startInfo,
                 ThreadHelper.JoinableTaskFactory,
-                _settings.Theme,
-                _settings.Font.Name,
-                _settings.Font.Size.ToString("F0", CultureInfo.InvariantCulture));
+                settings.Theme,
+                settings.Font.Name,
+                settings.Font.Size.ToString("F0", CultureInfo.InvariantCulture));
         }
         catch (InvalidOperationException)
         {
