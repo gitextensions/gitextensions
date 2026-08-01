@@ -9,6 +9,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.Compat;
+using GitUI.NBugReports;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ShutdownMode = Avalonia.Controls.ShutdownMode;
@@ -35,7 +36,10 @@ public partial class App : Application
             ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
             ShimServices.Install(desktop);
-            Shims.WinForms.Application.ThreadException += (_, e) => ReportUnhandledException(e.Exception);
+            AppDomain.CurrentDomain.UnhandledException += (_, e) => ReportUnhandledException(
+                e.ExceptionObject as Exception ?? new InvalidOperationException($"Unhandled object: {e.ExceptionObject}"),
+                e.IsTerminating);
+            Shims.WinForms.Application.ThreadException += (_, e) => ReportUnhandledException(e.Exception, isTerminating: false);
 
             AvaloniaFontSettings.InstallSystemDefaults();
             string userPluginsPath = Path.Join(AppSettings.LocalApplicationDataPath.Value!, AvaloniaUserPluginsDirectoryName);
@@ -46,9 +50,14 @@ public partial class App : Application
 
             string[] args = Environment.GetCommandLineArgs();
             GitModule module = new(Program.ServiceContainer.GetRequiredService<IGitExecutorProvider>(), GetWorkingDir(args));
+            BugReportInvoker.ExecutorProvider = Program.ServiceContainer.GetRequiredService<IGitExecutorProvider>();
             GitUICommands commands = new(Program.ServiceContainer, module);
             desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            desktop.Exit += (_, _) => AppSettings.SaveSettings();
+            desktop.Exit += (_, _) =>
+            {
+                BugReportInvoker.IgnoreFailedToLoadAnAssembly = true;
+                AppSettings.SaveSettings();
+            };
             Dispatcher.UIThread.Post(() => RunStartup(desktop, commands, args));
         }
 
@@ -80,7 +89,7 @@ public partial class App : Application
         }
         catch (Exception exception)
         {
-            ReportUnhandledException(exception);
+            ReportUnhandledException(exception, isTerminating: false);
             desktop.Shutdown(-1);
         }
     }
@@ -110,10 +119,17 @@ public partial class App : Application
         }
     }
 
-    private static void ReportUnhandledException(Exception exception)
+    private static void ReportUnhandledException(Exception exception, bool isTerminating)
     {
         Console.Error.WriteLine(exception);
-        GitUI.MessageBoxes.ShowError(owner: null, exception.ToString(), "Unhandled exception");
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            BugReportInvoker.Report(exception, isTerminating);
+        }
+        else
+        {
+            Dispatcher.UIThread.Invoke(() => BugReportInvoker.Report(exception, isTerminating));
+        }
     }
 
     // Twin of GitExtensions/Program.cs GetWorkingDir (keep in sync on upstream drift).

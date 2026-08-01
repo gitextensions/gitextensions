@@ -1,5 +1,6 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -20,13 +21,20 @@ public class TaskDialogButton
     public static TaskDialogButton Yes { get; } = new("Yes");
     public static TaskDialogButton No { get; } = new("No");
     public static TaskDialogButton Cancel { get; } = new("Cancel");
+    public static TaskDialogButton Close { get; } = new("Close");
+    public static TaskDialogButton Help { get; } = new("Help");
 
-    public TaskDialogButton(string? text = null)
+    public TaskDialogButton(string? text = null, string? descriptionText = null)
     {
         Text = text;
+        DescriptionText = descriptionText;
     }
 
     public string? Text { get; set; }
+
+    public string? DescriptionText { get; set; }
+
+    public bool AllowCloseDialog { get; init; } = true;
 
     public event EventHandler? Click;
 
@@ -35,10 +43,34 @@ public class TaskDialogButton
 
 public sealed class TaskDialogCommandLinkButton : TaskDialogButton
 {
-    public TaskDialogCommandLinkButton(string? text = null)
-        : base(text)
+    public TaskDialogCommandLinkButton(string? text = null, string? descriptionText = null)
+        : base(text, descriptionText)
     {
     }
+
+    public TaskDialogCommandLinkButton(string? text, bool allowCloseDialog)
+        : base(text)
+    {
+        AllowCloseDialog = allowCloseDialog;
+    }
+}
+
+public enum TaskDialogExpanderPosition
+{
+    AfterFootnote
+}
+
+public sealed class TaskDialogExpander
+{
+    public string? CollapsedButtonText { get; set; }
+
+    public string? ExpandedButtonText { get; set; }
+
+    public TaskDialogExpanderPosition Position { get; set; }
+
+    public string? Text { get; set; }
+
+    public bool IsExpanded { get; set; }
 }
 
 public sealed class TaskDialogVerificationCheckBox
@@ -74,6 +106,8 @@ public sealed class TaskDialogPage
 
     public string? Footnote { get; set; }
 
+    public TaskDialogExpander? Expander { get; set; }
+
     public bool AllowCancel { get; set; }
 
     public bool SizeToContent { get; set; }
@@ -102,7 +136,9 @@ public static class TaskDialog
                 CanResize = false,
                 WindowStartupLocation = ownerWindow is null ? WindowStartupLocation.CenterScreen : WindowStartupLocation.CenterOwner,
                 MaxWidth = 700,
+                MinWidth = 360,
             };
+            dialog.Classes.Add("gitextensions-task-dialog");
 
             TaskDialogButton result = TaskDialogButton.Cancel;
 
@@ -137,6 +173,7 @@ public static class TaskDialog
             {
                 Button commandLink = CreateButton(pageButton, minWidth: 320, HorizontalAlignment.Stretch);
                 commandLink.HorizontalContentAlignment = HorizontalAlignment.Left;
+                commandLink.Classes.Add("gitextensions-command-link");
                 content.Children.Add(commandLink);
             }
 
@@ -159,6 +196,31 @@ public static class TaskDialog
                     Opacity = 0.7,
                     TextWrapping = TextWrapping.Wrap,
                 });
+            }
+
+            if (page.Expander is not null)
+            {
+                Expander expander = new()
+                {
+                    Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(page.Expander.CollapsedButtonText ?? string.Empty),
+                    Content = new SelectableTextBlock
+                    {
+                        Text = page.Expander.Text ?? string.Empty,
+                        TextWrapping = TextWrapping.Wrap,
+                    },
+                    IsExpanded = page.Expander.IsExpanded,
+                };
+                expander.PropertyChanged += (_, eventArgs) =>
+                {
+                    if (eventArgs.Property == Expander.IsExpandedProperty)
+                    {
+                        string text = expander.IsExpanded
+                            ? page.Expander.ExpandedButtonText ?? page.Expander.CollapsedButtonText ?? string.Empty
+                            : page.Expander.CollapsedButtonText ?? string.Empty;
+                        expander.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(text);
+                    }
+                };
+                content.Children.Add(expander);
             }
 
             StackPanel buttonPanel = new()
@@ -224,18 +286,50 @@ public static class TaskDialog
             {
                 Button button = new()
                 {
-                    Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(pageButton.Text ?? string.Empty),
+                    Content = CreateButtonContent(pageButton),
                     MinWidth = minWidth,
                     HorizontalAlignment = alignment,
                     HorizontalContentAlignment = HorizontalAlignment.Center,
                 };
+                button.Classes.Add("gitextensions-dialog-action");
                 button.Click += (_, _) =>
                 {
                     result = pageButton;
+                    if (pageButton.AllowCloseDialog)
+                    {
+                        dialog.Close();
+                    }
+
                     pageButton.PerformClick();
-                    dialog.Close();
                 };
                 return button;
+            }
+
+            static object CreateButtonContent(TaskDialogButton pageButton)
+            {
+                AccessText title = new()
+                {
+                    Text = AvaloniaTranslationUtils.ToAvaloniaMnemonics(pageButton.Text ?? string.Empty),
+                };
+                if (string.IsNullOrEmpty(pageButton.DescriptionText))
+                {
+                    return title;
+                }
+
+                return new StackPanel
+                {
+                    Spacing = 2,
+                    Children =
+                    {
+                        title,
+                        new TextBlock
+                        {
+                            Text = pageButton.DescriptionText,
+                            Opacity = 0.75,
+                            TextWrapping = TextWrapping.Wrap,
+                        },
+                    },
+                };
             }
         }
     }

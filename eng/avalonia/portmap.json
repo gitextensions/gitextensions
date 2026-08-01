@@ -3478,20 +3478,28 @@
     "substitute": "Avalonia bitmap ownership, routed pointer input, and collection-specific native sorting."
   },
   "src/app/GitUI/NBugReports/BugReportInvoker.cs": {
-    "status": "unported",
-    "plannedIn": "P1.7"
+    "twin": "src/app/GitUI.Avalonia/NBugReports/BugReportInvoker.cs",
+    "status": "functional",
+    "basedOn": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+    "notes": "Preserves logging, exception classification, cancellation suppression, dubious-ownership routing, and terminating-state propagation; the Windows BugReporter.exe payload handoff becomes the native Avalonia reporting boundary."
   },
   "src/app/GitUI/NBugReports/ExceptionExtensions.cs": {
-    "status": "unported",
-    "plannedIn": "P1.7"
+    "twin": "src/app/GitUI.Avalonia/NBugReports/ExceptionExtensions.cs",
+    "status": "functional",
+    "basedOn": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+    "notes": "Mechanical twin; preserves external-operation context and command detail formatting."
   },
   "src/app/GitUI/NBugReports/OperationInfo.cs": {
-    "status": "unported",
-    "plannedIn": "P1.7"
+    "twin": "src/app/GitUI.Avalonia/NBugReports/OperationInfo.cs",
+    "status": "functional",
+    "basedOn": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+    "notes": "Preserves the operation classification and warning/error icon choice through the native task-dialog model."
   },
   "src/app/GitUI/NBugReports/UIReporter.cs": {
-    "status": "unported",
-    "plannedIn": "P1.7"
+    "twin": "src/app/GitUI.Avalonia/NBugReports/UIReporter.cs",
+    "status": "functional",
+    "basedOn": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+    "notes": "Native Avalonia task dialogs preserve error, failed-load, restart, report/ignore, and dubious-ownership flows; active Window ownership, dispatcher restart, and the portal-aware issue launcher replace WinForms handles and BugReportForm."
   },
   "src/app/GitUI/Properties/Images.Designer.cs": {
     "status": "windowsOnly",

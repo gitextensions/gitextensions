@@ -16880,6 +16880,306 @@
       }
     },
     {
+      "source": "src/app/GitUI/NBugReports/BugReportInvoker.cs",
+      "twin": "src/app/GitUI.Avalonia/NBugReports/BugReportInvoker.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/inventory/BugReportInvoker-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 14,
+          "note": "The P1.7 source inventory records deliberate framework-boundary and member-shape differences."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/inventory/BugReportInvoker-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 14,
+          "note": "Focused original-linked tests pass, but the source inventory retains the deliberate native Avalonia reporting substitutions."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not itself declare rendered UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping consumes the shared dialog chrome and does not define independent colors."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/semantic-color-role-report-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Focused dialog-model tests pass, but the complete report/restart/ignore/dubious-ownership interaction matrix has not been manually exercised."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/windows-runtime",
+            "eng/avalonia/parity-evidence/P1.7/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows, Wayland, X11, and Wayland-only Flatpak smokes pass; macOS remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/NBugReports/ExceptionExtensions.cs",
+      "twin": "src/app/GitUI.Avalonia/NBugReports/ExceptionExtensions.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/inventory/ExceptionExtensions-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 2,
+          "note": "The P1.7 source inventory records deliberate framework-boundary and member-shape differences."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/inventory/ExceptionExtensions-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 2,
+          "note": "Focused original-linked tests pass, but the source inventory retains the deliberate native Avalonia reporting substitutions."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not itself declare rendered UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping consumes the shared dialog chrome and does not define independent colors."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/semantic-color-role-report-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Focused dialog-model tests pass, but the complete report/restart/ignore/dubious-ownership interaction matrix has not been manually exercised."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/windows-runtime",
+            "eng/avalonia/parity-evidence/P1.7/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows, Wayland, X11, and Wayland-only Flatpak smokes pass; macOS remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/NBugReports/OperationInfo.cs",
+      "twin": "src/app/GitUI.Avalonia/NBugReports/OperationInfo.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/inventory/"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The class-oriented inventory does not represent this struct mapping."
+        },
+        "functional": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/inventory/"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The operation metadata is covered by focused tests, but the class-oriented inventory does not represent this struct."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not itself declare rendered UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping consumes the shared dialog chrome and does not define independent colors."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/semantic-color-role-report-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Focused dialog-model tests pass, but the complete report/restart/ignore/dubious-ownership interaction matrix has not been manually exercised."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/windows-runtime",
+            "eng/avalonia/parity-evidence/P1.7/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows, Wayland, X11, and Wayland-only Flatpak smokes pass; macOS remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/NBugReports/UIReporter.cs",
+      "twin": "src/app/GitUI.Avalonia/NBugReports/UIReporter.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/inventory/UIReporter-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 32,
+          "note": "The P1.7 source inventory records deliberate framework-boundary and member-shape differences."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/inventory/UIReporter-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 32,
+          "note": "Focused original-linked tests pass, but the source inventory retains the deliberate native Avalonia reporting substitutions."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not itself declare rendered UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping consumes the shared dialog chrome and does not define independent colors."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/semantic-color-role-report-final.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Focused dialog-model tests pass, but the complete report/restart/ignore/dubious-ownership interaction matrix has not been manually exercised."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-01",
+          "commit": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.7/windows-runtime",
+            "eng/avalonia/parity-evidence/P1.7/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows, Wayland, X11, and Wayland-only Flatpak smokes pass; macOS remains unverified."
+        }
+      }
+    },
+    {
       "source": "src/app/GitUI/Plugin/FailedPluginWrapper.cs",
       "twin": "src/app/GitUI.Avalonia/Plugin/FailedPluginWrapper.cs",
       "complete": false,
