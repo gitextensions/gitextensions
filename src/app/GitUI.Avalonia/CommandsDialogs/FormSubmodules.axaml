@@ -25,13 +25,9 @@
         </Border>
       </Grid>
 
-      <ListBox x:Name="Submodules" Grid.Row="1">
-        <ListBox.Styles>
-          <Style Selector="ListBoxItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-          </Style>
-        </ListBox.Styles>
-      </ListBox>
+      <ListBox x:Name="Submodules"
+               Classes="gitextensions-stretch-items"
+               Grid.Row="1" />
 
       <Button x:Name="AddSubmodule"
               Classes="gitextensions-dialog-action"

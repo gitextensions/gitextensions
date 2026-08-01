@@ -33,7 +33,7 @@
             <MenuItem x:Name="openToolStripMenuItem" Header="Open" />
             <MenuItem x:Name="openWithToolStripMenuItem" Header="Open With" />
             <MenuItem x:Name="openFolderToolStripMenuItem" Header="Show in folder">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
             </MenuItem>
             <Separator x:Name="toolStripSeparator4" />
             <MenuItem x:Name="fileHistoryToolStripMenuItem" Header="File history" />
@@ -41,9 +41,7 @@
         </ListBox.ContextMenu>
       </ListBox>
       <Grid x:Name="tableLayoutPanel3" Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="3">
-        <Image x:Name="pictureBox1"
-               Width="16"
-               Height="16"
+        <Image Classes="gitextensions-icon-16" x:Name="pictureBox1"
                Source="{x:Static properties:Images.Information}"
                VerticalAlignment="Center" />
         <TextBlock x:Name="conflictDescription" Grid.Column="1" Text="Select file" VerticalAlignment="Center" />

@@ -22,11 +22,11 @@
         <MenuItem x:Name="openWithDifftoolToolStripMenuItem"
                   Header="Open with difftool"
                   InputGesture="F3">
-          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Diff}" /></MenuItem.Icon>
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Diff}" /></MenuItem.Icon>
         </MenuItem>
         <MenuItem x:Name="diffToolRemoteLocalStripMenuItem" Header="Difftool selected &lt; - &gt; local" />
         <MenuItem x:Name="saveAsToolStripMenuItem" Header="Save as">
-          <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
         </MenuItem>
         <Separator />
         <MenuItem x:Name="followFileHistoryToolStripMenuItem"

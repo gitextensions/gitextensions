@@ -62,6 +62,7 @@
     </Border>
 
     <ListBox x:Name="Patches"
+             Classes="gitextensions-stretch-items"
              Grid.Row="1"
              Grid.ColumnSpan="7"
              SelectionMode="Single">
@@ -69,7 +70,6 @@
         <Style Selector="ListBoxItem">
           <Setter Property="Padding" Value="0" />
           <Setter Property="MinHeight" Value="28" />
-          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
       </ListBox.Styles>
     </ListBox>

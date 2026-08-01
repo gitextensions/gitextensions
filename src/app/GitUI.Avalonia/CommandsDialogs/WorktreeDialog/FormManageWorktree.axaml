@@ -60,13 +60,9 @@
             </Border>
           </Grid>
 
-          <ListBox x:Name="Worktrees" Grid.Row="1">
-            <ListBox.Styles>
-              <Style Selector="ListBoxItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-              </Style>
-            </ListBox.Styles>
-          </ListBox>
+          <ListBox x:Name="Worktrees"
+                   Classes="gitextensions-stretch-items"
+                   Grid.Row="1" />
         </Grid>
 
         <StackPanel x:Name="flowLayoutPanel1"
