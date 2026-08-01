@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Layout;
 using GitExtensions.Shims.WinForms;
@@ -18,7 +18,9 @@ public sealed class AvaloniaMessageBoxHost(IClassicDesktopStyleApplicationLifeti
 
         async Task<DialogResult> ShowDialogAsync()
         {
-            Window? ownerWindow = desktop.MainWindow;
+            Window? ownerWindow = owner as Window
+                ?? desktop.Windows.FirstOrDefault(window => window.IsActive)
+                ?? desktop.MainWindow;
 
             Window dialog = new()
             {
@@ -28,7 +30,9 @@ public sealed class AvaloniaMessageBoxHost(IClassicDesktopStyleApplicationLifeti
                 CanResize = false,
                 WindowStartupLocation = ownerWindow is null ? WindowStartupLocation.CenterScreen : WindowStartupLocation.CenterOwner,
                 MaxWidth = 700,
+                MinWidth = 320,
             };
+            dialog.Classes.Add("gitextensions-message-box");
 
             DialogResult result = GetCancelResult(buttons);
 
@@ -50,6 +54,7 @@ public sealed class AvaloniaMessageBoxHost(IClassicDesktopStyleApplicationLifeti
                     IsDefault = index == GetDefaultIndex(defaultButton, choices.Length),
                     IsCancel = choice is DialogResult.Cancel or DialogResult.No && choices.Length > 0 && choice == GetCancelResult(buttons),
                 };
+                button.Classes.Add("gitextensions-dialog-action");
                 button.Click += (_, _) =>
                 {
                     result = choice;
@@ -133,5 +138,13 @@ public sealed class AvaloniaMessageBoxHost(IClassicDesktopStyleApplicationLifeti
     {
         int index = (int)defaultButton >> 8;
         return index < buttonCount ? index : 0;
+    }
+
+    // parity-scaffolding: Exposes the original message-box button semantics to focused parity tests.
+    internal readonly struct TestAccessor
+    {
+        internal static DialogResult[] GetChoices(MessageBoxButtons buttons) => AvaloniaMessageBoxHost.GetChoices(buttons);
+        internal static DialogResult GetCancelResult(MessageBoxButtons buttons) => AvaloniaMessageBoxHost.GetCancelResult(buttons);
+        internal static int GetDefaultIndex(MessageBoxDefaultButton defaultButton, int buttonCount) => AvaloniaMessageBoxHost.GetDefaultIndex(defaultButton, buttonCount);
     }
 }
