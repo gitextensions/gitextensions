@@ -106,7 +106,7 @@
                     Header="_Open worktree"
                     ToolTip.Tip="Open this worktree"
                     compat:TranslationCompat.UseToolTipText="True">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.FolderOpen}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.FolderOpen}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="mnubtnDeleteWorktree"
                     Header="_Delete worktree..."
@@ -117,13 +117,13 @@
                     Header="Copy _path"
                     ToolTip.Tip="Copy the worktree path to clipboard"
                     compat:TranslationCompat.UseToolTipText="True">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="mnubtnShowWorktreeInFolder"
                     Header="Show _in folder"
                     ToolTip.Tip="Show the worktree in File Explorer"
                     compat:TranslationCompat.UseToolTipText="True">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
           </MenuItem>
         </ContextMenu>
       </TreeView.ContextMenu>

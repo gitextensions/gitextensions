@@ -7,13 +7,8 @@
                                  MinWidth="650"
                                  MinHeight="360"
                                  Text="Advanced">
-  <settings:SettingsPageWithHeader.Styles>
-    <Style Selector="CheckBox">
-      <Setter Property="Margin" Value="0,-4" />
-    </Style>
-  </settings:SettingsPageWithHeader.Styles>
-
-  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+  <ScrollViewer Classes="gitextensions-compact-checkboxes"
+                HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
     <StackPanel x:Name="tableLayoutPanel2"
                 Margin="8"

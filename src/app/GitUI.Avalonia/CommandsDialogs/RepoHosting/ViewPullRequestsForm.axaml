@@ -33,32 +33,32 @@
           <Grid ColumnDefinitions="42,*,90,150,170">
             <Border x:Name="columnHeaderId"
                     Classes="gitextensions-section">
-              <TextBlock Margin="6,3"
+              <TextBlock Classes="gitextensions-list-header-text"
                          Text="#"
                          TextAlignment="Right" />
             </Border>
             <Border x:Name="columnHeaderHeading"
                     Grid.Column="1"
                     Classes="gitextensions-section">
-              <TextBlock Margin="6,3"
+              <TextBlock Classes="gitextensions-list-header-text"
                          Text="Heading" />
             </Border>
             <Border x:Name="columnHeaderBy"
                     Grid.Column="2"
                     Classes="gitextensions-section">
-              <TextBlock Margin="6,3"
+              <TextBlock Classes="gitextensions-list-header-text"
                          Text="By" />
             </Border>
             <Border x:Name="columnHeaderCreated"
                     Grid.Column="3"
                     Classes="gitextensions-section">
-              <TextBlock Margin="6,3"
+              <TextBlock Classes="gitextensions-list-header-text"
                          Text="Created" />
             </Border>
             <Border x:Name="columnHeaderBranch"
                     Grid.Column="4"
                     Classes="gitextensions-section">
-              <TextBlock Margin="6,3"
+              <TextBlock Classes="gitextensions-list-header-text"
                          Text="Will be fetched to branch" />
             </Border>
           </Grid>

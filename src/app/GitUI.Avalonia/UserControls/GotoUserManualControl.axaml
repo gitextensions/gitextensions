@@ -8,9 +8,7 @@
               Orientation="Horizontal"
               Spacing="4"
               VerticalAlignment="Center">
-    <Image x:Name="pictureBoxHelpIcon"
-           Width="16"
-           Height="16"
+    <Image Classes="gitextensions-icon-16" x:Name="pictureBoxHelpIcon"
            Source="{x:Static properties:Images.GotoManual}" />
     <HyperlinkButton x:Name="linkLabelHelp"
                      Padding="0"

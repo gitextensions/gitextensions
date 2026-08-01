@@ -25,7 +25,7 @@
     <Style Selector="Button.dashboard-link">
       <Setter Property="HorizontalAlignment" Value="Stretch" />
       <Setter Property="HorizontalContentAlignment" Value="Left" />
-      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
       <Setter Property="BorderThickness" Value="0" />
       <Setter Property="CornerRadius" Value="0" />
       <Setter Property="Padding" Value="4,3" />

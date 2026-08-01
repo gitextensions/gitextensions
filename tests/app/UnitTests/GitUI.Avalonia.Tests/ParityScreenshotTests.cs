@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -46,6 +46,7 @@ using GitUI.ScriptsEngine;
 using GitUI.SpellChecker;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
+using GitUI.UserControls.Settings;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -68,6 +69,8 @@ public sealed partial class ParityScreenshotTests
     private const string CaptureRepoTreeContextEnvironmentVariable = "GITEXT_CAPTURE_REPO_TREE_CONTEXT";
     private const string CaptureFileStatusTreeEnvironmentVariable = "GITEXT_CAPTURE_FILE_STATUS_TREE";
     private const string CaptureWorkingDirectoryMenuEnvironmentVariable = "GITEXT_CAPTURE_WORKING_DIRECTORY_MENU";
+    // parity-scaffolding: Gives before/after extraction captures identical rendered repository text.
+    private const string CaptureDeterministicRepositoryEnvironmentVariable = "GITEXT_CAPTURE_PARITY_DETERMINISTIC_REPOSITORY";
     private const string AxamlExtension = ".axaml";
     private const string AppSourcePath = "src/App.cs";
     private const string FeatureBranchName = "feature/visual-parity";
@@ -790,6 +793,13 @@ public sealed partial class ParityScreenshotTests
             ]);
         }
 
+        if (root is SettingsLinkLabel settingsLinkLabel)
+        {
+            // parity-scaffolding: Give the standalone settings link visible representative content.
+            GetRequiredControl<HyperlinkButton>(settingsLinkLabel, "linkLabel").Content = "Review this setting";
+            GetRequiredControl<Button>(settingsLinkLabel, "pictureBox").IsVisible = true;
+        }
+
         if (root is Window)
         {
             return;
@@ -1067,6 +1077,46 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task WaitForAsyncViewsAsync(Control root)
     {
+        if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
+            && root is FormBrowse formBrowse)
+        {
+            // parity-scaffolding: Wait for the seeded repository's status count so captures cannot race the monitor.
+            Button commitButton = GetRequiredControl<Button>(formBrowse, "toolStripButtonCommit");
+            Stopwatch statusStopwatch = Stopwatch.StartNew();
+            while (!(commitButton.Content?.ToString()?.EndsWith("(3)", StringComparison.Ordinal) ?? false)
+                   && statusStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            commitButton.Content?.ToString().Should().EndWith("(3)");
+        }
+
+        if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
+            && root is FormVerify)
+        {
+            // parity-scaffolding: Let Fluent scrollbars finish their fade before exact pixel comparison.
+            await Task.Delay(1200);
+            Dispatcher.UIThread.RunJobs();
+        }
+
+        if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
+            && root is FormCommit formCommit)
+        {
+            // parity-scaffolding: Wait for the selected-file diff so the control tree cannot race its loader.
+            FileViewer selectedDiff = GetRequiredControl<FileViewer>(formCommit, "SelectedDiff");
+            Stopwatch diffStopwatch = Stopwatch.StartNew();
+            while (string.IsNullOrEmpty(selectedDiff.TextEditor.Text)
+                   && diffStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            selectedDiff.TextEditor.Text.Should().NotBeEmpty();
+        }
+
         if (root is EditNetSpell)
         {
             await Task.Delay(300);
@@ -1430,7 +1480,15 @@ public sealed partial class ParityScreenshotTests
             GitCommands.ServiceContainerRegistry.RegisterServices(_serviceContainer);
             GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
 
-            _workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Parity-{Guid.NewGuid():N}");
+            string repositoryDirectoryName = Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
+                ? "GitExtensions.Parity-Deterministic"
+                : $"GitExtensions.Parity-{Guid.NewGuid():N}";
+            _workingDirectory = Path.Combine(Path.GetTempPath(), repositoryDirectoryName);
+            if (Directory.Exists(_workingDirectory))
+            {
+                TestDirectory.Delete(_workingDirectory);
+            }
+
             Directory.CreateDirectory(_workingDirectory);
             Module = new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
             CreateRepository();
@@ -1514,29 +1572,43 @@ public sealed partial class ParityScreenshotTests
 
         private void CreateRepository()
         {
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet", "-b", MainBranchName });
-            Module.SetSetting("user.name", "Avalonia Contributor");
-            Module.SetSetting("user.email", "avalonia@example.com");
+            string? originalAuthorDate = Environment.GetEnvironmentVariable("GIT_AUTHOR_DATE");
+            string? originalCommitterDate = Environment.GetEnvironmentVariable("GIT_COMMITTER_DATE");
+            try
+            {
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet", "-b", MainBranchName });
+                Module.SetSetting("user.name", "Avalonia Contributor");
+                Module.SetSetting("user.email", "avalonia@example.com");
 
-            string sourceDirectory = Path.Combine(_workingDirectory, "src");
-            Directory.CreateDirectory(sourceDirectory);
-            File.WriteAllText(Path.Combine(_workingDirectory, "README.md"), "# Visual parity sample\n");
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "README.md" });
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", '"' + InitialCommitSubject + '"' });
+                string sourceDirectory = Path.Combine(_workingDirectory, "src");
+                Directory.CreateDirectory(sourceDirectory);
+                File.WriteAllText(Path.Combine(_workingDirectory, "README.md"), "# Visual parity sample\n");
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "README.md" });
+                Environment.SetEnvironmentVariable("GIT_AUTHOR_DATE", "2026-07-16T16:45:00+00:00");
+                Environment.SetEnvironmentVariable("GIT_COMMITTER_DATE", "2026-07-16T16:45:00+00:00");
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", '"' + InitialCommitSubject + '"' });
 
-            File.WriteAllText(Path.Combine(sourceDirectory, "App.cs"), "namespace GitExtensions;\n\npublic partial class App;\n");
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", AppSourcePath });
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", '"' + HeadCommitSubject + '"' });
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { FeatureBranchName, "HEAD~1" });
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("tag") { "v1.0", "HEAD~1" });
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("remote") { "add", RemoteName, "https://example.com/gitextensions/parity.git" });
-            Module.SetSetting($"remote.{RemoteName}.color", "#7B3FB2");
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("update-ref") { $"refs/remotes/{RemoteName}/{MainBranchName}", "HEAD" });
+                File.WriteAllText(Path.Combine(sourceDirectory, "App.cs"), "namespace GitExtensions;\n\npublic partial class App;\n");
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", AppSourcePath });
+                Environment.SetEnvironmentVariable("GIT_AUTHOR_DATE", "2026-07-17T10:30:00+00:00");
+                Environment.SetEnvironmentVariable("GIT_COMMITTER_DATE", "2026-07-17T10:30:00+00:00");
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", '"' + HeadCommitSubject + '"' });
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { FeatureBranchName, "HEAD~1" });
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("tag") { "v1.0", "HEAD~1" });
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("remote") { "add", RemoteName, "https://example.com/gitextensions/parity.git" });
+                Module.SetSetting($"remote.{RemoteName}.color", "#7B3FB2");
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("update-ref") { $"refs/remotes/{RemoteName}/{MainBranchName}", "HEAD" });
 
-            File.AppendAllText(Path.Combine(sourceDirectory, "App.cs"), "// Unstaged visual parity adjustment\n");
-            File.WriteAllText(Path.Combine(_workingDirectory, "CHANGELOG.md"), "Avalonia visual parity harness\n");
-            Module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "CHANGELOG.md" });
-            File.WriteAllText(Path.Combine(_workingDirectory, "notes.txt"), "untracked review notes\n");
+                File.AppendAllText(Path.Combine(sourceDirectory, "App.cs"), "// Unstaged visual parity adjustment\n");
+                File.WriteAllText(Path.Combine(_workingDirectory, "CHANGELOG.md"), "Avalonia visual parity harness\n");
+                Module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "CHANGELOG.md" });
+                File.WriteAllText(Path.Combine(_workingDirectory, "notes.txt"), "untracked review notes\n");
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("GIT_AUTHOR_DATE", originalAuthorDate);
+                Environment.SetEnvironmentVariable("GIT_COMMITTER_DATE", originalCommitterDate);
+            }
         }
 
         private GitRevision CreateRevision(ObjectId objectId, string subject, long unixTime, IReadOnlyList<ObjectId> parentIds)

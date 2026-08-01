@@ -65,80 +65,62 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center" />
             </Border>
-            <Border x:Name="columnDate"
+            <Border Classes="gitextensions-list-header-cell" x:Name="columnDate"
                     Grid.Column="1"
-                    Padding="6,3"
-                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
                     BorderThickness="0,0,1,1">
               <TextBlock FontWeight="SemiBold" Text="Date" />
             </Border>
-            <Border x:Name="columnType"
+            <Border Classes="gitextensions-list-header-cell" x:Name="columnType"
                     Grid.Column="2"
-                    Padding="6,3"
-                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
                     BorderThickness="0,0,1,1">
               <TextBlock FontWeight="SemiBold" Text="Type" />
             </Border>
-            <Border x:Name="columnSubject"
+            <Border Classes="gitextensions-list-header-cell" x:Name="columnSubject"
                     Grid.Column="3"
-                    Padding="6,3"
-                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
                     BorderThickness="0,0,1,1">
               <TextBlock FontWeight="SemiBold" Text="Subject" />
             </Border>
-            <Border x:Name="columnAuthor"
+            <Border Classes="gitextensions-list-header-cell" x:Name="columnAuthor"
                     Grid.Column="4"
-                    Padding="6,3"
-                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
                     BorderThickness="0,0,1,1">
               <TextBlock FontWeight="SemiBold" Text="Author" />
             </Border>
-            <Border x:Name="columnHash"
+            <Border Classes="gitextensions-list-header-cell" x:Name="columnHash"
                     Grid.Column="5"
-                    Padding="6,3"
-                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
                     BorderThickness="0,0,1,1">
               <TextBlock FontWeight="SemiBold" Text="Hash" />
             </Border>
-            <Border x:Name="columnParent"
+            <Border Classes="gitextensions-list-header-cell" x:Name="columnParent"
                     Grid.Column="6"
-                    Padding="6,3"
-                    BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
                     BorderThickness="0,0,0,1">
               <TextBlock FontWeight="SemiBold" Text="Parent(s) hashs" />
             </Border>
           </Grid>
 
           <ListBox x:Name="Warnings"
+                   Classes="gitextensions-dense-items"
                    Grid.Row="1"
                    SelectionMode="Single"
                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
-            <ListBox.Styles>
-              <Style Selector="ListBoxItem">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="MinHeight" Value="24" />
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-              </Style>
-            </ListBox.Styles>
             <ListBox.ContextMenu>
               <ContextMenu x:Name="mnuLostObjects">
                 <MenuItem x:Name="mnuLostObjectView" Header="View">
-                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ViewFile}" /></MenuItem.Icon>
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ViewFile}" /></MenuItem.Icon>
                 </MenuItem>
                 <MenuItem x:Name="mnuLostObjectsCreateTag" Header="Create tag" HotKey="Ctrl+T">
-                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
                 </MenuItem>
                 <MenuItem x:Name="mnuLostObjectsCreateBranch" Header="Create branch" HotKey="Ctrl+B">
-                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
                 </MenuItem>
                 <MenuItem x:Name="copyHashToolStripMenuItem" Header="Copy object hash">
-                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
                 </MenuItem>
                 <MenuItem x:Name="copyParentHashToolStripMenuItem" Header="Copy parent hash">
-                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
                 </MenuItem>
                 <MenuItem x:Name="saveAsToolStripMenuItem" Header="Save as..." HotKey="Ctrl+S">
-                  <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
                 </MenuItem>
               </ContextMenu>
             </ListBox.ContextMenu>
