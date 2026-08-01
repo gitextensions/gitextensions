@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using ConEmu.WinForms;
 using GitCommands;
 using GitUI.ConsoleEmulation;
@@ -32,7 +32,7 @@ internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
 
     public void ChangeWorkingDirectory(string path)
     {
-        string? shellType = AppSettings.ConEmuTerminal.Value;
+        string? shellType = AppSettings.ConEmuTerminal;
         IShellDescriptor shell = _shellProvider.GetShell(shellType);
         _conEmu.ChangeFolder(shell, path);
     }
@@ -56,7 +56,7 @@ internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
             WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
         };
 
-        string? shellType = AppSettings.ConEmuTerminal.Value;
+        string? shellType = AppSettings.ConEmuTerminal;
         startInfo.ConsoleProcessCommandLine = _shellProvider.GetShellCommandLine(shellType);
 
         if (!string.IsNullOrEmpty(AppSettings.GitCommandValue))

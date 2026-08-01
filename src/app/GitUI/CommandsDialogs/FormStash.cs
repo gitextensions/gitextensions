@@ -359,7 +359,7 @@ public sealed partial class FormStash : GitModuleForm
 
                 if (page.Verification.Checked)
                 {
-                    AppSettings.DontConfirmStashDrop = true;
+                    AppSettings.DontConfirmStashDrop.Value = true;
                 }
             }
             else

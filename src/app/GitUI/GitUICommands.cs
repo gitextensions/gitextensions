@@ -1241,7 +1241,7 @@ public sealed class GitUICommands : IGitUICommands
             return;
         }
 
-        bool updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? (AppSettings.DontConfirmUpdateSubmodulesOnCheckout ?? MessageBoxes.ConfirmUpdateSubmodules(owner));
+        bool updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? (AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value ?? MessageBoxes.ConfirmUpdateSubmodules(owner));
 
         if (updateSubmodules)
         {
@@ -1287,7 +1287,7 @@ public sealed class GitUICommands : IGitUICommands
 
     public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
     {
-        bool useBrowseForFileHistory = AppSettings.UseBrowseForFileHistory.Value;
+        bool useBrowseForFileHistory = AppSettings.UseBrowseForFileHistory;
         string arguments = useBrowseForFileHistory ? $"browse {PathFilterArg}={fileName.Quote()}{GetCommitIdArg()}"
             : $"{(showBlame ? BlameHistoryCommand : FileHistoryCommand)} {fileName.Quote()}{GetCommitIdArg()} {(filterByRevision ? FilterByRevisionArg : string.Empty)}";
         Launch(arguments, Module.WorkingDir);
@@ -1897,7 +1897,7 @@ public sealed class GitUICommands : IGitUICommands
         }
 
         // Similar to StartFileHistoryDialog()
-        if (AppSettings.UseBrowseForFileHistory.Value)
+        if (AppSettings.UseBrowseForFileHistory)
         {
             // NOTE: fileHistoryFileName doesn't need to be quoted, as it the filter will get quoted
             // when the filter gets set.

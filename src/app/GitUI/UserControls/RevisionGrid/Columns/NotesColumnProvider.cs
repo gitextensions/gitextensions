@@ -30,7 +30,7 @@ internal sealed class NotesColumnProvider : ColumnProvider
 
     public override void ApplySettings()
     {
-        Column.Visible = AppSettings.ShowGitNotesColumn.Value;
+        Column.Visible = AppSettings.ShowGitNotesColumn;
     }
 
     public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
