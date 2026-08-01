@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <None Include="parity-diff.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="color-roles.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-using System.Buffers.Binary;
+﻿using System.Buffers.Binary;
 using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
@@ -42,6 +42,14 @@ internal sealed class ParityDiffFixture : IDisposable
     public string ConfigurationFile { get; }
 
     public string OutputDirectory => Path.Combine(_rootDirectory, "output");
+
+    public string ColorOutputDirectory => Path.Combine(_rootDirectory, "color-output");
+
+    public string ReferenceManifest => Path.Combine(_rootDirectory, "reference", "manifest.json");
+
+    public string CandidateManifest => Path.Combine(_rootDirectory, "candidate", "manifest.json");
+
+    public string ColorRoleCatalogFile => Path.Combine(_rootDirectory, "color-roles.json");
 
     public CaptureDocument CreateDocument(string themeId) =>
         new()
@@ -106,11 +114,30 @@ internal sealed class ParityDiffFixture : IDisposable
     public ParityDiffResult Run() =>
         ParityDiffRunner.Run(new DiffOptions
         {
-            ReferenceManifest = Path.Combine(_rootDirectory, "reference", "manifest.json"),
-            CandidateManifest = Path.Combine(_rootDirectory, "candidate", "manifest.json"),
+            ReferenceManifest = ReferenceManifest,
+            CandidateManifest = CandidateManifest,
             ConfigurationFile = ConfigurationFile,
             OutputDirectory = OutputDirectory
         });
+
+    public ColorRoleResult RunColors() =>
+        ColorRoleRunner.Run(new ColorRoleOptions
+        {
+            ReferenceManifest = ReferenceManifest,
+            CandidateManifest = CandidateManifest,
+            RoleCatalog = ColorRoleCatalogFile,
+            OutputDirectory = ColorOutputDirectory
+        });
+
+    public void WriteColorRoleCatalog(params ColorRoleDefinition[] roles)
+    {
+        ColorRoleCatalog catalog = new()
+        {
+            SchemaVersion = ColorRoleCatalog.CurrentSchemaVersion,
+            Roles = roles
+        };
+        File.WriteAllText(ColorRoleCatalogFile, JsonSerializer.Serialize(catalog, JsonDefaults.WriteOptions));
+    }
 
     public void WriteCaptureSet(string name, IReadOnlyList<CaptureDocument> documents, byte red = 32)
     {
