@@ -137,10 +137,10 @@ public sealed class EnumSetting<TEnum> : Setting<TEnum>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for nullable <see langword="enum"/> types.
 /// </summary>
 /// <typeparam name="TEnum">The enum type.</typeparam>
-public sealed class Setting_NullableEnum<TEnum> : Setting<TEnum?>
+public sealed class NullableEnumSetting<TEnum> : Setting<TEnum?>
     where TEnum : struct, Enum
 {
-    public Setting_NullableEnum(SettingsPath settingsSource, string name)
+    public NullableEnumSetting(SettingsPath settingsSource, string name)
         : base(
             settingsSource,
             name,

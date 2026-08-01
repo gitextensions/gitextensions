@@ -960,7 +960,7 @@ internal sealed class SettingTests
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        Setting_NullableEnum<TestEnum> setting = new(settingsPath, settingName);
+        NullableEnumSetting<TestEnum> setting = new(settingsPath, settingName);
 
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
@@ -978,7 +978,7 @@ internal sealed class SettingTests
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        Setting_NullableEnum<TestEnum> setting = new(settingsPath, settingName);
+        NullableEnumSetting<TestEnum> setting = new(settingsPath, settingName);
 
         setting.Value = value;
         setting.Should().NotBeNull();
@@ -1000,7 +1000,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            Setting_NullableEnum<TestEnum> setting = new(settingsPath, settingName);
+            NullableEnumSetting<TestEnum> setting = new(settingsPath, settingName);
 
             setting.Value = value;
 
