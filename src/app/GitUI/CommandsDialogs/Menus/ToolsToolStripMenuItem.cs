@@ -24,8 +24,10 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         }
     }
 
-    public override void OnInitialized()
+    protected override void OnInitialized()
     {
+        base.OnInitialized();
+
         gitBashToolStripMenuItem.Tag = UICommands.GetRequiredService<IShellProvider>().GetShell(BashShell.ShellName);
     }
 
