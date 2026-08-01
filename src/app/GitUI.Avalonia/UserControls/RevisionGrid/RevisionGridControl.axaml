@@ -11,26 +11,26 @@
           <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" />
           <Separator x:Name="sepCopy" />
           <MenuItem x:Name="applyStashToolStripMenuItem" Header="Appl_y stash">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="popStashToolStripMenuItem" Header="Pop _stash">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="dropStashToolStripMenuItem" Header="_Drop stash...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
           </MenuItem>
           <Separator x:Name="sepStash" />
           <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="tsmiPushBranch" Header="Pus_h branch...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Push}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Push}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge into current branch...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Merge}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Merge}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="rebaseOnToolStripMenuItem" Header="_Rebase current branch on">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
             <MenuItem x:Name="rebaseToolStripMenuItem" Header="_Selected commit" />
             <MenuItem x:Name="rebaseInteractivelyToolStripMenuItem" Header="Selected commit _interactively..." />
             <Separator x:Name="sepRebase" />
@@ -38,73 +38,73 @@
           </MenuItem>
           <MenuItem x:Name="resetCurrentBranchToHereToolStripMenuItem"
                     Header="Reset c_urrent branch to here...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetCurrentBranchToHere}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ResetCurrentBranchToHere}" /></MenuItem.Icon>
           </MenuItem>
           <Separator x:Name="sepBranch" />
           <MenuItem x:Name="resetChangesToolStripMenuItem" Header="_Reset changes">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="commitToolStripMenuItem" Header="_Commit">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RepoStateDirty}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoStateDirty}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="createNewBranchToolStripMenuItem"
                     Header="Create new branch here (_x)..."
                     InputGesture="Ctrl+B">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="renameBranchToolStripMenuItem" Header="R_ename branch...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Renamed}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Renamed}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="deleteBranchToolStripMenuItem" Header="_Delete branch...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchDelete}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchDelete}" /></MenuItem.Icon>
           </MenuItem>
           <Separator x:Name="sepBranchModification" />
           <MenuItem x:Name="createTagToolStripMenuItem"
                     Header="Create new ta_g here..."
                     InputGesture="Ctrl+T">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="deleteTagToolStripMenuItem" Header="_Delete tag...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
           </MenuItem>
           <Separator x:Name="sepCommit" />
           <MenuItem x:Name="revertCommitToolStripMenuItem" Header="Re_vert this commit...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.RevertCommit}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RevertCommit}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="cherryPickCommitToolStripMenuItem" Header="Cherr_y pick this commit...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.CherryPick}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CherryPick}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="archiveRevisionToolStripMenuItem" Header="Arch_ive this commit...">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.ArchiveRevision}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ArchiveRevision}" /></MenuItem.Icon>
           </MenuItem>
           <Separator x:Name="sepNavigate" />
           <MenuItem x:Name="navigateToolStripMenuItem" Header="_Navigate">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GotoCommit}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GotoCommit}" /></MenuItem.Icon>
             <MenuItem Tag="ToggleBetweenArtificialAndHeadCommits"
                       Header="_Toggle between artificial and HEAD commits">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.WorkingDirChanges}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.WorkingDirChanges}" /></MenuItem.Icon>
             </MenuItem>
             <MenuItem Tag="GotoCurrentRevision"
                       Header="Go to c_urrent revision"
                       InputGesture="Ctrl+Shift+C">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GotoCurrentRevision}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GotoCurrentRevision}" /></MenuItem.Icon>
             </MenuItem>
             <Separator />
             <MenuItem Tag="GotoChildCommit" Header="Go to c_hild commit" InputGesture="Ctrl+N">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GoToChildCommit}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GoToChildCommit}" /></MenuItem.Icon>
             </MenuItem>
             <MenuItem Tag="GotoParentCommit" Header="Go to _parent commit" InputGesture="Ctrl+P">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GoToParentCommit}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GoToParentCommit}" /></MenuItem.Icon>
             </MenuItem>
             <MenuItem Tag="GotoFirstParentCommit" Header="Go to f_irst parent commit" InputGesture="Ctrl+Left">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GoToFirstParentCommit}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GoToFirstParentCommit}" /></MenuItem.Icon>
             </MenuItem>
             <MenuItem Tag="GotoLastParentCommit" Header="Go to _last parent commit" InputGesture="Ctrl+Right">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.GoToLastParentCommit}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GoToLastParentCommit}" /></MenuItem.Icon>
             </MenuItem>
           </MenuItem>
       <MenuItem x:Name="viewToolStripMenuItem" Header="View">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.AdvancedSettings}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.AdvancedSettings}" /></MenuItem.Icon>
             <MenuItem Tag="BranchesToolStripMenuItem"
                       Header="Branches"
                       Classes="gitextensions-menu-caption"
@@ -112,20 +112,20 @@
                       Focusable="False"
                       IsHitTestVisible="False" />
             <MenuItem Tag="ShowAllBranches" Header="Show _all branches" InputGesture="Ctrl+Shift+A" ToggleType="Radio">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchLocal}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchLocal}" /></MenuItem.Icon>
             </MenuItem>
             <MenuItem Tag="ShowCurrentBranchOnly" Header="Show _current branch only" InputGesture="Ctrl+Shift+U" ToggleType="Radio">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchFilter}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchFilter}" /></MenuItem.Icon>
             </MenuItem>
             <MenuItem Tag="ShowFilteredBranches" Header="Show _filtered branches" InputGesture="Ctrl+Shift+T" ToggleType="Radio">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BranchFilter}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchFilter}" /></MenuItem.Icon>
             </MenuItem>
             <MenuItem Tag="ShowReflogReferences" Header="Show _reflog references" InputGesture="Ctrl+Shift+L" ToggleType="CheckBox">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Book}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Book}" /></MenuItem.Icon>
             </MenuItem>
             <Separator />
             <MenuItem Tag="filterToolStripMenuItem" Header="Advanced filter..." InputGesture="Ctrl+I">
-              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.EditFilter}" /></MenuItem.Icon>
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.EditFilter}" /></MenuItem.Icon>
             </MenuItem>
             <Separator />
             <MenuItem Tag="drawNonrelativesGrayToolStripMenuItem" Header="Draw non relatives gra_y" ToggleType="CheckBox" />
@@ -172,10 +172,10 @@
             <MenuItem Tag="showIdColumnToolStripMenuItem" Header="Show SHA_-1 column" ToggleType="CheckBox" />
           </MenuItem>
           <MenuItem x:Name="runScriptToolStripMenuItem" Header="Run _script">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Console}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Console}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="openBuildReportToolStripMenuItem" Header="View _build report in a browser">
-            <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.Integration}" /></MenuItem.Icon>
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Integration}" /></MenuItem.Icon>
           </MenuItem>
         </ContextMenu>
       </ListBox.ContextMenu>

@@ -20,26 +20,26 @@
             <Grid ColumnDefinitions="*,45,50,45">
               <Border x:Name="columnHeaderMyReposName"
                       Classes="gitextensions-section">
-                <TextBlock Margin="6,3" Text="Name" />
+                <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
               </Border>
               <Border x:Name="columnHeaderMyReposIsFork"
                       Grid.Column="1"
                       Classes="gitextensions-section">
-                <TextBlock Margin="6,3"
+                <TextBlock Classes="gitextensions-list-header-text"
                            Text="Is fork"
                            TextAlignment="Center" />
               </Border>
               <Border x:Name="columnHeaderMyReposForks"
                       Grid.Column="2"
                       Classes="gitextensions-section">
-                <TextBlock Margin="6,3"
+                <TextBlock Classes="gitextensions-list-header-text"
                            Text="# Forks"
                            TextAlignment="Right" />
               </Border>
               <Border x:Name="columnHeaderMyReposIsPrivate"
                       Grid.Column="3"
                       Classes="gitextensions-section">
-                <TextBlock Margin="6,3"
+                <TextBlock Classes="gitextensions-list-header-text"
                            Text="Private"
                            TextAlignment="Center" />
               </Border>
@@ -88,24 +88,24 @@
               <Grid ColumnDefinitions="*,110,41,40">
                 <Border x:Name="columnHeaderSearchName"
                         Classes="gitextensions-section">
-                  <TextBlock Margin="6,3" Text="Name" />
+                  <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
                 </Border>
                 <Border x:Name="columnHeaderSearchOwner"
                         Grid.Column="1"
                         Classes="gitextensions-section">
-                  <TextBlock Margin="6,3" Text="Owner" />
+                  <TextBlock Classes="gitextensions-list-header-text" Text="Owner" />
                 </Border>
                 <Border x:Name="columnHeaderSearchIsFork"
                         Grid.Column="2"
                         Classes="gitextensions-section">
-                  <TextBlock Margin="6,3"
+                  <TextBlock Classes="gitextensions-list-header-text"
                              Text="Is fork"
                              TextAlignment="Center" />
                 </Border>
                 <Border x:Name="columnHeaderSearchForks"
                         Grid.Column="3"
                         Classes="gitextensions-section">
-                  <TextBlock Margin="6,3"
+                  <TextBlock Classes="gitextensions-list-header-text"
                              Text="# Forks"
                              TextAlignment="Right" />
                 </Border>

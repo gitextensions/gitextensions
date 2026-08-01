@@ -16,8 +16,8 @@
               Content="Also delete _new files and/or directories" />
     <TextBlock x:Name="lblDeleteHint" DockPanel.Dock="Bottom" Margin="0,8,0,8"
                Text="This will delete any uncommitted work." />
-    <TextBox x:Name="txtMessage" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap"
-             BorderThickness="0" Background="Transparent"
+    <TextBox x:Name="txtMessage" Classes="gitextensions-borderless-readonly"
+             AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap"
              Text="Are you sure you want to reset your changes?" />
   </DockPanel>
 </Window>
