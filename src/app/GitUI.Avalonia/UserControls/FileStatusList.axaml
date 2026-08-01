@@ -9,14 +9,14 @@
                 Header="_Stage selected"
                 IsVisible="False">
         <MenuItem.Icon>
-          <Image Width="16" Height="16" Source="{x:Static properties:Images.Stage}" />
+          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stage}" />
         </MenuItem.Icon>
       </MenuItem>
       <MenuItem x:Name="tsmiUnstageFile"
                 Header="_Unstage selected"
                 IsVisible="False">
         <MenuItem.Icon>
-          <Image Width="16" Height="16" Source="{x:Static properties:Images.Unstage}" />
+          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Unstage}" />
         </MenuItem.Icon>
       </MenuItem>
       <MenuItem x:Name="tsmiCherryPickChanges"
@@ -28,7 +28,7 @@
       <MenuItem x:Name="tsmiCopyPaths"
                 Header="Copy _path(s)">
         <MenuItem.Icon>
-          <Image Width="16" Height="16" Source="{x:Static properties:Images.CopyToClipboard}" />
+          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" />
         </MenuItem.Icon>
       </MenuItem>
       <MenuItem x:Name="tsmiShowInFolder"
@@ -57,7 +57,7 @@
       <MenuItem x:Name="tsmiRunScript"
                 Header="Run script">
         <MenuItem.Icon>
-          <Image Width="16" Height="16" Source="{x:Static properties:Images.Console}" />
+          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Console}" />
         </MenuItem.Icon>
       </MenuItem>
     </ContextMenu>
@@ -77,8 +77,7 @@
               Width="23"
               Height="23"
               IsVisible="False">
-        <Image Width="16"
-               Height="16"
+        <Image Classes="gitextensions-icon-16"
                Source="/Resources/Icons/DeleteText.png" />
       </Button>
       <Button x:Name="btnRefresh"
@@ -89,8 +88,7 @@
               Height="23"
               IsVisible="False"
               ToolTip.Tip="Refresh artificial commit">
-        <Image Width="16"
-               Height="16"
+        <Image Classes="gitextensions-icon-16"
                Source="{x:Static properties:Images.ReloadRevisions}" />
       </Button>
       <TextBlock x:Name="lblCount"

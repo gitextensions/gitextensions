@@ -36,7 +36,7 @@
                 Height="24"
                 Padding="3"
                 HorizontalAlignment="Left">
-          <Image Width="16" Height="16" Source="{x:Static properties:Images.SelectRevision}" />
+          <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SelectRevision}" />
         </Button>
       </StackPanel>
     </Grid>
@@ -110,7 +110,7 @@
                     Height="24"
                     Padding="3"
                     HorizontalAlignment="Left">
-              <Image Width="16" Height="16" Source="{x:Static properties:Images.SelectRevision}" />
+              <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SelectRevision}" />
             </Button>
           </StackPanel>
         </Grid>

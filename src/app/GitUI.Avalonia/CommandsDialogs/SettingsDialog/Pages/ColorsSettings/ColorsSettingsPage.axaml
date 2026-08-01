@@ -5,12 +5,8 @@
                                  xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
                                  x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ColorsSettingsPage"
                                  Text="Colors">
-  <settings:SettingsPageWithHeader.Styles>
-    <Style Selector="CheckBox">
-      <Setter Property="Margin" Value="0,-4" />
-    </Style>
-  </settings:SettingsPageWithHeader.Styles>
-  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+  <ScrollViewer Classes="gitextensions-compact-checkboxes"
+                HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
     <StackPanel x:Name="tlpnlMain"
                 Margin="8"
@@ -38,7 +34,7 @@
                       Spacing="6"
                       Margin="3,1,3,3"
                       IsVisible="False">
-            <Image Width="16" Height="16" Source="{x:Static properties:Images.Warning}" />
+            <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Warning}" />
             <TextBlock x:Name="lblRestartNeeded"
                        VerticalAlignment="Center"
                        Text="Restart required to apply changes" />

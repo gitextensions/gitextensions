@@ -23,7 +23,7 @@
     <ToggleButton x:Name="tsbShowReflog"
                   Classes="gitextensions-toolbar-button"
                   Padding="3">
-      <Image Width="16" Height="16" Source="{x:Static properties:Images.Book}" />
+      <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Book}" />
     </ToggleButton>
     <compat:IconSplitButton x:Name="tssbtnShowBranches"
                             Classes="gitextensions-toolbar-button"
@@ -84,7 +84,7 @@
     <ToggleButton x:Name="tsmiShowOnlyFirstParent"
                   Classes="gitextensions-toolbar-button"
                   Padding="3">
-      <Image Width="16" Height="16" Source="{x:Static properties:Images.ShowOnlyFirstParent}" />
+      <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ShowOnlyFirstParent}" />
     </ToggleButton>
   </StackPanel>
 </UserControl>

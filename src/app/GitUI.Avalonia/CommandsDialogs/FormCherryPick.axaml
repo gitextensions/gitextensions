@@ -55,7 +55,7 @@
                   Width="25"
                   Height="24"
                   Padding="3">
-            <Image Width="16" Height="16" Source="{x:Static properties:Images.SelectRevision}" />
+            <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SelectRevision}" />
           </Button>
         </StackPanel>
 
@@ -72,32 +72,25 @@
                   Classes="gitextensions-section">
             <Grid RowDefinitions="Auto,*">
               <Grid ColumnDefinitions="43,*,120,80">
-                <Border Padding="6,3"
-                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                <Border Classes="gitextensions-list-header-cell"
                         BorderThickness="0,0,1,1">
                   <TextBlock x:Name="columnHeader1"
                              FontWeight="SemiBold"
                              Text="No." />
                 </Border>
-                <Border Grid.Column="1"
-                        Padding="6,3"
-                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                <Border Classes="gitextensions-list-header-cell" Grid.Column="1"
                         BorderThickness="0,0,1,1">
                   <TextBlock x:Name="columnHeader2"
                              FontWeight="SemiBold"
                              Text="Message" />
                 </Border>
-                <Border Grid.Column="2"
-                        Padding="6,3"
-                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                <Border Classes="gitextensions-list-header-cell" Grid.Column="2"
                         BorderThickness="0,0,1,1">
                   <TextBlock x:Name="columnHeader3"
                              FontWeight="SemiBold"
                              Text="Author" />
                 </Border>
-                <Border Grid.Column="3"
-                        Padding="6,3"
-                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                <Border Classes="gitextensions-list-header-cell" Grid.Column="3"
                         BorderThickness="0,0,0,1">
                   <TextBlock x:Name="columnHeader4"
                              FontWeight="SemiBold"
@@ -105,16 +98,9 @@
                 </Border>
               </Grid>
               <ListBox x:Name="lvParentsList"
+                       Classes="gitextensions-dense-items"
                        Grid.Row="1"
-                       SelectionMode="Single">
-                <ListBox.Styles>
-                  <Style Selector="ListBoxItem">
-                    <Setter Property="Padding" Value="0" />
-                    <Setter Property="MinHeight" Value="24" />
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                  </Style>
-                </ListBox.Styles>
-              </ListBox>
+                       SelectionMode="Single" />
             </Grid>
           </Border>
         </Grid>

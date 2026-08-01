@@ -57,17 +57,10 @@
           </Border>
 
           <ListBox x:Name="GridChangedFiles"
+                   Classes="gitextensions-dense-items"
                    Grid.Row="1"
                    Grid.ColumnSpan="3"
-                   SelectionMode="Single">
-            <ListBox.Styles>
-              <Style Selector="ListBoxItem">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="MinHeight" Value="24" />
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-              </Style>
-            </ListBox.Styles>
-          </ListBox>
+                   SelectionMode="Single" />
         </Grid>
       </Border>
 

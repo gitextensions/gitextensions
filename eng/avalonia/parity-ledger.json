@@ -1680,22 +1680,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -2744,22 +2752,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -2809,22 +2825,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -2939,22 +2963,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -3134,22 +3166,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -3524,22 +3564,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -3849,22 +3897,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -3979,22 +4035,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -4239,22 +4303,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -4304,22 +4376,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -4369,22 +4449,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -4663,22 +4751,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -4793,22 +4889,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -4858,22 +4962,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -5573,22 +5685,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -5703,22 +5823,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -5963,22 +6091,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -6938,22 +7074,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -7198,22 +7342,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -7618,24 +7770,26 @@
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "9af64b5cc4c2a6f12a47f8a0d5c5461e7b0217b5",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.3/visual/findings.json"
+            "eng/avalonia/parity-evidence/P1.3/visual/findings.json",
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 3378,
-          "note": "Nine comparable WinForms/Avalonia captures report 3,378 visual findings; P1.3b owns resolved pixel parity."
+          "note": "Nine comparable WinForms/Avalonia captures report 3,378 visual findings; P1.3b owns resolved pixel parity. P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-07-30",
-          "commit": "9af64b5cc4c2a6f12a47f8a0d5c5461e7b0217b5",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
           "evidence": [
             "eng/avalonia/parity-evidence/P1.3/focused-test.log",
-            "eng/avalonia/parity-evidence/P1.3/visual/findings.json"
+            "eng/avalonia/parity-evidence/P1.3/visual/findings.json",
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
           ],
           "platforms": [
             "windows",
@@ -7644,7 +7798,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Theme apply, persistence, restart, reset, and light/dark/custom capture are exercised; P1.3b color results and macOS remain open."
+          "note": "Theme apply, persistence, restart, reset, and light/dark/custom capture are exercised; P1.3b color results and macOS remain open. P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "partial",
@@ -7920,22 +8074,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -8180,22 +8342,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -8700,22 +8870,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -9545,22 +9723,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -9870,22 +10056,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -10325,22 +10519,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -11885,22 +12087,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -13137,22 +13347,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -15997,22 +16215,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -21797,22 +22023,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -21992,22 +22226,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -22187,22 +22429,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -22837,22 +23087,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -25071,20 +25329,25 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-07-30",
-          "commit": "43d7a7286343294ca59f0e5cc980de6347e501bf",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.3b/"
+            "eng/avalonia/parity-evidence/P1.3b/",
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
           ],
           "platforms": [
             "windows",
@@ -25093,7 +25356,7 @@
             "flatpak"
           ],
           "findingCount": 1,
-          "note": "Exact alternating-row, authored-row, ref-label, build-status, graph, diff, and blame content colors are test-backed with reviewed renderer goldens and the representative theme/scale matrix. Framework-control colors belong to P1.7/P1.7b; native 96 DPI and macOS remain unverified, and later component tranches still own their full state audits."
+          "note": "Exact alternating-row, authored-row, ref-label, build-status, graph, diff, and blame content colors are test-backed with reviewed renderer goldens and the representative theme/scale matrix. Framework-control colors belong to P1.7/P1.7b; native 96 DPI and macOS remain unverified, and later component tranches still own their full state audits. P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
@@ -25403,22 +25666,30 @@
           "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-01",
+          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
         },
         "behavioralState": {
           "status": "unverified",
