@@ -122,7 +122,19 @@ internal static class AvaloniaThemeResources
         DrawingColor selection = ResolveAppColor(settings, AppColor.Selection);
         DrawingColor windowText = ResolveSystemColor(settings, KnownColor.WindowText);
         DrawingColor grayText = ResolveSystemColor(settings, KnownColor.GrayText);
-        DrawingColor sectionBorder = ColorHelper.Lerp(panel, windowText, isDark ? 0.14f : 0.18f);
+        DrawingColor control = ResolveSystemColor(settings, KnownColor.Control);
+        DrawingColor controlText = ResolveSystemColor(settings, KnownColor.ControlText);
+        DrawingColor controlDark = ResolveSystemColor(settings, KnownColor.ControlDark);
+        DrawingColor controlLight = ResolveSystemColor(settings, KnownColor.ControlLight);
+        DrawingColor highlight = ResolveSystemColor(settings, KnownColor.Highlight);
+        DrawingColor highlightText = ResolveSystemColor(settings, KnownColor.HighlightText);
+        DrawingColor inactiveSelection = ResolveSystemColor(settings, KnownColor.InactiveCaption);
+        DrawingColor inactiveSelectionText = ResolveSystemColor(settings, KnownColor.InactiveCaptionText);
+        DrawingColor info = ResolveSystemColor(settings, KnownColor.Info);
+        DrawingColor infoText = ResolveSystemColor(settings, KnownColor.InfoText);
+        DrawingColor sectionBorder = isDark
+            ? DrawingColor.FromArgb(47, 47, 47)
+            : DrawingColor.FromArgb(224, 224, 224);
         DrawingColor treeConnector = ColorHelper.Lerp(panel, windowText, isDark ? 0.38f : 0.46f);
         DrawingColor refLabelBackground = isDark ? ColorHelper.Lerp(panel, DrawingColor.Black, 0.36f) : panel;
         DrawingColor removedBackground = ResolveAppColor(settings, AppColor.AnsiTerminalRedBackNormal);
@@ -165,6 +177,19 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "ThemeBorderLowBrush", sectionBorder);
         SetBrush(resources, "GitExtensionsPanelBackgroundBrush", panel);
         SetBrush(resources, "GitExtensionsWindowTextBrush", windowText);
+        SetBrush(resources, "GitExtensionsWindowBackgroundBrush", ResolveSystemColor(settings, KnownColor.Window));
+        SetBrush(resources, "GitExtensionsControlBackgroundBrush", control);
+        SetBrush(resources, "GitExtensionsControlForegroundBrush", controlText);
+        SetBrush(resources, "GitExtensionsControlBorderBrush", controlDark);
+        SetBrush(resources, "GitExtensionsControlPointerOverBackgroundBrush", controlLight);
+        SetBrush(resources, "GitExtensionsControlPressedBackgroundBrush", controlDark);
+        SetBrush(resources, "GitExtensionsDisabledForegroundBrush", grayText);
+        SetBrush(resources, "GitExtensionsHighlightBackgroundBrush", highlight);
+        SetBrush(resources, "GitExtensionsHighlightForegroundBrush", highlightText);
+        SetBrush(resources, "GitExtensionsInactiveSelectionForegroundBrush", inactiveSelectionText);
+        SetBrush(resources, "GitExtensionsSystemInactiveSelectionBackgroundBrush", inactiveSelection);
+        SetBrush(resources, "GitExtensionsToolTipBackgroundBrush", info);
+        SetBrush(resources, "GitExtensionsToolTipForegroundBrush", infoText);
         SetBrush(resources, "GitExtensionsPaneBorderBrush", sectionBorder);
         SetBrush(resources, "GitExtensionsSectionBorderBrush", sectionBorder);
         SetBrush(resources, "GitExtensionsRefLabelBackgroundBrush", refLabelBackground);

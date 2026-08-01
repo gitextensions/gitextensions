@@ -228,8 +228,12 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         Dispatcher.UIThread.RunJobs();
         _restoreActions.Add(() =>
         {
-            _topLevel.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
-            _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None);
+            Point outside = new(-1, -1);
+            _topLevel.MouseUp(outside, MouseButton.Left, RawInputModifiers.None);
+            if (_topLevel.IsVisible)
+            {
+                _topLevel.MouseMove(outside, RawInputModifiers.None);
+            }
         });
     }
 

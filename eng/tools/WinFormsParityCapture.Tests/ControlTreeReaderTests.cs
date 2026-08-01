@@ -38,6 +38,43 @@ public sealed class ControlTreeReaderTests
         surface.Root.BoundsDip.Height.Should().Be(surface.Root.BoundsPx.Height / 2m);
     }
 
+    [Test]
+    [Category("P1_7")]
+    public void ReadPrimary_should_emit_framework_neutral_resolved_color_roles()
+    {
+        using TestForm form = new();
+        form.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureSurface surface = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200));
+        IReadOnlyDictionary<string, string> roles = surface.Root.Colors.Additional
+            .Where(pair => pair.Key.StartsWith("semantic.", StringComparison.Ordinal))
+            .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
+
+        roles.Should().HaveCount(18);
+        roles.Keys.Should().Contain(
+            "semantic.app.panel.background",
+            "semantic.app.selection.background",
+            "semantic.system.control.background",
+            "semantic.system.highlight.background",
+            "semantic.system.inactiveSelection.background",
+            "semantic.system.tooltip.background",
+            "semantic.app.reset.hard.background");
+        roles.Values.Should().OnlyContain(color => System.Text.RegularExpressions.Regex.IsMatch(color, "^#[0-9A-F]{8}$"));
+    }
+
+    [Test]
+    [Category("P1_7")]
+    public void Dark_system_roles_should_use_the_resolved_WinForms_dark_palette()
+    {
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.Control, isDark: true)
+            .Should().Be(Color.FromArgb(32, 32, 32));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.WindowText, isDark: true)
+            .Should().Be(Color.FromArgb(240, 240, 240));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.Info, isDark: true)
+            .Should().Be(Color.FromArgb(80, 80, 60));
+    }
+
     private static CaptureNode FindNode(CaptureNode root, string fieldName)
     {
         if (root.FieldName == fieldName)
