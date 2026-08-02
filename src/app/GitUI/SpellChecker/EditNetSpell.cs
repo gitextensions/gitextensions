@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
@@ -1023,7 +1023,7 @@ public partial class EditNetSpell : GitModuleControl
 
         if (!_autoCompleteListTask.IsValueFactoryCompleted)
         {
-            _autoCompleteListTask.GetValueAsync().Forget();
+            _autoCompleteListTask.GetValueAsync(_autoCompleteCancellationTokenSource.Token).Forget();
 
             if (calledByUser)
             {

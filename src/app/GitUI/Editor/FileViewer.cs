@@ -745,13 +745,13 @@ public partial class FileViewer : GitModuleControl
         {
             try
             {
-                using MemoryStream? stream = await Module.GetFileStreamAsync(blobId.ToString(), cancellationToken: default);
+                using MemoryStream? stream = await Module.GetFileStreamAsync(blobId.ToString(), cancellationToken);
                 if (stream is not null)
                 {
                     return CreateImage(file.Name, stream);
                 }
             }
-            catch
+            catch (Exception ex) when (ex is not OperationCanceledException)
             {
             }
 
