@@ -1,0 +1,189 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:colorPicker="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.ColorPicker"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormRemotes"
+        Width="820" Height="560"
+        MinWidth="700" MinHeight="440"
+        WindowStartupLocation="CenterOwner"
+        Title="Remote repositories">
+  <TabControl x:Name="tabControl1" Margin="8">
+    <TabItem x:Name="tabPage1" Header="Remote repositories">
+      <Grid ColumnDefinitions="240,*" ColumnSpacing="10" Margin="0,8,0,0">
+        <Grid RowDefinitions="*,Auto">
+          <ListBox x:Name="Remotes" />
+          <StackPanel x:Name="panelButtons"
+                      Grid.Row="1"
+                      Margin="0,6,0,0"
+                      Orientation="Horizontal"
+                      Spacing="4">
+            <compat:IconButton x:Name="New"
+                               Classes="gitextensions-icon-only"
+                               MinWidth="34"
+                               Icon="{x:Static properties:Images.RemoteAdd}" />
+            <compat:IconButton x:Name="Delete"
+                               Classes="gitextensions-icon-only"
+                               MinWidth="34"
+                               Icon="{x:Static properties:Images.RemoteDelete}" />
+            <compat:IconButton x:Name="btnToggleState"
+                               Classes="gitextensions-icon-only"
+                               MinWidth="34"
+                               Icon="{x:Static properties:Images.EyeOpened}" />
+          </StackPanel>
+        </Grid>
+
+        <HeaderedContentControl x:Name="gbMgtPanel"
+                                Classes="gitextensions-group-box"
+                                Grid.Column="1"
+                                Header="Create New Remote">
+          <Grid x:Name="flpnlRemoteManagement"
+                ColumnDefinitions="Auto,*,110"
+                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                ColumnSpacing="8" RowSpacing="6"
+                VerticalAlignment="Top">
+            <TextBlock x:Name="label1"
+                       Text="_Name"
+                       VerticalAlignment="Center" />
+            <TextBox x:Name="RemoteName"
+                     Grid.Column="1" Grid.ColumnSpan="2" />
+
+            <TextBlock x:Name="label2"
+                       Grid.Row="1"
+                       Text="_Url"
+                       VerticalAlignment="Center" />
+            <ComboBox x:Name="Url"
+                      Grid.Row="1" Grid.Column="1"
+                      HorizontalAlignment="Stretch"
+                      IsEditable="True" />
+            <usercontrols:FolderBrowserButton x:Name="folderBrowserButtonUrl"
+                                              Grid.Row="1" Grid.Column="2" />
+
+            <CheckBox x:Name="checkBoxSepPushUrl"
+                      Grid.Row="2" Grid.Column="1"
+                      Content="Sep_arate Push Url" />
+
+            <TextBlock x:Name="labelPushUrl"
+                       Grid.Row="3"
+                       Text="_Push Url"
+                       IsVisible="False"
+                       VerticalAlignment="Center" />
+            <ComboBox x:Name="comboBoxPushUrl"
+                      Grid.Row="3" Grid.Column="1"
+                      HorizontalAlignment="Stretch"
+                      IsVisible="False"
+                      IsEditable="True" />
+            <usercontrols:FolderBrowserButton x:Name="folderBrowserButtonPushUrl"
+                                              Grid.Row="3" Grid.Column="2"
+                                              IsVisible="False" />
+
+            <TextBlock x:Name="lblRemoteColor"
+                       Grid.Row="4"
+                       Text="Color"
+                       VerticalAlignment="Center" />
+            <StackPanel x:Name="flpnlRemoteColors"
+                        Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        Spacing="6">
+              <colorPicker:ColorPicker x:Name="btnRemoteColor"
+                                       MinWidth="80"
+                                       Content="Set _color"
+                                       IsAlphaEnabled="False" />
+              <Button x:Name="btnRemoteColorReset"
+                      Content="Default color"
+                      IsVisible="False" />
+            </StackPanel>
+
+            <TextBlock x:Name="lblRemotePrefix"
+                       Grid.Row="5"
+                       Text="Prefix"
+                       VerticalAlignment="Center" />
+            <TextBox x:Name="txtRemotePrefix"
+                     Grid.Row="5" Grid.Column="1" />
+
+            <compat:IconButton x:Name="Save"
+                               Classes="gitextensions-dialog-action"
+                               Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
+                               MinWidth="120"
+                               HorizontalAlignment="Right"
+                               Icon="{x:Static properties:Images.Save}"
+                               Content="_Save changes" />
+          </Grid>
+        </HeaderedContentControl>
+      </Grid>
+    </TabItem>
+
+    <TabItem x:Name="tabPage2" Header="Default pull behavior (fetch &amp; merge)">
+      <Grid RowDefinitions="*,Auto" Margin="0,8,0,0">
+        <Grid x:Name="columnsGrid" RowDefinitions="Auto,*">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <Border x:Name="BranchName"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock Text="Local branch name" FontWeight="SemiBold" />
+          </Border>
+          <Border x:Name="RemoteCombo"
+                  Grid.Column="1"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock Text="Remote repository" FontWeight="SemiBold" />
+          </Border>
+          <Border x:Name="MergeWith"
+                  Grid.Column="2"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock Text="Default merge with" FontWeight="SemiBold" />
+          </Border>
+          <ListBox x:Name="RemoteBranches"
+                   Grid.Row="1" Grid.ColumnSpan="3" />
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Margin="0,10,0,0"
+              ColumnDefinitions="Auto,*,Auto"
+              RowDefinitions="Auto,Auto,Auto"
+              ColumnSpacing="8" RowSpacing="6">
+          <TextBlock x:Name="label4"
+                     Text="_Local branch name"
+                     VerticalAlignment="Center" />
+          <TextBox x:Name="LocalBranchNameEdit"
+                   Grid.Column="1"
+                   IsReadOnly="True" />
+
+          <TextBlock x:Name="label5"
+                     Grid.Row="1"
+                     Text="_Remote repository"
+                     VerticalAlignment="Center" />
+          <ComboBox x:Name="RemoteRepositoryCombo"
+                    Grid.Row="1" Grid.Column="1"
+                    HorizontalAlignment="Stretch" />
+
+          <TextBlock x:Name="label6"
+                     Grid.Row="2"
+                     Text="_Default merge with"
+                     VerticalAlignment="Center" />
+          <ComboBox x:Name="DefaultMergeWithCombo"
+                    Grid.Row="2" Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    IsEditable="True" />
+
+          <compat:IconButton x:Name="SaveDefaultPushPull"
+                             Classes="gitextensions-dialog-action"
+                             Grid.Row="2" Grid.Column="2"
+                             MinWidth="120"
+                             VerticalAlignment="Bottom"
+                             Icon="{x:Static properties:Images.Save}"
+                             Content="_Save changes" />
+        </Grid>
+      </Grid>
+    </TabItem>
+  </TabControl>
+</Window>

@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>WinFormsParityCapture</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ParityCaptureSchema\ParityCaptureSchema.csproj" />
+    <ProjectReference Include="..\..\..\src\app\GitUI\GitUI.csproj" />
+    <ProjectReference Include="..\..\..\src\app\GitExtensions\GitExtensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App.config" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="capture-plan.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Profiles\reference.settings.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Themes\parity-custom.css" Link="Themes\parity-custom.css" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\..\src\app\GitUI\Themes\*.css" Link="Themes\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="README.md" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="PrepareReferencedGitExtensionsOutput" BeforeTargets="ResolveProjectReferences">
+    <!-- GitExtensions' release build enumerates its deployment Plugins directory. The
+         standalone capture graph has no plugin projects, so create the empty consumer
+         directory without changing the original project or either solution. -->
+    <MakeDir Directories="$(ArtifactsDir)bin\GitExtensions\net10.0-windows\Plugins" />
+  </Target>
+
+</Project>

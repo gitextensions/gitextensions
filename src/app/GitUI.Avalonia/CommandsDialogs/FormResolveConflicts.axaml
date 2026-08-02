@@ -1,0 +1,82 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormResolveConflicts"
+        Width="619" Height="392"
+        MinWidth="450" MinHeight="299"
+        WindowStartupLocation="CenterOwner"
+        Title="Resolve merge conflicts">
+  <Grid x:Name="tableLayoutPanel4" Margin="9" ColumnDefinitions="*,Auto" RowDefinitions="*,Auto,24" RowSpacing="8">
+    <Grid x:Name="tableLayoutPanel5" ColumnDefinitions="*" RowDefinitions="Auto,*,Auto" RowSpacing="3">
+      <TextBlock x:Name="label1" Text="Unresolved merge conflicts" />
+      <ListBox x:Name="ConflictedFiles" Grid.Row="1" SelectionMode="Multiple">
+        <ListBox.ContextMenu>
+          <ContextMenu x:Name="ConflictedFilesContextMenu">
+            <MenuItem x:Name="OpenMergetool" Header="Open in mergetool" />
+            <MenuItem x:Name="customMergetool" Header="Open in _mergetool" />
+            <MenuItem x:Name="ContextMarkAsSolved" Header="Mark conflict as solved" />
+            <Separator x:Name="toolStripSeparator3" />
+            <MenuItem x:Name="ContextChooseLocal" Header="Choose local" InputGesture="Ctrl+1" />
+            <MenuItem x:Name="ContextChooseRemote" Header="Choose remote" InputGesture="Ctrl+2" />
+            <MenuItem x:Name="ContextChooseBase" Header="Choose base" InputGesture="Ctrl+3" />
+            <Separator x:Name="toolStripSeparator1" />
+            <MenuItem x:Name="ContextOpenLocalWith" Header="Open local with" />
+            <MenuItem x:Name="ContextOpenRemoteWith" Header="Open remote with" />
+            <MenuItem x:Name="ContextOpenBaseWith" Header="Open base with" />
+            <Separator x:Name="toolStripSeparator2" />
+            <MenuItem x:Name="ContextSaveLocalAs" Header="Save local as" />
+            <MenuItem x:Name="ContextSaveRemoteAs" Header="Save remote as" />
+            <MenuItem x:Name="ContextSaveBaseAs" Header="Save base as" />
+            <Separator x:Name="toolStripMenuItem1" />
+            <MenuItem x:Name="openToolStripMenuItem" Header="Open" />
+            <MenuItem x:Name="openWithToolStripMenuItem" Header="Open With" />
+            <MenuItem x:Name="openFolderToolStripMenuItem" Header="Show in folder">
+              <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
+            </MenuItem>
+            <Separator x:Name="toolStripSeparator4" />
+            <MenuItem x:Name="fileHistoryToolStripMenuItem" Header="File history" />
+          </ContextMenu>
+        </ListBox.ContextMenu>
+      </ListBox>
+      <Grid x:Name="tableLayoutPanel3" Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="3">
+        <Image x:Name="pictureBox1"
+               Width="16"
+               Height="16"
+               Source="{x:Static properties:Images.Information}"
+               VerticalAlignment="Center" />
+        <TextBlock x:Name="conflictDescription" Grid.Column="1" Text="Select file" VerticalAlignment="Center" />
+        <compat:IconButton x:Name="merge"
+                           Classes="gitextensions-dialog-action"
+                           Grid.Column="2"
+                           MinWidth="130"
+                           Margin="0,0,0,2"
+                           Icon="{x:Static properties:Images.SelectBranch}"
+                           Content="Merge" />
+      </Grid>
+    </Grid>
+    <StackPanel x:Name="flowLayoutPanel1" Grid.Column="1" Margin="8,0,0,0" Spacing="6">
+      <Button x:Name="openMergeToolBtn" Classes="gitextensions-dialog-action" MinWidth="140" HorizontalAlignment="Stretch" Content="Open in mergetool" />
+      <Button x:Name="startMergetool" Classes="gitextensions-dialog-action" MinWidth="140" HorizontalAlignment="Stretch" Content="Start mergetool" />
+      <Button x:Name="Rescan" Classes="gitextensions-dialog-action" MinWidth="140" HorizontalAlignment="Stretch" Content="Rescan merge conflicts" />
+      <Button x:Name="Reset" Classes="gitextensions-dialog-action" MinWidth="140" HorizontalAlignment="Stretch" Content="_Reset" />
+      <ProgressBar x:Name="progressBar" MinHeight="24" IsVisible="False" />
+    </StackPanel>
+    <Grid x:Name="tableLayoutPanel1" Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*"
+          RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
+      <TextBlock x:Name="labelLocalCurrent" Padding="0,3,0,3" Text="Local/current" />
+      <TextBlock x:Name="localFileName" Grid.Column="1" VerticalAlignment="Center" Text="..." />
+      <TextBlock x:Name="labelBase" Grid.Row="1" Padding="0,3,0,3" Text="Base" />
+      <TextBlock x:Name="baseFileName" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="..." />
+      <TextBlock x:Name="labelRemoteIncoming" Grid.Row="2" Padding="0,3,0,3" Text="Remote/incoming" />
+      <TextBlock x:Name="remoteFileName" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Text="..." />
+    </Grid>
+    <usercontrols:GotoUserManualControl x:Name="gotoUserManualControl1"
+                                        Grid.Row="2"
+                                        ManualSectionAnchorName="handle-merge-conflicts"
+                                        ManualSectionSubfolder="modify_history"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom" />
+  </Grid>
+</Window>

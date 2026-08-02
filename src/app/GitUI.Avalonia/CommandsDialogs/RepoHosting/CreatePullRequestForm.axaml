@@ -1,0 +1,76 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:spellChecker="using:GitUI.SpellChecker"
+        x:Class="GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm"
+        Width="546"
+        Height="323"
+        MinWidth="546"
+        MinHeight="323"
+        WindowStartupLocation="CenterOwner"
+        Title="Create Pull Request">
+  <Grid RowDefinitions="27,27,27,*,39"
+        Margin="9,12,8,9">
+    <Grid ColumnDefinitions="126,*">
+      <TextBlock x:Name="label3"
+                 VerticalAlignment="Center"
+                 Text="Target repository:" />
+      <ComboBox x:Name="_pullReqTargetsCB"
+                Grid.Column="1"
+                VerticalContentAlignment="Center" />
+    </Grid>
+
+    <Grid Grid.Row="1"
+          ColumnDefinitions="126,*">
+      <TextBlock x:Name="label4"
+                 VerticalAlignment="Center"
+                 Text="Your branch:" />
+      <ComboBox x:Name="_yourBranchesCB"
+                Grid.Column="1"
+                VerticalContentAlignment="Center" />
+    </Grid>
+
+    <Grid Grid.Row="2"
+          ColumnDefinitions="126,*">
+      <TextBlock x:Name="label5"
+                 VerticalAlignment="Center"
+                 Text="Target branch:" />
+      <ComboBox x:Name="_remoteBranchesCB"
+                Grid.Column="1"
+                VerticalContentAlignment="Center" />
+    </Grid>
+
+    <GroupBox x:Name="groupBox1"
+              Grid.Row="3"
+              Margin="3,7,0,0"
+              Header="Pull request data">
+      <Grid RowDefinitions="27,*"
+            ColumnDefinitions="46,*"
+            Margin="6">
+        <TextBlock x:Name="label1"
+                   VerticalAlignment="Center"
+                   Text="Title:" />
+        <TextBox x:Name="_titleTB"
+                 Grid.Column="1"
+                 VerticalContentAlignment="Center" />
+        <TextBlock x:Name="label2"
+                   Grid.Row="1"
+                   Margin="0,4,0,0"
+                   VerticalAlignment="Top"
+                   Text="Body:" />
+        <spellChecker:EditNetSpell x:Name="_bodyTB"
+                                   Grid.Row="1"
+                                   Grid.Column="1"
+                                   Margin="0,3,0,0" />
+      </Grid>
+    </GroupBox>
+
+    <Button x:Name="_createBtn"
+            Grid.Row="4"
+            Classes="gitextensions-dialog-action-primary"
+            Width="112"
+            Height="33"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Content="Create" />
+  </Grid>
+</Window>

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.UserControls.GotoUserManualControl"
+             MinWidth="70"
+             MinHeight="20">
+  <StackPanel x:Name="flowLayoutPanel1"
+              Orientation="Horizontal"
+              Spacing="4"
+              VerticalAlignment="Center">
+    <Image x:Name="pictureBoxHelpIcon"
+           Width="16"
+           Height="16"
+           Source="{x:Static properties:Images.GotoManual}" />
+    <HyperlinkButton x:Name="linkLabelHelp"
+                     Padding="0"
+                     Content="Help" />
+  </StackPanel>
+</UserControl>

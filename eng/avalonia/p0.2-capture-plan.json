@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "settingsProfile": "Profiles/reference.settings.json",
+  "scales": [
+    100,
+    125,
+    150,
+    200
+  ],
+  "themes": [
+    {
+      "id": "light",
+      "kind": "builtin",
+      "file": "invariant.css",
+      "isBuiltin": true
+    },
+    {
+      "id": "dark",
+      "kind": "builtin",
+      "file": "dark.css",
+      "isBuiltin": true
+    },
+    {
+      "id": "parity-custom",
+      "kind": "custom",
+      "file": "parity-custom.css",
+      "isBuiltin": true
+    }
+  ],
+  "components": [
+    {
+      "typeName": "GitUI.ScriptsEngine.FormFilePrompt",
+      "textValues": {
+        "txtFilePath": "C:\\source\\first.txt C:\\source\\second.txt"
+      },
+      "states": [
+        {
+          "id": "normal",
+          "kind": "normal"
+        },
+        {
+          "id": "path.focused",
+          "kind": "focus",
+          "targetField": "txtFilePath"
+        },
+        {
+          "id": "ok.hover",
+          "kind": "hover",
+          "targetField": "btnOk"
+        },
+        {
+          "id": "ok.pressed",
+          "kind": "pressed",
+          "targetField": "btnOk"
+        },
+        {
+          "id": "ok.disabled",
+          "kind": "disabled",
+          "targetField": "btnOk"
+        }
+      ]
+    }
+  ]
+}

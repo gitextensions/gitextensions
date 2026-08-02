@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.FormRenameBranch"
+        Width="500" Height="80"
+        MinWidth="400" MinHeight="80"
+        MaxHeight="80"
+        WindowStartupLocation="CenterOwner"
+        Title="Rename branch">
+  <Grid x:Name="tableLayoutPanel1"
+        Margin="10"
+        ColumnDefinitions="Auto,*,Auto"
+        ColumnSpacing="8">
+    <TextBlock x:Name="label1"
+               Classes="gitextensions-dialog-label"
+               Text="New name" />
+    <TextBox x:Name="BranchNameTextBox"
+             Grid.Column="1"
+             VerticalAlignment="Center" />
+    <Button x:Name="Ok"
+            Classes="gitextensions-dialog-action"
+            Grid.Column="2"
+            Content="Rename"
+            IsDefault="True" />
+  </Grid>
+</Window>

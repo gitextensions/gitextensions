@@ -1,0 +1,189 @@
+using AwesomeAssertions;
+using GitExtensions.ParityCapture;
+using NUnit.Framework;
+
+namespace GitExtensions.ParityDiff.Tests;
+
+// parity-scaffolding: Proves the temporary comparison tool localizes perturbations.
+[TestFixture]
+[Category("P0_3")]
+public sealed class ParityDiffRunnerTests
+{
+    [Test]
+    public void Run_should_emit_no_findings_for_identical_sets()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument document = fixture.CreateDocument("light");
+        fixture.WriteCaptureSet("reference", [document]);
+        fixture.WriteCaptureSet("candidate", [document]);
+
+        ParityDiffResult result = fixture.Run();
+
+        result.Summary.ComparedCaptureCount.Should().Be(1);
+        result.Summary.FindingCount.Should().Be(0);
+        PixelMetrics pixels = result.Captures.Should().ContainSingle().Which.Pixels
+            ?? throw new InvalidOperationException("A compared capture must include pixel metrics.");
+        pixels.Ssim.Should().Be(1);
+        File.ReadAllText(Path.Combine(fixture.OutputDirectory, "findings.json"))
+            .Should().Contain("\"findingCount\": 0");
+        File.ReadAllText(Path.Combine(fixture.OutputDirectory, "report.md"))
+            .Should().Contain("- Findings: 0");
+    }
+
+    [Test]
+    public void Run_should_detect_and_localize_one_metric_perturbation()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = fixture.CreateDocument("light");
+        CaptureDocument candidate = ChangeTarget(
+            reference,
+            node => node with
+            {
+                BoundsDip = node.BoundsDip with { Width = node.BoundsDip.Width + 2 }
+            });
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityDiffResult result = fixture.Run();
+
+        ParityFinding finding = result.Captures.Should().ContainSingle()
+            .Which.Findings.Should().ContainSingle().Subject;
+        finding.Code.Should().Be("geometry.width");
+        finding.Path.Should().Be("surface[primary]/control[btnTarget]/boundsDip");
+        finding.Delta.Should().Be("2");
+        finding.Tolerance.Should().Be("0.5");
+    }
+
+    [Test]
+    public void Run_should_localize_a_dark_theme_only_color_perturbation()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument light = fixture.CreateDocument("light");
+        CaptureDocument dark = fixture.CreateDocument("dark");
+        CaptureDocument changedDark = ChangeTarget(
+            dark,
+            node => node with
+            {
+                Colors = node.Colors with { Background = "#FF102030" }
+            });
+        fixture.WriteCaptureSet("reference", [light, dark]);
+        fixture.WriteCaptureSet("candidate", [light, changedDark]);
+
+        ParityDiffResult result = fixture.Run();
+
+        CaptureComparison comparison = result.Captures.Should()
+            .ContainSingle(item => item.Findings.Count > 0).Subject;
+        comparison.Key.ThemeId.Should().Be("dark");
+        ParityFinding finding = comparison.Findings.Should().ContainSingle().Subject;
+        finding.Code.Should().Be("color.background");
+        finding.Path.Should().Be("surface[primary]/control[btnTarget]");
+        result.Captures.Single(item => item.Key.ThemeId == "light").Findings.Should().BeEmpty();
+    }
+
+    [Test]
+    public void Run_should_localize_a_uniquely_renamed_control()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = fixture.CreateDocument("light");
+        CaptureDocument candidate = ChangeTarget(
+            reference,
+            node => node with
+            {
+                FieldName = "btnRenamed",
+                Name = "btnRenamed"
+            });
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityDiffResult result = fixture.Run();
+
+        ParityFinding finding = result.Captures.Should().ContainSingle()
+            .Which.Findings.Should().ContainSingle(item => item.Code == "control.renamed").Subject;
+        finding.Code.Should().Be("control.renamed");
+        finding.ReferenceValue.Should().Be("btnTarget");
+        finding.CandidateValue.Should().Be("btnRenamed");
+    }
+
+    [Test]
+    public void Run_should_report_missing_and_extra_controls_without_a_semantic_join()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = fixture.CreateDocument("light");
+        CaptureDocument candidate = ChangeTarget(
+            reference,
+            node => node with
+            {
+                FieldName = "txtUnrelated",
+                Name = "txtUnrelated",
+                ControlKind = "textBox",
+                Text = "Unrelated"
+            });
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityDiffResult result = fixture.Run();
+
+        result.Captures.Should().ContainSingle().Which.Findings
+            .Select(finding => finding.Code)
+            .Should().Contain("control.missing", "control.extra");
+    }
+
+    [Test]
+    public void Run_should_apply_ssim_and_per_pixel_channel_budgets()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument document = fixture.CreateDocument("light");
+        fixture.WriteCaptureSet("reference", [document], red: 0);
+        fixture.WriteCaptureSet("candidate", [document], red: 255);
+
+        ParityDiffResult result = fixture.Run();
+
+        CaptureComparison comparison = result.Captures.Should().ContainSingle().Subject;
+        comparison.Findings.Select(finding => finding.Code).Should().Contain(
+            "image.ssim",
+            "image.differentPixelFraction",
+            "image.maximumChannelDelta");
+        PixelMetrics pixels = comparison.Pixels
+            ?? throw new InvalidOperationException("A compared capture must include pixel metrics.");
+        pixels.MaximumChannelDelta.Should().Be(255);
+        pixels.DifferentPixelFraction.Should().Be(1);
+    }
+
+    [Test]
+    public void Run_should_preserve_explicit_unsupported_state_notes()
+    {
+        using ParityDiffFixture fixture = new();
+        fixture.WriteUnsupportedCaptureSet("reference", "Reference cannot open the popup.");
+        fixture.WriteUnsupportedCaptureSet("candidate", "Candidate cannot compose the popup.");
+
+        ParityDiffResult result = fixture.Run();
+
+        CaptureComparison comparison = result.Captures.Should().ContainSingle().Subject;
+        comparison.Status.Should().Be("unavailable");
+        comparison.Findings.Should().BeEmpty();
+        comparison.ReferenceNote.Should().Be("Reference cannot open the popup.");
+        comparison.CandidateNote.Should().Be("Candidate cannot compose the popup.");
+        File.ReadAllText(Path.Combine(fixture.OutputDirectory, "report.md"))
+            .Should().Contain("Reference cannot open the popup.")
+            .And.Contain("Candidate cannot compose the popup.");
+    }
+
+    private static CaptureDocument ChangeTarget(
+        CaptureDocument document,
+        Func<CaptureNode, CaptureNode> transform)
+    {
+        CaptureSurface surface = document.Surfaces.Single();
+        CaptureNode root = surface.Root;
+        CaptureNode target = root.Children.Single();
+        return document with
+        {
+            Surfaces =
+            [
+                surface with
+                {
+                    Root = root with { Children = [transform(target)] }
+                }
+            ]
+        };
+    }
+}

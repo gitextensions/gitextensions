@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormCreateBranch"
+        Width="580" Height="425"
+        MinWidth="580" MinHeight="425"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Create branch">
+  <DockPanel>
+    <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
+                DockPanel.Dock="Bottom"
+                Spacing="8"
+                Margin="10">
+      <compat:IconButton x:Name="cmdOk"
+                         Classes="gitextensions-dialog-action"
+                         MinWidth="110"
+                         Icon="{x:Static properties:Images.BranchCreate}"
+                         Content="_Create branch"
+                         IsDefault="True" />
+    </StackPanel>
+    <Grid x:Name="MainPanel" Classes="gitextensions-dialog-main" ColumnDefinitions="Auto,*"
+          RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="10" RowSpacing="8">
+      <Label x:Name="label1"
+             Classes="gitextensions-dialog-label"
+             Padding="0"
+             Content="_Branch name"
+             Target="{Binding #BranchNameTextBox}" />
+      <TextBox x:Name="BranchNameTextBox" Grid.Column="1" />
+
+      <Label x:Name="lblCreateBranch"
+             Classes="gitextensions-dialog-label"
+             Grid.Row="1"
+             Padding="0"
+             Content="Create b_ranch at this revision"
+             Target="{Binding #commitPicker}" />
+      <usercontrols:CommitPickerSmallControl x:Name="commitPicker" Grid.Row="1" Grid.Column="1" />
+
+      <CheckBox x:Name="chkCheckoutAfterCreate" Grid.Row="2" Grid.Column="1"
+                IsChecked="True" Content="Checkout _after create" />
+
+      <usercontrols:CommitSummaryUserControl x:Name="commitSummaryUserControl1"
+                                             Grid.Row="3" Grid.ColumnSpan="2" />
+
+      <HeaderedContentControl x:Name="grpOrphan"
+                              Classes="gitextensions-group-box"
+                              Grid.Row="4"
+                              Grid.ColumnSpan="2"
+                              Header="Orphan">
+        <WrapPanel x:Name="flowLayoutPanel1" Margin="8,0,0,0" Orientation="Horizontal">
+          <CheckBox x:Name="chkCreateOrphan" Margin="0,0,16,0"
+                    Content="Create or_phan" ToolTip.Tip="New branch will have NO parents" />
+          <CheckBox x:Name="chkClearOrphan" IsChecked="True" IsEnabled="False"
+                    Content="Clear _working directory and index"
+                    ToolTip.Tip="Remove files from the working directory and from the index" />
+        </WrapPanel>
+      </HeaderedContentControl>
+    </Grid>
+  </DockPanel>
+</Window>

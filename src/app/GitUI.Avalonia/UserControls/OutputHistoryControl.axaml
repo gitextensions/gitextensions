@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             x:Class="GitUI.UserControls.OutputHistoryControl">
+  <compat:ThemeAwareTextEditor x:Name="TextBox"
+                               Margin="0"
+                               IsReadOnly="True"
+                               ShowLineNumbers="False"
+                               WordWrap="False"
+                               HorizontalScrollBarVisibility="Auto"
+                               VerticalScrollBarVisibility="Auto"
+                               FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}"
+                               FontSize="{DynamicResource GitExtensionsMonospaceFontSize}">
+    <compat:ThemeAwareTextEditor.ContextMenu>
+      <ContextMenu x:Name="TextBoxContextMenuStrip">
+        <MenuItem x:Name="tsmiCopy" Header="_Copy" InputGesture="Ctrl+C" />
+        <MenuItem x:Name="tsmiClear" Header="C_lear" />
+      </ContextMenu>
+    </compat:ThemeAwareTextEditor.ContextMenu>
+  </compat:ThemeAwareTextEditor>
+</UserControl>

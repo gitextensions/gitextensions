@@ -1,0 +1,115 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormReflog"
+        Width="782"
+        Height="555"
+        MinWidth="400"
+        MinHeight="200"
+        WindowStartupLocation="CenterOwner"
+        Title="Reflog">
+  <Grid x:Name="tableLayoutPanel1"
+        RowDefinitions="Auto,40,*">
+    <TextBlock x:Name="lblDirtyWorkingDirectory"
+               Grid.ColumnSpan="2"
+               Margin="3"
+               HorizontalAlignment="Center"
+               TextAlignment="Center"
+               Foreground="Red"
+               IsVisible="False"
+               Text="Warning: you've got changes in your working directory that could be lost if you want to reset the current branch to another commit.&#10;Stash them before if you don't want to lose them." />
+
+    <Grid Grid.Row="1"
+          Margin="4"
+          ColumnDefinitions="370,*">
+      <StackPanel x:Name="branchesPanel"
+                  Orientation="Horizontal"
+                  Spacing="8">
+        <TextBlock x:Name="label2"
+                   VerticalAlignment="Center"
+                   Text="Reference:" />
+        <ComboBox x:Name="Branches"
+                  Width="272"
+                  VerticalAlignment="Center" />
+      </StackPanel>
+
+      <StackPanel x:Name="currentBranchPanel"
+                  Grid.Column="1"
+                  Orientation="Horizontal"
+                  Spacing="6">
+        <TextBlock x:Name="label1"
+                   VerticalAlignment="Center"
+                   Text="Display reflog for:" />
+        <HyperlinkButton x:Name="linkCurrentBranch"
+                         Padding="0"
+                         VerticalAlignment="Center"
+                         Content="(Current branch name)" />
+        <HyperlinkButton x:Name="linkHead"
+                         Padding="0"
+                         VerticalAlignment="Center"
+                         Content="HEAD" />
+      </StackPanel>
+    </Grid>
+
+    <Border Grid.Row="2"
+            Classes="gitextensions-section">
+      <Grid RowDefinitions="Auto,*">
+        <Grid ColumnDefinitions="300,180,*">
+          <Border x:Name="Sha"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold" Text="SHA-1" />
+          </Border>
+          <Border x:Name="Ref"
+                  Grid.Column="1"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,1,1">
+            <TextBlock FontWeight="SemiBold" Text="Ref" />
+          </Border>
+          <Border x:Name="Action"
+                  Grid.Column="2"
+                  Padding="6,4"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="0,0,0,1">
+            <TextBlock FontWeight="SemiBold" Text="Action" />
+          </Border>
+        </Grid>
+
+        <ListBox x:Name="gridReflog"
+                 Grid.Row="1"
+                 SelectionMode="Single">
+          <ListBox.Styles>
+            <Style Selector="ListBoxItem">
+              <Setter Property="Padding" Value="0" />
+              <Setter Property="MinHeight" Value="24" />
+              <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </Style>
+          </ListBox.Styles>
+          <ListBox.ContextMenu>
+            <ContextMenu x:Name="contextMenuStripReflog">
+              <MenuItem x:Name="copySha1ToolStripMenuItem" Header="Copy SHA-1">
+                <MenuItem.Icon>
+                  <Image Width="16" Height="16" Source="{x:Static properties:Images.CommitId}" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem x:Name="createABranchOnThisCommitToolStripMenuItem"
+                        Header="Create a branch on this commit...">
+                <MenuItem.Icon>
+                  <Image Width="16" Height="16" Source="{x:Static properties:Images.BranchCreate}" />
+                </MenuItem.Icon>
+              </MenuItem>
+              <MenuItem x:Name="resetCurrentBranchOnThisCommitToolStripMenuItem"
+                        Header="Reset current branch to this commit...">
+                <MenuItem.Icon>
+                  <Image Width="16" Height="16" Source="{x:Static properties:Images.ResetCurrentBranchToHere}" />
+                </MenuItem.Icon>
+              </MenuItem>
+            </ContextMenu>
+          </ListBox.ContextMenu>
+        </ListBox>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

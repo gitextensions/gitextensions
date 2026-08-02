@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TeamCityIntegration.Settings.TeamCityBuildChooser"
+        Width="451"
+        Height="379"
+        MinWidth="320"
+        MinHeight="250"
+        CanResize="True"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Choose the TeamCity build...">
+  <Grid Margin="9,10,8,13"
+        RowDefinitions="*,Auto"
+        RowSpacing="13">
+    <TreeView x:Name="treeViewTeamCityProjects" />
+
+    <Grid Grid.Row="1"
+          Height="22"
+          ColumnDefinitions="112,56,*,56,112">
+      <Button x:Name="buttonCancel"
+              Grid.Column="1"
+              Padding="4,0"
+              IsCancel="True"
+              Content="Cancel" />
+      <Button x:Name="buttonOK"
+              Grid.Column="3"
+              Padding="4,0"
+              IsDefault="True"
+              IsEnabled="False"
+              Content="OK" />
+    </Grid>
+  </Grid>
+</Window>

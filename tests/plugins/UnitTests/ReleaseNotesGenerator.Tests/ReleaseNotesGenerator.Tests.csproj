@@ -1,8 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
+    <!-- Keep the existing Windows suite unchanged while also running its framework-neutral
+         parser fixtures against the portable plugin flavor. -->
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
+    <UseGitExtensionsShims>true</UseGitExtensionsShims>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
     <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Remove="MainFixture.cs" />
+    <Compile Include="..\..\..\..\src\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
   </ItemGroup>
 
 </Project>

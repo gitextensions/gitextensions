@@ -1,0 +1,96 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Cross-platform Avalonia tests; part of GitExtensions.Avalonia.slnx only, so the
+         Windows Forms solution and its pipelines are unaffected. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <DefineConstants>$(DefineConstants);GITEXTENSIONS_AVALONIA</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- CommonAssemblyInfo.cs declares SupportedOSPlatform("windows7.0"), which NUnit 4
+         translates into a Windows-only platform requirement for every test: on Linux the
+         whole assembly is silently discovered as empty. This project is cross-platform. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Reuse the framework-neutral theme tests verbatim so the CSS implementation has one
+         behavioral specification across WinForms and Avalonia. -->
+    <Compile Include="..\GitUI.Tests\Theming\CssUrlResolverTests.cs" Link="Theming\CssUrlResolverTests.cs" />
+    <Compile Include="..\GitUI.Tests\Theming\ThemeLoaderTests.cs" Link="Theming\ThemeLoaderTests.cs" />
+    <Compile Include="..\GitUI.Tests\Theming\ThemePersistenceTests.cs" Link="Theming\ThemePersistenceTests.cs" />
+    <Compile Include="..\GitUI.Tests\SpellChecker\WordAtCursorExtractorTests.cs"
+             Link="SpellChecker\WordAtCursorExtractorTests.cs" />
+    <Compile Include="..\GitUI.Tests\Script\ScriptOptionsParserTests.cs"
+             Link="Script\ScriptOptionsParserTests.cs" />
+    <Compile Include="..\GitUI.Tests\Script\ScriptsManagerScriptRunnerTests.cs"
+             Link="Script\ScriptsManagerScriptRunnerTests.cs" />
+    <Compile Include="..\GitUI.Tests\CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs"
+             Link="CommandsDialogs\SettingsDialog\Pages\ColorsPageSettingsPageControllerTests.cs" />
+    <Compile Include="..\GitUI.Tests\CommandsDialogs\Settings\GitHubExternalLinkDefinitionExtractorTests.cs"
+             Link="CommandsDialogs\Settings\GitHubExternalLinkDefinitionExtractorTests.cs" />
+    <Compile Include="..\GitUI.Tests\CommandsDialogs\Settings\AzureDevOpsExternalLinkDefinitionExtractorTests.cs"
+             Link="CommandsDialogs\Settings\AzureDevOpsExternalLinkDefinitionExtractorTests.cs" />
+    <Compile Include="..\GitUI.Tests\CommandsDialogs\FormAddSubmoduleTests.cs"
+             Link="CommandsDialogs\FormAddSubmoduleTests.cs" />
+    <Compile Include="..\GitUI.Tests\CommandsDialogs\BrowseDialog\ReleaseVersionTests.cs"
+             Link="CommandsDialogs\BrowseDialog\ReleaseVersionTests.cs" />
+    <Compile Include="..\GitUI.Tests\LeftPanel\WorktreeTreeTests.cs"
+             Link="LeftPanel\WorktreeTreeTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Exact WinForms-shaped aliases required by the unchanged shared script tests. -->
+    <Using Include="GitExtensions.Shims.WinForms.IWin32Window" Alias="IWin32Window" />
+    <Using Include="GitExtensions.Shims.WinForms.DialogResult" Alias="DialogResult" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Headless.NUnit" />
+    <!-- Skia renderer for graph golden images and the opt-in all-view parity captures. -->
+    <PackageReference Include="Avalonia.Skia" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- P0.2 deliberately references the platform-neutral parity contract so both capture
+         emitters compile against one schema; the Windows-only tool stays outside both solutions. -->
+    <ProjectReference Include="..\..\..\..\eng\tools\ParityCaptureSchema\ParityCaptureSchema.csproj" />
+    <ProjectReference Include="..\..\..\..\eng\tools\ImagesResxToAvalonia\ImagesResxToAvalonia.csproj" />
+    <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+    <ProjectReference Include="..\..\..\..\src\app\GitExtensions.Avalonia\GitExtensions.Avalonia.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\AzureDevOpsIntegration\GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\GitHubActionsIntegration\GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\BuildServerIntegration\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\CreateLocalBranches\GitExtensions.Plugins.CreateLocalBranches.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\GitHub3\GitExtensions.Plugins.GitHub3.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\Statistics\GitImpact\GitExtensions.Plugins.GitImpact.csproj" />
+    <ProjectReference Include="..\..\..\..\src\plugins\Statistics\GitStatistics\GitExtensions.Plugins.GitStatistics.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\eng\tools\WinFormsParityCapture\Profiles\reference.settings.json"
+          Link="Profiles\reference.settings.json"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\..\..\eng\tools\WinFormsParityCapture\Themes\parity-custom.css"
+          Link="Themes\parity-custom.css"
+          CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Exercises the Avalonia-side fallback used by portable plugins whose headless Icon
+         cannot carry a platform image. The production plugin embeds this same source PNG. -->
+    <EmbeddedResource Include="$(RepoRoot)src\plugins\BackgroundFetch\Resources\IconBackgroundFetch.png"
+                      Link="PluginTestAssets\IconEmbedded.png"
+                      LogicalName="GitUI.Avalonia.Tests.IconEmbedded.png" />
+  </ItemGroup>
+
+</Project>
