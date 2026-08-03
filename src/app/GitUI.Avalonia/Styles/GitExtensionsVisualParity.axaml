@@ -30,6 +30,10 @@
       <SolidColorBrush x:Key="GitExtensionsErrorForegroundBrush" Color="Red" />
       <SolidColorBrush x:Key="GitExtensionsInvalidSettingBackgroundBrush" Color="#FFFF8080" />
       <SolidColorBrush x:Key="GitExtensionsInvalidSettingForegroundBrush" Color="Black" />
+      <SolidColorBrush x:Key="GitExtensionsInteractiveActionBackgroundBrush" Color="#FF87CEFA" />
+      <SolidColorBrush x:Key="GitExtensionsInteractiveActionForegroundBrush" Color="#FF000000" />
+      <SolidColorBrush x:Key="GitExtensionsInteractiveConflictBackgroundBrush" Color="#FFFFA500" />
+      <SolidColorBrush x:Key="GitExtensionsInteractiveConflictForegroundBrush" Color="#FF000000" />
 
       <compat:WinFormsFocusAdornerTemplate x:Key="GitExtensionsFocusAdorner" />
 

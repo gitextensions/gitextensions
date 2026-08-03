@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             x:Class="GitUI.UserControls.Settings.SettingsCheckBox"
+             d:DesignWidth="104"
+             d:DesignHeight="17">
+  <StackPanel x:Name="tableLayoutPanel"
+              Orientation="Horizontal"
+              Spacing="2">
+    <CheckBox x:Name="checkBox"
+              Margin="0"
+              Content="Settings text" />
+    <Image x:Name="pictureBox"
+           Width="16"
+           Height="16"
+           Cursor="Hand"
+           IsVisible="False" />
+  </StackPanel>
+</UserControl>

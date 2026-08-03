@@ -531,7 +531,14 @@ internal static class CaptureRunner
         while (DateTime.UtcNow < deadline);
 
         Application.DoEvents();
+
+        // parity-scaffolding: Auto-sized descendants can invalidate their standalone host
+        // after the first layout pass; settle both levels before measuring or rendering.
+        root.FindForm()?.PerformLayout();
         root.PerformLayout();
+        root.FindForm()?.PerformLayout();
+        root.PerformLayout();
+        Application.DoEvents();
     }
 
     private static void PrepareControl(
@@ -558,10 +565,12 @@ internal static class CaptureRunner
                 StartPosition = FormStartPosition.Manual,
                 Location = new Point(monitor.X + 16, monitor.Y + 16),
                 ShowInTaskbar = false,
+                TopMost = true,
                 ClientSize = root.Size
             };
             host.Controls.Add(root);
             host.Show();
+            host.Activate();
         }
 
         ComponentFactory.PrepareAfterHandle(root, commands);

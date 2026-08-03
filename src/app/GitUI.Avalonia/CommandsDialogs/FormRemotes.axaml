@@ -57,7 +57,7 @@
                    Content="_Url"
                    Target="{Binding #Url}"
                    VerticalAlignment="Center" />
-            <ComboBox x:Name="Url"
+            <usercontrols:CaseSensitiveComboBox x:Name="Url"
                       Grid.Row="1" Grid.Column="1"
                       HorizontalAlignment="Stretch"
                       IsEditable="True" />
@@ -75,7 +75,7 @@
                    Target="{Binding #comboBoxPushUrl}"
                    IsVisible="False"
                    VerticalAlignment="Center" />
-            <ComboBox x:Name="comboBoxPushUrl"
+            <usercontrols:CaseSensitiveComboBox x:Name="comboBoxPushUrl"
                       Grid.Row="3" Grid.Column="1"
                       HorizontalAlignment="Stretch"
                       IsVisible="False"

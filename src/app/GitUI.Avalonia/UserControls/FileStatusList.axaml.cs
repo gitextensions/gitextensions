@@ -82,8 +82,20 @@ public partial class FileStatusList : GitModuleControl
             }
         };
         tvFiles.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
-        cboFilterComboBox.TextChanged += cboFilterComboBox_TextChanged;
-        cboFindInCommitFilesGitGrep.TextChanged += cboFindInCommitFilesGitGrep_TextUpdate;
+        cboFilterComboBox.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ComboBox.TextProperty)
+            {
+                cboFilterComboBox_TextChanged(this, EventArgs.Empty);
+            }
+        };
+        cboFindInCommitFilesGitGrep.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ComboBox.TextProperty)
+            {
+                cboFindInCommitFilesGitGrep_TextUpdate(this, EventArgs.Empty);
+            }
+        };
         DeleteFilterButton.Click += DeleteFilterButton_Click;
         DeleteSearchButton.Click += DeleteSearchButton_Click;
         _filterTimer.Tick += FilterTimer_Tick;
@@ -1871,7 +1883,7 @@ public partial class FileStatusList : GitModuleControl
 
     internal readonly struct TestAccessor(FileStatusList control)
     {
-        internal TextBox FilterComboBox => control.cboFilterComboBox;
+        internal WatermarkComboBox FilterComboBox => control.cboFilterComboBox;
         internal TextBlock CountLabel => control.lblCount;
         internal TextBlock NoFilesLabel => control.NoFiles;
         internal ListBox List => control.lstFiles;
