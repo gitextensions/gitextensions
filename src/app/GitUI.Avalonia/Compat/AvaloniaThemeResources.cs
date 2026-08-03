@@ -119,6 +119,7 @@ internal static class AvaloniaThemeResources
 
         DrawingColor panel = ResolveAppColor(settings, AppColor.PanelBackground);
         DrawingColor editor = ResolveAppColor(settings, AppColor.EditorBackground);
+        DrawingColor commitMessageBackground = ResolveSystemColor(settings, KnownColor.Window).MakeDarkerBy(0.04);
         DrawingColor selection = ResolveAppColor(settings, AppColor.Selection);
         DrawingColor windowText = ResolveSystemColor(settings, KnownColor.WindowText);
         DrawingColor grayText = ResolveSystemColor(settings, KnownColor.GrayText);
@@ -178,6 +179,7 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsPanelBackgroundBrush", panel);
         SetBrush(resources, "GitExtensionsWindowTextBrush", windowText);
         SetBrush(resources, "GitExtensionsWindowBackgroundBrush", ResolveSystemColor(settings, KnownColor.Window));
+        SetBrush(resources, "GitExtensionsCommitMessageBackgroundBrush", commitMessageBackground);
         SetBrush(resources, "GitExtensionsControlBackgroundBrush", control);
         SetBrush(resources, "GitExtensionsControlForegroundBrush", controlText);
         SetBrush(resources, "GitExtensionsControlBorderBrush", controlDark);
