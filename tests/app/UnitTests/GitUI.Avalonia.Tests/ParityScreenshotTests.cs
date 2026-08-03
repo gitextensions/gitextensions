@@ -1254,6 +1254,11 @@ public sealed partial class ParityScreenshotTests
             return (620, 320);
         }
 
+        if (viewType == typeof(EditNetSpell))
+        {
+            return (386, 336);
+        }
+
         if (viewType == typeof(BranchComboBox)
             || viewType == typeof(CommitPickerSmallControl)
             || viewType == typeof(FolderBrowserButton)

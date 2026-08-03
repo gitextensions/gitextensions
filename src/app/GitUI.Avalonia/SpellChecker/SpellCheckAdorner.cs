@@ -94,6 +94,17 @@ internal sealed class SpellCheckAdorner : Control
         return Math.Clamp(layout.HitTestPoint(point).TextPosition, 0, TextBox?.Text?.Length ?? 0);
     }
 
+    public Point GetTextPosition(int textIndex)
+    {
+        if (!TryGetTextLayout(out _, out TextLayout? layout, out Point origin))
+        {
+            return new Point(2, TextBox?.FontSize ?? 12);
+        }
+
+        Rect character = layout.HitTestTextPosition(Math.Clamp(textIndex, 0, TextBox?.Text?.Length ?? 0));
+        return new Point(origin.X + character.X + 2, origin.Y + character.Bottom);
+    }
+
     private static void DrawRange(
         DrawingContext context,
         TextLayout layout,
