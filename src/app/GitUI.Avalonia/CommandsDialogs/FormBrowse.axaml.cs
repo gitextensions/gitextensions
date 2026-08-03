@@ -168,6 +168,9 @@ public sealed partial class FormBrowse : GitModuleForm
         fileTree.UICommandsSource = this;
         repoObjectsTree.UICommandsSource = this;
         dashboard.UICommandsSource = this;
+        notificationBarBisectInProgress.UICommandsSource = this;
+        notificationBarGitActionInProgress.UICommandsSource = this;
+        Activated += (_, _) => Dispatcher.UIThread.Post(OnActivate);
         if (_repositoryHistoryUIService is not null)
         {
             dashboard.Initialize(_repositoryHistoryUIService);
@@ -362,6 +365,16 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         ToolStripScripts.IsVisible = ToolStripScripts.Children.Count > 0;
+    }
+
+    private void OnActivate()
+    {
+        // check if we are in the middle of bisect
+        notificationBarBisectInProgress.RefreshBisect();
+
+        // check if we are in the middle of an action (merge/rebase/etc.)
+        notificationBarGitActionInProgress.RefreshGitAction(
+            checkForConflicts: AppSettings.GitAsyncWhenMinimized || WindowState != WindowState.Minimized);
     }
 
     private void ReloadRepository()

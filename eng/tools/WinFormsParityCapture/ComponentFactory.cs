@@ -7,6 +7,8 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
+using GitUI.UserControls;
+using GitUI.UserControls.Settings;
 using GitUIPluginInterfaces;
 
 namespace WinFormsParityCapture;
@@ -30,6 +32,7 @@ internal static class ComponentFactory
                 new ColorsSettingsPage(GitUICommands.EmptyServiceProvider),
             _ => CreateParameterless(component.TypeName)
         };
+        PrepareInitialSize(control);
         foreach ((string fieldName, string text) in component.TextValues)
         {
             if (FindFieldValue(control, fieldName) is not Control target)
@@ -41,6 +44,17 @@ internal static class ComponentFactory
         }
 
         return control;
+    }
+
+    // parity-scaffolding: Code-only controls have no Designer-owned size when hosted standalone.
+    private static void PrepareInitialSize(Control control)
+    {
+        control.Size = control switch
+        {
+            WaitSpinner => new Size(48, 48),
+            WatermarkComboBox or CaseSensitiveComboBox => new Size(250, 23),
+            _ => control.Size
+        };
     }
 
     // parity-scaffolding: Populates the same commit-details state used by the Avalonia capture host.
@@ -69,7 +83,55 @@ internal static class ComponentFactory
                 commitInfoHeader.UICommandsSource = source;
                 commitInfoHeader.ShowCommitInfo(CreateRevision(commands), [commands.Module.RevParse("HEAD~1")]);
                 break;
+            case BranchSelector branchSelector:
+                branchSelector.UICommandsSource = source;
+                branchSelector.Initialize(remote: false, containObjectIds: null);
+                break;
+            case InteractiveGitActionControl interactiveGitActionControl:
+                interactiveGitActionControl.UICommandsSource = source;
+                InvokeNonPublic(
+                    interactiveGitActionControl,
+                    "SetGitAction",
+                    InteractiveGitActionControl.GitAction.Rebase,
+                    false);
+                break;
+            case SettingsCheckBox settingsCheckBox:
+                settingsCheckBox.Text = "Enable representative setting";
+                settingsCheckBox.ToolTipText = "Representative setting information";
+                break;
+            case WaitSpinner waitSpinner:
+                waitSpinner.IsAnimating = false;
+                SetNonPublicField(waitSpinner, "_progress", 7);
+                waitSpinner.Invalidate();
+                break;
+            case WatermarkComboBox watermarkComboBox:
+                watermarkComboBox.Watermark = "Filter files using a regular expression...";
+                break;
+            case CaseSensitiveComboBox caseSensitiveComboBox:
+                caseSensitiveComboBox.Items.AddRange(["Main", "main", "release/1.0"]);
+                caseSensitiveComboBox.Text = "main";
+                break;
         }
+    }
+
+    // parity-scaffolding: Seeds private original state without adding product-facing capture hooks.
+    private static void SetNonPublicField(object target, string fieldName, object value)
+    {
+        System.Reflection.FieldInfo field = target.GetType().GetField(
+            fieldName,
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException($"Field '{fieldName}' was not found on {target.GetType().FullName}.");
+        field.SetValue(target, value);
+    }
+
+    // parity-scaffolding: Drives an original private state transition through its own implementation.
+    private static void InvokeNonPublic(object target, string methodName, params object[] arguments)
+    {
+        System.Reflection.MethodInfo method = target.GetType().GetMethod(
+            methodName,
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException($"Method '{methodName}' was not found on {target.GetType().FullName}.");
+        method.Invoke(target, arguments);
     }
 
     // parity-scaffolding: Keeps both commit-details capture surfaces on one deterministic model.

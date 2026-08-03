@@ -152,6 +152,8 @@ internal static class AvaloniaThemeResources
         DrawingColor resetMixed = DrawingColor.FromArgb(255, 255, 128);
         DrawingColor resetHard = DrawingColor.FromArgb(255, 128, 128);
         DrawingColor warningPanel = DrawingColor.FromArgb(230, 99, 99);
+        DrawingColor interactiveAction = DrawingColor.LightSkyBlue.AdaptBackColor();
+        DrawingColor interactiveConflict = DrawingColor.Orange.AdaptBackColor();
         if (isDark)
         {
             resetSoft = resetSoft.DimColor();
@@ -221,6 +223,10 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsResetHardForegroundBrush", resetHard.GetTextColor());
         SetBrush(resources, "GitExtensionsWarningPanelBackgroundBrush", warningPanel);
         SetBrush(resources, "GitExtensionsWarningPanelForegroundBrush", warningPanel.GetTextColor());
+        SetBrush(resources, "GitExtensionsInteractiveActionBackgroundBrush", interactiveAction);
+        SetBrush(resources, "GitExtensionsInteractiveActionForegroundBrush", interactiveAction.GetTextColor());
+        SetBrush(resources, "GitExtensionsInteractiveConflictBackgroundBrush", interactiveConflict);
+        SetBrush(resources, "GitExtensionsInteractiveConflictForegroundBrush", interactiveConflict.GetTextColor());
         SetBrush(resources, "GitExtensionsDiffEditorBackgroundBrush", editor);
         SetBrush(resources, "GitExtensionsDiffTextBrush", windowText);
         SetBrush(resources, "GitExtensionsDiffLineNumberBackgroundBrush", ResolveAppColor(settings, AppColor.LineNumberBackground));
