@@ -119,7 +119,8 @@ internal static class AvaloniaThemeResources
 
         DrawingColor panel = ResolveAppColor(settings, AppColor.PanelBackground);
         DrawingColor editor = ResolveAppColor(settings, AppColor.EditorBackground);
-        DrawingColor commitMessageBackground = ResolveSystemColor(settings, KnownColor.Window).MakeDarkerBy(0.04);
+        DrawingColor window = ResolveSystemColor(settings, KnownColor.Window);
+        DrawingColor commitMessageBackground = window.MakeDarkerBy(0.04);
         DrawingColor selection = ResolveAppColor(settings, AppColor.Selection);
         DrawingColor windowText = ResolveSystemColor(settings, KnownColor.WindowText);
         DrawingColor grayText = ResolveSystemColor(settings, KnownColor.GrayText);
@@ -127,6 +128,7 @@ internal static class AvaloniaThemeResources
         DrawingColor controlText = ResolveSystemColor(settings, KnownColor.ControlText);
         DrawingColor controlDark = ResolveSystemColor(settings, KnownColor.ControlDark);
         DrawingColor controlLight = ResolveSystemColor(settings, KnownColor.ControlLight);
+        DrawingColor commitEditorBackground = isDark ? controlLight : window;
         DrawingColor highlight = ResolveSystemColor(settings, KnownColor.Highlight);
         DrawingColor highlightText = ResolveSystemColor(settings, KnownColor.HighlightText);
         DrawingColor inactiveSelection = ResolveSystemColor(settings, KnownColor.InactiveCaption);
@@ -178,7 +180,8 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "ThemeBorderLowBrush", sectionBorder);
         SetBrush(resources, "GitExtensionsPanelBackgroundBrush", panel);
         SetBrush(resources, "GitExtensionsWindowTextBrush", windowText);
-        SetBrush(resources, "GitExtensionsWindowBackgroundBrush", ResolveSystemColor(settings, KnownColor.Window));
+        SetBrush(resources, "GitExtensionsWindowBackgroundBrush", window);
+        SetBrush(resources, "GitExtensionsCommitEditorBackgroundBrush", commitEditorBackground);
         SetBrush(resources, "GitExtensionsCommitMessageBackgroundBrush", commitMessageBackground);
         SetBrush(resources, "GitExtensionsControlBackgroundBrush", control);
         SetBrush(resources, "GitExtensionsControlForegroundBrush", controlText);

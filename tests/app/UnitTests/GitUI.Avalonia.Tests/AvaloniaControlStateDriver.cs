@@ -8,16 +8,20 @@ using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitExtensions.ParityCapture;
+using GitUI.AutoCompletion;
+using GitUI.SpellChecker;
 
 namespace GitExtensionsTests;
 
 internal sealed class AvaloniaControlStateDriver : IDisposable
 {
     private readonly List<Action> _restoreActions = [];
+    private readonly Control _root;
     private readonly TopLevel _topLevel;
 
-    private AvaloniaControlStateDriver(TopLevel topLevel)
+    private AvaloniaControlStateDriver(Control root, TopLevel topLevel)
     {
+        _root = root;
         _topLevel = topLevel;
     }
 
@@ -27,7 +31,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
     {
         TopLevel topLevel = TopLevel.GetTopLevel(root)
             ?? throw new AvaloniaCaptureStateUnsupportedException("The control is not attached to a headless top level.");
-        AvaloniaControlStateDriver driver = new(topLevel);
+        AvaloniaControlStateDriver driver = new(root, topLevel);
         object? target = state.TargetField is null ? root : FindFieldValue(root, state.TargetField);
         if (target is null)
         {
@@ -196,6 +200,12 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
     private void OpenMenu(object target)
     {
+        if (target is ListBox { Name: "AutoComplete" } && _root is EditNetSpell editNetSpell)
+        {
+            OpenAutoComplete(editNetSpell);
+            return;
+        }
+
         MenuItem? menuItem = target switch
         {
             MenuItem direct => direct,
@@ -217,6 +227,33 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         RequiresExternalSurfaceCapture = true;
         _restoreActions.Add(() => menuItem.IsSubMenuOpen = previous);
+    }
+
+    private void OpenAutoComplete(EditNetSpell editNetSpell)
+    {
+        string previousText = editNetSpell.Text;
+        int previousCaretIndex = editNetSpell.CaretIndex;
+        EditNetSpell.TestAccessor accessor = editNetSpell.GetTestAccessor();
+
+        editNetSpell.Text = "Br";
+        editNetSpell.CaretIndex = editNetSpell.Text.Length;
+        accessor.ShowAutoCompleteForCapture(
+        [
+            new AutoCompleteWord("BranchParser"),
+            new AutoCompleteWord("BranchPolicy"),
+        ]);
+        Dispatcher.UIThread.RunJobs();
+        if (!accessor.IsAutoCompleteVisible)
+        {
+            throw new AvaloniaCaptureStateUnsupportedException("The native autocomplete list did not open.");
+        }
+
+        _restoreActions.Add(() =>
+        {
+            accessor.CloseAutoComplete();
+            editNetSpell.Text = previousText;
+            editNetSpell.CaretIndex = Math.Min(previousCaretIndex, editNetSpell.Text.Length);
+        });
     }
 
     private void Press(object target)

@@ -132,6 +132,7 @@
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#A0A0A0" />
@@ -216,6 +217,7 @@
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
+          <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#2E2E2E" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#4A4A4A" />

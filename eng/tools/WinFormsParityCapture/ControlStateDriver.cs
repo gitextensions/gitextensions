@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 
 using GitExtensions.ParityCapture;
+using GitUI.AutoCompletion;
 
 namespace WinFormsParityCapture;
 
@@ -176,6 +177,12 @@ internal sealed class ControlStateDriver : IDisposable
 
     private void OpenMenu(object target)
     {
+        if (target is ListBox { Name: "AutoComplete" } autoComplete)
+        {
+            OpenAutoComplete(autoComplete);
+            return;
+        }
+
         ToolStripDropDown popup = target switch
         {
             ToolStripDropDownItem item => Open(item),
@@ -190,6 +197,75 @@ internal sealed class ControlStateDriver : IDisposable
             item.ShowDropDown();
             return item.DropDown;
         }
+    }
+
+    private void OpenAutoComplete(ListBox autoComplete)
+    {
+        RichTextBox? textBox = autoComplete.Parent?.Controls.Find("TextBox", searchAllChildren: true).OfType<RichTextBox>().FirstOrDefault();
+        if (textBox is null)
+        {
+            throw new CaptureStateUnsupportedException("The autocomplete state requires the EditNetSpell text box.");
+        }
+
+        bool previousVisible = autoComplete.Visible;
+        object? previousDataSource = autoComplete.DataSource;
+        Rectangle previousBounds = autoComplete.Bounds;
+        int previousSelectedIndex = autoComplete.SelectedIndex;
+        string previousText = textBox.Text;
+        int previousSelectionStart = textBox.SelectionStart;
+        int previousSelectionLength = textBox.SelectionLength;
+
+        textBox.Text = "Br";
+        textBox.Select(textBox.TextLength, 0);
+        List<AutoCompleteWord> words =
+        [
+            new("BranchParser"),
+            new("BranchPolicy"),
+        ];
+        List<Size> sizes = [.. words.Select(word => TextRenderer.MeasureText(word.Word, textBox.Font))];
+        Point cursorPosition = textBox.GetPositionFromCharIndex(textBox.SelectionStart);
+        cursorPosition.Y += (int)Math.Ceiling(textBox.Font.GetHeight());
+        cursorPosition.X += 2;
+
+        int top = cursorPosition.Y;
+        int height = (sizes.Count + 1) * autoComplete.ItemHeight;
+        int width = sizes.Max(size => size.Width);
+        if (top + height > textBox.Height)
+        {
+            if (textBox.Height - top > textBox.Height / 2)
+            {
+                height = textBox.Height - top;
+            }
+            else
+            {
+                top = Math.Max(0, textBox.Height - height);
+                height = Math.Min(textBox.Height - top, height);
+            }
+
+            width += SystemInformation.VerticalScrollBarWidth;
+        }
+
+        autoComplete.SetBounds(cursorPosition.X, top, width, height);
+        autoComplete.DataSource = words;
+        autoComplete.SelectedIndex = 0;
+        autoComplete.Show();
+        textBox.Focus();
+
+        _restoreActions.Add(() =>
+        {
+            autoComplete.Hide();
+            autoComplete.DataSource = previousDataSource;
+            autoComplete.Bounds = previousBounds;
+            if (previousDataSource is not null && previousSelectedIndex >= 0)
+            {
+                autoComplete.SelectedIndex = previousSelectedIndex;
+            }
+
+            autoComplete.Visible = previousVisible;
+            textBox.Text = previousText;
+            int restoredSelectionStart = Math.Min(previousSelectionStart, textBox.TextLength);
+            textBox.Select(restoredSelectionStart, Math.Min(previousSelectionLength, textBox.TextLength - restoredSelectionStart));
+        });
     }
 
     private void Press(object target)
