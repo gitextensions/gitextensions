@@ -14,6 +14,7 @@ internal static class ComponentFactory
         {
             "GitUI.CommandsDialogs.FormBrowse" => new FormBrowse(commands, new BrowseArguments()),
             "GitUI.CommandsDialogs.FormCommit" => new FormCommit(commands),
+            "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
             "GitUI.CommandsDialogs.SettingsDialog.Pages.ColorsSettingsPage" =>
                 new ColorsSettingsPage(GitUICommands.EmptyServiceProvider),

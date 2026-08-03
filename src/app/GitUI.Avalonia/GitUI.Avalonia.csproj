@@ -45,6 +45,10 @@
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridFileUpdate.cs" Link="CommandsDialogs\IRevisionGridFileUpdate.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridInfo.cs" Link="CommandsDialogs\IRevisionGridInfo.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridUpdate.cs" Link="CommandsDialogs\IRevisionGridUpdate.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\FileStatusListContextMenuController.cs" Link="CommandsDialogs\FileStatusListContextMenuController.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\RememberFileContextMenuController.cs" Link="CommandsDialogs\RememberFileContextMenuController.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\RevisionDiffController.cs" Link="CommandsDialogs\RevisionDiffController.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\RevisionDiffContoller.ContextMenuSelectionInfo.cs" Link="CommandsDialogs\RevisionDiffContoller.ContextMenuSelectionInfo.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\DistributedSettingsSet.cs" Link="CommandsDialogs\SettingsDialog\DistributedSettingsSet.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\GitConfigSettingsSet.cs" Link="CommandsDialogs\SettingsDialog\GitConfigSettingsSet.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderExternalLinkDefinitionExtractorFactory.cs" Link="CommandsDialogs\SettingsDialog\RevisionLinks\CloudProviderExternalLinkDefinitionExtractorFactory.cs" />
@@ -90,6 +94,7 @@
     <Compile Include="..\GitUI\SpellChecker\WordAtCursorExtractor.cs" Link="SpellChecker\WordAtCursorExtractor.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
+    <Compile Include="..\GitUI\UserControls\FileStatusItemExtensions.cs" Link="UserControls\FileStatusItemExtensions.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusDiffCalculator.cs" Link="UserControls\FileStatusDiffCalculator.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs" Link="UserControls\FileStatusDiffCalculator.FileStatusDiffCalculatorInfo.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusWithDescription.cs" Link="UserControls\FileStatusWithDescription.cs" />
