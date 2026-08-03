@@ -344,8 +344,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         }
 
         // The hovered ref is on a known row; start ancestor walk there directly.
+        // Also consider VirtualRef with MergeWith as equal
         RevisionGraphRevision? hoveredRevision = _revisionGraph.GetNodeForRow(rowIndex);
-        if (hoveredRevision?.GitRevision?.Refs.Any(r => r == gitRef) is true)
+        if (hoveredRevision?.GitRevision?.Refs.Any(r => r == gitRef || IsInBranchGroup(r, gitRef)) is true)
         {
             WalkAncestors(hoveredRevision, ancestorIds, visibleIds);
             checkOtherRef = checkOtherRef && hoveredRevision.GitRevision?.Refs.Any(r => IsInBranchGroup(r, gitRef)) is not true;
@@ -396,8 +397,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         return;
 
         static bool IsInBranchGroup(IGitRef r, IGitRef gitRef)
-            => (gitRef.IsHead && r.IsRemote && gitRef.IsTrackingRemote(r))
-            || (gitRef.IsRemote && r.IsHead && r.IsTrackingRemote(gitRef));
+            => gitRef.IsTrackingRemote(r) || r.IsTrackingRemote(gitRef);
 
         static void WalkAncestors(RevisionGraphRevision revision, HashSet<ObjectId> result, IReadOnlySet<ObjectId> visibleIds)
         {
