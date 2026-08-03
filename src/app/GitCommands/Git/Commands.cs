@@ -102,16 +102,16 @@ public static partial class Commands
             });
     }
 
-    public static IGitCommand DeleteRemoteBranches(string remote, IEnumerable<string> branchLocalNames)
+    public static IGitCommand DeleteRemoteBranches(string remote, IEnumerable<string> branchFullNames)
     {
         ArgumentNullException.ThrowIfNull(remote);
-        ArgumentNullException.ThrowIfNull(branchLocalNames);
+        ArgumentNullException.ThrowIfNull(branchFullNames);
 
         return new GitCommand(accessesRemote: true, changesRepoState: true,
             new GitArgumentBuilder("push")
             {
                     remote,
-                    branchLocalNames.Select(branch => $":refs/heads/{branch.Quote()}")
+                    branchFullNames.Select(branch => $":{branch.Quote()}")
             });
     }
 }

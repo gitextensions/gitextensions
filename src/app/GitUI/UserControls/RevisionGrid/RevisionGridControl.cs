@@ -1227,9 +1227,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             string selectedRemote = selectedRef.TrackingRemote;
             string selectedMerge = selectedRef.MergeWith;
             IGitRef? selectedHeadMergeSource = gitRefs.FirstOrDefault(
-                gitRef => gitRef.IsRemote
-                     && selectedRemote == gitRef.Remote
-                     && selectedMerge == gitRef.LocalName);
+                gitRef => selectedRef.IsTrackingRemote(gitRef));
 
             selectedHeadMergeSource?.IsSelectedHeadMergeSource = true;
         }

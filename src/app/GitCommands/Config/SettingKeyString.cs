@@ -7,6 +7,11 @@
 public static class SettingKeyString
 {
     /// <summary>
+    /// "branch.{0}.merge"
+    /// </summary>
+    public static readonly string BranchMerge = "branch.{0}.merge";
+
+    /// <summary>
     /// "branch.{0}.remote"
     /// </summary>
     public static readonly string BranchRemote = "branch.{0}.remote";

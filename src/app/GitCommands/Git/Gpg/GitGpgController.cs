@@ -210,7 +210,7 @@ public partial class GitGpgController : IGitGpgController
         GitArgumentBuilder args = new("verify-tag")
         {
             { raw, "--raw" },
-            tagName
+            tagRef.CompleteName
         };
 
         // 'verify-tag' returns info in stderr

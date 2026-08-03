@@ -135,7 +135,7 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
                 return;
             }
 
-            IGitCommand cmd = Commands.DeleteRemoteBranches(remote, branches.Select(x => x.LocalName));
+            IGitCommand cmd = Commands.DeleteRemoteBranches(remote, branches.Select(x => x.CompleteName));
             using FormRemoteProcess form = new(UICommands, cmd.Arguments)
             {
                 Remote = remote

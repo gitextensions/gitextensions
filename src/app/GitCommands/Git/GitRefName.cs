@@ -120,7 +120,7 @@ public static partial class GitRefName
             return branch;
         }
 
-        return "refs/heads/" + branch;
+        return RefsHeadsPrefix + branch;
     }
 
     [Pure]

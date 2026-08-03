@@ -96,7 +96,7 @@ public class GitGpgControllerTests
         GitArgumentBuilder args = new("verify-tag")
         {
             "--raw",
-            gitRef.LocalName
+            gitRef.CompleteName
         };
 
         using IDisposable _ = _executable.StageOutput(args.ToString(), output: "", error: gitCmdReturn);
@@ -166,8 +166,8 @@ public class GitGpgControllerTests
                     GitRef gitRef = new(_module, objectId, "refs/tags/TagName^{}");
                     revision.Refs = new[] { gitRef };
 
-                    GitArgumentBuilder args = new("verify-tag") { gitRef.LocalName };
-                    validate = _executable.StageOutput(args.ToString(), output: "", error: gitRef.LocalName);
+                    GitArgumentBuilder args = new("verify-tag") { gitRef.CompleteName };
+                    validate = _executable.StageOutput(args.ToString(), output: "", error: gitRef.CompleteName);
 
                     break;
                 }
@@ -177,14 +177,14 @@ public class GitGpgControllerTests
                     // Two tag that's also IsDereference == true
                     GitRef gitRef1 = new(_module, objectId, "refs/tags/FirstTag^{}");
 
-                    GitArgumentBuilder args = new("verify-tag") { gitRef1.LocalName };
-                    _executable.StageOutput(args.ToString(), output: "", error: gitRef1.LocalName);
+                    GitArgumentBuilder args = new("verify-tag") { gitRef1.CompleteName };
+                    _executable.StageOutput(args.ToString(), output: "", error: gitRef1.CompleteName);
 
                     GitRef gitRef2 = new(_module, objectId, "refs/tags/SecondTag^{}");
                     revision.Refs = new[] { gitRef1, gitRef2 };
 
-                    args = new GitArgumentBuilder("verify-tag") { gitRef2.LocalName };
-                    validate = _executable.StageOutput(args.ToString(), output: "", error: gitRef2.LocalName);
+                    args = new GitArgumentBuilder("verify-tag") { gitRef2.CompleteName };
+                    validate = _executable.StageOutput(args.ToString(), output: "", error: gitRef2.CompleteName);
 
                     break;
                 }

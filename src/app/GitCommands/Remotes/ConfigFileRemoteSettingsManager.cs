@@ -114,7 +114,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
 
             foreach (IGitRef localHead in moduleRefs)
             {
-                if (localHead.IsRemote ||
+                if (!localHead.IsHead ||
                     !string.IsNullOrEmpty(localHead.TrackingRemote) ||
                     !remoteHead.Name.Contains(localHead.Name, StringComparison.InvariantCultureIgnoreCase))
                 {
