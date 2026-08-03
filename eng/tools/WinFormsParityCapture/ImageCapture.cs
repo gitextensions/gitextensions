@@ -27,11 +27,12 @@ internal static class ImageCapture
             throw new CaptureStateUnsupportedException("The control has no drawable area.");
         }
 
-        Bitmap bitmap = new(control.Width, control.Height, PixelFormat.Format32bppArgb);
-        control.DrawToBitmap(bitmap, new Rectangle(Point.Empty, control.Size));
-        EnsureRenderedContent(bitmap, "DrawToBitmap");
         Rectangle screenBounds = control.RectangleToScreen(control.ClientRectangle);
-        return new CaptureImageResult(bitmap, CaptureMethod.DrawToBitmap, screenBounds);
+        Bitmap bitmap = new(screenBounds.Width, screenBounds.Height, PixelFormat.Format32bppArgb);
+        using Graphics graphics = Graphics.FromImage(bitmap);
+        graphics.CopyFromScreen(screenBounds.Location, Point.Empty, screenBounds.Size, CopyPixelOperation.SourceCopy);
+        EnsureRenderedContent(bitmap, "screen capture");
+        return new CaptureImageResult(bitmap, CaptureMethod.ScreenGrab, screenBounds);
     }
 
     private static CaptureImageResult CaptureScreen(Control root, IReadOnlyList<ToolStripDropDown> popups)
