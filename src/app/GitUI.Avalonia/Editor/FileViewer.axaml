@@ -1,16 +1,12 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:compat="using:GitUI.Compat"
+             xmlns:editor="using:GitUI.Editor"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.Editor.FileViewer">
   <Grid>
-    <compat:ThemeAwareTextEditor x:Name="TextEditor"
-                                 Classes="gitextensions-diff-editor"
-                                 IsReadOnly="True"
-                                 ShowLineNumbers="True"
-                                 HorizontalScrollBarVisibility="Auto"
-                                 VerticalScrollBarVisibility="Auto">
-      <compat:ThemeAwareTextEditor.ContextMenu>
+    <editor:FileViewerInternal x:Name="internalFileViewer">
+      <editor:FileViewerInternal.ContextMenu>
         <ContextMenu x:Name="contextMenu">
           <MenuItem x:Name="stageSelectedLinesToolStripMenuItem"
               Header="Stage selected line(s)">
@@ -84,8 +80,8 @@
                     Header="_Go to line"
                     InputGesture="Ctrl+G" />
         </ContextMenu>
-      </compat:ThemeAwareTextEditor.ContextMenu>
-    </compat:ThemeAwareTextEditor>
+      </editor:FileViewerInternal.ContextMenu>
+    </editor:FileViewerInternal>
 
     <Border x:Name="PictureBox"
             IsVisible="False"

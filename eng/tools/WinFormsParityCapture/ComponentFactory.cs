@@ -1,4 +1,4 @@
-﻿using GitExtensions.Extensibility;
+using GitExtensions.Extensibility;
 using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -16,6 +16,9 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormCommit" => new FormCommit(commands),
             "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
+
+            // parity-scaffolding: Hosts the internal modeless editor-search dialog without changing GitUI visibility.
+            "GitUI.FormFindInCommitFilesGitGrep" => CreateWithCommands(component.TypeName, commands),
             "GitUI.CommandsDialogs.SettingsDialog.Pages.ColorsSettingsPage" =>
                 new ColorsSettingsPage(GitUICommands.EmptyServiceProvider),
             _ => CreateParameterless(component.TypeName)
@@ -61,6 +64,20 @@ internal static class ComponentFactory
         }
 
         return (Control?)Activator.CreateInstance(type)
+            ?? throw new InvalidOperationException($"{typeName} could not be constructed.");
+    }
+
+    private static Control CreateWithCommands(string typeName, GitUICommands commands)
+    {
+        Type type = Type.GetType($"{typeName}, GitUI", throwOnError: true)!;
+        return (Control?)Activator.CreateInstance(
+            type,
+            System.Reflection.BindingFlags.Instance
+            | System.Reflection.BindingFlags.Public
+            | System.Reflection.BindingFlags.NonPublic,
+            binder: null,
+            args: [commands],
+            culture: null)
             ?? throw new InvalidOperationException($"{typeName} could not be constructed.");
     }
 }

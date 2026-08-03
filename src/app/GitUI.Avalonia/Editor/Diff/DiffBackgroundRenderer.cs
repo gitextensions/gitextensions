@@ -59,7 +59,10 @@ internal sealed class DiffBackgroundRenderer : IBackgroundRenderer
         {
             foreach (DiffTextMarker marker in service.TextMarkers)
             {
-                DrawSegment(textView, drawingContext, marker.Offset, marker.Length, GetMarkerBrush(marker.Kind));
+                IBrush brush = marker.BackColor is System.Drawing.Color backColor
+                    ? new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(backColor))
+                    : GetMarkerBrush(marker.Kind);
+                DrawSegment(textView, drawingContext, marker.Offset, marker.Length, brush);
             }
 
             foreach (DiffInlineMarker marker in service.InlineMarkers)

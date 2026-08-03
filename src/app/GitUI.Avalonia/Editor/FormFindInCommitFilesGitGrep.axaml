@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.FormFindInCommitFilesGitGrep"
+        Title="Find in commit files using git-grep"
+        Width="425"
+        Height="175"
+        CanResize="False"
+        CanMinimize="False"
+        CanMaximize="False"
+        WindowStartupLocation="Manual">
+  <Grid RowDefinitions="103,41" Margin="0">
+    <Grid x:Name="MainPanel"
+          Grid.Row="0"
+          Margin="9"
+          ColumnDefinitions="69,*"
+          RowDefinitions="23,23,23,23"
+          RowSpacing="3">
+      <Label x:Name="label1" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Fi_nd what:" />
+      <ComboBox x:Name="cboFindInCommitFilesGitGrep"
+                Grid.Row="0" Grid.Column="1"
+                Height="23"
+                IsEditable="True"
+                PlaceholderText="git-grep regular expression..." />
+      <Label x:Name="lblOptions" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="_Options:" />
+      <TextBox x:Name="txtOptions" Grid.Row="1" Grid.Column="1" Height="23" />
+      <CheckBox x:Name="chkMatchCase" Grid.Row="2" Grid.Column="1" Content="Match _case" />
+      <CheckBox x:Name="chkMatchWholeWord" Grid.Row="3" Grid.Column="1" Content="Match _whole word" />
+    </Grid>
+    <Grid x:Name="ControlsPanel"
+          Grid.Row="1"
+          ColumnDefinitions="69,*,Auto"
+          Margin="9,8">
+      <CheckBox x:Name="chkShowSearchBox"
+                Grid.Column="1"
+                MinHeight="25"
+                VerticalAlignment="Center"
+                Content="_Show 'Find in commit files using git-grep'" />
+      <Button x:Name="btnSearch"
+              Grid.Column="2"
+              Classes="gitextensions-dialog-action"
+              MinWidth="75"
+              Height="25"
+              Content="_Find" />
+    </Grid>
+  </Grid>
+</Window>
