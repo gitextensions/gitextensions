@@ -264,7 +264,11 @@ public sealed class ImageResourceTests
             foreach (XElement image in document.Descendants().Where(element => element.Name.LocalName == nameof(Image)))
             {
                 bool isMenuIcon = image.Ancestors().Any(element => element.Name.LocalName == "MenuItem.Icon");
+                bool usesSharedMenuIconSize = (image.Attribute("Classes")?.Value ?? string.Empty)
+                    .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                    .Contains("gitextensions-icon-16", StringComparer.Ordinal);
                 if (isMenuIcon
+                    && !usesSharedMenuIconSize
                     && (image.Attribute("Width")?.Value != "16"
                         || image.Attribute("Height")?.Value != "16"))
                 {

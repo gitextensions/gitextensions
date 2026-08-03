@@ -16,6 +16,37 @@ namespace GitUI.CommandsDialogs;
 // WinForms-shaped list/viewer/blame boundary are retained.
 public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUpdate
 {
+    public static readonly string HotkeySettingsName = "BrowseDiff";
+
+    public enum Command
+    {
+        DeleteSelectedFiles = 0,
+        ShowHistory = 1,
+        Blame = 2,
+        OpenWithDifftool = 3,
+        EditFile = 4,
+        OpenAsTempFile = 5,
+        OpenAsTempFileWith = 6,
+        OpenWithDifftoolFirstToLocal = 7,
+        OpenWithDifftoolSelectedToLocal = 8,
+        ResetSelectedFiles = 9,
+        StageSelectedFile = 10,
+        UnStageSelectedFile = 11,
+        ShowFileTree = 12,
+        FilterFileInGrid = 13,
+        SelectFirstGroupChanges = 14,
+        FindFile = 15,
+        OpenWorkingDirectoryFileWith = 16,
+        FindInCommitFilesUsingGitGrep_DiffTab = 17,
+        GoToFirstParent = 18,
+        GoToLastParent = 19,
+        OpenWorkingDirectoryFile = 20,
+        OpenInVisualStudio = 21,
+        AddFileToGitIgnore = 22,
+        RenameMove = 23,
+        FindInCommitFilesUsingGitGrep_FileTreeTab = 24,
+    }
+
     private readonly FileStatusDiffCalculator _diffCalculator;
     private readonly CancellationTokenSequence _setDiffSequence = new();
 
@@ -79,6 +110,11 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
     internal GitRevision? DisplayedRevision { get; private set; }
 
     internal IScriptOptionsProvider ScriptOptionsProvider => GetScriptOptionsProvider();
+
+    public bool ExecuteCommand(Command command)
+        => command is Command.GoToFirstParent or Command.GoToLastParent
+            ? false
+            : DiffFiles.ExecuteCommand(command);
 
     protected override IScriptOptionsProvider GetScriptOptionsProvider()
     {

@@ -21872,25 +21872,30 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 497,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records 1,309 aggregate differences; structural parity is not claimed."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
           ],
-          "platforms": [],
-          "findingCount": 1433,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "The four consumers and restored command surfaces have focused coverage, while inventory findings and deferred dialog owners remain explicit gaps."
         },
         "visual": {
           "status": "notApplicable",
@@ -21911,22 +21916,38 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 432,
+          "note": "Focused tests cover restored behaviors; paired captures contain 432 state findings and the complete interaction walk remains outstanding."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
         }
       }
     },
@@ -21937,61 +21958,90 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 497,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records 1,309 aggregate differences; structural parity is not claimed."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
           ],
-          "platforms": [],
-          "findingCount": 1433,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "The four consumers and restored command surfaces have focused coverage, while inventory findings and deferred dialog owners remain explicit gaps."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 4938,
+          "note": "Paired light, dark and custom-theme captures at 100/125/150/200% contain 4,938 FileStatusList diagnostic findings."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1164,
+          "note": "The paired capture report contains 1,164 resolved-color findings for FileStatusList."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 432,
+          "note": "Focused tests cover restored behaviors; paired captures contain 432 state findings and the complete interaction walk remains outstanding."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
         }
       }
     },
@@ -22002,69 +22052,90 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 497,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records 1,309 aggregate differences; structural parity is not claimed."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
           ],
-          "platforms": [],
-          "findingCount": 1433,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "The four consumers and restored command surfaces have focused coverage, while inventory findings and deferred dialog owners remain explicit gaps."
         },
         "visual": {
-          "status": "partial",
-          "verifiedOn": "2026-08-01",
-          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 0,
-          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
+          "findingCount": 4938,
+          "note": "Paired light, dark and custom-theme captures at 100/125/150/200% contain 4,938 FileStatusList diagnostic findings."
         },
         "themingAndColor": {
-          "status": "partial",
-          "verifiedOn": "2026-08-01",
-          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 0,
-          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
+          "findingCount": 1164,
+          "note": "The paired capture report contains 1,164 resolved-color findings for FileStatusList."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 432,
+          "note": "Focused tests cover restored behaviors; paired captures contain 432 state findings and the complete interaction walk remains outstanding."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
         }
       }
     },
@@ -29102,6 +29173,1468 @@
           "platforms": [],
           "findingCount": 0,
           "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FileStatusListContextMenuController.cs",
+      "twin": "src/app/GitUI/CommandsDialogs/FileStatusListContextMenuController.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original source is compiled into the twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The exact original implementation is compiled into the twin and its FileStatusList consumer routes are covered by focused tests."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/RememberFileContextMenuController.cs",
+      "twin": "src/app/GitUI/CommandsDialogs/RememberFileContextMenuController.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original source is compiled into the twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The exact original implementation is compiled into the twin and its FileStatusList consumer routes are covered by focused tests."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/RevisionDiffContoller.ContextMenuSelectionInfo.cs",
+      "twin": "src/app/GitUI/CommandsDialogs/RevisionDiffContoller.ContextMenuSelectionInfo.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original source is compiled into the twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The exact original implementation is compiled into the twin and its FileStatusList consumer routes are covered by focused tests."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/RevisionDiffController.cs",
+      "twin": "src/app/GitUI/CommandsDialogs/RevisionDiffController.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original source is compiled into the twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The exact original implementation is compiled into the twin and its FileStatusList consumer routes are covered by focused tests."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusItemExtensions.cs",
+      "twin": "src/app/GitUI/UserControls/FileStatusItemExtensions.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original source is compiled into the twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The exact original implementation is compiled into the twin and its FileStatusList consumer routes are covered by focused tests."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.DelayedExpansion.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.DelayedExpansion.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.FileIcons.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.FileIcons.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.GitGrepState.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.GitGrepState.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.GroupBy.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.GroupBy.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.GroupKey.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.GroupKey.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.IStatusSorter.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.IStatusSorter.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.MissingIcon.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.MissingIcon.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.StatusSorter.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.StatusSorter.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.Toolbar.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.Toolbar.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/FileStatusList.TreeContextMenu.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.TreeContextMenu.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/PathFormatter.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/PathFormatter.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/SortDiffListContextMenuItem.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/SortDiffListContextMenuItem.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 1309,
+          "note": "The P2.1 family inventory records aggregate member, event, menu, setting, translation, hotkey and comment differences; this tranche does not claim structural parity."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1309,
+          "note": "Focused tests cover the restored family behavior, while the inventory and deferred dialog owners record remaining functional gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare UI chrome; its owning FileStatusList view carries paired visual evidence."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This partial source mapping does not independently declare theme resources; its owning FileStatusList view carries theme evidence."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/diff/findings.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused tests and captures cover the restored routes, but the complete interaction-state matrix is still outstanding."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
         }
       }
     }

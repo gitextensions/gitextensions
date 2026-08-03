@@ -4,7 +4,9 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
+using GitUI;
 
 namespace WinFormsParityCapture;
 
@@ -161,7 +163,7 @@ internal static class CaptureRunner
             using Control root = ComponentFactory.Create(component, bootstrap.Commands);
             try
             {
-                PrepareControl(root, monitor, scale, dpiMode);
+                PrepareControl(root, bootstrap.Commands, monitor, scale, dpiMode);
                 PumpUntilReady(root);
             }
             catch (CaptureStateUnsupportedException exception)
@@ -521,7 +523,12 @@ internal static class CaptureRunner
         root.PerformLayout();
     }
 
-    private static void PrepareControl(Control root, CaptureMonitor monitor, int scale, CaptureDpiMode dpiMode)
+    private static void PrepareControl(
+        Control root,
+        IGitUICommands commands,
+        CaptureMonitor monitor,
+        int scale,
+        CaptureDpiMode dpiMode)
     {
         int targetDpi = checked(scale * 96 / 100);
         if (root is Form form)
@@ -533,7 +540,9 @@ internal static class CaptureRunner
         }
         else
         {
-            Form host = new()
+            // parity-scaffolding: GitModuleControl resolves its real command source through
+            // the parent form, so standalone component captures need the same runtime shape.
+            CaptureHostForm host = new(commands)
             {
                 StartPosition = FormStartPosition.Manual,
                 Location = new Point(monitor.X + 16, monitor.Y + 16),
@@ -565,6 +574,17 @@ internal static class CaptureRunner
             Math.Max(1, (int)Math.Round(currentBounds.Height * factor)));
         NativeMethods.SendDpiChanged(root.FindForm()?.Handle ?? root.Handle, targetDpi, suggestedBounds);
         Application.DoEvents();
+    }
+
+    private sealed class CaptureHostForm(IGitUICommands commands) : Form, IGitUICommandsSource
+    {
+        public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged
+        {
+            add { }
+            remove { }
+        }
+
+        public IGitUICommands UICommands { get; } = commands;
     }
 
     private static string RequireExistingDirectory(string? value, string option)

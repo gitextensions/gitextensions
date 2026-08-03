@@ -1,0 +1,177 @@
+﻿using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Text;
+using Avalonia;
+using Avalonia.Media;
+using GitCommands;
+using GitExtUtils;
+
+using Size = Avalonia.Size;
+
+namespace GitUI;
+
+internal sealed class PathFormatter
+{
+    private static class NativeMethods
+    {
+        [DllImport("shlwapi.dll")]
+        public static extern bool PathCompactPathEx([Out] StringBuilder pszOut, string szPath, int cchMax, int dwFlags);
+    }
+
+    private readonly Typeface _typeface;
+    private readonly double _fontSize;
+
+    public PathFormatter(Typeface typeface, double fontSize)
+    {
+        _typeface = typeface;
+        _fontSize = fontSize;
+    }
+
+    public (string? prefix, string? text, string? suffix) FormatTextForDrawing(int maxWidth, string name, string? oldName)
+    {
+        string? prefix = null;
+        string? text = string.IsNullOrEmpty(name) ? "" : "...";
+        string? suffix = null;
+
+        switch (AppSettings.TruncatePathMethod)
+        {
+            case TruncatePathMethod.FileNameOnly:
+                (text, suffix) = FormatTextForFileNameOnly(name, oldName);
+                return (prefix, text, suffix);
+
+            case TruncatePathMethod.None:
+            case TruncatePathMethod.Compact when !OperatingSystem.IsWindows():
+                (prefix, text, suffix) = FormatString(name, oldName, step: 0);
+                return (prefix, text, suffix);
+
+            default:
+                int maxStep = name.Length + (oldName?.Length ?? 0);
+                BinarySearch.Find(min: 0, count: maxStep + 1, step =>
+                {
+                    (string? tmpPrefix, string? tmpText, string? tmpSuffix) = FormatString(name, oldName, step);
+                    double measuredWidth = MeasureString(tmpPrefix, tmpText, tmpSuffix).Width;
+                    bool isShortEnough = measuredWidth <= maxWidth;
+
+                    if (isShortEnough)
+                    {
+                        prefix = tmpPrefix;
+                        text = tmpText;
+                        suffix = tmpSuffix;
+                    }
+
+                    return isShortEnough;
+                });
+
+                return (prefix, text, suffix);
+        }
+    }
+
+    public static (string text, string? suffix) FormatTextForFileNameOnly(string name, string? oldName)
+    {
+        name = name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
+        string fileName = Path.GetFileName(name);
+        string? oldFileName = Path.GetFileName(oldName);
+        string? suffix = fileName == oldFileName ? null : FormatOldName(oldFileName!);
+        return (fileName, suffix);
+    }
+
+    public Size MeasureString(string? prefix, string? text, string? suffix)
+    {
+        string? value = prefix.Combine(string.Empty, text).Combine(string.Empty, suffix);
+        return MeasureString(value);
+    }
+
+    public Size MeasureString(string? value)
+    {
+        FormattedText formattedText = new(
+            value ?? string.Empty,
+            CultureInfo.CurrentUICulture,
+            FlowDirection.LeftToRight,
+            _typeface,
+            _fontSize,
+            Brushes.Black);
+        return new Size(formattedText.Width, formattedText.Height);
+    }
+
+    private static (string? prefix, string? text, string? suffix) FormatString(string name, string? oldName, int step)
+    {
+        if (oldName is not null)
+        {
+            // Suffix (oldName) is truncated first so that 'name' text always takes precedence.
+            int oldNameTruncatedChars = Math.Min(step, oldName.Length);
+            int nameTruncatedChars = step - oldNameTruncatedChars;
+
+            (string? path, string? filename) = SplitPathName(TruncatePath(name, name.Length - nameTruncatedChars));
+            string? suffix = FormatOldName(TruncatePath(oldName, oldName.Length - oldNameTruncatedChars));
+            return (path, filename, suffix);
+        }
+
+        (string? prefix, string? text) = SplitPathName(TruncatePath(name, name.Length - step));
+        return (prefix, text, null);
+
+        static string TruncatePath(string path, int length)
+        {
+            if (path.Length == length)
+            {
+                return path;
+            }
+
+            if (length <= 0)
+            {
+                // A non-empty truncated path must still be represented by "..." so that
+                // the caller can always show at least a minimal indication of a path.
+                return "...";
+            }
+
+            // The win32 method PathCompactPathEx is only supported on Windows
+            TruncatePathMethod truncatePathMethod = AppSettings.TruncatePathMethod;
+
+            if (truncatePathMethod == TruncatePathMethod.Compact && OperatingSystem.IsWindows())
+            {
+                StringBuilder result = new(length);
+                NativeMethods.PathCompactPathEx(result, path, length, 0);
+                return result.ToString();
+            }
+
+            if (truncatePathMethod == TruncatePathMethod.TrimStart)
+            {
+                return "..." + path[^length..];
+            }
+
+            return path;
+        }
+    }
+
+    private static string? FormatOldName(string oldName)
+        => string.IsNullOrEmpty(oldName) ? null : " (" + oldName + ")";
+
+    private static (string? path, string? fileName) SplitPathName(string? name)
+    {
+        if (name is null)
+        {
+            return (null, null);
+        }
+
+        int slashIndex = name.TrimEnd(PathUtil.PosixDirectorySeparatorChar).LastIndexOf(PathUtil.PosixDirectorySeparatorChar);
+        if (slashIndex >= 0 && slashIndex < name.Length)
+        {
+            string path = name[..(slashIndex + 1)];
+            string fileName = name[(slashIndex + 1)..];
+            return (path, fileName);
+        }
+
+        return (null, name);
+    }
+
+    internal readonly struct TestAccessor
+    {
+        internal static string? FormatOldName(string oldName)
+            => PathFormatter.FormatOldName(oldName);
+
+        internal static (string? path, string? fileName) SplitPathName(string name)
+            => PathFormatter.SplitPathName(name);
+
+        internal static (string? prefix, string? text, string? suffix) FormatString(string name, string? oldName, int step)
+            => PathFormatter.FormatString(name, oldName, step);
+    }
+}
