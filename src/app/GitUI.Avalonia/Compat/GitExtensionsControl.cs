@@ -17,6 +17,8 @@ public class GitExtensionsControl : TranslatedControl
 
     protected bool HotkeysEnabled { get; set; }
 
+    protected IReadOnlyList<HotkeyCommand> Hotkeys => _hotkeys;
+
     protected void LoadHotkeys(string hotkeySettingsName)
     {
         _hotkeys = HotkeysEnabled

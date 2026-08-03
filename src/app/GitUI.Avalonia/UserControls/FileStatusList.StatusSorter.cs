@@ -1,0 +1,215 @@
+﻿using GitExtensions.Extensibility.Git;
+using Microsoft;
+
+namespace GitUI;
+
+partial class FileStatusList
+{
+    internal sealed class StatusSorter : IStatusSorter
+    {
+        public StatusNode CreateTreeSortedByPath(
+            IEnumerable<GitItemStatus> statuses,
+            bool flat,
+            bool mergeSingleItemsWithFolder,
+            Func<GitItemStatus, StatusNode> createNode)
+        {
+            StatusNode root = CreateParent(RelativePath.From(""));
+
+            StatusNode parent = root;
+            foreach (GitItemStatus status in statuses.OrderBy(s => s, new PathFirstComparer()))
+            {
+                parent = flat ? root : GetOrCreateParent(parent, status.Path, root);
+                parent.Add(createNode(status));
+            }
+
+            if (!flat)
+            {
+                foreach (StatusNode node in Items(root))
+                {
+                    RemoveParentPath(node);
+                }
+            }
+
+            return root;
+
+            void RemoveParentPath(StatusNode node)
+            {
+                if (mergeSingleItemsWithFolder && node.Nodes.Count == 1 && node.Nodes[0].Nodes.Count == 0 && node.Parent is not null)
+                {
+                    StatusNode singleItem = node.Nodes[0];
+                    node.Nodes.Clear();
+                    node.Tag = singleItem.Tag;
+                    node.Text = singleItem.Text;
+                }
+
+                if (node.Parent?.Tag is RelativePath parentPath
+                    && parentPath.Length > 0
+                    && node.Text.StartsWith(parentPath.Value, StringComparison.Ordinal))
+                {
+                    node.Text = node.Text[(parentPath.Length + 1)..];
+                }
+            }
+        }
+
+        private static IEnumerable<StatusNode> Items(StatusNode node)
+        {
+            foreach (StatusNode child in node.Nodes)
+            {
+                yield return child;
+                foreach (StatusNode descendant in Items(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+
+        private static StatusNode CreateParent(RelativePath relativePath)
+            => new(relativePath.Value) { Tag = relativePath };
+
+        private static RelativePath GetCommonPath(RelativePath relativePathA, RelativePath relativePathB)
+        {
+            string a = $"{relativePathA}/";
+            string b = $"{relativePathB}/";
+            for (int commonEnd = 0; ; ++commonEnd)
+            {
+                if (commonEnd >= a.Length || commonEnd >= b.Length || a[commonEnd] != b[commonEnd])
+                {
+                    // Revert possible partial match
+                    while (commonEnd > 0 && a[--commonEnd] != '/')
+                    {
+                    }
+
+                    return RelativePath.From(a[..commonEnd]);
+                }
+            }
+        }
+
+        private static StatusNode GetOrCreateParent(StatusNode previousParent, RelativePath currentPath, StatusNode root)
+        {
+            Validates.NotNull(previousParent.Tag);
+            RelativePath previousPath = (RelativePath)previousParent.Tag;
+            if (previousPath == currentPath)
+            {
+                return previousParent;
+            }
+
+            RelativePath commonPath = GetCommonPath(previousPath, currentPath);
+            StatusNode commonParent = GetOrCreateCommonParent();
+            if (currentPath == commonPath)
+            {
+                return commonParent;
+            }
+
+            StatusNode parent = CreateParent(currentPath);
+            commonParent.Add(parent);
+            return parent;
+
+            StatusNode GetOrCreateCommonParent()
+            {
+                if (commonPath.Length == 0)
+                {
+                    return root;
+                }
+
+                StatusNode splitCandidate = previousParent;
+                RelativePath splitCandidatePath = previousPath;
+                while (splitCandidate.Parent?.Tag is RelativePath path && path.Value.StartsWith(commonPath.Value, StringComparison.Ordinal))
+                {
+                    splitCandidate = splitCandidate.Parent;
+                    splitCandidatePath = path;
+                }
+
+                return splitCandidatePath == commonPath
+                    ? splitCandidate
+                    : Split(splitCandidate, commonPath);
+            }
+        }
+
+        private static StatusNode Split(StatusNode subNode, RelativePath commonPath)
+        {
+            StatusNode parentNode = subNode.Parent ?? throw new ArgumentNullException($"{nameof(subNode)}.{nameof(subNode.Parent)}");
+            int index = parentNode.Nodes.IndexOf(subNode);
+            parentNode.Remove(subNode);
+            StatusNode commonFolderNode = CreateParent(commonPath);
+            commonFolderNode.Add(subNode);
+            parentNode.Insert(index, commonFolderNode);
+            return commonFolderNode;
+        }
+
+        private sealed class PathFirstComparer : IComparer<GitItemStatus>
+        {
+            public int Compare(GitItemStatus? l, GitItemStatus? r)
+                => (l, r) switch
+                {
+                    (null, null) => 0,
+                    (_, null) => -1,
+                    (null, _) => 1,
+                    _ => CompareNonNull(l, r)
+                };
+
+            private static int CompareNonNull(GitItemStatus l, GitItemStatus r)
+            {
+                int pathComparison = (l.Path.Value, r.Path.Value) switch
+                {
+                    ("", "") => 0,
+                    (_, "") => -1,
+                    ("", _) => 1,
+                    _ => ComparePath(l.Path.Value.AsSpan(), r.Path.Value.AsSpan())
+                };
+
+                return pathComparison switch
+                {
+                    -1 => StartsWith(r.Path, l.Path) ? 1 : -1,
+                    1 => StartsWith(l.Path, r.Path) ? -1 : 1,
+                    _ => StringComparer.InvariantCulture.Compare(l.Name, r.Name)
+                };
+
+                static int ComparePath(ReadOnlySpan<char> l, ReadOnlySpan<char> r)
+                {
+                    if (l.IsEmpty || r.IsEmpty)
+                    {
+                        return l.IsEmpty && r.IsEmpty ? 0 : l.IsEmpty ? -1 : 1;
+                    }
+
+                    SplitPath(l, out ReadOnlySpan<char> topL, out ReadOnlySpan<char> subL);
+                    SplitPath(r, out ReadOnlySpan<char> topR, out ReadOnlySpan<char> subR);
+                    return topL.CompareTo(topR, StringComparison.InvariantCulture) switch
+                    {
+                        -1 => -1,
+                        +1 => +1,
+                        _ => ComparePath(subL, subR)
+                    };
+                }
+
+                static void SplitPath(ReadOnlySpan<char> path, out ReadOnlySpan<char> top, out ReadOnlySpan<char> sub)
+                {
+                    int separatorIndex = path.IndexOf('/');
+                    if (separatorIndex == -1)
+                    {
+                        top = path;
+                        sub = ReadOnlySpan<char>.Empty;
+                        return;
+                    }
+
+                    top = path[..separatorIndex];
+                    sub = path[(separatorIndex + 1)..];
+                }
+
+                static bool StartsWith(RelativePath longPath, RelativePath shortPath)
+                {
+                    return longPath.Value.StartsWith(shortPath.Value, StringComparison.InvariantCulture)
+                        && longPath.Value[shortPath.Length] == '/';
+                }
+            }
+        }
+
+        internal static class TestAccessor
+        {
+            public static string GetCommonPath(string a, string b)
+                => StatusSorter.GetCommonPath(RelativePath.From(a), RelativePath.From(b)).Value;
+
+            public static int Compare(string l, string r)
+                => new PathFirstComparer().Compare(new GitItemStatus(l), new GitItemStatus(r));
+        }
+    }
+}
