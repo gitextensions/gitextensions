@@ -1149,8 +1149,8 @@
   "src/app/GitUI/CommandsDialogs/RevisionDiffControl.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RevisionDiffControl.axaml.cs",
     "status": "functional",
-    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed blob/image viewing through FileViewer in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Owner-managed loaders remain in their joinable task collection for deterministic cancellation/shutdown; FileViewer rendering is marshalled as cancellable Avalonia dispatcher operations. Shared FileStatusList actions filter selected paths in the revision grid, navigate ordinary-diff selections to the paired File tree, and apply supported selected/whole revision patches through FileViewer; diff-option changes reload the selection and applied patches request a repository refresh. The original Blame action either toggles an in-pane BlameControl or redirects ordinary diff selections to the File tree according to the shared setting. Both FormBrowse instances register the current relevant repository host in their BlameControl after plugin registration. Its same-named script-options provider exposes selected paths and the active diff/blame caret line and column. Custom tools retain their later owner. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization."
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Same-named shared Diff/File-tree boundary using the linked unchanged FileStatusDiffCalculator, followed-file selection, lazy cancellation-safe loading, committed blob/image viewing through FileViewer in tree mode, diff viewing in ordinary mode, continuous file navigation, and WinForms-shaped Bind/DisplayDiffTab/SelectFileOrFolder/SwitchFocus members. Owner-managed loaders remain in their joinable task collection for deterministic cancellation/shutdown; FileViewer rendering is marshalled as cancellable Avalonia dispatcher operations. Shared FileStatusList actions filter selected paths in the revision grid, navigate ordinary-diff selections to the paired File tree, and apply supported selected/whole revision patches through FileViewer; diff-option changes reload the selection and applied patches request a repository refresh. The original Blame action either toggles an in-pane BlameControl or redirects ordinary diff selections to the File tree according to the shared setting. Both FormBrowse instances register the current relevant repository host in their BlameControl after plugin registration. Its same-named script-options provider exposes selected paths and the active diff/blame caret line and column. The original hotkey command identity is restored and forwards list commands to FileStatusList; the parent-revision navigation route remains a recorded gap. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization."
   },
   "src/app/GitUI/CommandsDialogs/ScriptOptionsProvider.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/ScriptOptionsProvider.cs",
@@ -1832,20 +1832,20 @@
   "src/app/GitUI/UserControls/FileStatusList.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Reusable list/tree boundary with the original case-insensitive regex filter over current and old names, invalid-input retention/feedback, filtered counts, configurable multi-selection, revision-aware grouping, repository refresh binding, navigation, and WinForms-shaped events. The complete added/removed/modified/renamed/copied/unmerged/range-diff image matrix and asynchronously resolved submodule variants use the shared image cache. File-tree mode builds an ordinal folders-first hierarchy, restores followed selections, and supplies select/expand/collapse actions; both full-tree and grouped-diff trees consume the same compact dotted native-tree template as the left panel. The original revision-list SetDiffs, AllItems, and SelectedGitItem surface is available to CommitDiff. FileViewer line/chunk capability is consumed through a callback so unsupported selections remain disabled; custom difftools retain their later owner."
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Reusable list/tree boundary with the original case-insensitive regex filter over current and old names, invalid-input retention/feedback, filtered counts, configurable multi-selection, revision-aware grouping, repository refresh binding, navigation, selection restoration, and WinForms-shaped events. The complete added/removed/modified/renamed/copied/unmerged/range-diff image matrix and asynchronously resolved submodule variants use the shared image cache. File-tree mode builds an ordinal folders-first hierarchy, restores followed selections, and supplies select/expand/collapse actions; both full-tree and grouped-diff trees consume the same compact dotted native-tree template as the left panel. The original revision-list SetDiffs, AllItems, SelectedGitItem, sort/filter, grouping and command surfaces serve Commit, Stash, revision Diff and File tree consumers. Associated shell icons use the generic file icon until a cross-platform provider exists."
   },
   "src/app/GitUI/UserControls/FileStatusList.ContextMenu.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.ContextMenu.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named context-menu boundary with consumer-supplied stage/unstage callbacks plus portable open, copy paths, show folder, show in File tree, revision-grid path filtering, history/blame, tree expansion, and ShowInFileList user-script actions. The cherry-pick action is visible only for bound consumers and enabled only for one selection whose FileViewer reports line-patching support. Ignore/custom-difftool actions retain their later owners."
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Same-named context-menu boundary restores stage, unstage, reset, submodule, default and custom difftool, remembered difftool, open/edit/save/move/delete, copy, folder, file-tree, filtering, history, blame, tree, script, skip-worktree, assume-unchanged and stop-tracking actions. The cherry-pick action is visible only for bound consumers and enabled only for one selection whose FileViewer reports line-patching support. Search, ignore and git-grep dialog actions remain hidden until their owning tranches provide native dialogs; unsupported actions are not inert."
   },
   "src/app/GitUI/UserControls/FileStatusList.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Compact filter/count row, empty-state label, status list, repository tree, and same-named context items preserve existing translation identities. The active/invalid filter backgrounds are semantic light/dark resources; later toolbar/search commands remain absent rather than inert. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Restores the full FileStatusList toolbar, sort/settings/filter/search/loading surfaces, status list, repository tree and same-named context-menu identities while preserving translation keys. The active/invalid filter backgrounds are semantic light/dark resources and recurring values use the shared visual vocabulary. Paired WinForms/Avalonia capture evidence for all four consumers, themes and scales is recorded under eng/avalonia/parity-evidence/P2.1; the diagnostic diff remains open parity evidence rather than a completion claim."
   },
   "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs": {
     "twin": "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs",
@@ -2297,8 +2297,8 @@
   "src/app/ResourceManager/GitExtensionsControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsControl.cs",
     "status": "functional",
-    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Retains the WinForms-shaped persisted hotkey table, shortcut display and text-edit-key classification; containing Avalonia forms route key events to controls explicitly."
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Retains the WinForms-shaped persisted hotkey table, shortcut display and text-edit-key classification. The protected hotkey table now lets same-shaped control twins execute their own bubbled key routes without exposing the storage contract publicly."
   },
   "src/app/ResourceManager/TranslatedControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/TranslatedControl.cs",
@@ -2345,8 +2345,8 @@
   "src/app/GitUI/Hotkey/HotkeySettingsManager.cs": {
     "twin": "src/app/GitUI.Avalonia/Hotkey/HotkeySettingsManager.cs",
     "status": "functional",
-    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "Reduced command inventory preserves the upstream XML format and command IDs/defaults for implemented consumers, including OpenRepo Ctrl+O, CloseRepository Ctrl+W, the complete RevisionGrid table, and dynamically loaded user scripts. The original manager contract now loads, merges, saves, resets, and tracks assigned keys for the live editor; other command groups join only with their consumers."
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "The command inventory preserves the upstream XML format and command IDs/defaults for implemented consumers, including OpenRepo, CloseRepository, RevisionGrid, RevisionDiffControl/FileStatusList and dynamically loaded user scripts. The original manager contract loads, merges, saves, resets, and tracks assigned keys for the live editor; other command groups join only with their consumers."
   },
   "src/app/GitUI/GitExtensionsDialog.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsDialog.cs",
@@ -2698,8 +2698,10 @@
     "plannedIn": "P5.8"
   },
   "src/app/GitUI/CommandsDialogs/FileStatusListContextMenuController.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI/CommandsDialogs/FileStatusListContextMenuController.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Framework-neutral context-menu selection rules are linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/FormAbout.cs": {
     "status": "unported",
@@ -2898,20 +2900,26 @@
     "plannedIn": "P4.2"
   },
   "src/app/GitUI/CommandsDialogs/RememberFileContextMenuController.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI/CommandsDialogs/RememberFileContextMenuController.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Framework-neutral remembered-file diff selection is linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/DiscussionHtmlCreator.cs": {
     "status": "unported",
     "plannedIn": "P7.2"
   },
   "src/app/GitUI/CommandsDialogs/RevisionDiffContoller.ContextMenuSelectionInfo.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI/CommandsDialogs/RevisionDiffContoller.ContextMenuSelectionInfo.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Framework-neutral context-menu selection metadata is linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/RevisionDiffController.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI/CommandsDialogs/RevisionDiffController.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Framework-neutral reset and revision relationship rules are linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/SearchControl.cs": {
     "status": "unported",
@@ -3605,48 +3613,66 @@
     "plannedIn": "P2.5"
   },
   "src/app/GitUI/UserControls/FileStatusItemExtensions.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI/UserControls/FileStatusItemExtensions.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Framework-neutral FileStatusItem projections are linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/UserControls/FileStatusList.DelayedExpansion.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.DelayedExpansion.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Avalonia lazily materializes tree visuals while retaining the same expansion entry points and attached data children."
   },
   "src/app/GitUI/UserControls/FileStatusList.FileIcons.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.FileIcons.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Preserves extension-keyed icon caching through native Avalonia images; platform shell associated icons remain explicit visual debt."
   },
   "src/app/GitUI/UserControls/FileStatusList.GitGrepState.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.GitGrepState.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Retains the same git-grep option state and settings boundary; the editor dialog itself remains owned by P2.2."
   },
   "src/app/GitUI/UserControls/FileStatusList.GroupBy.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.GroupBy.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b"
   },
   "src/app/GitUI/UserControls/FileStatusList.GroupKey.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.GroupKey.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b"
   },
   "src/app/GitUI/UserControls/FileStatusList.IStatusSorter.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.IStatusSorter.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b"
   },
   "src/app/GitUI/UserControls/FileStatusList.MissingIcon.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.MissingIcon.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b"
   },
   "src/app/GitUI/UserControls/FileStatusList.StatusSorter.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.StatusSorter.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Preserves ordinal folder-first path grouping and dense-tree merge behavior with a native framework-neutral node model."
   },
   "src/app/GitUI/UserControls/FileStatusList.Toolbar.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.Toolbar.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Native toolbar preserves all six sorting modes, diff-status filters, tree/list choice, refresh and settings state; later ignore-dialog commands remain hidden until P5.4."
   },
   "src/app/GitUI/UserControls/FileStatusList.TreeContextMenu.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.TreeContextMenu.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Native context items preserve collapse-all, collapse-root, expand-all and select-all behavior for both tree modes."
   },
   "src/app/GitUI/UserControls/InteractiveGitActionControl.cs": {
     "status": "unported",
@@ -3696,8 +3722,10 @@
     "substitute": "Same-named Avalonia view behavior built from native controls, templates, routed input, and automation properties."
   },
   "src/app/GitUI/UserControls/PathFormatter.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/PathFormatter.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Preserves filename-priority truncation with Avalonia text metrics and the original Windows PathCompactPathEx path where available."
   },
   "src/app/GitUI/UserControls/PictureBoxEx.cs": {
     "status": "windowsOnly",
@@ -3785,8 +3813,10 @@
     "plannedIn": "P2.5"
   },
   "src/app/GitUI/UserControls/SortDiffListContextMenuItem.cs": {
-    "status": "unported",
-    "plannedIn": "P2.1"
+    "twin": "src/app/GitUI.Avalonia/UserControls/SortDiffListContextMenuItem.cs",
+    "status": "functional",
+    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
+    "notes": "Native menu preserves all six shared DiffListSortType choices and re-queries the live setting whenever opened."
   },
   "src/app/GitUI/UserControls/TextBoxEx.cs": {
     "status": "windowsOnly",
