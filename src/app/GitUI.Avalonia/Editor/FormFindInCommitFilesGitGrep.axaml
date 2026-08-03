@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="using:GitUI.UserControls"
         x:Class="GitUI.FormFindInCommitFilesGitGrep"
         Title="Find in commit files using git-grep"
         Width="425"
@@ -16,11 +17,10 @@
           RowDefinitions="23,23,23,23"
           RowSpacing="3">
       <Label x:Name="label1" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Fi_nd what:" />
-      <ComboBox x:Name="cboFindInCommitFilesGitGrep"
+      <usercontrols:WatermarkComboBox x:Name="cboFindInCommitFilesGitGrep"
                 Grid.Row="0" Grid.Column="1"
                 Height="23"
-                IsEditable="True"
-                PlaceholderText="git-grep regular expression..." />
+                Watermark="git-grep regular expression..." />
       <Label x:Name="lblOptions" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="_Options:" />
       <TextBox x:Name="txtOptions" Grid.Row="1" Grid.Column="1" Height="23" />
       <CheckBox x:Name="chkMatchCase" Grid.Row="2" Grid.Column="1" Content="Match _case" />

@@ -351,11 +351,21 @@
       </Border>
       <GridSplitter x:Name="leftPanelSplitter" Grid.Column="1" ResizeDirection="Columns" />
       <Grid x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="3*,0,2*">
-        <Grid x:Name="RevisionsSplitContainer" Grid.Row="0" ColumnDefinitions="0,0,*,0,0">
+          <Grid x:Name="RevisionsSplitContainer" Grid.Row="0" ColumnDefinitions="0,0,*,0,0">
           <Border x:Name="commitInfoLeftHost" Grid.Column="0" Classes="gitextensions-section" />
           <GridSplitter x:Name="commitInfoLeftSplitter" Grid.Column="1" ResizeDirection="Columns" IsVisible="False" />
           <Border x:Name="RevisionGridContainer" Grid.Column="2" Classes="gitextensions-section">
-            <gitui:RevisionGridControl x:Name="RevisionGrid" />
+            <Grid RowDefinitions="Auto,Auto,*">
+              <controls:InteractiveGitActionControl x:Name="notificationBarGitActionInProgress"
+                                                    Grid.Row="0"
+                                                    MinHeight="33"
+                                                    IsVisible="False" />
+              <controls:InteractiveGitActionControl x:Name="notificationBarBisectInProgress"
+                                                    Grid.Row="1"
+                                                    MinHeight="33"
+                                                    IsVisible="False" />
+              <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="2" />
+            </Grid>
           </Border>
           <GridSplitter x:Name="commitInfoRightSplitter" Grid.Column="3" ResizeDirection="Columns" IsVisible="False" />
           <Border x:Name="commitInfoRightHost" Grid.Column="4" Classes="gitextensions-section" />

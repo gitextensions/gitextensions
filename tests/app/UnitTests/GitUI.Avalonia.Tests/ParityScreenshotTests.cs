@@ -835,6 +835,48 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task SeedStandaloneControlAsync(Control root, CaptureContext context)
     {
+        if (root is BranchSelector branchSelector)
+        {
+            branchSelector.Initialize(remote: false, containObjectIds: null);
+            return;
+        }
+
+        if (root is InteractiveGitActionControl interactiveGitActionControl)
+        {
+            interactiveGitActionControl.GetTestAccessor().SetGitAction(
+                InteractiveGitActionControl.GitAction.Rebase,
+                conflicts: false);
+            return;
+        }
+
+        if (root is GitUI.UserControls.Settings.SettingsCheckBox settingsCheckBox)
+        {
+            settingsCheckBox.Text = "Enable representative setting";
+            settingsCheckBox.ToolTipText = "Representative setting information";
+            return;
+        }
+
+        if (root is WaitSpinner waitSpinner)
+        {
+            waitSpinner.IsAnimating = false;
+            waitSpinner.SetProgressForCapture(7);
+            return;
+        }
+
+        if (root is WatermarkComboBox watermarkComboBox)
+        {
+            watermarkComboBox.Watermark = "Filter files using a regular expression...";
+            return;
+        }
+
+        if (root is CaseSensitiveComboBox caseSensitiveComboBox)
+        {
+            caseSensitiveComboBox.ItemsSource = new[] { "Main", "main", "release/1.0" };
+            caseSensitiveComboBox.Text = "main";
+            caseSensitiveComboBox.NotifyAutoCompleteForTest();
+            return;
+        }
+
         if (root is Dashboard dashboard)
         {
             IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
@@ -1214,6 +1256,31 @@ public sealed partial class ParityScreenshotTests
 
     private static (double Width, double Height) GetCaptureSize(Type viewType)
     {
+        if (viewType == typeof(BranchSelector))
+        {
+            return (325, 54);
+        }
+
+        if (viewType == typeof(InteractiveGitActionControl))
+        {
+            return (424, 34);
+        }
+
+        if (viewType == typeof(GitUI.UserControls.Settings.SettingsCheckBox))
+        {
+            return (104, 17);
+        }
+
+        if (viewType == typeof(WaitSpinner))
+        {
+            return (48, 48);
+        }
+
+        if (viewType == typeof(WatermarkComboBox) || viewType == typeof(CaseSensitiveComboBox))
+        {
+            return (250, 23);
+        }
+
         if (viewType == typeof(SimplePrompt))
         {
             return (334, 104);
@@ -1418,11 +1485,20 @@ public sealed partial class ParityScreenshotTests
         string viewRoot = Path.Combine(repositoryRoot, "src", "app", "GitUI.Avalonia");
         Assembly viewAssembly = typeof(FormBrowse).Assembly;
 
-        return Directory.EnumerateFiles(viewRoot, "*" + AxamlExtension, SearchOption.AllDirectories)
+        ViewDescriptor[] axamlViews = Directory.EnumerateFiles(viewRoot, "*" + AxamlExtension, SearchOption.AllDirectories)
             .Where(path => !Path.GetRelativePath(viewRoot, path).StartsWith("Styles" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
             .Order(StringComparer.Ordinal)
             .Select(path => CreateDescriptor(viewRoot, path, viewAssembly))
             .ToArray();
+
+        // parity-scaffolding: Code-only controls need descriptors so the shared capture plan can render them without product wrappers.
+        return
+        [
+            .. axamlViews,
+            new("UserControls/WaitSpinner.cs", "UserControls/WaitSpinner", typeof(WaitSpinner).FullName!, typeof(WaitSpinner)),
+            new("UserControls/WatermarkComboBox.cs", "UserControls/WatermarkComboBox", typeof(WatermarkComboBox).FullName!, typeof(WatermarkComboBox)),
+            new("UserControls/CaseSensitiveComboBox.cs", "UserControls/CaseSensitiveComboBox", typeof(CaseSensitiveComboBox).FullName!, typeof(CaseSensitiveComboBox)),
+        ];
     }
 
     private static ViewDescriptor CreateDescriptor(string viewRoot, string path, Assembly viewAssembly)
