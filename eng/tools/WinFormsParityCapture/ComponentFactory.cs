@@ -1,8 +1,13 @@
+using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUI.CommitInfo;
+using GitUIPluginInterfaces;
 
 namespace WinFormsParityCapture;
 
@@ -16,6 +21,8 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormCommit" => new FormCommit(commands),
             "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
+            "GitUI.CommitInfo.CommitInfo" => CreateCommitInfo(),
+            "GitUI.CommitInfo.CommitInfoHeader" => CreateCommitInfoHeader(),
 
             // parity-scaffolding: Hosts the internal modeless editor-search dialog without changing GitUI visibility.
             "GitUI.FormFindInCommitFilesGitGrep" => CreateWithCommands(component.TypeName, commands),
@@ -34,6 +41,57 @@ internal static class ComponentFactory
         }
 
         return control;
+    }
+
+    // parity-scaffolding: Populates the same commit-details state used by the Avalonia capture host.
+    private static CommitInfo CreateCommitInfo()
+    {
+        return new CommitInfo { ShowBranchesAsLinks = true };
+    }
+
+    // parity-scaffolding: Populates the standalone header with the tranche's representative revision.
+    private static CommitInfoHeader CreateCommitInfoHeader()
+    {
+        return new CommitInfoHeader();
+    }
+
+    // parity-scaffolding: Runs control logic only after WinForms has created the capture host handle.
+    public static void PrepareAfterHandle(Control control, IGitUICommands commands)
+    {
+        CaptureCommandsSource source = new(commands);
+        switch (control)
+        {
+            case CommitInfo commitInfo:
+                commitInfo.UICommandsSource = source;
+                commitInfo.Revision = CreateRevision(commands);
+                break;
+            case CommitInfoHeader commitInfoHeader:
+                commitInfoHeader.UICommandsSource = source;
+                commitInfoHeader.ShowCommitInfo(CreateRevision(commands), [commands.Module.RevParse("HEAD~1")]);
+                break;
+        }
+    }
+
+    // parity-scaffolding: Keeps both commit-details capture surfaces on one deterministic model.
+    private static GitRevision CreateRevision(IGitUICommands commands)
+    {
+        IGitModule module = commands.Module;
+        ObjectId objectId = module.GetCurrentCheckout();
+        IReadOnlyList<IGitRef> refs = module.GetRefs(RefsFilter.NoFilter);
+        long unixTime = new DateTimeOffset(2026, 7, 17, 10, 30, 0, TimeSpan.Zero).ToUnixTimeSeconds();
+        return new GitRevision(objectId)
+        {
+            Author = "Avalonia Contributor",
+            AuthorEmail = "avalonia@example.com",
+            AuthorUnixTime = unixTime,
+            Committer = "Git Extensions Team",
+            CommitterEmail = "team@gitextensions.org",
+            CommitUnixTime = unixTime,
+            Subject = "Establish the Avalonia application shell",
+            Body = "Establish the Avalonia application shell\n\nRepresentative content used by the visual parity screenshot harness.",
+            ParentIds = [module.RevParse("HEAD~1")],
+            Refs = refs.Where(gitRef => gitRef.ObjectId == objectId).ToArray(),
+        };
     }
 
     private static object? FindFieldValue(object owner, string fieldName)
@@ -79,5 +137,17 @@ internal static class ComponentFactory
             args: [commands],
             culture: null)
             ?? throw new InvalidOperationException($"{typeName} could not be constructed.");
+    }
+
+    // parity-scaffolding: Adapts the capture worker's commands to GitModuleControl ownership.
+    private sealed class CaptureCommandsSource(IGitUICommands commands) : IGitUICommandsSource
+    {
+        public event EventHandler<GitUICommandsChangedEventArgs>? UICommandsChanged
+        {
+            add { }
+            remove { }
+        }
+
+        public IGitUICommands UICommands { get; } = commands;
     }
 }
