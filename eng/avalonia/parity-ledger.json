@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "dd45350c60936a8d7453e3d588e4989e0d9709e3",
+  "analyzedCommit": "60d785048eded3d0dedaff3349294727404d712c",
   "axisOrder": [
     "structural",
     "functional",
@@ -13261,61 +13261,88 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_FileViewer.after.json"
           ],
           "platforms": [],
-          "findingCount": 336,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 339,
+          "note": "The P2.2 combined FileViewer source inventory records 339 remaining member findings across the Designer/code-behind pair."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_FileViewer.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
           ],
           "platforms": [],
-          "findingCount": 693,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 696,
+          "note": "The P2.2 combined inventory still records 696 comment/event/hotkey/member/menu/setting/translation findings; the focused editor-core behaviors are implemented without claiming exact source parity."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 441,
+          "note": "Nine FileViewerInternal pairs were compared across the declared themes/scales/states and retain 441 diagnostic findings; the outer FileViewer interaction surface and unavailable DPI states remain open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/colors/color-findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "All 162 declared semantic color roles on the nine comparable FileViewerInternal captures match exactly in light, dark, and custom themes; remaining raw-control and complete capability coverage is not claimed."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/capture",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 27,
+          "note": "Normal, editor-focus, and disabled capture states plus focused behavior tests were exercised; 27 state findings and the complete editor interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows, native-ext4 Linux tests, nested Wayland/X11, and Wayland-only Flatpak runtime smokes passed; macOS remains unverified."
         }
       }
     },
@@ -13326,69 +13353,88 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_FileViewer.after.json"
           ],
           "platforms": [],
-          "findingCount": 336,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 339,
+          "note": "The P2.2 combined FileViewer source inventory records 339 remaining member findings across the Designer/code-behind pair."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_FileViewer.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
           ],
           "platforms": [],
-          "findingCount": 693,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 696,
+          "note": "The P2.2 combined inventory still records 696 comment/event/hotkey/member/menu/setting/translation findings; the focused editor-core behaviors are implemented without claiming exact source parity."
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-08-01",
-          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+            "eng/avalonia/parity-evidence/P2.2/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 0,
-          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
+          "findingCount": 441,
+          "note": "Nine FileViewerInternal pairs were compared across the declared themes/scales/states and retain 441 diagnostic findings; the outer FileViewer interaction surface and unavailable DPI states remain open."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-08-01",
-          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+            "eng/avalonia/parity-evidence/P2.2/colors/color-findings.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
+          "note": "All 162 declared semantic color roles on the nine comparable FileViewerInternal captures match exactly in light, dark, and custom themes; remaining raw-control and complete capability coverage is not claimed."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/capture",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 27,
+          "note": "Normal, editor-focus, and disabled capture states plus focused behavior tests were exercised; 27 state findings and the complete editor interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows, native-ext4 Linux tests, nested Wayland/X11, and Wayland-only Flatpak runtime smokes passed; macOS remains unverified."
         }
       }
     },
@@ -13399,61 +13445,88 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_FindAndReplaceForm.after.json"
           ],
           "platforms": [],
           "findingCount": 45,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The P2.2 combined FindAndReplaceForm source inventory records 45 remaining member findings across the Designer/code-behind pair."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_FindAndReplaceForm.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
           ],
           "platforms": [],
           "findingCount": 121,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The P2.2 combined inventory still records 121 comment/event/member/translation findings; focused find/replace tests are green without claiming exact source parity."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 5877,
+          "note": "Eighteen FindAndReplaceForm pairs were compared across light, dark, custom, normal, and focus requests and retain 5,877 diagnostic findings."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/colors/color-findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "All 324 declared semantic color roles on the 18 comparable captures match exactly in light, dark, and custom themes; remaining raw-control and capability coverage is not claimed."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/capture",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 333,
+          "note": "Normal and focused requests plus focused find/replace tests were exercised; 333 state findings and the complete editor/find interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows, native-ext4 Linux tests, nested Wayland/X11, and Wayland-only Flatpak runtime smokes passed; macOS remains unverified."
         }
       }
     },
@@ -13464,61 +13537,88 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_FindAndReplaceForm.after.json"
           ],
           "platforms": [],
-          "findingCount": 116,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 45,
+          "note": "The P2.2 combined FindAndReplaceForm source inventory records 45 remaining member findings across the Designer/code-behind pair."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_FindAndReplaceForm.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
           ],
           "platforms": [],
-          "findingCount": 210,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 121,
+          "note": "The P2.2 combined inventory still records 121 comment/event/member/translation findings; focused find/replace tests are green without claiming exact source parity."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 5877,
+          "note": "Eighteen FindAndReplaceForm pairs were compared across light, dark, custom, normal, and focus requests and retain 5,877 diagnostic findings."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/colors/color-findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "note": "All 324 declared semantic color roles on the 18 comparable captures match exactly in light, dark, and custom themes; remaining raw-control and capability coverage is not claimed."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/capture",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 333,
+          "note": "Normal and focused requests plus focused find/replace tests were exercised; 333 state findings and the complete editor/find interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows, native-ext4 Linux tests, nested Wayland/X11, and Wayland-only Flatpak runtime smokes passed; macOS remains unverified."
         }
       }
     },
@@ -30626,6 +30726,1281 @@
             "eng/avalonia/parity-evidence/P2.1/windows-tests.trx",
             "eng/avalonia/parity-evidence/P2.1/linux-tests.trx",
             "eng/avalonia/parity-evidence/P2.1/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/CommitMessageHighlightingStrategy.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/CommitMessageHighlightingStrategy.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_CommitMessageHighlightingStrategy.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 18,
+          "note": "The P2.2 source inventory records 18 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_CommitMessageHighlightingStrategy.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 18,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 18 source-level findings."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/capture"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Resolved color behavior and theme captures are exercised; exact WinForms comparison remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/GitHighlightingStrategyBase.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/GitHighlightingStrategyBase.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_GitHighlightingStrategyBase.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 29,
+          "note": "The P2.2 source inventory records 29 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_GitHighlightingStrategyBase.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 29,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 29 source-level findings."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/capture"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Resolved color behavior and theme captures are exercised; exact WinForms comparison remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/RebaseTodoHighlightingStrategy.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/RebaseTodoHighlightingStrategy.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_RebaseTodoHighlightingStrategy.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 9,
+          "note": "The P2.2 source inventory records 9 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_RebaseTodoHighlightingStrategy.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 9,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 9 source-level findings."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/capture"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Resolved color behavior and theme captures are exercised; exact WinForms comparison remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/Diff/AnsiEscapeUtilities.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/Diff/AnsiEscapeUtilities.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_AnsiEscapeUtilities.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 18,
+          "note": "The P2.2 source inventory records 18 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_AnsiEscapeUtilities.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 18,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 18 source-level findings."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/capture"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Resolved color behavior and theme captures are exercised; exact WinForms comparison remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/Diff/DifftasticHighlightService.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/Diff/DifftasticHighlightService.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_DifftasticHighlightService.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 10,
+          "note": "The P2.2 source inventory records 10 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_DifftasticHighlightService.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 10,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 10 source-level findings."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/capture"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Resolved color behavior and theme captures are exercised; exact WinForms comparison remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/Diff/GrepHighlightService.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/Diff/GrepHighlightService.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_GrepHighlightService.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 22,
+          "note": "The P2.2 source inventory records 22 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_GrepHighlightService.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 22,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 22 source-level findings."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/capture"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Resolved color behavior and theme captures are exercised; exact WinForms comparison remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/Diff/HighlightInfo.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/Diff/HighlightInfo.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The inventory currently does not enumerate this struct/interface declaration; its same-named portable twin is covered by focused compilation and tests."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Focused editor-core behavior is implemented and tested; exhaustive call-path parity remains open."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This type does not independently select or render theme colors."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/Diff/ITextHighlightService.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/Diff/ITextHighlightService.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The inventory currently does not enumerate this struct/interface declaration; its same-named portable twin is covered by focused compilation and tests."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Focused editor-core behavior is implemented and tested; exhaustive call-path parity remains open."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This type does not independently select or render theme colors."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/Diff/LineSegmentGetter.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/Diff/LineSegmentGetter.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_LineSegmentGetter.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 3,
+          "note": "The P2.2 source inventory records 3 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_LineSegmentGetter.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 3,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 3 source-level findings."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This type does not independently select or render theme colors."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/Diff/Segment.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/Diff/Segment.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The inventory currently does not enumerate this struct/interface declaration; its same-named portable twin is covered by focused compilation and tests."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Focused editor-core behavior is implemented and tested; exhaustive call-path parity remains open."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This type does not independently select or render theme colors."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/Diff/TextHighlightService.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/Diff/TextHighlightService.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_TextHighlightService.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 6,
+          "note": "The P2.2 source inventory records 6 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_Diff_TextHighlightService.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 6,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 6 source-level findings."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This non-visual service/type has no independently rendered surface."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This type does not independently select or render theme colors."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused editor-core tests cover the restored behavior; the exhaustive interaction-state audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/FileViewerInternal.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/FileViewerInternal.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_FileViewerInternal.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 162,
+          "note": "The P2.2 source inventory records 162 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_FileViewerInternal.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 162,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 162 source-level findings."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 441,
+          "note": "Nine FileViewerInternal pairs were compared across the declared themes/scales/states and retain 441 diagnostic findings."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/colors/color-findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 0,
+          "note": "All 162 declared semantic color roles on the nine comparable captures match exactly in light, dark, and custom themes; remaining raw-control and capability coverage is open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/capture",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 27,
+          "note": "Normal, editor-focus, and disabled requests plus focused behavior tests were exercised; 27 state findings and the exhaustive interaction audit remain open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/FileViewerInternal.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/FileViewerInternal.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_FileViewerInternal.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 162,
+          "note": "The P2.2 source inventory records 162 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_Editor_FileViewerInternal.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 162,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 162 source-level findings."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 441,
+          "note": "Nine FileViewerInternal pairs were compared across the declared themes/scales/states and retain 441 diagnostic findings."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/colors/color-findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 0,
+          "note": "All 162 declared semantic color roles on the nine comparable captures match exactly in light, dark, and custom themes; remaining raw-control and capability coverage is open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/capture",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 27,
+          "note": "Normal, editor-focus, and disabled requests plus focused behavior tests were exercised; 27 state findings and the exhaustive interaction audit remain open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/FormFindInCommitFilesGitGrep.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/FormFindInCommitFilesGitGrep.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_FormFindInCommitFilesGitGrep.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 88,
+          "note": "The P2.2 source inventory records 88 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_FormFindInCommitFilesGitGrep.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 88,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 88 source-level findings."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 4107,
+          "note": "Eighteen FormFindInCommitFilesGitGrep pairs were compared across the declared themes/scales/states and retain 4,107 diagnostic findings."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/colors/color-findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 0,
+          "note": "All 324 declared semantic color roles on the 18 comparable captures match exactly in light, dark, and custom themes; complete capability coverage remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/capture",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 198,
+          "note": "Normal, search-focus, and checked requests plus focused behavior tests were exercised; 198 state findings, 12 unsupported headless focus requests, and the exhaustive interaction audit remain open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 0,
+          "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Editor/FormFindInCommitFilesGitGrep.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/Editor/FormFindInCommitFilesGitGrep.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_FormFindInCommitFilesGitGrep.after.json"
+          ],
+          "platforms": [],
+          "findingCount": 88,
+          "note": "The P2.2 source inventory records 88 remaining structural/functional findings; this is not an exact twin claim."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/inventory/GitUI_FormFindInCommitFilesGitGrep.after.json",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [],
+          "findingCount": 88,
+          "note": "Focused editor-core behavior is implemented and tested, while the inventory still records 88 source-level findings."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 4107,
+          "note": "Eighteen FormFindInCommitFilesGitGrep pairs were compared across the declared themes/scales/states and retain 4,107 diagnostic findings."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/colors/color-findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 0,
+          "note": "All 324 declared semantic color roles on the 18 comparable captures match exactly in light, dark, and custom themes; complete capability coverage remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/capture",
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 198,
+          "note": "Normal, search-focus, and checked requests plus focused behavior tests were exercised; 198 state findings, 12 unsupported headless focus requests, and the exhaustive interaction audit remain open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "60d785048eded3d0dedaff3349294727404d712c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.2/windows-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-tests.trx",
+            "eng/avalonia/parity-evidence/P2.2/linux-runtime"
           ],
           "platforms": [
             "windows",

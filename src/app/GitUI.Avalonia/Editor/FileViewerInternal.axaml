@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             x:Class="GitUI.Editor.FileViewerInternal"
+             Margin="0">
+  <compat:ThemeAwareTextEditor x:Name="TextEditor"
+                               Classes="gitextensions-diff-editor"
+                               IsReadOnly="True"
+                               ShowLineNumbers="True"
+                               HorizontalScrollBarVisibility="Auto"
+                               VerticalScrollBarVisibility="Auto" />
+</UserControl>

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -72,6 +72,8 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     private int _lastCaretLine = -1;
     private FileStatusItem? _viewItem;
     private ViewMode _viewMode;
+
+    internal ThemeAwareTextEditor TextEditor => internalFileViewer.Editor;
 
     public FileViewer()
     {
@@ -375,6 +377,57 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         SetDiffText(parsedText, highlightService, showLeftColumn: false);
         GoToFirstChange();
         TextLoaded?.Invoke(this, EventArgs.Empty);
+    }
+
+    public Task ViewDifftasticAsync(
+        string fileName,
+        string text,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        CancelPendingView();
+        ResetView(ViewMode.Difftastic, fileName);
+        string parsedText = text;
+        DifftasticHighlightService highlightService = new(
+            ref parsedText,
+            _diffViewerLineNumberControl,
+            out int rightColumnStart);
+        VRulerPosition = rightColumnStart;
+        SetDiffText(parsedText, highlightService, showLeftColumn: true);
+        GoToFirstChange();
+        TextLoaded?.Invoke(this, EventArgs.Empty);
+        return Task.CompletedTask;
+    }
+
+    public Task ViewRangeDiffAsync(
+        string fileName,
+        string text,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        CancelPendingView();
+        ResetView(ViewMode.RangeDiff, fileName);
+        string parsedText = text;
+        RangeDiffHighlightService highlightService = new(ref parsedText);
+        SetDiffText(parsedText, highlightService, showLeftColumn: false);
+        GoToFirstChange();
+        TextLoaded?.Invoke(this, EventArgs.Empty);
+        return Task.CompletedTask;
+    }
+
+    public Task ViewGrepAsync(
+        FileStatusItem item,
+        string text,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        CancelPendingView();
+        ResetView(ViewMode.Grep, item.Item.Name, item);
+        string parsedText = text;
+        GrepHighlightService highlightService = new(ref parsedText, _diffViewerLineNumberControl);
+        SetDiffText(parsedText, highlightService, showLeftColumn: false);
+        TextLoaded?.Invoke(this, EventArgs.Empty);
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -880,7 +933,11 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         bool shouldHighlight = !string.IsNullOrEmpty(_fileName)
                                && (_viewMode == ViewMode.Text
                                    || (ShowSyntaxHighlightingInDiff && _viewMode.IsPartialTextView()));
-        string? extension = shouldHighlight ? Path.GetExtension(_fileName) : string.Empty;
+        bool isGitMessage = shouldHighlight
+            && (_fileName!.EndsWith("git-rebase-todo", StringComparison.Ordinal)
+                || _fileName.EndsWith("COMMIT_EDITMSG", StringComparison.Ordinal));
+        internalFileViewer.SetHighlightingForFile(isGitMessage ? _fileName : null, TryGetUICommandsDirect(out _) ? Module : null);
+        string? extension = shouldHighlight && !isGitMessage ? Path.GetExtension(_fileName) : string.Empty;
         TextEditor.SyntaxHighlighting = string.IsNullOrEmpty(extension)
             ? null
             : HighlightingManager.Instance.GetDefinitionByExtension(extension);
