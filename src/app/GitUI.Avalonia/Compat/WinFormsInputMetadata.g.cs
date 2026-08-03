@@ -1238,6 +1238,11 @@ internal static class WinFormsInputMetadata
                 new("PictureBox", 7, false, null),
                 new("_NO_TRANSLATE_lblShowPreview", 2, true, null),
                 new("fileviewerToolbar", 0, null, null),
+                new("internalFileViewer", 1, null, null),
+            ],
+            ["GitUI.Editor.FileViewerInternal"] =
+            [
+                new("TextEditor", 3, null, null),
             ],
             ["GitUI.Editor.FormGoToLine"] =
             [
@@ -1272,6 +1277,17 @@ internal static class WinFormsInputMetadata
                 new("lblReplaceWith", 2, null, null),
                 new("txtLookFor", 1, null, null),
                 new("txtReplaceWith", 3, null, null),
+            ],
+            ["GitUI.FormFindInCommitFilesGitGrep"] =
+            [
+                new("btnSearch", 7, null, null),
+                new("cboFindInCommitFilesGitGrep", 1, null, null),
+                new("chkMatchCase", 4, null, null),
+                new("chkMatchWholeWord", 5, null, null),
+                new("chkShowSearchBox", 6, null, null),
+                new("label1", 0, null, null),
+                new("lblOptions", 2, null, null),
+                new("txtOptions", 2, null, null),
             ],
             ["GitUI.Help.HelpImageDisplayUserControl"] =
             [

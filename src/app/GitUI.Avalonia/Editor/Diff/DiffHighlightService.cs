@@ -5,7 +5,7 @@ namespace GitUI.Editor.Diff;
 /// <summary>
 /// Analyzes a diff document and produces the semantic line and inline ranges used by the viewer.
 /// </summary>
-public abstract class DiffHighlightService
+public abstract class DiffHighlightService : TextHighlightService
 {
     private readonly List<DiffInlineMarker> _inlineMarkers = [];
     private readonly List<DiffTextMarker> _textMarkers = [];
@@ -29,6 +29,37 @@ public abstract class DiffHighlightService
 
     internal bool UseBackgroundColoring
         => !UseGitColoring || GitCommands.AppSettings.ReverseGitColoring.Value;
+
+    protected void AddTextMarkers(IEnumerable<TextMarker> markers)
+    {
+        foreach (TextMarker marker in markers)
+        {
+            _textMarkers.Add(new DiffTextMarker(
+                marker.Offset,
+                marker.Length,
+                GetMarkerKind(marker),
+                marker.Color,
+                marker.ForeColor));
+        }
+    }
+
+    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
+        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is DiffLineType.Plus
+            or DiffLineType.Minus
+            or DiffLineType.MinusPlus
+            or DiffLineType.MinusLeft
+            or DiffLineType.PlusRight;
+
+    private static DiffMarkerKind GetMarkerKind(TextMarker marker)
+    {
+        Color color = marker.ForeColor ?? marker.Color;
+        if (color.R > color.G)
+        {
+            return DiffMarkerKind.Removed;
+        }
+
+        return color.G > color.R ? DiffMarkerKind.Added : DiffMarkerKind.MovedAdded;
+    }
 
     protected void SetHighlighting(string text)
     {

@@ -597,6 +597,26 @@ public sealed partial class ParityScreenshotTests
             return form;
         }
 
+        // parity-scaffolding: Seeds the internal editor surface for paired capture.
+        if (viewType == typeof(FileViewerInternal))
+        {
+            FileViewerInternal viewer = new();
+            viewer.GetTestAccessor().TextEditor.Text = context.SamplePatch;
+            return viewer;
+        }
+
+        // parity-scaffolding: Seeds the modeless git-grep dialog without opening it from a consumer.
+        if (viewType == typeof(FormFindInCommitFilesGitGrep))
+        {
+            FormFindInCommitFilesGitGrep form = new(context.Commands)
+            {
+                GitGrepExpressionText = "representative|editor",
+            };
+            form.SetSearchItems(["representative|editor", "TODO|FIXME"]);
+            form.SetShowFindInCommitFilesGitGrep(visible: true);
+            return form;
+        }
+
         if (viewType == typeof(FormGoToLine))
         {
             FormGoToLine form = new();

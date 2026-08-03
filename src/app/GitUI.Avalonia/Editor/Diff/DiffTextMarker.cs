@@ -8,7 +8,12 @@ internal enum DiffMarkerKind
     MovedRemoved,
 }
 
-internal sealed record DiffTextMarker(int Offset, int Length, DiffMarkerKind Kind)
+internal sealed record DiffTextMarker(
+    int Offset,
+    int Length,
+    DiffMarkerKind Kind,
+    Color? BackColor = null,
+    Color? ForeColor = null)
 {
     public int EndOffset => Offset + Length;
 }
