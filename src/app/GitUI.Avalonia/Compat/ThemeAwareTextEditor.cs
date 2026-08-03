@@ -1,4 +1,4 @@
-﻿using Avalonia.Media;
+using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaEdit;
 using AvaloniaEdit.Highlighting;
@@ -10,7 +10,7 @@ namespace GitUI.Compat;
 /// <summary>
 ///  An AvaloniaEdit control that keeps built-in syntax colors readable in the dark theme.
 /// </summary>
-public sealed class ThemeAwareTextEditor : TextEditor
+public class ThemeAwareTextEditor : TextEditor
 {
     public ThemeAwareTextEditor()
     {

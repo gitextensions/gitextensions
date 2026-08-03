@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitCommands.Git;
@@ -135,6 +135,8 @@ partial class FileStatusList
         tsmiSkipWorktree.Click += SkipWorktree_Click;
         tsmiAssumeUnchanged.Click += AssumeUnchanged_Click;
         tsmiStopTracking.Click += StopTracking_Click;
+        tsmiOpenFindInCommitFilesGitGrepDialog.Click += OpenFindInCommitFilesGitGrepDialog_Click;
+        tsmiShowFindInCommitFilesGitGrep.Click += ShowFindInCommitFilesGitGrep_Click;
         CreateTreeContextMenuItems();
     }
 
@@ -424,8 +426,9 @@ partial class FileStatusList
         tsmiFileHistory.IsEnabled = (singleItem || singleFolder) && anyTracked;
         tsmiBlame.IsEnabled = singleItem && anyTracked && !anySubmodule;
         tsmiFindFile.IsVisible = false;
-        tsmiOpenFindInCommitFilesGitGrepDialog.IsVisible = false;
-        tsmiShowFindInCommitFilesGitGrep.IsVisible = false;
+        tsmiOpenFindInCommitFilesGitGrepDialog.IsVisible = CanUseFindInCommitFilesGitGrep;
+        tsmiShowFindInCommitFilesGitGrep.IsVisible = CanUseFindInCommitFilesGitGrep;
+        tsmiShowFindInCommitFilesGitGrep.IsChecked = FindInCommitFilesGitGrepVisible;
 
         // The native ignore dialogs are owned by their later dialog tranche. Keeping these
         // entries hidden avoids exposing the current GitUICommands NotPorted boundary.
@@ -522,18 +525,45 @@ partial class FileStatusList
             case RevisionDiffControl.Command.OpenWorkingDirectoryFile: OpenWorkingDirectoryFile_Click(this, EventArgs.Empty); break;
             case RevisionDiffControl.Command.RenameMove: Move_Click(this, EventArgs.Empty); break;
             case RevisionDiffControl.Command.FindFile:
+                return false;
             case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab:
+                if (_isFileTreeMode)
+                {
+                    return false;
+                }
+
+                ShowFindInCommitFileGitGrepDialog(_getSelectedText?.Invoke() ?? string.Empty);
+                break;
             case RevisionDiffControl.Command.GoToFirstParent:
             case RevisionDiffControl.Command.GoToLastParent:
             case RevisionDiffControl.Command.OpenInVisualStudio:
             case RevisionDiffControl.Command.AddFileToGitIgnore:
-            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab:
                 return false;
+            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab:
+                if (!_isFileTreeMode)
+                {
+                    return false;
+                }
+
+                ShowFindInCommitFileGitGrepDialog(_getSelectedText?.Invoke() ?? string.Empty);
+                break;
             default:
                 return false;
         }
 
         return true;
+    }
+
+    private void OpenFindInCommitFilesGitGrepDialog_Click(object? sender, EventArgs e)
+    {
+        ShowFindInCommitFileGitGrepDialog(_getSelectedText?.Invoke() ?? string.Empty);
+    }
+
+    private void ShowFindInCommitFilesGitGrep_Click(object? sender, EventArgs e)
+    {
+        bool visible = tsmiShowFindInCommitFilesGitGrep.IsChecked == true;
+        AppSettings.ShowFindInCommitFilesGitGrep.Value = visible;
+        SetFindInCommitFilesGitGrepVisibility(visible);
     }
 
     private void AddFileToIgnoreFile(bool localExclude)

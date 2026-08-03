@@ -54,7 +54,9 @@ internal sealed class DiffTextColorizer : DocumentColorizingTransformer
         {
             int start = Math.Max(marker.Offset, line.Offset);
             int end = Math.Min(marker.EndOffset, line.EndOffset);
-            IBrush markerBrush = marker.Kind switch
+            IBrush markerBrush = marker.ForeColor is System.Drawing.Color foreColor
+                ? new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(foreColor))
+                : marker.Kind switch
             {
                 DiffMarkerKind.Removed => GetBrush("GitExtensionsDiffRemovedForegroundBrush", GetAppColor(AppColor.AnsiTerminalRedForeNormal)),
                 DiffMarkerKind.Added => GetBrush("GitExtensionsDiffAddedForegroundBrush", GetAppColor(AppColor.AnsiTerminalGreenForeNormal)),

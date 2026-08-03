@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -31,7 +31,9 @@ public partial class FileStatusList : GitModuleControl
 
     private readonly FileStatusDiffCalculator _diffCalculator;
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
+    private readonly CancellationTokenSequence _reloadSequence = new();
     private readonly DispatcherTimer _filterTimer = new() { Interval = FilterThrottleDuration };
+    private readonly List<object?> _gitGrepSearchItems = [];
     private IReadOnlyList<object> _allListItems = [];
     private IReadOnlyList<FileStatusWithDescription> _revisionGroups = [];
     private IReadOnlyList<FileStatusItem> _allTreeItems = [];
@@ -45,6 +47,10 @@ public partial class FileStatusList : GitModuleControl
     private bool _suppressSelectionChanged;
     private Regex? _filter;
     private GitItemStatus? _nextItemToSelect;
+    private FormFindInCommitFilesGitGrep? _formFindInCommitFilesGitGrep;
+
+    [GeneratedRegex(@"(^|\s)-e(\s|\s+['""])", RegexOptions.ExplicitCapture)]
+    private static partial Regex GrepStringRegex { get; }
 
     public FileStatusList()
     {
@@ -77,7 +83,9 @@ public partial class FileStatusList : GitModuleControl
         };
         tvFiles.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
         cboFilterComboBox.TextChanged += cboFilterComboBox_TextChanged;
+        cboFindInCommitFilesGitGrep.TextChanged += cboFindInCommitFilesGitGrep_TextUpdate;
         DeleteFilterButton.Click += DeleteFilterButton_Click;
+        DeleteSearchButton.Click += DeleteSearchButton_Click;
         _filterTimer.Tick += FilterTimer_Tick;
         KeyDown += FileStatusList_KeyDown;
         WireToolbar();
@@ -96,6 +104,7 @@ public partial class FileStatusList : GitModuleControl
                 BindCommands(commands);
                 ReloadHotkeys();
                 LoadCustomDifftools();
+                SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
             }
         };
         DetachedFromLogicalTree += (_, _) =>
@@ -260,6 +269,39 @@ public partial class FileStatusList : GitModuleControl
     public bool FindInCommitFilesGitGrepActive => !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
 
     public bool FindInCommitFilesGitGrepFocused => cboFindInCommitFilesGitGrep.IsKeyboardFocusWithin;
+
+    public bool FindInCommitFilesGitGrepVisible => FindInCommitFilesGitGrepPanel.IsVisible;
+
+    /// <summary>
+    ///  Indicates whether the git-grep search functionality is enabled for this control.
+    /// </summary>
+    [DefaultValue(false)]
+    public bool CanUseFindInCommitFilesGitGrep { get; set; }
+
+    private void SetFindInCommitFilesGitGrepVisibility(bool visible)
+    {
+        if (!CanUseFindInCommitFilesGitGrep || FindInCommitFilesGitGrepPanel.IsVisible == visible)
+        {
+            return;
+        }
+
+        SetFindInCommitFilesGitGrepVisibilityImpl(visible);
+    }
+
+    private void SetFindInCommitFilesGitGrepVisibilityImpl(bool visible)
+    {
+        _formFindInCommitFilesGitGrep?.SetShowFindInCommitFilesGitGrep(visible);
+        FindInCommitFilesGitGrepPanel.IsVisible = visible;
+        if (visible)
+        {
+            cboFindInCommitFilesGitGrep.Focus();
+        }
+        else if (_formFindInCommitFilesGitGrep?.IsVisible is not true && !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text))
+        {
+            cboFindInCommitFilesGitGrep.Text = string.Empty;
+            FindInCommitFilesGitGrep();
+        }
+    }
 
     public bool SelectFirstItemOnSetItems { get; set; } = true;
 
@@ -838,6 +880,125 @@ public partial class FileStatusList : GitModuleControl
     {
         SetFilter(string.Empty);
         cboFilterComboBox.Focus();
+    }
+
+    private void cboFindInCommitFilesGitGrep_TextUpdate(object? sender, EventArgs e)
+        => FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text ?? string.Empty, delay: 200);
+
+    private void FindInCommitFilesGitGrep()
+    {
+        FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text ?? string.Empty);
+    }
+
+    private void FindInCommitFilesGitGrep(string search, int delay = 0)
+    {
+        DeleteSearchButton.IsVisible = !string.IsNullOrEmpty(search);
+
+        CancellationToken cancellationToken = _reloadSequence.Next();
+        this.InvokeAndForget(async () =>
+        {
+            // delay to handle keypresses
+            await Task.Delay(delay, cancellationToken);
+            string searchArg = search;
+            if (!string.IsNullOrWhiteSpace(searchArg) && !GrepStringRegex.IsMatch(searchArg))
+            {
+                searchArg = searchArg.Replace(@"\\", @"\\\\");
+                searchArg = $@"-e ""{searchArg}""";
+            }
+
+            bool isFileTreeMode = _isFileTreeMode;
+            IReadOnlyList<FileStatusWithDescription> previous = _revisionGroups;
+            IReadOnlyList<FileStatusWithDescription> groups = await Task.Run(() =>
+            {
+                _diffCalculator.SetGrep(searchArg, fileTreeMode: isFileTreeMode && string.IsNullOrWhiteSpace(searchArg));
+                return _diffCalculator.Calculate(
+                    prevList: previous,
+                    refreshDiff: false,
+                    refreshGrep: true,
+                    cancellationToken);
+            }, cancellationToken);
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                SetDiffs(groups, isFileTreeMode);
+                if (!string.IsNullOrEmpty(search))
+                {
+                    AddToSearchFilter(search);
+                }
+            });
+        });
+    }
+
+    private void AddToSearchFilter(string search)
+    {
+        int index = _gitGrepSearchItems.FindIndex(item => string.Equals(item?.ToString(), search, StringComparison.Ordinal));
+        if (index == 0)
+        {
+            return;
+        }
+
+        if (index > 0)
+        {
+            _gitGrepSearchItems.RemoveAt(index);
+        }
+
+        _gitGrepSearchItems.Insert(0, search);
+        const int SearchFilterMaxLength = 30;
+        if (_gitGrepSearchItems.Count > SearchFilterMaxLength)
+        {
+            _gitGrepSearchItems.RemoveRange(SearchFilterMaxLength, _gitGrepSearchItems.Count - SearchFilterMaxLength);
+        }
+
+        if (_formFindInCommitFilesGitGrep?.IsVisible is true)
+        {
+            _formFindInCommitFilesGitGrep.SetSearchItems(_gitGrepSearchItems);
+            if (FindInCommitFilesGitGrepVisible)
+            {
+                _formFindInCommitFilesGitGrep.GitGrepExpressionText = search;
+            }
+        }
+    }
+
+    private void DeleteSearchButton_Click(object? sender, EventArgs e)
+    {
+        cboFindInCommitFilesGitGrep.Text = string.Empty;
+        FindInCommitFilesGitGrep();
+    }
+
+    public void ShowFindInCommitFileGitGrepDialog(string text)
+    {
+        if (!CanUseFindInCommitFilesGitGrep
+            || !TryGetUICommandsDirect(out IGitUICommands? commands)
+            || TopLevel.GetTopLevel(this) is not Window owner)
+        {
+            return;
+        }
+
+        if (_formFindInCommitFilesGitGrep is null)
+        {
+            _formFindInCommitFilesGitGrep = new FormFindInCommitFilesGitGrep(commands)
+            {
+                FilesGitGrepLocator = value =>
+                {
+                    FindInCommitFilesGitGrep(value);
+                    cboFindInCommitFilesGitGrep.Text = value;
+                },
+                FindInCommitFilesGitGrepToggle = SetFindInCommitFilesGitGrepVisibility,
+            };
+            _formFindInCommitFilesGitGrep.Closed += (_, _) => _formFindInCommitFilesGitGrep = null;
+        }
+
+        _formFindInCommitFilesGitGrep.GitGrepExpressionText = !string.IsNullOrEmpty(text)
+            ? text
+            : FindInCommitFilesGitGrepActive ? cboFindInCommitFilesGitGrep.Text : null;
+        _formFindInCommitFilesGitGrep.SetSearchItems(_gitGrepSearchItems);
+        _formFindInCommitFilesGitGrep.SetShowFindInCommitFilesGitGrep(FindInCommitFilesGitGrepVisible);
+        if (!_formFindInCommitFilesGitGrep.IsVisible)
+        {
+            _formFindInCommitFilesGitGrep.Show(owner);
+        }
+
+        _formFindInCommitFilesGitGrep.Activate();
     }
 
     private void FilterTimer_Tick(object? sender, EventArgs e)

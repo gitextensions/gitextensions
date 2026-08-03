@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -10,6 +10,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
@@ -474,11 +475,20 @@ public sealed partial class ParityScreenshotTests
 
             switch (target)
             {
+                // parity-scaffolding: Seeds editable Avalonia combo boxes from the shared capture plan.
+                case ComboBox comboBox when comboBox.IsEditable:
+                    comboBox.Text = text;
+                    break;
                 case TextBox textBox:
                     textBox.Text = text;
                     break;
                 case ContentControl contentControl:
                     contentControl.Content = text;
+                    break;
+
+                // parity-scaffolding: Seeds native AvaloniaEdit surfaces from the shared capture plan.
+                case TextEditor textEditor:
+                    textEditor.Text = text;
                     break;
                 default:
                     throw new InvalidDataException($"Text seed field '{fieldName}' does not expose a supported text boundary.");
