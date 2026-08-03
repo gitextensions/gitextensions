@@ -454,6 +454,17 @@ internal static class CaptureRunner
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
             File.Copy(file, destination, overwrite: true);
         }
+
+        // parity-scaffolding: AppSettings derives its portable settings location from a
+        // recognized Git Extensions app host. The isolated alias still starts this tool's
+        // apphost payload, while keeping every settings read and write inside the worker root.
+        string captureHost = Path.Combine(sourceRoot, $"{Assembly.GetExecutingAssembly().GetName().Name}.exe");
+        if (!File.Exists(captureHost))
+        {
+            throw new FileNotFoundException("The capture worker apphost is missing.", captureHost);
+        }
+
+        File.Copy(captureHost, Path.Combine(destinationRoot, "GitExtensions.exe"), overwrite: true);
     }
 
     private static JsonSerializerOptions CreateJsonOptions()
@@ -553,6 +564,7 @@ internal static class CaptureRunner
             host.Show();
         }
 
+        ComponentFactory.PrepareAfterHandle(root, commands);
         Application.DoEvents();
         int currentDpi = NativeMethods.GetWindowDpi(root.FindForm()?.Handle ?? root.Handle);
         if (dpiMode == CaptureDpiMode.NativeMonitor)
@@ -610,18 +622,7 @@ internal static class CaptureRunner
 
     private static async Task<int> RunWorkerAsync(string runtimeRoot, IReadOnlyList<string> arguments)
     {
-        string assemblyName = Assembly.GetExecutingAssembly().GetName().Name!;
-        string executablePath = Path.Combine(runtimeRoot, $"{assemblyName}.exe");
-        ProcessStartInfo startInfo;
-        if (File.Exists(executablePath))
-        {
-            startInfo = new ProcessStartInfo(executablePath);
-        }
-        else
-        {
-            startInfo = new ProcessStartInfo("dotnet");
-            startInfo.ArgumentList.Add(Path.Combine(runtimeRoot, $"{assemblyName}.dll"));
-        }
+        ProcessStartInfo startInfo = new(Path.Combine(runtimeRoot, "GitExtensions.exe"));
 
         foreach (string argument in arguments)
         {
@@ -630,6 +631,7 @@ internal static class CaptureRunner
 
         startInfo.WorkingDirectory = runtimeRoot;
         startInfo.UseShellExecute = false;
+        startInfo.Environment["GITEXTENSIONS_DEBUG_FAIL_FAST"] = "1";
         using Process process = Process.Start(startInfo)
             ?? throw new InvalidOperationException("The capture worker could not be started.");
         await process.WaitForExitAsync();

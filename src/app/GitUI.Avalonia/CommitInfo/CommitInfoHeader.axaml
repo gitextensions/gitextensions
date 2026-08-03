@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:local="using:GitUI"
+             x:Class="GitUI.CommitInfo.CommitInfoHeader">
+  <Grid ColumnDefinitions="Auto,*">
+    <local:AvatarControl x:Name="avatarControl"
+                         Margin="0,0,8,0"
+                         VerticalAlignment="Top" />
+    <compat:XhtmlTextBlock x:Name="rtbRevisionHeader"
+                           Grid.Column="1"
+                           Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+                           FontFamily="{DynamicResource GitExtensionsUiFontFamily}"
+                           FontSize="{DynamicResource GitExtensionsUiFontSize}"
+                           FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
+                           FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
+                           Text=""
+                           TextWrapping="NoWrap"
+                           VerticalAlignment="Top"
+                           LinkClicked="rtbRevisionHeader_LinkClicked"
+                           KeyDown="rtbRevisionHeader_KeyDown"
+                           PointerPressed="rtbRevisionHeader_MouseDown" />
+  </Grid>
+</UserControl>
