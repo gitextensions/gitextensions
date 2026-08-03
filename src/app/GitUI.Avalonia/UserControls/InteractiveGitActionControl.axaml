@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.UserControls.InteractiveGitActionControl"
+             d:DesignWidth="424"
+             d:DesignHeight="34"
+             Height="34"
+             Background="{DynamicResource GitExtensionsInteractiveActionBackgroundBrush}">
+  <Grid ColumnDefinitions="28,*,Auto">
+    <Image x:Name="IconBox"
+           Width="16"
+           Height="16"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"
+           Source="{x:Static properties:Images.Information}" />
+    <TextBlock x:Name="TextLabel"
+               Grid.Column="1"
+               VerticalAlignment="Center"
+               Foreground="{DynamicResource GitExtensionsInteractiveActionForegroundBrush}" />
+    <StackPanel x:Name="ButtonContainer"
+                Grid.Column="2"
+                Margin="0,2,2,2"
+                Orientation="Horizontal"
+                Spacing="6">
+      <Button x:Name="ResolveButton" MinWidth="75" Height="23" Content="Resolve..." />
+      <Button x:Name="ContinueButton" MinWidth="75" Height="23" Content="Continue" />
+      <Button x:Name="AbortButton" MinWidth="75" Height="23" Content="Abort" />
+      <Button x:Name="MoreButton" MinWidth="75" Height="23" Content="M_ore..." />
+    </StackPanel>
+  </Grid>
+</UserControl>

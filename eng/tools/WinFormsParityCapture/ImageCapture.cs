@@ -1,4 +1,5 @@
 ﻿using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using GitExtensions.ParityCapture;
 
 namespace WinFormsParityCapture;
@@ -28,11 +29,65 @@ internal static class ImageCapture
         }
 
         Rectangle screenBounds = control.RectangleToScreen(control.ClientRectangle);
-        Bitmap bitmap = new(screenBounds.Width, screenBounds.Height, PixelFormat.Format32bppArgb);
-        using Graphics graphics = Graphics.FromImage(bitmap);
-        graphics.CopyFromScreen(screenBounds.Location, Point.Empty, screenBounds.Size, CopyPixelOperation.SourceCopy);
-        EnsureRenderedContent(bitmap, "screen capture");
-        return new CaptureImageResult(bitmap, CaptureMethod.ScreenGrab, screenBounds);
+        Form? host = control.FindForm();
+        if (host is not null)
+        {
+            Rectangle hostBounds = NativeMethods.GetWindowRectangle(host.Handle);
+            using Bitmap hostBitmap = new(hostBounds.Width, hostBounds.Height, PixelFormat.Format32bppArgb);
+            using (Graphics hostGraphics = Graphics.FromImage(hostBitmap))
+            {
+                IntPtr hostDeviceContext = hostGraphics.GetHdc();
+                bool hostRendered;
+                try
+                {
+                    hostRendered = NativeMethods.PrintWindowContent(host.Handle, hostDeviceContext);
+                }
+                finally
+                {
+                    hostGraphics.ReleaseHdc(hostDeviceContext);
+                }
+
+                Rectangle crop = new(
+                    screenBounds.X - hostBounds.X,
+                    screenBounds.Y - hostBounds.Y,
+                    screenBounds.Width,
+                    screenBounds.Height);
+                if (hostRendered
+                    && crop.X >= 0
+                    && crop.Y >= 0
+                    && crop.Right <= hostBitmap.Width
+                    && crop.Bottom <= hostBitmap.Height)
+                {
+                    Bitmap hostedControl = hostBitmap.Clone(crop, PixelFormat.Format32bppArgb);
+                    if (HasRenderedContent(hostedControl))
+                    {
+                        return new CaptureImageResult(hostedControl, CaptureMethod.PrintWindow, screenBounds);
+                    }
+
+                    hostedControl.Dispose();
+                }
+            }
+        }
+
+        Bitmap drawToBitmap = new(screenBounds.Width, screenBounds.Height, PixelFormat.Format32bppArgb);
+        try
+        {
+            control.DrawToBitmap(drawToBitmap, control.ClientRectangle);
+        }
+        catch (Exception exception) when (exception is ArgumentException or ExternalException or InvalidOperationException)
+        {
+            drawToBitmap.Dispose();
+            throw new CaptureStateUnsupportedException($"DrawToBitmap does not support this control: {exception.Message}");
+        }
+
+        if (HasRenderedContent(drawToBitmap))
+        {
+            return new CaptureImageResult(drawToBitmap, CaptureMethod.DrawToBitmap, screenBounds);
+        }
+
+        drawToBitmap.Dispose();
+        throw new CaptureStateUnsupportedException(
+            "The owning window and DrawToBitmap both returned blank client content.");
     }
 
     private static CaptureImageResult CaptureScreen(Control root, IReadOnlyList<ToolStripDropDown> popups)
@@ -88,6 +143,17 @@ internal static class ImageCapture
 
     private static void EnsureRenderedContent(Bitmap bitmap, string method)
     {
+        if (HasRenderedContent(bitmap))
+        {
+            return;
+        }
+
+        bitmap.Dispose();
+        throw new CaptureStateUnsupportedException($"{method} returned a blank image.");
+    }
+
+    private static bool HasRenderedContent(Bitmap bitmap)
+    {
         int stepX = Math.Max(1, bitmap.Width / 64);
         int stepY = Math.Max(1, bitmap.Height / 64);
         int firstPixel = bitmap.GetPixel(0, 0).ToArgb();
@@ -97,13 +163,12 @@ internal static class ImageCapture
             {
                 if (bitmap.GetPixel(x, y).ToArgb() != firstPixel)
                 {
-                    return;
+                    return true;
                 }
             }
         }
 
-        bitmap.Dispose();
-        throw new CaptureStateUnsupportedException($"{method} returned a blank image.");
+        return false;
     }
 }
 

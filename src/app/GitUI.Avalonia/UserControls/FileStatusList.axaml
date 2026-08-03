@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:compat="using:GitUI.Compat"
              xmlns:properties="using:GitUI.Properties"
+             xmlns:userControls="using:GitUI.UserControls"
              x:Class="GitUI.FileStatusList">
   <UserControl.ContextMenu>
     <ContextMenu x:Name="ItemContextMenu">
@@ -155,7 +156,7 @@
       </compat:IconDropDownButton>
     </StackPanel>
     <Grid DockPanel.Dock="Top" Height="25" ColumnDefinitions="*,Auto,Auto">
-      <TextBox x:Name="cboFilterComboBox" Grid.Column="0" MinHeight="23" Padding="4,1" PlaceholderText="Filter files using a regular expression..." />
+      <userControls:WatermarkComboBox x:Name="cboFilterComboBox" Grid.Column="0" MinHeight="23" Padding="4,1" Watermark="Filter files using a regular expression..." />
       <Button x:Name="DeleteFilterButton" Grid.Column="1" Classes="gitextensions-toolbar-button gitextensions-icon-only" Width="23" Height="23" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="/Resources/Icons/DeleteText.png" />
       </Button>
@@ -163,7 +164,7 @@
     </Grid>
     <Separator x:Name="lblSplitter" DockPanel.Dock="Top" />
     <Grid x:Name="FindInCommitFilesGitGrepPanel" DockPanel.Dock="Top" Height="25" ColumnDefinitions="*,Auto" IsVisible="False">
-      <TextBox x:Name="cboFindInCommitFilesGitGrep" Grid.Column="0" PlaceholderText="Find in commit files using git-grep regular expression..." />
+      <userControls:WatermarkComboBox x:Name="cboFindInCommitFilesGitGrep" Grid.Column="0" Watermark="Find in commit files using git-grep regular expression..." />
       <Button x:Name="DeleteSearchButton" Grid.Column="1" Classes="gitextensions-toolbar-button gitextensions-icon-only" Width="23">
         <Image Classes="gitextensions-icon-16" Source="/Resources/Icons/DeleteText.png" />
       </Button>
