@@ -18,6 +18,7 @@ using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.Compat;
+using GitUI.SpellChecker;
 using Microsoft.VisualStudio.Threading;
 using WinFormsFont = GitExtensions.Shims.WinForms.Font;
 
@@ -311,8 +312,15 @@ public sealed partial class ParityScreenshotTests
         string outputRoot)
     {
         Control view = CreateView(context, descriptor.ViewType);
-        ApplyTextValues(view, component);
         (double width, double height) = GetCaptureSize(descriptor.ViewType);
+        double renderScale = scalePercent / 100d;
+        if (descriptor.ViewType == typeof(EditNetSpell))
+        {
+            // parity-scaffolding: The WinForms standalone host keeps this Designer-sized control in physical pixels.
+            width = (width - 0.75) / renderScale;
+            height = (height - 0.75) / renderScale;
+        }
+
         bool isWindow = view is Window;
         Window window = view as Window
             ?? new Window
@@ -329,12 +337,13 @@ public sealed partial class ParityScreenshotTests
         {
             PrepareView(view, context);
             window.Show();
-            double renderScale = scalePercent / 100d;
             window.SetRenderScaling(renderScale);
             if (!isWindow)
             {
                 await SeedStandaloneControlAsync(view, context);
             }
+
+            ApplyTextValues(view, component);
 
             await WaitForAsyncViewsAsync(view);
             Dispatcher.UIThread.RunJobs();

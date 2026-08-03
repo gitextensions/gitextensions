@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "3a39b00cd2c6b43d6483801b5f2ebbe476c7f0d5",
+  "analyzedCommit": "6be5c913c85e96e2093102478934aae3edb3bc8a",
   "axisOrder": [
     "structural",
     "functional",
@@ -3145,25 +3145,30 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.4/inventory/FormCommit-final.json"
           ],
           "platforms": [],
-          "findingCount": 378,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 377,
+          "note": "The current inventory still records 377 member-shape differences; P2.4 restored the two original autocomplete-provider registrations without claiming FormCommit structural parity."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.4/inventory/FormCommit-final.json",
+            "eng/avalonia/parity-evidence/P2.4/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 913,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "The current inventory retains 913 broader FormCommit findings. P2.4 proves that FormCommit registers the unchanged changed-file/symbol and commit-metadata providers and refreshes them with the change list on Windows and Linux."
         },
         "visual": {
           "status": "partial",
@@ -20363,61 +20368,91 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.4/inventory/EditNetSpell-final.json"
           ],
           "platforms": [],
-          "findingCount": 129,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 144,
+          "note": "The current inventory records 144 member-shape differences after restoring the original autocomplete surface; framework-forced event and control types remain open."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-03",
+          "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P2.4/inventory/EditNetSpell-final.json",
+            "eng/avalonia/parity-evidence/P2.4/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 252,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 261,
+          "note": "Provider aggregation, refresh/cancellation, debounce, Ctrl+Space, prefix and camel-hump filtering, navigation, acceptance, focus close, setting toggle, tooltip, and caret-positioned popup behavior are restored. The inventory still records 261 broader editor differences."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.4/diff-final9/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 573,
+          "note": "Twelve native-monitor 125% pairs across light, dark, custom and four states retain 573 non-color visual/control-tree findings. Avalonia captured all 48 requested states; the other 36 WinForms DPI requests are explicitly unavailable."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.4/diff-final9/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 216,
+          "note": "The editor and popup now resolve their WinForms light/dark/custom backgrounds and active selection colors through semantic resources; 216 diagnostic color findings remain across the full recursive trees."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.4/diff-final9/findings.json",
+            "eng/avalonia/parity-evidence/P2.4/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 39,
+          "note": "Normal, editor focus, editor disabled, and autocomplete-open states were captured across three themes and four scales; keyboard navigation, acceptance, and focus close are tested. Thirty-nine state findings and the complete manual interaction walk remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.4/windows-runtime/smoke.json",
+            "eng/avalonia/parity-evidence/P2.4/linux-runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P2.4/linux-runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P2.4/linux-runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed; macOS remains unverified."
         }
       }
     },
@@ -32133,6 +32168,71 @@
           "findingCount": 0,
           "note": "Windows and Linux gates cover this tranche; macOS and the complete platform parity matrix remain outstanding."
         }
+      }
+    },
+    {
+      "source": "src/app/GitUI/AutoCompletion/AutoCompleteRegexes.cs",
+      "twin": "src/app/GitUI/AutoCompletion/AutoCompleteRegexes.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "verified", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The exact framework-neutral source is compiled into GitUI.Avalonia through an MSBuild Link." },
+        "functional": { "status": "verified", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The unchanged regex catalog is consumed by the unchanged commit autocomplete provider." },
+        "visual": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This source declares no UI chrome." },
+        "themingAndColor": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This source declares no colors." },
+        "behavioralState": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This source has no interaction state." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "The shared source builds and its consumers pass on Windows and Linux; macOS remains unverified." }
+      }
+    },
+    {
+      "source": "src/app/GitUI/AutoCompletion/AutoCompleteWord.cs",
+      "twin": "src/app/GitUI/AutoCompletion/AutoCompleteWord.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "verified", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The exact framework-neutral source is compiled into GitUI.Avalonia through an MSBuild Link." },
+        "functional": { "status": "verified", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Prefix, equality, and camel-hump matching run from the unchanged source on both platforms." },
+        "visual": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This source declares no UI chrome." },
+        "themingAndColor": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This source declares no colors." },
+        "behavioralState": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This value object has no interaction state." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Focused tests pass on Windows and Linux; macOS remains unverified." }
+      }
+    },
+    {
+      "source": "src/app/GitUI/AutoCompletion/CommitAutoCompleteProvider.cs",
+      "twin": "src/app/GitUI/AutoCompletion/CommitAutoCompleteProvider.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "verified", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The exact framework-neutral source is compiled into GitUI.Avalonia through an MSBuild Link." },
+        "functional": { "status": "partial", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The unchanged changed-file/symbol provider is registered by FormCommit and compiled on both platforms; a provider-specific real-repository audit remains open with the broader FormCommit state audit." },
+        "visual": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This provider declares no UI chrome." },
+        "themingAndColor": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This provider declares no colors." },
+        "behavioralState": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "Provider interaction state is represented by EditNetSpell." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "The unchanged provider builds and its FormCommit registration passes on Windows and Linux; macOS remains unverified." }
+      }
+    },
+    {
+      "source": "src/app/GitUI/AutoCompletion/CommitMessageMetadataProvider.cs",
+      "twin": "src/app/GitUI/AutoCompletion/CommitMessageMetadataProvider.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "verified", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The exact framework-neutral source is compiled into GitUI.Avalonia through an MSBuild Link." },
+        "functional": { "status": "verified", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The exact five original commit-trailer completions are asserted on both platforms." },
+        "visual": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This provider declares no UI chrome." },
+        "themingAndColor": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This provider declares no colors." },
+        "behavioralState": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "Provider interaction state is represented by EditNetSpell." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Focused tests pass on Windows and Linux; macOS remains unverified." }
+      }
+    },
+    {
+      "source": "src/app/GitUI/AutoCompletion/IAutoCompleteProvider.cs",
+      "twin": "src/app/GitUI/AutoCompletion/IAutoCompleteProvider.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "verified", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The exact framework-neutral interface is compiled into GitUI.Avalonia through an MSBuild Link." },
+        "functional": { "status": "verified", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The unchanged cancellation-aware provider contract is exercised by EditNetSpell and both original providers." },
+        "visual": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This interface declares no UI chrome." },
+        "themingAndColor": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "This interface declares no colors." },
+        "behavioralState": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "Provider interaction state is represented by EditNetSpell." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "The shared interface and consumers pass on Windows and Linux; macOS remains unverified." }
       }
     }
   ]
