@@ -123,6 +123,16 @@ public sealed class FormCommitTests
     }
 
     [AvaloniaTest]
+    public void FormCommit_should_register_the_original_commit_message_auto_complete_providers()
+    {
+        FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithTwoUnstagedChanges()));
+
+        form.GetTestAccessor().Message.GetTestAccessor().AutoCompleteProviderCount.Should().Be(2);
+
+        form.Close();
+    }
+
+    [AvaloniaTest]
     public Task FormCommit_should_initialize_a_fixup_message_like_the_original()
         => AssertCommitKindAsync(CommitKind.Fixup, "fixup! Target commit", editable: false);
 
