@@ -1249,8 +1249,14 @@ internal static class WinFormsInputMetadata
             ["GitUI.FileStatusList"] =
             [
                 new("DeleteFilterButton", 7, null, null),
+                new("DeleteSearchButton", 4, null, null),
+                new("FileStatusListView", 9, null, null),
+                new("LoadingFiles", 2, null, null),
                 new("NoFiles", 1, null, null),
+                new("Toolbar", 0, null, null),
                 new("cboFilterComboBox", 5, null, null),
+                new("cboFindInCommitFilesGitGrep", 0, null, null),
+                new("lblSplitter", 8, null, null),
             ],
             ["GitUI.FindAndReplaceForm"] =
             [
