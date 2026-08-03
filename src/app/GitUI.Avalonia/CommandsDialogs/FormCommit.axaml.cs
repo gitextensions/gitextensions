@@ -11,6 +11,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitUI.AutoCompletion;
 using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
@@ -157,6 +158,8 @@ public sealed partial class FormCommit : GitModuleForm
         Message.TextChanged += Message_TextChanged;
         Message.KeyDown += Message_KeyDown;
         Message.SelectionChanged += Message_SelectionChanged;
+        Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(() => Module));
+        Message.AddAutoCompleteProvider(new CommitMessageMetadataProvider());
         Amend.IsCheckedChanged += Amend_CheckedChanged;
         ResetSoft.Click += ResetSoftClick;
         StageInSuperproject.IsCheckedChanged += StageInSuperproject_CheckedChanged;
@@ -292,6 +295,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void ReloadChanges(bool preferStaged = false)
     {
+        Message.RefreshAutoCompleteWords();
         CancellationToken cancellationToken = _refreshSequence.Next();
         IGitModule module = Module;
         ThreadHelper.FileAndForget(async () =>

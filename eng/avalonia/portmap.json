@@ -1443,20 +1443,20 @@
   "src/app/GitUI/SpellChecker/EditNetSpell.cs": {
     "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named multiline commit-message editor with the original text, selection, caret, line, watermark, and enabled-state boundary. NetSpell dictionary selection, debounced checking, theme-adapted red misspelling waves, exact 120-alpha adapted ill-formed-line marks, correction/add/ignore/remove context actions, and editing commands are functional. The separate typing-completion popup remains deferred; spelling suggestions are available from the context menu. In design mode command discovery stops before walking a command-less parent form."
+    "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
+    "notes": "Same-named multiline commit-message editor with the original text, selection, caret, line, watermark, and enabled-state boundary. NetSpell dictionary selection, debounced checking, theme-adapted red misspelling waves, exact 120-alpha adapted ill-formed-line marks, correction/add/ignore/remove context actions, and editing commands are functional. The original provider aggregation, debounce, Ctrl+Space activation, prefix/camel-hump filtering, keyboard navigation, acceptance, cancellation, setting toggle, tooltip, and caret-positioned native autocomplete list are functional. A dedicated semantic editor-background resource resolves through WinForms' Window/ControlLight theme boundary. In design mode command discovery stops before walking a command-less parent form."
   },
   "src/app/GitUI/SpellChecker/EditNetSpell.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Multiline Avalonia TextBox and non-interactive overlay retain the original editor and context-menu field boundary. DesignWidth and DesignHeight preserve the original 386-by-336 Designer surface without affecting runtime layout."
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Multiline Avalonia TextBox, non-interactive spelling overlay, and in-control AutoComplete ListBox retain the original editor, context-menu, and popup field boundaries. DesignWidth and DesignHeight preserve the original 386-by-336 Designer surface without affecting runtime layout."
   },
   "src/app/GitUI/SpellChecker/SpellCheckEditControl.cs": {
     "twin": "src/app/GitUI.Avalonia/SpellChecker/SpellCheckAdorner.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Avalonia DrawingContext twin renders wrapped-range spelling waves and commit-message length highlights over the native text presenter without platform window handles. The red spelling foreground is adapted against the resolved editor background and the ill-formed mark uses the original 120-alpha yellow AdaptBackColor result. Its public parameterless constructor lets Avalonia's out-of-process previewer instantiate the otherwise internal AXAML control. WinForms IME composition suppression has no direct Avalonia hook and remains a focused macOS/Linux validation item."
+    "basedOn": "58937dbe78448761e69f47d7170b991c511425ef",
+    "notes": "Avalonia DrawingContext twin renders wrapped-range spelling waves and commit-message length highlights over the native text presenter without platform window handles. The same presenter layout exposes caret geometry for EditNetSpell's autocomplete popup. The red spelling foreground is adapted against the resolved editor background and the ill-formed mark uses the original 120-alpha yellow AdaptBackColor result. Its public parameterless constructor lets Avalonia's out-of-process previewer instantiate the otherwise internal AXAML control. WinForms IME composition suppression has no direct Avalonia hook and remains a focused macOS/Linux validation item."
   },
   "src/app/GitUI/SpellChecker/SpellCheckerHelper.cs": {
     "twin": "src/app/GitUI/SpellChecker/SpellCheckerHelper.cs",
@@ -1618,8 +1618,8 @@
   "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Whole-file commit workflows are functional: staged/unstaged multi-selection and context actions, revision-aware FileViewer preview with the consumer-owned external-difftool action, selected-line stage/unstage/reset with reload blocking, normal/amend/empty commits, fixup/squash/amend autosquash messages, soft reset, commit-message persistence/history/templates and conventional prefixes, shared validation settings, custom author/sign-off/no-verify/GPG/reset-author arguments, merge-conflict and detached-HEAD recovery, commit-and-push including force-with-lease after amend, optional superproject staging, compact original-named toolbar/options/status controls, and the original close/refresh preferences. The same-named EditNetSpell editor now supplies deployed dictionaries, spell/line marks, and correction context actions. Git hook bypass is functional through No verify, while before/after commit event scripts retain their original placement around successful commits. Template-settings editing remains owned by the settings host."
+    "basedOn": "090464d5f5c350497427ad5b4717651df9c4f4d2",
+    "notes": "Whole-file commit workflows are functional: staged/unstaged multi-selection and context actions, revision-aware FileViewer preview with the consumer-owned external-difftool action, selected-line stage/unstage/reset with reload blocking, normal/amend/empty commits, fixup/squash/amend autosquash messages, soft reset, commit-message persistence/history/templates and conventional prefixes, shared validation settings, custom author/sign-off/no-verify/GPG/reset-author arguments, merge-conflict and detached-HEAD recovery, commit-and-push including force-with-lease after amend, optional superproject staging, compact original-named toolbar/options/status controls, and the original close/refresh preferences. The same-named EditNetSpell editor supplies deployed dictionaries, spell/line marks, correction context actions, and the original changed-file/symbol plus commit-metadata autocomplete providers, refreshed with the change list. Git hook bypass is functional through No verify, while before/after commit event scripts retain their original placement around successful commits. Template-settings editing remains owned by the settings host."
   },
   "src/app/GitUI/CommandsDialogs/FormPush.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPush.axaml.cs",
@@ -2565,24 +2565,34 @@
     "notes": "Entry point twin (with App.axaml.cs and StartupCoordinator.cs). Startup retains upstream working-directory discovery and routes arguments through GitUICommands.RunCommand. An explicit desktop lifetime sequences Git discovery, conditional automatic settings checks/repairs, unresolved checklist display, and then the requested command without exposing a hidden main window or shutting down between dialogs. Browse/modeless commands become and visibly open as MainWindow; modal commands run under explicit shutdown and return success/failure through the desktop process exit code. Startup also maps the platform default family and point-based AppSettings UI/commit/diff/monospace fonts into shared Avalonia resources, loads the shared CSS theme repository through the ThemeModule twin, projects AppColor/KnownColor and semantic brushes into variant dictionaries, and reloads Windows app color mode when the actual platform variant changes."
   },
   "src/app/GitUI/AutoCompletion/AutoCompleteRegexes.cs": {
-    "status": "unported",
-    "plannedIn": "P2.4"
+    "twin": "src/app/GitUI/AutoCompletion/AutoCompleteRegexes.cs",
+    "status": "functional",
+    "basedOn": "d558831375033c12f220b080d075be730cfbe3b3",
+    "notes": "Framework-neutral autocomplete regex catalog linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/AutoCompletion/AutoCompleteWord.cs": {
-    "status": "unported",
-    "plannedIn": "P2.4"
+    "twin": "src/app/GitUI/AutoCompletion/AutoCompleteWord.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Framework-neutral autocomplete word and camel-hump matcher linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/AutoCompletion/CommitAutoCompleteProvider.cs": {
-    "status": "unported",
-    "plannedIn": "P2.4"
+    "twin": "src/app/GitUI/AutoCompletion/CommitAutoCompleteProvider.cs",
+    "status": "functional",
+    "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
+    "notes": "Framework-neutral changed-file and symbol provider linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/AutoCompletion/CommitMessageMetadataProvider.cs": {
-    "status": "unported",
-    "plannedIn": "P2.4"
+    "twin": "src/app/GitUI/AutoCompletion/CommitMessageMetadataProvider.cs",
+    "status": "functional",
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "Framework-neutral commit-trailer provider linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/AutoCompletion/IAutoCompleteProvider.cs": {
-    "status": "unported",
-    "plannedIn": "P2.4"
+    "twin": "src/app/GitUI/AutoCompletion/IAutoCompleteProvider.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Framework-neutral autocomplete provider contract linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/BitmapExtensions.cs": {
     "status": "windowsOnly",

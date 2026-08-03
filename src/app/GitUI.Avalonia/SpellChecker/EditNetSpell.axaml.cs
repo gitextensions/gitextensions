@@ -3,7 +3,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -11,6 +13,8 @@ using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
+using GitUI.AutoCompletion;
+using Microsoft.VisualStudio.Threading;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
 using ResourceManager;
@@ -37,7 +41,26 @@ public sealed partial class EditNetSpell : GitModuleControl
 
     private WordDictionary? _wordDictionary;
 
+    private CancellationTokenSource _autoCompleteCancellationTokenSource = new();
+    private readonly List<IAutoCompleteProvider> _autoCompleteProviders = [];
+    private AsyncLazy<IEnumerable<AutoCompleteWord>?>? _autoCompleteListTask;
+    private bool _autoCompleteWasUserActivated;
+    private bool _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
+
+    // Avalonia routes navigation directly to the native list instead of sending virtual key strings.
+    private readonly HashSet<Key> _keysToSendToAutoComplete =
+    [
+        Key.Down,
+        Key.Up,
+        Key.PageUp,
+        Key.PageDown,
+        Key.End,
+        Key.Home,
+    ];
+
     private readonly DispatcherTimer _spellCheckTimer;
+    private readonly DispatcherTimer _autoCompleteTimer;
+    private readonly DispatcherTimer _autoCompleteToolTipTimer;
     private readonly Spelling _spelling;
     private readonly IWordAtCursorExtractor _wordAtCursorExtractor = new WordAtCursorExtractor();
     private int _contextMenuTextIndex = -1;
@@ -61,17 +84,35 @@ public sealed partial class EditNetSpell : GitModuleControl
         };
         _spellCheckTimer.Tick += SpellCheckTimerTick;
 
+        _autoCompleteTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(200),
+        };
+        _autoCompleteTimer.Tick += AutoCompleteTimer_Tick;
+        _autoCompleteToolTipTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(2),
+        };
+        _autoCompleteToolTipTimer.Tick += AutoCompleteToolTipTimer_Tick;
+
+        AutoComplete.ItemTemplate = new FuncDataTemplate<AutoCompleteWord>((word, _) =>
+            new TextBlock { Text = word?.Word ?? string.Empty });
+
         TextBox.TextWrapping = AppSettings.MessageEditorWordWrap.Value
             ? TextWrapping.Wrap
             : TextWrapping.NoWrap;
         TextBox.TextChanged += TextBoxTextChanged;
+        TextBox.KeyDown += TextBox_KeyDown;
+        TextBox.TextInput += TextBox_TextInput;
+        TextBox.LostFocus += TextBox_LostFocus;
         TextBox.PropertyChanged += TextBoxPropertyChanged;
         TextBox.PointerPressed += TextBoxPointerPressed;
+        AutoComplete.PointerReleased += AutoComplete_Click;
         TextBox.LayoutUpdated += (_, _) => SpellCheckAdorner.InvalidateVisual();
         SpellCheckContextMenu.Opening += SpellCheckContextMenuOpening;
         PropertyChanged += EditNetSpellPropertyChanged;
-        AttachedToVisualTree += (_, _) => CheckSpelling();
-        DetachedFromVisualTree += (_, _) => _spellCheckTimer.Stop();
+        AttachedToVisualTree += EditNetSpellAttachedToVisualTree;
+        DetachedFromVisualTree += EditNetSpellDetachedFromVisualTree;
 
         SpellCheckAdorner.TextBox = TextBox;
         InitializeComplete();
@@ -190,8 +231,30 @@ public sealed partial class EditNetSpell : GitModuleControl
             ? (commands.Module.GetEffectiveSettings() as DistributedSettings ?? AppSettings.SettingsContainer).Detached()
             : AppSettings.SettingsContainer.Detached();
 
+    private void EditNetSpellAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        CheckSpelling();
+        ToggleAutoCompletion();
+    }
+
+    private void EditNetSpellDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        _spellCheckTimer.Stop();
+        CloseAutoComplete();
+        CancelAutoComplete();
+    }
+
     private void TextBoxTextChanged(object? sender, EventArgs e)
     {
+        if (!_disableAutoCompleteTriggerOnTextUpdate)
+        {
+            _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
+
+            // Reset when timer is already running
+            _autoCompleteTimer.Stop();
+            _autoCompleteTimer.Start();
+        }
+
         SpellCheckAdorner.MisspelledWords.Clear();
         SpellCheckAdorner.IllFormedLines.Clear();
         SpellCheckAdorner.InvalidateVisual();
@@ -202,6 +265,75 @@ public sealed partial class EditNetSpell : GitModuleControl
             _spellCheckTimer.Stop();
             _spellCheckTimer.Start();
         }
+    }
+
+    private void TextBox_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (AutoComplete.IsVisible && e.KeyModifiers == KeyModifiers.None && _keysToSendToAutoComplete.Contains(e.Key))
+        {
+            MoveAutoCompleteSelection(e.Key);
+            e.Handled = true;
+            return;
+        }
+
+        if (AutoComplete.IsVisible && e.Key is Key.Tab or Key.Enter)
+        {
+            AcceptAutoComplete();
+            e.Handled = true;
+            return;
+        }
+
+        if (AutoComplete.IsVisible && e.Key == Key.Escape)
+        {
+            CloseAutoComplete();
+            e.Handled = true;
+            return;
+        }
+
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Space && AppSettings.ProvideAutocompletion)
+        {
+            UpdateOrShowAutoComplete(calledByUser: true);
+            e.Handled = true;
+            return;
+        }
+
+        if (e.Key == Key.Back)
+        {
+            _disableAutoCompleteTriggerOnTextUpdate = false;
+
+            // When a character is deleted...
+            if (CaretIndex == 0 || Text[CaretIndex - 1].IsSeparator())
+            {
+                CloseAutoComplete();
+            }
+        }
+    }
+
+    private void TextBox_TextInput(object? sender, TextInputEventArgs e)
+    {
+        if (string.IsNullOrEmpty(e.Text))
+        {
+            return;
+        }
+
+        bool isSeparator = e.Text[^1].IsSeparator();
+        _disableAutoCompleteTriggerOnTextUpdate = isSeparator;
+        if (isSeparator)
+        {
+            CloseAutoComplete();
+        }
+    }
+
+    private void TextBox_LostFocus(object? sender, RoutedEventArgs e)
+    {
+        // Avalonia raises LostFocus before the list receives focus, so defer the original ActiveControl check.
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!AutoComplete.IsKeyboardFocusWithin)
+            {
+                CloseAutoComplete();
+            }
+        }, DispatcherPriority.Input);
     }
 
     private void TextBoxPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -259,6 +391,15 @@ public sealed partial class EditNetSpell : GitModuleControl
                 CheckSpelling();
             },
             isChecked: AppSettings.MarkIllFormedLinesInCommitMsg,
+            isCheckable: true));
+        items.Add(CreateMenuItem(
+            _autoCompletionText.Text,
+            (_, _) =>
+            {
+                AppSettings.ProvideAutocompletion = !AppSettings.ProvideAutocompletion;
+                ToggleAutoCompletion();
+            },
+            isChecked: AppSettings.ProvideAutocompletion,
             isCheckable: true));
 
         SpellCheckContextMenu.ItemsSource = items;
@@ -384,6 +525,277 @@ public sealed partial class EditNetSpell : GitModuleControl
         CheckSpelling();
     }
 
+    private void ToggleAutoCompletion()
+    {
+        if (!AppSettings.ProvideAutocompletion || Design.IsDesignMode)
+        {
+            CloseAutoComplete();
+            CancelAutoComplete();
+            return;
+        }
+
+        InitializeAutoCompleteWordsTask();
+        CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
+        AsyncLazy<IEnumerable<AutoCompleteWord>?> autoCompleteListTask = _autoCompleteListTask!;
+
+        ThreadHelper.FileAndForget(async () =>
+        {
+            IEnumerable<AutoCompleteWord>? words = await autoCompleteListTask.GetValueAsync(cancellationToken);
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            if (words is not null)
+            {
+                _spelling.AddAutoCompleteWords(words.Select(word => word.Word));
+            }
+        });
+    }
+
+    public void RefreshAutoCompleteWords()
+    {
+        if (AppSettings.ProvideAutocompletion)
+        {
+            InitializeAutoCompleteWordsTask();
+        }
+    }
+
+    private void InitializeAutoCompleteWordsTask()
+    {
+        CancelAutoComplete();
+        _autoCompleteCancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
+        _autoCompleteListTask = new AsyncLazy<IEnumerable<AutoCompleteWord>?>(
+            async () =>
+            {
+                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
+                Task<IEnumerable<AutoCompleteWord>>[] subTasks =
+                    [.. _autoCompleteProviders.Select(provider => provider.GetAutoCompleteWordsAsync(cancellationToken))];
+                try
+                {
+                    IEnumerable<AutoCompleteWord>[] results = await Task.WhenAll(subTasks);
+                    return results.SelectMany(result => result).Distinct();
+                }
+                catch (OperationCanceledException)
+                {
+                    // WaitAll was cancelled
+                    return null;
+                }
+                catch (Exception)
+                {
+                    if (subTasks.Any(task => task.IsCanceled))
+                    {
+                        // At least one task was cancelled
+                        return null;
+                    }
+
+                    throw;
+                }
+            },
+            ThreadHelper.JoinableTaskFactory);
+    }
+
+    public void AddAutoCompleteProvider(IAutoCompleteProvider autoCompleteProvider)
+    {
+        _autoCompleteProviders.Add(autoCompleteProvider);
+    }
+
+    private string GetWordAtCursor()
+    {
+        return _wordAtCursorExtractor.Extract(Text, CaretIndex - 1);
+    }
+
+    private void CloseAutoComplete()
+    {
+        AutoComplete.IsVisible = false;
+        _autoCompleteWasUserActivated = false;
+    }
+
+    private void AcceptAutoComplete(AutoCompleteWord? completionWord = null)
+    {
+        completionWord ??= AutoComplete.SelectedItem as AutoCompleteWord;
+        if (completionWord is null)
+        {
+            return;
+        }
+
+        string word = GetWordAtCursor();
+        int start = Math.Max(0, CaretIndex - word.Length);
+        TextBox.SelectionStart = start;
+        TextBox.SelectionEnd = CaretIndex;
+        TextBox.SelectedText = completionWord.Word;
+        CaretIndex = start + completionWord.Word.Length;
+        CloseAutoComplete();
+    }
+
+    private void UpdateOrShowAutoComplete(bool calledByUser)
+    {
+        if (TopLevel.GetTopLevel(this) is null && !Design.IsDesignMode)
+        {
+            return;
+        }
+
+        if (_autoCompleteListTask is null || !AppSettings.ProvideAutocompletion)
+        {
+            return;
+        }
+
+        if (!_autoCompleteListTask.IsValueFactoryCompleted)
+        {
+            _autoCompleteListTask.GetValueAsync().Forget();
+
+            if (calledByUser)
+            {
+                ToolTip.SetTip(TextBox, "AutoComplete is not available yet (it is still parsing the changed files).");
+                ToolTip.SetIsOpen(TextBox, true);
+                _autoCompleteToolTipTimer.Stop();
+                _autoCompleteToolTipTimer.Start();
+            }
+
+            return;
+        }
+
+        _autoCompleteToolTipTimer.Stop();
+        ToolTip.SetIsOpen(TextBox, false);
+
+        string word = GetWordAtCursor();
+        if (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated)
+        {
+            CloseAutoComplete();
+            return;
+        }
+
+        IEnumerable<AutoCompleteWord>? autoCompleteList =
+            ThreadHelper.JoinableTaskFactory.Run(_autoCompleteListTask.GetValueAsync);
+        IReadOnlyList<AutoCompleteWord> list = autoCompleteList?
+            .Where(candidate => candidate.Matches(word))
+            .OrderBy(candidate => candidate.Word, StringComparer.CurrentCultureIgnoreCase)
+            .ToList()
+            ?? [];
+
+        if (list.Count == 0)
+        {
+            CloseAutoComplete();
+            return;
+        }
+
+        if (list.Count == 1 && calledByUser)
+        {
+            AcceptAutoComplete(list[0]);
+            return;
+        }
+
+        if (calledByUser)
+        {
+            _autoCompleteWasUserActivated = true;
+        }
+
+        ShowAutoCompleteList(list);
+    }
+
+    private void ShowAutoCompleteList(IReadOnlyList<AutoCompleteWord> list)
+    {
+        double renderScaling = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
+        double itemHeight = 14 / renderScaling;
+        double verticalScrollBarWidth = 17 / renderScaling;
+
+        double width = list.Max(word =>
+        {
+            TextBlock text = new()
+            {
+                FontFamily = TextBox.FontFamily,
+                FontSize = TextBox.FontSize,
+                FontStyle = TextBox.FontStyle,
+                FontWeight = TextBox.FontWeight,
+                Text = word.Word,
+            };
+            text.Measure(Avalonia.Size.Infinity);
+            return text.DesiredSize.Width;
+        });
+        width = Math.Max(24, Math.Ceiling(width) + 6 - (1 / renderScaling));
+
+        Point cursorPosition = SpellCheckAdorner.GetTextPosition(CaretIndex);
+        double top = cursorPosition.Y;
+        double height = (list.Count + 1) * itemHeight;
+        if (top + height > Bounds.Height)
+        {
+            // if reduced height is not too small then shrink only
+            if (Bounds.Height - top > Bounds.Height / 2)
+            {
+                height = Bounds.Height - top;
+            }
+            else
+            {
+                // if shrinking wasn't acceptable, move higher
+                top = Math.Max(0, Bounds.Height - height);
+
+                // and reduce height if moving up wasn't enough
+                height = Math.Min(Bounds.Height - top, height);
+            }
+
+            width += verticalScrollBarWidth;
+        }
+
+        double left = cursorPosition.X + (1 / renderScaling);
+        Canvas.SetLeft(AutoComplete, Math.Clamp(left, 0, Math.Max(0, Bounds.Width - width)));
+        Canvas.SetTop(AutoComplete, top);
+        AutoComplete.Width = width;
+        AutoComplete.Height = Math.Max(itemHeight, height);
+        AutoComplete.ItemsSource = list;
+        AutoComplete.SelectedIndex = 0;
+        AutoComplete.IsVisible = true;
+        TextBox.Focus();
+    }
+
+    private void MoveAutoCompleteSelection(Key key)
+    {
+        int count = AutoComplete.ItemCount;
+        if (count == 0)
+        {
+            return;
+        }
+
+        int index = Math.Max(0, AutoComplete.SelectedIndex);
+        index = key switch
+        {
+            Key.Up => index == 0 ? count - 1 : index - 1,
+            Key.Down => index == count - 1 ? 0 : index + 1,
+            Key.PageUp => Math.Max(0, index - 5),
+            Key.PageDown => Math.Min(count - 1, index + 5),
+            Key.Home => 0,
+            Key.End => count - 1,
+            _ => index,
+        };
+        AutoComplete.SelectedIndex = index;
+        AutoComplete.ScrollIntoView(index);
+        TextBox.Focus();
+    }
+
+    private void AutoComplete_Click(object? sender, PointerReleasedEventArgs e)
+    {
+        if (e.InitialPressMouseButton == MouseButton.Left)
+        {
+            AcceptAutoComplete();
+        }
+    }
+
+    private void AutoCompleteTimer_Tick(object? sender, EventArgs e)
+    {
+        UpdateOrShowAutoComplete(calledByUser: false);
+        _autoCompleteTimer.Stop();
+    }
+
+    public void CancelAutoComplete()
+    {
+        _autoCompleteCancellationTokenSource.Cancel();
+        _autoCompleteToolTipTimer.Stop();
+        _autoCompleteTimer.Stop();
+    }
+
+    private void AutoCompleteToolTipTimer_Tick(object? sender, EventArgs e)
+    {
+        ToolTip.SetIsOpen(TextBox, false);
+        _autoCompleteToolTipTimer.Stop();
+    }
+
     private void ReplaceText(int start, int length, string replacement)
     {
         string text = Text;
@@ -502,6 +914,7 @@ public sealed partial class EditNetSpell : GitModuleControl
         return item;
     }
 
+    // parity-scaffolding: Drives and inspects editor states that the paired capture and headless tests cannot reach through a compositor.
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor(EditNetSpell control)
@@ -514,6 +927,12 @@ public sealed partial class EditNetSpell : GitModuleControl
 
         public ContextMenu ContextMenu => control.SpellCheckContextMenu;
 
+        public ListBox AutoComplete => control.AutoComplete;
+
+        public bool IsAutoCompleteVisible => control.AutoComplete.IsVisible;
+
+        public int AutoCompleteProviderCount => control._autoCompleteProviders.Count;
+
         public string DictionaryPath => EditNetSpell.DictionaryDirectory;
 
         public int RenderedMisspellingCount => control.SpellCheckAdorner.RenderedMisspellingCount;
@@ -523,5 +942,21 @@ public sealed partial class EditNetSpell : GitModuleControl
         public Avalonia.Media.Color SpellingWaveColor => control.SpellCheckAdorner.SpellingWaveColor;
 
         public void OpenContextMenu() => control.SpellCheckContextMenuOpening(control.SpellCheckContextMenu, new CancelEventArgs());
+
+        public void AcceptAutoComplete() => control.AcceptAutoComplete();
+
+        public void MoveAutoCompleteSelection(Key key) => control.MoveAutoCompleteSelection(key);
+
+        public async Task ShowAutoCompleteAsync(bool calledByUser)
+        {
+            control.InitializeAutoCompleteWordsTask();
+            await control._autoCompleteListTask!.GetValueAsync();
+            control.UpdateOrShowAutoComplete(calledByUser);
+        }
+
+        public void ShowAutoCompleteForCapture(IReadOnlyList<AutoCompleteWord> words)
+            => control.ShowAutoCompleteList(words);
+
+        public void CloseAutoComplete() => control.CloseAutoComplete();
     }
 }
