@@ -1,20 +1,78 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:GitUI"
-             x:Class="GitUI.CommitInfo.CommitInfo">
-  <ScrollViewer>
-    <Grid Margin="8,4" ColumnDefinitions="Auto,*">
-      <local:AvatarControl x:Name="avatarControl"
-                           Margin="0,0,8,0"
-                           VerticalAlignment="Top" />
-      <StackPanel Grid.Column="1" Spacing="8">
-        <SelectableTextBlock x:Name="RevisionHeader"
-                             Classes="gitextensions-commit-header"
-                             Opacity="0.85" />
-        <SelectableTextBlock x:Name="rtbxCommitMessage"
-                             Classes="gitextensions-commit-message"
-                             TextWrapping="Wrap" />
-      </StackPanel>
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:local="using:GitUI.CommitInfo"
+             x:Class="GitUI.CommitInfo.CommitInfo"
+             ContextMenu="{StaticResource CommitInfoContextMenu}">
+  <UserControl.Resources>
+    <ContextMenu x:Key="CommitInfoContextMenu" x:Name="commitInfoContextMenuStrip">
+      <MenuItem x:Name="copyLinkToolStripMenuItem"
+                Header="Copy link" />
+      <MenuItem x:Name="copyCommitInfoToolStripMenuItem"
+                Header="_Copy commit info" />
+      <Separator x:Name="toolStripSeparator1" />
+      <MenuItem x:Name="showContainedInBranchesToolStripMenuItem"
+                Header="Show local branches containing this commit"
+                ToggleType="CheckBox" />
+      <MenuItem x:Name="showContainedInBranchesRemoteToolStripMenuItem"
+                Header="Show remote branches containing this commit"
+                ToggleType="CheckBox" />
+      <MenuItem x:Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem"
+                Header="Show remote branches only when no local branch contains this commit"
+                ToggleType="CheckBox" />
+      <MenuItem x:Name="showContainedInTagsToolStripMenuItem"
+                Header="Show tags containing this commit"
+                ToggleType="CheckBox" />
+      <MenuItem x:Name="showMessagesOfAnnotatedTagsToolStripMenuItem"
+                Header="Show messages of annotated tags"
+                ToggleType="CheckBox" />
+      <MenuItem x:Name="showTagThisCommitDerivesFromMenuItem"
+                Header="Show the most recent tag this commit derives from"
+                ToggleType="CheckBox" />
+      <Separator x:Name="toolStripSeparator2" />
+      <MenuItem x:Name="addNoteToolStripMenuItem"
+                Header="Add _notes" />
+    </ContextMenu>
+  </UserControl.Resources>
+  <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+    <Grid x:Name="tableLayout"
+          RowDefinitions="Auto,Auto,Auto"
+          Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+          IsVisible="False">
+      <local:CommitInfoHeader x:Name="commitInfoHeader"
+                              Margin="8,8,16,8" />
+      <Border x:Name="pnlCommitMessage"
+              Grid.Row="1"
+              Background="{DynamicResource GitExtensionsCommitMessageBackgroundBrush}">
+        <compat:XhtmlTextBlock x:Name="rtbxCommitMessage"
+                               Margin="8"
+                               Background="{DynamicResource GitExtensionsCommitMessageBackgroundBrush}"
+                               ContextMenu="{StaticResource CommitInfoContextMenu}"
+                               FontFamily="{DynamicResource GitExtensionsCommitFontFamily}"
+                               FontSize="{DynamicResource GitExtensionsCommitFontSize}"
+                               FontStyle="{DynamicResource GitExtensionsCommitFontStyle}"
+                               FontWeight="{DynamicResource GitExtensionsCommitFontWeight}"
+                               Text=""
+                               TextWrapping="Wrap"
+                               LinkClicked="LinkClicked"
+                               KeyDown="RichTextBox_KeyDown"
+                               PointerPressed="_RevisionHeader_MouseDown" />
+      </Border>
+      <compat:XhtmlTextBlock x:Name="RevisionInfo"
+                             Grid.Row="2"
+                             Margin="8,8,16,8"
+                             Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+                             ContextMenu="{StaticResource CommitInfoContextMenu}"
+                             FontFamily="{DynamicResource GitExtensionsUiFontFamily}"
+                             FontSize="{DynamicResource GitExtensionsUiFontSize}"
+                             FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
+                             FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
+                             Text=""
+                             TextWrapping="Wrap"
+                             LinkClicked="LinkClicked"
+                             KeyDown="RichTextBox_KeyDown"
+                             PointerPressed="_RevisionHeader_MouseDown" />
     </Grid>
   </ScrollViewer>
 </UserControl>
