@@ -32234,6 +32234,941 @@
         "behavioralState": { "status": "notApplicable", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": [], "platforms": [], "findingCount": 0, "note": "Provider interaction state is represented by EditNetSpell." },
         "platform": { "status": "partial", "verifiedOn": "2026-08-03", "commit": "6be5c913c85e96e2093102478934aae3edb3bc8a", "evidence": ["eng/avalonia/parity-evidence/P2.4/windows-focused.trx", "eng/avalonia/parity-evidence/P2.4/linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "The shared interface and consumers pass on Windows and Linux; macOS remains unverified." }
       }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/BranchSelector.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/BranchSelector.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/BranchSelector.json"
+          ],
+          "platforms": [],
+          "findingCount": 52,
+          "note": "The P2.5 source inventory records 52 remaining source/member findings; this is not an exact structural twin claim."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/BranchSelector.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 52,
+          "note": "The focused P2.5 suite passes on Windows and Linux, while the recorded source-level findings and complete consumer audit remain open."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 833,
+          "note": "Six native-125% WinForms/Avalonia pairs were compared; 833 diagnostic findings and the other DPI/state requests remain open."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 146,
+          "note": "Light, dark, and custom-theme captures were compared at the machine's native 125% context; remaining color findings and DPI contexts stay open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 60,
+          "note": "The declared representative states and focused behavior tests ran; the exhaustive interaction-state and consumer audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover this tranche, including native Wayland, X11, and Flatpak Wayland; macOS and the complete platform matrix remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/BranchSelector.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/BranchSelector.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/BranchSelector.json"
+          ],
+          "platforms": [],
+          "findingCount": 52,
+          "note": "The P2.5 source inventory records 52 remaining source/member findings; this is not an exact structural twin claim."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/BranchSelector.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 52,
+          "note": "The focused P2.5 suite passes on Windows and Linux, while the recorded source-level findings and complete consumer audit remain open."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 833,
+          "note": "Six native-125% WinForms/Avalonia pairs were compared; 833 diagnostic findings and the other DPI/state requests remain open."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 146,
+          "note": "Light, dark, and custom-theme captures were compared at the machine's native 125% context; remaining color findings and DPI contexts stay open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 60,
+          "note": "The declared representative states and focused behavior tests ran; the exhaustive interaction-state and consumer audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover this tranche, including native Wayland, X11, and Flatpak Wayland; macOS and the complete platform matrix remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/CaseSensitiveComboBox.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/CaseSensitiveComboBox.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/CaseSensitiveComboBox.json"
+          ],
+          "platforms": [],
+          "findingCount": 19,
+          "note": "The P2.5 source inventory records 19 remaining source/member findings; this is not an exact structural twin claim."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/CaseSensitiveComboBox.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 19,
+          "note": "The focused P2.5 suite passes on Windows and Linux, while the recorded source-level findings and complete consumer audit remain open."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 3,
+          "note": "The native WinForms reference was captured, but the exact-height standalone Avalonia headless surface rendered blank; visual closure moves to its FormRemotes consumer."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "No like-for-like pixels were available because the Avalonia standalone headless surface did not render; consumer-surface theme closure remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The declared representative states and focused behavior tests ran; the exhaustive interaction-state and consumer audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover this tranche, including native Wayland, X11, and Flatpak Wayland; macOS and the complete platform matrix remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/InteractiveGitActionControl.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/InteractiveGitActionControl.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/InteractiveGitActionControl.json"
+          ],
+          "platforms": [],
+          "findingCount": 55,
+          "note": "The P2.5 source inventory records 55 remaining source/member findings; this is not an exact structural twin claim."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/InteractiveGitActionControl.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 55,
+          "note": "The focused P2.5 suite passes on Windows and Linux, while the recorded source-level findings and complete consumer audit remain open."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1467,
+          "note": "Nine native-125% WinForms/Avalonia pairs were compared; 1,467 diagnostic findings and the other DPI/state requests remain open."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 246,
+          "note": "Light, dark, and custom-theme captures were compared at the machine's native 125% context; remaining color findings and DPI contexts stay open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 69,
+          "note": "The declared representative states and focused behavior tests ran; the exhaustive interaction-state and consumer audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover this tranche, including native Wayland, X11, and Flatpak Wayland; macOS and the complete platform matrix remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/InteractiveGitActionControl.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/InteractiveGitActionControl.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/InteractiveGitActionControl.json"
+          ],
+          "platforms": [],
+          "findingCount": 55,
+          "note": "The P2.5 source inventory records 55 remaining source/member findings; this is not an exact structural twin claim."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/InteractiveGitActionControl.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 55,
+          "note": "The focused P2.5 suite passes on Windows and Linux, while the recorded source-level findings and complete consumer audit remain open."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1467,
+          "note": "Nine native-125% WinForms/Avalonia pairs were compared; 1,467 diagnostic findings and the other DPI/state requests remain open."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 246,
+          "note": "Light, dark, and custom-theme captures were compared at the machine's native 125% context; remaining color findings and DPI contexts stay open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 69,
+          "note": "The declared representative states and focused behavior tests ran; the exhaustive interaction-state and consumer audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover this tranche, including native Wayland, X11, and Flatpak Wayland; macOS and the complete platform matrix remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/Settings/SettingsCheckBox.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsCheckBox.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/SettingsCheckBox.json"
+          ],
+          "platforms": [],
+          "findingCount": 42,
+          "note": "The P2.5 source inventory records 42 remaining source/member findings; this is not an exact structural twin claim."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/SettingsCheckBox.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 42,
+          "note": "The focused P2.5 suite passes on Windows and Linux, while the recorded source-level findings and complete consumer audit remain open."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 968,
+          "note": "Twelve native-125% WinForms/Avalonia pairs were compared; 968 diagnostic findings and the other DPI/state requests remain open."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 182,
+          "note": "Light, dark, and custom-theme captures were compared at the machine's native 125% context; remaining color findings and DPI contexts stay open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 54,
+          "note": "The declared representative states and focused behavior tests ran; the exhaustive interaction-state and consumer audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover this tranche, including native Wayland, X11, and Flatpak Wayland; macOS and the complete platform matrix remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/Settings/SettingsCheckBox.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsCheckBox.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/SettingsCheckBox.json"
+          ],
+          "platforms": [],
+          "findingCount": 42,
+          "note": "The P2.5 source inventory records 42 remaining source/member findings; this is not an exact structural twin claim."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/SettingsCheckBox.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 42,
+          "note": "The focused P2.5 suite passes on Windows and Linux, while the recorded source-level findings and complete consumer audit remain open."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 968,
+          "note": "Twelve native-125% WinForms/Avalonia pairs were compared; 968 diagnostic findings and the other DPI/state requests remain open."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 182,
+          "note": "Light, dark, and custom-theme captures were compared at the machine's native 125% context; remaining color findings and DPI contexts stay open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 54,
+          "note": "The declared representative states and focused behavior tests ran; the exhaustive interaction-state and consumer audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover this tranche, including native Wayland, X11, and Flatpak Wayland; macOS and the complete platform matrix remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/WaitSpinner.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/WaitSpinner.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/WaitSpinner.json"
+          ],
+          "platforms": [],
+          "findingCount": 28,
+          "note": "The P2.5 source inventory records 28 remaining source/member findings; this is not an exact structural twin claim."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/WaitSpinner.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 28,
+          "note": "The focused P2.5 suite passes on Windows and Linux, while the recorded source-level findings and complete consumer audit remain open."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 84,
+          "note": "Three native-125% WinForms/Avalonia pairs were compared; 84 diagnostic findings and the other DPI requests remain open."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 12,
+          "note": "Light, dark, and custom-theme captures were compared at the machine's native 125% context; remaining color findings and DPI contexts stay open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 6,
+          "note": "The declared representative states and focused behavior tests ran; the exhaustive interaction-state and consumer audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover this tranche, including native Wayland, X11, and Flatpak Wayland; macOS and the complete platform matrix remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/WatermarkComboBox.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/WatermarkComboBox.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/WatermarkComboBox.json"
+          ],
+          "platforms": [],
+          "findingCount": 33,
+          "note": "The P2.5 source inventory records 33 remaining source/member findings; this is not an exact structural twin claim."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/WatermarkComboBox.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 33,
+          "note": "The focused P2.5 suite passes on Windows and Linux, while the recorded source-level findings and complete consumer audit remain open."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 3,
+          "note": "The native WinForms reference was captured, but the exact-height standalone Avalonia headless surface rendered blank; visual closure moves to its FileStatusList and search-dialog consumers."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "No like-for-like pixels were available because the Avalonia standalone headless surface did not render; consumer-surface theme closure remains open."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/diff/findings.json",
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The declared representative states and focused behavior tests ran; the exhaustive interaction-state and consumer audit remains open."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover this tranche, including native Wayland, X11, and Flatpak Wayland; macOS and the complete platform matrix remain unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/EnterEventArgs.cs",
+      "twin": "src/app/GitUI/UserControls/EnterEventArgs.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/inventory/EnterEventArgs.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The exact framework-neutral source is compiled into GitUI.Avalonia through an MSBuild Link; the inventory tool's three AXAML-shape expectations do not represent source differences."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The unchanged event-data contract compiles and the focused P2.5 suite passes on Windows and Linux."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This event-data type declares no UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This event-data type declares no colors."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1,
+          "note": "The type is exact-linked; full FileStatusList Enter-key consumer closure remains assigned to P8.6c."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-03",
+          "commit": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P2.5/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/linux-focused.trx",
+            "eng/avalonia/parity-evidence/P2.5/windows-runtime",
+            "eng/avalonia/parity-evidence/P2.5/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "The shared source and tranche consumers pass on Windows and Linux; macOS remains unverified."
+        }
+      }
     }
   ]
 }

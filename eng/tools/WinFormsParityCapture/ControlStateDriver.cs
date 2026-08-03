@@ -93,9 +93,17 @@ internal sealed class ControlStateDriver : IDisposable
 
     private void Check(object target)
     {
+        if (target is RadioButton radioButton)
+        {
+            bool radioPrevious = radioButton.Checked;
+            radioButton.Checked = true;
+            _restoreActions.Add(() => radioButton.Checked = radioPrevious);
+            return;
+        }
+
         if (target is not CheckBox checkBox)
         {
-            throw new CaptureStateUnsupportedException("The checked state requires a CheckBox.");
+            throw new CaptureStateUnsupportedException("The checked state requires a CheckBox or RadioButton.");
         }
 
         CheckState previous = checkBox.CheckState;
