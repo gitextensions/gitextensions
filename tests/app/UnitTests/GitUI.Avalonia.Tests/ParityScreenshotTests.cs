@@ -933,6 +933,10 @@ public sealed partial class ParityScreenshotTests
                     commitInfo.Revision = context.HeadRevision;
                     break;
 
+                case CommitInfoHeader commitInfoHeader:
+                    commitInfoHeader.ShowCommitInfo(context.HeadRevision, [context.ParentRevision.ObjectId]);
+                    break;
+
                 case CommitSummaryUserControl summary:
                     summary.Revision = context.HeadRevision;
                     break;
