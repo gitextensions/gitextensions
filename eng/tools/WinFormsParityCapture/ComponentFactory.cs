@@ -8,6 +8,7 @@ using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
 using GitUI.UserControls;
+using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.Settings;
 using GitUIPluginInterfaces;
 
@@ -25,6 +26,7 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
             "GitUI.CommitInfo.CommitInfo" => CreateCommitInfo(),
             "GitUI.CommitInfo.CommitInfoHeader" => CreateCommitInfoHeader(),
+            "GitUI.UserControls.RevisionGrid.EmptyRepoControl" => new EmptyRepoControl(),
 
             // parity-scaffolding: Hosts the internal modeless editor-search dialog without changing GitUI visibility.
             "GitUI.FormFindInCommitFilesGitGrep" => CreateWithCommands(component.TypeName, commands),
@@ -103,6 +105,13 @@ internal static class ComponentFactory
                 waitSpinner.IsAnimating = false;
                 SetNonPublicField(waitSpinner, "_progress", 7);
                 waitSpinner.Invalidate();
+                break;
+            case LoadingControl loadingControl:
+                loadingControl.IsAnimating = false;
+                WaitSpinner loadingSpinner = (WaitSpinner?)FindFieldValue(loadingControl, "_waitSpinner")
+                    ?? throw new InvalidOperationException("LoadingControl did not create its WaitSpinner.");
+                SetNonPublicField(loadingSpinner, "_progress", 7);
+                loadingSpinner.Invalidate();
                 break;
             case WatermarkComboBox watermarkComboBox:
                 watermarkComboBox.Watermark = "Filter files using a regular expression...";
