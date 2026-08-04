@@ -1,0 +1,19 @@
+<menus:ToolStripMenuItemEx xmlns="https://github.com/avaloniaui"
+                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                              xmlns:menus="using:GitUI.CommandsDialogs.Menus"
+                              xmlns:properties="using:GitUI.Properties"
+                              x:Class="GitUI.CommandsDialogs.Menus.CopyPathsToolStripMenuItem"
+                              Header="Copy _path(s)">
+  <menus:ToolStripMenuItemEx.Icon>
+    <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" />
+  </menus:ToolStripMenuItemEx.Icon>
+  <MenuItem x:Name="copyRelativePathsPosixToolStripMenuItem" Header="Copy relative path(s) - _POSIX" />
+  <MenuItem x:Name="copyRelativePathsNativeToolStripMenuItem" Header="Copy relative path(s) - _native" />
+  <MenuItem x:Name="copyFullPathsNativeToolStripMenuItem"
+            Header="Copy _full path(s) - native"
+            HotKey="Ctrl+C"
+            InputGesture="Ctrl+C"
+            FontWeight="Bold" />
+  <MenuItem x:Name="copyFullPathsWslToolStripMenuItem" Header="Copy full path(s) - _WSL" />
+  <MenuItem x:Name="copyFullPathsCygwinToolStripMenuItem" Header="Copy full path(s) - _Cygwin" />
+</menus:ToolStripMenuItemEx>

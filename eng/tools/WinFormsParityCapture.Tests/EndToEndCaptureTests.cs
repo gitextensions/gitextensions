@@ -66,4 +66,29 @@ public sealed class EndToEndCaptureTests
         action.Should().Throw<ThreadStateException>()
             .WithMessage("*STA*");
     }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void State_driver_should_find_a_dynamic_menu_item_by_name()
+    {
+        using Form form = new();
+        using MenuStrip menu = new();
+        using ToolStripMenuItem dynamicItem = new("Dynamic") { Name = "dynamicToolStripMenuItem" };
+        dynamicItem.DropDownItems.Add("Child");
+        menu.Items.Add(dynamicItem);
+        form.Controls.Add(menu);
+        form.Show();
+
+        using ControlStateDriver driver = ControlStateDriver.Apply(
+            form,
+            new CaptureStatePlan
+            {
+                Id = "dynamic-menu.open",
+                Kind = CaptureStateKind.MenuOpen,
+                TargetField = dynamicItem.Name,
+            });
+
+        driver.Popups.Should().ContainSingle().Which.Should().BeSameAs(dynamicItem.DropDown);
+        dynamicItem.DropDown.Visible.Should().BeTrue();
+    }
 }
