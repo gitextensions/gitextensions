@@ -386,7 +386,7 @@ public sealed class ViewConstructionTests
             ?? throw new InvalidOperationException("Rebase menu item was not created.");
         RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
             ?? throw new InvalidOperationException("Revision grid was not created.");
-        ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")
+        ListBox revisions = revisionGrid.FindControl<ListBox>("_gridView")
             ?? throw new InvalidOperationException("Revision list was not created.");
         GitRevision revision = new(ObjectId.Random());
         revisions.ItemsSource = new[] { revision };
@@ -736,7 +736,7 @@ public sealed class ViewConstructionTests
                 ?? throw new InvalidOperationException("Create-branch menu item was not created.");
             MenuItem createTag = control.FindControl<MenuItem>("createTagToolStripMenuItem")
                 ?? throw new InvalidOperationException("Create-tag menu item was not created.");
-            ListBox revisions = control.FindControl<ListBox>("lstRevisions")
+            ListBox revisions = control.FindControl<ListBox>("_gridView")
                 ?? throw new InvalidOperationException("Revision list was not created.");
 
             contextMenu.Open(revisions);

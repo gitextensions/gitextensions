@@ -25662,81 +25662,81 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-04",
-          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "commit": "01f060776d87d14c1b464832670ca49a3f32f5ab",
           "evidence": [
-            "eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P3.4/inventory/functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 1107,
-          "note": "The current aggregate inventory records 1,107 source-shape, behavior-contract, comment, event, hotkey, menu, setting, and translation findings across the original three partials and two Avalonia parts; exact source closure remains assigned to the grid behavior tranche."
+          "findingCount": 1102,
+          "note": "The P3.4 inventory records 1,102 source-shape, behavior-contract, comment, event, hotkey, menu, setting, and translation findings across three original and three Avalonia parts. The original _gridView field identity is restored and the two WinForms-only DataGridView hosts have explicit native substitutes, but exact source closure remains open."
         },
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-04",
-          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "commit": "01f060776d87d14c1b464832670ca49a3f32f5ab",
           "evidence": [
-            "eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json",
-            "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx",
-            "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"
+            "eng/avalonia/parity-evidence/P3.4/inventory/functional-findings.json",
+            "eng/avalonia/parity-evidence/P3.4/test-results/P3.4-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.4/test-results/P3.4-linux-wsl-gate.log"
           ],
           "platforms": [
             "windows",
             "linux"
           ],
-          "findingCount": 1107,
-          "note": "The original top-level context-menu order, all declared advanced/compare/rebase descendants, complete Navigate/View command inventories, dynamic Copy grouping, check/enabled refresh, persisted shortcuts, edit/reword interactive-rebase actions, and truncation tooltip provider are present and focused-test backed. Go-to-commit, checkout-revision, reset-another-branch, and compare dialog actions remain visibly disabled until their owning dialog tranches; deeper grid behavior remains open."
+          "findingCount": 1102,
+          "note": "The native grid now keeps one observable ItemsSource during streaming, preserving selection and its virtualized scroll anchor; Home, End, Ctrl+C, quick-search, XButton history, patch-file drop, fixed provider order, visibility/width settings, row rendering, tooltip, and ref-label routes are focused-test backed on Windows and native-ext4 Linux. Dialog-owned disabled commands and exact source closure remain open in their bounded owners."
         },
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-04",
-          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "commit": "01f060776d87d14c1b464832670ca49a3f32f5ab",
           "evidence": [
-            "eng/avalonia/parity-evidence/P3.3/diff/findings.json"
+            "eng/avalonia/parity-evidence/P3.4/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 137,
-          "note": "Three native-125-percent light/dark/custom primary-grid pairs were compared and record 137 diagnostic findings. WinForms captured all three menu surfaces at native 125 percent, but Avalonia headless popup composition is unavailable; 45 requested pairs are explicitly unavailable."
+          "findingCount": 824,
+          "note": "Twelve native-125-percent light/dark/custom grid-state pairs at the original 682 by 235 physical size compare with 824 diagnostic findings. Thirty-six requested WinForms DPI states and twelve external Avalonia context-menu states are explicitly unavailable; no bitmap was scaled."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-04",
-          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "commit": "01f060776d87d14c1b464832670ca49a3f32f5ab",
           "evidence": [
-            "eng/avalonia/parity-evidence/P3.3/diff/findings.json"
+            "eng/avalonia/parity-evidence/P3.4/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 11,
-          "note": "The native-125-percent light, dark, and custom primary-grid comparisons record 11 resolved-color findings; paired popup theme colors remain unavailable from the Avalonia headless renderer."
+          "findingCount": 152,
+          "note": "The native-125-percent light, dark, and custom grid-state comparisons record 152 resolved-ARGB findings. Paired popup theme colors remain unavailable from the Avalonia headless renderer."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-04",
-          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "commit": "01f060776d87d14c1b464832670ca49a3f32f5ab",
           "evidence": [
-            "eng/avalonia/parity-evidence/P3.3/diff/findings.json",
-            "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx",
-            "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"
+            "eng/avalonia/parity-evidence/P3.4/diff/findings.json",
+            "eng/avalonia/parity-evidence/P3.4/test-results/P3.4-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.4/test-results/P3.4-linux-wsl-gate.log"
           ],
           "platforms": [
             "windows",
             "linux"
           ],
-          "findingCount": 45,
-          "note": "Menu identity/order, enabled-state refresh, dynamic Copy opening, selection routing, and tooltip installation/truncation state are covered. Forty-five capture pairs are unavailable because of native-DPI and popup-composition limits; hover, keyboard/pointer focus, complete tooltip timing/virtualization, and every command outcome remain assigned to the grid behavior tranche."
+          "findingCount": 57,
+          "note": "Single/multi selection replacement, Home/End, Ctrl+C, quick search, streaming append anchoring, XButton navigation, patch-drop acceptance, fixed column order, visibility/width settings, tooltip truncation, and ref-label hit routes are covered. The paired comparison still records 57 state findings and 48 unavailable pairs; the exhaustive visual-state walk is not complete."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-04",
-          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "commit": "01f060776d87d14c1b464832670ca49a3f32f5ab",
           "evidence": [
-            "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx",
-            "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx",
-            "eng/avalonia/parity-evidence/P3.3/windows-runtime",
-            "eng/avalonia/parity-evidence/P3.3/linux-runtime"
+            "eng/avalonia/parity-evidence/P3.4/test-results/P3.4-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.4/test-results/P3.4-linux-wsl-gate.log",
+            "eng/avalonia/parity-evidence/P3.4/windows-runtime",
+            "eng/avalonia/parity-evidence/P3.4/linux-runtime"
           ],
           "platforms": [
             "windows",
@@ -25745,7 +25745,7 @@
             "linux-flatpak-wayland"
           ],
           "findingCount": 1,
-          "note": "Windows and Linux tranche gates cover the changed grid; macOS and live native popup interaction remain unverified."
+          "note": "Windows and native-ext4 Linux gates cover the changed grid; isolated smokes passed on Windows, native Wayland, nested X11, and Wayland-only Flatpak. macOS and the interactive IDE/manual state walk remain unverified."
         }
       }
     },
