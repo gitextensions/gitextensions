@@ -43,6 +43,12 @@ public sealed partial class FormBrowse : GitModuleForm
 {
     private readonly TranslationString _consoleTabCaption = new("Console");
     private readonly TranslationString _outputHistoryTabCaption = new("Output");
+    private readonly TranslationString _pullFetch = new("Fetch");
+    private readonly TranslationString _pullFetchAll = new("Fetch all");
+    private readonly TranslationString _pullFetchPruneAll = new("Fetch and prune all");
+    private readonly TranslationString _pullMerge = new("Pull - merge");
+    private readonly TranslationString _pullRebase = new("Pull - rebase");
+    private readonly TranslationString _pullOpenDialog = new("Open pull dialog");
     private readonly TranslationString _buildReportTabCaption = new("Build Report");
     private readonly TranslationString _commitButtonText = new("Commit");
     private readonly TranslationString _indexLockCantDelete = new("Failed to delete index.lock");
@@ -72,7 +78,6 @@ public sealed partial class FormBrowse : GitModuleForm
     private GridLength _leftPanelWidth = new(260);
     private GridLength _splitViewBottomHeight = new(2, GridUnitType.Star);
     private GridLength _splitViewTopHeight = new(3, GridUnitType.Star);
-    private GitRevision? _fileTreeRevision;
     private bool _gpgInfoLoaded;
     private bool _hasRuntimeCommands;
     private int _gpgInfoLoadVersion;
@@ -82,6 +87,8 @@ public sealed partial class FormBrowse : GitModuleForm
     private OutputHistoryControllerBase? _outputHistoryController;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
     private FormBrowseMenus? _formBrowseMenus;
+
+    private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
     public static readonly string HotkeySettingsName = "Browse";
 
@@ -100,12 +107,14 @@ public sealed partial class FormBrowse : GitModuleForm
         Commit = 7,
         CheckoutBranch = 10,
         QuickFetch = 11,
+        QuickPull = 12,
         FocusFilter = 18,
         OpenSettings = 20,
         ToggleLeftPanel = 21,
         FocusNextTab = 31,
         FocusPrevTab = 32,
         PullOrFetch = 39,
+        QuickPullOrFetch = 48,
         Push = 40,
         CreateBranch = 41,
         MergeBranches = 42,
@@ -123,12 +132,11 @@ public sealed partial class FormBrowse : GitModuleForm
     public FormBrowse()
     {
         InitializeComponent();
-        ((Image)recoverLostObjectsToolStripMenuItem.Icon!).Source = Images.RecoverLostObjects.AdaptLightness();
         ((Image)translateToolStripMenuItem.Icon!).Source = Images.Translate.AdaptLightness();
-        branchSelect.Icon = Images.Branch.AdaptLightness();
         _formBrowseMenus = new FormBrowseMenus(mainMenuStrip, RevisionGrid, repositoryToolStripMenuItem);
         InitializeWorkspaceLayout();
         InitializeComplete();
+        InitMenusAndToolbars(revFilter: null, pathFilter: null);
     }
 
     public FormBrowse(IServiceProvider serviceProvider, GitModule module)
@@ -184,8 +192,6 @@ public sealed partial class FormBrowse : GitModuleForm
         _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
         RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         repoObjectsTree.Initialize(RevisionGrid.SetAndApplyBranchFilter, OpenRepository);
-        RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
-        RevisionGrid.RevisionsLoading += RefreshLeftPanel;
         ToolStripFilters.Bind(() => Module, RevisionGrid);
         revisionDiff.Bind(RevisionGrid, RevisionGrid, fileTree, () => string.Empty, RefreshGitStatusMonitor);
         fileTree.Bind(RevisionGrid, RevisionGrid, revisionFileTree: null, () => string.Empty, RefreshGitStatusMonitor);
@@ -193,7 +199,8 @@ public sealed partial class FormBrowse : GitModuleForm
         revisionDiff.InitSplitterManager(_splitterManager);
         fileTree.InitSplitterManager(_splitterManager);
         _splitterManager.RestoreSplitters();
-        RevisionGrid.FilterChanged += RevisionGrid_FilterChanged;
+        InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
+        InitCommitDetails();
         CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectionChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
@@ -212,7 +219,6 @@ public sealed partial class FormBrowse : GitModuleForm
         openToolStripMenuItem.Click += OpenToolStripMenuItemClick;
         cloneToolStripMenuItem.Click += CloneToolStripMenuItemClick;
         exitToolStripMenuItem.Click += ExitToolStripMenuItemClick;
-        commandsToolStripMenuItem.SubmenuOpened += CommandsToolStripMenuItem_SubmenuOpened;
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         undoLastCommitToolStripMenuItem.Click += undoLastCommitToolStripMenuItem_Click;
         pushToolStripMenuItem.Click += PushToolStripMenuItemClick;
@@ -251,7 +257,6 @@ public sealed partial class FormBrowse : GitModuleForm
         RefreshButton.Click += RefreshToolStripMenuItemClick;
         toggleLeftPanel.Click += ToggleLeftPanelClick;
         InitializeWorkspaceLayout();
-        FillTerminalTab();
         InitializeOutputHistory();
         branchSelect.Click += BranchSelectClick;
         branchSelect.AddHandler(
@@ -281,12 +286,6 @@ public sealed partial class FormBrowse : GitModuleForm
         fetchToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.Fetch, isSilent: true);
         fetchAllToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.FetchAll, isSilent: true);
         fetchPruneAllToolStripMenuItem.Click += (_, _) => DoPull(GitPullAction.FetchPruneAll, isSilent: true);
-        defaultPullDialogToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.None);
-        defaultPullMergeToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.Merge);
-        defaultPullRebaseToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.Rebase);
-        defaultPullFetchToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.Fetch);
-        defaultPullFetchAllToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.FetchAll);
-        defaultPullFetchPruneAllToolStripMenuItem.Click += (_, _) => SetDefaultPullAction(GitPullAction.FetchPruneAll);
         stashChangesToolStripMenuItem.Click += (_, _) => UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
         stashStagedToolStripMenuItem.Click += (_, _) => UICommands.StashStaged(this);
         stashPopToolStripMenuItem.Click += (_, _) => UICommands.StashPop(this);
@@ -306,13 +305,6 @@ public sealed partial class FormBrowse : GitModuleForm
         _gitStatusMonitor.GitStatusMonitorStateChanged += GitStatusMonitorStateChanged;
         _gitStatusMonitor.GitWorkingDirectoryStatusChanged += GitWorkingDirectoryStatusChanged;
 
-        RevisionGrid.SelectedId = args.SelectedId.IsZero ? args.FirstId : args.SelectedId;
-        ToolStripFilters.SetRevisionFilter(args.RevFilter);
-        if (!string.IsNullOrWhiteSpace(args.PathFilter))
-        {
-            RevisionGrid.SetAndApplyPathFilter(args.PathFilter.ToPosixPath());
-        }
-
         if (args.IsFileHistoryMode)
         {
             ToggleLeftPanelClick(this, EventArgs.Empty);
@@ -331,6 +323,7 @@ public sealed partial class FormBrowse : GitModuleForm
             .LoadHotkeys(RevisionGridControl.HotkeySettingsName);
         ToolStripFilters.RefreshRevisionGridShortcutKeys(revisionGridHotkeys);
         RevisionGrid.RefreshMenuShortcutKeys(revisionGridHotkeys);
+        InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
         LoadUserMenu();
     }
 
@@ -1288,59 +1281,59 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void RevisionGrid_SelectionChanged(object? sender, EventArgs e)
     {
+        RefreshSelection();
+
         IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
-        revisionDiff.DisplayDiffTab(selectedRevisions);
-        fileTree.Clear();
-        _fileTreeRevision = null;
-        RefreshGpgInfo(RevisionGrid.SelectedRevision);
-        RevisionInfo.Revision = RevisionGrid.SelectedRevision;
-        _buildReportTabPageExtension ??= new BuildReportTabPageExtension(
-            () => Module,
-            CommitInfoTabControl,
-            _buildReportTabCaption.Text);
-        _buildReportTabPageExtension.FillBuildReport(selectedRevisions.Count == 1 ? RevisionGrid.SelectedRevision : null);
         rebaseToolStripMenuItem.IsEnabled =
             RevisionGrid.SelectedRevision is { IsArtificial: false }
             && !Module.IsBareRepository();
         archiveToolStripMenuItem.IsEnabled =
             selectedRevisions.Count == 1
             && selectedRevisions[0] is { IsArtificial: false };
-
-        if (CommitInfoTabControl.SelectedItem == TreeTabPage)
-        {
-            FillFileTree();
-        }
     }
 
-    private void RevisionGrid_FilterChanged(object? sender, FilterChangedEventArgs e)
+    private void RefreshSelection()
     {
-        string? path = e.PathFilter;
-        if (path?.Length is > 1 && path[0] == '"' && path[^1] == '"')
+        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+        GitRevision? selectedRevision = selectedRevisions.Count > 0 ? selectedRevisions[0] : null;
+
+        FillFileTree(selectedRevision);
+        FillDiff(selectedRevisions);
+
+        (string? body, string? notes) old = (selectedRevision?.Body, selectedRevision?.Notes);
+        FillCommitInfo(selectedRevision);
+
+        // If the revision's body has been updated then the grid needs to be refreshed to display it
+        if (AppSettings.ShowCommitBodyInRevisionGrid
+            && selectedRevision?.HasMultiLineMessage is true
+            && old != (selectedRevision.Body, selectedRevision.Notes))
         {
-            path = path[1..^1];
+            RevisionGrid.InvalidateVisual();
         }
 
-        if (!string.IsNullOrWhiteSpace(path))
-        {
-            RelativePath relativePath = RelativePath.From(path);
-            revisionDiff.FallbackFollowedFile = relativePath;
-            fileTree.FallbackFollowedFile = relativePath;
-        }
+        RefreshGpgInfo(selectedRevision);
+        FillBuildReport(selectedRevision);
     }
 
     private void CommitInfoTabControl_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        bool selectingGpgInfo = CommitInfoTabControl.SelectedItem == GpgInfoTabPage;
+        if (!selectingGpgInfo)
+        {
+            RefreshSelection();
+        }
+
         if (CommitInfoTabControl.SelectedItem == TreeTabPage)
         {
-            FillFileTree();
             fileTree.SwitchFocus(alreadyContainedFocus: false);
         }
         else if (CommitInfoTabControl.SelectedItem == DiffTabPage)
         {
             revisionDiff.SwitchFocus(alreadyContainedFocus: false);
         }
-        else if (CommitInfoTabControl.SelectedItem == GpgInfoTabPage)
+        else if (selectingGpgInfo)
         {
+            // Avalonia keeps the revision prepared by the selection event while the GPG tab receives focus.
             FillGpgInfo();
             revisionGpgInfo1.FocusInfo();
         }
@@ -1350,16 +1343,61 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
-    private void FillFileTree()
+    private void FillFileTree(GitRevision? revision)
     {
-        if (RevisionGrid.SelectedRevision is not GitRevision revision
-            || ReferenceEquals(_fileTreeRevision, revision))
+        // "File Tree" tab implemented using git-grep works for artificial commits, too
+        bool showFileTreeTab = true;
+
+        TreeTabPage.IsVisible = showFileTreeTab;
+        if (!showFileTreeTab
+            || CommitInfoTabControl.SelectedItem != TreeTabPage
+            || _selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.FileTree))
         {
             return;
         }
 
-        _fileTreeRevision = revision;
-        fileTree.DisplayDiffTab([revision]);
+        _selectedRevisionUpdatedTargets |= UpdateTargets.FileTree;
+        if (revision is not null)
+        {
+            fileTree.DisplayDiffTab([revision]);
+        }
+    }
+
+    private void FillDiff(IReadOnlyList<GitRevision> revisions)
+    {
+        // Avalonia keeps the shared diff pane live while split view hosts it outside the selected tab.
+        bool splitViewShowsDiff = AppSettings.ShowSplitViewLayout;
+        if (!splitViewShowsDiff && CommitInfoTabControl.SelectedItem != DiffTabPage)
+        {
+            return;
+        }
+
+        if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.DiffList))
+        {
+            return;
+        }
+
+        _selectedRevisionUpdatedTargets |= UpdateTargets.DiffList;
+        revisionDiff.DisplayDiffTab(revisions);
+    }
+
+    private void FillCommitInfo(GitRevision? revision)
+    {
+        if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
+        {
+            return;
+        }
+
+        if (AppSettings.CommitInfoPosition == CommitInfoPosition.BelowList
+            && CommitInfoTabControl.SelectedItem != CommitInfoTabPage)
+        {
+            return;
+        }
+
+        _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
+
+        // The native grid does not yet expose the original revision-children query.
+        RevisionInfo.SetRevisionWithChildren(revision, children: null);
     }
 
     internal void RefreshGpgInfo(GitRevision? revision)
@@ -1379,6 +1417,7 @@ public sealed partial class FormBrowse : GitModuleForm
             if (CommitInfoTabControl.SelectedItem == GpgInfoTabPage)
             {
                 CommitInfoTabControl.SelectedItem = TreeTabPage;
+                GpgInfoTabPage.IsVisible = false;
             }
 
             return;
@@ -1490,29 +1529,6 @@ public sealed partial class FormBrowse : GitModuleForm
                 && AppSettings.RevisionGraphShowArtificialCommits
                     ? status
                     : null);
-    }
-
-    private Avalonia.Media.IBrush UpdateCommitButtonAndGetBrush(
-        IReadOnlyList<GitItemStatus>? status,
-        bool showCount)
-    {
-        RepoStateVisualiser repoStateVisualiser = new();
-        (Avalonia.Media.IImage image, Avalonia.Media.IBrush brush) = repoStateVisualiser.Invoke(status);
-
-        if (showCount)
-        {
-            toolStripButtonCommit.Icon = image;
-            toolStripButtonCommit.Content = status is null
-                ? _commitButtonText.Text
-                : $"{_commitButtonText} ({status.Count})";
-        }
-        else
-        {
-            toolStripButtonCommit.Icon = RepoStateVisualiser.Clean.Item1;
-            toolStripButtonCommit.Content = _commitButtonText.Text;
-        }
-
-        return brush;
     }
 
     private void RefreshPushButton(IGitModule module, string branchName)
@@ -1682,33 +1698,6 @@ public sealed partial class FormBrowse : GitModuleForm
         {
             UICommands.StartPullDialog(this, pullAction: action);
         }
-    }
-
-    private void SetDefaultPullAction(GitPullAction action)
-    {
-        AppSettings.DefaultPullAction = action;
-        RefreshDefaultPullAction();
-    }
-
-    private void RefreshDefaultPullAction()
-    {
-        GitPullAction action = AppSettings.DefaultPullAction;
-        defaultPullDialogToolStripMenuItem.IsChecked = action == GitPullAction.None;
-        defaultPullMergeToolStripMenuItem.IsChecked = action == GitPullAction.Merge;
-        defaultPullRebaseToolStripMenuItem.IsChecked = action == GitPullAction.Rebase;
-        defaultPullFetchToolStripMenuItem.IsChecked = action == GitPullAction.Fetch;
-        defaultPullFetchAllToolStripMenuItem.IsChecked = action == GitPullAction.FetchAll;
-        defaultPullFetchPruneAllToolStripMenuItem.IsChecked = action == GitPullAction.FetchPruneAll;
-
-        toolStripButtonPull.Icon = action switch
-        {
-            GitPullAction.Fetch => Properties.Images.PullFetch,
-            GitPullAction.FetchAll => Properties.Images.PullFetchAll,
-            GitPullAction.FetchPruneAll => Properties.Images.PullFetchPruneAll,
-            GitPullAction.Rebase => Properties.Images.PullRebase,
-            GitPullAction.Merge => Properties.Images.PullMerge,
-            _ => Properties.Images.Pull,
-        };
     }
 
     private void StashToolStripMenuItemClick(object? sender, EventArgs e)

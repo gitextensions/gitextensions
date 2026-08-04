@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "363b2ecd3ce3bd303a3690090741a05ef45c2882",
+  "analyzedCommit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
   "axisOrder": [
     "structural",
     "functional",
@@ -2798,66 +2798,375 @@
       }
     },
     {
+      "source": "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseMenus.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormBrowseMenus.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 50,
+          "note": "The measured inventory retains FormBrowseMenus member/signature differences."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 96,
+          "note": "P4.1 restores the property-change synchronization boundary; P4.2 owns the complete menu inventory."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix has not been exercised."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows and WSL gates do not prove every required runtime platform."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormBrowse.InitCommitDetails.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.InitCommitDetails.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 588,
+          "note": "The partial boundary and member order are restored; the assembled FormBrowse inventory retains structural findings."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 1605,
+          "note": "The assembled FormBrowse inventory retains functional findings after P4.1."
+        },
+        "visual": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 133993,
+          "note": "The paired FormBrowse capture contains visual findings."
+        },
+        "themingAndColor": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 31162,
+          "note": "The paired FormBrowse capture contains resolved-color findings."
+        },
+        "behavioralState": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 11085,
+          "note": "The selected P4.1 state set retains findings; the complete state matrix remains open."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows and WSL gates do not prove every required runtime platform."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormBrowse.InitMenusAndToolbars.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.InitMenusAndToolbars.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 588,
+          "note": "The partial boundary and member order are restored; the assembled FormBrowse inventory retains structural findings."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 1605,
+          "note": "The assembled FormBrowse inventory retains functional findings after P4.1."
+        },
+        "visual": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 133993,
+          "note": "The paired FormBrowse capture contains visual findings."
+        },
+        "themingAndColor": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 31162,
+          "note": "The paired FormBrowse capture contains resolved-color findings."
+        },
+        "behavioralState": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 11085,
+          "note": "The selected P4.1 state set retains findings; the complete state matrix remains open."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows and WSL gates do not prove every required runtime platform."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormBrowse.InitRevisionGrid.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.InitRevisionGrid.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 588,
+          "note": "The partial boundary and member order are restored; the assembled FormBrowse inventory retains structural findings."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 1605,
+          "note": "The assembled FormBrowse inventory retains functional findings after P4.1."
+        },
+        "visual": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 133993,
+          "note": "The paired FormBrowse capture contains visual findings."
+        },
+        "themingAndColor": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 31162,
+          "note": "The paired FormBrowse capture contains resolved-color findings."
+        },
+        "behavioralState": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 11085,
+          "note": "The selected P4.1 state set retains findings; the complete state matrix remains open."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows and WSL gates do not prove every required runtime platform."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormBrowse.UpdateTargets.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.UpdateTargets.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 588,
+          "note": "The partial boundary and member order are restored; the assembled FormBrowse inventory retains structural findings."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"],
+          "platforms": [],
+          "findingCount": 1605,
+          "note": "The assembled FormBrowse inventory retains functional findings after P4.1."
+        },
+        "visual": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 133993,
+          "note": "The paired FormBrowse capture contains visual findings."
+        },
+        "themingAndColor": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 31162,
+          "note": "The paired FormBrowse capture contains resolved-color findings."
+        },
+        "behavioralState": {
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": ["eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 11085,
+          "note": "The selected P4.1 state set retains findings; the complete state matrix remains open."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows and WSL gates do not prove every required runtime platform."
+        }
+      }
+    },
+    {
       "source": "src/app/GitUI/CommandsDialogs/FormBrowse.cs",
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
       "complete": false,
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 609,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 588,
+          "note": "P4.1 restored all six original FormBrowse source parts, while the measured inventory retains member/signature differences."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P4.1/final/full-functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 1688,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 1605,
+          "note": "P4.1 reduced the measured FormBrowse inventory from 1,691 to 1,605 findings; later browse tranches own the remaining menus, left panel, dashboard, and behavior."
         },
         "visual": {
-          "status": "partial",
-          "verifiedOn": "2026-08-01",
-          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+            "eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 0,
-          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
+          "findingCount": 133993,
+          "note": "P4.1 compared 18 native-125%-DPI WinForms/Avalonia capture pairs and retains the measured visual findings; unsupported native DPI contexts are verification debt."
         },
         "themingAndColor": {
-          "status": "partial",
-          "verifiedOn": "2026-08-01",
-          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+            "eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 0,
-          "note": "P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
+          "findingCount": 31162,
+          "note": "The P4.1 paired light, dark, and custom-theme capture retains exact resolved-color findings."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "5e0b3b4999b6bc598c7aeb641591bc38563da5c6",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P4.1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 11085,
+          "note": "P4.1 captured normal, focused, hover, pressed, and disabled states for its selected surfaces; the complete state matrix remains open."
         },
         "platform": {
           "status": "unverified",
