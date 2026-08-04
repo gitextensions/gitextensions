@@ -249,7 +249,7 @@ public sealed class FileHistoryTests
         {
             RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")!;
             TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
-            ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")!;
+            ListBox revisions = revisionGrid.FindControl<ListBox>("_gridView")!;
 
             await WaitUntilAsync(() => loadingStatus.Text == "2 revisions");
             GitRevision[] items = [.. revisions.ItemsSource!.OfType<GitRevision>()];
@@ -279,7 +279,7 @@ public sealed class FileHistoryTests
             TabControl tabs = form.FindControl<TabControl>("tabControl1")!;
             TabItem viewTab = form.FindControl<TabItem>("ViewTab")!;
             FileViewer view = form.FindControl<FileViewer>("View")!;
-            ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")!;
+            ListBox revisions = revisionGrid.FindControl<ListBox>("_gridView")!;
 
             await WaitUntilAsync(() => loadingStatus.Text == "3 revisions");
             GitRevision originalRevision = revisions.ItemsSource!

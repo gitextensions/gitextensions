@@ -150,7 +150,7 @@ public sealed class CherryPickTests
     public void Revision_grid_should_return_multi_selection_in_cherry_pick_order()
     {
         RevisionGridControl control = new();
-        ListBox revisions = control.FindControl<ListBox>("lstRevisions")!;
+        ListBox revisions = control.FindControl<ListBox>("_gridView")!;
         GitRevision newest = new(ObjectId.Parse("1111111111111111111111111111111111111111"));
         GitRevision middle = new(ObjectId.Parse("2222222222222222222222222222222222222222"));
         GitRevision oldest = new(ObjectId.Parse("3333333333333333333333333333333333333333"));

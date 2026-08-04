@@ -1760,7 +1760,7 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Reword-commit menu item was not created.");
             MenuItem view = revisionGrid.FindControl<MenuItem>("viewToolStripMenuItem")
                 ?? throw new InvalidOperationException("View menu item was not created.");
-            ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")
+            ListBox revisions = revisionGrid.FindControl<ListBox>("_gridView")
                 ?? throw new InvalidOperationException("Revision list was not created.");
 
             (string Name, ThemeVariant Variant)[] themes =
