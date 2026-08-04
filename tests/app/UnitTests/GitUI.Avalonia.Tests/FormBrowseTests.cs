@@ -930,6 +930,32 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_pull_toolbar_shortcuts_should_preserve_the_original_action_order()
+    {
+        using FormBrowse form = new();
+
+        string[] shortcutNames = form.ToolStripMain.Children
+            .OfType<IconButton>()
+            .Where(button => button.Name?.StartsWith(FormBrowse.FetchPullToolbarShortcutsPrefix, StringComparison.Ordinal) is true)
+            .Select(button => button.Name!)
+            .ToArray();
+
+        shortcutNames.Should().Equal(
+            "pull_shortcut_fetchToolStripMenuItem",
+            "pull_shortcut_fetchAllToolStripMenuItem",
+            "pull_shortcut_fetchPruneAllToolStripMenuItem",
+            "pull_shortcut_mergeToolStripMenuItem",
+            "pull_shortcut_rebaseToolStripMenuItem1",
+            "pull_shortcut_pullToolStripMenuItem1");
+        form.defaultPullDialogToolStripMenuItem.Tag.Should().Be(GitPullAction.None);
+        form.defaultPullMergeToolStripMenuItem.Tag.Should().Be(GitPullAction.Merge);
+        form.defaultPullRebaseToolStripMenuItem.Tag.Should().Be(GitPullAction.Rebase);
+        form.defaultPullFetchToolStripMenuItem.Tag.Should().Be(GitPullAction.Fetch);
+        form.defaultPullFetchAllToolStripMenuItem.Tag.Should().Be(GitPullAction.FetchAll);
+        form.defaultPullFetchPruneAllToolStripMenuItem.Tag.Should().Be(GitPullAction.FetchPruneAll);
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_commands_menu_should_preserve_translation_identities()
     {
         using FormBrowse form = new();
