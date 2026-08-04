@@ -3812,16 +3812,22 @@
     "substitute": "Each Avalonia ref capsule is a native RefLabelControl visual; MessageColumnProvider hit-tests those controls directly and the control's shape-aware Contains method preserves slanted point/notch ownership."
   },
   "src/app/GitUI/UserControls/RevisionGrid/EmptyRepoControl.cs": {
-    "status": "unported",
-    "plannedIn": "P3.2"
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/EmptyRepoControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "363b2ecd3ce3bd303a3690090741a05ef45c2882",
+    "notes": "Native same-path GitModuleControl twin preserves translation identities, bare-repository visibility, and the original edit-ignore and commit command routes."
   },
   "src/app/GitUI/UserControls/RevisionGrid/EmptyRepoControl.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P3.2"
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/EmptyRepoControl.axaml",
+    "status": "functional",
+    "basedOn": "363b2ecd3ce3bd303a3690090741a05ef45c2882",
+    "notes": "AXAML preserves the original named label, buttons, centered panel, tab order, source sizes, and translation identities."
   },
   "src/app/GitUI/UserControls/RevisionGrid/ErrorControl.cs": {
-    "status": "unported",
-    "plannedIn": "P3.2"
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/ErrorControl.cs",
+    "status": "functional",
+    "basedOn": "363b2ecd3ce3bd303a3690090741a05ef45c2882",
+    "notes": "Native code-only UserControl centers the same StatusBadgeError image and is selected by RevisionGridControl on load failure."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Graph/Rendering/GraphCache.cs": {
     "status": "windowsOnly",
@@ -3835,8 +3841,10 @@
     "notes": "Framework-neutral FileSystemWatcher source linked unchanged into GitUI.Avalonia and exposed lazily by RevisionGridControl."
   },
   "src/app/GitUI/UserControls/RevisionGrid/LoadingControl.cs": {
-    "status": "unported",
-    "plannedIn": "P3.2"
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/LoadingControl.cs",
+    "status": "functional",
+    "basedOn": "363b2ecd3ce3bd303a3690090741a05ef45c2882",
+    "notes": "Native code-only UserControl owns the same-named WaitSpinner and forwards IsAnimating; RevisionGridControl shows it during initial history loading."
   },
   "src/app/GitUI/UserControls/RevisionGrid/MenuUtil.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/MenuUtil.cs",
