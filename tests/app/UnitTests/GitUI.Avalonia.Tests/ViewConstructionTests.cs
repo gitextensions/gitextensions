@@ -728,7 +728,7 @@ public sealed class ViewConstructionTests
         window.Show();
         try
         {
-            ContextMenu contextMenu = control.FindControl<ContextMenu>("revisionContextMenu")
+            ContextMenu contextMenu = control.FindControl<ContextMenu>("mainContextMenu")
                 ?? throw new InvalidOperationException("Revision context menu was not created.");
             MenuItem checkoutBranch = control.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Checkout-branch menu item was not created.");
