@@ -6,6 +6,9 @@
   <DockPanel>
     <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" />
     <Grid x:Name="pnlRevisionGrid">
+      <ContentControl x:Name="revisionPage"
+                      HorizontalContentAlignment="Stretch"
+                      VerticalContentAlignment="Stretch">
       <ListBox x:Name="lstRevisions" SelectionMode="Multiple">
       <ListBox.ContextMenu>
         <ContextMenu x:Name="revisionContextMenu">
@@ -189,6 +192,7 @@
         </Style>
       </ListBox.Styles>
       </ListBox>
+      </ContentControl>
     </Grid>
   </DockPanel>
 </UserControl>
