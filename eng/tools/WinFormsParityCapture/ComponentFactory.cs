@@ -85,6 +85,9 @@ internal static class ComponentFactory
                 commitInfoHeader.UICommandsSource = source;
                 commitInfoHeader.ShowCommitInfo(CreateRevision(commands), [commands.Module.RevParse("HEAD~1")]);
                 break;
+            case RevisionGridControl revisionGrid:
+                revisionGrid.PerformRefreshRevisions(forceRefresh: true);
+                break;
             case BranchSelector branchSelector:
                 branchSelector.UICommandsSource = source;
                 branchSelector.Initialize(remote: false, containObjectIds: null);

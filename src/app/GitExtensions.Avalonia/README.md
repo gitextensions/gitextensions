@@ -83,6 +83,15 @@ plugin references. Launch its dedicated workspace from PowerShell so both proper
 available to the editor process. Exit every running VS Code process first; a new window owned
 by an existing process does not inherit these variables.
 
+If the Windows Forms solution was built most recently, first restore the Avalonia project graph.
+The two build modes share intermediate restore files, and a stale Windows Forms evaluation can
+leave the Avalonia status item at **loading** or make a valid preview time out:
+
+```powershell
+dotnet build eng/avalonia/GitExtensions.Avalonia.sln `
+  -p:BuildAvalonia=true -p:BuildAvaloniaDesigner=true
+```
+
 ```powershell
 $env:BuildAvalonia = "true"
 $env:BuildAvaloniaDesigner = "true"
@@ -101,6 +110,11 @@ BuildAvalonia=true BuildAvaloniaDesigner=true \
 Open an `.axaml` file and choose **Show Preview** from the Avalonia extension. The preview
 workspace uses `eng/avalonia/GitExtensions.Avalonia.sln`, because the Avalonia language server
 does not currently consume the repository's `.slnx` solution.
+
+The account **Sign In** item is unrelated to project evaluation and is not required for the
+previewer. If **Show Preview** is unavailable or the status remains at **loading**, verify that
+VS Code was started as a fresh process with both variables above and repeat the explicit
+Avalonia build before investigating the view itself.
 
 `BuildAvaloniaDesigner` changes only the design-time dependency graph. Normal application and
 solution builds continue to place bundled plugins below `Plugins` for MEF discovery without

@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -409,6 +410,108 @@ public sealed class RevisionGridSupportTests
         provider.Hide().Should().BeFalse();
     }
 
+    [AvaloniaTest]
+    public void Revision_grid_should_preserve_selection_and_scroll_anchor_while_streaming_rows()
+    {
+        RevisionGridControl control = new();
+        RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
+        GitRevision[] initial = [.. Enumerable.Range(1, 80).Select(Revision)];
+        accessor.SetRevisions(initial);
+        Window window = new()
+        {
+            Width = 900,
+            Height = 160,
+            Content = control,
+        };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            GitRevision selected = initial[40];
+            accessor.Revisions.SelectedItem = selected;
+            accessor.Revisions.ScrollIntoView(selected);
+            Dispatcher.UIThread.RunJobs();
+            ScrollViewer scrollViewer = accessor.Revisions.GetVisualDescendants().OfType<ScrollViewer>().Single();
+            double verticalOffset = scrollViewer.Offset.Y;
+            verticalOffset.Should().BeGreaterThan(0);
+            object? itemsSource = accessor.Revisions.ItemsSource;
+
+            accessor.AppendRevisions(Enumerable.Range(81, 20).Select(Revision));
+            Dispatcher.UIThread.RunJobs();
+
+            accessor.Revisions.ItemsSource.Should().BeSameAs(itemsSource);
+            accessor.Revisions.SelectedItem.Should().BeSameAs(selected);
+            scrollViewer.Offset.Y.Should().Be(verticalOffset);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public void Revision_grid_should_preserve_home_end_copy_and_patch_drop_routes()
+    {
+        RevisionGridControl control = new();
+        RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
+        GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
+        accessor.SetRevisions(revisions);
+        Window window = new() { Width = 900, Height = 160, Content = control };
+        RecordingClipboard clipboard = new();
+        GitExtensions.Shims.WinForms.IClipboard? originalClipboard = TryGetClipboard();
+        GitExtensions.Shims.WinForms.ShimHost.Clipboard = clipboard;
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            control.MultiSelect = true;
+            accessor.Revisions.SelectedIndex = 1;
+            accessor.Revisions.SelectedItems!.Add(revisions[0]);
+            RaiseKey(accessor.Revisions, Key.End);
+            accessor.Revisions.SelectedItem.Should().BeSameAs(revisions[2]);
+            accessor.Revisions.SelectedItems!.Count.Should().Be(1);
+            RaiseKey(accessor.Revisions, Key.Home);
+            accessor.Revisions.SelectedItem.Should().BeSameAs(revisions[0]);
+
+            accessor.Revisions.SelectedItems!.Add(revisions[2]);
+            RaiseKey(accessor.Revisions, Key.C, KeyModifiers.Control);
+            clipboard.Text.Should().Be(string.Join(Environment.NewLine, revisions[0].ObjectId, revisions[2].ObjectId));
+
+            DragDrop.GetAllowDrop(accessor.Revisions).Should().BeTrue();
+            RevisionGridControl.CanDropPatchFiles(["one.patch", "TWO.PATCH"]).Should().BeTrue();
+            RevisionGridControl.CanDropPatchFiles([]).Should().BeFalse();
+            RevisionGridControl.CanDropPatchFiles(["one.patch", "notes.txt"]).Should().BeFalse();
+        }
+        finally
+        {
+            window.Close();
+            GitExtensions.Shims.WinForms.ShimHost.Clipboard = originalClipboard ?? new RecordingClipboard();
+        }
+
+        static void RaiseKey(ListBox list, Key key, KeyModifiers modifiers = KeyModifiers.None)
+        {
+            list.RaiseEvent(new KeyEventArgs
+            {
+                RoutedEvent = InputElement.KeyDownEvent,
+                Key = key,
+                KeyModifiers = modifiers,
+            });
+        }
+
+        static GitExtensions.Shims.WinForms.IClipboard? TryGetClipboard()
+        {
+            try
+            {
+                return GitExtensions.Shims.WinForms.ShimHost.Clipboard;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
+    }
+
     private static ObjectId Id(char value)
         => ObjectId.Parse(new string(value, 40));
 
@@ -419,4 +522,22 @@ public sealed class RevisionGridSupportTests
             Author = "Author",
             HasMultiLineMessage = multiline,
         };
+
+    private static GitRevision Revision(int index)
+        => new(ObjectId.Parse(index.ToString("x40")))
+        {
+            Subject = $"Revision {index}",
+            Author = "Author",
+        };
+
+    private sealed class RecordingClipboard : GitExtensions.Shims.WinForms.IClipboard
+    {
+        public string Text { get; private set; } = string.Empty;
+
+        public bool ContainsText() => Text.Length > 0;
+
+        public string GetText() => Text;
+
+        public void SetText(string text) => Text = text;
+    }
 }

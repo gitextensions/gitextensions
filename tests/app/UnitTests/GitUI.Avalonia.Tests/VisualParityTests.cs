@@ -730,7 +730,7 @@ public sealed class VisualParityTests
     public void Revision_grid_should_use_the_visible_lane_width_and_WinForms_left_margins()
     {
         RevisionGridControl control = new();
-        ListBox revisions = control.FindControl<ListBox>("lstRevisions")
+        ListBox revisions = control.FindControl<ListBox>("_gridView")
             ?? throw new InvalidOperationException("The revision list was not created.");
         revisions.ItemsSource = new[] { new GitRevision(ObjectId.Random()) };
 
