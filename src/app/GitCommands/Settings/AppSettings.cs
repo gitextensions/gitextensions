@@ -37,6 +37,7 @@ public static partial class AppSettings
     public static DistributedSettings SettingsContainer { get; private set; }
 
     private static readonly SettingsPath AppearanceSettingsPath = new AppSettingsPath("Appearance");
+    private static readonly SettingsPath AiCommitMessageSettingsPath = new AppSettingsPath("AiCommitMessage");
     private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
     private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
     private static readonly SettingsPath DialogSettingsPath = new AppSettingsPath("Dialogs");
@@ -461,6 +462,41 @@ public static partial class AppSettings
         get => GetInt("commitDialogNumberOfPreviousMessages", 6);
         set => SetInt("commitDialogNumberOfPreviousMessages", value);
     }
+
+    public static ISetting<bool> AiCommitMessageEnabled { get; } = Setting.Create(AiCommitMessageSettingsPath, nameof(AiCommitMessageEnabled), false);
+
+    public static ISetting<string> AiCommitMessageApiBaseUrl { get; } = Setting.Create(AiCommitMessageSettingsPath, nameof(AiCommitMessageApiBaseUrl), "https://api.openai.com/v1");
+
+    public static ISetting<string> AiCommitMessageModel { get; } = Setting.Create(AiCommitMessageSettingsPath, nameof(AiCommitMessageModel), "gpt-4o-mini");
+
+    // The API key is a secret, so it is stored in the Windows Credential Manager instead of the
+    // plaintext settings file. The credential target name is derived from the source's setting level,
+    // so a dedicated global-scoped source is used for both reading and writing - otherwise the
+    // ambient SettingsContainer level (which varies by context) would produce different target names
+    // and the saved key would not be found when generating.
+    private static readonly CredentialsSetting _aiCommitMessageApiKey
+        = new("aiCommitMessage.apiKey", "AI commit message API key", static () => null);
+
+    private static readonly Lazy<DistributedSettings> _aiCommitMessageApiKeySource
+        = new(static () => DistributedSettings.CreateGlobal());
+
+    public static string AiCommitMessageApiKey
+    {
+        get => _aiCommitMessageApiKey.GetValueOrDefault(_aiCommitMessageApiKeySource.Value).Password;
+        set
+        {
+            // The Windows Credential Manager rejects an empty secret, so an empty key clears the
+            // entry instead: a blank user name tells CredentialsSetting to drop the credential, while
+            // a real key is stored under a fixed (non-empty) user name.
+            string key = value ?? string.Empty;
+            _aiCommitMessageApiKey.SaveValue(_aiCommitMessageApiKeySource.Value, string.IsNullOrWhiteSpace(key) ? string.Empty : "token", key);
+            _aiCommitMessageApiKey.Save();
+        }
+    }
+
+    public static ISetting<string> AiCommitMessageSystemPrompt { get; } = Setting.Create(AiCommitMessageSettingsPath, nameof(AiCommitMessageSystemPrompt), AiCommitMessageGenerator.DefaultSystemPrompt);
+
+    public static ISetting<int> AiCommitMessageMaxDiffLength { get; } = Setting.Create(AiCommitMessageSettingsPath, nameof(AiCommitMessageMaxDiffLength), 12000);
 
     public static ISetting<bool> CommitDialogSelectStagedOnEnterMessage { get; } = Setting.Create(DialogSettingsPath, nameof(CommitDialogSelectStagedOnEnterMessage), true);
 
