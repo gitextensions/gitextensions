@@ -206,6 +206,19 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             return;
         }
 
+        if (target is ContextMenu contextMenu)
+        {
+            // parity-scaffolding: Exercise the grid-owned ContextMenu through Avalonia's real popup surface.
+            Control owner = EnumerateLogicalControls(_root)
+                .FirstOrDefault(control => ReferenceEquals(control.ContextMenu, contextMenu))
+                ?? throw new AvaloniaCaptureStateUnsupportedException("The ContextMenu is not attached to a control in the captured view.");
+            contextMenu.Open(owner);
+            Dispatcher.UIThread.RunJobs();
+            RequiresExternalSurfaceCapture = true;
+            _restoreActions.Add(contextMenu.Close);
+            return;
+        }
+
         MenuItem? menuItem = target switch
         {
             MenuItem direct => direct,
