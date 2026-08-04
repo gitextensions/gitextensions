@@ -13,7 +13,7 @@ public class AutoCompleteWord : IEquatable<AutoCompleteWord?>
 
     public bool Matches(string typedWord)
     {
-        return Word.StartsWith(typedWord, StringComparison.OrdinalIgnoreCase) || (typedWord.All(char.IsUpper) && _camelHumps.StartsWith(typedWord));
+        return Word.StartsWith(typedWord, StringComparison.OrdinalIgnoreCase) || _camelHumps.StartsWith(typedWord, StringComparison.OrdinalIgnoreCase);
     }
 
     public bool Equals(AutoCompleteWord? other)
