@@ -74,7 +74,7 @@ public sealed class RevisionGridColumnProviderTests
             AvatarService.UpdateAvatarProvider();
 
             RevisionGridControl control = new();
-            ListBox revisions = control.FindControl<ListBox>("lstRevisions")
+            ListBox revisions = control.FindControl<ListBox>("_gridView")
                 ?? throw new InvalidOperationException("The revision list was not created.");
             revisions.ItemsSource = new[] { CreateRevision() };
             Window window = new()
@@ -190,7 +190,7 @@ public sealed class RevisionGridColumnProviderTests
             RevisionGridControl control = new();
             control.SetAheadBehindDataProvider(aheadBehindProvider);
             control.ApplyColumnSettings();
-            ListBox revisions = control.FindControl<ListBox>("lstRevisions")
+            ListBox revisions = control.FindControl<ListBox>("_gridView")
                 ?? throw new InvalidOperationException("The revision list was not created.");
             revisions.ItemsSource = new[] { revision };
             Window window = new()
