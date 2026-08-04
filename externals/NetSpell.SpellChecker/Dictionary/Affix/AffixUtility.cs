@@ -254,27 +254,18 @@ public static class AffixUtility
             && (tempLength + entry.StripCharacters.Length >= entry.ConditionCount)
             && word.StartsWith(entry.AddCharacters))
         {
-            // word with out affix
-            string tempWord = word[entry.AddCharacters.Length..];
-
-            // add back strip chars
-            tempWord = entry.StripCharacters + tempWord;
+            // strip chars plus word without affix
+            string tempWord = $"{entry.StripCharacters}{word.AsSpan(entry.AddCharacters.Length)}";
 
             // check that this is valid
-            int passCount = 0;
             for (int i = 0; i < entry.ConditionCount; i++)
             {
                 int charCode = tempWord[i];
-                if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
-                {
-                    passCount++;
-                }
+                if ((entry.Condition[charCode] & (1 << i)) != (1 << i))
+                    return word; // not valid
             }
 
-            if (passCount == entry.ConditionCount)
-            {
-                return tempWord;
-            }
+            return tempWord;
         }
 
         return word;
