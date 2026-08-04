@@ -68,20 +68,18 @@ internal sealed class MessageColumnProvider : ColumnProvider
     {
         MessageCell panel = new(this)
         {
-            Orientation = Orientation.Horizontal,
             Margin = new Thickness(ColumnLeftMargin, 0, 2, 0),
             ClipToBounds = true,
         };
         panel.Classes.Add("revision-message-cell");
         panel.Subject.Classes.Add("revision-subject");
-        panel.Children.Add(panel.Subject);
         return panel;
     }
 
     public override void UpdateCell(Control control, GitRevision revision)
     {
         MessageCell panel = (MessageCell)control;
-        panel.Children.RemoveRange(0, panel.Children.Count - 1);
+        panel.ContentPanel.Children.RemoveRange(0, panel.ContentPanel.Children.Count - 1);
 
         if (revision.IsArtificial)
         {
@@ -93,16 +91,17 @@ internal sealed class MessageColumnProvider : ColumnProvider
                         : RefLabelIcon.WorkingDirectory,
                     dashed: false);
             artificialLabel.MinWidth = GetArtificialLabelWidth(panel);
-            panel.Children.Insert(panel.Children.Count - 1, artificialLabel);
+            panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, artificialLabel);
 
             foreach (Control statusControl in CreateArtificialStatusControls(revision.ObjectId))
             {
-                panel.Children.Insert(panel.Children.Count - 1, statusControl);
+                panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, statusControl);
             }
 
             panel.Subject.Text = string.Empty;
             panel.Subject.FontWeight = FontWeight.Normal;
             panel.Revision = revision;
+            panel.Indicator.Update(revision);
             panel.ClearHighlight();
             ToolTip.SetTip(panel, GetArtificialToolTip(revision));
             return;
@@ -117,7 +116,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 : null;
         foreach (Control label in CreateSuperprojectLabels(revision, superProjectInfo))
         {
-            panel.Children.Insert(panel.Children.Count - 1, label);
+            panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, label);
         }
 
         foreach (Control label in RevisionGridRefRenderer.CreateLabels(
@@ -128,7 +127,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                      GetVirtualRef,
                      superprojectRefs?.Select(gitRef => gitRef.CompleteName).ToHashSet(StringComparer.Ordinal)))
         {
-            panel.Children.Insert(panel.Children.Count - 1, label);
+            panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, label);
         }
 
         panel.Subject.Text = revision.Subject;
@@ -136,6 +135,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             ? FontWeight.Bold
             : FontWeight.Normal;
         panel.Revision = revision;
+        panel.Indicator.Update(revision);
         panel.ClearHighlight();
         ToolTip.SetTip(panel, _settings.ShowRevisionGridTooltips ? revision.Subject : null);
     }
@@ -456,7 +456,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             => value.StartsWith(prefix, StringComparison.Ordinal) ? value[prefix.Length..] : value;
     }
 
-    private sealed class MessageCell : StackPanel
+    private sealed class MessageCell : DockPanel
     {
         private readonly MessageColumnProvider _provider;
         private RevisionGridRefRenderer.RefLabelControl? _highlightedLabel;
@@ -464,6 +464,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
         public MessageCell(MessageColumnProvider provider)
         {
             _provider = provider;
+            ContentPanel.Children.Add(Subject);
+            SetDock(Indicator, Dock.Right);
+            Children.Add(Indicator);
+            Children.Add(ContentPanel);
             PointerMoved += OnPointerMoved;
             PointerExited += (_, _) =>
             {
@@ -473,7 +477,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
             DoubleTapped += OnDoubleTapped;
         }
 
+        public StackPanel ContentPanel { get; } = new() { Orientation = Orientation.Horizontal };
+
         public TextBlock Subject { get; } = CreateTextBlock();
+
+        public MultilineIndicator Indicator { get; } = new();
 
         public GitRevision? Revision { get; set; }
 
