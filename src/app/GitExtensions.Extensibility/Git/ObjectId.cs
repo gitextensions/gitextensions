@@ -133,6 +133,7 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
     /// <param name="s">The string to try parsing from.</param>
     /// <returns>The parsed <see cref="ObjectId"/>.</returns>
     /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
+    [Obsolete("Only kept to avoid a binary breaking change")]
     [Pure]
     public static ObjectId Parse(string s)
     {
