@@ -107,6 +107,22 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task FormBrowse_should_show_the_empty_repository_surface_when_no_revision_exists()
+    {
+        GitModule module = new(
+            _serviceContainer.GetRequiredService<IGitExecutorProvider>(),
+            _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+
+        form.Show();
+
+        TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+        await WaitUntilAsync(() => loadingStatus.Text == "0 revisions");
+        form.RevisionGrid.GetTestAccessor().CurrentPage.Should().BeOfType<EmptyRepoControl>();
+    }
+
+    [AvaloniaTest]
     public void QuickFetch_should_stop_when_the_before_fetch_script_cancels()
     {
         TestScriptEventRecorder scriptEvents = TestScriptEventRecorder.Install(_serviceContainer);

@@ -7,6 +7,8 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
+using GitUI.Properties;
+using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
@@ -17,6 +19,47 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class RevisionGridSupportTests
 {
+    [AvaloniaTest]
+    public void Empty_repository_control_should_preserve_actions_and_bare_repository_state()
+    {
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        source.UICommands.Returns(commands);
+        EmptyRepoControl control = new() { UICommandsSource = source };
+
+        Button editGitIgnore = control.FindControl<Button>("btnEditGitIgnore")!;
+        Button openCommit = control.FindControl<Button>("btnOpenCommitForm")!;
+        editGitIgnore.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+        openCommit.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+
+        commands.Received(1).StartEditGitIgnoreDialog(control, localExcludes: false);
+        commands.Received(1).StartCommitDialog(control);
+        control.FindControl<Label>("lblEmptyRepository")!.Content.Should()
+            .Be("This repository does not yet contain any commits.");
+        KeyboardNavigation.GetTabIndex(editGitIgnore).Should().Be(0);
+        KeyboardNavigation.GetTabIndex(openCommit).Should().Be(1);
+
+        EmptyRepoControl bareControl = new(isBareRepository: true);
+        bareControl.FindControl<Button>("btnEditGitIgnore")!.IsVisible.Should().BeFalse();
+        bareControl.FindControl<Button>("btnOpenCommitForm")!.IsVisible.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    public void Error_and_loading_controls_should_preserve_their_owned_visual_state()
+    {
+        ErrorControl error = new();
+
+        error.Content.Should().BeOfType<Image>().Which.Source.Should().BeSameAs(Images.StatusBadgeError);
+
+        LoadingControl loading = new();
+        loading.Content.Should().BeOfType<WaitSpinner>();
+        loading.IsAnimating.Should().BeTrue();
+
+        loading.IsAnimating = false;
+
+        loading.IsAnimating.Should().BeFalse();
+    }
+
     [Test]
     public void Navigation_history_should_walk_backward_forward_and_clear_forward_on_push()
     {
