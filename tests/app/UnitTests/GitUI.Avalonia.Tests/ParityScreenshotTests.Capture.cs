@@ -332,7 +332,7 @@ public sealed partial class ParityScreenshotTests
         Control view = CreateView(context, descriptor.ViewType);
         (double width, double height) = GetCaptureSize(descriptor.ViewType);
         double renderScale = scalePercent / 100d;
-        if (descriptor.ViewType == typeof(EditNetSpell))
+        if (descriptor.ViewType == typeof(EditNetSpell) || descriptor.ViewType == typeof(RevisionGridControl))
         {
             // parity-scaffolding: The WinForms standalone host keeps this Designer-sized control in physical pixels.
             width = (width - 0.75) / renderScale;

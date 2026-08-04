@@ -1289,6 +1289,11 @@ public sealed partial class ParityScreenshotTests
             return (827, 189);
         }
 
+        if (viewType == typeof(RevisionGridControl))
+        {
+            return (682, 235);
+        }
+
         if (viewType == typeof(ErrorControl))
         {
             return (2080, 1447);

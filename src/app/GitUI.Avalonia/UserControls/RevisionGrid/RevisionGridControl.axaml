@@ -2,14 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:properties="using:GitUI.Properties"
              xmlns:revisionGrid="using:GitUI.UserControls.RevisionGrid"
-             x:Class="GitUI.RevisionGridControl">
+             x:Class="GitUI.RevisionGridControl"
+             Design.Width="682"
+             Design.Height="235">
   <DockPanel>
-    <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" />
+    <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" IsVisible="False" />
     <Grid x:Name="pnlRevisionGrid">
       <ContentControl x:Name="revisionPage"
                       HorizontalContentAlignment="Stretch"
                       VerticalContentAlignment="Stretch">
-      <ListBox x:Name="lstRevisions" SelectionMode="Multiple">
+      <ListBox x:Name="_gridView" SelectionMode="Multiple">
       <ListBox.ContextMenu>
         <ContextMenu x:Name="mainContextMenu">
           <MenuItem x:Name="markRevisionAsBadToolStripMenuItem" Header="Mark revision as bad">
