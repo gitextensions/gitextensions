@@ -172,7 +172,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "dfdee1b2ae92d832a2ea7420eb4c11aa2cd14420",
-    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The Repository menu restores the current functional WinForms contributions in their original groups: refresh, file explorer with its executable and displayed Ctrl+Shift+O gesture, remotes, submodule management/update/sync, worktrees, all four maintenance commands, and repository settings. Git ignore/info-exclude/attributes/mailmap/sparse editors remain absent with their unported dialogs. The same FormBrowse instance switches between the Dashboard and repository panes when the working directory becomes invalid or valid; Dashboard selections and Open/Close commands use that boundary rather than creating a second shell. The first loaded repository host owns the same-named top-level menu; fork/clone remains available outside a repository, while view/create pull request and add-upstream resolve the provider relevant to the current repository and preserve the original errors and command boundaries. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, the same-named searchable favourite/recent working-directory split selector, current-branch selector, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The working-directory selector routes open/close and Ctrl-new-instance actions through the original command IDs, records the valid recent working directory once, and opens the native recent-repository settings twin. One same-named GitStatusMonitor status result drives the configurable Commit state/count and artificial-revision counters, while the existing ahead/behind provider drives the same-named Push button's arrow/count text with repository/branch stale-result rejection. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, shared Output history, and the selection-driven Build Report contribution when build-server data exists; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown. Portable plugins load and register through the original lifecycle, including unregister/re-register on repository changes; the Browse menu lists them alphabetically, materializes their embedded portable PNGs, executes them through the original GitUIEventArgs boundary, and routes its settings command to the Plugins root. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including OpenRepo Ctrl+O, CloseRepository Ctrl+W, and ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, GPG, build-server polling, and plugin discovery work use owned lifetime boundaries, so queued notifications and unfinished providers cannot outlive shutdown. The Help menu exposes the original check-for-updates contribution, and the weekly startup check is routed through an injected production-only update service so view tests never contact the network. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. P4.1 restores the original InitMenusAndToolbars, InitRevisionGrid, InitCommitDetails, and UpdateTargets partial-file boundaries and routes selection refresh through the original target mask; complete browse-menu, left-panel, dashboard, and state-matrix parity remain later work."
+    "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The Repository menu restores the current functional WinForms contributions in their original groups: refresh, file explorer with its executable and displayed Ctrl+Shift+O gesture, remotes, submodule management/update/sync, worktrees, all four maintenance commands, and repository settings. Git ignore/info-exclude/attributes/mailmap/sparse editors remain absent with their unported dialogs. The same FormBrowse instance switches between the Dashboard and repository panes when the working directory becomes invalid or valid; Dashboard selections and Open/Close commands use that boundary rather than creating a second shell. The first loaded repository host owns the same-named top-level menu; fork/clone remains available outside a repository, while view/create pull request and add-upstream resolve the provider relevant to the current repository and preserve the original errors and command boundaries. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, the same-named searchable favourite/recent working-directory split selector, current-branch selector, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The working-directory selector routes open/close and Ctrl-new-instance actions through the original command IDs, records the valid recent working directory once, and opens the native recent-repository settings twin. One same-named GitStatusMonitor status result drives the configurable Commit state/count and artificial-revision counters, while the existing ahead/behind provider drives the same-named Push button's arrow/count text with repository/branch stale-result rejection. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, shared Output history, and the selection-driven Build Report contribution when build-server data exists; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown. Portable plugins load and register through the original lifecycle, including unregister/re-register on repository changes; the Browse menu lists them alphabetically, materializes their embedded portable PNGs, executes them through the original GitUIEventArgs boundary, and routes its settings command to the Plugins root. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including OpenRepo Ctrl+O, CloseRepository Ctrl+W, and ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Top-level menu access keys are resolved before configured script hotkeys so Alt+S opens Start instead of a conflicting user script. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, GPG, build-server polling, and plugin discovery work use owned lifetime boundaries, so queued notifications and unfinished providers cannot outlive shutdown. P4.2 restores the same-named Start, Tools, and Help menu owners, including dynamic recent/favourite repositories, available actions, shortcuts, translations, separators, icons, state refresh, and settings-change handling. P5.8 retains ownership of the unavailable PuTTY, command-log, changelog, donate, and about surfaces. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. P4.1 restores the original InitMenusAndToolbars, InitRevisionGrid, InitCommitDetails, and UpdateTargets partial-file boundaries and routes selection refresh through the original target mask; left-panel, dashboard, and exact state-matrix parity remain later work."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml.cs",
@@ -1832,14 +1832,14 @@
   "src/app/GitUI/UserControls/FileStatusList.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
-    "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Reusable list/tree boundary with the original regex filter, revision grouping, repository tree, selection/navigation, status images, and WinForms-shaped events. P2.2 restores the cancellable git-grep calculation path, search history, persisted visibility, active search surface, and modeless FormFindInCommitFilesGitGrep integration for diff and file-tree consumers. Associated shell icons still use the generic file icon until a cross-platform provider exists."
+    "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
+    "notes": "Reusable list/tree boundary with the original regex filter, revision grouping, repository tree, selection/navigation, status images, and WinForms-shaped events. P2.2 restores the cancellable git-grep calculation path, search history, persisted visibility, active search surface, and modeless FormFindInCommitFilesGitGrep integration for diff and file-tree consumers. P4.2 restores the same-named CopyPathsToolStripMenuItem with the original selection callback and translation identities. Associated shell icons still use the generic file icon until a cross-platform provider exists."
   },
   "src/app/GitUI/UserControls/FileStatusList.ContextMenu.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.ContextMenu.cs",
     "status": "functional",
-    "basedOn": "491088f26acece7943f4fe25c273d2050442b899",
-    "notes": "Same-named context-menu boundary restores stage, unstage, reset, submodule, difftool, open/edit/save/move/delete, copy, folder, filtering, history, blame, tree, script and index-bit actions. P2.2 enables the git-grep dialog/toggle entries and both mode-specific hotkey commands now that their native dialog and calculation path exist; P3.1 applies the shared native MenuUtil caption treatment to the two difftool revision headings; later-owned ignore actions remain hidden rather than inert."
+    "basedOn": "2e5471ed438fbc0c6d7dee441aca731a669515a7",
+    "notes": "Same-named context-menu boundary restores stage, unstage, reset, submodule, difftool, open/edit/save/move/delete, copy, folder, filtering, history, blame, tree, script and index-bit actions. P2.2 enables the git-grep dialog/toggle entries and both mode-specific hotkey commands now that their native dialog and calculation path exist; P3.1 applies the shared native MenuUtil caption treatment to the two difftool revision headings; P4.2 delegates path copying and file/folder reveal behavior to the same-named menu/helper twins. Later-owned ignore actions remain hidden rather than inert."
   },
   "src/app/GitUI/UserControls/FileStatusList.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml",
@@ -2322,7 +2322,7 @@
     "twin": "src/app/GitUI.Avalonia/GitModuleForm.cs",
     "status": "functional",
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "UICommands/Module plus the shared IGitUICommandsSource contract, lazy required hotkey/script services, central script-command dispatch, lazy user-script hotkey routing through the original Scripts settings category, and activation-time Git settings invalidation. Services resolve on first use so design/test construction can provide only the surface it exercises."
+    "notes": "UICommands/Module plus the shared IGitUICommandsSource contract, lazy required hotkey/script services, central script-command dispatch, lazy user-script hotkey routing through the original Scripts settings category, and activation-time Git settings invalidation. Avalonia modifier-only and unsupported key events map to Keys.None and are excluded from script dispatch so an unassigned script cannot run. Services resolve on first use so design/test construction can provide only the surface it exercises."
   },
   "src/app/GitUI/GitModuleControl.cs": {
     "twin": "src/app/GitUI.Avalonia/GitModuleControl.cs",
@@ -2633,14 +2633,16 @@
     "plannedIn": "P5.5"
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseUtil.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseUtil.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Framework-neutral file and directory shell-action helper linked unchanged into GitUI.Avalonia. The native FileStatusList consumes the shared existence and reveal boundaries."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseMenus.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormBrowseMenus.cs",
     "status": "functional",
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Synchronizes cloned Navigate/View menu items from the revision-grid command sources through the original OnMenuCommandsPropertyChanged boundary. Complete menu inventory and helper reconciliation remain planned for P4.2."
+    "notes": "Synchronizes the complete cloned Navigate/View menu inventories from the revision-grid command sources through the original OnMenuCommandsPropertyChanged boundary. Names, icons, separators, shortcuts, checks, enabled state, visibility, group headings, nested items, and actions remain owned by RevisionGrid and are re-verified through FormBrowse."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormChangeLog.cs": {
     "status": "unported",
@@ -2683,20 +2685,22 @@
     "plannedIn": "P5.8"
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/GitFileTreeComparer.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI/CommandsDialogs/BrowseDialog/GitFileTreeComparer.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Framework-neutral tree/commit-before-blob comparer linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/MenuCommand.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/MenuCommand.cs",
     "status": "functional",
-    "basedOn": "42a3b8dc9f30e86228f633201813aed940ed7c60",
-    "notes": "The same command, grouping, translation, check, enabled-state, registration and shortcut-refresh contract creates native Avalonia MenuItem and Separator controls. WinForms shortcut display strings are converted to Avalonia KeyGesture when representable; an invalid or platform-unrepresentable user string is omitted instead of preventing the menu from opening."
+    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
+    "notes": "The same command, grouping, translation, check, enabled-state, registration and shortcut-refresh contract creates native Avalonia MenuItem and Separator controls. Group headers remain disabled italic captions. WinForms shortcut display strings are converted to Avalonia KeyGesture when representable; an invalid or platform-unrepresentable user string is omitted instead of preventing the menu from opening. Re-verified through the complete FormBrowse Navigate/View families in P4.2."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/MenuCommandsBase.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/MenuCommandsBase.cs",
     "status": "functional",
-    "basedOn": "42a3b8dc9f30e86228f633201813aed940ed7c60",
-    "notes": "Mechanical twin of the original translation enumeration and lifecycle base used by RevisionGridMenuCommands."
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Mechanical twin of the original translation enumeration and lifecycle base used by RevisionGridMenuCommands; re-verified through the complete FormBrowse Navigate/View families in P4.2."
   },
   "src/app/GitUI/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.cs": {
     "status": "unported",
@@ -2894,44 +2898,64 @@
     "plannedIn": "P5.4"
   },
   "src/app/GitUI/CommandsDialogs/Menus/CopyPathsToolStripMenuItem.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/CopyPathsToolStripMenuItem.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Preserves the same path selection, distinct filtering, native/POSIX/WSL/Cygwin conversions, full-path default action, clipboard route, and member order. Avalonia dismisses its native ContextMenu automatically instead of explicitly hiding a WinForms parent; WSL/Cygwin presentations are absent off Windows where those conversions are not actionable."
   },
   "src/app/GitUI/CommandsDialogs/Menus/CopyPathsToolStripMenuItem.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/CopyPathsToolStripMenuItem.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native AXAML preserves the five named entries, order, image, mnemonics, Ctrl+C gesture, and bold full-native default."
   },
   "src/app/GitUI/CommandsDialogs/Menus/HelpToolStripMenuItem.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/HelpToolStripMenuItem.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Preserves manual, translation, telemetry, issue-report, environment-copy, and update-check behavior through native menu events and the shared URL/update boundaries. Change log, donate, and about entries remain explicitly absent until their same-named dialogs are ported in P5.8."
   },
   "src/app/GitUI/CommandsDialogs/Menus/HelpToolStripMenuItem.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/HelpToolStripMenuItem.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native AXAML preserves names, icons, order, separators, check state, and translation identities for every currently actionable Help entry; unavailable P5.8 dialog entries are absent rather than inert."
   },
   "src/app/GitUI/CommandsDialogs/Menus/SettingsChangedEventArgs.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI/CommandsDialogs/Menus/SettingsChangedEventArgs.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Framework-neutral settings-change payload linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/Menus/StartToolStripMenuItem.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/StartToolStripMenuItem.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Preserves initialize/open/clone/exit actions, shortcuts, module transitions, recent-history clearing, dynamic recent/favourite grouping, pinned separators/icons, branch labels, tooltips, numeric mnemonics, invalid-repository handling, and Ctrl-open-in-new-instance behavior through the shared Avalonia repository-history service. The folder picker is the native cross-platform substitute for FormOpenDirectory, which remains owned by P5.8."
   },
   "src/app/GitUI/CommandsDialogs/Menus/StartToolStripMenuItem.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/StartToolStripMenuItem.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native AXAML preserves the complete named Start inventory, order, separators, icons, mnemonics, clear command, and Ctrl+Q exit gesture. Dynamic children replace placeholders before submenu opening."
   },
   "src/app/GitUI/CommandsDialogs/Menus/ToolsToolStripMenuItem.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/ToolsToolStripMenuItem.axaml.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Preserves Git GUI/GitK/settings actions, shortcut refresh, bare-repository state, settings-change notification, and shell-launch error handling. Git bash uses the native cross-platform terminal service. PuTTY/Pageant and Git command-log entries remain explicitly absent until their platform/native surfaces are supplied in P5.8."
   },
   "src/app/GitUI/CommandsDialogs/Menus/ToolsToolStripMenuItem.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/ToolsToolStripMenuItem.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native AXAML preserves names, icons, order, separator, mnemonics, and translation identities for every currently actionable Tools entry; unavailable platform/dialog entries are absent rather than inert."
   },
   "src/app/GitUI/CommandsDialogs/Menus/ToolStripMenuItemEx.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/ToolStripMenuItemEx.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native MenuItem base preserves the original UICommands/module initialization, owner, translation, shortcut refresh, and state refresh contract. Avalonia resolves the owner from the menu's TopLevel and uses native KeyGesture values instead of WinForms shortcut display strings."
   },
   "src/app/GitUI/CommandsDialogs/RememberFileContextMenuController.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/RememberFileContextMenuController.cs",

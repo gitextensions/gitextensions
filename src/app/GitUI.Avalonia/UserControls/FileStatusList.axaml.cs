@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
@@ -58,6 +59,11 @@ public partial class FileStatusList : GitModuleControl
         _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         _revisionDiffController = new RevisionDiffController(() => Module, _fullPathResolver);
         InitializeComponent();
+        tsmiCopyPaths.Initialize(
+            () => TryGetUICommandsDirect(out IGitUICommands? commands)
+                ? commands
+                : throw new InvalidOperationException("The menu is not attached to UI commands."),
+            GetSelectedFilePaths);
 
         lstFiles.ItemTemplate = new FuncDataTemplate<object>(CreateFileRow, supportsRecycling: false);
         tvDiffFiles.ItemTemplate = new FuncTreeDataTemplate<DiffTreeNode>(
@@ -135,6 +141,18 @@ public partial class FileStatusList : GitModuleControl
         InitializeComplete();
     }
 
+    public override void AddTranslationItems(ITranslation translation)
+    {
+        base.AddTranslationItems(translation);
+        tsmiCopyPaths.AddControlTranslationItems(translation);
+    }
+
+    public override void TranslateItems(ITranslation translation)
+    {
+        base.TranslateItems(translation);
+        tsmiCopyPaths.TranslateControlItems(translation);
+    }
+
     private void FileStatusList_KeyDown(object? sender, KeyEventArgs e)
     {
         if (ProcessHotkey(KeysMapper.ToKeys(e)))
@@ -142,6 +160,11 @@ public partial class FileStatusList : GitModuleControl
             e.Handled = true;
         }
     }
+
+    private IEnumerable<string?> GetSelectedFilePaths()
+        => SelectedFolder is RelativePath folder
+            ? [folder.Value]
+            : SelectedGitItems.Select(item => item.Name);
 
     /// <summary>
     ///  Occurs when the selected file changes (named like the WinForms event).

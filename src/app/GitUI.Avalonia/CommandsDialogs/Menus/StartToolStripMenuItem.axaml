@@ -1,0 +1,29 @@
+<menus:ToolStripMenuItemEx xmlns="https://github.com/avaloniaui"
+                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                              xmlns:menus="using:GitUI.CommandsDialogs.Menus"
+                              xmlns:properties="using:GitUI.Properties"
+                              x:Class="GitUI.CommandsDialogs.Menus.StartToolStripMenuItem"
+                              Header="_Start">
+  <MenuItem x:Name="initNewRepositoryToolStripMenuItem" Header="_Create new repository...">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoCreate}" /></MenuItem.Icon>
+  </MenuItem>
+  <MenuItem x:Name="openToolStripMenuItem" Header="_Open...">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoOpen}" /></MenuItem.Icon>
+  </MenuItem>
+  <MenuItem x:Name="tsmiFavouriteRepositories" Header="_Favorite repositories">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Star}" /></MenuItem.Icon>
+    <MenuItem Header="..." IsEnabled="False" />
+  </MenuItem>
+  <MenuItem x:Name="tsmiRecentRepositories" Header="_Recent repositories">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RecentRepositories}" /></MenuItem.Icon>
+    <MenuItem Header="..." IsEnabled="False" />
+    <Separator x:Name="clearRecentRepositoriesListToolStripMenuItem" />
+    <MenuItem x:Name="tsmiRecentRepositoriesClear" Header="Clear list" />
+  </MenuItem>
+  <Separator x:Name="toolStripSeparator12" />
+  <MenuItem x:Name="cloneToolStripMenuItem" Header="C_lone repository...">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CloneRepoGit}" /></MenuItem.Icon>
+  </MenuItem>
+  <Separator x:Name="toolStripMenuItem1" />
+  <MenuItem x:Name="exitToolStripMenuItem" Header="E_xit" HotKey="Ctrl+Q" InputGesture="Ctrl+Q" />
+</menus:ToolStripMenuItemEx>

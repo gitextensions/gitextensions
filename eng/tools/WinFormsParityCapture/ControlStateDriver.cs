@@ -83,7 +83,55 @@ internal sealed class ControlStateDriver : IDisposable
             }
         }
 
+        if (owner is Control root)
+        {
+            foreach (Control control in EnumerateSelfAndDescendants(root))
+            {
+                if (control.Name == fieldName)
+                {
+                    return control;
+                }
+
+                if (control is ToolStrip toolStrip
+                    && FindToolStripItem(toolStrip.Items, fieldName) is ToolStripItem item)
+                {
+                    return item;
+                }
+            }
+        }
+
         return null;
+
+        static IEnumerable<Control> EnumerateSelfAndDescendants(Control control)
+        {
+            yield return control;
+            foreach (Control child in control.Controls)
+            {
+                foreach (Control descendant in EnumerateSelfAndDescendants(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+
+        static ToolStripItem? FindToolStripItem(ToolStripItemCollection items, string name)
+        {
+            foreach (ToolStripItem item in items)
+            {
+                if (item.Name == name)
+                {
+                    return item;
+                }
+
+                if (item is ToolStripDropDownItem dropDownItem
+                    && FindToolStripItem(dropDownItem.DropDownItems, name) is ToolStripItem child)
+                {
+                    return child;
+                }
+            }
+
+            return null;
+        }
     }
 
     private static void PumpEvents()
