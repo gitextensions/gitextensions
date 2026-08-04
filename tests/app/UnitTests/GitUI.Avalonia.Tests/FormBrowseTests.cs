@@ -1724,7 +1724,7 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Revision loading status was not created.");
             await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && revisionGrid.SelectedRevision is not null);
 
-            ContextMenu contextMenu = revisionGrid.FindControl<ContextMenu>("revisionContextMenu")
+            ContextMenu contextMenu = revisionGrid.FindControl<ContextMenu>("mainContextMenu")
                 ?? throw new InvalidOperationException("Revision context menu was not created.");
             MenuItem checkoutBranch = revisionGrid.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Checkout-branch menu item was not created.");
@@ -1754,6 +1754,10 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Copy menu item was not created.");
             MenuItem rebase = revisionGrid.FindControl<MenuItem>("rebaseToolStripMenuItem")
                 ?? throw new InvalidOperationException("Rebase menu item was not created.");
+            MenuItem editCommit = revisionGrid.FindControl<MenuItem>("editCommitToolStripMenuItem")
+                ?? throw new InvalidOperationException("Edit-commit menu item was not created.");
+            MenuItem rewordCommit = revisionGrid.FindControl<MenuItem>("rewordCommitToolStripMenuItem")
+                ?? throw new InvalidOperationException("Reword-commit menu item was not created.");
             MenuItem view = revisionGrid.FindControl<MenuItem>("viewToolStripMenuItem")
                 ?? throw new InvalidOperationException("View menu item was not created.");
             ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")
@@ -1805,6 +1809,8 @@ public sealed class FormBrowseTests
             cherryPick.IsVisible.Should().BeTrue();
             revertCommit.IsVisible.Should().BeTrue();
             archive.IsEnabled.Should().BeTrue();
+            editCommit.IsEnabled.Should().BeTrue();
+            rewordCommit.IsEnabled.Should().BeTrue();
             copy.Items.Should().NotBeEmpty();
 
             MenuItem checkoutFeature = checkoutBranch.Items.Cast<MenuItem>()

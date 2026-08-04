@@ -1684,8 +1684,8 @@
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
-    "basedOn": "491088f26acece7943f4fe25c273d2050442b899",
-    "notes": "Read-only graph/ref labels plus WinForms-shaped single/multi-selection, preselection, double-click notification and the shared IRevisionGridFilter contract. Default reloads use the unchanged FilterInfo argument builder, so branch/current/reflog, message/committer/author/diff, first-parent and path filters match WinForms and persist through AppSettings; explicit caller-supplied revision filters remain supported. Stored stash revisions retain their reflog selectors, older stashes are inserted before their base commit, and the shared RevisionsLoading/RevisionsLoaded payload feeds the left panel from the same lazy refs/stash reads. ShowUncommittedChangesIfPossible defaults on like WinForms and injects the same Working directory/Commit index revisions into the graph stream immediately before HEAD, allowing the shared graph to resolve both artificial edges; filtered-out HEAD and empty repositories retain the original completion-time fallback insertion. The shared artificial-commit setting and bare-repository exclusion remain authoritative, and one live parsed status is split into the staged/worktree change counters. File-history rename following expands one path through git log --follow and preserves FilePathByObjectId/GetRevisionFileName, including exact-only rename/copy settings and merge commits. The context menu routes copy details, stash apply/pop/drop, local/remote checkout, local push, merge and rebase variants, artificial-row reset/commit, branch/tag creation, local rename/delete, tag delete, parent/child/current navigation, provider visibility toggles, and direct/nested user scripts through real Avalonia workflows; RevisionContextMenu lets specialized hosts such as File History compose that menu. Persisted upstream RevisionGrid command IDs/default hotkeys dispatch from FormBrowse. P3.1 wires the unchanged navigation histories, parent/child reversal, quick-search typing/paste/result commands, and the lazy unchanged index watcher into the native list. Recycled rows use the same ordered ColumnProvider boundary; settings control graph, notes, author, date and object-ID visibility, while visible lanes determine graph width. Alternating and authored row backgrounds now use the original even-row condition and exact MakeDarkerBy/AppColor inputs. Refs mark the checked-out branch/tracking remote. Selection drives shared author highlighting; related refs and superproject data are functional. Owner-managed superproject loading returns through its JoinableTaskFactory for cancellation-safe shutdown. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization."
+    "basedOn": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+    "notes": "Read-only graph/ref labels plus WinForms-shaped single/multi-selection, preselection, double-click notification and the shared IRevisionGridFilter contract. Default reloads use the unchanged FilterInfo argument builder, so branch/current/reflog, message/committer/author/diff, first-parent and path filters match WinForms and persist through AppSettings; explicit caller-supplied revision filters remain supported. Stored stash revisions retain their reflog selectors, older stashes are inserted before their base commit, and the shared RevisionsLoading/RevisionsLoaded payload feeds the left panel from the same lazy refs/stash reads. ShowUncommittedChangesIfPossible defaults on like WinForms and injects the same Working directory/Commit index revisions into the graph stream immediately before HEAD, allowing the shared graph to resolve both artificial edges; filtered-out HEAD and empty repositories retain the original completion-time fallback insertion. The shared artificial-commit setting and bare-repository exclusion remain authoritative, and one live parsed status is split into the staged/worktree change counters. File-history rename following expands one path through git log --follow and preserves FilePathByObjectId/GetRevisionFileName, including exact-only rename/copy settings and merge commits. The context menu now preserves the original top-level item inventory and order, routes its implemented copy, stash, checkout, push, merge, rebase, bisect, reset, commit, branch/tag, advanced commit, difftool, help, pull-request and script actions through real Avalonia workflows, and keeps actions whose same-named dialogs are still absent visible but disabled. RevisionContextMenu lets specialized hosts such as File History compose that menu. The exact RevisionGridMenuCommands inventory builds the Navigate and View menus, updates checks and shortcuts, and retains all persisted command IDs; the realized row cells feed the same-named truncation tooltip provider. P3.1 wires the unchanged navigation histories, parent/child reversal, quick-search typing/paste/result commands, and the lazy unchanged index watcher into the native list. Recycled rows use the same ordered ColumnProvider boundary; settings control graph, notes, author, date and object-ID visibility, while visible lanes determine graph width. Alternating and authored row backgrounds now use the original even-row condition and exact MakeDarkerBy/AppColor inputs. Refs mark the checked-out branch/tracking remote. Selection drives shared author highlighting; related refs and superproject data are functional. Owner-managed superproject loading returns through its JoinableTaskFactory for cancellation-safe shutdown. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. Exact popup rendering, every disabled command body, and the exhaustive grid state audit remain open."
   },
   "src/app/GitUI/UserControls/RevisionGrid/ArtificialCommitChangeCount.cs": {
     "twin": "src/app/GitUI/UserControls/RevisionGrid/ArtificialCommitChangeCount.cs",
@@ -1708,8 +1708,8 @@
   "src/app/GitUI/UserControls/RevisionGrid/CopyContextMenuItem.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/CopyContextMenuItem.cs",
     "status": "functional",
-    "basedOn": "491088f26acece7943f4fe25c273d2050442b899",
-    "notes": "Avalonia MenuItem twin copies filtered branch/tag names plus commit hash, message, author and date details with the original translated captions, access keys and shared icons; dynamic group captions use the same MenuUtil boundary as WinForms."
+    "basedOn": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+    "notes": "Avalonia MenuItem twin rebuilds on each submenu opening and preserves the original item-for-item order, filtered local/remote branch and tag grouping, numbered access keys, separators, translated captions, shared icons, and commit hash/message/author/date clipboard payloads. Avalonia Header, Items and IImage replace the WinForms Text, DropDownItems and Image members without changing the command contract."
   },
   "src/app/GitUI/UserControls/RevisionGrid/AuthorRevisionHighlighting.cs": {
     "twin": "src/app/GitUI/UserControls/RevisionGrid/AuthorRevisionHighlighting.cs",
@@ -2681,12 +2681,16 @@
     "plannedIn": "P4.2"
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/MenuCommand.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/MenuCommand.cs",
+    "status": "functional",
+    "basedOn": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+    "notes": "The same command, grouping, translation, check, enabled-state, registration and shortcut-refresh contract creates native Avalonia MenuItem and Separator controls. WinForms shortcut display strings are converted to Avalonia KeyGesture when representable; an invalid or platform-unrepresentable user string is omitted instead of preventing the menu from opening."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/MenuCommandsBase.cs": {
-    "status": "unported",
-    "plannedIn": "P4.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/MenuCommandsBase.cs",
+    "status": "functional",
+    "basedOn": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+    "notes": "Mechanical twin of the original translation enumeration and lifecycle base used by RevisionGridMenuCommands."
   },
   "src/app/GitUI/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.cs": {
     "status": "unported",
@@ -3879,12 +3883,16 @@
     "plannedIn": "P3.4"
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridMenuCommands.cs": {
-    "status": "unported",
-    "plannedIn": "P3.3"
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridMenuCommands.cs",
+    "status": "functional",
+    "basedOn": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+    "notes": "The original Navigate and View command inventories, group ordering, translations, icons, check/enabled predicates, persisted shortcuts and actions are preserved through native MenuItem creation. Go to commit remains visible but disabled until its same-named dialog twin exists."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridToolTipProvider.cs": {
-    "status": "unported",
-    "plannedIn": "P3.3"
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridToolTipProvider.cs",
+    "status": "functional",
+    "basedOn": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+    "notes": "Native Avalonia pointer routing on recycled realized cells preserves the original setting gate, per-row/column truncation cache, previous-cell suppression, hide, clear and tooltip text behavior. Cell registration and text extraction are isolated framework substitutions; exhaustive timing, virtualization and visual-state equivalence remains open."
   },
   "src/app/GitUI/UserControls/RevisionGrid/VisibleRowRange.cs": {
     "twin": "src/app/GitUI/UserControls/RevisionGrid/VisibleRowRange.cs",
