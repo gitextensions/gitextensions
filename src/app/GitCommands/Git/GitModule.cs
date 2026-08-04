@@ -2235,7 +2235,7 @@ public sealed partial class GitModule : IGitModule
             }
 
             int spaceIndex = field.IndexOf(' ');
-            string key = spaceIndex >= 0 ? field[..spaceIndex] : field;
+            ReadOnlySpan<char> key = spaceIndex >= 0 ? field.AsSpan(0, spaceIndex) : field;
             string value = spaceIndex >= 0 ? field[(spaceIndex + 1)..] : "";
             switch (key)
             {
