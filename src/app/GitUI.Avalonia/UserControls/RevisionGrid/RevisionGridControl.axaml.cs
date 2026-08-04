@@ -89,7 +89,11 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
     private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly FilterInfo _filterInfo = new();
+    private readonly NavigationHistory _navigationHistory = new();
+    private readonly QuickSearchProvider _quickSearchProvider;
+    private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
     private readonly AuthorRevisionHighlighting _authorHighlighting = new();
+    private readonly Lazy<IndexWatcher> _indexWatcher;
     private readonly List<ColumnProvider> _columnProviders = [];
     private readonly List<GitRevision> _revisions = [];
     private readonly TranslationString _areYouSureRebase = new("Are you sure you want to rebase? This action will rewrite commit history.");
@@ -132,13 +136,28 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         AddColumn(_buildServerWatcher.ColumnProvider);
         ApplyColumnSettings();
 
+        _quickSearchProvider = new QuickSearchProvider(lstRevisions, pnlRevisionGrid, () => Module.WorkingDir);
+
+        // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
+        _parentChildNavigationHistory = new ParentChildNavigationHistory(commitId => SetSelectedRevision(commitId));
+        _indexWatcher = new Lazy<IndexWatcher>(() => new IndexWatcher(UICommandsSource));
+
         lstRevisions.ItemTemplate = new FuncDataTemplate<GitRevision>((_, _) => new RevisionRowControl(this), supportsRecycling: true);
         lstRevisions.SelectionChanged += (_, _) =>
         {
+            _parentChildNavigationHistory.RevisionsSelectionChanged();
             HighlightRevisionsByAuthor();
             UpdateContextMenuItems();
+            GitRevision[] selectedRevisions = [.. lstRevisions.SelectedItems?.OfType<GitRevision>().Take(2) ?? []];
+            if (selectedRevisions.Length == 1)
+            {
+                _navigationHistory.Push(selectedRevisions[0].ObjectId);
+            }
+
             SelectionChanged?.Invoke(this, EventArgs.Empty);
         };
+        lstRevisions.KeyDown += (_, e) => _quickSearchProvider.OnKeyDown(e);
+        lstRevisions.TextInput += (_, e) => _quickSearchProvider.OnTextInput(e);
         lstRevisions.DoubleTapped += (_, _) =>
             DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(SelectedRevision));
         lstRevisions.PointerPressed += lstRevisions_PointerPressed;
@@ -163,9 +182,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ToggleBetweenArtificialAndHeadCommitsMenuItem.Click += (_, _) => ToggleBetweenArtificialAndHeadCommits();
         GotoCurrentRevisionMenuItem.Click += (_, _) => SelectCurrentRevision();
         GotoChildCommitMenuItem.Click += (_, _) => GoToChild();
-        GotoParentCommitMenuItem.Click += (_, _) => GoToParent(firstParent: true);
-        GotoFirstParentCommitMenuItem.Click += (_, _) => GoToParent(firstParent: true);
-        GotoLastParentCommitMenuItem.Click += (_, _) => GoToParent(firstParent: false);
+        GotoParentCommitMenuItem.Click += (_, _) => GoToParent(firstParent: true, useHistory: true);
+        GotoFirstParentCommitMenuItem.Click += (_, _) => GoToParent(firstParent: true, useHistory: false);
+        GotoLastParentCommitMenuItem.Click += (_, _) => GoToParent(firstParent: false, useHistory: false);
         ShowAllBranchesMenuItem.Click += (_, _) => ShowAllBranches();
         ShowCurrentBranchOnlyMenuItem.Click += (_, _) => ShowCurrentBranchOnly();
         ShowFilteredBranchesMenuItem.Click += (_, _) => ShowFilteredBranches();
@@ -191,7 +210,14 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                 UICommands.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(HotkeySettingsName));
         };
         UpdateContextMenuItems();
-        DetachedFromVisualTree += (_, _) => _buildServerWatcher.Dispose();
+        DetachedFromVisualTree += (_, _) =>
+        {
+            _buildServerWatcher.Dispose();
+            if (_indexWatcher.IsValueCreated)
+            {
+                _indexWatcher.Value.Dispose();
+            }
+        };
 
         InitializeComplete();
     }
@@ -214,6 +240,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     internal bool ShowBuildServerInfo { get; set; }
 
     internal bool HasRevisionSource => _lastModule is not null;
+
+    internal IndexWatcher IndexWatcher => _indexWatcher.Value;
 
     /// <summary>
     ///  Occurs when the selected revision changes.
@@ -456,6 +484,27 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         return !objectId.IsZero && SetSelectedRevision(objectId);
     }
 
+    private void ResetNavigationHistory()
+    {
+        _navigationHistory.Clear();
+    }
+
+    public void NavigateBackward()
+    {
+        if (_navigationHistory.CanNavigateBackward)
+        {
+            SetSelectedRevision(_navigationHistory.NavigateBackward(), updateNavigationHistory: false);
+        }
+    }
+
+    public void NavigateForward()
+    {
+        if (_navigationHistory.CanNavigateForward)
+        {
+            SetSelectedRevision(_navigationHistory.NavigateForward(), updateNavigationHistory: false);
+        }
+    }
+
     private void AddColumn(ColumnProvider columnProvider)
     {
         columnProvider.Index = _columnProviders.Count;
@@ -519,7 +568,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     }
 
     /// <summary>Selects and scrolls to the given revision if it is loaded.</summary>
-    public bool SetSelectedRevision(ObjectId objectId)
+    public bool SetSelectedRevision(ObjectId objectId, bool toggleSelection = false, bool updateNavigationHistory = true)
     {
         GitRevision? revision = _revisions.Find(r => r.ObjectId == objectId);
         if (revision is null)
@@ -527,13 +576,47 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             return false;
         }
 
-        lstRevisions.SelectedItem = revision;
+        if (objectId.IsZero)
+        {
+            throw new ArgumentException("Value cannot be a zero ObjectId.", nameof(objectId));
+        }
+
+        if (toggleSelection && lstRevisions.SelectedItems is { } selectedItems)
+        {
+            bool wasSelected = selectedItems.Contains(revision);
+            if (wasSelected && selectedItems.Count > 1)
+            {
+                selectedItems.Remove(revision);
+            }
+            else if (!wasSelected)
+            {
+                selectedItems.Add(revision);
+            }
+        }
+        else if (lstRevisions.SelectedItems is { } currentSelection)
+        {
+            if (currentSelection.Count != 1 || !currentSelection.Contains(revision))
+            {
+                if (currentSelection.Count > 1)
+                {
+                    currentSelection.Clear();
+                }
+
+                lstRevisions.SelectedItem = revision;
+            }
+        }
+
         lstRevisions.ScrollIntoView(revision);
+        if (updateNavigationHistory)
+        {
+            _navigationHistory.Push(objectId);
+        }
+
         return true;
     }
 
     bool IRevisionGridUpdate.SetSelectedRevision(ObjectId commitId, bool toggleSelection, bool updateNavigationHistory)
-        => SetSelectedRevision(commitId);
+        => SetSelectedRevision(commitId, toggleSelection, updateNavigationHistory);
 
     #region IRevisionGridInfo
 
@@ -1079,11 +1162,17 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private bool GoToParent(bool firstParent)
+    private bool GoToParent(bool firstParent, bool useHistory)
     {
         if (SelectedRevision is not GitRevision revision)
         {
             return false;
+        }
+
+        if (useHistory && _parentChildNavigationHistory.HasPreviousParent)
+        {
+            _parentChildNavigationHistory.NavigateToPreviousParent(revision.ObjectId);
+            return true;
         }
 
         GitRevision actualRevision = GetActualRevision(revision);
@@ -1091,7 +1180,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ObjectId parentId = firstParent
             ? parentIds?.FirstOrDefault() ?? default
             : parentIds?.LastOrDefault() ?? default;
-        return !parentId.IsZero && SetSelectedRevision(parentId);
+        if (parentId.IsZero)
+        {
+            return false;
+        }
+
+        _parentChildNavigationHistory.NavigateToParent(revision.ObjectId, parentId);
+        return true;
     }
 
     private bool GoToChild()
@@ -1101,9 +1196,21 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             return false;
         }
 
+        if (_parentChildNavigationHistory.HasPreviousChild)
+        {
+            _parentChildNavigationHistory.NavigateToPreviousChild(revision.ObjectId);
+            return true;
+        }
+
         GitRevision? child = _revisions.FirstOrDefault(
             candidate => candidate.ParentIds?.Contains(revision.ObjectId) == true);
-        return child is not null && SetSelectedRevision(child.ObjectId);
+        if (child is null)
+        {
+            return false;
+        }
+
+        _parentChildNavigationHistory.NavigateToChild(revision.ObjectId, child.ObjectId);
+        return true;
     }
 
     private void UpdateNavigationMenu(GitRevision? revision)
@@ -1254,10 +1361,17 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             case Command.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
             case Command.SelectCurrentRevision: SelectCurrentRevision(); break;
             case Command.GoToParent:
+                return GoToParent(firstParent: true, useHistory: true);
             case Command.GoToFirstParent:
-                return GoToParent(firstParent: true);
-            case Command.GoToLastParent: return GoToParent(firstParent: false);
+                return GoToParent(firstParent: true, useHistory: false);
+            case Command.GoToLastParent: return GoToParent(firstParent: false, useHistory: false);
             case Command.GoToChild: return GoToChild();
+            case Command.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;
+            case Command.PrevQuickSearch: _quickSearchProvider.NextResult(down: false); break;
+            case Command.NavigateBackward:
+            case Command.NavigateBackward_AlternativeHotkey: NavigateBackward(); break;
+            case Command.NavigateForward:
+            case Command.NavigateForward_AlternativeHotkey: NavigateForward(); break;
             case Command.ToggleBetweenArtificialAndHeadCommits: return ToggleBetweenArtificialAndHeadCommits();
             case Command.ToggleHighlightSelectedBranch: return HighlightSelectedBranch();
             case Command.DeleteRef: return DeleteSingleRef();
@@ -1368,6 +1482,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         FilterChanged?.Invoke(this, new FilterChangedEventArgs(_filterInfo));
 
         _revisions.Clear();
+        ResetNavigationHistory();
+        _parentChildNavigationHistory.Clear();
         _buildServerWatcher.CancelBuildStatusFetchOperation();
         foreach (ColumnProvider columnProvider in _columnProviders)
         {

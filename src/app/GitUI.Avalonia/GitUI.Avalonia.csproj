@@ -108,10 +108,14 @@
     <Compile Include="..\GitUI\UserControls\RevisionGrid\FilterInfo.cs" Link="UserControls\RevisionGrid\FilterInfo.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\ICheckRefs.cs" Link="UserControls\RevisionGrid\ICheckRefs.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\IRevisionGridFilter.cs" Link="UserControls\RevisionGrid\IRevisionGridFilter.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\IndexWatcher.cs" Link="UserControls\RevisionGrid\IndexWatcher.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\NavigationHistory.cs" Link="UserControls\RevisionGrid\NavigationHistory.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\ParentChildNavigationHistory.cs" Link="UserControls\RevisionGrid\ParentChildNavigationHistory.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionFilter.cs" Link="UserControls\RevisionGrid\RevisionFilter.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\FilterChangedEventArgs.cs" Link="UserControls\RevisionGrid\FilterChangedEventArgs.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionLoadEventArgs.cs" Link="UserControls\RevisionGrid\RevisionLoadEventArgs.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\RevisionGridControl.Command.cs" Link="UserControls\RevisionGrid\RevisionGridControl.Command.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\VisibleRowRange.cs" Link="UserControls\RevisionGrid\VisibleRowRange.cs" />
     <Compile Include="..\GitUI\UserControls\MainThreadScheduler.cs" Link="UserControls\MainThreadScheduler.cs" />
     <Compile Include="..\GitUI\UserControls\GitBlameParser.cs" Link="UserControls\GitBlameParser.cs" />
     <Compile Include="..\GitUI\UserControls\PatchFile.cs" Link="UserControls\PatchFile.cs" />

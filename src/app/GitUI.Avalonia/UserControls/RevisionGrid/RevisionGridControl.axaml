@@ -5,7 +5,8 @@
              x:Class="GitUI.RevisionGridControl">
   <DockPanel>
     <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" />
-    <ListBox x:Name="lstRevisions" SelectionMode="Multiple">
+    <Grid x:Name="pnlRevisionGrid">
+      <ListBox x:Name="lstRevisions" SelectionMode="Multiple">
       <ListBox.ContextMenu>
         <ContextMenu x:Name="revisionContextMenu">
           <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" />
@@ -187,6 +188,7 @@
           <Setter Property="MinHeight" Value="0" />
         </Style>
       </ListBox.Styles>
-    </ListBox>
+      </ListBox>
+    </Grid>
   </DockPanel>
 </UserControl>
