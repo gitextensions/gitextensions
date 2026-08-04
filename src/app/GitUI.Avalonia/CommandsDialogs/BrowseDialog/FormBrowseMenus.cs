@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using GitExtensions.Extensibility.Translations;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
 using ResourceManager;
 
@@ -62,7 +63,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     {
         _navigateToolStripMenuItem.Header = Translate("navigateToolStripMenuItem", "&Navigate");
         _viewToolStripMenuItem.Header = Translate("viewToolStripMenuItem", "&View");
-        RefreshItems();
+        OnMenuCommandsPropertyChanged();
 
         return;
 
@@ -86,14 +87,40 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     internal void RefreshItems()
     {
         _revisionGrid.RefreshMainMenuState();
+        SynchronizeItems(includeVisibility: true);
+    }
+
+    internal void OnMenuCommandsPropertyChanged()
+    {
+        // Visibility remains owned by the explicit menu-opening refresh, avoiding transient cloned-menu expansion.
+        SynchronizeItems(includeVisibility: false);
+    }
+
+    private void SynchronizeItems(bool includeVisibility)
+    {
+        Dictionary<string, MenuCommand> menuCommands = _revisionGrid.MenuCommands.NavigateMenuCommands
+            .Concat(_revisionGrid.MenuCommands.ViewMenuCommands)
+            .Where(command => !command.IsSeparator && command.Name is not null)
+            .ToDictionary(command => command.Name!, StringComparer.Ordinal);
         foreach ((MenuItem source, MenuItem target) in _sourceItems)
         {
+            if (source.Tag is string tag
+                && menuCommands.TryGetValue(tag, out MenuCommand? command)
+                && command?.Text is string commandText)
+            {
+                source.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(commandText);
+            }
+
             target.Header = source.Header;
             target.InputGesture = source.InputGesture;
             target.ToggleType = source.ToggleType;
             target.IsChecked = source.IsChecked;
             target.IsEnabled = source.IsEnabled;
-            target.IsVisible = source.IsVisible;
+            if (includeVisibility)
+            {
+                target.IsVisible = source.IsVisible;
+            }
+
             ToolTip.SetTip(target, ToolTip.GetTip(source));
         }
     }
