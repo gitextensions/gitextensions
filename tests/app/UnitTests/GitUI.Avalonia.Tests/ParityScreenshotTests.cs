@@ -863,6 +863,14 @@ public sealed partial class ParityScreenshotTests
             return;
         }
 
+        if (root is LoadingControl loadingControl)
+        {
+            loadingControl.IsAnimating = false;
+            WaitSpinner loadingSpinner = loadingControl.GetLogicalDescendants().OfType<WaitSpinner>().Single();
+            loadingSpinner.SetProgressForCapture(7);
+            return;
+        }
+
         if (root is WatermarkComboBox watermarkComboBox)
         {
             watermarkComboBox.Watermark = "Filter files using a regular expression...";
@@ -1276,6 +1284,21 @@ public sealed partial class ParityScreenshotTests
             return (48, 48);
         }
 
+        if (viewType == typeof(EmptyRepoControl))
+        {
+            return (827, 189);
+        }
+
+        if (viewType == typeof(ErrorControl))
+        {
+            return (2080, 1447);
+        }
+
+        if (viewType == typeof(LoadingControl))
+        {
+            return (32, 32);
+        }
+
         if (viewType == typeof(WatermarkComboBox) || viewType == typeof(CaseSensitiveComboBox))
         {
             return (250, 23);
@@ -1495,6 +1518,8 @@ public sealed partial class ParityScreenshotTests
         return
         [
             .. axamlViews,
+            new("UserControls/RevisionGrid/ErrorControl.cs", "UserControls/RevisionGrid/ErrorControl", typeof(ErrorControl).FullName!, typeof(ErrorControl)),
+            new("UserControls/RevisionGrid/LoadingControl.cs", "UserControls/RevisionGrid/LoadingControl", typeof(LoadingControl).FullName!, typeof(LoadingControl)),
             new("UserControls/WaitSpinner.cs", "UserControls/WaitSpinner", typeof(WaitSpinner).FullName!, typeof(WaitSpinner)),
             new("UserControls/WatermarkComboBox.cs", "UserControls/WatermarkComboBox", typeof(WatermarkComboBox).FullName!, typeof(WatermarkComboBox)),
             new("UserControls/CaseSensitiveComboBox.cs", "UserControls/CaseSensitiveComboBox", typeof(CaseSensitiveComboBox).FullName!, typeof(CaseSensitiveComboBox)),

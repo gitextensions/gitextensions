@@ -1449,6 +1449,13 @@ internal static class WinFormsInputMetadata
                 new("comboBoxRemotes", 0, null, null),
                 new("tableLayoutPanel1", 1, null, null),
             ],
+            ["GitUI.UserControls.RevisionGrid.EmptyRepoControl"] =
+            [
+                new("btnEditGitIgnore", 0, null, null),
+                new("btnOpenCommitForm", 1, null, null),
+                new("lblEmptyRepository", 2, null, null),
+                new("panel1", 3, null, null),
+            ],
             ["GitUI.UserControls.RevisionGrid.FormQuickItemSelector"] =
             [
                 new("btnAction", 1, null, null),

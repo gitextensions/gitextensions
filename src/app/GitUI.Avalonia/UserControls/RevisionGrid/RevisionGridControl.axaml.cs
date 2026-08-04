@@ -1502,6 +1502,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         _headHighlighted = false;
         lstRevisions.ItemsSource = null;
         lblLoadingStatus.Text = "Loading…";
+        SetPage(new LoadingControl());
 
         Lazy<IReadOnlyList<IGitRef>> refs = new(() => module.GetRefs(RefsFilter.NoFilter));
         Lazy<IReadOnlyCollection<GitRevision>> stashes = new(() =>
@@ -1742,6 +1743,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
         // Swapping the ItemsSource per batch keeps the virtualized list simple; batches are
         // few (the reader flushes at most every 500 ms).
+        SetPage(lstRevisions);
         lstRevisions.ItemsSource = _revisions.ToArray();
         lblLoadingStatus.Text = $"{_revisions.Count} revisions…";
         SelectPendingRevision();
@@ -1762,10 +1764,19 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             _revisions.InsertRange(insertIndex < 0 ? 0 : insertIndex, artificialRevisions);
         }
 
-        // The graph rows straightened after the final CacheTo become visible only when the
-        // realized row controls render again, so refresh the list once at the end.
-        lstRevisions.ItemsSource = _revisions.ToArray();
-        RefreshRealizedRows();
+        if (_revisions.Count == 0 && !_filterInfo.HasFilter)
+        {
+            SetPage(new EmptyRepoControl(_lastModule?.IsBareRepository() == true));
+        }
+        else
+        {
+            SetPage(lstRevisions);
+
+            // The graph rows straightened after the final CacheTo become visible only when the
+            // realized row controls render again, so refresh the list once at the end.
+            lstRevisions.ItemsSource = _revisions.ToArray();
+            RefreshRealizedRows();
+        }
 
         lblLoadingStatus.Text = $"{_revisions.Count} revisions";
         SelectPendingRevision();
@@ -1840,8 +1851,17 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         if (!cancellationToken.IsCancellationRequested)
         {
             lblLoadingStatus.Text = $"Failed to load revisions: {exception.Message}";
+            SetPage(new ErrorControl());
         }
     }
+
+    /// <summary>
+    /// Reset the controls to the supplied content.
+    /// This is used to remove spinners added when loading and to replace the gridview at errors.
+    /// </summary>
+    /// <param name="content">The content to show.</param>
+    private void SetPage(Control content)
+        => revisionPage.Content = content;
 
     private void UpdateVisibleGraphColumnWidth()
     {
@@ -1906,6 +1926,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     internal readonly struct TestAccessor(RevisionGridControl control)
     {
+        public Control? CurrentPage => control.revisionPage.Content as Control;
+
         public bool HasGraphParent(ObjectId childId, ObjectId parentId)
             => control._revisionGraph.TryGetNode(childId, out RevisionGraphRevision? child)
                 && child.Parents.Any(parent => parent.Objectid == parentId);
