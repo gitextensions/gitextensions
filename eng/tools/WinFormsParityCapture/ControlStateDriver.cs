@@ -9,9 +9,11 @@ internal sealed class ControlStateDriver : IDisposable
 {
     private readonly List<Action> _restoreActions = [];
     private readonly List<ToolStripDropDown> _popups = [];
+    private readonly Control _root;
 
-    private ControlStateDriver()
+    private ControlStateDriver(Control root)
     {
+        _root = root;
     }
 
     public IReadOnlyList<ToolStripDropDown> Popups => _popups;
@@ -20,7 +22,7 @@ internal sealed class ControlStateDriver : IDisposable
 
     public static ControlStateDriver Apply(Control root, CaptureStatePlan state)
     {
-        ControlStateDriver driver = new();
+        ControlStateDriver driver = new(root);
         object? target = state.TargetField is null ? root : FindFieldValue(root, state.TargetField);
         if (target is null)
         {
@@ -191,8 +193,10 @@ internal sealed class ControlStateDriver : IDisposable
             return;
         }
 
+        // parity-scaffolding: Capture the grid-owned ContextMenuStrip through its real popup surface.
         ToolStripDropDown popup = target switch
         {
+            ContextMenuStrip contextMenu => OpenContextMenu(contextMenu, _root),
             ToolStripDropDownItem item => Open(item),
             MenuStrip menu when menu.Items.OfType<ToolStripDropDownItem>().FirstOrDefault() is { } item => Open(item),
             _ => throw new CaptureStateUnsupportedException("The open-menu state requires a MenuStrip or ToolStripDropDownItem.")
@@ -204,6 +208,12 @@ internal sealed class ControlStateDriver : IDisposable
         {
             item.ShowDropDown();
             return item.DropDown;
+        }
+
+        static ToolStripDropDown OpenContextMenu(ContextMenuStrip contextMenu, Control root)
+        {
+            contextMenu.Show(root, new Point(Math.Max(1, root.ClientSize.Width / 2), Math.Max(1, root.ClientSize.Height / 2)));
+            return contextMenu;
         }
     }
 

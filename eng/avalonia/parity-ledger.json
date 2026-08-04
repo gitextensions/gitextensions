@@ -24312,61 +24312,86 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 26,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 18,
+          "note": "The current inventory records 16 member-shape findings, one source-path convention finding, and one translation-key diagnostic for the native MenuItem adaptation."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json",
+            "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 32,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 18,
+          "note": "The dynamic submenu is tested item-for-item for branch, tag, separator, numbering, access-key, and revision-detail ordering on Windows and Linux; exhaustive clipboard failure paths and multi-revision combinations remain open."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
+          "status": "unverified",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.3/diff/findings.json"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "findingCount": 1,
+          "note": "WinForms popup captures exist at native 125 percent, but headless Avalonia cannot compose its popup top level into the primary frame; paired popup pixels remain unverified."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
+          "status": "unverified",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.3/diff/findings.json"
+          ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "findingCount": 1,
+          "note": "Resolved light, dark, and custom WinForms popup colors were captured, but no paired Avalonia popup surface is available from the headless renderer."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1,
+          "note": "Opening and rebuilding the representative populated submenu is covered; empty, filtered, multi-selection, hover, keyboard-focus, disabled, and clipboard-error states remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx",
+            "eng/avalonia/parity-evidence/P3.3/windows-runtime",
+            "eng/avalonia/parity-evidence/P3.3/linux-runtime"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "linux-flatpak-wayland"
+          ],
+          "findingCount": 1,
+          "note": "Windows and Linux tranche gates cover construction and runtime startup; macOS and live native popup interaction remain unverified."
         }
       }
     },
@@ -25636,73 +25661,91 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 450,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 1107,
+          "note": "The current aggregate inventory records 1,107 source-shape, behavior-contract, comment, event, hotkey, menu, setting, and translation findings across the original three partials and two Avalonia parts; exact source closure remains assigned to the grid behavior tranche."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.2/functional-findings.json"
+            "eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json",
+            "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 1208,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 1107,
+          "note": "The original top-level context-menu order, all declared advanced/compare/rebase descendants, complete Navigate/View command inventories, dynamic Copy grouping, check/enabled refresh, persisted shortcuts, edit/reword interactive-rebase actions, and truncation tooltip provider are present and focused-test backed. Go-to-commit, checkout-revision, reset-another-branch, and compare dialog actions remain visibly disabled until their owning dialog tranches; deeper grid behavior remains open."
         },
         "visual": {
-          "status": "partial",
-          "verifiedOn": "2026-08-01",
-          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+            "eng/avalonia/parity-evidence/P3.3/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 0,
-          "note": "P1.8 proves the shared-vocabulary extraction is pixel-, geometry-, and text-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
+          "findingCount": 137,
+          "note": "Three native-125-percent light/dark/custom primary-grid pairs were compared and record 137 diagnostic findings. WinForms captured all three menu surfaces at native 125 percent, but Avalonia headless popup composition is unavailable; 45 requested pairs are explicitly unavailable."
         },
         "themingAndColor": {
-          "status": "partial",
-          "verifiedOn": "2026-08-01",
-          "commit": "26ad79e675a402ef37c2994e0e56d797e6ab2cd4",
+          "status": "gap",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
           "evidence": [
-            "eng/avalonia/parity-evidence/P1.3b/",
-            "eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json"
+            "eng/avalonia/parity-evidence/P3.3/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 11,
+          "note": "The native-125-percent light, dark, and custom primary-grid comparisons record 11 resolved-color findings; paired popup theme colors remain unavailable from the Avalonia headless renderer."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.3/diff/findings.json",
+            "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 45,
+          "note": "Menu identity/order, enabled-state refresh, dynamic Copy opening, selection routing, and tooltip installation/truncation state are covered. Forty-five capture pairs are unavailable because of native-DPI and popup-composition limits; hover, keyboard/pointer focus, complete tooltip timing/virtualization, and every command outcome remain assigned to the grid behavior tranche."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx",
+            "eng/avalonia/parity-evidence/P3.3/windows-runtime",
+            "eng/avalonia/parity-evidence/P3.3/linux-runtime"
           ],
           "platforms": [
             "windows",
             "linux-wayland",
             "linux-x11",
-            "flatpak"
+            "linux-flatpak-wayland"
           ],
           "findingCount": 1,
-          "note": "Exact alternating-row, authored-row, ref-label, build-status, graph, diff, and blame content colors are test-backed with reviewed renderer goldens and the representative theme/scale matrix. Framework-control colors belong to P1.7/P1.7b; native 96 DPI and macOS remain unverified, and later component tranches still own their full state audits. P1.8 proves the shared-vocabulary extraction is resolved-color-neutral against the prior Avalonia baseline across light, dark, and custom themes at 100/125/150/200%. This does not prove parity with the WinForms original; that comparison remains unverified."
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-31",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-07-30",
-          "commit": "e5a7dedda79e406a6917b5e4f852622fb681ac41",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows and Linux tranche gates cover the changed grid; macOS and live native popup interaction remain unverified."
         }
       }
     },
@@ -33403,6 +33446,58 @@
         "themingAndColor": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": [], "platforms": [], "findingCount": 0, "note": "This range value declares no colors."},
         "behavioralState": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Range equality and boundary values are tested; the complete virtualized-grid consumer audit remains assigned to P3.4."},
         "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx", "eng/avalonia/parity-evidence/P3.1/windows-runtime", "eng/avalonia/parity-evidence/P3.1/linux-runtime"], "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1, "note": "Windows and Linux gates cover the tranche; macOS remains unverified."}
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/BrowseDialog/MenuCommand.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/MenuCommand.cs",
+      "complete": false,
+      "axes": {
+        "structural": {"status": "gap", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json"], "platforms": [], "findingCount": 30, "note": "The inventory records 26 member, three adapted-comment, and one source-path convention finding for the native MenuItem substitution."},
+        "functional": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json", "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 30, "note": "Native menu creation, grouping, translation, icon, tooltip, click, check/enabled registration, and shortcut refresh are exercised through both RevisionGrid menu families; invalid display strings are safely omitted. Exhaustive standalone shortcut-format coverage remains open."},
+        "visual": {"status": "unverified", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/diff/findings.json"], "platforms": [], "findingCount": 1, "note": "WinForms Navigate/View menu surfaces were captured at native 125 percent, but paired Avalonia popup pixels are unavailable from headless composition."},
+        "themingAndColor": {"status": "unverified", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/diff/findings.json"], "platforms": [], "findingCount": 1, "note": "Light, dark, and custom popup theme comparison remains unavailable on the Avalonia side."},
+        "behavioralState": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Registered menu items receive current checked, enabled, and shortcut state; full pointer, keyboard, focus, disabled, and submenu lifecycle comparison remains open."},
+        "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx", "eng/avalonia/parity-evidence/P3.3/windows-runtime", "eng/avalonia/parity-evidence/P3.3/linux-runtime"], "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1, "note": "Windows and Linux tranche gates cover construction and startup; macOS and live native popup interaction remain unverified."}
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/BrowseDialog/MenuCommandsBase.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/MenuCommandsBase.cs",
+      "complete": false,
+      "axes": {
+        "structural": {"status": "gap", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json"], "platforms": [], "findingCount": 8, "note": "All seven original members and comments match; the eight findings are the inventory's code-only twin-path convention diagnostics."},
+        "functional": {"status": "verified", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json", "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The translation lifecycle and command enumeration are mechanical twins and are exercised by the complete Navigate/View inventory on Windows and Linux."},
+        "visual": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": [], "platforms": [], "findingCount": 0, "note": "This translation/enumeration base declares no UI chrome."},
+        "themingAndColor": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": [], "platforms": [], "findingCount": 0, "note": "This translation/enumeration base declares no colors."},
+        "behavioralState": {"status": "verified", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The class owns no interaction state beyond its verified translation lifecycle."},
+        "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "The framework-neutral behavior is verified on Windows and Linux; macOS remains unverified."}
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/RevisionGridMenuCommands.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridMenuCommands.cs",
+      "complete": false,
+      "axes": {
+        "structural": {"status": "gap", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json"], "platforms": [], "findingCount": 19, "note": "The inventory records 17 code-only twin-path member diagnostics, one path convention finding, and one translation-key diagnostic; the original member inventory and order are otherwise retained."},
+        "functional": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json", "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 19, "note": "Every original Navigate/View command, group, separator, icon, translation, check/enabled predicate, setting toggle, and persisted shortcut ID is present and inventory-tested. Go to commit remains visible but disabled until the same-named dialog twin is implemented."},
+        "visual": {"status": "unverified", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/diff/findings.json"], "platforms": [], "findingCount": 1, "note": "WinForms Navigate/View popup captures exist at native 125 percent, but paired Avalonia popup pixels cannot be composed by the headless renderer."},
+        "themingAndColor": {"status": "unverified", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/diff/findings.json"], "platforms": [], "findingCount": 1, "note": "Resolved light, dark, and custom WinForms menu colors are captured; paired Avalonia popup colors remain unavailable."},
+        "behavioralState": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Complete command identity/order and representative enabled/check refresh are covered; every action result and full popup interaction matrix remain open."},
+        "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx", "eng/avalonia/parity-evidence/P3.3/windows-runtime", "eng/avalonia/parity-evidence/P3.3/linux-runtime"], "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1, "note": "Windows and Linux tranche gates cover the menu command family; macOS and live native popup interaction remain unverified."}
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/RevisionGridToolTipProvider.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridToolTipProvider.cs",
+      "complete": false,
+      "axes": {
+        "structural": {"status": "gap", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json"], "platforms": [], "findingCount": 35, "note": "The inventory records framework-required pointer/cell-state substitutions plus code-only path diagnostics; exact DataGridView-shaped source closure is not claimed."},
+        "functional": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/inventory/functional-findings.json", "eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 35, "note": "The same setting gate, previous-cell suppression, graph-highlight preference, provider text, truncation fallback, hide, clear, and per-row/column cache operate on Avalonia's recycled realized cells. Exhaustive live virtualization, timing, and graph hit testing remain open."},
+        "visual": {"status": "unverified", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": [], "platforms": [], "findingCount": 1, "note": "No paired active tooltip surface was captured; popup geometry and text rendering remain assigned to the grid state audit."},
+        "themingAndColor": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": [], "platforms": [], "findingCount": 0, "note": "The provider declares no custom colors and delegates tooltip chrome to the verified framework style boundary."},
+        "behavioralState": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Installation, setting propagation, truncation cache, clear, and inactive hide are covered. Active hover, movement between recycled rows, graph highlights, disabled setting, and popup timing remain open."},
+        "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "42a3b8dc9f30e86228f633201813aed940ed7c60", "evidence": ["eng/avalonia/parity-evidence/P3.3/P3.3-windows-focused.trx", "eng/avalonia/parity-evidence/P3.3/P3.3-linux-focused.trx", "eng/avalonia/parity-evidence/P3.3/windows-runtime", "eng/avalonia/parity-evidence/P3.3/linux-runtime"], "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1, "note": "Windows and Linux tranche gates cover construction and startup; macOS and live native tooltip interaction remain unverified."}
       }
     }
   ]

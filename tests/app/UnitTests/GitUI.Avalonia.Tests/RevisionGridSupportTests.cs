@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
@@ -12,6 +13,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 
 namespace GitExtensionsTests;
@@ -19,6 +21,12 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class RevisionGridSupportTests
 {
+    [SetUp]
+    public void SetUp()
+    {
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+    }
+
     [AvaloniaTest]
     public void Empty_repository_control_should_preserve_actions_and_bare_repository_state()
     {
@@ -227,6 +235,178 @@ public sealed class RevisionGridSupportTests
 
         indicator.Update(Revision('2', "subject", multiline: false));
         indicator.IsVisible.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    public void Revision_grid_context_menu_should_preserve_the_original_item_order()
+    {
+        RevisionGridControl control = new();
+        ContextMenu contextMenu = control.FindControl<ContextMenu>("mainContextMenu")
+            ?? throw new InvalidOperationException("The revision context menu was not created.");
+
+        contextMenu.Items.OfType<Control>().Select(item => item.Name).Should().Equal(
+            "markRevisionAsBadToolStripMenuItem",
+            "markRevisionAsGoodToolStripMenuItem",
+            "bisectSkipRevisionToolStripMenuItem",
+            "stopBisectToolStripMenuItem",
+            "sepBisect",
+            "copyToClipboardToolStripMenuItem",
+            "sepCopy",
+            "applyStashToolStripMenuItem",
+            "popStashToolStripMenuItem",
+            "dropStashToolStripMenuItem",
+            "sepStash",
+            "checkoutBranchToolStripMenuItem",
+            "tsmiPushBranch",
+            "mergeBranchToolStripMenuItem",
+            "rebaseOnToolStripMenuItem",
+            "resetCurrentBranchToHereToolStripMenuItem",
+            "sepBranch",
+            "resetChangesToolStripMenuItem",
+            "commitToolStripMenuItem",
+            "createNewBranchToolStripMenuItem",
+            "resetAnotherBranchToHereToolStripMenuItem",
+            "renameBranchToolStripMenuItem",
+            "deleteBranchToolStripMenuItem",
+            "sepBranchModification",
+            "createTagToolStripMenuItem",
+            "deleteTagToolStripMenuItem",
+            "sepCommit",
+            "checkoutRevisionToolStripMenuItem",
+            "revertCommitToolStripMenuItem",
+            "cherryPickCommitToolStripMenuItem",
+            "archiveRevisionToolStripMenuItem",
+            "manipulateCommitToolStripMenuItem",
+            "sepCompare",
+            "compareToolStripMenuItem",
+            "sepNavigate",
+            "navigateToolStripMenuItem",
+            "tsmiSelectInLeftPanel",
+            "viewToolStripMenuItem",
+            "runScriptToolStripMenuItem",
+            "openBuildReportToolStripMenuItem",
+            "openPullRequestPageStripMenuItem",
+            "tsmiOtherActions");
+
+        control.FindControl<MenuItem>("rebaseOnToolStripMenuItem")!.Items.OfType<Control>().Select(item => item.Name).Should().Equal(
+            "rebaseToolStripMenuItem",
+            "rebaseInteractivelyToolStripMenuItem",
+            "sepRebase",
+            "rebaseWithAdvOptionsToolStripMenuItem");
+        control.FindControl<MenuItem>("manipulateCommitToolStripMenuItem")!.Items.OfType<Control>().Select(item => item.Name).Should().Equal(
+            "editCommitToolStripMenuItem",
+            "rewordCommitToolStripMenuItem",
+            "fixupCommitToolStripMenuItem",
+            "squashCommitToolStripMenuItem",
+            "amendCommitToolStripMenuItem",
+            "getHelpOnHowToUseTheseFeaturesToolStripMenuItem");
+        control.FindControl<MenuItem>("compareToolStripMenuItem")!.Items.OfType<Control>().Select(item => item.Name).Should().Equal(
+            "openCommitsWithDiffToolMenuItem",
+            "sepCompareDropdown",
+            "compareToBranchToolStripMenuItem",
+            "compareWithCurrentBranchToolStripMenuItem",
+            "selectAsBaseToolStripMenuItem",
+            "compareToBaseToolStripMenuItem",
+            "compareToWorkingDirectoryMenuItem",
+            "compareSelectedCommitsMenuItem");
+    }
+
+    [AvaloniaTest]
+    public void Revision_grid_menu_commands_should_preserve_the_original_navigate_and_view_inventory()
+    {
+        RevisionGridControl control = new();
+
+        control.MenuCommands.NavigateMenuCommands.Where(command => !command.IsSeparator).Select(command => command.Name).Should().Equal(
+            "ToggleBetweenArtificialAndHeadCommits",
+            "GotoCurrentRevision",
+            "GotoCommit",
+            "GotoChildCommit",
+            "GotoParentCommit",
+            "GotoFirstParentCommit",
+            "GotoLastParentCommit",
+            "GotoMergeBaseCommit",
+            "NavigateBackward",
+            "NavigateForward",
+            "QuickSearch",
+            "PrevQuickSearch",
+            "NextQuickSearch");
+        control.MenuCommands.ViewMenuCommands.Where(command => !command.IsSeparator).Select(command => command.Name).Should().Equal(
+            "BranchesToolStripMenuItem",
+            "ShowAllBranches",
+            "ShowCurrentBranchOnly",
+            "ShowFilteredBranches",
+            "ShowReflogReferences",
+            "filterToolStripMenuItem",
+            "drawNonrelativesGrayToolStripMenuItem",
+            "HighlightSelectedBranch",
+            "CommitsToolStripMenuItem",
+            "ShowArtificialCommits",
+            "ShowStashes",
+            "showGitNotesToolStripMenuItem",
+            "ShowSessionCheckpoints",
+            "Grid_labelsToolStripMenuItem",
+            "ShowRemoteBranches",
+            "showTagsToolStripMenuItem",
+            "ShowSuperprojectTags",
+            "ShowSuperprojectRemoteBranches",
+            "ShowSuperprojectBranches",
+            "Grid_infoToolStripMenuItem",
+            "showBuildStatusIconToolStripMenuItem",
+            "showBuildStatusTextToolStripMenuItem",
+            "showCommitMessageBodyToolStripMenuItem",
+            "showAuthorDateToolStripMenuItem",
+            "showRelativeDateToolStripMenuItem",
+            "ColumnsToolStripMenuItem",
+            "showRevisionGraphColumnToolStripMenuItem",
+            "showGitNotesColumnToolStripMenuItem",
+            "showAuthorAvatarColumnToolStripMenuItem",
+            "showAuthorNameColumnToolStripMenuItem",
+            "showDateColumnToolStripMenuItem",
+            "showIdColumnToolStripMenuItem",
+            "SortingToolStripMenuItem",
+            "AuthorDateSort",
+            "TopoOrder",
+            "Settings_persistenceToolStripMenuItem",
+            "SaveAsDefault");
+    }
+
+    [AvaloniaTest]
+    public void Copy_context_menu_should_rebuild_the_original_branch_tag_and_revision_groups()
+    {
+        GitRevision revision = Revision('1', "subject");
+        revision.AuthorEmail = "author@example.com";
+        revision.Refs =
+        [
+            new GitRef(null!, revision.ObjectId, "refs/heads/branch1"),
+            new GitRef(null!, revision.ObjectId, "refs/tags/tag1"),
+        ];
+        CopyContextMenuItem item = new();
+        item.SetRevisionFunc(() => [revision]);
+
+        item.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+
+        item.Items.Should().HaveCount(10);
+        item.Items[0].Should().BeOfType<MenuItem>().Which.Header.Should().Be(TranslatedStrings.Branches);
+        item.Items[1].Should().BeOfType<MenuItem>().Which.Header.Should().Be("_1:   branch1");
+        item.Items[3].Should().BeOfType<MenuItem>().Which.Header.Should().Be(TranslatedStrings.Tags);
+        item.Items[4].Should().BeOfType<MenuItem>().Which.Header.Should().Be("_2:   tag1");
+        item.Items[6].Should().BeOfType<MenuItem>().Which.Header!.ToString().Should().StartWith("_Commit hash");
+    }
+
+    [AvaloniaTest]
+    public void Revision_grid_tooltip_provider_should_be_installed_with_the_original_setting()
+    {
+        RevisionGridControl control = new();
+        System.Reflection.FieldInfo field = typeof(RevisionGridControl).GetField(
+            "_toolTipProvider",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("The revision tooltip provider field was not created.");
+        RevisionGridToolTipProvider provider = (RevisionGridToolTipProvider)field.GetValue(control)!;
+
+        provider.ShowRevisionGridTooltips.Should().Be(AppSettings.ShowRevisionGridTooltips.Value);
+        provider.SetTruncation(columnIndex: 1, rowIndex: 2, truncated: true);
+        provider.Clear();
+        provider.Hide().Should().BeFalse();
     }
 
     private static ObjectId Id(char value)
