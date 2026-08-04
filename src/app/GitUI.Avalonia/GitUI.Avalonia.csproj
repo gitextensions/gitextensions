@@ -43,6 +43,9 @@
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\ReleaseVersion.cs" Link="CommandsDialogs\BrowseDialog\ReleaseVersion.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\ReleaseType.cs" Link="CommandsDialogs\BrowseDialog\ReleaseType.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" Link="CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" Link="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitFileTreeComparer.cs" Link="CommandsDialogs\BrowseDialog\GitFileTreeComparer.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\Menus\SettingsChangedEventArgs.cs" Link="CommandsDialogs\Menus\SettingsChangedEventArgs.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" Link="CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" Link="CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\FormVerify.LostObject.cs" Link="CommandsDialogs\FormVerify.LostObject.cs" />

@@ -1,0 +1,20 @@
+<menus:ToolStripMenuItemEx xmlns="https://github.com/avaloniaui"
+                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                              xmlns:menus="using:GitUI.CommandsDialogs.Menus"
+                              xmlns:properties="using:GitUI.Properties"
+                              x:Class="GitUI.CommandsDialogs.Menus.ToolsToolStripMenuItem"
+                              Header="_Tools">
+  <MenuItem x:Name="gitBashToolStripMenuItem" Header="Git _bash">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GitForWindows}" /></MenuItem.Icon>
+  </MenuItem>
+  <MenuItem x:Name="gitGUIToolStripMenuItem" Header="Git _GUI">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GitGui}" /></MenuItem.Icon>
+  </MenuItem>
+  <MenuItem x:Name="kGitToolStripMenuItem" Header="Git_K">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Gitk}" /></MenuItem.Icon>
+  </MenuItem>
+  <Separator x:Name="toolStripSeparator7" />
+  <MenuItem x:Name="settingsToolStripMenuItem" Header="_Settings...">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
+  </MenuItem>
+</menus:ToolStripMenuItemEx>

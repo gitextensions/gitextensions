@@ -153,6 +153,7 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
 
             MenuItem target = new()
             {
+                Name = source.Name,
                 Tag = source.Tag,
                 Header = source.Header,
                 Icon = CloneIcon(source.Icon),

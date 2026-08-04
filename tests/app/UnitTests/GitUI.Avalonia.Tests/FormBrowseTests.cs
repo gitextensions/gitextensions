@@ -24,6 +24,7 @@ using GitUI;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+using GitUI.CommandsDialogs.Menus;
 using GitUI.Compat;
 using GitUI.LeftPanel;
 using GitUI.Properties;
@@ -533,6 +534,8 @@ public sealed class FormBrowseTests
         GetItemNames(form.fileToolStripMenuItem).Should().Equal(
             "initNewRepositoryToolStripMenuItem",
             "openToolStripMenuItem",
+            "tsmiFavouriteRepositories",
+            "tsmiRecentRepositories",
             "|",
             "cloneToolStripMenuItem",
             "|",
@@ -554,8 +557,6 @@ public sealed class FormBrowseTests
 
         foreach (string unavailableName in new[]
         {
-            "tsmiFavouriteRepositories",
-            "tsmiRecentRepositories",
             "PuTTYToolStripMenuItem",
             "gitcommandLogToolStripMenuItem",
             "changelogToolStripMenuItem",
@@ -605,6 +606,27 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_start_tools_and_help_menu_roots_should_not_receive_the_host_title_translation()
+    {
+        using FormBrowse form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+        translation.TranslateItem(nameof(FormBrowse), "$this", "Text", Arg.Any<Func<string>>())
+            .Returns("Git Extensions");
+        translation.TranslateItem(nameof(FormBrowse), "fileToolStripMenuItem", "Text", Arg.Any<Func<string>>())
+            .Returns("&Start translated");
+        translation.TranslateItem(nameof(FormBrowse), "toolsToolStripMenuItem", "Text", Arg.Any<Func<string>>())
+            .Returns("&Tools translated");
+        translation.TranslateItem(nameof(FormBrowse), "helpToolStripMenuItem", "Text", Arg.Any<Func<string>>())
+            .Returns("&Help translated");
+
+        form.TranslateItems(translation);
+
+        form.fileToolStripMenuItem.Header.Should().Be("_Start translated");
+        form.toolsToolStripMenuItem.Header.Should().Be("_Tools translated");
+        form.helpToolStripMenuItem.Header.Should().Be("_Help translated");
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_start_tools_and_help_menus_should_route_commands_and_refresh_state()
     {
         bool isBare = false;
@@ -619,40 +641,43 @@ public sealed class FormBrowseTests
         commands.GetService(Arg.Any<Type>())
             .Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
         using FormBrowse form = new(commands);
+        StartToolStripMenuItem.TestAccessor start = form.fileToolStripMenuItem.GetTestAccessor();
+        ToolsToolStripMenuItem.TestAccessor tools = form.toolsToolStripMenuItem.GetTestAccessor();
+        HelpToolStripMenuItem.TestAccessor help = form.helpToolStripMenuItem.GetTestAccessor();
 
-        form.initNewRepositoryToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        form.cloneToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        form.gitGUIToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        form.kGitToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        form.settingsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
-        form.tsmiTelemetryEnabled.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        start.InitNewRepositoryMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        start.CloneMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        tools.GitGuiMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        tools.GitKMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        tools.SettingsMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        help.TelemetryMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
         commands.Received(1).StartInitializeDialog(
-            form,
+            null,
             null,
             Arg.Any<EventHandler<GitModuleEventArgs>>());
         commands.Received(1).StartCloneDialog(
-            form,
+            null,
             string.Empty,
             false,
             Arg.Any<EventHandler<GitModuleEventArgs>>());
         module.Received(1).RunGui();
         module.Received(1).RunGitK();
-        commands.Received(1).StartSettingsDialog(form, null);
-        commands.Received(1).StartGeneralSettingsDialog(form);
+        commands.Received(1).StartSettingsDialog(null, null);
+        commands.Received(1).StartGeneralSettingsDialog(null);
 
         form.toolsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
-        form.gitGUIToolStripMenuItem.IsEnabled.Should().BeTrue();
+        tools.GitGuiMenuItem.IsEnabled.Should().BeTrue();
         isBare = true;
         form.toolsToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
-        form.gitGUIToolStripMenuItem.IsEnabled.Should().BeFalse();
+        tools.GitGuiMenuItem.IsEnabled.Should().BeFalse();
 
         bool? originalTelemetry = AppSettings.TelemetryEnabled;
         try
         {
             AppSettings.TelemetryEnabled = true;
             form.helpToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
-            form.tsmiTelemetryEnabled.IsChecked.Should().BeTrue();
+            help.TelemetryMenuItem.IsChecked.Should().BeTrue();
         }
         finally
         {
@@ -680,11 +705,20 @@ public sealed class FormBrowseTests
         GetTaggedItemNames(navigate).Should().Equal(
             "ToggleBetweenArtificialAndHeadCommits",
             "GotoCurrentRevision",
+            "GotoCommit",
             "|",
             "GotoChildCommit",
             "GotoParentCommit",
             "GotoFirstParentCommit",
-            "GotoLastParentCommit");
+            "GotoLastParentCommit",
+            "GotoMergeBaseCommit",
+            "|",
+            "NavigateBackward",
+            "NavigateForward",
+            "|",
+            "QuickSearch",
+            "PrevQuickSearch",
+            "NextQuickSearch");
         GetTaggedItemNames(view).Should().Equal(
             "BranchesToolStripMenuItem",
             "ShowAllBranches",
@@ -698,37 +732,42 @@ public sealed class FormBrowseTests
             "HighlightSelectedBranch",
             "|",
             "CommitsToolStripMenuItem",
+            "ShowArtificialCommits",
+            "ShowStashes",
             "showGitNotesToolStripMenuItem",
+            "ShowSessionCheckpoints",
             "|",
             "Grid_labelsToolStripMenuItem",
             "ShowRemoteBranches",
             "showTagsToolStripMenuItem",
+            "ShowSuperprojectTags",
+            "ShowSuperprojectRemoteBranches",
+            "ShowSuperprojectBranches",
             "|",
             "Grid_infoToolStripMenuItem",
+            "showBuildStatusIconToolStripMenuItem",
+            "showBuildStatusTextToolStripMenuItem",
+            "showCommitMessageBodyToolStripMenuItem",
             "showAuthorDateToolStripMenuItem",
             "showRelativeDateToolStripMenuItem",
             "|",
             "ColumnsToolStripMenuItem",
             "showRevisionGraphColumnToolStripMenuItem",
             "showGitNotesColumnToolStripMenuItem",
+            "showAuthorAvatarColumnToolStripMenuItem",
             "showAuthorNameColumnToolStripMenuItem",
             "showDateColumnToolStripMenuItem",
-            "showIdColumnToolStripMenuItem");
+            "showIdColumnToolStripMenuItem",
+            "|",
+            "SortingToolStripMenuItem",
+            "AuthorDateSort",
+            "TopoOrder",
+            "|",
+            "Settings_persistenceToolStripMenuItem",
+            "SaveAsDefault");
 
         string[] unsupportedCommands =
         [
-            "GotoCommit",
-            "GotoMergeBaseCommit",
-            "NavigateBackward",
-            "NavigateForward",
-            "QuickSearch",
-            "ShowArtificialCommits",
-            "ShowStashes",
-            "ShowSessionCheckpoints",
-            "showBuildStatusIconToolStripMenuItem",
-            "showAuthorAvatarColumnToolStripMenuItem",
-            "AuthorDateSort",
-            "SaveAsDefault",
             "toolbarsMenuItem",
         ];
         GetTaggedItemNames(navigate)
@@ -742,6 +781,8 @@ public sealed class FormBrowseTests
             "Grid_labelsToolStripMenuItem",
             "Grid_infoToolStripMenuItem",
             "ColumnsToolStripMenuItem",
+            "SortingToolStripMenuItem",
+            "Settings_persistenceToolStripMenuItem",
         })
         {
             MenuItem caption = GetTaggedMenuItem(view, captionTag);
@@ -1947,14 +1988,14 @@ public sealed class FormBrowseTests
     private static MenuItem GetTaggedMenuItem(MenuItem parent, string tag)
         => parent.Items
             .OfType<MenuItem>()
-            .Single(item => item.Tag as string == tag);
+            .Single(item => item.Tag as string == tag || item.Name == tag);
 
     private static string[] GetTaggedItemNames(MenuItem parent)
         => parent.Items
             .Select(item => item switch
             {
                 Separator => "|",
-                MenuItem menuItem => menuItem.Tag as string
+                MenuItem menuItem => menuItem.Tag as string ?? menuItem.Name
                     ?? throw new InvalidOperationException("A shared menu command has no tag."),
                 _ => throw new InvalidOperationException($"Unexpected shared menu entry: {item?.GetType().Name}"),
             })
