@@ -30,17 +30,17 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
     /// <summary>
     /// Gets the artificial ObjectId used to represent working directory tree (unstaged) changes.
     /// </summary>
-    public static ObjectId WorkTreeId { get; } = Parse("1111111111111111111111111111111111111111");
+    public static ObjectId WorkTreeId { get; } = Parse("1111111111111111111111111111111111111111".AsSpan());
 
     /// <summary>
     /// Gets the artificial ObjectId used to represent changes staged to the index.
     /// </summary>
-    public static ObjectId IndexId { get; } = Parse("2222222222222222222222222222222222222222");
+    public static ObjectId IndexId { get; } = Parse("2222222222222222222222222222222222222222".AsSpan());
 
     /// <summary>
     /// Gets the artificial ObjectId used to represent combined diff for merge commits.
     /// </summary>
-    public static ObjectId CombinedDiffId { get; } = Parse("3333333333333333333333333333333333333333");
+    public static ObjectId CombinedDiffId { get; } = Parse("3333333333333333333333333333333333333333".AsSpan());
 
     /// <summary>
     ///  Produces an <see cref="ObjectId"/> populated with random bytes.
