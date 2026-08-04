@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -168,6 +168,24 @@ public sealed partial class ParityScreenshotTests
         applyUnsupported.Should().Throw<AvaloniaCaptureStateUnsupportedException>()
             .WithMessage("*ToggleButton*");
         unsupportedWindow.Close();
+    }
+
+    [Test]
+    [Category(P02Category)]
+    public void Avalonia_unsupported_manifest_entries_should_not_claim_capture_artifacts()
+    {
+        CaptureManifestEntry entry = Unsupported(
+            "GitUI.FormBrowse",
+            "light",
+            scalePercent: 125,
+            "main-menu.open",
+            "External popup capture is unavailable.");
+
+        entry.Status.Should().Be(CaptureStateStatus.Unsupported);
+        entry.DpiMode.Should().BeNull();
+        entry.CaptureMethod.Should().Be(CaptureMethod.Unsupported);
+        entry.ImageFile.Should().BeNull();
+        entry.TreeFile.Should().BeNull();
     }
 
     private static async Task CaptureParityPlanAsync()
@@ -531,7 +549,7 @@ public sealed partial class ParityScreenshotTests
             State = state,
             Status = CaptureStateStatus.Unsupported,
             Note = note,
-            DpiMode = CaptureDpiMode.HeadlessRenderScale,
+            DpiMode = null,
             CaptureMethod = CaptureMethod.Unsupported,
             ImageFile = null,
             TreeFile = null
