@@ -30,17 +30,17 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
     /// <summary>
     /// Gets the artificial ObjectId used to represent working directory tree (unstaged) changes.
     /// </summary>
-    public static ObjectId WorkTreeId { get; } = Parse("1111111111111111111111111111111111111111".AsSpan());
+    public static ObjectId WorkTreeId { get; } = Parse("1111111111111111111111111111111111111111");
 
     /// <summary>
     /// Gets the artificial ObjectId used to represent changes staged to the index.
     /// </summary>
-    public static ObjectId IndexId { get; } = Parse("2222222222222222222222222222222222222222".AsSpan());
+    public static ObjectId IndexId { get; } = Parse("2222222222222222222222222222222222222222");
 
     /// <summary>
     /// Gets the artificial ObjectId used to represent combined diff for merge commits.
     /// </summary>
-    public static ObjectId CombinedDiffId { get; } = Parse("3333333333333333333333333333333333333333".AsSpan());
+    public static ObjectId CombinedDiffId { get; } = Parse("3333333333333333333333333333333333333333");
 
     /// <summary>
     ///  Produces an <see cref="ObjectId"/> populated with random bytes.
@@ -151,6 +151,7 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
     /// <returns>The parsed <see cref="ObjectId"/>.</returns>
     /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
     [Pure]
+    [OverloadResolutionPriority(1)]
     public static ObjectId Parse(ReadOnlySpan<char> s)
     {
         if (s.Length is not Sha1CharCount || !TryParse(s, out ObjectId id))

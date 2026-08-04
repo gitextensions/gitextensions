@@ -995,11 +995,9 @@ public sealed partial class GitModule : IGitModule
         {
             $"{objectId}^@".Quote()
         };
-        return GitExecutable.Execute(args, cache: GitCommandCache)
+        return Array.ConvertAll(GitExecutable.Execute(args, cache: GitCommandCache)
             .StandardOutput
-            .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries)
-            .Select(ObjectId.Parse)
-            .ToList();
+            .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries), i => ObjectId.Parse(i));
     }
 
     public IReadOnlyList<GitRevision> GetParentRevisions(ObjectId objectId)
