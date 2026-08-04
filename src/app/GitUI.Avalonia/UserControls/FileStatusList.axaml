@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:compat="using:GitUI.Compat"
+              xmlns:compat="using:GitUI.Compat"
+              xmlns:menus="using:GitUI.CommandsDialogs.Menus"
              xmlns:properties="using:GitUI.Properties"
              xmlns:userControls="using:GitUI.UserControls"
              x:Class="GitUI.FileStatusList">
@@ -47,9 +48,7 @@
       <MenuItem x:Name="tsmiMove" Header="Rena_me / move" />
       <MenuItem x:Name="tsmiDeleteFile" Header="De_lete file" />
       <Separator x:Name="sepFile" />
-      <MenuItem x:Name="tsmiCopyPaths" Header="Copy _path(s)">
-        <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
-      </MenuItem>
+      <menus:CopyPathsToolStripMenuItem x:Name="tsmiCopyPaths" />
       <MenuItem x:Name="tsmiShowInFolder" Header="Show _in folder" />
       <Separator x:Name="sepBrowse" />
       <MenuItem x:Name="tsmiShowInFileTree" Header="Show in File _tree" IsVisible="False" />
