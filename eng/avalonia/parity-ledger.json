@@ -33169,6 +33169,189 @@
           "note": "The shared source and tranche consumers pass on Windows and Linux; macOS remains unverified."
         }
       }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/Columns/MultilineIndicator.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/MultilineIndicator.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-04",
+          "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.1/inventory/functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The inventory analyzer does not compare the original top-level struct with the native Avalonia control, so no exact structural claim is made."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"
+          ],
+          "platforms": ["windows", "linux"],
+          "findingCount": 0,
+          "note": "Focused tests cover the native indicator geometry, visibility, and disabled state; exhaustive RevisionGrid consumer closure remains assigned to P3.4."
+        },
+        "visual": {
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.1/diff/findings.json"
+          ],
+          "platforms": ["windows"],
+          "findingCount": 1,
+          "note": "The indicator is present in the representative FormBrowse capture, but the aggregate comparison is not an isolated per-control proof; P3.4 owns the complete scale/state review."
+        },
+        "themingAndColor": {
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.1/diff/findings.json",
+            "eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx"
+          ],
+          "platforms": ["windows"],
+          "findingCount": 1,
+          "note": "The native renderer resolves semantic brushes and representative themes were captured; an isolated zero-tolerance color comparison remains open for P3.4."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"
+          ],
+          "platforms": ["windows", "linux"],
+          "findingCount": 1,
+          "note": "Visible and hidden states are tested; the complete grid state matrix remains assigned to P3.4."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-04",
+          "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx",
+            "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx",
+            "eng/avalonia/parity-evidence/P3.1/windows-runtime",
+            "eng/avalonia/parity-evidence/P3.1/linux-runtime"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"],
+          "findingCount": 1,
+          "note": "Windows and Linux gates cover the tranche, including Wayland, X11, and Flatpak Wayland; macOS remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/IndexWatcher.cs",
+      "twin": "src/app/GitUI/UserControls/RevisionGrid/IndexWatcher.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-04",
+          "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": ["eng/avalonia/parity-evidence/P3.1/inventory/functional-findings.json"],
+          "platforms": ["windows", "linux"],
+          "findingCount": 0,
+          "note": "The exact framework-neutral source is compiled into GitUI.Avalonia through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-04",
+          "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"],
+          "platforms": ["windows", "linux"],
+          "findingCount": 0,
+          "note": "The unchanged watcher contract and lazy RevisionGrid integration are covered by focused tests on Windows and Linux."
+        },
+        "visual": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": [], "platforms": [], "findingCount": 0, "note": "This filesystem-watcher type declares no UI chrome."},
+        "themingAndColor": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": [], "platforms": [], "findingCount": 0, "note": "This filesystem-watcher type declares no colors."},
+        "behavioralState": {
+          "status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"],
+          "platforms": ["windows", "linux"], "findingCount": 1,
+          "note": "Enabled and disabled watcher behavior is tested; the complete live-repository RevisionGrid state audit remains assigned to P3.4."
+        },
+        "platform": {
+          "status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899",
+          "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx", "eng/avalonia/parity-evidence/P3.1/windows-runtime", "eng/avalonia/parity-evidence/P3.1/linux-runtime"],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1,
+          "note": "Windows and Linux gates cover the tranche; macOS remains unverified."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/MenuUtil.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/MenuUtil.cs",
+      "complete": false,
+      "axes": {
+        "structural": {"status": "gap", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/inventory/functional-findings.json"], "platforms": [], "findingCount": 9, "note": "The source inventory records nine expected framework-shape findings for the native Avalonia menu helper."},
+        "functional": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/inventory/functional-findings.json", "eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 9, "note": "Caption disabling, focus, hit-testing, and style-class behavior are tested; the complete owning-menu audit remains assigned to P3.4."},
+        "visual": {"status": "unverified", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/diff/findings.json"], "platforms": [], "findingCount": 1, "note": "Avalonia headless capture explicitly reports the external main-menu popup unsupported, so caption visuals are not claimed from the aggregate form capture."},
+        "themingAndColor": {"status": "unverified", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/diff/findings.json"], "platforms": [], "findingCount": 1, "note": "Popup composition was explicitly unsupported in this capture; light, dark, and custom-theme caption comparison remains assigned to P3.4."},
+        "behavioralState": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Noninteractive caption state is tested; pointer, keyboard, and popup integration remain assigned to P3.4."},
+        "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx", "eng/avalonia/parity-evidence/P3.1/windows-runtime", "eng/avalonia/parity-evidence/P3.1/linux-runtime"], "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1, "note": "Windows and Linux gates cover the tranche; macOS remains unverified."}
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/NavigationHistory.cs",
+      "twin": "src/app/GitUI/UserControls/RevisionGrid/NavigationHistory.cs",
+      "complete": false,
+      "axes": {
+        "structural": {"status": "verified", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/inventory/functional-findings.json"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The exact framework-neutral source is compiled into GitUI.Avalonia through an MSBuild Link."},
+        "functional": {"status": "verified", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Backward/forward stack behavior and RevisionGrid selection integration are covered by focused tests on Windows and Linux."},
+        "visual": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": [], "platforms": [], "findingCount": 0, "note": "This history type declares no UI chrome."},
+        "themingAndColor": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": [], "platforms": [], "findingCount": 0, "note": "This history type declares no colors."},
+        "behavioralState": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Core stack states are tested; the complete keyboard/menu/selection consumer matrix remains assigned to P3.4."},
+        "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx", "eng/avalonia/parity-evidence/P3.1/windows-runtime", "eng/avalonia/parity-evidence/P3.1/linux-runtime"], "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1, "note": "Windows and Linux gates cover the tranche; macOS remains unverified."}
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/ParentChildNavigationHistory.cs",
+      "twin": "src/app/GitUI/UserControls/RevisionGrid/ParentChildNavigationHistory.cs",
+      "complete": false,
+      "axes": {
+        "structural": {"status": "verified", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/inventory/functional-findings.json"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The exact framework-neutral source is compiled into GitUI.Avalonia through an MSBuild Link."},
+        "functional": {"status": "verified", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Parent/child reversal and RevisionGrid command integration are covered by focused tests on Windows and Linux."},
+        "visual": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": [], "platforms": [], "findingCount": 0, "note": "This history type declares no UI chrome."},
+        "themingAndColor": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": [], "platforms": [], "findingCount": 0, "note": "This history type declares no colors."},
+        "behavioralState": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Core reversal states are tested; the complete keyboard/menu/selection consumer matrix remains assigned to P3.4."},
+        "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx", "eng/avalonia/parity-evidence/P3.1/windows-runtime", "eng/avalonia/parity-evidence/P3.1/linux-runtime"], "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1, "note": "Windows and Linux gates cover the tranche; macOS remains unverified."}
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/QuickSearchProvider.cs",
+      "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/QuickSearchProvider.cs",
+      "complete": false,
+      "axes": {
+        "structural": {"status": "gap", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/inventory/functional-findings.json"], "platforms": [], "findingCount": 36, "note": "The source inventory records 36 expected framework-shape findings for the native Avalonia overlay."},
+        "functional": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/inventory/functional-findings.json", "eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 36, "note": "Incremental search, wraparound, backward/forward navigation, backspace, paste, escape, and timeout behavior are implemented; the complete live-grid audit remains assigned to P3.4."},
+        "visual": {"status": "unverified", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/diff/findings.json"], "platforms": [], "findingCount": 1, "note": "The representative capture does not activate the transient quick-search overlay; its scale/layout comparison remains assigned to P3.4."},
+        "themingAndColor": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx"], "platforms": ["windows"], "findingCount": 1, "note": "Focused tests cover success/error semantic brush selection; zero-tolerance light, dark, and custom-theme image comparison remains assigned to P3.4."},
+        "behavioralState": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Representative success, failure, editing, dismissal, and navigation states are tested; the complete input/state matrix remains assigned to P3.4."},
+        "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx", "eng/avalonia/parity-evidence/P3.1/windows-runtime", "eng/avalonia/parity-evidence/P3.1/linux-runtime"], "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1, "note": "Windows and Linux gates cover the tranche; macOS remains unverified."}
+      }
+    },
+    {
+      "source": "src/app/GitUI/UserControls/RevisionGrid/VisibleRowRange.cs",
+      "twin": "src/app/GitUI/UserControls/RevisionGrid/VisibleRowRange.cs",
+      "complete": false,
+      "axes": {
+        "structural": {"status": "verified", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/inventory/functional-findings.json"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The exact framework-neutral source is compiled into GitUI.Avalonia through an MSBuild Link."},
+        "functional": {"status": "verified", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The unchanged visible-row range contract is covered by focused tests on Windows and Linux."},
+        "visual": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": [], "platforms": [], "findingCount": 0, "note": "This range value declares no UI chrome."},
+        "themingAndColor": {"status": "notApplicable", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": [], "platforms": [], "findingCount": 0, "note": "This range value declares no colors."},
+        "behavioralState": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1, "note": "Range equality and boundary values are tested; the complete virtualized-grid consumer audit remains assigned to P3.4."},
+        "platform": {"status": "partial", "verifiedOn": "2026-08-04", "commit": "491088f26acece7943f4fe25c273d2050442b899", "evidence": ["eng/avalonia/parity-evidence/P3.1/P3.1-windows-focused.trx", "eng/avalonia/parity-evidence/P3.1/P3.1-linux-focused.trx", "eng/avalonia/parity-evidence/P3.1/windows-runtime", "eng/avalonia/parity-evidence/P3.1/linux-runtime"], "platforms": ["windows", "linux-wayland", "linux-x11", "linux-flatpak-wayland"], "findingCount": 1, "note": "Windows and Linux gates cover the tranche; macOS remains unverified."}
+      }
     }
   ]
 }
