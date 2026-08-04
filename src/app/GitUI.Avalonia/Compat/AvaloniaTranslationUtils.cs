@@ -107,6 +107,15 @@ internal static class AvaloniaTranslationUtils
         List<(string Name, object Item)> sharedItems = [];
         foreach ((string name, object item) in TranslationUtils.GetObjFields(host, "$this"))
         {
+            // If a user control is being translated through its host control (e.g. FilterToolBar is hosted on FormBrowse,
+            // and its translations are recorded under 'FormBrowse' node) then the host's "$this.Text" will be applied to
+            // the user control's "Text" property as well.
+            // Which is obviously incorrect, so skip any "$this" for types other than the host's type.
+            if (name == "$this" && item.GetType().Name != category)
+            {
+                continue;
+            }
+
             if (name.StartsWith("_NO_TRANSLATE_", StringComparison.Ordinal))
             {
                 continue;

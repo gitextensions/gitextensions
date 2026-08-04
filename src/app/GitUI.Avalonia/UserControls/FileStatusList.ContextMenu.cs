@@ -7,6 +7,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
@@ -103,7 +104,6 @@ partial class FileStatusList
         tsmiCherryPickChanges.Click += (_, _) => _cherryPickChanges?.Invoke();
         btnRefresh.Click += (_, _) => RequestRefresh();
         tsmiOpenWorkingDirectoryFile.Click += OpenWorkingDirectoryFile_Click;
-        tsmiCopyPaths.Click += CopyPaths_Click;
         tsmiShowInFolder.Click += ShowInFolder_Click;
         tsmiShowInFileTree.Click += (_, _) => _openInFileTreeTab_AsBlame?.Invoke(false);
         tsmiFilterFileInGrid.Click += (_, _) => _filterFileInGrid?.Invoke();
@@ -150,17 +150,6 @@ partial class FileStatusList
         else
         {
             StartFileHistoryDialog(showBlame: true);
-        }
-    }
-
-    private void CopyPaths_Click(object? sender, EventArgs e)
-    {
-        string[] paths = SelectedFolder is RelativePath folder
-            ? [folder.Value]
-            : [.. SelectedGitItems.Select(item => item.Name)];
-        if (paths.Length > 0)
-        {
-            ClipboardUtil.TrySetText(string.Join(Environment.NewLine, paths));
         }
     }
 
@@ -211,7 +200,7 @@ partial class FileStatusList
         tsmiOpenWorkingDirectoryFile.IsVisible = workingFileExists;
         tsmiCopyPaths.IsEnabled = hasPath;
         tsmiShowInFolder.IsEnabled = absolutePath is not null
-                                     && (File.Exists(absolutePath) || Directory.Exists(absolutePath));
+                                     && FormBrowseUtil.FileOrParentDirectoryExists(absolutePath);
         sepBrowse.IsVisible = hasPath;
         tsmiShowInFileTree.IsVisible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null;
         tsmiShowInFileTree.IsEnabled = hasSingleItem;
@@ -304,11 +293,7 @@ partial class FileStatusList
             return;
         }
 
-        string? directory = Directory.Exists(path) ? path : Path.GetDirectoryName(path);
-        if (directory is not null && Directory.Exists(directory))
-        {
-            OsShellUtil.Open(directory);
-        }
+        FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(path);
     }
 
     private void StartFileHistoryDialog(bool showBlame)
@@ -420,7 +405,7 @@ partial class FileStatusList
         tsmiCopyPaths.IsEnabled = (hasItems || singleFolder) && !selected.Any(item => item.Item.IsStatusOnly);
         tsmiShowInFolder.IsVisible = hasItems || singleFolder;
         tsmiShowInFolder.IsEnabled = GetSelectedAbsolutePath() is string absolute
-                                     && (File.Exists(absolute) || Directory.Exists(absolute));
+                                     && FormBrowseUtil.FileOrParentDirectoryExists(absolute);
         tsmiShowInFileTree.IsVisible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null && (singleItem || singleFolder);
         tsmiFilterFileInGrid.IsVisible = _filterFileInGrid is not null;
         tsmiFilterFileInGrid.IsEnabled = singleItem || singleFolder;

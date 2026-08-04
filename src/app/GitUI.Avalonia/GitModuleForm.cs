@@ -83,6 +83,12 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
             ReloadScriptHotkeys();
         }
 
+        // Avalonia reports modifier-only and unsupported key events as None; they are not assignable script hotkeys.
+        if (keyData == WinFormsShims.Keys.None)
+        {
+            return false;
+        }
+
         HotkeyCommand? hotkey = _scriptHotkeys.FirstOrDefault(command => command.KeyData == keyData);
         return hotkey is not null && ExecuteCommand(hotkey.CommandCode);
     }

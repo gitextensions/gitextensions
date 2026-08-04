@@ -359,6 +359,91 @@ public sealed class HotkeyTests
     }
 
     [AvaloniaTest]
+    [Category("P4.2")]
+    public void FormBrowse_menu_access_key_should_take_precedence_over_a_user_script_hotkey()
+    {
+        ScriptInfo script = new()
+        {
+            Name = "Conflicting script",
+            HotkeyCommandIdentifier = 9014,
+        };
+        IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
+        scriptsManager.GetScripts().Returns(new System.ComponentModel.BindingList<ScriptInfo>([script]));
+        scriptsManager.GetScript(script.HotkeyCommandIdentifier).Returns(script);
+        IScriptsRunner scriptsRunner = Substitute.For<IScriptsRunner>();
+        (FormBrowse form, _, _) = CreateBrowseForm(
+            browseHotkeys: [],
+            revisionHotkeys: [],
+            scriptsManager,
+            scriptsRunner,
+            scriptHotkeys:
+            [
+                new HotkeyCommand(script.HotkeyCommandIdentifier, script.Name)
+                {
+                    KeyData = WinFormsShims.Keys.Alt | WinFormsShims.Keys.S,
+                },
+            ]);
+        form.Show();
+        try
+        {
+            form.KeyPress(Key.S, RawInputModifiers.Alt, PhysicalKey.S, keySymbol: "s");
+
+            form.fileToolStripMenuItem.IsSubMenuOpen.Should().BeTrue();
+            scriptsRunner.DidNotReceive().RunScript(
+                Arg.Any<ScriptInfo>(),
+                Arg.Any<IWin32Window>(),
+                Arg.Any<IGitUICommands>(),
+                Arg.Any<IScriptOptionsProvider>());
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P4.2")]
+    public void FormBrowse_unmapped_key_should_not_execute_an_unassigned_user_script_hotkey()
+    {
+        ScriptInfo script = new()
+        {
+            Name = "Unassigned script",
+            HotkeyCommandIdentifier = 9015,
+        };
+        IScriptsManager scriptsManager = Substitute.For<IScriptsManager>();
+        scriptsManager.GetScripts().Returns(new System.ComponentModel.BindingList<ScriptInfo>([script]));
+        scriptsManager.GetScript(script.HotkeyCommandIdentifier).Returns(script);
+        IScriptsRunner scriptsRunner = Substitute.For<IScriptsRunner>();
+        (FormBrowse form, _, _) = CreateBrowseForm(
+            browseHotkeys: [],
+            revisionHotkeys: [],
+            scriptsManager,
+            scriptsRunner,
+            scriptHotkeys:
+            [
+                new HotkeyCommand(script.HotkeyCommandIdentifier, script.Name)
+                {
+                    KeyData = WinFormsShims.Keys.None,
+                },
+            ]);
+        form.Show();
+        try
+        {
+            form.KeyPress(Key.LeftAlt, RawInputModifiers.Alt, PhysicalKey.AltLeft, keySymbol: null);
+
+            scriptsRunner.DidNotReceive().RunScript(
+                Arg.Any<ScriptInfo>(),
+                Arg.Any<IWin32Window>(),
+                Arg.Any<IGitUICommands>(),
+                Arg.Any<IScriptOptionsProvider>());
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_should_build_the_user_script_toolbar_from_the_shared_manager()
     {
         ScriptInfo script = new()

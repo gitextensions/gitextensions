@@ -1,0 +1,95 @@
+using GitCommands;
+using GitExtensions.Extensibility.Git;
+using GitExtUtils;
+using GitUI.Compat;
+
+namespace GitUI.CommandsDialogs.Menus;
+
+internal partial class CopyPathsToolStripMenuItem : ToolStripMenuItemEx
+{
+    private Func<IEnumerable<string?>>? _getSelectedFilePaths;
+
+    public CopyPathsToolStripMenuItem()
+    {
+        InitializeComponent();
+
+        copyFullPathsWslToolStripMenuItem.IsVisible = OperatingSystem.IsWindows();
+        copyFullPathsCygwinToolStripMenuItem.IsVisible = OperatingSystem.IsWindows();
+        Click += CopyFullPathsNativeToolStripMenuItem_Click;
+        copyRelativePathsPosixToolStripMenuItem.Click += CopyRelativePathsPosixToolStripMenuItem_Click;
+        copyRelativePathsNativeToolStripMenuItem.Click += CopyRelativePathsNativeToolStripMenuItem_Click;
+        copyFullPathsNativeToolStripMenuItem.Click += CopyFullPathsNativeToolStripMenuItem_Click;
+        copyFullPathsWslToolStripMenuItem.Click += CopyFullPathsWslToolStripMenuItem_Click;
+        copyFullPathsCygwinToolStripMenuItem.Click += CopyFullPathsCygwinToolStripMenuItem_Click;
+        InputAccessibility.Apply(this);
+    }
+
+    public CopyPathsToolStripMenuItem Initialize(Func<IGitUICommands> getUICommands, Func<IEnumerable<string?>> getSelectedFilePaths)
+    {
+        Initialize(getUICommands);
+        _getSelectedFilePaths = getSelectedFilePaths;
+        return this;
+    }
+
+    private void CopyPathsToClipboard(string prefixDir, Func<string, string> convertPath)
+    {
+        IEnumerable<string?> selectedFilePaths
+            = (_getSelectedFilePaths ?? throw new InvalidOperationException("The menu is not initialized."))();
+        string filePaths = GetFilePaths(selectedFilePaths, prefixDir, convertPath);
+        if (!string.IsNullOrWhiteSpace(filePaths))
+        {
+            ClipboardUtil.TrySetText(filePaths);
+        }
+    }
+
+    private static string GetFilePaths(IEnumerable<string?> selectedFilePaths, string prefixDir, Func<string, string> convertPath)
+    {
+        return selectedFilePaths
+            .Where(path => path is not null)
+            .Distinct()
+            .Select(path => prefixDir.Length == 0 && path!.Length == 0 ? "." : convertPath(Path.Combine(prefixDir, path!)))
+            .Join(Environment.NewLine);
+    }
+
+    private void CopyFullPathsNativeToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        // The command can be invoked via the keyboard, and the parent is null
+        // Avalonia dismisses an opened native ContextMenu after the command; a closed menu has no popup to hide.
+
+        CopyPathsToClipboard(Module.WorkingDir, PathUtil.ToNativePath);
+    }
+
+    private void CopyFullPathsCygwinToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        CopyPathsToClipboard(Module.WorkingDir, PathUtil.ToCygwinPath);
+    }
+
+    private void CopyFullPathsWslToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        CopyPathsToClipboard(Module.WorkingDir, PathUtil.ToWslPath);
+    }
+
+    private void CopyRelativePathsNativeToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        CopyPathsToClipboard(prefixDir: "", PathUtil.ToNativePath);
+    }
+
+    private void CopyRelativePathsPosixToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        CopyPathsToClipboard(prefixDir: "", PathUtil.ToPosixPath);
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(CopyPathsToolStripMenuItem menu)
+    {
+        public Avalonia.Controls.MenuItem RelativePosixMenuItem => menu.copyRelativePathsPosixToolStripMenuItem;
+        public Avalonia.Controls.MenuItem RelativeNativeMenuItem => menu.copyRelativePathsNativeToolStripMenuItem;
+        public Avalonia.Controls.MenuItem FullNativeMenuItem => menu.copyFullPathsNativeToolStripMenuItem;
+        public Avalonia.Controls.MenuItem FullWslMenuItem => menu.copyFullPathsWslToolStripMenuItem;
+        public Avalonia.Controls.MenuItem FullCygwinMenuItem => menu.copyFullPathsCygwinToolStripMenuItem;
+
+        public static string GetFilePaths(IEnumerable<string?> paths, string prefixDir, Func<string, string> convertPath)
+            => CopyPathsToolStripMenuItem.GetFilePaths(paths, prefixDir, convertPath);
+    }
+}
