@@ -751,8 +751,8 @@ public sealed class VisualParityTests
             Grid revisionRow = control.GetVisualDescendants()
                 .OfType<Grid>()
                 .Single(item => item.Classes.Contains("revision-row"));
-            StackPanel messageCell = control.GetVisualDescendants()
-                .OfType<StackPanel>()
+            DockPanel messageCell = control.GetVisualDescendants()
+                .OfType<DockPanel>()
                 .Single(item => item.Classes.Contains("revision-message-cell"));
 
             graphCell.Margin.Left.Should().Be(6);

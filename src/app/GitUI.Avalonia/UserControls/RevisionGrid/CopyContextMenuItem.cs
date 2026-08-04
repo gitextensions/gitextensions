@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Media;
 using GitExtensions.Extensibility;
 using GitExtUtils;
@@ -87,7 +87,9 @@ public sealed class CopyContextMenuItem : MenuItem
             return;
         }
 
-        Items.Add(new MenuItem { Header = caption, IsEnabled = false });
+        MenuItem captionItem = new() { Header = caption };
+        MenuUtil.SetAsCaptionMenuItem(captionItem, this);
+        Items.Add(captionItem);
         foreach (string name in names)
         {
             AddItem(name, name, image, hotkey: null);

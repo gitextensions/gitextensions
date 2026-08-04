@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitCommands.Git;
@@ -11,6 +11,7 @@ using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
 using GitUI.UserControls;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -731,6 +732,8 @@ partial class FileStatusList
         List<GitRevision> firstRevisions = [.. selected.FirstRevs()];
         tsmiSecondDiffCaption.Header = _selectedRevision.Text + DescribeRevisions(secondRevisions);
         tsmiFirstDiffCaption.Header = _firstRevision.Text + DescribeRevisions(firstRevisions);
+        MenuUtil.SetAsCaptionMenuItem(tsmiSecondDiffCaption, tsmiOpenWithDifftool);
+        MenuUtil.SetAsCaptionMenuItem(tsmiFirstDiffCaption, tsmiOpenWithDifftool);
 
         ContextMenuDiffToolInfo info = GetContextMenuDiffToolInfo(selected);
         tsmiDiffFirstToSelected.IsEnabled = _itemContextMenuController.ShouldShowMenuFirstToSelected(info);
