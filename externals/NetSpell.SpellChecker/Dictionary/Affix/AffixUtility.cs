@@ -310,20 +310,14 @@ public static class AffixUtility
             string tempWord = $"{word.AsSpan(0, tempLength)}{entry.StripCharacters}";
 
             // check that this is valid
-            int passCount = 0;
             for (int i = 0; i < entry.ConditionCount; i++)
             {
                 int charCode = tempWord[^(entry.ConditionCount - i)];
-                if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
-                {
-                    passCount++;
-                }
+                if ((entry.Condition[charCode] & (1 << i)) != (1 << i))
+                    return word; // not valid
             }
 
-            if (passCount == entry.ConditionCount)
-            {
-                return tempWord;
-            }
+            return tempWord;
         }
 
         return word;
