@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -7,10 +7,12 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Remotes;
 using GitCommands.Submodules;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Compat;
+using GitUI.LeftPanel.ContextMenu;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
@@ -28,8 +30,16 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private readonly Separator _actionSeparator = new();
     private readonly TranslationString _searchTooltip = new("Search");
     private readonly List<Tree> _trees = [];
+    private IReadOnlyCollection<GitRevision> _currentStashes = [];
+    private string _currentBranch = string.Empty;
+    private IReadOnlyList<GitWorktree> _currentWorktrees = [];
+    private string _currentWorkingDirectory = string.Empty;
+    private IReadOnlyList<Remote>? _disabledRemotes;
+    private IReadOnlyList<Remote>? _enabledRemotes;
     private Action<string?>? _filterRevisionGridBySpaceSeparatedRefs;
+    private bool _includeStashes;
     private Action<string, ObjectId, ObjectId>? _openRepository;
+    private IConfigFileRemoteSettingsManager? _remotesManager;
     private List<TreeViewItem>? _searchResults;
     private StashTree? _stashTree;
     private readonly SubmoduleTree _submoduleTree;
@@ -181,6 +191,15 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         IReadOnlyList<GitWorktree>? worktrees = null,
         string currentWorkingDirectory = "")
     {
+        _currentStashes = stashes;
+        _includeStashes = includeStashes;
+        _currentBranch = currentBranch;
+        _enabledRemotes = enabledRemotes;
+        _disabledRemotes = disabledRemotes;
+        _remotesManager = remotesManager;
+        _currentWorktrees = worktrees ?? [];
+        _currentWorkingDirectory = currentWorkingDirectory;
+
         HashSet<string> expandedNodes =
         [
             .. _trees
@@ -199,7 +218,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         IGitRef[] tags = [.. refs.Where(gitRef => gitRef.IsTag && !gitRef.IsDereference)];
         _trees.Add(new LocalBranchTree(this, branches, currentBranch));
         _trees.Add(new RemoteBranchTree(this, remotes, enabledRemotes, disabledRemotes, remotesManager));
-        _worktreeTree.Load(worktrees ?? [], currentWorkingDirectory);
+        _worktreeTree.Load(_currentWorktrees, currentWorkingDirectory);
         _trees.Add(_worktreeTree);
         _trees.Add(new TagTree(this, tags));
         _trees.Add(_submoduleTree);
@@ -228,6 +247,31 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Refresh after resorting.
+    /// </summary>
+    /// <param name="getRefs">Git references</param>
+    public void ResortRefs(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    {
+        IReadOnlyList<IGitRef> refs =
+        [
+            .. getRefs(RefsFilter.Heads),
+            .. getRefs(RefsFilter.Remotes),
+            .. getRefs(RefsFilter.Tags),
+        ];
+
+        SetRefs(
+            refs,
+            _currentStashes,
+            _includeStashes,
+            _currentBranch,
+            _enabledRemotes,
+            _disabledRemotes,
+            _remotesManager,
+            _currentWorktrees,
+            _currentWorkingDirectory);
     }
 
     internal static string GetNodeIdentity(NodeBase node)
@@ -471,24 +515,21 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _searchResults = null;
     }
 
+    [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(_sortByContextMenuItem), nameof(_sortOrderContextMenuItem), nameof(_localBranchMenuItems), nameof(_remoteBranchMenuItems), nameof(_tagNodeMenuItems))]
     private void RegisterContextActions()
     {
         menuMain.Items.Add(_actionSeparator);
         AddAction(RepoAction.Copy, nameof(RepoObjectsTree), "copyContextMenuItem", "&Copy to clipboard", Images.CopyToClipboard);
         AddAction(RepoAction.Filter, nameof(RepoObjectsTree), "filterForSelectedRefsMenuItem", "&Filter for selected", Images.ShowThisBranchOnly);
-        AddAction(RepoAction.CheckoutLocal, "BranchMenuItemsStrings", "Checkout", "Chec&kout branch...", Images.BranchCheckout);
-        AddAction(RepoAction.CheckoutRemote, "RemoteBranchMenuItemsStrings", "Checkout", "Chec&kout remote branch...", Images.BranchCheckout);
-        AddAction(RepoAction.CheckoutTag, "TagMenuItemsStrings", "Checkout", "Chec&kout tag revision...", Images.BranchCheckout);
-        AddAction(RepoAction.Merge, "MenuItemsStrings", "Merge", "&Merge into current branch...", Images.Merge);
-        AddAction(RepoAction.RebaseLocal, "BranchMenuItemsStrings", "Rebase", "&Rebase current branch on this branch...", Images.Rebase);
-        AddAction(RepoAction.RebaseRemote, "RemoteBranchMenuItemsStrings", "Rebase", "&Rebase current branch on this remote branch...", Images.Rebase);
-        AddAction(RepoAction.RebaseTag, "TagMenuItemsStrings", "Rebase", "&Rebase current branch on this tag revision...", Images.Rebase);
-        AddAction(RepoAction.CreateBranch, "MenuItemsStrings", "CreateBranch", "Create &branch...", Images.Branch.AdaptLightness());
-        AddAction(RepoAction.Reset, "MenuItemsStrings", "Reset", "Re&set current branch to here...", Images.ResetCurrentBranchToHere);
-        AddAction(RepoAction.RenameBranch, "MenuItemsStrings", "Rename", "R&ename branch...", Images.Renamed);
-        AddAction(RepoAction.DeleteBranch, "BranchMenuItemsStrings", "Delete", "&Delete branch...", Images.BranchDelete);
-        AddAction(RepoAction.DeleteRemoteBranch, "RemoteBranchMenuItemsStrings", "Delete", "&Delete remote branch...", Images.BranchDelete);
-        AddAction(RepoAction.DeleteTag, "TagMenuItemsStrings", "Delete", "&Delete tag...", Images.BranchDelete);
+
+        // git refs (tag, local & remote branch) menu items (rename, delete, merge, etc)
+        _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
+        _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
+        _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
+        menuMain.InsertItems(_tagNodeMenuItems.Select(s => s.Item).Prepend(new Separator()), after: _actionItems[RepoAction.Filter]);
+        menuMain.InsertItems(_remoteBranchMenuItems.Select(s => s.Item).Prepend(new Separator()), after: _actionItems[RepoAction.Filter]);
+        menuMain.InsertItems(_localBranchMenuItems.Select(s => s.Item).Prepend(new Separator()), after: _actionItems[RepoAction.Filter]);
+
         AddAction(RepoAction.FetchBranch, nameof(RepoObjectsTree), "mnubtnFetchOneBranch", "Fe&tch", Images.Stage);
         AddAction(RepoAction.FetchMerge, nameof(RepoObjectsTree), "mnubtnPullFromRemoteBranch", "Fetch && Merge (&Pull)", Images.Pull);
         AddAction(RepoAction.FetchCheckout, nameof(RepoObjectsTree), "mnubtnRemoteBranchFetchAndCheckout", "&Fetch && Checkout", Images.BranchCheckout);
@@ -518,6 +559,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         AddAction(RepoAction.Expand, nameof(RepoObjectsTree), "mnubtnExpand", "Expand", Images.ExpandAll.AdaptLightness());
         AddAction(RepoAction.MoveUp, nameof(RepoObjectsTree), "mnubtnMoveUp", "Move Up", Images.ArrowUp);
         AddAction(RepoAction.MoveDown, nameof(RepoObjectsTree), "mnubtnMoveDown", "Move Down", Images.ArrowDown);
+
+        // Sort by / order
+        _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.Module).GetRefs));
+        _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.Module).GetRefs));
+        menuMain.InsertItems(new Control[] { new Separator(), _sortByContextMenuItem, _sortOrderContextMenuItem }, after: _actionItems[RepoAction.MoveDown]);
     }
 
     private void AddAction(RepoAction action, string category, string name, string source, IImage icon)
@@ -550,6 +596,15 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         {
             item.IsVisible = false;
         }
+
+        EnableMenuItems(_localBranchMenuItems, _ => false);
+        EnableMenuItems(_remoteBranchMenuItems, _ => false);
+        EnableMenuItems(_tagNodeMenuItems, _ => false);
+        _sortByContextMenuItem.Enable(false);
+        _sortOrderContextMenuItem.Enable(false);
+
+        NodeBase[] selectedNodes = [.. GetSelectedNodes()];
+        bool hasSingleSelection = selectedNodes.Length == 1;
 
         bool stashTreeSelected = SelectedNode is StashTree;
         bool stashSelected = SelectedStashNode is not null;
@@ -600,41 +655,39 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         SetAction(RepoAction.Copy, canCopy, canCopy);
         SetAction(RepoAction.Filter, canFilter, canFilter);
 
+        LocalBranchNode? selectedLocalBranch = SelectedNode as LocalBranchNode;
+
+        foreach (ToolStripItemWithKey item in _localBranchMenuItems)
+        {
+            bool visible = hasSingleSelection && selectedLocalBranch is not null;
+            item.Item.IsVisible = visible; // only display for single-selected branch
+
+            /* Enabled items must also be visible; cancellation of menu opening below relies on it.
+             * Avalonia exposes IsVisible before the popup is opened, so no visual-parent workaround is needed. */
+            item.Item.IsEnabled = visible
+
+                // enable all items for non-current branches or only those applying to the current branch
+                && (selectedLocalBranch?.IsCurrent == false || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(item.Key));
+        }
+
+        EnableMenuItems(_remoteBranchMenuItems, _ => hasSingleSelection && SelectedNode is RemoteBranchNode);
+        EnableMenuItems(_tagNodeMenuItems, _ => hasSingleSelection && SelectedNode is TagNode);
+
+        bool isSingleRefSelected = hasSingleSelection && SelectedNode is IGitRefActions;
+        _sortByContextMenuItem.Enable(isSingleRefSelected);
+
+        // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
+        bool showSortOrder = AppSettings.RefsSortBy != GitRefsSortBy.Default;
+        _sortOrderContextMenuItem.Enable(isSingleRefSelected && showSortOrder);
+
         switch (SelectedNode)
         {
-            case LocalBranchNode localBranch:
-                SetActionVisible(RepoAction.CreateBranch, canChangeWorkingTree);
-                SetActionVisible(RepoAction.Reset, canChangeWorkingTree);
-                SetActionVisible(RepoAction.RenameBranch, canChangeWorkingTree);
-                if (!localBranch.IsCurrent)
-                {
-                    SetActionVisible(RepoAction.CheckoutLocal, canChangeWorkingTree);
-                    SetActionVisible(RepoAction.Merge, canChangeWorkingTree);
-                    SetActionVisible(RepoAction.RebaseLocal, canChangeWorkingTree);
-                    SetActionVisible(RepoAction.DeleteBranch, canChangeWorkingTree);
-                }
-
-                break;
             case RemoteBranchNode:
-                SetActionVisible(RepoAction.CheckoutRemote, canChangeWorkingTree);
-                SetActionVisible(RepoAction.Merge, canChangeWorkingTree);
-                SetActionVisible(RepoAction.RebaseRemote, canChangeWorkingTree);
-                SetActionVisible(RepoAction.CreateBranch, canChangeWorkingTree);
-                SetActionVisible(RepoAction.Reset, canChangeWorkingTree);
                 SetActionVisible(RepoAction.FetchBranch, canRunCommands);
                 SetActionVisible(RepoAction.FetchMerge, canChangeWorkingTree);
                 SetActionVisible(RepoAction.FetchCheckout, canChangeWorkingTree);
                 SetActionVisible(RepoAction.FetchRebase, canChangeWorkingTree);
                 SetActionVisible(RepoAction.FetchCreate, canChangeWorkingTree);
-                SetActionVisible(RepoAction.DeleteRemoteBranch, canRunCommands);
-                break;
-            case TagNode:
-                SetActionVisible(RepoAction.CheckoutTag, canChangeWorkingTree);
-                SetActionVisible(RepoAction.Merge, canChangeWorkingTree);
-                SetActionVisible(RepoAction.RebaseTag, canChangeWorkingTree);
-                SetActionVisible(RepoAction.CreateBranch, canChangeWorkingTree);
-                SetActionVisible(RepoAction.Reset, canChangeWorkingTree);
-                SetActionVisible(RepoAction.DeleteTag, canRunCommands);
                 break;
             case BranchPathNode:
                 SetActionVisible(RepoAction.CreateInFolder, canChangeWorkingTree);
@@ -692,16 +745,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             SetActionVisible(RepoAction.MoveDown, index >= 0 && index < visibleTrees.Length - 1);
         }
 
-        bool hasDynamicAction = _actionItems.Values.Any(item => item.IsVisible);
-        bool hasStaticAction = stashTreeSelected || stashSelected || worktreeTreeSelected || worktreeSelected;
-        _actionSeparator.IsVisible = hasDynamicAction && hasStaticAction;
-        e.Cancel = !hasDynamicAction && !hasStaticAction;
+        menuMain.ToggleSeparators();
+
+        /* Cancel context menu opening if no items are Enabled.
+         * This relies on that flag being set correctly on all menu items above. */
+        e.Cancel = !menuMain.Items.OfType<MenuItem>().Any(i => i.IsVisible && i.IsEnabled);
     }
 
     private void contextMenu_Opened(object? sender, EventArgs e)
     {
-        // Avalonia positions and groups its external popup surface after Opening; no WinForms
-        // cursor correction or post-open separator pass is required.
+        // Avalonia exposes item visibility before opening, but re-run the original separator
+        // normalization after the external popup surface has opened.
+        menuMain.ToggleSeparators();
     }
 
     private void SetActionVisible(RepoAction action, bool enabled)
@@ -729,47 +784,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             case RepoAction.Filter:
                 _filterRevisionGridBySpaceSeparatedRefs?.Invoke(string.Join(" ", GetSelectedNodes().OfType<IGitRefActions>().Select(node => node.FullPath)));
                 break;
-            case RepoAction.CheckoutLocal: ((LocalBranchNode)SelectedNode!).Checkout(); break;
-            case RepoAction.CheckoutRemote: ((RemoteBranchNode)SelectedNode!).Checkout(); break;
-            case RepoAction.CheckoutTag: ((TagNode)SelectedNode!).Checkout(); break;
-            case RepoAction.Merge:
-                if (SelectedNode is LocalBranchNode localMerge)
-                {
-                    localMerge.Merge();
-                }
-                else if (SelectedNode is RemoteBranchNode remoteMerge)
-                {
-                    remoteMerge.Merge();
-                }
-                else
-                {
-                    ((TagNode)SelectedNode!).Merge();
-                }
-
-                break;
-            case RepoAction.RebaseLocal: ((LocalBranchNode)SelectedNode!).Rebase(); break;
-            case RepoAction.RebaseRemote: ((RemoteBranchNode)SelectedNode!).Rebase(); break;
-            case RepoAction.RebaseTag: ((TagNode)SelectedNode!).Rebase(); break;
-            case RepoAction.CreateBranch:
-                if (SelectedNode is LocalBranchNode localCreate)
-                {
-                    localCreate.CreateBranch();
-                }
-                else if (SelectedNode is RemoteBranchNode remoteCreate)
-                {
-                    remoteCreate.CreateBranch();
-                }
-                else
-                {
-                    ((TagNode)SelectedNode!).CreateBranch();
-                }
-
-                break;
-            case RepoAction.Reset: ((BaseRevisionNode)SelectedNode!).Reset(); break;
-            case RepoAction.RenameBranch: ((LocalBranchNode)SelectedNode!).Rename(); break;
-            case RepoAction.DeleteBranch: ((LocalBranchNode)SelectedNode!).Delete(); break;
-            case RepoAction.DeleteRemoteBranch: ((RemoteBranchNode)SelectedNode!).Delete(); break;
-            case RepoAction.DeleteTag: ((TagNode)SelectedNode!).Delete(); break;
             case RepoAction.FetchBranch: ((RemoteBranchNode)SelectedNode!).Fetch(); break;
             case RepoAction.FetchMerge: ((RemoteBranchNode)SelectedNode!).FetchAndMerge(); break;
             case RepoAction.FetchCheckout: ((RemoteBranchNode)SelectedNode!).FetchAndCheckout(); break;
@@ -911,7 +925,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     {
         internal TreeView Tree => control.treeMain;
 
-        internal ContextMenu ContextMenu => control.menuMain;
+        internal Avalonia.Controls.ContextMenu ContextMenu => control.menuMain;
 
         internal TextBox SearchBox => control.txtBranchCriterion;
 
@@ -958,7 +972,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         internal MenuItem ShowWorktreeInFolderMenuItem => control.mnubtnShowWorktreeInFolder;
 
         internal MenuItem GetActionMenuItem(string action)
-            => control._actionItems[Enum.Parse<RepoAction>(action)];
+            => control.GetActionMenuItem(action);
 
         internal Nodes GetNodes(TreeViewItem item)
             => ((NodeBase)item.Tag!).Nodes;
@@ -984,19 +998,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     {
         Copy,
         Filter,
-        CheckoutLocal,
-        CheckoutRemote,
-        CheckoutTag,
-        Merge,
-        RebaseLocal,
-        RebaseRemote,
-        RebaseTag,
-        CreateBranch,
-        Reset,
-        RenameBranch,
-        DeleteBranch,
-        DeleteRemoteBranch,
-        DeleteTag,
         FetchBranch,
         FetchMerge,
         FetchCheckout,
