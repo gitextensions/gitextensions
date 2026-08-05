@@ -3,6 +3,7 @@ using System.Xml.Serialization;
 using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.LeftPanel;
 using GitUI.ScriptsEngine;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -204,6 +205,13 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
                 Hk(FormBrowse.Command.CreateTag, WinFormsShims.Keys.Control | WinFormsShims.Keys.T),
                 Hk(FormBrowse.Command.Rebase, WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.E),
                 Hk(FormBrowse.Command.ManageWorkTrees, WinFormsShims.Keys.Control | WinFormsShims.Keys.Alt | WinFormsShims.Keys.W)),
+            new HotkeySettings(
+                RepoObjectsTree.HotkeySettingsName,
+                Hk(RepoObjectsTree.Command.Delete, WinFormsShims.Keys.Delete),
+                Hk(RepoObjectsTree.Command.MultiSelect, WinFormsShims.Keys.Control | WinFormsShims.Keys.Space),
+                Hk(RepoObjectsTree.Command.MultiSelectWithChildren, WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.Space),
+                Hk(RepoObjectsTree.Command.Rename, WinFormsShims.Keys.F2),
+                Hk(RepoObjectsTree.Command.Search, WinFormsShims.Keys.F3)),
             new HotkeySettings(
                 RevisionGridControl.HotkeySettingsName,
                 Hk(RevisionGridControl.Command.CompareSelectedCommits, WinFormsShims.Keys.None),

@@ -92,10 +92,19 @@ internal static class ImageCapture
 
     private static CaptureImageResult CaptureScreen(Control root, IReadOnlyList<ToolStripDropDown> popups)
     {
-        Rectangle bounds = NativeMethods.GetWindowRectangle(root.FindForm()?.Handle ?? root.Handle);
+        Rectangle primaryBounds = NativeMethods.GetWindowRectangle(root.FindForm()?.Handle ?? root.Handle);
+        Rectangle bounds = primaryBounds;
         foreach (ToolStripDropDown popup in popups)
         {
             bounds = Rectangle.Union(bounds, popup.Bounds);
+        }
+
+        int maximumExpectedWidth = primaryBounds.Width + popups.Sum(popup => popup.Width);
+        int maximumExpectedHeight = primaryBounds.Height + popups.Sum(popup => popup.Height);
+        if (bounds.Width > maximumExpectedWidth || bounds.Height > maximumExpectedHeight)
+        {
+            throw new CaptureStateUnsupportedException(
+                "The popup screen bounds could not be reconciled with the owning window; refusing a partial desktop capture.");
         }
 
         if (bounds.Width <= 0 || bounds.Height <= 0)

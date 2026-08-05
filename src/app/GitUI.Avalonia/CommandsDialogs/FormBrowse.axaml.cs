@@ -2003,6 +2003,11 @@ public sealed partial class FormBrowse : GitModuleForm
             return true;
         }
 
+        if (repoObjectsTree.IsKeyboardFocusWithin && repoObjectsTree.ProcessHotkey(keyData))
+        {
+            return true;
+        }
+
         if (base.ProcessHotkey(keyData))
         {
             return true;

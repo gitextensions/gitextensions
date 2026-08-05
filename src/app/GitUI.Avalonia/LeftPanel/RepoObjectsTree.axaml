@@ -79,7 +79,7 @@
               ScrollViewer.VerticalScrollBarVisibility="Auto"
               ScrollViewer.AllowAutoHide="False">
       <TreeView.ContextMenu>
-        <ContextMenu x:Name="repoObjectsContextMenu">
+        <ContextMenu x:Name="menuMain">
           <MenuItem x:Name="mnubtnStashAllFromRootNode" Header="_Stash" />
           <MenuItem x:Name="mnubtnStashStagedFromRootNode" Header="S_tash staged" />
           <MenuItem x:Name="mnubtnManageStashFromRootNode" Header="_Manage stashes..." />
