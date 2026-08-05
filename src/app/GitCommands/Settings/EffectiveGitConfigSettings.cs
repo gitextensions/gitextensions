@@ -7,7 +7,7 @@ namespace GitCommands.Settings;
 
 /// <summary>
 ///  Provides read-only access to the effective git config settings (by running "git config list").
-///  <br>Only the last value of multi-value settings is provided - in contrast to <see cref="GitConfigSettings"/>.</br>
+///  <br>Only the last value of multi-value settings is provided - in contrast to <see cref="GitConfigSettings"/>, which also offers all values via <see cref="GitConfigSettings.GetValues"/>.</br>
 ///  <br>"Implements" <see cref="IConfigValueStore"/> so it can be used with <see cref="SettingsSource{T}"/>.</br>
 /// </summary>
 /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the repo of interest.</param>
