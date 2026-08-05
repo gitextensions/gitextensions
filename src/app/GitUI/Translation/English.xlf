@@ -10427,6 +10427,18 @@ Select this commit to populate the full message.</source>
 Copy error details to clipboard?</source>
         <target />
       </trans-unit>
+      <trans-unit id="_incompatiblePlugin.Text">
+        <source>Incompatible plugin</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_incompatiblePluginHeadingFormat.Text">
+        <source>Plugin '{0}' is not compatible with this version of Git Extensions.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_incompatiblePluginText.Text">
+        <source>The plugin was compiled for an older version of Git Extensions and cannot run. Please update or remove the plugin.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_filterFileInGrid.Text">
         <source>Filter file in &amp;grid</source>
         <target />
