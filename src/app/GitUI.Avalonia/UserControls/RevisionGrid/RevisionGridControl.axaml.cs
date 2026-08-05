@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -25,6 +25,7 @@ using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 using ResourceManager;
 using ResourceManager.Hotkey;
@@ -72,6 +73,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private readonly TranslationString _rebaseBranchInteractive = new("Rebase branch interactively.");
     private readonly TranslationString _rebaseConfirmTitle = new("Rebase Confirmation");
     private readonly TranslationString _droppingFilesBlocked = new("For you own protection dropping more than 10 patch files at once is blocked!");
+    private readonly TranslationString _noRevisionFoundError = new("No revision found.");
+    private readonly TranslationString _baseForCompareNotSelectedError = new("Base commit for compare is not selected.");
     private readonly RevisionGraph _revisionGraph = new();
     private readonly ArtificialCommitChangeCount _workTreeChangeCount = new();
     private readonly ArtificialCommitChangeCount _indexChangeCount = new();
@@ -87,6 +90,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private bool _parentsAreRewritten;
     private ILookup<ObjectId, IGitRef>? _refsByObjectId;
     private string? _rebaseOnTopOf;
+    private GitRevision? _baseCommitToCompare;
     private SuperProjectInfo? _superprojectCurrentCheckout;
 
     public RevisionGridControl()
@@ -175,6 +179,12 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         editCommitToolStripMenuItem.Click += editCommitToolStripMenuItem_Click;
         rewordCommitToolStripMenuItem.Click += rewordCommitToolStripMenuItem_Click;
         openCommitsWithDiffToolMenuItem.Click += (_, _) => DiffSelectedCommitsWithDifftool();
+        compareToBranchToolStripMenuItem.Click += CompareToBranchToolStripMenuItem_Click;
+        compareWithCurrentBranchToolStripMenuItem.Click += CompareWithCurrentBranchToolStripMenuItem_Click;
+        selectAsBaseToolStripMenuItem.Click += selectAsBaseToolStripMenuItem_Click;
+        compareToBaseToolStripMenuItem.Click += compareToBaseToolStripMenuItem_Click;
+        compareToWorkingDirectoryMenuItem.Click += compareToWorkingDirectoryMenuItem_Click;
+        compareSelectedCommitsMenuItem.Click += compareSelectedCommitsMenuItem_Click;
         getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Click += GetHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click;
         openBuildReportToolStripMenuItem.Click += (_, _) => OpenBuildReport(SelectedRevision);
         openPullRequestPageStripMenuItem.Click += OpenPullRequestPageStripMenuItem_Click;
@@ -909,12 +919,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         rewordCommitToolStripMenuItem.IsEnabled = regularRevision;
         SetVisible(compareToolStripMenuItem, revision is not null);
         openCommitsWithDiffToolMenuItem.IsEnabled = selectedRevisions.Count > 0;
-        compareToBranchToolStripMenuItem.IsEnabled = false;
-        compareWithCurrentBranchToolStripMenuItem.IsEnabled = false;
-        selectAsBaseToolStripMenuItem.IsEnabled = false;
-        compareToBaseToolStripMenuItem.IsEnabled = false;
-        compareToWorkingDirectoryMenuItem.IsEnabled = false;
-        compareSelectedCommitsMenuItem.IsEnabled = false;
+        (ObjectId first, GitRevision? selected) = GetFirstAndSelected();
+        compareToBranchToolStripMenuItem.IsEnabled = selected is not null;
+        compareWithCurrentBranchToolStripMenuItem.IsEnabled = selected is not null && !string.IsNullOrWhiteSpace(Module.GetSelectedBranch());
+        selectAsBaseToolStripMenuItem.IsEnabled = selected is not null;
+        compareToBaseToolStripMenuItem.IsEnabled = selected is not null && _baseCommitToCompare is not null;
+        compareToWorkingDirectoryMenuItem.IsEnabled = selected is not null && selected.ObjectId != ObjectId.WorkTreeId;
+        compareSelectedCommitsMenuItem.IsEnabled = !first.IsZero && selected is not null;
         tsmiOtherActions.IsVisible = false;
 
         sepCopy.IsVisible = copyToClipboardToolStripMenuItem.IsVisible;
@@ -1664,6 +1675,124 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ApplySettingsAndRefreshRows();
     }
 
+    private (ObjectId firstId, GitRevision? selectedRev) GetFirstAndSelected()
+    {
+        IReadOnlyList<GitRevision> revisions = GetSelectedRevisions();
+
+        return revisions.Count switch
+        {
+            0 => (default, null),
+            1 => (firstId: revisions[0].FirstParentId, selectedRev: revisions[0]),
+            _ => (firstId: revisions[^1].ObjectId, selectedRev: revisions[0])
+        };
+    }
+
+    private void ShowFormDiff(ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
+    {
+        FormDiff diffForm = new(UICommands, baseCommitSha, headCommitSha, baseCommitDisplayStr, headCommitDisplayStr)
+        {
+            ShowInTaskbar = true
+        };
+
+        diffForm.Show();
+    }
+
+    private void CompareToBranchToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        GitRevision? headCommit = SelectedRevision;
+        if (headCommit is null)
+        {
+            return;
+        }
+
+        using FormCompareToBranch form = new(UICommands, headCommit.ObjectId);
+        if (form.ShowDialog(GetOwner()) == WinFormsShims.DialogResult.OK)
+        {
+            Validates.NotNull(form.BranchName);
+            ObjectId baseCommit = Module.RevParse(form.BranchName);
+            if (baseCommit.IsZero)
+            {
+                MessageBoxes.ShowError(this, _noRevisionFoundError.Text);
+                return;
+            }
+
+            ShowFormDiff(baseCommit, headCommit.ObjectId, form.BranchName, headCommit.Subject);
+        }
+    }
+
+    private void CompareWithCurrentBranchToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        string currentBranch = Module.GetSelectedBranch();
+        if (string.IsNullOrWhiteSpace(currentBranch) || CurrentCheckout.IsZero)
+        {
+            MessageBoxes.Show(this, "No branch is currently selected", TranslatedStrings.Error, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
+            return;
+        }
+
+        GitRevision? baseCommit = SelectedRevision;
+        if (baseCommit is null)
+        {
+            return;
+        }
+
+        ShowFormDiff(baseCommit.ObjectId, CurrentCheckout, baseCommit.Subject, currentBranch);
+    }
+
+    private void selectAsBaseToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        _baseCommitToCompare = SelectedRevision;
+        compareToBaseToolStripMenuItem.IsEnabled = _baseCommitToCompare is not null;
+    }
+
+    private void compareToBaseToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (_baseCommitToCompare is null)
+        {
+            MessageBoxes.Show(this, _baseForCompareNotSelectedError.Text, TranslatedStrings.Error, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
+            return;
+        }
+
+        GitRevision? headCommit = SelectedRevision;
+        if (headCommit is null)
+        {
+            return;
+        }
+
+        ShowFormDiff(_baseCommitToCompare.ObjectId, headCommit.ObjectId, _baseCommitToCompare.Subject, headCommit.Subject);
+    }
+
+    private void compareToWorkingDirectoryMenuItem_Click(object? sender, EventArgs e)
+    {
+        GitRevision? baseCommit = SelectedRevision;
+        if (baseCommit is null)
+        {
+            return;
+        }
+
+        if (baseCommit.ObjectId == ObjectId.WorkTreeId)
+        {
+            MessageBoxes.Show(this, "Cannot diff working directory to itself", TranslatedStrings.Error, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
+            return;
+        }
+
+        ShowFormDiff(baseCommit.ObjectId, ObjectId.WorkTreeId, baseCommit.Subject, "Working directory");
+    }
+
+    private void compareSelectedCommitsMenuItem_Click(object? sender, EventArgs e)
+    {
+        (ObjectId firstId, GitRevision? selected) = GetFirstAndSelected();
+
+        if (selected is not null && !firstId.IsZero)
+        {
+            string firstSubject = GetRevision(firstId)?.Subject ?? "";
+            ShowFormDiff(firstId, selected.ObjectId, firstSubject, selected.Subject);
+        }
+        else
+        {
+            MessageBoxes.Show(this, "You must have two commits selected to compare", TranslatedStrings.Error, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
+        }
+    }
+
     protected override bool ExecuteCommand(int command)
     {
         switch ((Command)command)
@@ -1691,6 +1820,12 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             case Command.NavigateForward_AlternativeHotkey: NavigateForward(); break;
             case Command.ToggleBetweenArtificialAndHeadCommits: return ToggleBetweenArtificialAndHeadCommits();
             case Command.ToggleHighlightSelectedBranch: return HighlightSelectedBranch();
+            case Command.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(this, EventArgs.Empty); break;
+            case Command.CompareToBase: compareToBaseToolStripMenuItem_Click(this, EventArgs.Empty); break;
+            case Command.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(this, EventArgs.Empty); break;
+            case Command.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;
+            case Command.CompareToBranch: CompareToBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;
+            case Command.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(this, EventArgs.Empty); break;
             case Command.DeleteRef: return DeleteSingleRef();
             case Command.RenameRef: return RenameSingleRef();
             default: return base.ExecuteCommand(command);

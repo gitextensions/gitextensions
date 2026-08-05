@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls.ApplicationLifetimes;
 using GitCommands;
 using GitCommands.Git;
@@ -1230,7 +1230,18 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(null, Action, requiresValidWorkingDir: false, changesRepo: false);
     }
 
-    public bool StartFormatPatchDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartFormatPatchDialog));
+    public bool StartFormatPatchDialog(IWin32Window? owner = null)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormFormatPatch form = new(this);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, changesRepo: false);
+    }
+
     public bool StartGeneralSettingsDialog(IWin32Window? owner)
         => StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.Pages.GeneralSettingsPage.GetPageReference());
     public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null)
