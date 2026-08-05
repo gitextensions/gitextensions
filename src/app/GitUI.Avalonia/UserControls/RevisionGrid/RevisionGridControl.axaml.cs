@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -160,6 +160,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
         createTagToolStripMenuItem.Click += CreateTagToolStripMenuItemClick;
+        checkoutRevisionToolStripMenuItem.Click += CheckoutRevisionToolStripMenuItemClick;
         revertCommitToolStripMenuItem.Click += RevertCommitToolStripMenuItemClick;
         cherryPickCommitToolStripMenuItem.Click += CherryPickCommitToolStripMenuItemClick;
         archiveRevisionToolStripMenuItem.Click += ArchiveRevisionToolStripMenuItemClick;
@@ -880,7 +881,6 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         SetVisible(createTagToolStripMenuItem, revision is { IsArtificial: false } && hasCommands);
         SetVisible(deleteTagToolStripMenuItem, deleteTagToolStripMenuItem.Items.Count > 0);
         SetVisible(checkoutRevisionToolStripMenuItem, regularRevision);
-        checkoutRevisionToolStripMenuItem.IsEnabled = false;
         IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
         SetVisible(
             revertCommitToolStripMenuItem,
@@ -1096,6 +1096,14 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         if (SelectedRevision is GitRevision revision)
         {
             UICommands.StartCreateTagDialog(GetOwner(), revision);
+        }
+    }
+
+    private void CheckoutRevisionToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        if (SelectedRevision is GitRevision revision)
+        {
+            UICommands.StartCheckoutRevisionDialog(GetOwner(), revision.Guid);
         }
     }
 
