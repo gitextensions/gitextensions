@@ -1,0 +1,43 @@
+﻿<gitui:GitExtensionsForm xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:gitui="using:GitUI"
+                         x:Class="GitUI.CommandsDialogs.BrowseDialog.DashboardControl.FormDashboardCategoryTitle"
+                         Width="400"
+                         Height="92"
+                         MinWidth="400"
+                         MinHeight="80"
+                         CanResize="False"
+                         WindowStartupLocation="CenterOwner"
+                         Title="Enter Caption">
+  <Grid x:Name="tableLayoutPanel1"
+        RowDefinitions="Auto,Auto">
+    <Grid Margin="3"
+          ColumnDefinitions="Auto,*">
+      <TextBlock x:Name="lblCategoryName"
+                 VerticalAlignment="Center"
+                 Text="Category name" />
+      <TextBox x:Name="txtCategoryName"
+               Grid.Column="1"
+               Margin="6,0,0,0"
+               MinWidth="292"
+               TabIndex="1" />
+    </Grid>
+    <StackPanel x:Name="flpnlControls"
+                Grid.Row="1"
+                Classes="gitextensions-dialog-controls"
+                Orientation="Horizontal">
+      <Button x:Name="btnCancel"
+              Classes="gitextensions-dialog-action"
+              Width="75"
+              Content="Cancel"
+              IsCancel="True"
+              TabIndex="1" />
+      <Button x:Name="btnOk"
+              Classes="gitextensions-dialog-action"
+              Width="124"
+              Content="OK"
+              IsDefault="True"
+              TabIndex="0" />
+    </StackPanel>
+  </Grid>
+</gitui:GitExtensionsForm>
