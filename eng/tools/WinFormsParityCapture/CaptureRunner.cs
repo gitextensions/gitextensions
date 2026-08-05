@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
 using GitUI;
+using ResourceManager;
 
 namespace WinFormsParityCapture;
 
@@ -598,7 +599,7 @@ internal static class CaptureRunner
         Application.DoEvents();
     }
 
-    private sealed class CaptureHostForm(IGitUICommands commands) : Form, IGitUICommandsSource
+    private sealed class CaptureHostForm(IGitUICommands commands) : Form, IGitUICommandsSource, IGitModuleForm
     {
         public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged
         {
