@@ -1,4 +1,4 @@
-using System.Buffers;
+﻿using System.Buffers;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Properties;
@@ -21,6 +21,7 @@ internal sealed class WorktreeTree : Tree
         bool firstLoad = TreeViewNode.Items.Count == 0;
         bool wasExpanded = TreeViewNode.IsExpanded;
         TreeViewNode.Items.Clear();
+        Nodes.Clear();
 
         string currentWorkingDir = currentWorkingDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         string mainWorktreePath = worktrees.Count > 0

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
@@ -10,8 +10,12 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.LeftPanel;
+using GitUI.LeftPanel.Interfaces;
 using GitUIPluginInterfaces;
 using NSubstitute;
+using ResourceManager;
+using ResourceManager.Hotkey;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -177,6 +181,138 @@ public sealed class RepoObjectsTreeTests
             commands.Received(1).StartResetCurrentBranchDialog(control, "feature");
             commands.Received(1).StartRenameDialog(control, "feature");
             commands.Received(1).StartDeleteBranchDialog(control, "feature");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P4.3")]
+    public void Ref_nodes_should_expose_the_original_action_interfaces_and_missing_routes()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            IGitModule module = Substitute.For<IGitModule>();
+            module.IsBareRepository().Returns(false);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.SetRefs(
+            [
+                CreateRef("refs/heads/main"),
+                CreateRef("refs/remotes/origin/feature", "origin"),
+                CreateRef("refs/tags/v1"),
+            ], [], "main");
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            TreeViewItem[] roots = [.. accessor.Tree.Items.Cast<TreeViewItem>()];
+            TreeViewItem local = roots.Single(item => HeaderText(item).StartsWith("Branches", StringComparison.Ordinal)).Items.Cast<TreeViewItem>().Single();
+            TreeViewItem remote = roots.Single(item => HeaderText(item).StartsWith("Remotes", StringComparison.Ordinal)).Items.Cast<TreeViewItem>().Single().Items.Cast<TreeViewItem>().Single();
+            TreeViewItem tag = roots.Single(item => HeaderText(item).StartsWith("Tags", StringComparison.Ordinal)).Items.Cast<TreeViewItem>().Single();
+
+            local.Tag.Should().BeAssignableTo<IGitRefActions>();
+            local.Tag.Should().BeAssignableTo<ICanRename>();
+            local.Tag.Should().BeAssignableTo<ICanDelete>();
+            remote.Tag.Should().BeAssignableTo<IGitRefActions>();
+            remote.Tag.Should().BeAssignableTo<ICanDelete>();
+            tag.Tag.Should().BeAssignableTo<IGitRefActions>();
+            tag.Tag.Should().BeAssignableTo<ICanDelete>();
+
+            accessor.Tree.SelectedItem = remote;
+            accessor.UpdateContextMenu().Should().BeTrue();
+            accessor.GetActionMenuItem("DeleteRemoteBranch").IsVisible.Should().BeTrue();
+            Click(accessor.GetActionMenuItem("DeleteRemoteBranch"));
+
+            accessor.Tree.SelectedItem = tag;
+            accessor.UpdateContextMenu().Should().BeTrue();
+            accessor.GetActionMenuItem("CheckoutTag").IsVisible.Should().BeTrue();
+            Click(accessor.GetActionMenuItem("CheckoutTag"));
+
+            commands.Received(1).StartDeleteRemoteBranchDialog(control, "origin/feature");
+            commands.Received(1).StartCheckoutRevisionDialog(control, "v1");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P4.3")]
+    public void Node_collection_and_hotkeys_should_preserve_the_original_tree_contract()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            IGitModule module = Substitute.For<IGitModule>();
+            module.IsBareRepository().Returns(false);
+            IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
+            loader.LoadHotkeys(RepoObjectsTree.HotkeySettingsName).Returns(
+            [
+                new HotkeyCommand((int)RepoObjectsTree.Command.Delete, nameof(RepoObjectsTree.Command.Delete))
+                {
+                    KeyData = WinFormsShims.Keys.Delete,
+                },
+            ]);
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
+            IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+            source.UICommands.Returns(commands);
+            RepoObjectsTree control = new() { UICommandsSource = source };
+            control.SetRefs([CreateRef("refs/heads/feature")], [], "main");
+            RepoObjectsTree.TestAccessor accessor = control.GetTestAccessor();
+            TreeViewItem branches = accessor.Tree.Items.Cast<TreeViewItem>().First();
+            TreeViewItem branch = branches.Items.Cast<TreeViewItem>().Single();
+
+            accessor.GetNodes(branches).Count.Should().Be(1);
+            accessor.GetNodes(branches).LastNode.Should().BeSameAs(branch.Tag);
+            accessor.GetNodes(branches).DepthEnumerator<LocalBranchNode>().Should().ContainSingle();
+
+            accessor.Tree.SelectedItem = branch;
+            control.ProcessHotkey(WinFormsShims.Keys.Delete).Should().BeTrue();
+
+            commands.Received(1).StartDeleteBranchDialog(control, "feature");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P4.3")]
+    public void Invalid_tree_positions_should_be_normalized_to_stable_sequential_indices()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            AppSettings.RepoObjectsTreeBranchesIndex = 9;
+            AppSettings.RepoObjectsTreeRemotesIndex = 9;
+            AppSettings.RepoObjectsTreeWorktreesIndex = -1;
+            AppSettings.RepoObjectsTreeTagsIndex = 20;
+            AppSettings.RepoObjectsTreeSubmodulesIndex = 2;
+            AppSettings.RepoObjectsTreeStashesIndex = 2;
+
+            _ = new RepoObjectsTree();
+
+            int[] positions =
+            [
+                AppSettings.RepoObjectsTreeBranchesIndex,
+                AppSettings.RepoObjectsTreeRemotesIndex,
+                AppSettings.RepoObjectsTreeWorktreesIndex,
+                AppSettings.RepoObjectsTreeTagsIndex,
+                AppSettings.RepoObjectsTreeSubmodulesIndex,
+                AppSettings.RepoObjectsTreeStashesIndex,
+            ];
+            positions.OrderBy(position => position).Should().Equal(0, 1, 2, 3, 4, 5);
         }
         finally
         {

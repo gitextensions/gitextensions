@@ -1,9 +1,10 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitUI.LeftPanel.Interfaces;
 
 namespace GitUI.LeftPanel;
 
-internal sealed class RemoteBranchNode : BaseBranchLeafNode
+internal sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICanDelete
 {
     public RemoteBranchNode(RemoteBranchTree tree, NodeBase parent, IGitRef gitRef)
         : base(tree, parent, gitRef.Name, gitRef, remote: true)
@@ -32,6 +33,9 @@ internal sealed class RemoteBranchNode : BaseBranchLeafNode
     public bool Merge()
         => UICommands.StartMergeBranchDialog(Owner, FullPath);
 
+    public bool Delete()
+        => UICommands.StartDeleteRemoteBranchDialog(Owner, FullPath);
+
     public bool FetchAndMerge()
         => Fetch() && Merge();
 
@@ -46,6 +50,9 @@ internal sealed class RemoteBranchNode : BaseBranchLeafNode
 
     internal override void OnDoubleClick()
         => Checkout();
+
+    internal override void OnDelete()
+        => Delete();
 
     private (string Remote, string Branch) GetRemoteBranchInfo()
     {

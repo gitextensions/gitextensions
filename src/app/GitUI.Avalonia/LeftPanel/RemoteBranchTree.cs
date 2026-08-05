@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
@@ -48,7 +48,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
         ];
         foreach (Remote remote in emptyRemotes)
         {
-            TreeViewNode.Items.Add(new RemoteRepoNode(this, this, remote.Name, remote, enabled: true, remotesManager).TreeViewNode);
+            AddChild(new RemoteRepoNode(this, this, remote.Name, remote, enabled: true, remotesManager));
         }
 
         if (disabledRemotes?.Count > 0)
@@ -56,10 +56,10 @@ internal sealed class RemoteBranchTree : BaseRefTree
             RemoteRepoFolderNode inactive = new(this, this, TranslatedStrings.Inactive);
             foreach (Remote remote in disabledRemotes.OrderBy(remote => remote.Name, StringComparer.OrdinalIgnoreCase))
             {
-                inactive.TreeViewNode.Items.Add(new RemoteRepoNode(this, inactive, remote.Name, remote, enabled: false, remotesManager).TreeViewNode);
+                inactive.AddChild(new RemoteRepoNode(this, inactive, remote.Name, remote, enabled: false, remotesManager));
             }
 
-            TreeViewNode.Items.Add(inactive.TreeViewNode);
+            AddChild(inactive);
         }
 
         int itemCount = branches.Count + emptyRemotes.Length + (disabledRemotes?.Count ?? 0);

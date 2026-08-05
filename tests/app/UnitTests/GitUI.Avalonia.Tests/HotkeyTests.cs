@@ -1,9 +1,10 @@
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Serialization;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
+using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -12,6 +13,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.Hotkey;
+using GitUI.LeftPanel;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -358,6 +360,73 @@ public sealed class HotkeyTests
         }
     }
 
+    [Test]
+    [Category("P4.3")]
+    public void HotkeySettingsManager_should_load_the_original_left_panel_hotkeys()
+    {
+        string? serializedHotkeys = AppSettings.SerializedHotkeys;
+        AppSettings.SerializedHotkeys = string.Empty;
+        try
+        {
+            IHotkeySettingsLoader loader = new HotkeySettingsManager();
+
+            IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(RepoObjectsTree.HotkeySettingsName);
+
+            hotkeys.Should().BeEquivalentTo(
+            [
+                new HotkeyCommand((int)RepoObjectsTree.Command.Delete, nameof(RepoObjectsTree.Command.Delete)) { KeyData = WinFormsShims.Keys.Delete },
+                new HotkeyCommand((int)RepoObjectsTree.Command.MultiSelect, nameof(RepoObjectsTree.Command.MultiSelect)) { KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.Space },
+                new HotkeyCommand((int)RepoObjectsTree.Command.MultiSelectWithChildren, nameof(RepoObjectsTree.Command.MultiSelectWithChildren)) { KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.Space },
+                new HotkeyCommand((int)RepoObjectsTree.Command.Rename, nameof(RepoObjectsTree.Command.Rename)) { KeyData = WinFormsShims.Keys.F2 },
+                new HotkeyCommand((int)RepoObjectsTree.Command.Search, nameof(RepoObjectsTree.Command.Search)) { KeyData = WinFormsShims.Keys.F3 },
+            ], options => options.WithStrictOrdering());
+        }
+        finally
+        {
+            AppSettings.SerializedHotkeys = serializedHotkeys!;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P4.3")]
+    public void FormBrowse_should_route_left_panel_hotkeys_when_the_repository_tree_has_focus()
+    {
+        (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm(
+            browseHotkeys: [],
+            revisionHotkeys: [],
+            leftPanelHotkeys:
+            [
+                new HotkeyCommand((int)RepoObjectsTree.Command.Delete, nameof(RepoObjectsTree.Command.Delete))
+                {
+                    KeyData = WinFormsShims.Keys.Delete,
+                },
+            ]);
+        form.Show();
+        try
+        {
+            form.FindControl<Grid>("mainContentGrid")!.IsVisible = true;
+            form.FindControl<Border>("leftPanel")!.IsVisible = true;
+            RepoObjectsTree tree = form.FindControl<RepoObjectsTree>("repoObjectsTree")!;
+            tree.SetRefs([new GitRef(commands.Module, ObjectId.Random(), "refs/heads/feature")], [], "main");
+            RepoObjectsTree.TestAccessor accessor = tree.GetTestAccessor();
+            TreeViewItem branch = accessor.Tree.Items.Cast<TreeViewItem>().First().Items.Cast<TreeViewItem>().Single();
+            accessor.Tree.SelectedItem = branch;
+            Dispatcher.UIThread.RunJobs();
+            accessor.Tree.Focusable = true;
+            accessor.Tree.Focus(NavigationMethod.Tab, KeyModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            tree.IsKeyboardFocusWithin.Should().BeTrue();
+
+            form.KeyPress(Key.Delete, RawInputModifiers.None, PhysicalKey.Delete, keySymbol: null);
+
+            commands.Received(1).StartDeleteBranchDialog(tree, "feature");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
     [AvaloniaTest]
     [Category("P4.2")]
     public void FormBrowse_menu_access_key_should_take_precedence_over_a_user_script_hotkey()
@@ -616,7 +685,8 @@ public sealed class HotkeyTests
         IReadOnlyList<HotkeyCommand> revisionHotkeys,
         IScriptsManager? scriptsManager = null,
         IScriptsRunner? scriptsRunner = null,
-        IReadOnlyList<HotkeyCommand>? scriptHotkeys = null)
+        IReadOnlyList<HotkeyCommand>? scriptHotkeys = null,
+        IReadOnlyList<HotkeyCommand>? leftPanelHotkeys = null)
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
@@ -630,6 +700,7 @@ public sealed class HotkeyTests
         loader.LoadHotkeys(FormBrowse.HotkeySettingsName).Returns(browseHotkeys);
         loader.LoadHotkeys(RevisionGridControl.HotkeySettingsName).Returns(revisionHotkeys);
         loader.LoadHotkeys(FormSettings.HotkeySettingsName).Returns(scriptHotkeys ?? []);
+        loader.LoadHotkeys(RepoObjectsTree.HotkeySettingsName).Returns(leftPanelHotkeys ?? []);
 
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
