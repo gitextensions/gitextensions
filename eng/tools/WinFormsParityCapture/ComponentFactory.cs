@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
@@ -6,6 +6,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
@@ -27,6 +28,10 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormCommit" => new FormCommit(commands),
             "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
+            "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
+            "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),
+            "GitUI.CommandsDialogs.SearchControl" => CreateSearchControl(),
+            "GitUI.CommandsDialogs.SearchWindow" => CreateSearchWindow(),
             "GitUI.CommitInfo.CommitInfo" => CreateCommitInfo(),
             "GitUI.CommitInfo.CommitInfoHeader" => CreateCommitInfoHeader(),
             "GitUI.LeftPanel.RepoObjectsTree" => CreateRepoObjectsTree(commands),
@@ -75,6 +80,26 @@ internal static class ComponentFactory
     {
         return new CommitInfoHeader();
     }
+
+    // parity-scaffolding: Gives the checkout dialog a deterministic initial revision.
+    private static FormCheckoutRevision CreateCheckoutRevision(GitUICommands commands)
+    {
+        FormCheckoutRevision form = new(commands);
+        form.SetRevision("HEAD");
+        return form;
+    }
+
+    // parity-scaffolding: Closes the open generic capture boundary with representative paths.
+    private static SearchControl<string> CreateSearchControl()
+        => new(SearchCandidates, _ => { });
+
+    // parity-scaffolding: Closes the open generic capture boundary with representative paths.
+    private static SearchWindow<string> CreateSearchWindow()
+        => new(SearchCandidates);
+
+    private static IEnumerable<string> SearchCandidates(string value)
+        => new[] { "src/App.cs", "src/Commands/Checkout.cs", "tests/SearchTests.cs" }
+            .Where(candidate => candidate.Contains(value, StringComparison.OrdinalIgnoreCase));
 
     // parity-scaffolding: Hosts the original tree under a commands source while its model is initialised.
     private static RepoObjectsTree CreateRepoObjectsTree(GitUICommands commands)
@@ -226,7 +251,30 @@ internal static class ComponentFactory
             }
         }
 
+        if (owner is Control control)
+        {
+            return FindNamedControl(control, fieldName);
+        }
+
         return null;
+
+        static Control? FindNamedControl(Control control, string fieldName)
+        {
+            if (control.Name == fieldName)
+            {
+                return control;
+            }
+
+            foreach (Control child in control.Controls)
+            {
+                if (FindNamedControl(child, fieldName) is Control match)
+                {
+                    return match;
+                }
+            }
+
+            return null;
+        }
     }
 
     private static Control CreateParameterless(string typeName)

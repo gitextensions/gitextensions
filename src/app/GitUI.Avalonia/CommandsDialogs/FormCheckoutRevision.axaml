@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormCheckoutRevision"
+        Width="481" Height="131"
+        MinWidth="460" MinHeight="125"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Checkout revision">
+  <DockPanel>
+    <Border x:Name="ControlsPanel"
+            DockPanel.Dock="Bottom"
+            Height="41"
+            Classes="gitextensions-dialog-buttons">
+      <compat:IconButton x:Name="OkCheckout"
+                         Classes="gitextensions-dialog-action"
+                         MinWidth="118"
+                         HorizontalAlignment="Right"
+                         Icon="{x:Static properties:Images.Checkout}"
+                         Content="Checkout"
+                         IsDefault="True" />
+    </Border>
+    <Border x:Name="MainPanel"
+            Classes="gitextensions-dialog-main">
+      <Grid x:Name="tableLayoutPanel1"
+            ColumnDefinitions="124,*"
+            RowDefinitions="32,28,*"
+            ColumnSpacing="6">
+        <Label x:Name="label2"
+               Target="{Binding #commitPickerSmallControl1}"
+               Padding="0,5,0,0"
+               Content="Checkout this _revision"
+               VerticalContentAlignment="Center" />
+        <usercontrols:CommitPickerSmallControl x:Name="commitPickerSmallControl1"
+                                               Grid.Column="1"
+                                               MinWidth="100"
+                                               MinHeight="26" />
+        <CheckBox x:Name="Force"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Content="_Force checkout"
+                  VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+  </DockPanel>
+</Window>
