@@ -562,6 +562,7 @@ internal static class CaptureRunner
             // the parent form, so standalone component captures need the same runtime shape.
             CaptureHostForm host = new(commands)
             {
+                AutoScaleMode = AutoScaleMode.Dpi,
                 StartPosition = FormStartPosition.Manual,
                 Location = new Point(monitor.X + 16, monitor.Y + 16),
                 ShowInTaskbar = false,

@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -7,6 +7,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
+using GitUI.LeftPanel;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.Settings;
@@ -26,6 +27,7 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
             "GitUI.CommitInfo.CommitInfo" => CreateCommitInfo(),
             "GitUI.CommitInfo.CommitInfoHeader" => CreateCommitInfoHeader(),
+            "GitUI.LeftPanel.RepoObjectsTree" => CreateRepoObjectsTree(commands),
             "GitUI.UserControls.RevisionGrid.EmptyRepoControl" => new EmptyRepoControl(),
 
             // parity-scaffolding: Hosts the internal modeless editor-search dialog without changing GitUI visibility.
@@ -55,6 +57,7 @@ internal static class ComponentFactory
         {
             WaitSpinner => new Size(48, 48),
             WatermarkComboBox or CaseSensitiveComboBox => new Size(250, 23),
+            RepoObjectsTree => new Size(360, 560),
             _ => control.Size
         };
     }
@@ -69,6 +72,34 @@ internal static class ComponentFactory
     private static CommitInfoHeader CreateCommitInfoHeader()
     {
         return new CommitInfoHeader();
+    }
+
+    // parity-scaffolding: Hosts the original tree under a commands source while its model is initialised.
+    private static RepoObjectsTree CreateRepoObjectsTree(GitUICommands commands)
+    {
+        RepoObjectsTree tree = new();
+        CaptureCommandsHost host = new(commands);
+        host.Controls.Add(tree);
+        CaptureRevisionGridInfo revisionGridInfo = new(commands.Module);
+        tree.Initialize(
+            aheadBehindDataProvider: null,
+            filterRevisionGridBySpaceSeparatedRefs: _ => { },
+            refsSource: revisionGridInfo,
+            revisionGridInfo);
+        tree.RefreshRevisionsLoading(
+            commands.Module.GetRefs,
+            new Lazy<IReadOnlyCollection<GitRevision>>(() => []),
+            forceRefresh: true);
+        tree.RefreshRevisionsLoaded();
+        TreeView treeMain = (TreeView?)FindFieldValue(tree, "treeMain")
+            ?? throw new InvalidOperationException("RepoObjectsTree did not create treeMain.");
+        TreeNode selectedNode = treeMain.Nodes[0];
+        treeMain.Nodes[0].Expand();
+        treeMain.SelectedNode = selectedNode;
+        InvokeNonPublic(tree, "SelectNode", selectedNode.Tag!, false, false);
+        host.Controls.Remove(tree);
+        host.Dispose();
+        return tree;
     }
 
     // parity-scaffolding: Runs control logic only after WinForms has created the capture host handle.
@@ -223,5 +254,39 @@ internal static class ComponentFactory
         }
 
         public IGitUICommands UICommands { get; } = commands;
+    }
+
+    // parity-scaffolding: Supplies the ancestor contract expected by standalone GitModuleControls.
+    private sealed class CaptureCommandsHost(IGitUICommands commands) : Panel, IGitUICommandsSource
+    {
+        public event EventHandler<GitUICommandsChangedEventArgs>? UICommandsChanged
+        {
+            add { }
+            remove { }
+        }
+
+        public IGitUICommands UICommands { get; } = commands;
+    }
+
+    // parity-scaffolding: Supplies deterministic revision-grid state without constructing FormBrowse.
+    private sealed class CaptureRevisionGridInfo(IGitModule module) : ICheckRefs, IRevisionGridInfo
+    {
+        private readonly IReadOnlyList<IGitRef> _refs = module.GetRefs(RefsFilter.NoFilter);
+
+        public ObjectId CurrentCheckout { get; } = module.GetCurrentCheckout();
+
+        public bool Contains(ObjectId objectId) => _refs.Any(gitRef => gitRef.ObjectId == objectId);
+
+        public GitRevision GetRevision(ObjectId objectId) => new(objectId);
+
+        public GitRevision? GetActualRevision(ObjectId objectId) => GetRevision(objectId);
+
+        public GitRevision GetActualRevision(GitRevision revision) => revision;
+
+        public IReadOnlyList<GitRevision> GetSelectedRevisions() => [GetRevision(CurrentCheckout)];
+
+        public string DescribeRevision(GitRevision revision, int maxLength = 0) => revision.ObjectId.ToString();
+
+        public string GetCurrentBranch() => module.GetSelectedBranch(emptyIfDetached: true);
     }
 }

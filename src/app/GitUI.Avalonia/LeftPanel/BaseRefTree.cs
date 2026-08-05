@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 
@@ -92,7 +92,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
 
     private static void AddNode(NodeBase parent, NodeBase child)
     {
-        parent.TreeViewNode.Items.Add(child.TreeViewNode);
+        parent.AddChild(child);
     }
 
     private sealed class PathEntry(string path)
