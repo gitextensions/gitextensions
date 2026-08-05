@@ -1,8 +1,9 @@
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
+using GitUI.LeftPanel.Interfaces;
 
 namespace GitUI.LeftPanel;
 
-internal sealed class LocalBranchNode : BaseBranchLeafNode
+internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
 {
     public LocalBranchNode(LocalBranchTree tree, NodeBase parent, IGitRef gitRef, bool isCurrent)
         : base(tree, parent, gitRef.Name, gitRef, remote: false, isCurrent)
@@ -27,6 +28,12 @@ internal sealed class LocalBranchNode : BaseBranchLeafNode
 
     public bool Rename()
         => UICommands.StartRenameDialog(Owner, FullPath);
+
+    internal override void OnRename()
+        => Rename();
+
+    internal override void OnDelete()
+        => Delete();
 
     internal override void OnDoubleClick()
     {

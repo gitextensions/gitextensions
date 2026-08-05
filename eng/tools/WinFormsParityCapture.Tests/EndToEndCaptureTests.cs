@@ -91,4 +91,36 @@ public sealed class EndToEndCaptureTests
         driver.Popups.Should().ContainSingle().Which.Should().BeSameAs(dynamicItem.DropDown);
         dynamicItem.DropDown.Visible.Should().BeTrue();
     }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void State_driver_should_reject_a_context_menu_that_declines_to_open()
+    {
+        using CancelingContextMenuForm form = new();
+        form.Show();
+
+        Action action = () => ControlStateDriver.Apply(
+            form,
+            new CaptureStatePlan
+            {
+                Id = "context-menu.open",
+                Kind = CaptureStateKind.MenuOpen,
+                TargetField = "_menuMain",
+            });
+
+        action.Should().Throw<CaptureStateUnsupportedException>()
+            .WithMessage("*declined to open*");
+    }
+
+    private sealed class CancelingContextMenuForm : Form
+    {
+        private readonly ContextMenuStrip _menuMain = new() { Name = "menuMain" };
+
+        public CancelingContextMenuForm()
+        {
+            _menuMain.Items.Add("Child");
+            _menuMain.Opening += (_, e) => e.Cancel = true;
+            ContextMenuStrip = _menuMain;
+        }
+    }
 }
