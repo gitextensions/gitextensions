@@ -98,6 +98,7 @@ screenshot="$evidence_dir/window.png"
 manifest_output="$evidence_dir/smoke.json"
 weston_log="$evidence_dir/weston.log"
 backend_log="$evidence_dir/backend-evidence.txt"
+permissions_log="$evidence_dir/flatpak-permissions.txt"
 rm -f -- \
     "$stdout_log" \
     "$stderr_log" \
@@ -105,7 +106,19 @@ rm -f -- \
     "$screenshot" \
     "$manifest_output" \
     "$weston_log" \
-    "$backend_log"
+    "$backend_log" \
+    "$permissions_log"
+
+flatpak info --user --show-permissions "$app_id" >"$permissions_log"
+filesystem_permissions="$(sed -n 's/^filesystems=//p' "$permissions_log")"
+case ";$filesystem_permissions" in
+    *";host;"*) ;;
+    *)
+        echo "error: installed Flatpak does not grant --filesystem=host" >&2
+        cat "$permissions_log" >&2
+        exit 1
+        ;;
+esac
 
 outer_display=${DISPLAY:-}
 if [[ -z "$outer_display" ]]; then
@@ -224,7 +237,8 @@ cat > "$manifest_output" <<EOF
   "backendEvidence": "Wayland-only sandbox plus compositor-native screenshot",
   "sessionHost": "nestedWestonOnWslgX11",
   "command": "browse <dedicated-smoke-repository>",
-  "filesystemGrant": "~/.local/share/gitextensions-parity-smoke",
+  "filesystemGrant": "--filesystem=host",
+  "permissionsEvidence": "flatpak-permissions.txt",
   "screenshot": "window.png",
   "screenshotSha256": "$screenshot_sha256",
   "stdout": "stdout.log",
