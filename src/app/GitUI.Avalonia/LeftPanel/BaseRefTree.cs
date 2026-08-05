@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 
@@ -74,8 +74,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
         }
 
         return refs
-            .OrderBy(gitRef => IsPriorityMatch(priority, gitRef.LocalName) ? 0 : 1)
-            .ThenBy(gitRef => gitRef.Name, StringComparer.OrdinalIgnoreCase);
+            .OrderBy(gitRef => IsPriorityMatch(priority, gitRef.LocalName) ? 0 : 1);
 
         static bool IsPriorityMatch(Regex? pattern, string branchName)
         {

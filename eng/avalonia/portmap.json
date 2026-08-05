@@ -2158,8 +2158,8 @@
   "src/app/GitUI/LeftPanel/BaseRefTree.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseRefTree.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Builds stable slash-path hierarchies and applies the existing prioritized-branch setting; visibility against a filtered revision set remains reduced."
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Builds stable slash-path hierarchies, preserves the Git provider's requested ref order inside the existing prioritized-branch grouping, and applies the existing prioritized-branch setting; visibility against a filtered revision set remains reduced."
   },
   "src/app/GitUI/LeftPanel/BaseRevisionNode.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseRevisionNode.cs",
@@ -3495,48 +3495,70 @@
     "substitute": "Avalonia-native control, drawing, input, path, and connectivity APIs."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/ContextMenuExtensions.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/ContextMenuExtensions.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Preserves insertion, coupled visibility/enabled state, and separator normalization over native Avalonia ContextMenu controls; Avalonia exposes visibility before popup composition."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/GitRefsSortByContextMenuItem.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/GitRefsSortByContextMenuItem.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Same settings-backed sort-by radio submenu and refresh callback over native Avalonia MenuItems."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/GitRefsSortOrderContextMenuItem.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/GitRefsSortOrderContextMenuItem.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Same settings-backed sort-order radio submenu, stable menu name, and refresh callback over native Avalonia MenuItems."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/IMenuItemFactory.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/IMenuItemFactory.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Original generic factory boundary expressed with native Avalonia MenuItem and IImage types."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/IMenuItemsGenerator.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/IMenuItemsGenerator.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Original keyed generator contract expressed with native Avalonia controls."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/LocalBranchMenuItems.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/LocalBranchMenuItems.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Same local-branch strings and current-branch enabled-item key set."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/MenuItemKey.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/MenuItemKey.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Exact keyed menu-item identity contract."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/MenuItemsGenerator.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/MenuItemsGenerator.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Restores the original lazy keyed generator, action order, capability checks, icons, tooltips, separator, and factory callback boundary over native Avalonia MenuItem and Separator controls."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/MenuItemsStrings.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/MenuItemsStrings.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Exact translation categories, field names, defaults, and tooltip assignment boundary."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/RemoteBranchMenuItems.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/RemoteBranchMenuItems.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Same remote-branch translation specialization applied to the shared generator."
   },
   "src/app/GitUI/LeftPanel/ContextMenu/TagMenuItems.cs": {
-    "status": "unported",
-    "plannedIn": "P4.4"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/ContextMenu/TagMenuItems.cs",
+    "status": "functional",
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Same tag translation specialization applied to the shared generator."
   },
   "src/app/GitUI/LeftPanel/Interfaces/ICanDelete.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/Interfaces/ICanDelete.cs",
@@ -3583,8 +3605,8 @@
   "src/app/GitUI/LeftPanel/RepoObjectsTree.ContextActions.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.ContextActions.cs",
     "status": "functional",
-    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
-    "notes": "Restores the original partial boundary and node-interface action routing, including remote-branch deletion and tag checkout. P4.4 replaces the existing native menu construction with the same-named original generator boundary."
+    "basedOn": "3ff58ebc7337f7609f0e900ae67ac7bc25606ecb",
+    "notes": "Restores the original partial and generator boundaries, node-interface action routing, keyed current-branch restrictions, separator normalization, and sort refresh while preserving the loaded branch, remote, tag, stash, and worktree context. Native Avalonia controls replace ToolStrip items; the searchable parity-scaffolding marker identifies the legacy-name test accessor."
   },
   "src/app/GitUI/LeftPanel/RepoObjectsTree.SettingsContextMenu.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.SettingsContextMenu.cs",
