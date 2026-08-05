@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -164,7 +164,7 @@ internal static class CaptureRunner
             using Control root = ComponentFactory.Create(component, bootstrap.Commands);
             try
             {
-                PrepareControl(root, bootstrap.Commands, monitor, scale, dpiMode);
+                PrepareControl(root, bootstrap.Commands, component, monitor, scale, dpiMode);
                 PumpUntilReady(root);
             }
             catch (CaptureStateUnsupportedException exception)
@@ -200,6 +200,7 @@ internal static class CaptureRunner
 
             Application.DoEvents();
             bootstrap.ThrowIfThreadException();
+            ComponentFactory.CleanupBeforeDispose(root);
         }
         catch (Exception exception)
         {
@@ -545,6 +546,7 @@ internal static class CaptureRunner
     private static void PrepareControl(
         Control root,
         IGitUICommands commands,
+        CaptureComponentPlan component,
         CaptureMonitor monitor,
         int scale,
         CaptureDpiMode dpiMode)
@@ -575,7 +577,7 @@ internal static class CaptureRunner
             host.Activate();
         }
 
-        ComponentFactory.PrepareAfterHandle(root, commands);
+        ComponentFactory.PrepareAfterHandle(root, commands, component);
         Application.DoEvents();
         int currentDpi = NativeMethods.GetWindowDpi(root.FindForm()?.Handle ?? root.Handle);
         if (dpiMode == CaptureDpiMode.NativeMonitor)
