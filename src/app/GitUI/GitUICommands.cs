@@ -311,7 +311,7 @@ public sealed class GitUICommands : IGitUICommands
                 SizeToContent = true
             };
 
-            TaskDialogButton result = TaskDialog.ShowDialog(owner!, page);
+            TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page);
 
             if (page.Verification.Checked)
             {
