@@ -51,20 +51,21 @@ public sealed partial class GitTreeParser : IGitTreeParser
 
     public string GitTreeFormat { get; } = "%(objectmode) %(objecttype) %(objectname)%x09%(path)";
 
+    [Obsolete($"Use {nameof(ParseToList)} instead")]
     public IEnumerable<GitItem> Parse(string? tree)
     {
+        return ParseToList(tree);
+    }
+
+    public static List<GitItem> ParseToList(string? tree)
+    {
+        List<GitItem> gitItems = [];
         if (string.IsNullOrWhiteSpace(tree))
         {
-            yield break;
+            return gitItems;
         }
 
-        List<Range> ranges = [];
         foreach (Range range in tree.AsSpan().Split('\0'))
-        {
-            ranges.Add(range);
-        }
-
-        foreach (Range range in ranges)
         {
             int beginning = range.Start.Value;
             int length = range.End.Value - beginning;
@@ -79,8 +80,10 @@ public sealed partial class GitTreeParser : IGitTreeParser
                 continue;
             }
 
-            yield return ParseSingleFromSuccessfulMatch(match);
+            gitItems.Add(ParseSingleFromSuccessfulMatch(match));
         }
+
+        return gitItems;
     }
 
     public GitItem? ParseSingle(string? rawItem)
@@ -105,32 +108,45 @@ public sealed partial class GitTreeParser : IGitTreeParser
         return new GitItem(mode, type, objectId, name);
     }
 
+    [Obsolete($"Use {nameof(ParseLsFilesToList)} instead")]
     public IEnumerable<GitItem> ParseLsFiles(string? tree)
     {
-        if (string.IsNullOrWhiteSpace(tree))
-        {
-            return [];
-        }
-
-        return tree.LazySplit('\0').Select(ParseSingleLsFiles).WhereNotNull();
+        return ParseLsFilesToList(tree);
     }
 
-    private static GitItem? ParseSingleLsFiles(string? rawItem)
+    public static List<GitItem> ParseLsFilesToList(string? tree)
     {
-        if (rawItem is null)
+        List<GitItem> gitItems = [];
+        if (string.IsNullOrWhiteSpace(tree))
         {
-            return null;
+            return gitItems;
         }
 
-        Match match = LsFilesLineRegex.Match(rawItem);
-
-        if (!match.Success)
+        foreach (Range range in tree.AsSpan().Split('\0'))
         {
-            return null;
+            int beginning = range.Start.Value;
+            int length = range.End.Value - beginning;
+            if (length < 1)
+            {
+                continue;
+            }
+
+            Match match = LsFilesLineRegex.Match(tree, beginning, length);
+            if (!match.Success)
+            {
+                continue;
+            }
+
+            gitItems.Add(ParseSingleLsFromSuccessfulMatch(match));
         }
 
+        return gitItems;
+    }
+
+    private static GitItem ParseSingleLsFromSuccessfulMatch(Match match)
+    {
         int mode = int.Parse(match.Groups["mode"].ValueSpan);
-        ObjectId objectId = ObjectId.Parse(rawItem, match.Groups["objectid"]);
+        ObjectId objectId = ObjectId.Parse(match.Groups["objectid"].ValueSpan);
         string name = match.Groups["name"].Value;
 
         GitObjectType type = mode == 160000
