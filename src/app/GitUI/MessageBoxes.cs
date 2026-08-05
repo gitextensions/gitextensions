@@ -105,6 +105,11 @@ public class MessageBoxes : Translate
 
     public static bool ConfirmResolveMergeConflicts(IWin32Window? owner)
     {
+        if (AppSettings.DontConfirmResolveConflicts)
+        {
+            return true;
+        }
+
         TaskDialogPage page = new()
         {
             Text = Instance._unresolvedMergeConflicts.Text,
