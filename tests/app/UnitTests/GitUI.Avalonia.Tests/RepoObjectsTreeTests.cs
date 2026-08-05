@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
@@ -6,6 +6,7 @@ using Avalonia.Media;
 using GitCommands;
 using GitCommands.Remotes;
 using GitCommands.Submodules;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
@@ -148,6 +149,7 @@ public sealed class RepoObjectsTreeTests
     }
 
     [AvaloniaTest]
+    [Category("P4.4")]
     public void Local_branch_context_actions_should_route_to_the_existing_commands()
     {
         SettingsSnapshot settings = SettingsSnapshot.Capture();
@@ -190,6 +192,7 @@ public sealed class RepoObjectsTreeTests
 
     [AvaloniaTest]
     [Category("P4.3")]
+    [Category("P4.4")]
     public void Ref_nodes_should_expose_the_original_action_interfaces_and_missing_routes()
     {
         SettingsSnapshot settings = SettingsSnapshot.Capture();
@@ -236,6 +239,48 @@ public sealed class RepoObjectsTreeTests
 
             commands.Received(1).StartDeleteRemoteBranchDialog(control, "origin/feature");
             commands.Received(1).StartCheckoutRevisionDialog(control, "v1");
+        }
+        finally
+        {
+            settings.Restore();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P4.4")]
+    public void Resort_refs_should_requery_each_ref_tree_and_preserve_loaded_context()
+    {
+        SettingsSnapshot settings = SettingsSnapshot.Capture();
+        try
+        {
+            settings.EnableAllTrees();
+            RepoObjectsTree control = new();
+            control.SetRefs([CreateRef("refs/heads/main")], [CreateStash()], "main");
+            List<RefsFilter> requestedFilters = [];
+
+            control.ResortRefs(filter =>
+            {
+                requestedFilters.Add(filter);
+                return filter switch
+                {
+                    RefsFilter.Heads =>
+                    [
+                        CreateRef("refs/heads/z-last"),
+                        CreateRef("refs/heads/main"),
+                        CreateRef("refs/heads/a-first"),
+                    ],
+                    RefsFilter.Remotes => [CreateRef("refs/remotes/origin/main", "origin")],
+                    RefsFilter.Tags => [CreateRef("refs/tags/v1")],
+                    _ => throw new ArgumentOutOfRangeException(nameof(filter), filter, null),
+                };
+            });
+
+            requestedFilters.Should().Equal(RefsFilter.Heads, RefsFilter.Remotes, RefsFilter.Tags);
+            TreeViewItem[] roots = [.. control.GetTestAccessor().Tree.Items.Cast<TreeViewItem>()];
+            TreeViewItem branches = roots.Single(item => HeaderText(item).StartsWith("Branches", StringComparison.Ordinal));
+            branches.Items.Cast<TreeViewItem>().Select(HeaderText).Should().Equal("main", "z-last", "a-first");
+            HeaderLabel(branches.Items.Cast<TreeViewItem>().Single(item => HeaderText(item) == "main")).FontWeight.Should().Be(FontWeight.Bold);
+            HeaderText(roots.Single(item => HeaderText(item).StartsWith("Stashes", StringComparison.Ordinal))).Should().Be("Stashes (1)");
         }
         finally
         {
