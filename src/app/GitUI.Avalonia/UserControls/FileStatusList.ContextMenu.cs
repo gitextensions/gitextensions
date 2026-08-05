@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitCommands.Git;
@@ -33,6 +33,7 @@ partial class FileStatusList
     private Action? _stage;
     private Action? _unstage;
     private readonly IFileStatusListContextMenuController _itemContextMenuController = new FileStatusListContextMenuController();
+    private readonly IFindFilePredicateProvider _findFilePredicateProvider = new FindFilePredicateProvider();
     private readonly RememberFileContextMenuController _rememberFileContextMenuController = RememberFileContextMenuController.Default;
     private readonly TranslationString _deleteSelectedFilesCaption = new("Delete");
     private readonly TranslationString _deleteSelectedFiles = new("Are you sure you want to delete the selected file(s)?");
@@ -109,6 +110,7 @@ partial class FileStatusList
         tsmiFilterFileInGrid.Click += (_, _) => _filterFileInGrid?.Invoke();
         tsmiFileHistory.Click += (_, _) => StartFileHistoryDialog(showBlame: false);
         tsmiBlame.Click += Blame_Click;
+        tsmiFindFile.Click += FindFile_Click;
         tsmiUpdateSubmodule.Click += UpdateSubmodule_Click;
         tsmiResetSubmoduleChanges.Click += ResetSubmoduleChanges_Click;
         tsmiStashSubmoduleChanges.Click += StashSubmoduleChanges_Click;
@@ -315,6 +317,43 @@ partial class FileStatusList
             showBlame: showBlame);
     }
 
+    private void FindFile_Click(object? sender, EventArgs e)
+    {
+        if (LoadingFiles.IsVisible)
+        {
+            this.InvokeAndForget(async () =>
+            {
+                while (LoadingFiles.IsVisible)
+                {
+                    await Task.Delay(100);
+                }
+
+                FindFile_Click(this, EventArgs.Empty);
+            });
+            return;
+        }
+
+        IReadOnlyList<GitItemStatus> candidates = GitItemStatuses;
+
+        IEnumerable<GitItemStatus> FindDiffFilesMatches(string name)
+        {
+            Func<string?, bool> predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
+            return candidates.Where(item => predicate(item.Name) || predicate(item.OldName));
+        }
+
+        GitItemStatus? selectedItem;
+        using (SearchWindow<GitItemStatus> searchWindow = new(FindDiffFilesMatches))
+        {
+            searchWindow.ShowDialog(GetOwner());
+            selectedItem = searchWindow.SelectedItem;
+        }
+
+        if (selectedItem is not null)
+        {
+            SelectedGitItem = selectedItem;
+        }
+    }
+
     private void StageFile_Click(object? sender, EventArgs e)
     {
         if (_stage is not null)
@@ -411,7 +450,7 @@ partial class FileStatusList
         tsmiFilterFileInGrid.IsEnabled = singleItem || singleFolder;
         tsmiFileHistory.IsEnabled = (singleItem || singleFolder) && anyTracked;
         tsmiBlame.IsEnabled = singleItem && anyTracked && !anySubmodule;
-        tsmiFindFile.IsVisible = false;
+        tsmiFindFile.IsVisible = true;
         tsmiOpenFindInCommitFilesGitGrepDialog.IsVisible = CanUseFindInCommitFilesGitGrep;
         tsmiShowFindInCommitFilesGitGrep.IsVisible = CanUseFindInCommitFilesGitGrep;
         tsmiShowFindInCommitFilesGitGrep.IsChecked = FindInCommitFilesGitGrepVisible;
@@ -510,8 +549,7 @@ partial class FileStatusList
             case RevisionDiffControl.Command.OpenWorkingDirectoryFileWith: OpenWorkingDirectoryFileWith_Click(this, EventArgs.Empty); break;
             case RevisionDiffControl.Command.OpenWorkingDirectoryFile: OpenWorkingDirectoryFile_Click(this, EventArgs.Empty); break;
             case RevisionDiffControl.Command.RenameMove: Move_Click(this, EventArgs.Empty); break;
-            case RevisionDiffControl.Command.FindFile:
-                return false;
+            case RevisionDiffControl.Command.FindFile: FindFile_Click(this, EventArgs.Empty); break;
             case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab:
                 if (_isFileTreeMode)
                 {

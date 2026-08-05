@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.LogicalTree;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
@@ -37,16 +38,18 @@ public sealed partial class ParityScreenshotTests
 
         plan.Scales.Should().Equal(100, 125, 150, 200);
         plan.Themes.Select(theme => theme.Id).Should().Equal("light", "dark", "parity-custom");
-        CaptureComponentPlan component = plan.Components.Should().ContainSingle().Subject;
-        component.TypeName.Should().Be("GitUI.ScriptsEngine.FormFilePrompt");
-        component.TextValues.Should().ContainKey("txtFilePath")
-            .WhoseValue.Should().Be(@"C:\source\first.txt C:\source\second.txt");
-        component.States.Select(state => state.Kind).Should().Equal(
-            CaptureStateKind.Normal,
-            CaptureStateKind.Focus,
-            CaptureStateKind.Hover,
-            CaptureStateKind.Pressed,
-            CaptureStateKind.Disabled);
+        plan.Components.Select(component => component.TypeName).Should().Equal(
+            "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit",
+            "GitUI.CommandsDialogs.FormCheckoutRevision",
+            "GitUI.CommandsDialogs.SearchControl",
+            "GitUI.CommandsDialogs.SearchWindow");
+        plan.Components.Should().OnlyContain(component => component.States.Any(state => state.Kind == CaptureStateKind.Normal));
+        plan.Components.Single(component => component.TypeName.EndsWith("FormGoToCommit", StringComparison.Ordinal))
+            .TextValues.Should().ContainKey("textboxCommitExpression").WhoseValue.Should().Be("HEAD~1");
+        plan.Components.Single(component => component.TypeName.EndsWith("FormCheckoutRevision", StringComparison.Ordinal))
+            .States.Select(state => state.Kind).Should().Contain(CaptureStateKind.Checked);
+        plan.Components.Where(component => component.TypeName.Contains("Search", StringComparison.Ordinal))
+            .Should().OnlyContain(component => component.TextValues["txtSearchBox"] == "src");
     }
 
     [AvaloniaTest]
@@ -236,6 +239,7 @@ public sealed partial class ParityScreenshotTests
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
         GitExtensions.Shims.WinForms.ShimHost.MessageBoxHost = new StubMessageBoxHost();
+        GitExtensions.Shims.WinForms.ShimHost.Clipboard = new CaptureClipboard();
 
         CapturePlan plan = CapturePlan.Load(GetCapturePlanPath());
         string? viewFilter = Environment.GetEnvironmentVariable(CaptureViewEnvironmentVariable);
@@ -364,6 +368,8 @@ public sealed partial class ParityScreenshotTests
             ApplyTextValues(view, component);
 
             await WaitForAsyncViewsAsync(view);
+            // parity-scaffolding: Async loaders may replace seeded text; the capture plan remains authoritative.
+            ApplyTextValues(view, component);
             Dispatcher.UIThread.RunJobs();
             using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(view, state);
             if (driver.RequiresExternalSurfaceCapture)
@@ -397,7 +403,8 @@ public sealed partial class ParityScreenshotTests
                 theme,
                 GetThemeSourceSha256(theme),
                 scalePercent,
-                state.Id);
+                state.Id,
+                component.TypeName);
             string treeJson = CaptureJson.Serialize(document);
             CaptureJson.Serialize(CaptureJson.Deserialize(treeJson)).Should().Be(treeJson);
             File.WriteAllText(treePath, treeJson);
@@ -453,7 +460,8 @@ public sealed partial class ParityScreenshotTests
         CaptureThemePlan theme,
         string sourceSha256,
         int scalePercent,
-        string state)
+        string state,
+        string? componentType = null)
     {
         int dpi = checked(scalePercent * 96 / 100);
         return new CaptureDocument
@@ -461,7 +469,7 @@ public sealed partial class ParityScreenshotTests
             SchemaVersion = CaptureDocument.CurrentSchemaVersion,
             Component = new CaptureComponent
             {
-                TypeName = root.GetType().FullName ?? root.GetType().Name,
+                TypeName = componentType ?? root.GetType().FullName ?? root.GetType().Name,
                 AssemblyName = root.GetType().Assembly.GetName().Name ?? "GitUI.Avalonia"
             },
             Capture = new CaptureMetadata
@@ -494,7 +502,7 @@ public sealed partial class ParityScreenshotTests
     {
         foreach ((string fieldName, string text) in component.TextValues)
         {
-            Control? target = root.FindControl<Control>(fieldName);
+            Control? target = FindNamedControl(root, fieldName);
             if (target is null)
             {
                 throw new InvalidDataException($"Text seed field '{fieldName}' was not found on {component.TypeName}.");
@@ -521,6 +529,24 @@ public sealed partial class ParityScreenshotTests
                     throw new InvalidDataException($"Text seed field '{fieldName}' does not expose a supported text boundary.");
             }
         }
+    }
+
+    private static Control? FindNamedControl(Control root, string fieldName)
+    {
+        if (root.Name == fieldName)
+        {
+            return root;
+        }
+
+        foreach (Control child in root.GetLogicalChildren().OfType<Control>())
+        {
+            if (FindNamedControl(child, fieldName) is Control match)
+            {
+                return match;
+            }
+        }
+
+        return null;
     }
 
     private static IEnumerable<CaptureNode> Flatten(CaptureNode root)
