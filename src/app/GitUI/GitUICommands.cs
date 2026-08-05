@@ -345,32 +345,17 @@ public sealed class GitUICommands : IGitUICommands
 
     private static FormBrowse? FindFormBrowse(IWin32Window? window)
     {
-        if (window is FormBrowse browse)
-        {
-            return browse;
-        }
-
         // The owner may be a child control (e.g. the repository objects tree), so resolve its containing form first.
         if (window is Control control and not Form)
         {
             window = control.FindForm();
         }
 
-        if (window is Form form)
+        for (Form? form = window as Form; form is not null; form = form.Owner)
         {
             if (form is FormBrowse formBrowse)
             {
                 return formBrowse;
-            }
-
-            while (form.Owner is not null)
-            {
-                if (form.Owner is FormBrowse ownerBrowse)
-                {
-                    return ownerBrowse;
-                }
-
-                form = form.Owner;
             }
         }
 
