@@ -1,10 +1,12 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
 using GitUI.LeftPanel;
@@ -153,6 +155,15 @@ internal static class ComponentFactory
             case CaseSensitiveComboBox caseSensitiveComboBox:
                 caseSensitiveComboBox.Items.AddRange(["Main", "main", "release/1.0"]);
                 caseSensitiveComboBox.Text = "main";
+                break;
+
+            // parity-scaffolding: Seeds the isolated Dashboard history before paired capture.
+            case Dashboard dashboard:
+                dashboard.UICommandsSource = source;
+                Repository repository = new(commands.Module.WorkingDir);
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(repository.Path));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AssignCategoryAsync(repository, "Development"));
+                dashboard.RefreshContent();
                 break;
         }
     }

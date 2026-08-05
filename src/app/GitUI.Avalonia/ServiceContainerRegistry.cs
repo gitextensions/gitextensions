@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.Design;
 using GitCommands;
+using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.Compat;
 using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.PlainText;
@@ -50,6 +52,8 @@ public static class ServiceContainerRegistry
         IInvalidRepositoryRemover invalidRepositoryRemover = new InvalidRepositoryRemover();
         serviceContainer.AddService<IRepositoryCurrentBranchNameCache>(branchNameCache);
         serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);
+        serviceContainer.AddService<IUserRepositoriesListController>(
+            new UserRepositoriesListController(RepositoryHistoryManager.Locals, invalidRepositoryRemover, branchNameCache));
         serviceContainer.AddService<IRepositoryHistoryUIService>(
             new RepositoryHistoryUIService(branchNameCache, invalidRepositoryRemover));
     }

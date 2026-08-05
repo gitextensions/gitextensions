@@ -177,26 +177,26 @@
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml.cs",
     "status": "functional",
-    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Same-named repository-less surface with Create, Open, Clone, contribution links, recent repositories, and transitions back into the owning FormBrowse. The hosted GitHub fork/clone contribution remains owned by the later complete Dashboard conformance review."
+    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
+    "notes": "Same-named repository-less surface with Create, Open, Clone, contribution links, recent repositories, and transitions back into the owning FormBrowse. P4.5 restores the original DashboardTheme boundary, all repository-list appearance roles, and dynamic clone/fork contributions from the loaded repository hosts. Full six-axis state and platform evidence remains outstanding."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.axaml",
     "status": "functional",
-    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native two-column Dashboard retains the original named logo, start, contribute, and repository-list sections with light/dark semantic palettes. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
+    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
+    "notes": "Native two-column Dashboard retains the original named logo, start, contribute, and repository-list sections and applies the selected DashboardTheme palette to those sections. P1.8 centralized recurring AXAML values through the shared visual vocabulary. P4.5 adds the original background-image and panel identities; full measured WinForms visual parity remains outstanding."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml.cs",
     "status": "functional",
-    "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "Same-named searchable recent/favourite repository list over the shared history service, with branch/path hints, invalid-history cleanup, Enter and original one-click row activation, category headers, and the original recent-repository settings command. Headers, whitespace, and scrollbars cannot activate the current selection. Drag reordering and category-editing context actions remain for the complete Dashboard conformance review."
+    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
+    "notes": "Same-named searchable recent/favourite repository list through the original controller boundary, with branch/path hints, invalid-history cleanup, Enter and one-click row activation, category headers/actions, repository and category context menus, add/rename/delete/clear category flows, and native single-folder drag/drop. Headers, whitespace, and scrollbars cannot activate the current selection. Full behavioral-state and cross-platform interaction evidence remains outstanding."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesList.axaml",
     "status": "functional",
-    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native searchable list layout preserves the original list, heading, search, and configure identities."
+    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
+    "notes": "Native searchable list layout preserves the original list, heading, search, configure, repository context-menu, category submenu, and category context-menu identities."
   },
   "src/app/GitUI/CommandsDialogs/InvalidRepositoryRemover.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/InvalidRepositoryRemover.cs",
@@ -2411,8 +2411,8 @@
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Registers the plain-text command and embedded-shell emulation, shared Output history provider/recorder with trace forwarding, reduced hotkey settings loader, and cross-platform external-terminal launcher; Linux honors the desktop default through xdg-terminal-exec before named fallbacks."
+    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
+    "notes": "Registers the plain-text command and embedded-shell emulation, shared Output history provider/recorder with trace forwarding, reduced hotkey settings loader, cross-platform external-terminal launcher, and the same-named Dashboard repository-list controller; Linux honors the desktop default through xdg-terminal-exec before named fallbacks."
   },
   "src/app/GitUI/MessageBoxes.cs": {
     "twin": "src/app/GitUI.Avalonia/MessageBoxes.cs",
@@ -2609,20 +2609,28 @@
     "plannedIn": "P5.8"
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/DashboardTheme.cs": {
-    "status": "unported",
-    "plannedIn": "P4.5"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/DashboardTheme.cs",
+    "status": "functional",
+    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
+    "notes": "Same-named palette contract with the original member order and exact light RGB values; dark SystemColors are resolved through Avalonia's default dark palette because symbolic SystemColors do not exist cross-platform."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/FormDashboardCategoryTitle.cs": {
-    "status": "unported",
-    "plannedIn": "P4.5"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/FormDashboardCategoryTitle.axaml.cs",
+    "status": "functional",
+    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
+    "notes": "Same-named category-title dialog with original translation strings, duplicate and empty-name validation, rename state, and OK/cancel dialog-result behavior."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/FormDashboardCategoryTitle.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P4.5"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/FormDashboardCategoryTitle.axaml",
+    "status": "functional",
+    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
+    "notes": "Native fixed-size category-title dialog preserving the original named label, input, separator, OK, and Cancel controls."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesListController.cs": {
-    "status": "unported",
-    "plannedIn": "P4.5"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/UserRepositoriesListController.cs",
+    "status": "functional",
+    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
+    "notes": "Same interface, class, dependencies, member order, repository filtering, category assignment, invalid-repository removal, and branch-cache behavior as the WinForms original."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBisect.cs": {
     "status": "unported",
