@@ -281,6 +281,11 @@ internal static class WinFormsInputMetadata
                 new("splitRight", 0, false, null),
                 new("toolbarCommit", 110, null, null),
             ],
+            ["GitUI.CommandsDialogs.FormCompareToBranch"] =
+            [
+                new("branchSelector", 0, null, null),
+                new("btnCompare", 1, null, null),
+            ],
             ["GitUI.CommandsDialogs.FormCreateBranch"] =
             [
                 new("BranchNameTextBox", 1, null, null),
@@ -328,6 +333,28 @@ internal static class WinFormsInputMetadata
                 new("label2", 13, null, null),
                 new("label3", 15, null, null),
                 new("remotesComboboxControl1", 12, null, null),
+            ],
+            ["GitUI.CommandsDialogs.FormDiff"] =
+            [
+                new("DiffFiles", 0, null, null),
+                new("DiffText", 0, null, null),
+                new("btnAnotherFirstBranch", 7, null, null),
+                new("btnAnotherFirstCommit", 10, null, null),
+                new("btnAnotherSecondBranch", 16, null, null),
+                new("btnAnotherSecondCommit", 17, null, null),
+                new("btnCompareDirectoriesWithDiffTool", 10, null, null),
+                new("btnSwap", 6, null, null),
+                new("ckCompareToMergeBase", 9, null, null),
+                new("diffOptionsPanel", 14, null, null),
+                new("firstCommitGroup", 16, false, null),
+                new("firstCommitPanel", 14, null, null),
+                new("lblFirstCommit", 14, null, null),
+                new("lblSecondCommit", 1, null, null),
+                new("mainLayoutPanel", 0, null, null),
+                new("secondCommitGroup", 17, false, null),
+                new("secondCommitPanel", 15, null, null),
+                new("settingsLayoutPanel", 3, null, null),
+                new("splitContainer1", 1, null, null),
             ],
             ["GitUI.CommandsDialogs.FormEditor"] =
             [

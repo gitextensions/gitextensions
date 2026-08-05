@@ -29,51 +29,42 @@
   ],
   "components": [
     {
-      "typeName": "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit",
-    "textValues": {
-      "textboxCommitExpression": "HEAD~1",
-      "comboBoxBranches": "feature/navigation"
-      },
+      "typeName": "GitUI.CommandsDialogs.FormDiff",
       "states": [
         { "id": "normal", "kind": "normal" },
-        { "id": "expression.focused", "kind": "focus", "targetField": "textboxCommitExpression" },
-        { "id": "go.hover", "kind": "hover", "targetField": "goButton" },
-        { "id": "go.pressed", "kind": "pressed", "targetField": "goButton" },
-        { "id": "go.disabled", "kind": "disabled", "targetField": "goButton" }
+        { "id": "files.focused", "kind": "focus", "targetField": "DiffFiles" },
+        { "id": "swap.hover", "kind": "hover", "targetField": "btnSwap" },
+        { "id": "swap.pressed", "kind": "pressed", "targetField": "btnSwap" },
+        { "id": "mergebase.checked", "kind": "checked", "targetField": "ckCompareToMergeBase" },
+        { "id": "directory.disabled", "kind": "disabled", "targetField": "btnCompareDirectoriesWithDiffTool" }
       ]
     },
     {
-      "typeName": "GitUI.CommandsDialogs.FormCheckoutRevision",
-      "states": [
-        { "id": "normal", "kind": "normal" },
-        { "id": "revision.focused", "kind": "focus", "targetField": "commitPickerSmallControl1" },
-        { "id": "force.checked", "kind": "checked", "targetField": "Force" },
-        { "id": "checkout.hover", "kind": "hover", "targetField": "OkCheckout" },
-        { "id": "checkout.pressed", "kind": "pressed", "targetField": "OkCheckout" },
-        { "id": "checkout.disabled", "kind": "disabled", "targetField": "OkCheckout" }
-      ]
-    },
-    {
-      "typeName": "GitUI.CommandsDialogs.SearchControl",
+      "typeName": "GitUI.CommandsDialogs.FormCompareToBranch",
       "textValues": {
-        "txtSearchBox": "src"
+        "Branches": "feature/visual-parity"
       },
       "states": [
         { "id": "normal", "kind": "normal" },
-        { "id": "search.focused", "kind": "focus", "targetField": "txtSearchBox" },
-        { "id": "results.focused", "kind": "focus", "targetField": "listBoxSearchResult" },
-        { "id": "search.disabled", "kind": "disabled", "targetField": "txtSearchBox" }
+        { "id": "branch.focused", "kind": "focus", "targetField": "Branches" },
+        { "id": "compare.hover", "kind": "hover", "targetField": "btnCompare" },
+        { "id": "compare.pressed", "kind": "pressed", "targetField": "btnCompare" },
+        { "id": "compare.disabled", "kind": "disabled", "targetField": "btnCompare" }
       ]
     },
     {
-      "typeName": "GitUI.CommandsDialogs.SearchWindow",
+      "typeName": "GitUI.CommandsDialogs.FormFormatPatch",
       "textValues": {
-        "txtSearchBox": "src"
+        "OutputPath": "patch-output"
       },
       "states": [
         { "id": "normal", "kind": "normal" },
-        { "id": "search.focused", "kind": "focus", "targetField": "txtSearchBox" },
-        { "id": "results.focused", "kind": "focus", "targetField": "listBoxSearchResult" }
+        { "id": "output.focused", "kind": "focus", "targetField": "OutputPath" },
+        { "id": "browse.hover", "kind": "hover", "targetField": "Browse" },
+        { "id": "browse.pressed", "kind": "pressed", "targetField": "Browse" },
+        { "id": "create.hover", "kind": "hover", "targetField": "FormatPatch" },
+        { "id": "create.pressed", "kind": "pressed", "targetField": "FormatPatch" },
+        { "id": "create.disabled", "kind": "disabled", "targetField": "FormatPatch" }
       ]
     }
   ]

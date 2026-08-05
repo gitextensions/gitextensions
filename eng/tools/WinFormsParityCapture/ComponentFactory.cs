@@ -28,6 +28,9 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormCommit" => new FormCommit(commands),
             "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
+            "GitUI.CommandsDialogs.FormDiff" => CreateFormDiff(commands),
+            "GitUI.CommandsDialogs.FormCompareToBranch" => new FormCompareToBranch(commands, commands.Module.RevParse("HEAD")),
+            "GitUI.CommandsDialogs.FormFormatPatch" => new FormFormatPatch(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
             "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),
             "GitUI.CommandsDialogs.SearchControl" => CreateSearchControl(),
@@ -130,7 +133,7 @@ internal static class ComponentFactory
     }
 
     // parity-scaffolding: Runs control logic only after WinForms has created the capture host handle.
-    public static void PrepareAfterHandle(Control control, IGitUICommands commands)
+    public static void PrepareAfterHandle(Control control, IGitUICommands commands, CaptureComponentPlan component)
     {
         CaptureCommandsSource source = new(commands);
         switch (control)
@@ -191,6 +194,35 @@ internal static class ComponentFactory
                 dashboard.RefreshContent();
                 break;
         }
+
+        // parity-scaffolding: Load handlers may replace plan seeds; the shared plan remains authoritative.
+        foreach ((string fieldName, string text) in component.TextValues)
+        {
+            if (FindFieldValue(control, fieldName) is not Control target)
+            {
+                throw new InvalidDataException($"Text seed field '{fieldName}' was not found on {component.TypeName}.");
+            }
+
+            target.Text = text;
+        }
+    }
+
+    // parity-scaffolding: Cancel the original grid's asynchronous refresh before WinForms disposal joins it.
+    public static void CleanupBeforeDispose(Control control)
+    {
+        if (control is FormFormatPatch
+            && FindFieldValue(control, "RevisionGrid") is RevisionGridControl revisionGrid)
+        {
+            InvokeNonPublic(revisionGrid, "CancelBackgroundTasks");
+        }
+    }
+
+    // parity-scaffolding: Gives both diff surfaces the same adjacent representative revisions.
+    private static FormDiff CreateFormDiff(GitUICommands commands)
+    {
+        ObjectId head = commands.Module.RevParse("HEAD");
+        ObjectId parent = commands.Module.RevParse("HEAD~1");
+        return new FormDiff(commands, parent, head, "HEAD~1", "HEAD");
     }
 
     // parity-scaffolding: Seeds private original state without adding product-facing capture hooks.
