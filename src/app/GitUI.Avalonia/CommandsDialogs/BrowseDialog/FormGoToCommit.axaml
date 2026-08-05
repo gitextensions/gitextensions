@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit"
+        Width="604" Height="302"
+        MinWidth="620" MinHeight="340"
+        WindowStartupLocation="CenterOwner"
+        Title="Go to commit">
+  <Grid Classes="gitextensions-dialog-main"
+        ColumnDefinitions="133,*,75"
+        RowDefinitions="28,141,32,32"
+        ColumnSpacing="10"
+        RowSpacing="14">
+    <TextBlock x:Name="label1"
+               Text="Commit expression:"
+               VerticalAlignment="Center" />
+    <TextBox x:Name="textboxCommitExpression"
+             Grid.Column="1"
+             VerticalContentAlignment="Center" />
+    <Button x:Name="goButton"
+            Grid.Column="2"
+            MinWidth="75"
+            Height="28"
+            Content="Go"
+            IsDefault="True" />
+
+    <GroupBox x:Name="groupBox1"
+              Grid.Row="1"
+              Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Margin="33,0,0,0"
+              Header="Help">
+      <Grid Margin="7,2,7,7"
+            RowDefinitions="*,Auto">
+        <TextBlock x:Name="label2"
+                   TextWrapping="Wrap" />
+        <TextBlock x:Name="linkGitRevParse"
+                   Grid.Row="1"
+                   Classes="gitextensions-link"
+                   Text="More see git-rev-parse" />
+      </Grid>
+    </GroupBox>
+
+    <TextBlock x:Name="label3"
+               Grid.Row="2"
+               Text="Go to tag:"
+               VerticalAlignment="Center" />
+    <ComboBox x:Name="comboBoxTags"
+              Grid.Row="2"
+              Grid.Column="1"
+              IsEditable="True"
+              IsTextSearchEnabled="True" />
+
+    <TextBlock x:Name="label4"
+               Grid.Row="3"
+               Text="Go to branch:"
+               VerticalAlignment="Center" />
+    <ComboBox x:Name="comboBoxBranches"
+              Grid.Row="3"
+              Grid.Column="1"
+              IsEditable="True"
+              IsTextSearchEnabled="True" />
+  </Grid>
+</Window>

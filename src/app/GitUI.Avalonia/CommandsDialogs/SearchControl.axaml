@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.CommandsDialogs.SearchControl"
+             MinWidth="64"
+             MinHeight="23">
+  <Grid x:Name="tableLayoutPanel1"
+        RowDefinitions="Auto,Auto">
+    <Border x:Name="searchBoxBorder"
+            BorderThickness="1">
+      <TextBox x:Name="txtSearchBox"
+               AutomationProperties.Name="Enter File Name"
+               Margin="-1"
+               MinHeight="23"
+               VerticalContentAlignment="Center" />
+    </Border>
+    <ListBox x:Name="listBoxSearchResult"
+             AutomationProperties.Name="File search results"
+             Grid.Row="1"
+             MinWidth="64"
+             Margin="0"
+             IsVisible="False" />
+  </Grid>
+</UserControl>

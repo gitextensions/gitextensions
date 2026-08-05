@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Controls.ApplicationLifetimes;
 using GitCommands;
 using GitCommands.Git;
@@ -37,6 +37,7 @@ public sealed class GitUICommands : IGitUICommands
 
     private readonly IServiceProvider _serviceProvider;
     private readonly ICommitTemplateManager _commitTemplateManager;
+    private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
     public IGitModule Module { get; private set; }
     public ILockableNotifier RepoChangedNotifier { get; }
@@ -51,6 +52,7 @@ public sealed class GitUICommands : IGitUICommands
         Module = module;
 
         _commitTemplateManager = new CommitTemplateManager(() => module);
+        _findFilePredicateProvider = new FindFilePredicateProvider();
         RepoChangedNotifier = new ActionNotifier(
             () => InvokeEvent(null, PostRepositoryChanged));
     }
@@ -464,6 +466,8 @@ public sealed class GitUICommands : IGitUICommands
             case "checkout":
             case "checkoutbranch":
                 return StartCheckoutBranch(null);
+            case "checkoutrevision":
+                return StartCheckoutRevisionDialog(null);
             case "cherry":
                 return StartCherryPickDialog();
             case "clone":
@@ -507,6 +511,8 @@ public sealed class GitUICommands : IGitUICommands
                 return StartRemotesDialog(owner: null);
             case "settings":
                 return StartSettingsDialog(owner: null);
+            case "searchfile":
+                return RunSearchFileCommand();
             case "stash":
                 return StartStashDialog();
             case "synchronize":
@@ -547,6 +553,21 @@ public sealed class GitUICommands : IGitUICommands
                 MessageBoxes.ShowError(owner: null, message, "Unsupported command");
                 return false;
         }
+    }
+
+    private bool RunSearchFileCommand()
+    {
+        using SearchWindow<string> searchWindow = new(FindFileMatches);
+        searchWindow.ShowDialog();
+        if (searchWindow.SelectedItem is not null)
+        {
+            // We need to return the file that has been found, the visual studio plugin uses the return value
+            // to open the selected file.
+            Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
+            return true;
+        }
+
+        return false;
     }
 
     private bool RunBrowseCommand(IReadOnlyList<string> args)
@@ -717,6 +738,15 @@ public sealed class GitUICommands : IGitUICommands
         }
 
         return arguments;
+    }
+
+    private IEnumerable<string> FindFileMatches(string name)
+    {
+        IReadOnlyList<string> candidates = Module.GetFullTree("HEAD");
+
+        Func<string?, bool> predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
+
+        return candidates.Where(predicate);
     }
 
     private bool Commit(IReadOnlyDictionary<string, string?> arguments)
@@ -903,7 +933,16 @@ public sealed class GitUICommands : IGitUICommands
         return StartCheckoutBranch(owner, branch, true);
     }
 
-    public bool StartCheckoutRevisionDialog(IWin32Window? owner, string? revision = null) => throw NotPorted(nameof(StartCheckoutRevisionDialog));
+    public bool StartCheckoutRevisionDialog(IWin32Window? owner, string? revision = null)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using FormCheckoutRevision form = new(this);
+            form.SetRevision(revision);
+            return form.ShowDialog(owner) == DialogResult.OK;
+        }, preEvent: PreCheckoutRevision, postEvent: PostCheckoutRevision);
+    }
+
     public bool StartCherryPickDialog(IWin32Window? owner = null, GitRevision? revision = null)
     {
         bool Action()
