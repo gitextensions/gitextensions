@@ -281,7 +281,7 @@ public sealed partial class FormPull : GitExtensionsDialog
                     SizeToContent = true
                 };
 
-                isActionConfirmed = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
+                isActionConfirmed = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page) == TaskDialogButton.Yes;
 
                 if (page.Verification.Checked)
                 {
@@ -423,7 +423,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             page.Buttons.Add(btnCheckout);
             page.Buttons.Add(btnContinue);
 
-            TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? default, page);
+            TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page);
             if (result == TaskDialogButton.Cancel)
             {
                 return DialogResult.Cancel;
@@ -612,7 +612,7 @@ public sealed partial class FormPull : GitExtensionsDialog
                     SizeToContent = true
                 };
 
-                messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
+                messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page) == TaskDialogButton.Yes;
 
                 if (page.Verification.Checked)
                 {
