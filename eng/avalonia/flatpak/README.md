@@ -5,10 +5,11 @@ self-contained build against the Freedesktop 25.08 SDK so Git is available insid
 development sandbox. The release manifest, runtime selection, metadata, and distribution
 policy belong to P10.
 
-The manifest grants the application only network, native Wayland, GPU, and the dedicated
-`~/.local/share/gitextensions-parity-smoke` fixture used by the confined smoke. It exposes no
-X11 socket. The smoke launches inside a nested Weston session, explicitly revokes both X11
-socket types, and captures the rendered window through that compositor. Build and run it
-through `build-and-smoke.sh`; generated publish and builder output remain ignored.
+The manifest grants the application network, native Wayland, GPU, and host-filesystem access
+through `--filesystem=host`. It exposes no X11 socket. The smoke itself still uses dedicated
+settings and the `~/.local/share/gitextensions-parity-smoke` fixture, launches inside a nested
+Weston session, explicitly revokes both X11 socket types, verifies the installed filesystem
+permission, and captures the rendered window through that compositor. Build and run it through
+`build-and-smoke.sh`; generated publish and builder output remain ignored.
 
 parity-scaffolding: the development manifest and smoke are replaced by release packaging in P10.
