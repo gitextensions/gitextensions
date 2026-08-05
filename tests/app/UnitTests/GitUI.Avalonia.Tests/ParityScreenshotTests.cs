@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -381,6 +381,26 @@ public sealed partial class ParityScreenshotTests
             FormCheckoutRevision form = new(context.Commands);
             form.SetRevision(context.HeadRevision.ObjectId.ToString());
             return form;
+        }
+
+        if (viewType == typeof(FormDiff))
+        {
+            return new FormDiff(
+                context.Commands,
+                context.ParentRevision.ObjectId,
+                context.HeadRevision.ObjectId,
+                "HEAD~1",
+                "HEAD");
+        }
+
+        if (viewType == typeof(FormCompareToBranch))
+        {
+            return new FormCompareToBranch(context.Commands, context.HeadRevision.ObjectId);
+        }
+
+        if (viewType == typeof(FormFormatPatch))
+        {
+            return new FormFormatPatch(context.Commands);
         }
 
         if (viewType == typeof(SearchControl))
@@ -1186,6 +1206,22 @@ public sealed partial class ParityScreenshotTests
             branches.Text.Should().NotBe(GitUI.TranslatedStrings.LoadingData);
         }
 
+        if (root is FormDiff formDiff)
+        {
+            // parity-scaffolding: Wait for the diff list and selected-file viewer to settle.
+            FormDiff.TestAccessor accessor = formDiff.GetTestAccessor();
+            Stopwatch diffStopwatch = Stopwatch.StartNew();
+            while ((accessor.DiffFiles.AllItemsCount == 0 || string.IsNullOrEmpty(accessor.DiffText.TextEditor.Text))
+                   && diffStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            accessor.DiffFiles.AllItems.Should().NotBeEmpty();
+            accessor.DiffText.TextEditor.Text.Should().NotBeEmpty();
+        }
+
         if (FindNamedControl(root, "listBoxSearchResult") is ListBox searchResults
             && FindNamedControl(root, "txtSearchBox") is TextBox searchText
             && !string.IsNullOrEmpty(searchText.Text))
@@ -1377,6 +1413,21 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormCheckoutRevision))
         {
             return (481, 131);
+        }
+
+        if (viewType == typeof(FormDiff))
+        {
+            return (1042, 685);
+        }
+
+        if (viewType == typeof(FormCompareToBranch))
+        {
+            return (434, 110);
+        }
+
+        if (viewType == typeof(FormFormatPatch))
+        {
+            return (1030, 665);
         }
 
         if (viewType == typeof(SearchControl))

@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -39,17 +39,16 @@ public sealed partial class ParityScreenshotTests
         plan.Scales.Should().Equal(100, 125, 150, 200);
         plan.Themes.Select(theme => theme.Id).Should().Equal("light", "dark", "parity-custom");
         plan.Components.Select(component => component.TypeName).Should().Equal(
-            "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit",
-            "GitUI.CommandsDialogs.FormCheckoutRevision",
-            "GitUI.CommandsDialogs.SearchControl",
-            "GitUI.CommandsDialogs.SearchWindow");
+            "GitUI.CommandsDialogs.FormDiff",
+            "GitUI.CommandsDialogs.FormCompareToBranch",
+            "GitUI.CommandsDialogs.FormFormatPatch");
         plan.Components.Should().OnlyContain(component => component.States.Any(state => state.Kind == CaptureStateKind.Normal));
-        plan.Components.Single(component => component.TypeName.EndsWith("FormGoToCommit", StringComparison.Ordinal))
-            .TextValues.Should().ContainKey("textboxCommitExpression").WhoseValue.Should().Be("HEAD~1");
-        plan.Components.Single(component => component.TypeName.EndsWith("FormCheckoutRevision", StringComparison.Ordinal))
+        plan.Components.Single(component => component.TypeName.EndsWith("FormDiff", StringComparison.Ordinal))
             .States.Select(state => state.Kind).Should().Contain(CaptureStateKind.Checked);
-        plan.Components.Where(component => component.TypeName.Contains("Search", StringComparison.Ordinal))
-            .Should().OnlyContain(component => component.TextValues["txtSearchBox"] == "src");
+        plan.Components.Single(component => component.TypeName.EndsWith("FormCompareToBranch", StringComparison.Ordinal))
+            .TextValues["Branches"].Should().Be("feature/visual-parity");
+        plan.Components.Single(component => component.TypeName.EndsWith("FormFormatPatch", StringComparison.Ordinal))
+            .TextValues["OutputPath"].Should().Be("patch-output");
     }
 
     [AvaloniaTest]

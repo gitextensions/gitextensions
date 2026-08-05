@@ -1,0 +1,22 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormCompareToBranch"
+        Width="434"
+        Height="110"
+        CanResize="False"
+        ShowInTaskbar="False"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        Title="Compare to branch">
+  <Grid Margin="8"
+        RowDefinitions="Auto,Auto">
+    <controls:BranchSelector x:Name="branchSelector" />
+    <Button x:Name="btnCompare"
+            Grid.Row="1"
+            Margin="0,18,8,0"
+            HorizontalAlignment="Right"
+            Content="Compare"
+            IsDefault="True" />
+  </Grid>
+</Window>
