@@ -249,6 +249,11 @@ internal sealed class ControlStateDriver : IDisposable
             MenuStrip menu when menu.Items.OfType<ToolStripDropDownItem>().FirstOrDefault() is { } item => Open(item),
             _ => throw new CaptureStateUnsupportedException("The open-menu state requires a MenuStrip or ToolStripDropDownItem.")
         };
+        if (!popup.Visible)
+        {
+            throw new CaptureStateUnsupportedException("The requested popup declined to open in the current control state.");
+        }
+
         _popups.Add(popup);
         _restoreActions.Add(popup.Close);
 
@@ -260,7 +265,9 @@ internal sealed class ControlStateDriver : IDisposable
 
         static ToolStripDropDown OpenContextMenu(ContextMenuStrip contextMenu, Control root)
         {
-            contextMenu.Show(root, new Point(Math.Max(1, root.ClientSize.Width / 2), Math.Max(1, root.ClientSize.Height / 2)));
+            Point screenLocation = root.PointToScreen(
+                new Point(Math.Max(1, root.ClientSize.Width / 2), Math.Max(1, root.ClientSize.Height / 2)));
+            contextMenu.Show(screenLocation);
             return contextMenu;
         }
     }

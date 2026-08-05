@@ -63,6 +63,7 @@ internal sealed class SubmoduleTree : Tree
         HashSet<string> selected = OwnerControl.CaptureSelectedNodeIdentities(this);
         bool firstLoad = TreeViewNode.Items.Count == 0;
         TreeViewNode.Items.Clear();
+        Nodes.Clear();
 
         string topPath = NormalizePath(result.TopProject.Path);
         SubmoduleNode topNode = new(
@@ -73,7 +74,7 @@ internal sealed class SubmoduleTree : Tree
             result.TopProject.Bold ? result.CurrentSubmoduleStatus : null,
             string.Empty,
             result.TopProject.Path);
-        TreeViewNode.Items.Add(topNode.TreeViewNode);
+        AddChild(topNode);
 
         Dictionary<string, SubmoduleNode> moduleNodes = new(_pathComparer)
         {
@@ -128,7 +129,7 @@ internal sealed class SubmoduleTree : Tree
             info.Bold ? result.CurrentSubmoduleStatus : null,
             relativePath,
             parent.Key);
-        parentNode.TreeViewNode.Items.Add(node.TreeViewNode);
+        parentNode.AddChild(node);
         moduleNodes[path] = node;
     }
 
@@ -144,7 +145,7 @@ internal sealed class SubmoduleTree : Tree
             if (folderNode is null)
             {
                 folderNode = new SubmoduleFolderNode(this, parentNode, folder);
-                parentNode.TreeViewNode.Items.Add(folderNode.TreeViewNode);
+                parentNode.AddChild(folderNode);
             }
 
             parentNode = folderNode;

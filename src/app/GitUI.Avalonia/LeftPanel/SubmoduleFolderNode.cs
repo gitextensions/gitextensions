@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitUI.Properties;
 
 namespace GitUI.LeftPanel;
@@ -23,9 +23,12 @@ internal sealed class SubmoduleFolderNode : Node
             _name += "/" + childFolder._name;
             TreeViewItem[] children = [.. childFolder.TreeViewNode.Items.Cast<TreeViewItem>()];
             TreeViewNode.Items.Clear();
+            Nodes.Clear();
             foreach (TreeViewItem child in children)
             {
-                ((NodeBase)child.Tag!).Reparent(this);
+                Node node = (Node)child.Tag!;
+                node.Reparent(this);
+                Nodes.AddNode(node);
                 TreeViewNode.Items.Add(child);
             }
 
