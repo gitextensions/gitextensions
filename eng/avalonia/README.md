@@ -108,11 +108,12 @@ wsl -d Ubuntu -- bash -lc `
 ```
 
 It publishes a self-contained Linux build, packages it against the Freedesktop 25.08 SDK,
-installs it for the current user, and launches it confined with access only to the dedicated
-`~/.local/share/gitextensions-parity-smoke` fixture. The manifest exposes native Wayland but
-no X11 socket; the smoke explicitly revokes both X11 socket types and captures the application
-through nested Weston. P10 owns the release manifest. The macOS leg is recorded in
-`macos-smoke-checklist.md` until a macOS runner is available.
+installs it for the current user, and launches it with `--filesystem=host`. The smoke still
+uses dedicated settings and a throwaway repository under
+`~/.local/share/gitextensions-parity-smoke`. The manifest exposes native Wayland but no X11
+socket; the smoke explicitly revokes both X11 socket types, verifies the installed filesystem
+permission, and captures the application through nested Weston. P10 owns the release manifest.
+The macOS leg is recorded in `macos-smoke-checklist.md` until a macOS runner is available.
 
 On a WSL installation whose ext4 VHD has remounted read-only, stop and restart WSL before
 continuing. If the failure repeats only during RID publish, cross-publish `linux-x64` from
