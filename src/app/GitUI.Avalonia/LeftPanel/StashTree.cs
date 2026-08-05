@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
@@ -21,7 +21,7 @@ internal sealed class StashTree : Tree
         ];
         foreach (StashNode node in nodes)
         {
-            TreeViewNode.Items.Add(node.TreeViewNode);
+            AddChild(node);
         }
 
         Complete(TranslatedStrings.Stashes, Images.Stash, nodes.Length, expanded: false);

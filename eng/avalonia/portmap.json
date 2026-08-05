@@ -3539,40 +3539,58 @@
     "plannedIn": "P4.4"
   },
   "src/app/GitUI/LeftPanel/Interfaces/ICanDelete.cs": {
-    "status": "unported",
-    "plannedIn": "P4.3"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/Interfaces/ICanDelete.cs",
+    "status": "functional",
+    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
+    "notes": "Exact framework-neutral node deletion contract."
   },
   "src/app/GitUI/LeftPanel/Interfaces/ICanRename.cs": {
-    "status": "unported",
-    "plannedIn": "P4.3"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/Interfaces/ICanRename.cs",
+    "status": "functional",
+    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
+    "notes": "Exact framework-neutral node rename contract."
   },
   "src/app/GitUI/LeftPanel/Interfaces/IGitRefActions.cs": {
-    "status": "unported",
-    "plannedIn": "P4.3"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/Interfaces/IGitRefActions.cs",
+    "status": "functional",
+    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
+    "notes": "Exact framework-neutral git-ref action contract, implemented by local branches, remote branches, and tags."
   },
   "src/app/GitUI/LeftPanel/Interfaces/INode.cs": {
-    "status": "unported",
-    "plannedIn": "P4.3"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/Interfaces/INode.cs",
+    "status": "functional",
+    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
+    "notes": "Exact framework-neutral test-facing node marker contract."
   },
   "src/app/GitUI/LeftPanel/NodeExtensions.cs": {
-    "status": "unported",
-    "plannedIn": "P4.3"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/NodeExtensions.cs",
+    "status": "functional",
+    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
+    "notes": "Preserves child, expandable, and collapsible filtering over native Avalonia TreeViewItem state."
   },
   "src/app/GitUI/LeftPanel/Nodes.cs": {
-    "status": "unported",
-    "plannedIn": "P4.3"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/Nodes.cs",
+    "status": "functional",
+    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
+    "notes": "Preserves collection, insertion, depth enumeration, and model-to-control synchronization. Avalonia nodes retain their own TreeViewItem because routed handlers are attached to that native item instead of recycling a WinForms TreeNode across model nodes."
   },
   "src/app/GitUI/LeftPanel/RepoObjectsTree.Command.cs": {
-    "status": "unported",
-    "plannedIn": "P4.3"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.Command.cs",
+    "status": "functional",
+    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
+    "notes": "Exact command enum; Delete, Rename, Search, MultiSelect, and MultiSelectWithChildren route through the original LeftPanel hotkey category."
   },
   "src/app/GitUI/LeftPanel/RepoObjectsTree.ContextActions.cs": {
-    "status": "unported",
-    "plannedIn": "P4.3"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.ContextActions.cs",
+    "status": "functional",
+    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
+    "notes": "Restores the original partial boundary and node-interface action routing, including remote-branch deletion and tag checkout. P4.4 replaces the existing native menu construction with the same-named original generator boundary."
   },
   "src/app/GitUI/LeftPanel/RepoObjectsTree.SettingsContextMenu.cs": {
-    "status": "unported",
-    "plannedIn": "P4.3"
+    "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.SettingsContextMenu.cs",
+    "status": "functional",
+    "basedOn": "c7a003ba3d85b4730161ab7c8ca069d5227aa3f8",
+    "notes": "Restores the original settings partial boundary, invalid-index normalization, category visibility handlers, clearing, and top-level reordering over native Avalonia TreeViewItems."
   },
   "src/app/GitUI/MouseWheelRedirector.cs": {
     "status": "windowsOnly",
