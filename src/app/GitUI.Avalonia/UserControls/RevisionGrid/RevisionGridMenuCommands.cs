@@ -113,8 +113,7 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
                 Text = "Go to &commit...",
                 Image = Images.GotoCommit,
                 ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.GoToCommit),
-                ExecuteAction = GotoCommitExecute,
-                IsEnabledFunc = () => false
+                ExecuteAction = GotoCommitExecute
             },
             MenuCommand.CreateSeparator(),
             new MenuCommand
@@ -519,8 +518,25 @@ internal sealed class RevisionGridMenuCommands : MenuCommandsBase
 
     public void GotoCommitExecute()
     {
-        // Avalonia's same-named FormGoToCommit is not implemented yet.
-        MessageBoxes.Show("The Go to commit dialog is not available in this build.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        using FormGoToCommit formGoToCommit = new(_revisionGrid.UICommands);
+        if (formGoToCommit.ShowDialog(_revisionGrid) != DialogResult.OK)
+        {
+            return;
+        }
+
+        ObjectId commitId = formGoToCommit.ValidateAndGetSelectedObjectId();
+
+        if (!commitId.IsZero)
+        {
+            if (!_revisionGrid.SetSelectedRevision(commitId))
+            {
+                MessageBoxes.RevisionFilteredInGrid(_revisionGrid, commitId);
+            }
+        }
+        else
+        {
+            MessageBoxes.CannotFindGitRevision(owner: _revisionGrid);
+        }
     }
 
     /// <summary>

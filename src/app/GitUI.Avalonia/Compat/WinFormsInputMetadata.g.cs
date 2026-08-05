@@ -34,11 +34,35 @@ internal static class WinFormsInputMetadata
                 new("pnlLogo", 0, null, null),
                 new("userRepositoriesList", 1, null, null),
             ],
+            ["GitUI.CommandsDialogs.BrowseDialog.DashboardControl.FormDashboardCategoryTitle"] =
+            [
+                new("btnCancel", 1, null, null),
+                new("btnOk", 0, null, null),
+                new("flpnlControls", 4, null, null),
+                new("lblCategoryName", 0, null, null),
+                new("tableLayoutPanel1", 3, null, null),
+                new("txtCategoryName", 1, null, null),
+            ],
             ["GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList"] =
             [
                 new("lblRecentRepositories", 2, null, null),
                 new("listView1", 1, null, null),
+                new("pnlBody", 1, null, null),
+                new("pnlHeader", 0, null, null),
                 new("textBoxSearch", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit"] =
+            [
+                new("comboBoxBranches", 2, null, null),
+                new("comboBoxTags", 1, null, null),
+                new("goButton", 3, null, null),
+                new("groupBox1", 4, false, null),
+                new("label1", 2, null, null),
+                new("label2", 0, null, null),
+                new("label3", 4, null, null),
+                new("label4", 5, null, null),
+                new("linkGitRevParse", 0, true, null),
+                new("textboxCommitExpression", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.BrowseDialog.FormRecentReposSettings"] =
             [
@@ -153,6 +177,8 @@ internal static class WinFormsInputMetadata
                 new("TreeTabPage", 0, null, null),
                 new("fileTree", 0, null, null),
                 new("mainMenuStrip", 0, null, null),
+                new("notificationBarBisectInProgress", 1, null, null),
+                new("notificationBarGitActionInProgress", 0, null, null),
                 new("repoObjectsTree", 1, null, null),
                 new("revisionDiff", 0, null, null),
                 new("revisionGpgInfo1", 0, null, null),
@@ -183,6 +209,16 @@ internal static class WinFormsInputMetadata
                 new("tlpnlMain", 0, true, null),
                 new("tlpnlRemoteOptions", 2, null, null),
                 new("txtCustomBranchName", 3, null, null),
+            ],
+            ["GitUI.CommandsDialogs.FormCheckoutRevision"] =
+            [
+                new("ControlsPanel", 1, null, null),
+                new("Force", 5, null, null),
+                new("MainPanel", 0, null, null),
+                new("OkCheckout", 0, null, null),
+                new("commitPickerSmallControl1", 1, null, null),
+                new("label2", 0, null, null),
+                new("tableLayoutPanel1", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.FormCherryPick"] =
             [
@@ -774,6 +810,17 @@ internal static class WinFormsInputMetadata
                 new("txtCommitGpgInfo", 0, false, null),
                 new("txtTagGpgInfo", 1, false, null),
             ],
+            ["GitUI.CommandsDialogs.SearchControl"] =
+            [
+                new("listBoxSearchResult", 2, null, null),
+                new("tableLayoutPanel1", 8, null, null),
+                new("txtSearchBox", 1, null, null),
+            ],
+            ["GitUI.CommandsDialogs.SearchWindow"] =
+            [
+                new("lblEnterFileName", 0, null, null),
+                new("tableLayoutPanel1", 0, null, null),
+            ],
             ["GitUI.CommandsDialogs.SettingsDialog.FormAvailableEncodings"] =
             [
                 new("ButtonCancel", 1, null, null),
@@ -1231,7 +1278,16 @@ internal static class WinFormsInputMetadata
             ],
             ["GitUI.CommitInfo.CommitInfo"] =
             [
+                new("RevisionInfo", 2, null, null),
+                new("commitInfoHeader", 0, null, null),
+                new("pnlCommitMessage", 0, null, null),
                 new("rtbxCommitMessage", 1, null, null),
+                new("tableLayout", 0, null, null),
+            ],
+            ["GitUI.CommitInfo.CommitInfoHeader"] =
+            [
+                new("avatarControl", 0, null, null),
+                new("rtbRevisionHeader", 0, null, null),
             ],
             ["GitUI.Editor.FileViewer"] =
             [
@@ -1377,6 +1433,10 @@ internal static class WinFormsInputMetadata
             [
                 new("Patches", 0, null, null),
             ],
+            ["GitUI.RevisionGridControl"] =
+            [
+                new("_gridView", 0, null, null),
+            ],
             ["GitUI.ScriptsEngine.FormFilePrompt"] =
             [
                 new("btnBrowse", 2, null, null),
@@ -1392,7 +1452,17 @@ internal static class WinFormsInputMetadata
             ],
             ["GitUI.SpellChecker.EditNetSpell"] =
             [
+                new("AutoComplete", 2, null, null),
                 new("TextBox", 1, null, null),
+            ],
+            ["GitUI.UserControls.BranchSelector"] =
+            [
+                new("Branches", 1, null, null),
+                new("LocalBranch", 0, true, null),
+                new("Remotebranch", 0, null, null),
+                new("label1", 7, null, null),
+                new("lbChanges", 30, null, null),
+                new("tableLayoutPanel1", 1, true, null),
             ],
             ["GitUI.UserControls.CommitDiff"] =
             [
@@ -1432,6 +1502,16 @@ internal static class WinFormsInputMetadata
                 new("flowLayoutPanel1", 2, null, null),
                 new("linkLabelHelp", 0, true, null),
                 new("pictureBoxHelpIcon", 2, false, null),
+            ],
+            ["GitUI.UserControls.InteractiveGitActionControl"] =
+            [
+                new("AbortButton", 2, null, null),
+                new("ButtonContainer", 0, null, null),
+                new("ContinueButton", 1, null, null),
+                new("IconBox", 2, false, null),
+                new("MoreButton", 5, null, null),
+                new("ResolveButton", 6, null, null),
+                new("TextLabel", 0, null, null),
             ],
             ["GitUI.UserControls.OutputHistoryControl"] =
             [
@@ -1501,6 +1581,12 @@ internal static class WinFormsInputMetadata
                 new("_NO_TRANSLATE_lblSince", 0, null, null),
                 new("_NO_TRANSLATE_lblUntil", 3, null, null),
                 new("tableLayoutPanel1", 0, null, null),
+            ],
+            ["GitUI.UserControls.Settings.SettingsCheckBox"] =
+            [
+                new("checkBox", 0, null, null),
+                new("pictureBox", 1, false, null),
+                new("tableLayoutPanel", 0, null, null),
             ],
             ["GitUI.UserControls.Settings.SettingsLinkLabel"] =
             [

@@ -287,6 +287,10 @@ public sealed partial class ParityScreenshotTests
         }
     }
 
+    private static IEnumerable<string> SearchCandidates(string value)
+        => new[] { AppSourcePath, "src/Commands/Checkout.cs", "tests/SearchTests.cs" }
+            .Where(candidate => candidate.Contains(value, StringComparison.OrdinalIgnoreCase));
+
     private static Control CreateView(CaptureContext context, Type viewType)
     {
         if (viewType == typeof(SimplePrompt))
@@ -365,6 +369,28 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormCheckoutBranch))
         {
             return new FormCheckoutBranch(context.Commands, FeatureBranchName, remote: false);
+        }
+
+        if (viewType == typeof(FormGoToCommit))
+        {
+            return new FormGoToCommit(context.Commands);
+        }
+
+        if (viewType == typeof(FormCheckoutRevision))
+        {
+            FormCheckoutRevision form = new(context.Commands);
+            form.SetRevision(context.HeadRevision.ObjectId.ToString());
+            return form;
+        }
+
+        if (viewType == typeof(SearchControl))
+        {
+            return new SearchControl<string>(SearchCandidates, _ => { });
+        }
+
+        if (viewType == typeof(SearchWindow))
+        {
+            return new SearchWindow<string>(SearchCandidates);
         }
 
         if (viewType == typeof(FormCherryPick))
@@ -1143,6 +1169,38 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task WaitForAsyncViewsAsync(Control root)
     {
+        if (root is FormGoToCommit)
+        {
+            // parity-scaffolding: Wait for the reference/tag loaders so the capture records the settled dialog.
+            ComboBox tags = GetRequiredControl<ComboBox>(root, "comboBoxTags");
+            ComboBox branches = GetRequiredControl<ComboBox>(root, "comboBoxBranches");
+            Stopwatch refsStopwatch = Stopwatch.StartNew();
+            while ((tags.Text == GitUI.TranslatedStrings.LoadingData || branches.Text == GitUI.TranslatedStrings.LoadingData)
+                   && refsStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            tags.Text.Should().NotBe(GitUI.TranslatedStrings.LoadingData);
+            branches.Text.Should().NotBe(GitUI.TranslatedStrings.LoadingData);
+        }
+
+        if (FindNamedControl(root, "listBoxSearchResult") is ListBox searchResults
+            && FindNamedControl(root, "txtSearchBox") is TextBox searchText
+            && !string.IsNullOrEmpty(searchText.Text))
+        {
+            // parity-scaffolding: Wait for SearchControl's AsyncLoader before driving result-list states.
+            Stopwatch searchStopwatch = Stopwatch.StartNew();
+            while (searchResults.ItemCount == 0 && searchStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            searchResults.ItemCount.Should().BeGreaterThan(0);
+        }
+
         if (Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
             && root is FormBrowse formBrowse)
         {
@@ -1309,6 +1367,26 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormFilePrompt))
         {
             return (549, 78);
+        }
+
+        if (viewType == typeof(FormGoToCommit))
+        {
+            return (604, 302);
+        }
+
+        if (viewType == typeof(FormCheckoutRevision))
+        {
+            return (481, 131);
+        }
+
+        if (viewType == typeof(SearchControl))
+        {
+            return (325, 91);
+        }
+
+        if (viewType == typeof(SearchWindow))
+        {
+            return (325, 113);
         }
 
         if (viewType == typeof(FormDashboardCategoryTitle))
@@ -1594,6 +1672,17 @@ public sealed partial class ParityScreenshotTests
                 WinFormsShims.MessageBoxButtons.YesNo or WinFormsShims.MessageBoxButtons.YesNoCancel => WinFormsShims.DialogResult.Yes,
                 _ => WinFormsShims.DialogResult.OK,
             };
+    }
+
+    private sealed class CaptureClipboard : WinFormsShims.IClipboard
+    {
+        public bool ContainsText() => false;
+
+        public string GetText() => string.Empty;
+
+        public void SetText(string value)
+        {
+        }
     }
 
     private sealed class CaptureContext : IDisposable, IGitUICommandsSource

@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.SearchWindow"
+        Width="325" Height="213"
+        MinWidth="64" MinHeight="45"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent"
+        WindowStartupLocation="CenterOwner">
+  <Grid x:Name="tableLayoutPanel1"
+        RowDefinitions="22,*">
+    <Border BorderThickness="1"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            Background="{DynamicResource ThemeControlLowBrush}">
+      <TextBlock x:Name="lblEnterFileName"
+                 Padding="0,7,0,0"
+                 Text="Enter File Name" />
+    </Border>
+    <ContentControl x:Name="searchControlHost"
+                    Grid.Row="1" />
+  </Grid>
+</Window>
