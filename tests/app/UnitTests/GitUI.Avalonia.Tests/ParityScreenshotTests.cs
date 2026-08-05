@@ -888,27 +888,19 @@ public sealed partial class ParityScreenshotTests
         if (root is Dashboard dashboard)
         {
             IRepositoryHistoryUIService history = Substitute.For<IRepositoryHistoryUIService>();
-            history.LoadSnapshot().Returns(new RepositoryHistorySnapshot(
-                [
-                    new RepositoryHistoryEntry(
-                        new Repository(context.WorkingDirectory),
-                        "gitextensions",
-                        MainBranchName,
-                        IsFavourite: false,
-                        IsAnchored: true),
-                ],
-                [
-                    new RepositoryHistoryEntry(
-                        new Repository(Path.GetDirectoryName(context.WorkingDirectory)!)
-                        {
-                            Category = "Development",
-                        },
-                        "avalonia-port",
-                        FeatureBranchName,
-                        IsFavourite: true,
-                        IsAnchored: false),
-                ]));
-            dashboard.Initialize(history);
+            IUserRepositoriesListController controller = Substitute.For<IUserRepositoriesListController>();
+            Repository recent = new(context.WorkingDirectory);
+            Repository favourite = new(Path.GetDirectoryName(context.WorkingDirectory)!)
+            {
+                Category = "Development",
+            };
+            controller.PreRenderRepositories(Arg.Any<string>()).Returns((
+                new[] { new RecentRepoInfo(recent, topRepo: true, anchored: true) { Caption = "gitextensions" } },
+                new[] { new RecentRepoInfo(favourite, topRepo: false, anchored: false) { Caption = "avalonia-port" } }));
+            controller.IsValidGitWorkingDir(Arg.Any<string>()).Returns(true);
+            controller.GetCurrentBranchName(recent.Path).Returns(MainBranchName);
+            controller.GetCurrentBranchName(favourite.Path).Returns(FeatureBranchName);
+            dashboard.Initialize(controller, history);
             dashboard.RefreshContent();
             return;
         }
@@ -1319,6 +1311,11 @@ public sealed partial class ParityScreenshotTests
             return (549, 78);
         }
 
+        if (viewType == typeof(FormDashboardCategoryTitle))
+        {
+            return (400, 92);
+        }
+
         if (viewType == typeof(FormQuickItemSelector))
         {
             return (190, 134);
@@ -1332,6 +1329,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormBrowse))
         {
             return (1400, 850);
+        }
+
+        if (viewType == typeof(Dashboard))
+        {
+            return (686, 358);
         }
 
         if (viewType == typeof(FormRecentReposSettings))
