@@ -9,7 +9,7 @@
     "--share=network",
     "--socket=wayland",
     "--device=dri",
-    "--filesystem=~/.local/share/gitextensions-parity-smoke"
+    "--filesystem=host"
   ],
   "modules": [
     {
