@@ -536,6 +536,9 @@ public sealed class GitUICommands : IGitUICommands
                 return StartCompareRevisionsDialog();
             case "viewpatch":
                 return StartViewPatchDialog(args.Count == 3 ? args[2] : string.Empty);
+            case "usage":
+            case "help":
+                return ShowCommandlineHelp();
             default:
                 if (command.StartsWith("git://") || command.StartsWith("http://") || command.StartsWith("https://"))
                 {
@@ -565,6 +568,13 @@ public sealed class GitUICommands : IGitUICommands
                 MessageBoxes.ShowError(owner: null, message, "Unsupported command");
                 return false;
         }
+    }
+
+    private static bool ShowCommandlineHelp()
+    {
+        using CommandsDialogs.FormCommandlineHelp form = new();
+        form.ShowDialog(owner: null);
+        return true;
     }
 
     private bool RunSearchFileCommand()
