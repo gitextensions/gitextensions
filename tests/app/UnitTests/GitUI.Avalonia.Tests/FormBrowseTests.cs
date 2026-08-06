@@ -545,6 +545,8 @@ public sealed class FormBrowseTests
             "gitGUIToolStripMenuItem",
             "kGitToolStripMenuItem",
             "|",
+            "gitcommandLogToolStripMenuItem",
+            "|",
             "settingsToolStripMenuItem");
         GetItemNames(form.helpToolStripMenuItem).Should().Equal(
             "userManualToolStripMenuItem",
@@ -558,7 +560,6 @@ public sealed class FormBrowseTests
         foreach (string unavailableName in new[]
         {
             "PuTTYToolStripMenuItem",
-            "gitcommandLogToolStripMenuItem",
             "changelogToolStripMenuItem",
             "donateToolStripMenuItem",
             "aboutToolStripMenuItem",
@@ -598,6 +599,7 @@ public sealed class FormBrowseTests
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitBashToolStripMenuItem", "Text", "Git &bash");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitGUIToolStripMenuItem", "Text", "Git &GUI");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "kGitToolStripMenuItem", "Text", "Git&K");
+        translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitcommandLogToolStripMenuItem", "Text", "Git &command log");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "settingsToolStripMenuItem", "Text", "&Settings...");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "userManualToolStripMenuItem", "Text", "User &manual");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "translateToolStripMenuItem", "Text", "&Translate");

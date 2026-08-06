@@ -2669,12 +2669,16 @@
     "plannedIn": "P5.8"
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGitCommandLog.cs": {
-    "status": "unported",
-    "plannedIn": "P5.3"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormGitCommandLog.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Single-instance non-modal command-log window over the shared CommandLog and GitModule.GitCommandCache. Preserves the command-log/command-cache tabs, list selection preservation, detail/cache output panes, printable-character formatting, always-on-top, word-wrap, capture-call-stacks setting, clear/save/copy actions, and the Ctrl+S/Ctrl+L accelerators. WinForms ListBox DataSource/DisplayMember maps to ItemsSource plus a typed FuncDataTemplate; RichTextBox maps to a read-only multiline TextBox; the synchronous SaveFileDialog maps to the portal-backed StorageProvider; Clipboard.SetText maps to ClipboardUtil. Opened from the Tools menu; the FormFileHistory F12 entry remains a recorded gap owned by FormFileHistory re-verification."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGitCommandLog.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.3"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormGitCommandLog.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the FullBleedTabControl, the two command-log/cache split panes with their ListBox/output fields, the context menus (save/copy/clear and clear-cache), and the always-on-top/word-wrap/capture-call-stacks checkboxes with the original field names, icons, and window size. SystemColors.ControlLight backgrounds are a recorded later visual-closure gap."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGoToCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormGoToCommit.axaml.cs",
@@ -2762,12 +2766,16 @@
     "plannedIn": "P5.4"
   },
   "src/app/GitUI/CommandsDialogs/FormBlame.cs": {
-    "status": "unported",
-    "plannedIn": "P5.3"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBlame.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Hosts the shared BlameControl for the standalone blame command, loads the blame asynchronously for the requested file/revision/line, configures the repository-host plugin, and sets the runtime 'Blame (file)' title. The BlameControl.LoadBlameAsync twin drops the WinForms children and controlToMask parameters that have no Avalonia equivalent; the load runs on the shared JoinableTaskFactory. Wired through the blame command verb."
   },
   "src/app/GitUI/CommandsDialogs/FormBlame.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.3"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBlame.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML hosts the single filling blameControl1 with the original 784x762 window size, center-parent placement, and 'File History' design title."
   },
   "src/app/GitUI/CommandsDialogs/FormBrowse.InitCommitDetails.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.InitCommitDetails.cs",
@@ -2886,12 +2894,16 @@
     "plannedIn": "P5.4"
   },
   "src/app/GitUI/CommandsDialogs/FormLog.cs": {
-    "status": "unported",
-    "plannedIn": "P5.3"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormLog.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Compare-revisions dialog hosting the RevisionGrid over a FileStatusList and FileViewer. Preserves grid load, revision-selection driven diff population, selected-file diff viewing, continuous-scroll file navigation, and wait-cursor scopes. RevisionGrid.Load() maps to ReloadRevisions; DiffFiles.SelectedItem maps to the FileStatusList twin's SelectedFileStatusItem. The original Designer Name is 'FormDiff', so its single translation string is emitted under that catalog category rather than the class name. Wired through StartCompareRevisionsDialog and the viewdiff command verb."
   },
   "src/app/GitUI/CommandsDialogs/FormLog.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.3"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormLog.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the horizontal RevisionGrid/lower split and the lower DiffFiles/diffViewer split with the original splitContainer1/splitContainer3 field identities, RevisionGrid, DiffFiles, and diffViewer fields, 750x529 window size, and 250x250 minimum."
   },
   "src/app/GitUI/CommandsDialogs/FormMailMap.cs": {
     "status": "unported",
