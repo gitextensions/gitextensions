@@ -13,6 +13,10 @@
   <MenuItem x:Name="kGitToolStripMenuItem" Header="Git_K">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Gitk}" /></MenuItem.Icon>
   </MenuItem>
+  <Separator x:Name="toolStripSeparator41" />
+  <MenuItem x:Name="gitcommandLogToolStripMenuItem" Header="Git _command log">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GitCommandLog}" /></MenuItem.Icon>
+  </MenuItem>
   <Separator x:Name="toolStripSeparator7" />
   <MenuItem x:Name="settingsToolStripMenuItem" Header="_Settings...">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
