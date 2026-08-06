@@ -1,0 +1,107 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormCleanupRepository"
+        Width="542"
+        Height="727"
+        MinWidth="558"
+        MinHeight="738"
+        WindowStartupLocation="CenterOwner"
+        Title="Clean working directory">
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
+        ColumnDefinitions="Auto,*,Auto">
+    <HeaderedContentControl x:Name="groupBox1"
+                            Grid.Row="0" Grid.ColumnSpan="3"
+                            Classes="gitextensions-group-box"
+                            Header="Remove untracked files from working directory">
+      <StackPanel Orientation="Vertical" Spacing="6">
+        <RadioButton x:Name="RemoveAll" IsChecked="True" Content="Remove all untracked files" />
+        <RadioButton x:Name="RemoveNonIgnored" Content="Remove only non-ignored untracked files" />
+        <RadioButton x:Name="RemoveIgnored" Content="Remove only ignored untracked files" />
+      </StackPanel>
+    </HeaderedContentControl>
+
+    <CheckBox x:Name="RemoveDirectories"
+              Grid.Row="1" Grid.ColumnSpan="3"
+              IsChecked="True"
+              Content="Remove untracked directories" />
+
+    <CheckBox x:Name="CleanSubmodules"
+              Grid.Row="2" Grid.ColumnSpan="3"
+              Content="Clean submodules recursively" />
+
+    <CheckBox x:Name="checkBoxIncludePathFilter"
+              Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+              VerticalAlignment="Center"
+              Content="Affect the following directory path(s) only:" />
+    <Button x:Name="AddInclusivePath"
+            Grid.Row="3" Grid.Column="2"
+            MinWidth="150"
+            Content="Add a path..." />
+
+    <TextBox x:Name="textBoxIncludePaths"
+             Grid.Row="4" Grid.ColumnSpan="3"
+             Margin="45,3,0,0"
+             AcceptsReturn="True"
+             Height="78"
+             ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    <TextBlock x:Name="labelPathHintInclude"
+               Grid.Row="5" Grid.ColumnSpan="3"
+               Margin="47,0,0,0"
+               Text="(one path per line)" />
+
+    <CheckBox x:Name="checkBoxExcludePathFilter"
+              Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"
+              VerticalAlignment="Center"
+              Content="Exclude the following file path(s):" />
+    <Button x:Name="AddExclusivePath"
+            Grid.Row="6" Grid.Column="2"
+            MinWidth="150"
+            Content="Add a path..." />
+
+    <TextBox x:Name="textBoxExcludePaths"
+             Grid.Row="7" Grid.ColumnSpan="3"
+             Margin="45,3,0,0"
+             AcceptsReturn="True"
+             Height="78"
+             ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    <TextBlock x:Name="labelPathHintExclude"
+               Grid.Row="8" Grid.ColumnSpan="3"
+               Margin="47,0,0,0"
+               Text="(one path per line)" />
+
+    <StackPanel Grid.Row="9" Grid.ColumnSpan="3"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="8"
+                Margin="0,12,0,0">
+      <compat:IconButton x:Name="Preview"
+                         MinWidth="150"
+                         Content="Preview"
+                         Icon="{x:Static properties:Images.Preview}" />
+      <compat:IconButton x:Name="Cleanup"
+                         MinWidth="150"
+                         Content="Cleanup"
+                         Icon="{x:Static properties:Images.CleanupRepo}" />
+      <Button x:Name="_NO_TRANSLATE_Close"
+              MinWidth="150"
+              Content="Close"
+              IsCancel="True" />
+    </StackPanel>
+
+    <TextBlock x:Name="label1"
+               Grid.Row="10" Grid.ColumnSpan="3"
+               Margin="0,12,0,0"
+               Text="Log:" />
+    <TextBox x:Name="PreviewOutput"
+             Grid.Row="11" Grid.ColumnSpan="3"
+             Margin="0,3,0,0"
+             AcceptsReturn="True"
+             IsReadOnly="True"
+             TextWrapping="NoWrap"
+             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+             ScrollViewer.VerticalScrollBarVisibility="Auto" />
+  </Grid>
+</Window>
