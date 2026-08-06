@@ -37970,6 +37970,269 @@
           "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
         }
       }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormDeleteRemoteBranch.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteRemoteBranch.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.6/inventory/FormDeleteRemoteBranch.json"
+          ],
+          "platforms": [],
+          "findingCount": 24,
+          "note": "The P5.6 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.6/inventory/FormDeleteRemoteBranch.json"
+          ],
+          "platforms": [],
+          "findingCount": 63,
+          "note": "The P5.6 functional inventory found member/event/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    }
+,
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormDeleteRemoteBranch.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteRemoteBranch.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.6/inventory/FormDeleteRemoteBranch.json"
+          ],
+          "platforms": [],
+          "findingCount": 24,
+          "note": "The P5.6 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.6/inventory/FormDeleteRemoteBranch.json"
+          ],
+          "platforms": [],
+          "findingCount": 63,
+          "note": "The P5.6 functional inventory found member/event/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    }
+,
+    {
+      "source": "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetAnotherBranch.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.6/inventory/FormResetAnotherBranch.json"
+          ],
+          "platforms": [],
+          "findingCount": 36,
+          "note": "The P5.6 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.6/inventory/FormResetAnotherBranch.json"
+          ],
+          "platforms": [],
+          "findingCount": 90,
+          "note": "The P5.6 functional inventory found member/event/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    }
+,
+    {
+      "source": "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.cs",
+      "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetAnotherBranch.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.6/inventory/FormResetAnotherBranch.json"
+          ],
+          "platforms": [],
+          "findingCount": 36,
+          "note": "The P5.6 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.6/inventory/FormResetAnotherBranch.json"
+          ],
+          "platforms": [],
+          "findingCount": 90,
+          "note": "The P5.6 functional inventory found member/event/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
     }
   ]
 }
