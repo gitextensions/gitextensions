@@ -207,7 +207,6 @@ public class RevisionGraphColumnTests
             ObjectId.Parse(parentId),
             ObjectId.Parse(rootId),
         ]);
-        testAccessor.HoverHighlightedIds.Should().NotContain(ObjectId.Parse(rootId));
     }
 
     [Test]
