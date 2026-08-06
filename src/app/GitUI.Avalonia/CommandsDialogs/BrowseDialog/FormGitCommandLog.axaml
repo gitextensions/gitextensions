@@ -1,0 +1,79 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:commandsDialogs="clr-namespace:GitUI.CommandsDialogs"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog"
+        Width="659"
+        Height="470"
+        ShowInTaskbar="True"
+        Title="Git Command Log">
+  <Grid RowDefinitions="*,Auto">
+    <commandsDialogs:FullBleedTabControl x:Name="TabControl"
+                                         Grid.Row="0"
+                                         Padding="0">
+      <TabItem x:Name="tabPageCommandLog" Header="Command log">
+        <Grid x:Name="splitContainer2" RowDefinitions="264*,5,150*">
+          <ListBox x:Name="LogItems"
+                   Grid.Row="0"
+                   FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}">
+            <ListBox.ContextMenu>
+              <ContextMenu x:Name="contextMenu">
+                <MenuItem x:Name="mnuSaveToFile" Header="_Save to file" InputGesture="Ctrl+S">
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="mnuCopyCommandLine" Header="_Copy full command line" InputGesture="Ctrl+C">
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="mnuClear" Header="C_lear" InputGesture="Ctrl+L">
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ClearLog}" /></MenuItem.Icon>
+                </MenuItem>
+              </ContextMenu>
+            </ListBox.ContextMenu>
+          </ListBox>
+          <GridSplitter Grid.Row="1"
+                        Height="5"
+                        ResizeDirection="Rows" />
+          <TextBox x:Name="LogOutput"
+                   Grid.Row="2"
+                   IsReadOnly="True"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}" />
+        </Grid>
+      </TabItem>
+      <TabItem x:Name="tabPageCommandCache" Header="Command cache">
+        <Grid x:Name="splitContainer1" RowDefinitions="183*,5,231*">
+          <ListBox x:Name="CommandCacheItems"
+                   Grid.Row="0"
+                   FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}">
+            <ListBox.ContextMenu>
+              <ContextMenu x:Name="cmsCache">
+                <MenuItem x:Name="tsmiClearCache" Header="C_lear" InputGesture="Ctrl+L">
+                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ClearLog}" /></MenuItem.Icon>
+                </MenuItem>
+              </ContextMenu>
+            </ListBox.ContextMenu>
+          </ListBox>
+          <GridSplitter Grid.Row="1"
+                        Height="5"
+                        ResizeDirection="Rows" />
+          <TextBox x:Name="commandCacheOutput"
+                   Grid.Row="2"
+                   IsReadOnly="True"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}" />
+        </Grid>
+      </TabItem>
+    </commandsDialogs:FullBleedTabControl>
+
+    <StackPanel Grid.Row="1"
+                Orientation="Horizontal"
+                Margin="4,3"
+                Spacing="6">
+      <CheckBox x:Name="chkAlwaysOnTop" Content="Always on top" />
+      <CheckBox x:Name="chkWordWrap" Content="Word wrap" IsChecked="True" />
+      <CheckBox x:Name="chkCaptureCallStacks" Content="Capture call stacks" />
+    </StackPanel>
+  </Grid>
+</Window>

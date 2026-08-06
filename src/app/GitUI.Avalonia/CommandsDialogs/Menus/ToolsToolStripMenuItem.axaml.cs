@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtUtils;
@@ -27,6 +28,11 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         gitBashToolStripMenuItem.Click += gitBashToolStripMenuItem_Click;
         gitGUIToolStripMenuItem.Click += GitGuiToolStripMenuItemClick;
         kGitToolStripMenuItem.Click += KGitToolStripMenuItemClick;
+
+        // The original menu item carries a static Keys.F12 accelerator; the twin displays it.
+        // Global execution while the submenu is closed is owned by FormBrowse re-verification.
+        gitcommandLogToolStripMenuItem.InputGesture = new KeyGesture(Key.F12);
+        gitcommandLogToolStripMenuItem.Click += GitcommandLogToolStripMenuItemClick;
         settingsToolStripMenuItem.Click += OnShowSettingsClick;
         InputAccessibility.Apply(this);
     }
@@ -52,6 +58,11 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         gitGUIToolStripMenuItem.IsEnabled = !bareRepository;
 
         base.RefreshState(bareRepository);
+    }
+
+    private void GitcommandLogToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        FormGitCommandLog.ShowOrActivate(OwnerForm!);
     }
 
     private void GitGuiToolStripMenuItemClick(object? sender, EventArgs e)
@@ -93,6 +104,7 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         public MenuItem GitBashMenuItem => menu.gitBashToolStripMenuItem;
         public MenuItem GitGuiMenuItem => menu.gitGUIToolStripMenuItem;
         public MenuItem GitKMenuItem => menu.kGitToolStripMenuItem;
+        public MenuItem GitCommandLogMenuItem => menu.gitcommandLogToolStripMenuItem;
         public MenuItem SettingsMenuItem => menu.settingsToolStripMenuItem;
     }
 }

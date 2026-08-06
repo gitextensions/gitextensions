@@ -438,6 +438,12 @@ public sealed class GitUICommands : IGitUICommands
             return false;
         }
 
+        if (command == "blame" && args.Count <= 2)
+        {
+            MessageBoxes.Show("Cannot open blame, there is no file selected.", "Blame", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
         if (command == "fileeditor" && args.Count <= 2)
         {
             MessageBoxes.Show("Cannot open file editor, there is no file selected.", "File editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -459,6 +465,8 @@ public sealed class GitUICommands : IGitUICommands
             case "apply":
             case "applypatch":
                 return StartApplyPatchDialog(null, args.Count == 3 ? args[2] : string.Empty);
+            case "blame": // filename
+                return RunBlameCommand(args);
             case "branch":
                 return StartCreateBranchDialog();
             case "browse":
@@ -522,6 +530,8 @@ public sealed class GitUICommands : IGitUICommands
                 return commitSucceeded && pullSucceeded && pushSucceeded;
             case "tag":
                 return StartCreateTagDialog();
+            case "viewdiff":
+                return StartCompareRevisionsDialog();
             case "viewpatch":
                 return StartViewPatchDialog(args.Count == 3 ? args[2] : string.Empty);
             default:
@@ -702,6 +712,28 @@ public sealed class GitUICommands : IGitUICommands
         {
             FormFileHistory form = new(this, fileName.QuoteNE(), revision, filterByRevision, showBlame);
             ShowModelessWindow(form, owner: null);
+            return true;
+        }, changesRepo: false);
+    }
+
+    /// <returns>false on error.</returns>
+    private bool RunBlameCommand(IReadOnlyList<string> args)
+    {
+        string blameFileName = NormalizeFileName(args[2]);
+
+        int? initialLine = null;
+        if (args.Count > 3)
+        {
+            if (int.TryParse(args[3], out int temp))
+            {
+                initialLine = temp;
+            }
+        }
+
+        return DoActionOnRepo(owner: null, action: () =>
+        {
+            using CommandsDialogs.FormBlame frm = new(this, blameFileName, null, initialLine);
+            frm.ShowDialog(null);
             return true;
         }, changesRepo: false);
     }
@@ -1045,7 +1077,17 @@ public sealed class GitUICommands : IGitUICommands
         }, changesRepo: false, preEvent: PreCommit, postEvent: PostCommit);
     }
 
-    public bool StartCompareRevisionsDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartCompareRevisionsDialog));
+    public bool StartCompareRevisionsDialog(IWin32Window? owner = null)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormLog form = new(this);
+            return form.ShowDialog(owner) == DialogResult.OK;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartCreateBranchDialog(IWin32Window? owner, string? branch)
     {
         ObjectId objectId = Module.RevParse(branch!);
