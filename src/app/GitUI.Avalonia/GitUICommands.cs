@@ -459,6 +459,13 @@ public sealed class GitUICommands : IGitUICommands
         string command = args[1];
         switch (command)
         {
+            case "about":
+                using (CommandsDialogs.FormAbout aboutForm = new())
+                {
+                    aboutForm.ShowDialog(owner: null);
+                }
+
+                return true;
             case "add":
             case "addfiles":
                 return StartAddFilesDialog(owner: null, addFiles: args.Count < 3 ? "." : string.Join(' ', args.Skip(2).Select(file => file.Quote())));
