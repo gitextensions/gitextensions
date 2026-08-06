@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="clr-namespace:GitUI"
+        x:Class="GitUI.CommandsDialogs.FormDeleteRemoteBranch"
+        Width="403" Height="180"
+        MinWidth="403" MinHeight="150"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="Height"
+        Title="Delete branch">
+  <DockPanel>
+    <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
+                DockPanel.Dock="Bottom"
+                Spacing="8"
+                Margin="10,8">
+      <Button x:Name="Delete"
+              Classes="gitextensions-dialog-action"
+              Content="_Delete"
+              IsEnabled="False"
+              IsDefault="True" />
+    </StackPanel>
+
+    <Grid x:Name="tlpnlMain"
+          Classes="gitextensions-dialog-main"
+          Margin="9"
+          ColumnDefinitions="Auto,*"
+          RowDefinitions="Auto,Auto,Auto,Auto"
+          ColumnSpacing="6"
+          RowSpacing="6">
+      <Label x:Name="labelSelectBranches"
+             Classes="gitextensions-dialog-label"
+             VerticalAlignment="Center"
+             Padding="0"
+             Content="Select _branches"
+             Target="{Binding #Branches}" />
+      <gitui:BranchComboBox x:Name="Branches"
+                            Grid.Column="1"
+                            MinWidth="290" />
+
+      <CheckBox x:Name="DeleteRemote"
+                Grid.Row="1" Grid.Column="1"
+                Content="Delete branch(es) from _remote repository" />
+      <CheckBox x:Name="DeleteLocalTrackingBranch"
+                Grid.Row="2" Grid.Column="1"
+                Content="Delete _local tracking branch (if available)" />
+      <TextBlock x:Name="_NO_TRANSLATE_labelLocalTrackingBranches"
+                 Grid.Row="3" Grid.Column="1"
+                 TextWrapping="Wrap" />
+    </Grid>
+  </DockPanel>
+</Window>

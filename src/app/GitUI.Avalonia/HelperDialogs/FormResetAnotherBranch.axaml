@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="using:GitUI.UserControls"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.HelperDialogs.FormResetAnotherBranch"
+        Width="535" Height="381"
+        MinWidth="535" MinHeight="381"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Title="Reset branch">
+  <Grid x:Name="tableLayoutPanel1"
+        Margin="8"
+        RowDefinitions="Auto,10,Auto,Auto,Auto,Auto,Auto,Auto">
+    <Grid x:Name="tlpnlWarning"
+          Margin="2"
+          ColumnDefinitions="Auto,*"
+          ColumnSpacing="6">
+      <Image x:Name="pictureBox1"
+             Classes="gitextensions-icon-16"
+             VerticalAlignment="Top"
+             Source="{x:Static properties:Images.Warning}" />
+      <TextBlock x:Name="lblResetBranchWarning"
+                 Grid.Column="1"
+                 TextWrapping="Wrap"
+                 Text="You can only reset a branch safely if there is a direct path from it to selected revision.&#10;Forcing a branch to reset if it has not been merged might leave some commits unreachable." />
+    </Grid>
+
+    <Label x:Name="BranchInfo"
+           Grid.Row="2"
+           Padding="0"
+           VerticalAlignment="Center"
+           Content="Reset local _branch:"
+           Target="{Binding #Branches}" />
+    <ComboBox x:Name="Branches"
+              Grid.Row="3"
+              Margin="8,3"
+              HorizontalAlignment="Stretch"
+              IsEditable="True" />
+
+    <usercontrols:CommitSummaryUserControl x:Name="commitSummaryUserControl"
+                                           Grid.Row="4"
+                                           Margin="1"
+                                           MinWidth="493"
+                                           MinHeight="150" />
+
+    <CheckBox x:Name="cbxCheckoutBranch"
+              Grid.Row="5"
+              Content="Chec_kout branch after reset" />
+    <CheckBox x:Name="ForceReset"
+              Grid.Row="6"
+              Content="_Force reset for a non-fast-forward reset" />
+
+    <StackPanel x:Name="flowLayoutPanel1"
+                Grid.Row="7"
+                Classes="gitextensions-dialog-controls"
+                Margin="2">
+      <Button x:Name="Ok"
+              Classes="gitextensions-dialog-action"
+              Width="91"
+              Height="25"
+              Content="OK" />
+      <Button x:Name="Cancel"
+              Classes="gitextensions-dialog-action"
+              Width="91"
+              Height="25"
+              Content="Cancel"
+              IsCancel="True" />
+    </StackPanel>
+  </Grid>
+</Window>
