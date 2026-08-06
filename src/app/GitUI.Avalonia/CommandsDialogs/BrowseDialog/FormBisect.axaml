@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.BrowseDialog.FormBisect"
+        SizeToContent="WidthAndHeight"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Bisect">
+  <StackPanel Orientation="Vertical" Margin="12" Spacing="4" MinWidth="224">
+    <Button x:Name="Start"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Content="Start bisect" />
+    <Button x:Name="Bad"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Content="Mark current revision _bad" />
+    <Button x:Name="Good"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Content="Mark current revision _good" />
+    <Button x:Name="btnSkip"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Content="_Skip current revision" />
+    <Button x:Name="Stop"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Content="Stop bisect" />
+  </StackPanel>
+</Window>

@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Controls.ApplicationLifetimes;
 using GitCommands;
 using GitCommands.Git;
@@ -478,6 +478,8 @@ public sealed class GitUICommands : IGitUICommands
                 return StartCheckoutRevisionDialog(null);
             case "cherry":
                 return StartCherryPickDialog();
+            case "cleanup":
+                return StartCleanupRepositoryDialog();
             case "clone":
                 return StartCloneDialog(null, args.Count > 2 ? args[2] : null);
             case "commit":
@@ -1041,7 +1043,15 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action);
     }
 
-    public bool StartCleanupRepositoryDialog(IWin32Window? owner = null, string? path = null) => throw NotPorted(nameof(StartCleanupRepositoryDialog));
+    public bool StartCleanupRepositoryDialog(IWin32Window? owner = null, string? path = null)
+    {
+        using CommandsDialogs.FormCleanupRepository form = new(this);
+        form.SetPathArgument(path);
+        form.ShowDialog(owner);
+
+        return true;
+    }
+
     public bool StartCloneDialog(IWin32Window? owner, string url, EventHandler<GitModuleEventArgs> gitModuleChanged)
     {
         return StartCloneDialog(owner, url, false, gitModuleChanged);
@@ -1593,7 +1603,18 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartSettingsDialog(Type pageType)
         => StartSettingsDialog(owner: null, new SettingsPageReferenceByType(pageType));
-    public bool StartSparseWorkingCopyDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSparseWorkingCopyDialog));
+    public bool StartSparseWorkingCopyDialog(IWin32Window? owner)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormSparseWorkingCopy form = new(this);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, changesRepo: false);
+    }
+
     public bool StartSquashCommitDialog(IWin32Window? owner, GitRevision revision)
     {
         bool Action()
