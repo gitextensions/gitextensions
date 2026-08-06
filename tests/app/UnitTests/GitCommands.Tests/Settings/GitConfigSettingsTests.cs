@@ -1,4 +1,5 @@
 using CommonTestUtils;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Settings;
@@ -101,5 +102,67 @@ public sealed class GitConfigSettingsTests
         settings.GetValue("force.load");
 
         return settings;
+    }
+
+    /// <summary>
+    ///  Runs against the real git executable instead of staged output.
+    ///  <br>The tests above encode our assumption about what "git config list --includes" emits;
+    ///  these verify that assumption against git itself.</br>
+    /// </summary>
+    public sealed class IntegrationTests
+    {
+        [Test]
+        public void GetValue_returns_the_included_value_when_a_conditional_include_overrides_it()
+        {
+            using GitModuleTestHelper helper = new();
+            GitConfigSettings settings = CreateSettingsWithConditionalInclude(helper);
+
+            settings.GetValue(SettingKeyString.UserName).Should().Be("Included Name");
+            settings.GetValue(SettingKeyString.UserEmail).Should().Be("included@example.com");
+        }
+
+        [Test]
+        public void GetValue_agrees_with_git_config_get_when_a_conditional_include_overrides_it()
+        {
+            using GitModuleTestHelper helper = new();
+            GitConfigSettings settings = CreateSettingsWithConditionalInclude(helper);
+
+            // Let git itself, rather than a staged string, be the oracle for the effective value.
+            string gitAnswer = helper.Module.GitExecutable.GetOutput("config --local --includes --get user.name").Trim();
+
+            gitAnswer.Should().Be("Included Name");
+            settings.GetValue(SettingKeyString.UserName).Should().Be(gitAnswer);
+        }
+
+        [Test]
+        public void GetValues_returns_the_including_value_before_the_included_one()
+        {
+            using GitModuleTestHelper helper = new();
+            GitConfigSettings settings = CreateSettingsWithConditionalInclude(helper);
+
+            // Pins the emission order that GetValue relies on to pick the effective value.
+            settings.GetValues(SettingKeyString.UserName).Should().Equal("author", "Included Name");
+        }
+
+        /// <summary>
+        ///  Adds a conditional include to the repo which overrides the user identity that
+        ///  <see cref="GitModuleTestHelper"/> has written to the local config, so that
+        ///  "git config list --local --includes" reports user.name and user.email twice.
+        /// </summary>
+        private static GitConfigSettings CreateSettingsWithConditionalInclude(GitModuleTestHelper helper)
+        {
+            string gitDir = Path.Combine(helper.Module.WorkingDir, ".git");
+
+            File.WriteAllText(Path.Combine(gitDir, "included.config"),
+                "[user]\n\tname = Included Name\n\temail = included@example.com\n");
+
+            // Appended, so that it follows - and therefore overrides - the [user] section written by the helper.
+            // "gitdir:**/" matches any repo, which avoids quoting a Windows path into the condition.
+            File.AppendAllText(Path.Combine(gitDir, "config"),
+                "[includeIf \"gitdir:**/\"]\n\tpath = included.config\n");
+
+            // Constructed after the edits because the settings are loaded lazily and then cached.
+            return new GitConfigSettings(helper.Module.GitExecutable, GitSettingLevel.Local);
+        }
     }
 }
