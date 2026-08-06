@@ -2854,12 +2854,16 @@
     "notes": "Native AXAML preserves the BranchSelector and Compare-button field names, order, sizing intent, default-button route, title, and compact centered layout."
   },
   "src/app/GitUI/CommandsDialogs/FormDeleteRemoteBranch.cs": {
-    "status": "unported",
-    "plannedIn": "P5.6"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteRemoteBranch.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Delete-remote-branches dialog over the shared BranchComboBox. Preserves the remote-branch multi-selection, the merged-branch background load through a TaskManager joined before delete, the unmerged-branch confirmation, the delete-remote/delete-local-tracking checkboxes with the tracking-candidate summary, the before/after push event scripts, DeleteRemoteBranches through FormRemoteProcess per remote, and the optional local-tracking delete via StartDeleteBranchDialog. Deviations: OnShown work folds into OnRuntimeLoad; the PuTTY/Pageant EnsurePageant step is dropped because OpenSSH owns portable authentication (platform matrix). Wired through StartDeleteRemoteBranchDialog."
   },
   "src/app/GitUI/CommandsDialogs/FormDeleteRemoteBranch.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.6"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteRemoteBranch.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the GitExtensionsDialog MainPanel/ControlsPanel chrome, original field names, the label+BranchComboBox row, the two checkboxes, and the tracking-candidate label. The WinForms title-bar HelpButton is not reproduced (deferred, matching the FormDeleteBranch twin); ManualSection anchors are retained in code-behind."
   },
   "src/app/GitUI/CommandsDialogs/FormDiff.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDiff.axaml.cs",
@@ -3351,12 +3355,16 @@
     "substitute": "No runtime substitute; the Avalonia project keeps only its own targeted analyzer configuration."
   },
   "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.cs": {
-    "status": "unported",
-    "plannedIn": "P5.6"
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetAnotherBranch.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Reset-another-branch dialog. Preserves the local-branches-without-current ordering (tracking remotes first), the editable branch combo with default-remote preselection, the commit summary, the checkout-after-reset setting, the force-reset option, and the asynchronous cancellable dry-run push validation that enables OK and tints invalid input. UpdateRef runs through FormProcess, then optional StartCheckoutBranch. Deviations: the WinForms editable ComboBox maps to an editable Avalonia ComboBox whose items are branch-name strings; the invalid LightCoral background maps to the shared semantic invalid-input brush; the Application.Idle drop-down open maps to a posted action; the KeyUp caret dance is unnecessary in Avalonia. Opened from the revision-grid Reset-another-branch context command."
   },
   "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.6"
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetAnotherBranch.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the original field names, the warning icon+label row, the branch label+combo, the commit summary control, the checkout/force checkboxes, and the OK/Cancel row. The multiline warning keeps its exact translation source; PictureBox maps to a 16px Image and the warning-label ForeColor adaptation is deferred with the visual axis."
   },
   "src/app/GitUI/Infrastructure/Plink.cs": {
     "status": "windowsOnly",
