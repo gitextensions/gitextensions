@@ -156,9 +156,9 @@ partial class FileStatusList
         ToolTip.SetTip(tsmiShowDiffForAllParents, TranslatedStrings.ShowDiffForAllParentsTooltip);
         tsmiDenseTree.IsChecked = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
         tsmiShowGroupNodesInFlatList.IsChecked = AppSettings.FileStatusShowGroupNodesInFlatList.Value;
-        tsmiEditGitIgnore.IsVisible = false;
-        tmsiEditLocallyIgnoredFiles.IsVisible = false;
-        sepEdit.IsVisible = false;
+        tsmiEditGitIgnore.IsVisible = true;
+        tmsiEditLocallyIgnoredFiles.IsVisible = true;
+        sepEdit.IsVisible = true;
     }
 
     private void ShowAssumeUnchangedFiles_Click(object? sender, EventArgs e)

@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:editor="clr-namespace:GitUI.Editor"
+        x:Class="GitUI.CommandsDialogs.FormMailMap"
+        Width="634"
+        Height="474"
+        WindowStartupLocation="CenterOwner"
+        Title="Edit .mailmap">
+  <Grid x:Name="splitContainer1"
+        ColumnDefinitions="381,4,*">
+    <editor:FileViewer x:Name="_NO_TRANSLATE_MailMapText" Grid.Column="0" />
+    <GridSplitter Grid.Column="1"
+                  ResizeDirection="Columns" />
+    <DockPanel Grid.Column="2" Margin="3">
+      <Button x:Name="Save"
+              DockPanel.Dock="Bottom"
+              Classes="gitextensions-dialog-action"
+              HorizontalAlignment="Right"
+              Content="Save" />
+      <TextBox x:Name="label1"
+               IsReadOnly="True"
+               AcceptsReturn="True"
+               TextWrapping="NoWrap"
+               ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    </DockPanel>
+  </Grid>
+</Window>
