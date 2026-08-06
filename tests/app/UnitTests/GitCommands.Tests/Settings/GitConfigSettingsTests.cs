@@ -13,7 +13,7 @@ public sealed class GitConfigSettingsTests
 {
     private const string _globalConfigList = "config list --global --includes --null";
 
-    private MockExecutable _executable = null!;
+    private MockExecutable _executable = new();
 
     [SetUp]
     public void SetUp()

@@ -130,7 +130,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
         {
             throw new UserExternalOperationException(new InvalidOperationException($"""
                 Changing multi-value git settings is not supported. Tried to set "{name}" = "{value}".
-                But "{name}" has multiple values in the {GitSettingLevel.ToString().ToLower()} git config. This is unusual for this configuration entry.
+                But "{name}" has multiple values in the {GitSettingLevel.ToString().ToLowerInvariant()} git config. This is unusual for this configuration entry.
                 Either it is set several times, or a conditional include ("includeIf") overrides the value of the including config file.
                 Please edit the config file(s) manually.
                 """));
