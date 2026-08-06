@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -160,6 +160,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         rebaseInteractivelyToolStripMenuItem.Click += RebaseInteractivelyToolStripMenuItemClick;
         rebaseWithAdvOptionsToolStripMenuItem.Click += RebaseWithAdvOptionsToolStripMenuItemClick;
         resetCurrentBranchToHereToolStripMenuItem.Click += ResetCurrentBranchToHereToolStripMenuItemClick;
+        resetAnotherBranchToHereToolStripMenuItem.Click += ResetAnotherBranchToHereToolStripMenuItemClick;
         resetChangesToolStripMenuItem.Click += ResetChangesToolStripMenuItemClick;
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
@@ -885,7 +886,6 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         SetVisible(commitToolStripMenuItem, revision is { IsArtificial: true } && hasCommands && !isBareRepository);
         SetVisible(createNewBranchToolStripMenuItem, regularRevision);
         SetVisible(resetAnotherBranchToHereToolStripMenuItem, regularRevision);
-        resetAnotherBranchToHereToolStripMenuItem.IsEnabled = false;
         SetVisible(renameBranchToolStripMenuItem, renameBranchToolStripMenuItem.Items.Count > 0);
         SetVisible(deleteBranchToolStripMenuItem, deleteBranchToolStripMenuItem.Items.Count > 0);
         SetVisible(createTagToolStripMenuItem, revision is { IsArtificial: false } && hasCommands);
@@ -1157,6 +1157,20 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         UICommands.DoActionOnRepo(() =>
         {
             using FormResetCurrentBranch form = FormResetCurrentBranch.Create(UICommands, revision);
+            return form.ShowDialog(GetOwner()) == WinFormsShims.DialogResult.OK;
+        });
+    }
+
+    private void ResetAnotherBranchToHereToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        if (SelectedRevision is not GitRevision revision)
+        {
+            return;
+        }
+
+        UICommands.DoActionOnRepo(() =>
+        {
+            using FormResetAnotherBranch form = FormResetAnotherBranch.Create(UICommands, revision);
             return form.ShowDialog(GetOwner()) == WinFormsShims.DialogResult.OK;
         });
     }

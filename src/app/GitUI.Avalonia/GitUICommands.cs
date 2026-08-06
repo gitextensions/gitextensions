@@ -1216,7 +1216,16 @@ public sealed class GitUICommands : IGitUICommands
         }, changesRepo: false);
     }
 
-    public bool StartDeleteRemoteBranchDialog(IWin32Window? owner, string remoteBranch) => throw NotPorted(nameof(StartDeleteRemoteBranchDialog));
+    public bool StartDeleteRemoteBranchDialog(IWin32Window? owner, string remoteBranch)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using CommandsDialogs.FormDeleteRemoteBranch form = new(this, remoteBranch);
+            form.ShowDialog(owner);
+            return true;
+        }, changesRepo: false);
+    }
+
     public bool StartDeleteTagDialog(IWin32Window? owner, string? tag)
     {
         bool Action()
