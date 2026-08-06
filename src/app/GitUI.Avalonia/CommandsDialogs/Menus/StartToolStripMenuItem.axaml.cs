@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Platform.Storage;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
@@ -75,24 +74,10 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
 
     private void OpenToolStripMenuItemClick(object? sender, EventArgs e)
     {
-        Window? owner = OwnerWindow;
-        if (owner is null)
+        IGitModule? module = FormOpenDirectory.OpenModule(OwnerForm!, UICommands.GetRequiredService<IGitExecutorProvider>(), UICommands.Module);
+        if (module is not null)
         {
-            return;
-        }
-
-        IReadOnlyList<IStorageFolder> folders = DispatcherPump.Wait(() => owner.StorageProvider.OpenFolderPickerAsync(
-            new FolderPickerOpenOptions
-            {
-                AllowMultiple = false,
-                SuggestedStartLocation = Directory.Exists(Module.WorkingDir)
-                    ? DispatcherPump.Wait(() => owner.StorageProvider.TryGetFolderFromPathAsync(Module.WorkingDir))
-                    : null,
-            }));
-        string? path = folders.FirstOrDefault()?.TryGetLocalPath();
-        if (!string.IsNullOrWhiteSpace(path))
-        {
-            SetGitModule(path);
+            GitModuleChanged?.Invoke(OwnerForm, new GitModuleEventArgs(module));
         }
     }
 

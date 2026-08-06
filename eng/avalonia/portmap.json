@@ -2665,12 +2665,16 @@
     "plannedIn": "P5.8"
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormDonate.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormDonate.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Donate dialog. Preserves the explanatory text and the clickable donate badge that opens the OpenCollective URL. Deviations: PictureBox.Click maps to Image.PointerPressed; lblText is TranslateText=False and seeded from the _donateText string at runtime. Reachable once the Help-menu Donate item is restored with the About family (P5.8b)."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormDonate.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormDonate.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the field names and the text-over-badge layout. TableLayoutPanel maps to Grid; the clickable PictureBox maps to an Image."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGitCommandLog.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormGitCommandLog.axaml.cs",
@@ -2697,12 +2701,16 @@
     "notes": "Native AXAML retains the original named fields, minimum dimensions, help content, editable tag/branch selectors, default Go action, and input metadata."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormOpenDirectory.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormOpenDirectory.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Open-local-repository dialog. Preserves the editable directory combo seeded from clone-destination/parent/recent-history/home directories, the Browse and go-up buttons, the Open action with the invalid-repository warning, and the OpenModule/OpenGitRepository boundary that records the repository in the recent history. Deviations: the WinForms combo DataSource maps to ItemsSource; FileSystemDirectories auto-complete and ResizeDropDownWidth are dropped; the SendKeys separator append in go-up is replaced by setting the parent path directly; OsShellUtil.PickFolder replaces the folder browser. Wired into the Start menu Open command."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormOpenDirectory.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormOpenDirectory.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the field names, the directory label+combo, the go-up/browse/Open buttons, and the fixed 116px height. The named ToolTip on folderGoUpButton maps to ToolTip.Tip with the toolTip1 key; the image buttons map to IconButton."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/GitFileTreeComparer.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/BrowseDialog/GitFileTreeComparer.cs",
@@ -2746,12 +2754,16 @@
     "substitute": "The native Avalonia header checkbox and list selection logic in FormVerify."
   },
   "src/app/GitUI/CommandsDialogs/EnvironmentInfo.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/EnvironmentInfo.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Environment-information control over the linked UserEnvironmentInformation. Preserves the report label and the copy-to-clipboard button. Deviations: the WinForms ToolTip component maps to ToolTip.SetTip; the design guard uses Design.IsDesignMode; the control is [Untranslated] (no XLF) with a static copy-button automation name/tooltip. Consumed by FormAbout (owned by P5.8b)."
   },
   "src/app/GitUI/CommandsDialogs/EnvironmentInfo.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/EnvironmentInfo.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the field names, the report-label/copy-button row, and the top/bottom separators. TableLayoutPanel maps to Grid; the Fixed3D separators map to section-separator borders; the image copy button maps to IconButton."
   },
   "src/app/GitUI/CommandsDialogs/FileStatusListContextMenuController.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/FileStatusListContextMenuController.cs",
@@ -2840,12 +2852,16 @@
     "notes": "Native AXAML preserves the original field names, the group-box clean-mode radios, the include/exclude filter sections with their Add-a-path buttons and one-path-per-line hints, and the log output. GroupBox maps to HeaderedContentControl; the image Preview/Cleanup buttons map to IconButton; absolute Designer positions map to a Grid."
   },
   "src/app/GitUI/CommandsDialogs/FormCommandlineHelp.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommandlineHelp.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Command-line usage dialog. Preserves the header label and the scrollable command list. The resx-backed _NO_TRANSLATE_ command list is seeded as a code const. Wired into the help/usage command-line verbs."
   },
   "src/app/GitUI/CommandsDialogs/FormCommandlineHelp.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommandlineHelp.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the field names and the top-down header/commands layout inside a ScrollViewer; FlowLayoutPanel maps to a StackPanel."
   },
   "src/app/GitUI/CommandsDialogs/FormCompareToBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCompareToBranch.axaml.cs",
