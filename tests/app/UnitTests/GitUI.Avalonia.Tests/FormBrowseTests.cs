@@ -550,19 +550,19 @@ public sealed class FormBrowseTests
             "settingsToolStripMenuItem");
         GetItemNames(form.helpToolStripMenuItem).Should().Equal(
             "userManualToolStripMenuItem",
+            "changelogToolStripMenuItem",
             "|",
             "translateToolStripMenuItem",
             "|",
+            "donateToolStripMenuItem",
             "tsmiTelemetryEnabled",
             "reportAnIssueToolStripMenuItem",
-            "checkForUpdatesToolStripMenuItem");
+            "checkForUpdatesToolStripMenuItem",
+            "aboutToolStripMenuItem");
 
         foreach (string unavailableName in new[]
         {
             "PuTTYToolStripMenuItem",
-            "changelogToolStripMenuItem",
-            "donateToolStripMenuItem",
-            "aboutToolStripMenuItem",
         })
         {
             form.FindControl<Control>(unavailableName).Should().BeNull(
