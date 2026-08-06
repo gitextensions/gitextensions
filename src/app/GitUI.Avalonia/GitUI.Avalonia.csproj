@@ -170,6 +170,11 @@
     <AvaloniaResource Include="..\GitUI\Resources\Icons\*.png" Link="Resources\Icons\%(Filename)%(Extension)" />
     <AvaloniaResource Include="..\GitUI\Resources\Icons\*.ico" Link="Resources\Icons\%(Filename)%(Extension)" />
     <AvaloniaResource Include="..\..\..\setup\assets\Logo\*.png" Link="Resources\Logo\%(Filename)%(Extension)" />
+
+    <!-- The original string resources (contributor lists, changelog) have no generated Avalonia
+         twin like Images.g.cs; the resx and changelog are packaged and read by Properties/Resources.g.cs. -->
+    <AvaloniaResource Include="..\GitUI\Properties\Resources.resx" Link="Properties\Resources.resx" />
+    <AvaloniaResource Include="..\GitUI\Resources\ChangeLog.md" Link="Resources\ChangeLog.md" />
   </ItemGroup>
 
   <ItemGroup>
