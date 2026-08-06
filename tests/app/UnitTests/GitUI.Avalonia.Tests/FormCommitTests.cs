@@ -272,8 +272,12 @@ public sealed class FormCommitTests
             Dispatcher.UIThread.RunJobs();
             form.GetTestAccessor().Message.Text.Should().Be("Template body");
 
-            MenuItem conventional = accessor.CommitTemplatesFlyout.Items.OfType<MenuItem>().Last();
+            MenuItem conventional = accessor.CommitTemplatesFlyout.Items.OfType<MenuItem>().Last(item => item.Items.OfType<MenuItem>().Any());
             conventional.Items.OfType<MenuItem>().Select(item => item.Header).Should().Contain(FeatCommitTypeForTest);
+
+            // The commit-message settings entry follows the conventional-commits submenu.
+            accessor.CommitTemplatesFlyout.Items.OfType<MenuItem>().Last().Header
+                .Should().Be("_Edit commit message templates and settings...");
         }
         finally
         {

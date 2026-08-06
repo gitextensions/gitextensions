@@ -45,6 +45,7 @@
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" Link="CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" Link="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitFileTreeComparer.cs" Link="CommandsDialogs\BrowseDialog\GitFileTreeComparer.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\CommitDialog\WordWrapper.cs" Link="CommandsDialogs\CommitDialog\WordWrapper.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\Menus\SettingsChangedEventArgs.cs" Link="CommandsDialogs\Menus\SettingsChangedEventArgs.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" Link="CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" Link="CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" />
