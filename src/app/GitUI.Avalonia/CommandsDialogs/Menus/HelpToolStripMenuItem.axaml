@@ -7,16 +7,25 @@
   <MenuItem x:Name="userManualToolStripMenuItem" Header="User _manual">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GotoManual}" /></MenuItem.Icon>
   </MenuItem>
+  <MenuItem x:Name="changelogToolStripMenuItem" Header="_Changelog">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Changelog}" /></MenuItem.Icon>
+  </MenuItem>
   <Separator x:Name="toolStripSeparator3" />
   <MenuItem x:Name="translateToolStripMenuItem" Header="_Translate">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Translate}" /></MenuItem.Icon>
   </MenuItem>
   <Separator x:Name="toolStripSeparator16" />
+  <MenuItem x:Name="donateToolStripMenuItem" Header="_Donate">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.DollarSign}" /></MenuItem.Icon>
+  </MenuItem>
   <MenuItem x:Name="tsmiTelemetryEnabled" Header="_Yes, I allow telemetry" ToggleType="CheckBox" />
   <MenuItem x:Name="reportAnIssueToolStripMenuItem" Header="_Report an issue">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BugReport}" /></MenuItem.Icon>
   </MenuItem>
   <MenuItem x:Name="checkForUpdatesToolStripMenuItem" Header="Check for _updates">
     <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CheckForUpdates}" /></MenuItem.Icon>
+  </MenuItem>
+  <MenuItem x:Name="aboutToolStripMenuItem" Header="_About">
+    <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Information}" /></MenuItem.Icon>
   </MenuItem>
 </menus:ToolStripMenuItemEx>

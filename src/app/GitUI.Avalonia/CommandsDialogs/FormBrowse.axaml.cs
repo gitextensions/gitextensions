@@ -533,24 +533,11 @@ public sealed partial class FormBrowse : GitModuleForm
     }
 
     private void OpenRepositoryDialog()
-        => _loadOperations.FileAndForget(OpenRepositoryDialogAsync);
-
-    private async Task OpenRepositoryDialogAsync()
     {
-        FolderPickerOpenOptions options = new()
+        IGitModule? module = FormOpenDirectory.OpenModule(this, UICommands.GetRequiredService<IGitExecutorProvider>(), Module);
+        if (module is not null)
         {
-            AllowMultiple = false,
-        };
-        if (Directory.Exists(Module.WorkingDir))
-        {
-            options.SuggestedStartLocation = await StorageProvider.TryGetFolderFromPathAsync(Module.WorkingDir);
-        }
-
-        IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(options);
-        string? path = folders.FirstOrDefault()?.TryGetLocalPath();
-        if (!string.IsNullOrWhiteSpace(path))
-        {
-            ChangeWorkingDirectory(path);
+            ChangeWorkingDirectory(module.WorkingDir);
         }
     }
 

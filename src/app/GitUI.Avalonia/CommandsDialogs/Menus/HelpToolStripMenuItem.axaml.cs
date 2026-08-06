@@ -16,16 +16,37 @@ internal partial class HelpToolStripMenuItem : ToolStripMenuItemEx
         ((Image)translateToolStripMenuItem.Icon!).Source = Images.Translate.AdaptLightness();
         SubmenuOpened += this_DropDownOpening;
         userManualToolStripMenuItem.Click += UserManualToolStripMenuItemClick;
+        changelogToolStripMenuItem.Click += ChangelogToolStripMenuItemClick;
         translateToolStripMenuItem.Click += TranslateToolStripMenuItemClick;
+        donateToolStripMenuItem.Click += DonateToolStripMenuItemClick;
         tsmiTelemetryEnabled.Click += TsmiTelemetryEnabled_Click;
         reportAnIssueToolStripMenuItem.Click += reportAnIssueToolStripMenuItem_Click;
         checkForUpdatesToolStripMenuItem.Click += checkForUpdatesToolStripMenuItem_Click;
+        aboutToolStripMenuItem.Click += AboutToolStripMenuItemClick;
         InputAccessibility.Apply(this);
     }
 
     private void this_DropDownOpening(object? sender, EventArgs e)
     {
         tsmiTelemetryEnabled.IsChecked = AppSettings.TelemetryEnabled ?? false;
+    }
+
+    private void AboutToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        using FormAbout frm = new();
+        frm.ShowDialog(OwnerForm);
+    }
+
+    private void ChangelogToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        using FormChangeLog frm = new();
+        frm.ShowDialog(OwnerForm);
+    }
+
+    private void DonateToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        using FormDonate frm = new();
+        frm.ShowDialog(OwnerForm);
     }
 
     private void checkForUpdatesToolStripMenuItem_Click(object? sender, EventArgs e)

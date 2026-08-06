@@ -2605,8 +2605,10 @@
     "substitute": "OpenSSH with the platform ssh-agent through GitCommands."
   },
   "src/app/GitUI/CommandsDialogs/AboutBoxDialog/FormContributors.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/AboutBoxDialog/FormContributors.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Contributors dialog. Like the original it has no Designer and builds its FullBleedTabControl with three read-only text boxes (Developers/Translators/Designers) in code. Contributor names come from the packaged string resources through the new Properties/Resources.g.cs twin. The form is [Untranslated] (no XLF), matching the original's absent catalog entry."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/DashboardTheme.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/DashboardControl/DashboardTheme.cs",
@@ -2657,12 +2659,16 @@
     "notes": "Synchronizes the complete cloned Navigate/View menu inventories from the revision-grid command sources through the original OnMenuCommandsPropertyChanged boundary. Names, icons, separators, shortcuts, checks, enabled state, visibility, group headings, nested items, and actions remain owned by RevisionGrid and are re-verified through FormBrowse."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormChangeLog.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormChangeLog.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Change log dialog. Shows the packaged ChangeLog.md through the new Properties/Resources.g.cs twin in a read-only text box. RichTextBox maps to a read-only TextBox with TranslateText=False (its content is dynamic). Reachable from the restored Help-menu Changelog item."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormChangeLog.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormChangeLog.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the single ChangeLog text box filling the 849x411 window; RichTextBox maps to a read-only, no-wrap, scrollable TextBox."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormDonate.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormDonate.axaml.cs",
@@ -2772,12 +2778,16 @@
     "notes": "Framework-neutral context-menu selection rules are linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/FormAbout.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAbout.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "About dialog hosting the EnvironmentInfo control. Preserves the logo/description/copyright text, the product-name/thanks/icons links, the donate badge, the warranty label, and the timer that cycles a random contributor (from the packaged string resources via Properties/Resources.g.cs). Deviations: LinkLabels map to HyperlinkButton, the clickable PictureBox maps to Image.PointerPressed, and the WinForms Timer maps to a DispatcherTimer stopped on close. Wired into the about command-line verb and the restored Help-menu About item."
   },
   "src/app/GitUI/CommandsDialogs/FormAbout.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.8"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAbout.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the field names, the left logo/label/donate column and the right text column with the embedded EnvironmentInfo control. TableLayoutPanel/FlowLayoutPanel map to Grid/StackPanel; the _NO_TRANSLATE_ links map to HyperlinkButtons."
   },
   "src/app/GitUI/CommandsDialogs/FormAddToGitIgnore.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddToGitIgnore.axaml.cs",
@@ -3765,7 +3775,7 @@
   "src/app/GitUI/Properties/Resources.Designer.cs": {
     "status": "windowsOnly",
     "justification": "These generated accessors materialize WinForms System.Drawing resources.",
-    "substitute": "The Avalonia Properties/Images.g.cs and native resource loading boundary."
+    "substitute": "The Avalonia Properties/Images.g.cs (images) and Properties/Resources.g.cs (string resources, read from the packaged resx and ChangeLog.md) plus native resource loading boundary."
   },
   "src/app/GitUI/ScriptsEngine/SplitButton.cs": {
     "status": "windowsOnly",
