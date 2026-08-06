@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -91,6 +91,8 @@ public sealed partial class FormBrowse : GitModuleForm
     private FormBrowseMenus? _formBrowseMenus;
 
     private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
+
+    public RevisionGridControl RevisionGridControl => RevisionGrid;
 
     public static readonly string HotkeySettingsName = "Browse";
 
