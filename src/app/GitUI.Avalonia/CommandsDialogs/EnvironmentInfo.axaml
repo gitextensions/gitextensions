@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.CommandsDialogs.EnvironmentInfo">
+  <Grid RowDefinitions="Auto,Auto,Auto">
+    <Border x:Name="lblSeparatorTop"
+            Grid.Row="0"
+            Classes="gitextensions-section-separator" />
+
+    <Grid x:Name="tableLayoutPanel1"
+          Grid.Row="1"
+          Margin="0,8"
+          ColumnDefinitions="*,Auto">
+      <TextBlock x:Name="environmentIssueInfo"
+                 Grid.Column="0"
+                 Margin="0,0,8,0"
+                 VerticalAlignment="Center"
+                 TextWrapping="Wrap" />
+      <compat:IconButton x:Name="copyButton"
+                         Grid.Column="1"
+                         Classes="gitextensions-icon-only"
+                         VerticalAlignment="Top"
+                         Width="25"
+                         MinHeight="26"
+                         ToolTip.Tip="Copy environment info"
+                         AutomationProperties.Name="Copy environment info"
+                         Icon="{x:Static properties:Images.CopyToClipboard}" />
+    </Grid>
+
+    <Border x:Name="lblSeparatorBottom"
+            Grid.Row="2"
+            Classes="gitextensions-section-separator" />
+  </Grid>
+</UserControl>
