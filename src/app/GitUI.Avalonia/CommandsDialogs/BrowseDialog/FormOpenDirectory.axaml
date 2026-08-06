@@ -1,0 +1,50 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.BrowseDialog.FormOpenDirectory"
+        Width="615" Height="116"
+        MinWidth="450" MaxWidth="800"
+        MinHeight="116" MaxHeight="116"
+        WindowStartupLocation="CenterOwner"
+        Title="Open local repository">
+  <Grid Margin="9"
+        ColumnDefinitions="Auto,*,Auto"
+        RowDefinitions="Auto,Auto"
+        ColumnSpacing="6"
+        RowSpacing="8">
+    <Label x:Name="label1"
+           Grid.Row="0" Grid.Column="0"
+           VerticalAlignment="Center"
+           Padding="0"
+           Content="_Directory:"
+           Target="{Binding #_NO_TRANSLATE_Directory}" />
+    <ComboBox x:Name="_NO_TRANSLATE_Directory"
+              Grid.Row="0" Grid.Column="1"
+              HorizontalAlignment="Stretch"
+              IsEditable="True" />
+    <StackPanel Grid.Row="0" Grid.Column="2"
+                Orientation="Horizontal"
+                Spacing="3">
+      <compat:IconButton x:Name="folderGoUpButton"
+                         Classes="gitextensions-icon-only"
+                         Width="26"
+                         compat:TranslationCompat.ToolTipPropertyName="toolTip1"
+                         ToolTip.Tip="Go to parent directory..."
+                         AutomationProperties.Name="Go to parent directory..."
+                         Icon="{x:Static properties:Images.NavigateUp}" />
+      <compat:IconButton x:Name="folderBrowserButton"
+                         MinWidth="135"
+                         Content="_Browse..."
+                         Icon="{x:Static properties:Images.BrowseFileExplorer}" />
+    </StackPanel>
+
+    <compat:IconButton x:Name="Load"
+                       Grid.Row="1" Grid.Column="2"
+                       MinWidth="164"
+                       HorizontalAlignment="Right"
+                       Content="Open"
+                       Icon="{x:Static properties:Images.RepoOpen}"
+                       IsDefault="True" />
+  </Grid>
+</Window>

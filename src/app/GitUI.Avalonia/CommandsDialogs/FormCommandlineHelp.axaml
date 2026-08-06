@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.FormCommandlineHelp"
+        Width="410" Height="700"
+        MinWidth="410" MinHeight="700"
+        WindowStartupLocation="CenterOwner"
+        Title="Commandline usage">
+  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="flowLayoutPanel1" Orientation="Vertical">
+      <TextBlock x:Name="label1"
+                 Padding="10"
+                 TextWrapping="Wrap"
+                 Text="Supported commandline arguments for&#10;gitex.cmd / gitex (located in the same folder as GitExtensions.exe):" />
+      <TextBlock x:Name="_NO_TRANSLATE_commands"
+                 Padding="10,0,10,10"
+                 TextWrapping="NoWrap" />
+    </StackPanel>
+  </ScrollViewer>
+</Window>
