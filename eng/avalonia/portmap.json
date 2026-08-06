@@ -2723,16 +2723,22 @@
     "notes": "Mechanical twin of the original translation enumeration and lifecycle base used by RevisionGridMenuCommands; re-verified through the complete FormBrowse Navigate/View families in P4.2."
   },
   "src/app/GitUI/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.cs": {
-    "status": "unported",
-    "plannedIn": "P5.7"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Commit message settings dialog (templates + validation tabs). Preserves the ten template slots with the migration fill, per-slot name/text/regex editing, the list display formatting, and load/save of the CommitValidation* settings through AppSettings and CommitTemplateItem. Deviations: the DropDownList ComboBox binds an ObservableCollection; NumericUpDown.Value is nullable; SelectionChanged guards the Avalonia -1 (re)assignment; the bare validation checkboxes carry no translatable text; the named ToolTip maps to ToolTip.Tip with TranslationCompat.ToolTipPropertyName. Reachable from the FormCommit commit-templates flyout settings item."
   },
   "src/app/GitUI/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.7"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the GitExtensionsDialog chrome, the original field names, the two tab pages (templates/validation), and the label/control grid. TabControl maps to Avalonia TabControl+TabItem; TableLayoutPanel to Grid; the regex-help ToolTip is retained on checkBoxRegexEnabled with the toolTipRegex key."
   },
   "src/app/GitUI/CommandsDialogs/CommitDialog/WordWrapper.cs": {
-    "status": "unported",
-    "plannedIn": "P5.7"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/CommitDialog/WordWrapper.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged; framework-neutral commit-message single-line word-wrapper. Its FormCommit auto-wrap consumer is deferred to FormCommit re-verification (P5.9)."
   },
   "src/app/GitUI/CommandsDialogs/DataGridViewCheckBoxHeaderCell.cs": {
     "status": "windowsOnly",

@@ -38233,6 +38233,47 @@
           "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
         }
       }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.axaml",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "gap", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": ["eng/avalonia/parity-evidence/P5.7/inventory/FormCommitTemplateSettings.json"], "platforms": [], "findingCount": 70, "note": "The P5.7 source inventory found structural/member/comment differences from the WinForms original." },
+        "functional": { "status": "gap", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": ["eng/avalonia/parity-evidence/P5.7/inventory/FormCommitTemplateSettings.json"], "platforms": [], "findingCount": 168, "note": "The P5.7 functional inventory found member/event/menu/hotkey/settings/translation differences." },
+        "visual": { "status": "unverified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i." },
+        "themingAndColor": { "status": "unverified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i." },
+        "behavioralState": { "status": "unverified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i." },
+        "platform": { "status": "unverified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity." }
+      }
+    }
+,
+    {
+      "source": "src/app/GitUI/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "gap", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": ["eng/avalonia/parity-evidence/P5.7/inventory/FormCommitTemplateSettings.json"], "platforms": [], "findingCount": 70, "note": "The P5.7 source inventory found structural/member/comment differences from the WinForms original." },
+        "functional": { "status": "gap", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": ["eng/avalonia/parity-evidence/P5.7/inventory/FormCommitTemplateSettings.json"], "platforms": [], "findingCount": 168, "note": "The P5.7 functional inventory found member/event/menu/hotkey/settings/translation differences." },
+        "visual": { "status": "unverified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i." },
+        "themingAndColor": { "status": "unverified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i." },
+        "behavioralState": { "status": "unverified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i." },
+        "platform": { "status": "unverified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity." }
+      }
+    }
+,
+    {
+      "source": "src/app/GitUI/CommandsDialogs/CommitDialog/WordWrapper.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/CommitDialog/WordWrapper.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "verified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "The exact original source is compiled into the twin through an MSBuild Link." },
+        "functional": { "status": "verified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "The exact original implementation is compiled into the twin." },
+        "visual": { "status": "notApplicable", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "This source mapping does not declare UI chrome." },
+        "themingAndColor": { "status": "notApplicable", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "This source mapping does not declare UI chrome." },
+        "behavioralState": { "status": "notApplicable", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "This source mapping does not declare UI chrome." },
+        "platform": { "status": "unverified", "verifiedOn": "2026-08-06", "commit": "12cc85a2bf681b8759762c2606854dc57cdc0453", "evidence": [], "platforms": [], "findingCount": 0, "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity." }
+      }
     }
   ]
 }
