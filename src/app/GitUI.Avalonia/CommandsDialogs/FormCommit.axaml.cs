@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
@@ -12,6 +12,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.AutoCompletion;
+using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
@@ -75,6 +76,7 @@ public sealed partial class FormCommit : GitModuleForm
         "Commit message does not match RegEx." + Environment.NewLine + "Do you want to continue?");
     private readonly TranslationString _commitValidationCaption = new("Commit validation");
     private readonly TranslationString _conventionalCommit = new("Conven&tional Commits");
+    private readonly TranslationString _commitMessageSettings = new("&Edit commit message templates and settings...");
     private readonly TranslationString _commitAuthorInfo = new("Author");
     private readonly TranslationString _commitCommitterInfo = new("Committer");
     private readonly TranslationString _commitCommitterToolTip = new("Click to change committer information.");
@@ -991,6 +993,19 @@ public sealed partial class FormCommit : GitModuleForm
         skipCi.Click += (_, _) => AppendCommitFooter("[skip ci]");
         conventional.Items.Add(skipCi);
         flyout.Items.Add(conventional);
+
+        flyout.Items.Add(new Separator());
+        MenuItem settingsItem = new()
+        {
+            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_commitMessageSettings.Text),
+            Icon = new Image { Width = 16, Height = 16, Source = Properties.Images.Settings },
+        };
+        settingsItem.Click += (_, _) =>
+        {
+            using FormCommitTemplateSettings frm = new(UICommands);
+            frm.ShowDialog(this);
+        };
+        flyout.Items.Add(settingsItem);
     }
 
     private void ApplyConventionalCommitPrefix(string keyword)
