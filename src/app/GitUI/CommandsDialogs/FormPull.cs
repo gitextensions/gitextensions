@@ -261,12 +261,33 @@ public sealed partial class FormPull : GitExtensionsDialog
                 messageBoxTitle = string.Format(_pruneFromCaption.Text, remote);
             }
 
-            bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
-                                     || MessageBoxes.Show(
-                                         owner,
-                                         _pullFetchPruneAllConfirmation.Text,
-                                         messageBoxTitle,
-                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
+            bool isActionConfirmed;
+            if (AppSettings.DontConfirmFetchAndPruneAll)
+            {
+                isActionConfirmed = true;
+            }
+            else
+            {
+                TaskDialogPage page = new()
+                {
+                    Text = _pullFetchPruneAllConfirmation.Text,
+                    Caption = messageBoxTitle,
+                    Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                    Icon = TaskDialogIcon.Information,
+                    Verification = new TaskDialogVerificationCheckBox
+                    {
+                        Text = TranslatedStrings.DontShowAgain
+                    },
+                    SizeToContent = true
+                };
+
+                isActionConfirmed = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page) == TaskDialogButton.Yes;
+
+                if (page.Verification.Checked)
+                {
+                    AppSettings.DontConfirmFetchAndPruneAll = true;
+                }
+            }
 
             if (!isActionConfirmed)
             {
@@ -402,7 +423,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             page.Buttons.Add(btnCheckout);
             page.Buttons.Add(btnContinue);
 
-            TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? default, page);
+            TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page);
             if (result == TaskDialogButton.Cancel)
             {
                 return DialogResult.Cancel;
@@ -591,7 +612,7 @@ public sealed partial class FormPull : GitExtensionsDialog
                     SizeToContent = true
                 };
 
-                messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
+                messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page) == TaskDialogButton.Yes;
 
                 if (page.Verification.Checked)
                 {

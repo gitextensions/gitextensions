@@ -104,7 +104,34 @@ public class MessageBoxes : Translate
         => Confirm(owner, Instance._serverHostkeyNotCachedText.Text, "SSH");
 
     public static bool ConfirmResolveMergeConflicts(IWin32Window? owner)
-        => Confirm(owner, Instance._unresolvedMergeConflicts.Text, Instance._unresolvedMergeConflictsCaption.Text);
+    {
+        if (AppSettings.DontConfirmResolveConflicts)
+        {
+            return true;
+        }
+
+        TaskDialogPage page = new()
+        {
+            Text = Instance._unresolvedMergeConflicts.Text,
+            Caption = Instance._unresolvedMergeConflictsCaption.Text,
+            Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+            Icon = TaskDialogIcon.Information,
+            Verification = new TaskDialogVerificationCheckBox
+            {
+                Text = TranslatedStrings.DontShowAgain
+            },
+            SizeToContent = true
+        };
+
+        bool result = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
+
+        if (page.Verification.Checked)
+        {
+            AppSettings.DontConfirmResolveConflicts = true;
+        }
+
+        return result;
+    }
 
     public static bool ConfirmUpdateSubmodules(IWin32Window? owner)
     {

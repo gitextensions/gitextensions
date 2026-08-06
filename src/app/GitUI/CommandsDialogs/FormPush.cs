@@ -301,10 +301,32 @@ public partial class FormPush : GitModuleForm
                 !IsBranchKnownToRemote(selectedRemoteName, RemoteBranch.Text))
             {
                 // Ask if this is really what the user wants
-                if (!AppSettings.DontConfirmPushNewBranch &&
-                    MessageBoxes.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (!AppSettings.DontConfirmPushNewBranch)
                 {
-                    return false;
+                    TaskDialogPage page = new()
+                    {
+                        Text = _branchNewForRemote.Text,
+                        Caption = _pushCaption.Text,
+                        Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                        Icon = TaskDialogIcon.Information,
+                        Verification = new TaskDialogVerificationCheckBox
+                        {
+                            Text = TranslatedStrings.DontShowAgain
+                        },
+                        SizeToContent = true
+                    };
+
+                    TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? Handle, page);
+
+                    if (page.Verification.Checked)
+                    {
+                        AppSettings.DontConfirmPushNewBranch = true;
+                    }
+
+                    if (result != TaskDialogButton.Yes)
+                    {
+                        return false;
+                    }
                 }
             }
         }
