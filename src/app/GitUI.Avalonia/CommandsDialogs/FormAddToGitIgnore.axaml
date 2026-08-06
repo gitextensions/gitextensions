@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormAddToGitIgnore"
+        Width="599"
+        Height="341"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        Title="Add file(s) to .gitignore">
+  <Grid RowDefinitions="Auto,*,Auto">
+    <HeaderedContentControl x:Name="groupFilePattern"
+                            Grid.Row="0"
+                            Classes="gitextensions-group-box"
+                            Header="Enter a file pattern to ignore:">
+      <TextBox x:Name="FilePattern"
+               Height="71"
+               AcceptsReturn="True"
+               TextWrapping="NoWrap"
+               ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    </HeaderedContentControl>
+
+    <HeaderedContentControl x:Name="groupBox1"
+                            Grid.Row="1"
+                            Classes="gitextensions-group-box"
+                            Header="Preview">
+      <Grid>
+        <ListBox x:Name="_NO_TRANSLATE_Preview" />
+        <Border x:Name="noMatchPanel"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                IsVisible="False"
+                Padding="4">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <Image x:Name="pictureBox1"
+                   Classes="gitextensions-icon-16"
+                   Source="{x:Static properties:Images.Unmerged}" />
+            <TextBlock x:Name="label2"
+                       VerticalAlignment="Center"
+                       Text="No existing files match that pattern." />
+          </StackPanel>
+        </Border>
+        <TextBlock x:Name="_NO_TRANSLATE_filesWillBeIgnored"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   Text="(matched files count)" />
+      </Grid>
+    </HeaderedContentControl>
+
+    <StackPanel x:Name="panel1"
+                Grid.Row="2"
+                Classes="gitextensions-dialog-controls"
+                Orientation="Horizontal">
+      <Button x:Name="AddToIgnore"
+              Classes="gitextensions-dialog-action"
+              Content="Ignore"
+              IsDefault="True" />
+      <Button x:Name="btnCancel"
+              Classes="gitextensions-dialog-action"
+              Content="Cancel"
+              IsCancel="True" />
+    </StackPanel>
+  </Grid>
+</Window>

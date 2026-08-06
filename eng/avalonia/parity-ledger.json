@@ -3847,6 +3847,136 @@
       }
     },
     {
+      "source": "src/app/GitUI/CommandsDialogs/FormAddToGitIgnore.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddToGitIgnore.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormAddToGitIgnore.json"
+          ],
+          "platforms": [],
+          "findingCount": 83,
+          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormAddToGitIgnore.json"
+          ],
+          "platforms": [],
+          "findingCount": 3,
+          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormAddToGitIgnore.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddToGitIgnore.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormAddToGitIgnore.json"
+          ],
+          "platforms": [],
+          "findingCount": 83,
+          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormAddToGitIgnore.json"
+          ],
+          "platforms": [],
+          "findingCount": 3,
+          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
       "source": "src/app/GitUI/CommandsDialogs/FormApplyPatch.cs",
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormApplyPatch.axaml.cs",
       "complete": false,
@@ -5739,6 +5869,266 @@
       }
     },
     {
+      "source": "src/app/GitUI/CommandsDialogs/FormGitAttributes.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitAttributes.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitAttributes.json"
+          ],
+          "platforms": [],
+          "findingCount": 55,
+          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitAttributes.json"
+          ],
+          "platforms": [],
+          "findingCount": 2,
+          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormGitAttributes.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitAttributes.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitAttributes.json"
+          ],
+          "platforms": [],
+          "findingCount": 55,
+          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitAttributes.json"
+          ],
+          "platforms": [],
+          "findingCount": 2,
+          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormGitIgnore.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitIgnore.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitIgnore.json"
+          ],
+          "platforms": [],
+          "findingCount": 108,
+          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitIgnore.json"
+          ],
+          "platforms": [],
+          "findingCount": 6,
+          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormGitIgnore.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitIgnore.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitIgnore.json"
+          ],
+          "platforms": [],
+          "findingCount": 108,
+          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitIgnore.json"
+          ],
+          "platforms": [],
+          "findingCount": 6,
+          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
       "source": "src/app/GitUI/CommandsDialogs/FormInit.cs",
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormInit.axaml.cs",
       "complete": false,
@@ -5926,6 +6316,136 @@
           "status": "unverified",
           "verifiedOn": "2026-08-06",
           "commit": "097edac1458d0e1a78a65c19adeb7e124122ed67",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormMailMap.Designer.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMailMap.axaml",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormMailMap.json"
+          ],
+          "platforms": [],
+          "findingCount": 55,
+          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormMailMap.json"
+          ],
+          "platforms": [],
+          "findingCount": 2,
+          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/FormMailMap.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMailMap.axaml.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormMailMap.json"
+          ],
+          "platforms": [],
+          "findingCount": 55,
+          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+        },
+        "functional": {
+          "status": "gap",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P5.4/inventory/FormMailMap.json"
+          ],
+          "platforms": [],
+          "findingCount": 2,
+          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+        },
+        "themingAndColor": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+        },
+        "behavioralState": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
@@ -7230,6 +7750,189 @@
           "platforms": [],
           "findingCount": 0,
           "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/GitIgnoreDialog/GitIgnoreModel.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/GitIgnoreDialog/GitIgnoreModel.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original source is compiled into the twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original implementation is compiled into the twin."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "behavioralState": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/GitIgnoreDialog/GitLocalExcludeModel.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/GitIgnoreDialog/GitLocalExcludeModel.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original source is compiled into the twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original implementation is compiled into the twin."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "behavioralState": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+        }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/GitIgnoreDialog/IGitIgnoreDialogModel.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/GitIgnoreDialog/IGitIgnoreDialogModel.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "verified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original source is compiled into the twin through an MSBuild Link."
+        },
+        "functional": {
+          "status": "verified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The exact original implementation is compiled into the twin."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "behavioralState": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping does not declare UI chrome."
+        },
+        "platform": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-06",
+          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
         }
       }
     },

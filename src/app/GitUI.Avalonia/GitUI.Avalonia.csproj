@@ -49,6 +49,9 @@
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" Link="CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" Link="CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\FormVerify.LostObject.cs" Link="CommandsDialogs\FormVerify.LostObject.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" Link="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" Link="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
+    <Compile Include="..\GitUI\CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" Link="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\FormRemotesController.cs" Link="CommandsDialogs\FormRemotesController.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridFileUpdate.cs" Link="CommandsDialogs\IRevisionGridFileUpdate.cs" />
     <Compile Include="..\GitUI\CommandsDialogs\IRevisionGridInfo.cs" Link="CommandsDialogs\IRevisionGridInfo.cs" />
