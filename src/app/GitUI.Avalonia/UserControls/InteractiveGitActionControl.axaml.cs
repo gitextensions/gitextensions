@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
 using ResourceManager;
@@ -255,8 +256,19 @@ public partial class InteractiveGitActionControl : GitModuleControl
         switch (_action)
         {
             case GitAction.Bisect:
-                // Cross-platform constraint: FormBisect is owned by P5.5; keep the action visible until its same-named twin is available.
-                return;
+                if (Form is not FormBrowse formBrowse)
+                {
+                    return;
+                }
+
+                using (FormBisect frm = new(formBrowse.RevisionGridControl))
+                {
+                    // Framework constraint: the modal owner is the hosting window, not this Avalonia control.
+                    frm.ShowDialog(Form);
+                }
+
+                Form.UICommands.RepoChangedNotifier.Notify();
+                break;
             case GitAction.Rebase:
                 Form.UICommands.StartTheContinueRebaseDialog(Form);
                 break;
