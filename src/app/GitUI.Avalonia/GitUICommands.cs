@@ -835,7 +835,18 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action);
     }
 
-    public bool StartAddToGitIgnoreDialog(IWin32Window? owner, bool localExclude, params string[] filePattern) => throw NotPorted(nameof(StartAddToGitIgnoreDialog));
+    public bool StartAddToGitIgnoreDialog(IWin32Window? owner, bool localExclude, params string[] filePattern)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormAddToGitIgnore frm = new(this, localExclude, filePattern);
+            frm.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, changesRepo: false, postEvent: PostEditGitIgnore);
+    }
+
     public bool StartAmendCommitDialog(IWin32Window? owner, GitRevision revision)
     {
         bool Action()
@@ -1207,8 +1218,30 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action);
     }
 
-    public bool StartEditGitAttributesDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartEditGitAttributesDialog));
-    public bool StartEditGitIgnoreDialog(IWin32Window? owner, bool localExcludes) => throw NotPorted(nameof(StartEditGitIgnoreDialog));
+    public bool StartEditGitAttributesDialog(IWin32Window? owner = null)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormGitAttributes form = new(this);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, changesRepo: false);
+    }
+
+    public bool StartEditGitIgnoreDialog(IWin32Window? owner, bool localExcludes)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormGitIgnore form = new(this, localExcludes);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, changesRepo: false, postEvent: PostEditGitIgnore);
+    }
+
     public bool StartFileEditorDialog(string? filename, bool showWarning = false, int? lineNumber = null)
     {
         using FormEditor formEditor = new(this, filename, showWarning, lineNumber: lineNumber);
@@ -1311,7 +1344,18 @@ public sealed class GitUICommands : IGitUICommands
             startRebaseImmediately: true);
     }
 
-    public bool StartMailMapDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartMailMapDialog));
+    public bool StartMailMapDialog(IWin32Window? owner = null)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormMailMap form = new(this);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, changesRepo: false);
+    }
+
     public bool StartMergeBranchDialog(IWin32Window? owner, string? branch)
     {
         bool Action()
