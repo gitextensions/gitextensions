@@ -455,18 +455,17 @@ partial class FileStatusList
         tsmiShowFindInCommitFilesGitGrep.IsVisible = CanUseFindInCommitFilesGitGrep;
         tsmiShowFindInCommitFilesGitGrep.IsChecked = FindInCommitFilesGitGrepVisible;
 
-        // The native ignore dialogs are owned by their later dialog tranche. Keeping these
-        // entries hidden avoids exposing the current GitUICommands NotPorted boundary.
-        tsmiAddFileToGitIgnore.IsVisible = false;
-        tsmiAddFileToGitInfoExclude.IsVisible = false;
-        tsmiSkipWorktree.IsVisible = anyWorkTree && anyTracked && !anySubmodule;
+        bool canIgnoreFiles = anyWorkTree && !anySubmodule;
+        tsmiAddFileToGitIgnore.IsVisible = canIgnoreFiles;
+        tsmiAddFileToGitInfoExclude.IsVisible = canIgnoreFiles;
+        tsmiSkipWorktree.IsVisible = canIgnoreFiles && anyTracked;
         tsmiAssumeUnchanged.IsVisible = tsmiSkipWorktree.IsVisible;
         tsmiStopTracking.IsVisible = singleItem && anyTracked;
         tsmiSkipWorktree.IsChecked = selected.Any(item => item.Item.IsSkipWorktree);
         tsmiAssumeUnchanged.IsChecked = selected.Any(item => item.Item.IsAssumeUnchanged);
         ToolTip.SetTip(tsmiSkipWorktree, _skipWorktreeToolTip.Text);
         ToolTip.SetTip(tsmiAssumeUnchanged, _assumeUnchangedToolTip.Text);
-        sepIgnore.IsVisible = tsmiSkipWorktree.IsVisible || tsmiAssumeUnchanged.IsVisible || tsmiStopTracking.IsVisible;
+        sepIgnore.IsVisible = canIgnoreFiles || tsmiStopTracking.IsVisible;
     }
 
     public void RepositoryChanged()

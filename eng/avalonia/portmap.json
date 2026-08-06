@@ -2758,12 +2758,16 @@
     "plannedIn": "P5.8"
   },
   "src/app/GitUI/CommandsDialogs/FormAddToGitIgnore.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddToGitIgnore.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Preview dialog for adding a file pattern to .gitignore or .git/info/exclude. Preserves the async ignored-files preview loader, pattern entry, no-match panel, add/cancel, and local-exclude title. WinForms ListBox DataSource maps to ItemsSource; TextBox.Lines maps to a newline split. Wired through StartAddToGitIgnoreDialog with PostEditGitIgnore."
   },
   "src/app/GitUI/CommandsDialogs/FormAddToGitIgnore.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddToGitIgnore.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the file-pattern group, preview group with the _NO_TRANSLATE_Preview list, matched-count label, centered no-match panel (Unmerged icon + label2), and the Ignore/Cancel action row with the original field names and 599x341 size."
   },
   "src/app/GitUI/CommandsDialogs/FormBlame.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBlame.axaml.cs",
@@ -2878,20 +2882,28 @@
     "notes": "Native AXAML preserves the save-to row, RevisionGrid, branch labels, create button, field names, resize minimum, title, and 1030x665 layout; WinForms-only BindingSource components have no rendered Avalonia counterpart."
   },
   "src/app/GitUI/CommandsDialogs/FormGitAttributes.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitAttributes.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Edit .gitattributes dialog over the FileViewer editor. Preserves load/save, unsaved-changes close confirmation, and bare-repo guard. label1 help is a read-only TextBox seeded from the original resx text. Wired through StartEditGitAttributesDialog."
   },
   "src/app/GitUI/CommandsDialogs/FormGitAttributes.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitAttributes.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the editor/help split with the Save action, original field names, and 634x474 size. The Label help maps to a read-only TextBox."
   },
   "src/app/GitUI/CommandsDialogs/FormGitIgnore.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitIgnore.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Edit .gitignore / .git/info/exclude dialog over the FileViewer editor and the linked GitIgnoreModel/GitLocalExcludeModel. Preserves load/save, unsaved-changes close confirmation, add-default-patterns, add-pattern (opens FormAddToGitIgnore), example/generate links, and bare-repo guard. Escape close is handled by the base OnKeyDown; ProcessCmdKey is not reintroduced. label1 help is a read-only TextBox seeded from the original resx text. Wired through StartEditGitIgnoreDialog with PostEditGitIgnore."
   },
   "src/app/GitUI/CommandsDialogs/FormGitIgnore.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitIgnore.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the editor/help split with the AddDefault/AddPattern buttons, the example/generate hyperlink row, the Save/Cancel action row, original field names, 634x623 size, and 650x498 minimum. LinkLabel maps to HyperlinkButton; the help label is a read-only TextBox."
   },
   "src/app/GitUI/CommandsDialogs/FormLog.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormLog.axaml.cs",
@@ -2906,12 +2918,16 @@
     "notes": "Native AXAML preserves the horizontal RevisionGrid/lower split and the lower DiffFiles/diffViewer split with the original splitContainer1/splitContainer3 field identities, RevisionGrid, DiffFiles, and diffViewer fields, 750x529 window size, and 250x250 minimum."
   },
   "src/app/GitUI/CommandsDialogs/FormMailMap.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMailMap.axaml.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Edit .mailmap dialog over the FileViewer editor. Preserves load/save (with RepoChangedNotifier.Notify), unsaved-changes close confirmation, and bare-repo guard. label1 help is a read-only TextBox seeded from the original resx text. Wired through StartMailMapDialog."
   },
   "src/app/GitUI/CommandsDialogs/FormMailMap.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMailMap.axaml",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Native AXAML preserves the editor/help split with the Save action, original field names, and 634x474 size. The Label help maps to a read-only TextBox."
   },
   "src/app/GitUI/CommandsDialogs/FormSparseWorkingCopy.cs": {
     "status": "unported",
@@ -2926,16 +2942,22 @@
     "plannedIn": "P5.9"
   },
   "src/app/GitUI/CommandsDialogs/GitIgnoreDialog/GitIgnoreModel.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/GitIgnoreDialog/GitIgnoreModel.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged; framework-neutral .gitignore dialog model (caption, resolved exclude path, save/error strings)."
   },
   "src/app/GitUI/CommandsDialogs/GitIgnoreDialog/GitLocalExcludeModel.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/GitIgnoreDialog/GitLocalExcludeModel.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged; framework-neutral .git/info/exclude dialog model."
   },
   "src/app/GitUI/CommandsDialogs/GitIgnoreDialog/IGitIgnoreDialogModel.cs": {
-    "status": "unported",
-    "plannedIn": "P5.4"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/GitIgnoreDialog/IGitIgnoreDialogModel.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Linked unchanged; framework-neutral dialog-model contract."
   },
   "src/app/GitUI/CommandsDialogs/Menus/CopyPathsToolStripMenuItem.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/CopyPathsToolStripMenuItem.axaml.cs",
