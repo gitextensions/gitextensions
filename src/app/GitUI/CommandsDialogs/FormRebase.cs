@@ -398,7 +398,7 @@ public partial class FormRebase : GitExtensionsDialog
     private void btnChooseFromRevision_Click(object sender, EventArgs e)
     {
         bool previousValueBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-        bool previousValueShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool previousValueShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly.Value;
         bool previousValueShowReflogReferences = AppSettings.ShowReflogReferences;
         bool previousValueShowStashes = AppSettings.ShowStashes;
 
