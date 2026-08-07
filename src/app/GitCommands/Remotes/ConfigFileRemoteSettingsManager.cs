@@ -102,7 +102,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
     public void ConfigureRemotes(string remoteName)
     {
         IGitModule module = GetModule();
-        IReadOnlyList<IGitRef> moduleRefs = module.GetRefs(RefsFilter.Heads);
+        IReadOnlyList<IGitRef> moduleRefs = module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes);
 
         foreach (IGitRef remoteHead in moduleRefs)
         {

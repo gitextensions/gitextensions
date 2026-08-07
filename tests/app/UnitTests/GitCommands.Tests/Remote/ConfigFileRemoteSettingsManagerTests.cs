@@ -347,6 +347,9 @@ internal class ConfigFileRemoteSettingsManagerTests
         gitRef.Remote.Returns(remote);
         gitRef.IsRemote.Returns(isRemote);
         gitRef.IsTag.Returns(isTag);
+        string mergeWithValue = "";
+        gitRef.MergeWith.Returns(_ => mergeWithValue);
+        gitRef.When(x => { x.MergeWith = Arg.Any<string>(); }).Do(info => mergeWithValue = info.Arg<string>());
         return gitRef;
     }
 
