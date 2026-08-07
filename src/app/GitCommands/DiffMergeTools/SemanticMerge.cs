@@ -1,4 +1,4 @@
-namespace GitCommands.DiffMergeTools;
+﻿namespace GitCommands.DiffMergeTools;
 
 internal sealed class SemanticMerge : DiffMergeTool
 {
@@ -8,7 +8,7 @@ internal sealed class SemanticMerge : DiffMergeTool
     public override string DiffCommand => "-s \"$LOCAL\" -d \"$REMOTE\"";
 
     /// <inheritdoc />
-    public override string ExeFileName => "semanticmergetool.exe";
+    public override string ExeFileName => OperatingSystem.IsWindows() ? "semanticmergetool.exe" : "semanticmergetool";
 
     /// <inheritdoc />
     public override string MergeCommand => "-s \"$REMOTE\" -d \"$LOCAL\" -b \"$BASE\" -r \"$MERGED\"";

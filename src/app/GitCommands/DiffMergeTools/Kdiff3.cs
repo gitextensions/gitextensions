@@ -1,9 +1,9 @@
-namespace GitCommands.DiffMergeTools;
+﻿namespace GitCommands.DiffMergeTools;
 
 internal sealed class Kdiff3 : DiffMergeTool
 {
     /// <inheritdoc />
-    public override string ExeFileName => "kdiff3.exe";
+    public override string ExeFileName => OperatingSystem.IsWindows() ? "kdiff3.exe" : "kdiff3";
 
     /// <inheritdoc />
     public override string MergeCommand => "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
