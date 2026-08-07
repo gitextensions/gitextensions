@@ -106,9 +106,10 @@ public sealed class GitConfigSettingsTests
 
     /// <summary>
     ///  Runs against the real git executable instead of staged output.
-    ///  <br>The tests above encode our assumption about what "git config list --includes" emits;
-    ///  these verify that assumption against git itself.</br>
+    ///  <br/>The tests above encode our assumption about what "git config list --includes" emits;
+    ///  these verify that assumption against git itself.
     /// </summary>
+    [TestFixture]
     public sealed class IntegrationTests
     {
         [Test]
