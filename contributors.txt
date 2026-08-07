@@ -231,3 +231,4 @@ YYYY/MM/DD, github id, Full name, email
 2026/06/01, becm, Marc Becker, becm@gmx.de
 2026/07/15, SparshGarg999, Sparsh Garg, sparshgarg307@gmail.com
 2026/08/05, mantasaudickas, Mantas Audickas, mantas.audickas@gmail.com
+2026/08/04, AlexThunder1989, Alexander Karlsson, alexthunder(at)gmail.com
