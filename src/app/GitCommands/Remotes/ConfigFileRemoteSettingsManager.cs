@@ -8,8 +8,6 @@ namespace GitCommands.Remotes;
 
 public interface IConfigFileRemoteSettingsManager
 {
-    void ConfigureRemotes(string remoteName);
-
     /// <summary>
     /// Returns the default remote for push operation.
     /// </summary>
@@ -96,35 +94,6 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
     public ConfigFileRemoteSettingsManager(Func<IGitModule?> getModule)
     {
         _getModule = getModule;
-    }
-
-    // TODO: moved verbatim from FormRemotes.cs, perhaps needs refactoring
-    public void ConfigureRemotes(string remoteName)
-    {
-        IGitModule module = GetModule();
-        IReadOnlyList<IGitRef> moduleRefs = module.GetRefs(RefsFilter.Heads);
-
-        foreach (IGitRef remoteHead in moduleRefs)
-        {
-            if (!remoteHead.IsRemote ||
-                !remoteHead.Name.Contains(remoteName, StringComparison.InvariantCultureIgnoreCase))
-            {
-                continue;
-            }
-
-            foreach (IGitRef localHead in moduleRefs)
-            {
-                if (localHead.IsRemote ||
-                    !string.IsNullOrEmpty(localHead.TrackingRemote) ||
-                    !remoteHead.Name.Contains(localHead.Name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    continue;
-                }
-
-                localHead.TrackingRemote = remoteName;
-                localHead.MergeWith = localHead.Name;
-            }
-        }
     }
 
     /// <summary>
