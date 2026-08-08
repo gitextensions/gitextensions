@@ -373,64 +373,64 @@
     "notes": "Scrollable compact caption/control rows replace AutoLayoutSettingsPage's generated table while retaining the original empty-state label and translation identity. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
   },
   "src/app/GitUI/SettingControlBindings/BoolSettingControlBinding.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/BoolSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Consolidated Avalonia renderer preserves nullable/effective tri-state load and save behavior."
+    "notes": "P6.2 restores the original class boundary and member order. Native Avalonia CheckBox replaces the WinForms control while preserving nullable/effective tri-state load and save behavior."
   },
   "src/app/GitUI/SettingControlBindings/ChoiceSettingControlBinding.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/ChoiceSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Consolidated Avalonia renderer preserves the declared choice list, selected value, and effective-setting comparison."
+    "notes": "P6.2 restores the original class boundary. Avalonia's non-editable ComboBox uses PlaceholderText for an unmatched legacy value because it has no writable DropDownList Text surface."
   },
   "src/app/GitUI/SettingControlBindings/CredentialsSettingControlBinding.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/CredentialsSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Consolidated Avalonia renderer preserves supported setting levels, username/password load and save, password masking, custom labels, and username-field visibility over the portable git-credential backend."
+    "notes": "P6.2 restores the original class boundary. A native Grid and TextBox fields replace the WinForms CredentialsControl visual while retaining its portable model, supported levels, masked password, custom labels, save, and post-save reload."
   },
   "src/app/GitUI/SettingControlBindings/NumberSettingControlBinding.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/NumberSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Consolidated Avalonia renderer reuses the existing SettingsPageBase translated numeric placeholder."
+    "notes": "P6.2 restores the original static placeholder class and property; the translated value is applied to native numeric controls."
   },
   "src/app/GitUI/SettingControlBindings/NumberSettingNumericUpDownBinding.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/NumberSettingNumericUpDownBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Consolidated Avalonia renderer uses the native nullable NumericUpDown with the original non-negative Int32 range and effective-setting behavior."
+    "notes": "P6.2 restores the original class boundary and TODO. Avalonia's nullable NumericUpDown and attached ToolTip replace ResetText and the WinForms ToolTip while preserving the range and null/effective behavior."
   },
   "src/app/GitUI/SettingControlBindings/NumberSettingTextBoxBinding.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/NumberSettingTextBoxBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Consolidated Avalonia renderer preserves current-culture numeric conversion, unset values, effective-setting comparisons, and invalid-value highlighting."
+    "notes": "P6.2 restores the original generic class boundary. A local parser mirrors the inaccessible internal NumberSetting<T> parser, and an Avalonia validation class replaces direct SystemColors assignments."
   },
   "src/app/GitUI/SettingControlBindings/PasswordSettingControlBinding.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/PasswordSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Consolidated Avalonia renderer preserves password masking and the string binding's null/empty/effective semantics."
+    "notes": "P6.2 restores the original class boundary; the native TextBox preserves masking and the string binding's null, explicit-empty, trim, placeholder, and effective semantics."
   },
   "src/app/GitUI/SettingControlBindings/PseudoSettingControlBinding.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/PseudoSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Consolidated Avalonia renderer adapts the supplied headless text/check/choice/link control model without persisting a value; LinkLabel activation is forwarded from a native HyperlinkButton."
+    "notes": "P6.2 restores the original class boundary. The compat adapter synchronizes the supplied portable text/check/choice/link model because Avalonia cannot host the headless control directly; no setting value is persisted."
   },
   "src/app/GitUI/SettingControlBindings/SettingControlBindingsProvider.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/SettingControlBindingsProvider.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Avalonia-side factory consolidates the same model dispatch and adapts credentials plus plugin-provided headless TextBox, CheckBox, ComboBox, and LinkLabel bindings."
+    "notes": "P6.2 restores the original provider boundary and typed/runtime dispatch. It returns native PluginSettingBinding objects because the shared ISettingControlBinding contract exposes headless WinForms-shaped controls; custom bindings retain their exact instance through Compat."
   },
   "src/app/GitUI/SettingControlBindings/StringSettingControlBinding.cs": {
-    "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+    "twin": "src/app/GitUI.Avalonia/SettingControlBindings/StringSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Consolidated Avalonia renderer preserves null versus explicit empty string, trimming, multiline newline normalization, translated placeholders, and effective-setting comparisons."
+    "notes": "P6.2 restores the original class, constants, placeholder property, comments, and member order; native TextBox replaces WinForms while preserving null, explicit-empty, trim, multiline, and effective semantics."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageBase.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.cs",

@@ -225,7 +225,7 @@ public sealed class PluginSettingsTests
 
             ITranslation translation = Substitute.For<ITranslation>();
             translation.TranslateItem(
-                    nameof(SettingsPageBase),
+                    nameof(DistributedSettingsPage),
                     "_stringSettingPlaceholder",
                     "Text",
                     Arg.Any<Func<string>>())
