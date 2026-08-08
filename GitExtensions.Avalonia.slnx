@@ -25,6 +25,7 @@
     <Project Path="src/plugins/DeleteUnusedBranches/GitExtensions.Plugins.DeleteUnusedBranches.csproj" />
     <Project Path="src/plugins/FindLargeFiles/GitExtensions.Plugins.FindLargeFiles.csproj" />
     <Project Path="src/plugins/GitHub3/GitExtensions.Plugins.GitHub3.csproj" />
+    <Project Path="src/plugins/Gource/GitExtensions.Plugins.Gource.csproj" />
     <Project Path="src/plugins/ProxySwitcher/GitExtensions.Plugins.ProxySwitcher.csproj" />
     <Project Path="src/plugins/ReleaseNotesGenerator/GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
     <Project Path="src/plugins/Statistics/GitImpact/GitExtensions.Plugins.GitImpact.csproj" />
