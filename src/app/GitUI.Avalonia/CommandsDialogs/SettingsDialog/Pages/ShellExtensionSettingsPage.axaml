@@ -1,0 +1,69 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:properties="using:GitUI.Properties"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage"
+                                 MinWidth="650"
+                                 MinHeight="331"
+                                 Text="Shell extension">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel x:Name="tlpnlMain"
+                Margin="8"
+                Spacing="6">
+      <GroupBox x:Name="gbExplorerIntegration"
+                Header="Windows Explorer integration">
+        <StackPanel x:Name="flpnlExplorerIntegration"
+                    Margin="8,4,8,8"
+                    Orientation="Horizontal"
+                    Spacing="6">
+          <Button x:Name="RegisterButton"
+                  Content="_Enable shell extension" />
+          <Button x:Name="UnregisterButton"
+                  Content="_Disable shell extension" />
+        </StackPanel>
+      </GroupBox>
+      <GroupBox x:Name="gbCascadingMenu"
+                Header="Cascaded context menu">
+        <Grid x:Name="tlpnlCascadingMenu"
+              Margin="8,4,8,8"
+              ColumnDefinitions="Auto,Auto,*"
+              RowDefinitions="Auto,Auto,*"
+              ColumnSpacing="4"
+              RowSpacing="4">
+          <CheckBox x:Name="cbAlwaysShowAllCommands"
+                    Grid.ColumnSpan="3"
+                    Content="Always show all commands" />
+          <TextBlock x:Name="lblMenuEntries"
+                     Grid.Row="1"
+                     VerticalAlignment="Center"
+                     Text="Configuration of items in the context menu" />
+          <Image x:Name="menuHelp"
+                 Grid.Row="1"
+                 Grid.Column="1"
+                 Width="16"
+                 Height="16"
+                 Cursor="Hand"
+                 Source="{x:Static properties:Images.Information}" />
+          <TextBlock x:Name="label1"
+                     Grid.Row="1"
+                     Grid.Column="2"
+                     VerticalAlignment="Center"
+                     Text="Context menu preview:" />
+          <ListBox x:Name="_NO_TRANSLATE_chlMenuEntries"
+                   Grid.Row="2"
+                   Grid.ColumnSpan="2"
+                   MinWidth="315"
+                   MinHeight="190" />
+          <Border Grid.Row="2"
+                  Grid.Column="2"
+                  Padding="3">
+            <TextBlock x:Name="labelPreview"
+                       Text="..."
+                       TextWrapping="Wrap" />
+          </Border>
+        </Grid>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

@@ -190,6 +190,14 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             SettingsPageBase.Create<HotkeysSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
             Images.Hotkey);
+        if (OperatingSystem.IsWindows())
+        {
+            settingsTreeView.AddSettingsPage(
+                SettingsPageBase.Create<ShellExtensionSettingsPage>(this, serviceProvider),
+                GitExtensionsSettingsGroup.GetPageReference(),
+                Images.ShellExtensions);
+        }
+
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<AdvancedSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
@@ -203,9 +211,21 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             GitExtensionsSettingsGroup.GetPageReference(),
             Images.Settings);
         settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<FormBrowseRepoSettingsPage>(this, serviceProvider),
+            DetailedSettingsPage.GetPageReference(),
+            Images.BranchFolder);
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<CommitDialogSettingsPage>(this, serviceProvider),
+            DetailedSettingsPage.GetPageReference(),
+            Images.CommitSummary);
+        settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<DiffViewerSettingsPage>(this, serviceProvider),
             DetailedSettingsPage.GetPageReference(),
             Images.Diff);
+        settingsTreeView.AddSettingsPage(
+            SettingsPageBase.Create<BlameViewerSettingsPage>(this, serviceProvider),
+            DetailedSettingsPage.GetPageReference(),
+            Images.Blame);
         SshSettingsPage sshSettingsPage =
             SettingsPageBase.Create<SshSettingsPage>(this, serviceProvider);
         settingsTreeView.AddSettingsPage(

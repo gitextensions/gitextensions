@@ -18,6 +18,7 @@ using GitExtensions.Extensibility.Settings;
 using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
 using GitUI.SpellChecker;
 using Microsoft.VisualStudio.Threading;
@@ -335,7 +336,9 @@ public sealed partial class ParityScreenshotTests
         Control view = CreateView(context, descriptor.ViewType);
         (double width, double height) = GetCaptureSize(descriptor.ViewType);
         double renderScale = scalePercent / 100d;
-        if (descriptor.ViewType == typeof(EditNetSpell) || descriptor.ViewType == typeof(RevisionGridControl))
+        if (descriptor.ViewType == typeof(EditNetSpell)
+            || descriptor.ViewType == typeof(RevisionGridControl)
+            || descriptor.ViewType == typeof(BlameViewerSettingsPage))
         {
             // parity-scaffolding: The WinForms standalone host keeps this Designer-sized control in physical pixels.
             width = (width - 0.75) / renderScale;

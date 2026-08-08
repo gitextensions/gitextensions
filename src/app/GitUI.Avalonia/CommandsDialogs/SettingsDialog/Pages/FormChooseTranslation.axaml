@@ -1,0 +1,26 @@
+<gitui:GitExtensionsForm xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:gitui="using:GitUI"
+                         x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.FormChooseTranslation"
+                         Width="800"
+                         Height="539"
+                         MinWidth="500"
+                         MinHeight="360"
+                         CanResize="True"
+                         WindowStartupLocation="CenterScreen"
+                         Title="Choose language">
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        RowSpacing="8">
+    <TextBlock x:Name="label1"
+               FontSize="18"
+               FontWeight="SemiBold"
+               Text="Choose your language" />
+    <TextBlock x:Name="label2"
+               Grid.Row="1"
+               Text="You can change the language at any time in the settings dialog"
+               TextWrapping="Wrap" />
+    <ListBox x:Name="lvTranslations"
+             Grid.Row="2" />
+  </Grid>
+</gitui:GitExtensionsForm>
