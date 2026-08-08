@@ -2970,7 +2970,7 @@ public sealed partial class GitModule : IGitModule
     public string GetRemoteBranch(string branch)
     {
         string remote = GetSetting(string.Format(SettingKeyString.BranchRemote, branch));
-        string merge = GetSetting($"branch.{branch}.merge");
+        string merge = GetSetting(string.Format(SettingKeyString.BranchMerge, branch));
 
         if (string.IsNullOrEmpty(remote) || string.IsNullOrEmpty(merge))
         {
@@ -3912,7 +3912,7 @@ public sealed partial class GitModule : IGitModule
             (string section, string? subsection, string name) = IGitConfigSettingsGetter.SplitSetting(setting);
             if (section == "branch" && name == "remote" && value == remoteName)
             {
-                string? remoteBranch = localGitConfigSettings.GetValue($"{section}.{subsection}.merge")?.Replace("refs/heads/", string.Empty);
+                string? remoteBranch = localGitConfigSettings.GetValue(string.Format(SettingKeyString.BranchMerge, subsection))?.Replace("refs/heads/", string.Empty);
                 if (remoteBranch == branchName)
                 {
                     return subsection;
