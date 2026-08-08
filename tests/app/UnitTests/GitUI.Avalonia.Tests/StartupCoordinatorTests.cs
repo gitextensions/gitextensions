@@ -6,6 +6,7 @@ using GitExtensions.Extensibility.Settings;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -108,28 +109,50 @@ public sealed class StartupCoordinatorTests
     [AvaloniaTest]
     public void Checklist_should_report_invalid_settings_without_throwing_when_git_is_unavailable()
     {
-        IGitModule module = Substitute.For<IGitModule>();
-        module.GitExecutable.Returns(Substitute.For<IExecutable>());
-        CommonLogic commonLogic = new(module);
-        SettingsPageHostMock pageHost = new(new CheckSettingsLogic(commonLogic));
-        ChecklistSettingsPage page = SettingsPageBase.Create<ChecklistSettingsPage>(
-            pageHost,
-            Substitute.For<IServiceProvider>());
+        WinFormsShims.IMessageBoxHost? originalMessageBoxHost = TryGetMessageBoxHost();
+        WinFormsShims.ShimHost.MessageBoxHost = new StubMessageBoxHost();
 
-        bool result = page.CheckSettings();
+        try
+        {
+            IGitModule module = Substitute.For<IGitModule>();
+            module.GitExecutable.Returns(Substitute.For<IExecutable>());
+            CommonLogic commonLogic = new(module);
+            SettingsPageHostMock pageHost = new(new CheckSettingsLogic(commonLogic));
+            ChecklistSettingsPage page = SettingsPageBase.Create<ChecklistSettingsPage>(
+                pageHost,
+                Substitute.For<IServiceProvider>());
 
-        result.Should().BeFalse();
-        string[] windowsOnlyRows =
-        [
-            "ShellExtensionsRegistered",
-            "GitBinFound",
-            "GitExtensionsInstall",
-            "SshConfig",
-        ];
-        windowsOnlyRows
-            .Select(name => Avalonia.Controls.ControlExtensions
-                .FindControl<Avalonia.Controls.Button>(page, name)!.IsVisible)
-            .Should().OnlyContain(isVisible => isVisible == OperatingSystem.IsWindows());
+            bool result = page.CheckSettings();
+
+            result.Should().BeFalse();
+            string[] windowsOnlyRows =
+            [
+                "ShellExtensionsRegistered",
+                "GitBinFound",
+                "GitExtensionsInstall",
+                "SshConfig",
+            ];
+            windowsOnlyRows
+                .Select(name => Avalonia.Controls.ControlExtensions
+                    .FindControl<Avalonia.Controls.Button>(page, name)!.IsVisible)
+                .Should().OnlyContain(isVisible => isVisible == OperatingSystem.IsWindows());
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.MessageBoxHost = originalMessageBoxHost ?? new StubMessageBoxHost();
+        }
+
+        static WinFormsShims.IMessageBoxHost? TryGetMessageBoxHost()
+        {
+            try
+            {
+                return WinFormsShims.ShimHost.MessageBoxHost;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+        }
     }
 
     [Test]
@@ -206,4 +229,16 @@ public sealed class StartupCoordinatorTests
 
     private static string NormalizePath(string path)
         => Path.TrimEndingDirectorySeparator(Path.GetFullPath(path));
+
+    private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
+    {
+        public WinFormsShims.DialogResult Show(
+            WinFormsShims.IWin32Window? owner,
+            string? text,
+            string? caption,
+            WinFormsShims.MessageBoxButtons buttons,
+            WinFormsShims.MessageBoxIcon icon,
+            WinFormsShims.MessageBoxDefaultButton defaultButton)
+            => WinFormsShims.DialogResult.OK;
+    }
 }

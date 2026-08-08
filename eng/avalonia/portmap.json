@@ -322,7 +322,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named modal settings host with the original page lifecycle, last/initial-page navigation, page hosting, load/apply/discard/OK/cancel flow, shared settings containers, PostSettings command routing, and the root placeholder. GeneralSettingsPage and AppearanceSettingsPage are registered under Git Extensions, with Sorting, Colors, Fonts, and Console style nested beneath Appearance in their original order. Git paths, Git config, advanced Git config, and the Git root introduction are registered beneath the original Git group. The Plugins root, introduction, and alphabetically sorted generic settings pages are registered from the runtime PluginRegistry with each plugin's portable icon. Remaining built-in pages land incrementally."
+    "notes": "Same-named modal settings host with the original checklist root, page lifecycle, last/initial-page navigation, page hosting and focus, load/apply/discard/OK/cancel flow, expected SaveSettingsException reporting, Windows HOME validation, shared settings containers, PostSettings command routing, and Plugin: title prefix. GeneralSettingsPage and AppearanceSettingsPage are registered under Git Extensions, with Sorting, Colors, Fonts, and Console style nested beneath Appearance in their original order. Git paths, Git config, advanced Git config, and the Git root introduction are registered beneath the original Git group. The Plugins root, introduction, and alphabetically sorted generic settings pages are registered from the runtime PluginRegistry with each plugin's portable icon. The parameterless preview/test constructor skips OnPageShown because runtime services do not exist there."
   },
   "src/app/GitUI/CommandsDialogs/FormSettings.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml",
@@ -1084,7 +1084,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same root replacement, hierarchy, initial/programmatic navigation, selected-page event, AND-keyword search, cycling foundation, and page enumeration over native Avalonia TreeViewItems. Unknown references fall back to the first root while their pages are incrementally ported. Its standalone construction path explicitly projects WinForms input and automation metadata."
+    "notes": "Same root replacement, hierarchy, initial/programmatic navigation, selected-page event, AND-keyword search, Enter-key cycling, and page enumeration over native Avalonia TreeViewItems. Like WinForms, an unknown page reference leaves the current selection unchanged. Its standalone construction path explicitly projects WinForms input and automation metadata."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml",
@@ -1114,7 +1114,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "58937dbe78448761e69f47d7170b991c511425ef",
-    "notes": "Complete same-named startup checklist for Git supported/recommended version, identity, merge and diff tools, editor, translation, and the original Windows-only install registration, shell extensions, Linux tools, SSH, and obsolete credential-helper checks. Windows-only rows remain absent on Linux/macOS. Status and Repair controls retain their original identities; every repair routes to a real native settings page/service, unavailable Git/config state is tolerated while locating Git, and startup checking disables only after all applicable checks pass."
+    "notes": "Complete same-named startup checklist for Git supported/recommended version, identity, merge and diff tools, editor, translation, and the original Windows-only install registration, shell extensions, Linux tools, SSH, and obsolete credential-helper checks. Windows-only rows remain absent on Linux/macOS. Status and Repair controls retain their original identities; Git and Linux-tools discovery preserve the original failure/success prompts and load/save/rescan ordering, configured diff/merge repairs rescan while unconfigured tools navigate to global Git settings, PuTTY discovery preserves its original branch, and startup checking disables only after all applicable checks pass."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.axaml",
