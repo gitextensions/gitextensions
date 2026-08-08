@@ -1980,7 +1980,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         this.InvokeAndForget(async () =>
         {
             await _revisionGraphColumnProvider.SetHoverHighlightAsync(gitRef, rowIndex);
-            _gridView.RequestGraphRedraw();
+            _gridView.RequestRedrawWithoutClear();
         });
     }
 

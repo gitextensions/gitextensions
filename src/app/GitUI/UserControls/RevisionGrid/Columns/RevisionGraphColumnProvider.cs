@@ -19,16 +19,13 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
     private int _columnWidth = 0;
 
-    private const int HighlightCacheCapacity = 4;
     private const int HoverHighlightDebounceMs = 100;
 
     private readonly record struct HighlightCacheEntry(string GitRefCompleteName, string? GitRefGuid, int RowIndex, VisibleRowRange VisibleRange, int RevisionCount, IReadOnlySet<ObjectId>? HighlightedIds);
 
     private IReadOnlySet<ObjectId>? _hoverHighlightedIds;
-    private volatile bool _hoverHighlightDirty;
-    private VisibleRowRange _lastVisibleRange;
-    private readonly HighlightCacheEntry[] _highlightCache = new HighlightCacheEntry[HighlightCacheCapacity];
-    private int _highlightCacheNext;
+    private bool _hoverHighlightDirty;
+    private VisibleRowRange _cachedVisibleRange;
     private readonly CancellationTokenSequence _hoverHighlightSequence = new();
 
     public RevisionGraphColumnProvider(RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
@@ -124,7 +121,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 
     private void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
     {
-        _lastVisibleRange = range;
+        _cachedVisibleRange = range;
 
         int width = CalculateGraphColumnWidth(range);
         if (_columnWidth != width)
@@ -232,8 +229,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     {
         _graphRenderCache.Reset();
         _graphDisplayCache.Reset();
-        Array.Clear(_highlightCache);
-        _highlightCacheNext = 0;
         _hoverHighlightedIds = null;
         _hoverHighlightDirty = true;
     }
@@ -281,27 +276,13 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         }
 
         int revisionCount = _revisionGraph.Count;
-
-        // Check the small ring-buffer cache before recomputing.
-        // This is intended to cover moving the mouse pointer around in the graph.
-        if (TryApplyFromCache(_highlightCache, gitRef, rowIndex, _lastVisibleRange, revisionCount, out IReadOnlySet<ObjectId>? hoverHighlightedIds))
-        {
-            if (!HightlightIdsSameValues(_hoverHighlightedIds, hoverHighlightedIds))
-            {
-                _hoverHighlightedIds = hoverHighlightedIds;
-                _hoverHighlightDirty = true;
-            }
-
-            return;
-        }
-
         HashSet<ObjectId> ancestorIds = [];
 
         // Build the set of currently visible ObjectIds below current row (and some parents/children).
         RevisionGraphRevision? hoveredRevision = _revisionGraph.GetNodeForRow(rowIndex);
         Validates.NotNull(hoveredRevision);
-        int visibleTo = Math.Max(_lastVisibleRange.Count - 1, _lastVisibleRange.FromIndex + _lastVisibleRange.Count - 1);
-        HashSet<ObjectId> visibleIds = new(capacity: 50 + (2 * _lastVisibleRange.Count));
+        int visibleTo = Math.Max(_cachedVisibleRange.Count - 1, _cachedVisibleRange.FromIndex + _cachedVisibleRange.Count - 1);
+        HashSet<ObjectId> visibleIds = new(capacity: 50 + (2 * _cachedVisibleRange.Count));
 
         // Add visible ids and their parents, find if a tracked branch is in the set
         AddIdAndParents(_revisionGraph, rowIndex, visibleIds);
@@ -326,7 +307,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         else if (checkOtherRefs)
         {
             // Rows above rowIndex are only needed for the upward search
-            int searchFrom = Math.Max(0, _lastVisibleRange.FromIndex - Math.Max(50, _lastVisibleRange.Count));
+            int searchFrom = Math.Max(0, _cachedVisibleRange.FromIndex - Math.Max(50, _cachedVisibleRange.Count));
             for (int row = rowIndex - 1; row >= searchFrom; row--)
             {
                 RevisionGraphRevision rev = AddIdAndParents(_revisionGraph, row, visibleIds);
