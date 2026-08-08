@@ -4,6 +4,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
+using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -13,6 +14,7 @@ using GitExtensions.Plugins.GitHub3;
 using GitUI;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
@@ -296,6 +298,11 @@ public sealed class PluginSettingsTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(hotkeySettingsLoader);
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        IUserRepositoriesListController repositoriesController = Substitute.For<IUserRepositoriesListController>();
+        repositoriesController.PreRenderRepositories(Arg.Any<string>()).Returns((
+            Array.Empty<RecentRepoInfo>(),
+            Array.Empty<RecentRepoInfo>()));
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
         return new FormBrowse(commands);
     }
 

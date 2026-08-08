@@ -23,6 +23,7 @@ using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Plugins.Gource;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
@@ -1676,6 +1677,11 @@ public sealed partial class ParityScreenshotTests
             return (1527, 599);
         }
 
+        if (viewType == typeof(GourceStart))
+        {
+            return (718, 165);
+        }
+
         if (typeof(Window).IsAssignableFrom(viewType))
         {
             return (900, 620);
@@ -1705,6 +1711,8 @@ public sealed partial class ParityScreenshotTests
             new("UserControls/WaitSpinner.cs", "UserControls/WaitSpinner", typeof(WaitSpinner).FullName!, typeof(WaitSpinner)),
             new("UserControls/WatermarkComboBox.cs", "UserControls/WatermarkComboBox", typeof(WatermarkComboBox).FullName!, typeof(WatermarkComboBox)),
             new("UserControls/CaseSensitiveComboBox.cs", "UserControls/CaseSensitiveComboBox", typeof(CaseSensitiveComboBox).FullName!, typeof(CaseSensitiveComboBox)),
+            // parity-scaffolding: Plugin-owned AXAML lives outside GitUI.Avalonia but shares the capture schema and state driver.
+            new("../../plugins/Gource/GourceStart.axaml", "../../plugins/Gource/GourceStart", typeof(GourceStart).FullName!, typeof(GourceStart)),
         ];
     }
 
