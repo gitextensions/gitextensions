@@ -25,6 +25,12 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
     private readonly TranslationString _otherSshClient = new("Other SSH client configured: {0}.");
     private readonly TranslationString _linuxToolsSshNotFound =
         new("Linux tools (sh) not found. To solve this problem you can set the correct path in settings.");
+    private readonly TranslationString _solveGitCommandFailedCaption = new("Locate git");
+    private readonly TranslationString _gitCanBeRun = new("Git can be run using: {0}");
+    private readonly TranslationString _gitCanBeRunCaption = new("Locate git");
+    private readonly TranslationString _solveGitCommandFailed =
+        new("The command to run git could not be determined automatically." + Environment.NewLine +
+            "Please make sure that Git for Windows is installed or set the correct command manually.");
     private readonly TranslationString _shellExtRegistered = new("Shell extensions registered properly.");
     private readonly TranslationString _shellExtNoInstalled =
         new("Shell extensions are not installed. Run the installer to install the shell extensions.");
@@ -49,6 +55,8 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
     private readonly TranslationString _emailSet = new("A username and an email address are configured.");
     private readonly TranslationString _mergeToolXConfiguredNeedsCmd =
         new("{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.");
+    private readonly TranslationString _customMergeToolXConfigured =
+        new("There is a custom mergetool configured: {0}");
     private readonly TranslationString _mergeToolXConfigured =
         new("There is a mergetool configured: {0}");
     private readonly TranslationString _linuxToolsSshFound =
@@ -61,10 +69,20 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         new("There is a difftool configured: {0}");
     private readonly TranslationString _configureMergeTool =
         new("You need to configure merge tool in order to solve merge conflicts.");
+    private readonly TranslationString _noDiffToolConfiguredCaption = new("Difftool");
+    private readonly TranslationString _linuxToolsShNotFound =
+        new("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
+            "Please make sure there are linux tools installed (through Git for Windows or cygwin) or set the correct path manually.");
+    private readonly TranslationString _linuxToolsShNotFoundCaption = new("Locate linux tools");
+    private readonly TranslationString _shCanBeRun = new("Command sh can be run using: {0}sh");
+    private readonly TranslationString _shCanBeRunCaption = new("Locate linux tools");
     private readonly TranslationString _gcmDetectedCaption =
         new("Obsolete git-credential-winstore.exe detected");
     private readonly TranslationString _puttyFoundAuto =
         new("All paths needed for PuTTY could be automatically found and are set.");
+
+    private const string _putty = "PuTTY";
+    private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
     public ChecklistSettingsPage()
         : this(EmptyServiceProvider.Instance)
@@ -97,7 +115,7 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         translationConfig_Fix.Click += translationConfig_Click;
         GcmDetectedFix.Click += GcmDetectedFix_Click;
         Rescan.Click += SaveAndRescan_Click;
-        CheckAtStartup.Click += (_, _) => AppSettings.CheckSettings = CheckAtStartup.IsChecked == true;
+        CheckAtStartup.Click += CheckAtStartup_CheckedChanged;
         InitializeComplete();
     }
 
@@ -112,6 +130,8 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     public bool CheckSettings()
     {
+        _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(
+            () => CheckSettingsLogic.CommonLogic.GitConfigSettingsSet.EffectiveSettings);
         ChecklistResult result = Evaluate(CommonLogic);
         Render(GitFound, GitFound_Fix, isVisible: true, result.GitStatus, result.GitMessage);
         Render(UserNameSet, UserNameSet_Fix, isVisible: true, result.Identity, result.IdentityMessage);
@@ -159,61 +179,68 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         string gitMessage = _gitNotFound.Text;
         bool gitAvailable = TryCheck(() =>
         {
-            if (string.IsNullOrWhiteSpace(commonLogic.Module.GitExecutable.GetOutput(arguments: "--version")))
+            if (!CheckSettingsLogic.CanFindGitCmd())
             {
                 return false;
             }
 
-            IGitVersion version = GitVersion.Current;
-            if (version < GitVersion.LastSupportedVersion)
+            IGitVersion nativeGitVersion = GitVersion.Current;
+            IGitVersion usedGitVersion = commonLogic.Module.IsValidGitWorkingDir()
+                ? GitVersion.CurrentVersion(commonLogic.Module.GitExecutable)
+                : nativeGitVersion;
+            string displayedVersion = nativeGitVersion == usedGitVersion
+                ? $"{nativeGitVersion}"
+                : $"{nativeGitVersion} / WSL {usedGitVersion}";
+            if (usedGitVersion < GitVersion.LastSupportedVersion)
             {
                 gitMessage = string.Format(
                     _wrongGitVersion.Text,
-                    version,
+                    displayedVersion,
                     GitVersion.LastRecommendedVersion);
                 return false;
             }
 
-            if (version < GitVersion.LastRecommendedVersion)
+            if (usedGitVersion < GitVersion.LastRecommendedVersion)
             {
                 gitStatus = CheckState.NotRecommended;
                 gitMessage = string.Format(
                     _notRecommendedGitVersion.Text,
-                    version,
+                    displayedVersion,
                     GitVersion.LastRecommendedVersion);
-                return true;
+                return false;
             }
 
             gitStatus = CheckState.Valid;
-            gitMessage = string.Format(_gitVersionFound.Text, version);
+            gitMessage = string.Format(_gitVersionFound.Text, displayedVersion);
             return true;
         });
-        if (!gitAvailable)
+        if (!gitAvailable && gitStatus != CheckState.NotRecommended)
         {
             gitStatus = CheckState.Invalid;
         }
 
-        bool identity = gitAvailable && TryCheck(() =>
-            !string.IsNullOrWhiteSpace(commonLogic.GitConfigSettingsSet.GlobalSettings.GetValue(SettingKeyString.UserName))
-            && !string.IsNullOrWhiteSpace(commonLogic.GitConfigSettingsSet.GlobalSettings.GetValue(SettingKeyString.UserEmail)));
-        DiffMergeToolConfigurationManager tools = new(
-            () => commonLogic.GitConfigSettingsSet.EffectiveSettings);
+        bool identity = TryCheck(() =>
+            !string.IsNullOrEmpty(commonLogic.GitConfigSettingsSet.GlobalSettings.GetValue(SettingKeyString.UserName))
+            && !string.IsNullOrEmpty(commonLogic.GitConfigSettingsSet.GlobalSettings.GetValue(SettingKeyString.UserEmail)));
+        DiffMergeToolConfigurationManager tools = _diffMergeToolConfigurationManager ??=
+            new DiffMergeToolConfigurationManager(
+                () => commonLogic.GitConfigSettingsSet.EffectiveSettings);
         string? mergeTool = null;
-        bool merge = gitAvailable && TryCheck(() =>
+        bool merge = TryCheck(() =>
         {
             mergeTool = tools.ConfiguredMergeTool;
             return !string.IsNullOrWhiteSpace(mergeTool)
                    && !string.IsNullOrWhiteSpace(tools.GetToolCommand(mergeTool, DiffMergeToolType.Merge));
         });
         string? diffTool = null;
-        bool diff = gitAvailable && TryCheck(() =>
+        bool diff = TryCheck(() =>
         {
             diffTool = tools.ConfiguredDiffTool;
             return !string.IsNullOrWhiteSpace(diffTool)
                    && !string.IsNullOrWhiteSpace(tools.GetToolCommand(diffTool, DiffMergeToolType.Diff));
         });
-        bool editor = gitAvailable && TryCheck(() => !string.IsNullOrWhiteSpace(commonLogic.GetGlobalEditor()));
-        bool translation = !string.IsNullOrWhiteSpace(AppSettings.Translation);
+        bool editor = TryCheck(() => !string.IsNullOrEmpty(commonLogic.GetGlobalEditor()));
+        bool translation = !string.IsNullOrEmpty(AppSettings.Translation);
 
         bool windows = OperatingSystem.IsWindows();
         (bool Install, string Message) install = windows
@@ -341,26 +368,38 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
                 : string.Format(_otherSshClient.Text, sshPath));
         }
 
-        static bool TryCheck(Func<bool> check)
+        bool TryCheck(Func<bool> check)
         {
             try
             {
                 return check();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                MessageBoxes.Show(
+                    TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+                    exception.Message,
+                    TranslatedStrings.Error,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
                 return false;
             }
         }
 
-        static T TryEvaluate<T>(Func<T> check, T fallback)
+        T TryEvaluate<T>(Func<T> check, T fallback)
         {
             try
             {
                 return check();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                MessageBoxes.Show(
+                    TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+                    exception.Message,
+                    TranslatedStrings.Error,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
                 return fallback;
             }
         }
@@ -405,7 +444,24 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private void GitFound_Click(object? sender, EventArgs e)
     {
-        CheckSettingsLogic.SolveGitCommand();
+        if (!CheckSettingsLogic.SolveGitCommand())
+        {
+            MessageBoxes.Show(
+                TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+                _solveGitCommandFailed.Text,
+                _solveGitCommandFailedCaption.Text,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error);
+            PageHost.GotoPage(GitSettingsPage.GetPageReference());
+            return;
+        }
+
+        MessageBoxes.Show(
+            TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+            string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue),
+            _gitCanBeRunCaption.Text,
+            WinFormsShims.MessageBoxButtons.OK,
+            WinFormsShims.MessageBoxIcon.Information);
         PageHost.GotoPage(GitSettingsPage.GetPageReference());
         SaveAndRescan_Click(sender, e);
     }
@@ -414,9 +470,30 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
 
     private void MergeToolFix_Click(object? sender, EventArgs e)
-        => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
+    {
+        string? mergeTool = _diffMergeToolConfigurationManager?.ConfiguredMergeTool;
+        if (string.IsNullOrEmpty(mergeTool))
+        {
+            GotoPageGlobalSettings();
+            return;
+        }
+
+        SaveAndRescan_Click(this, EventArgs.Empty);
+    }
 
     private void DiffToolFix_Click(object? sender, EventArgs e)
+    {
+        string? diffTool = _diffMergeToolConfigurationManager?.ConfiguredDiffTool;
+        if (string.IsNullOrEmpty(diffTool))
+        {
+            GotoPageGlobalSettings();
+            return;
+        }
+
+        SaveAndRescan_Click(this, EventArgs.Empty);
+    }
+
+    private void GotoPageGlobalSettings()
         => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
 
     private void ShellExtensionsRegistered_Click(object? sender, EventArgs e)
@@ -427,8 +504,25 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private void GitBinFound_Click(object? sender, EventArgs e)
     {
-        CheckSettingsLogic.SolveLinuxToolsDir();
-        PageHost.GotoPage(GitSettingsPage.GetPageReference());
+        if (!CheckSettingsLogic.SolveLinuxToolsDir())
+        {
+            MessageBoxes.Show(
+                TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+                _linuxToolsShNotFound.Text,
+                _linuxToolsShNotFoundCaption.Text,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error);
+            PageHost.GotoPage(GitSettingsPage.GetPageReference());
+            return;
+        }
+
+        MessageBoxes.Show(
+            TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+            string.Format(_shCanBeRun.Text, AppSettings.LinuxToolsDir),
+            _shCanBeRunCaption.Text,
+            WinFormsShims.MessageBoxButtons.OK,
+            WinFormsShims.MessageBoxIcon.Information);
+        PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
         SaveAndRescan_Click(sender, e);
     }
 
@@ -440,24 +534,34 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private void SshConfig_Click(object? sender, EventArgs e)
     {
-        if (SshSettingsPage is null)
+        if (GitSshHelpers.IsPlink)
         {
+            if (SshSettingsPage is null)
+            {
+                return;
+            }
+
+            if (SshSettingsPage.AutoFindPuttyPaths())
+            {
+                MessageBoxes.Show(
+                    TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+                    _puttyFoundAuto.Text,
+                    _putty,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Information);
+            }
+            else
+            {
+                PageHost.GotoPage(SshSettingsPage.GetPageReference());
+            }
+
             return;
         }
 
-        if (GitSshHelpers.IsPlink && SshSettingsPage.AutoFindPuttyPaths())
+        if (SshSettingsPage is not null)
         {
-            MessageBoxes.Show(
-                TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
-                _puttyFoundAuto.Text,
-                "PuTTY",
-                WinFormsShims.MessageBoxButtons.OK,
-                WinFormsShims.MessageBoxIcon.Information);
-            SaveAndRescan_Click(sender, e);
-            return;
+            PageHost.GotoPage(SshSettingsPage.GetPageReference());
         }
-
-        PageHost.GotoPage(SshSettingsPage.GetPageReference());
     }
 
     private void translationConfig_Click(object? sender, EventArgs e)
@@ -477,10 +581,16 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private void SaveAndRescan_Click(object? sender, EventArgs e)
     {
-        PageHost.SaveAll();
-        PageHost.LoadAll();
-        CheckSettings();
+        using (WaitCursorScope.Enter())
+        {
+            PageHost.SaveAll();
+            PageHost.LoadAll();
+            CheckSettings();
+        }
     }
+
+    private void CheckAtStartup_CheckedChanged(object? sender, EventArgs e)
+        => AppSettings.CheckSettings = CheckAtStartup.IsChecked == true;
 
     internal enum CheckState
     {

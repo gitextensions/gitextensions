@@ -30,6 +30,11 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
 
     public IEnumerable<ISettingsPage> SettingsPages => _settingsPages;
 
+    /// <summary>Add page to settings tree.</summary>
+    /// <param name="page">The settings page to add.</param>
+    /// <param name="parentPageReference">An already added settings page to be a parent in the tree.</param>
+    /// <param name="icon">An icon to display in tree node.</param>
+    /// <param name="asRoot">only one page can be set as the root page (for the GitExt and Plugin root node).</param>
     public void AddSettingsPage(ISettingsPage page, SettingsPageReference? parentPageReference, IImage? icon, bool asRoot = false)
     {
         TreeViewItem node;
@@ -64,7 +69,6 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
         TreeViewItem? node = settingsPageReference is null
             ? treeView1.Items.OfType<TreeViewItem>().FirstOrDefault()
             : _pages2NodeMap.GetValueOrDefault(settingsPageReference);
-        node ??= treeView1.Items.OfType<TreeViewItem>().FirstOrDefault();
         if (node is null)
         {
             return;
