@@ -1,0 +1,50 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 xmlns:settingscontrols="using:GitUI.UserControls.Settings"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.BlameViewerSettingsPage"
+                                 MinWidth="341"
+                                 MinHeight="272"
+                                 Text="Blame viewer">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="8"
+                Spacing="6">
+      <GroupBox x:Name="groupBoxBlameSettings"
+                Header="Blame settings">
+        <StackPanel x:Name="tableLayoutPanelBlameSettings"
+                    Margin="8,4,8,8"
+                    Spacing="1">
+          <CheckBox x:Name="cbIgnoreWhitespace"
+                    Content="Ignore whitespace" />
+          <settingscontrols:SettingsCheckBox x:Name="cbDetectMoveAndCopyInThisFile"
+                                             ManualSectionAnchorName="blame-detect-moved-or-copied-lines"
+                                             Text="Detect moved or copied lines within blamed file" />
+          <settingscontrols:SettingsCheckBox x:Name="cbDetectMoveAndCopyInAllFiles"
+                                             ManualSectionAnchorName="blame-detect-moved-or-copied-lines"
+                                             Text="Detect moved or copied lines from all files in same commit" />
+        </StackPanel>
+      </GroupBox>
+      <GroupBox x:Name="groupBoxDisplayResult"
+                Header="Display result settings">
+        <StackPanel Margin="8,4,8,8"
+                    Spacing="1">
+          <CheckBox x:Name="cbDisplayAuthorFirst"
+                    Content="Display author first" />
+          <CheckBox x:Name="cbShowAuthor"
+                    Content="Show author" />
+          <CheckBox x:Name="cbShowAuthorDate"
+                    Content="Show author date" />
+          <CheckBox x:Name="cbShowAuthorTime"
+                    Content="Show author time" />
+          <CheckBox x:Name="cbShowLineNumbers"
+                    Content="Show line numbers" />
+          <CheckBox x:Name="cbShowOriginalFilePath"
+                    Content="Show original file path" />
+          <CheckBox x:Name="cbShowAuthorAvatar"
+                    Content="Show author avatar" />
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

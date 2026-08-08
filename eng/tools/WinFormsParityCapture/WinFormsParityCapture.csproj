@@ -21,6 +21,7 @@
     <None Include="Profiles\reference.settings.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Themes\parity-custom.css" Link="Themes\parity-custom.css" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\..\src\app\GitUI\Themes\*.css" Link="Themes\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\..\src\app\GitUI\Translation\*.*" Link="Translation\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="README.md" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

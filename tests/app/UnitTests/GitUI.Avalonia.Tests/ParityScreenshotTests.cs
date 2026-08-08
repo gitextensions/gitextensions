@@ -766,6 +766,26 @@ public sealed partial class ParityScreenshotTests
             confirmationsSettingsPage.LoadSettings();
         }
 
+        if (root is BlameViewerSettingsPage blameViewerSettingsPage)
+        {
+            blameViewerSettingsPage.LoadSettings();
+        }
+
+        if (root is CommitDialogSettingsPage commitDialogSettingsPage)
+        {
+            commitDialogSettingsPage.LoadSettings();
+        }
+
+        if (root is FormBrowseRepoSettingsPage formBrowseRepoSettingsPage)
+        {
+            formBrowseRepoSettingsPage.LoadSettings();
+        }
+
+        if (root is ShellExtensionSettingsPage shellExtensionSettingsPage)
+        {
+            shellExtensionSettingsPage.LoadSettings();
+        }
+
         if (root is ScriptsSettingsPage scriptsSettingsPage)
         {
             scriptsSettingsPage.LoadSettings();
@@ -1623,6 +1643,32 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(ConfirmationsSettingsPage))
         {
             return (791, 760);
+        }
+
+        if (viewType == typeof(BlameViewerSettingsPage))
+        {
+            return (341, 272);
+        }
+
+        if (viewType == typeof(CommitDialogSettingsPage))
+        {
+            return (1014, 950);
+        }
+
+        if (viewType == typeof(FormBrowseRepoSettingsPage))
+        {
+            return (738, 438);
+        }
+
+        if (viewType == typeof(ShellExtensionSettingsPage))
+        {
+            return (1502, 331);
+        }
+
+        if (viewType == typeof(FormChooseTranslation))
+        {
+            // The WinForms full-window PrintWindow surface includes non-client chrome.
+            return (814.5, 577);
         }
 
         if (viewType == typeof(ColorsSettingsPage))

@@ -20,6 +20,8 @@ public class MessageBoxes : Translate
     private readonly TranslationString _failedToRunShell = new("Failed to run shell");
     private readonly TranslationString _reason = new("Reason");
     private readonly TranslationString _selectOnlyOneOrTwoRevisions = new("Select only one or two revisions. Abort.");
+    private readonly TranslationString _shellNotFoundCaption = new("Shell not found");
+    private readonly TranslationString _shellNotFound = new("The selected shell is not installed, or is not on your path.");
 
     private readonly TranslationString _confirmBranchCheckoutCaption = new("Confirm checkout");
     private readonly TranslationString _confirmBranchCheckout = new(@"Are you sure you want to check out branch ""{0}""?");
@@ -70,6 +72,9 @@ public class MessageBoxes : Translate
     public static void FailedToRunShell(WinFormsShims.IWin32Window? owner, string shell, Exception ex)
         => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
                             + $"{Instance._reason.Text}: {ex.Message}");
+
+    public static void ShellNotFound(WinFormsShims.IWin32Window? owner)
+        => ShowError(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text);
 
     public static void ShowError(WinFormsShims.IWin32Window? owner, string text, string? caption = null)
         => GitExtensions.Extensibility.MessageBoxes.ShowError(owner, text, caption);
