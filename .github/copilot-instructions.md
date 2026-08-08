@@ -100,6 +100,13 @@ For example:
 * Avoid null-forgiving (`!`) suppressions. Prefer making nullability explicit in the type system — for example, by declaring a parameter or property as nullable, adding a null guard, or restructuring code so that null states are unrepresentable. Use `!` only as a last resort when the type system cannot express a known invariant.
 * When modifying code that contains existing `!` suppressions, look for opportunities to remove them safely. Use `Validates.NotNull` for runtime null checks where a value is expected to be non-null but the type system cannot prove it.
 
+## constants
+
+* In GitExtensions, libraries may be used by plugins, also not in GitExtensions.Extensibility.
+  Prefix/suffix string members must remain public static string auto-properties
+  (not const), because const would inline values into dependent plugin assemblies
+  and break binary compatibility.
+
 ## WinForms UI
 
 * Follow the naming conventions in `.github/ui_design_guidelines.md` for all WinForms controls:

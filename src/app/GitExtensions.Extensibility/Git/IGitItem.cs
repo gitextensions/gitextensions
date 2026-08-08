@@ -3,7 +3,7 @@
 public interface IGitItem
 {
     /// <summary>
-    /// Gets the object ID, or the zero <see cref="ObjectId"/> if not known.
+    /// Gets the object ID, or default/zero <see cref="ObjectId"/> if not known.
     /// </summary>
     ObjectId ObjectId { get; }
 
