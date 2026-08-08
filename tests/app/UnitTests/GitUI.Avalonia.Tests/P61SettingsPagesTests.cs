@@ -386,7 +386,8 @@ public sealed class P61SettingsPagesTests
     {
         BoolSetting setting = new("P61AutoLayout", "Enabled", defaultValue: false);
         TestAutoLayoutPage page = new();
-        page.AddSettingControl(new TestSettingControlBinding(setting));
+        TestSettingControlBinding binding = new(setting);
+        page.AddSettingControl(binding);
 
         Grid grid = page.Content.Should().BeOfType<Grid>().Subject;
         grid.ColumnDefinitions.Should().HaveCount(3);
@@ -396,6 +397,7 @@ public sealed class P61SettingsPagesTests
         page.LoadSettings();
         checkBox.IsThreeState.Should().BeTrue();
         checkBox.IsChecked.Should().BeNull("the global source has no explicit value for the test setting");
+        binding.LoadCount.Should().Be(1, "AutoLayout must use the supplied binding instance");
     }
 
     private sealed class TestAutoLayoutPage : AutoLayoutSettingsPage
@@ -408,10 +410,16 @@ public sealed class P61SettingsPagesTests
 
     private sealed class TestSettingControlBinding(BoolSetting setting) : ISettingControlBinding
     {
-        public GitExtensions.Shims.WinForms.Control GetControl() => new();
+        private readonly GitExtensions.Shims.WinForms.CheckBox _control = new();
+
+        internal int LoadCount { get; private set; }
+
+        public GitExtensions.Shims.WinForms.Control GetControl() => _control;
 
         public void LoadSetting(SettingsSource settings)
         {
+            LoadCount++;
+            _control.CheckState = GitExtensions.Shims.WinForms.CheckState.Indeterminate;
         }
 
         public void SaveSetting(SettingsSource settings)
