@@ -52,6 +52,10 @@ cat > "$settings_directory/GitExtensions.settings" <<'EOF'
     <key><string>CheckSettings</string></key>
     <value><string>false</string></value>
   </item>
+  <item>
+    <key><string>translation</string></key>
+    <value><string>English</string></value>
+  </item>
 </dictionary>
 EOF
 

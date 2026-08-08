@@ -8,6 +8,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
 using GitUI.NBugReports;
 using GitUIPluginInterfaces;
@@ -71,6 +72,12 @@ public partial class App : Application
     {
         try
         {
+            if (string.IsNullOrEmpty(AppSettings.Translation))
+            {
+                using FormChooseTranslation formChoose = new();
+                formChoose.ShowDialog();
+            }
+
             StartupCoordinator coordinator = new();
             if (!coordinator.EnsurePrerequisites(commands, args))
             {

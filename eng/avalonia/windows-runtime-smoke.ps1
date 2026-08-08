@@ -97,7 +97,7 @@ try
     [IO.File]::WriteAllText((Join-Path $runtimeRoot "GitExtensions.Avalonia.dll.config"), $portableConfiguration)
     [IO.File]::WriteAllText(
         (Join-Path $runtimeRoot "GitExtensions.settings"),
-        "<?xml version=`"1.0`" encoding=`"utf-8`"?>`r`n<dictionary>`r`n  <item>`r`n    <key><string>CheckSettings</string></key>`r`n    <value><string>false</string></value>`r`n  </item>`r`n</dictionary>`r`n")
+        "<?xml version=`"1.0`" encoding=`"utf-8`"?>`r`n<dictionary>`r`n  <item>`r`n    <key><string>CheckSettings</string></key>`r`n    <value><string>false</string></value>`r`n  </item>`r`n  <item>`r`n    <key><string>translation</string></key>`r`n    <value><string>English</string></value>`r`n  </item>`r`n</dictionary>`r`n")
 
     Invoke-Git -C $fixtureRepository init --quiet --initial-branch=main
     Invoke-Git -C $fixtureRepository config user.name "P0.6 Runtime Smoke"

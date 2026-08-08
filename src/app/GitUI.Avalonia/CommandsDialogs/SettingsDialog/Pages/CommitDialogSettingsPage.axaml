@@ -1,0 +1,68 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.CommitDialogSettingsPage"
+                                 MinWidth="650"
+                                 MinHeight="400"
+                                 Text="Commit dialog">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <GroupBox x:Name="groupBoxBehaviour"
+              Margin="8"
+              Header="Behaviour">
+      <Grid x:Name="tableLayoutPanelBehaviour"
+            Margin="8,4,8,8"
+            ColumnDefinitions="Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+            RowSpacing="1">
+        <CheckBox x:Name="chkAutocomplete"
+                  Grid.ColumnSpan="2"
+                  Content="Provide auto-completion in commit dialog" />
+        <CheckBox x:Name="chkShowErrorsWhenStagingFiles"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="2"
+                  Content="Show errors when staging files" />
+        <CheckBox x:Name="chkEnsureCommitMessageSecondLineEmpty"
+                  Grid.Row="2"
+                  Grid.ColumnSpan="2"
+                  Content="Ensure the second line of commit message is empty" />
+        <CheckBox x:Name="chkWriteCommitMessageInCommitWindow"
+                  Grid.Row="3"
+                  Grid.ColumnSpan="2"
+                  Content="Compose commit messages in Commit dialog&#xA;(otherwise the message will be requested during commit)" />
+        <TextBlock x:Name="lblCommitDialogNumberOfPreviousMessages"
+                   Grid.Row="4"
+                   Margin="0,4,8,4"
+                   VerticalAlignment="Center"
+                   Text="Number of previous messages in commit dialog" />
+        <NumericUpDown x:Name="_NO_TRANSLATE_CommitDialogNumberOfPreviousMessages"
+                       Grid.Row="4"
+                       Grid.Column="1"
+                       Width="123"
+                       HorizontalAlignment="Left"
+                       Minimum="1"
+                       Maximum="999"
+                       Value="1" />
+        <CheckBox x:Name="cbRememberAmendCommitState"
+                  Grid.Row="6"
+                  Grid.ColumnSpan="2"
+                  Content="Remember 'Amend commit' checkbox on commit form close" />
+        <GroupBox x:Name="grpAdditionalButtons"
+                  Grid.Row="7"
+                  Grid.ColumnSpan="2"
+                  Header="Show additional buttons in commit button area">
+          <StackPanel x:Name="flowLayoutPanel1"
+                      Margin="8,4,8,8"
+                      Spacing="1">
+            <CheckBox x:Name="chkShowCommitAndPush"
+                      Content="Commit &amp; Push" />
+            <CheckBox x:Name="chkShowResetWorkTreeChanges"
+                      Content="Reset Unstaged Changes" />
+            <CheckBox x:Name="chkShowResetAllChanges"
+                      Content="Reset All Changes" />
+          </StackPanel>
+        </GroupBox>
+      </Grid>
+    </GroupBox>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>
