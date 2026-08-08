@@ -3114,52 +3114,76 @@
     "notes": "Native borderless transparent AXAML retains the original prompt, content host, initial dimensions, center-owner placement, and taskbar suppression through the non-generic compiled-XAML shell."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves the original ISettingsLayout, BaseSettingsLayout, and TableSettingsLayout boundaries while materializing each shared plugin setting through the native Avalonia control factory. Exact binding-class reconciliation remains owned by P6.2."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "The generated WinForms autosizing table maps to a code-created native Avalonia Grid; the framework-forced single-file visual boundary is measured by the P6.1 inventory."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves all blame option loads, saves, translation identities, and the copy/move warning tooltip through native Avalonia controls."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native AXAML retains the two original groups and every same-named checkbox; measured visual differences remain open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves the complete commit-dialog settings load/save surface, including previous-message count and amend-state persistence."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native AXAML retains the original same-named controls and vertical order; measured visual and focus differences remain open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "2061dd857c3893c1a2657331da6e2bc01f9c1e86",
+    "notes": "Preserves browse, tab, output-history, shell selection, unavailable-shell error, and hotkey-tooltip behavior. The portable shell list substitutes platform discovery at the UI boundary."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "2061dd857c3893c1a2657331da6e2bc01f9c1e86",
+    "notes": "Native AXAML retains the original General and Tabs groups, same-named controls, help affordances, and measured physical capture size."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.axaml.cs",
+    "status": "functional",
+    "basedOn": "659a574db848a0e180d414231c90a14d448fc9b5",
+    "notes": "Preserves sorted translation discovery with English first, optional flag images, one-action selection, close fallback, and startup/checklist entry points through a native Avalonia list."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native AXAML retains the original labels, translation list, resizable window contract, and initial dimensions; the list uses Avalonia item layout instead of WinForms LargeIcon mode."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.axaml.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves all 18 menu entries, 0/1/2 tri-state persistence and cycle order, preview, help, registration status, and register/unregister actions. FormSettings exposes the page only on Windows while the page remains constructible and explicitly disabled elsewhere."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.Designer.cs": {
-    "status": "unported",
-    "plannedIn": "P6.1"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.axaml",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Native AXAML retains the original groups, same-named controls, information icon, checklist and preview geometry; exact visual/state parity remains measured debt."
   },
   "src/app/GitUI/CommitInfo/CommitInfoHeader.cs": {
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfoHeader.axaml.cs",
