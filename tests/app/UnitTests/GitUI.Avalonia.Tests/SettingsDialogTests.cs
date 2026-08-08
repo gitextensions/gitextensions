@@ -101,7 +101,23 @@ public sealed class SettingsDialogTests
     }
 
     [AvaloniaTest]
-    public void FormSettings_should_host_the_placeholder_and_preserve_dialog_chrome()
+    public void Checklist_repairs_should_route_unconfigured_identity_and_diff_tools_to_global_settings()
+    {
+        TestHost host = new();
+        ChecklistSettingsPage checklist = SettingsPageBase.Create<ChecklistSettingsPage>(
+            host,
+            EmptyServiceProvider.Instance);
+
+        checklist.FindControl<Button>("UserNameSet_Fix")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        checklist.FindControl<Button>("MergeTool_Fix")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        checklist.FindControl<Button>("DiffTool_Fix")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+        host.GotoPages.Should().HaveCount(3);
+        host.GotoPages.Should().OnlyContain(reference => reference.Equals(GitConfigSettingsPage.GetPageReference()));
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_host_the_checklist_root_and_preserve_dialog_chrome()
     {
         FormSettings form = new();
         form.Show();
@@ -110,15 +126,79 @@ public sealed class SettingsDialogTests
             Dispatcher.UIThread.RunJobs();
 
             FormSettings.TestAccessor accessor = form.GetTestAccessor();
-            accessor.CurrentPage.Should().BeOfType<SettingsPlaceholderPage>();
+            SettingsPageHeader header = accessor.CurrentPage.Should().BeOfType<SettingsPageHeader>().Subject;
+            header.GetTestAccessor().Page.Should().BeOfType<ChecklistSettingsPage>();
             accessor.OkButton.IsDefault.Should().BeTrue();
             accessor.CancelButton.Content.Should().Be("Cancel");
-            form.Title.Should().Be($"Settings - {GitCommands.AppSettings.ApplicationName}");
+            accessor.InstantSaveNotice.IsVisible.Should().BeTrue();
+            form.Title.Should().Be("Settings - Checklist");
             form.CaptureRenderedFrame().Should().NotBeNull();
         }
         finally
         {
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_apply_discard_and_cancel_through_the_original_page_lifecycle()
+    {
+        FormSettings form = new();
+        FormSettings.TestAccessor accessor = form.GetTestAccessor();
+        TestPage page = new("Lifecycle");
+        accessor.SettingsTreeView.AddSettingsPage(page, parentPageReference: null, icon: null);
+        form.GotoPage(page.PageReference);
+
+        accessor.DiscardButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        accessor.ApplyButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+        page.LoadCount.Should().Be(1);
+        page.SaveCount.Should().Be(1);
+
+        form.Show();
+        accessor.CancelButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        page.SaveCount.Should().Be(1, "Cancel must discard deferred page edits without saving them");
+    }
+
+    [AvaloniaTest]
+    public void FormSettings_should_report_expected_page_validation_failures_and_propagate_unexpected_ones()
+    {
+        WinFormsShims.IMessageBoxHost? originalMessageBoxHost = TryGetMessageBoxHost();
+        StubMessageBoxHost messageBoxes = new();
+        WinFormsShims.ShimHost.MessageBoxHost = messageBoxes;
+        try
+        {
+            FormSettings form = new();
+            FormSettings.TestAccessor accessor = form.GetTestAccessor();
+            TestPage page = new("Validation")
+            {
+                SaveException = new SaveSettingsException(new InvalidOperationException("Invalid page value")),
+            };
+            accessor.SettingsTreeView.AddSettingsPage(page, parentPageReference: null, icon: null);
+
+            accessor.SaveSettings().Should().BeFalse();
+            messageBoxes.Messages.Should().ContainSingle()
+                .Which.Should().Be(("Failed to save all settings", "Invalid page value"));
+
+            page.SaveException = new InvalidOperationException("Unexpected page failure");
+            Action save = () => accessor.SaveSettings();
+            save.Should().Throw<InvalidOperationException>().WithMessage("Unexpected page failure");
+        }
+        finally
+        {
+            WinFormsShims.ShimHost.MessageBoxHost = originalMessageBoxHost ?? new StubMessageBoxHost();
+        }
+
+        static WinFormsShims.IMessageBoxHost? TryGetMessageBoxHost()
+        {
+            try
+            {
+                return WinFormsShims.ShimHost.MessageBoxHost;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
     }
 
@@ -834,6 +914,7 @@ public sealed class SettingsDialogTests
     [AvaloniaTest]
     public void Sorting_settings_should_preserve_original_translation_keys_and_help_text()
     {
+        const string remoteTooltip = "Regex to prioritize remote names in the left panel and commit info.\nThe remotes matching the pattern will be shown before the others.\nSeparate the priorities with ';'.";
         ITranslation translation = Substitute.For<ITranslation>();
         SortingSettingsPage page = new();
 
@@ -846,7 +927,10 @@ public sealed class SettingsDialogTests
         translation.Received(1).AddTranslationItem(
             nameof(SortingSettingsPage), "_revisionSortWarningTooltip", "Text", "Sorting revisions may delay rendering of the revision graph.");
         translation.Received(1).AddTranslationItem(
-            nameof(SortingSettingsPage), "_prioRemoteNamesTooltip", "Text", "Regex to prioritize remote names in the left panel and commit info.\nThe remotes matching the pattern will be shown before the others.\nSeparate the priorities with ';'.");
+            nameof(SortingSettingsPage),
+            "_prioRemoteNamesTooltip",
+            "Text",
+            Arg.Is<string>(text => text.ReplaceLineEndings("\n") == remoteTooltip));
 
         SortingSettingsPage.TestAccessor accessor = page.GetTestAccessor();
         ToolTip.GetTip(accessor.RevisionSortOrderHelp)
@@ -1948,6 +2032,15 @@ public sealed class SettingsDialogTests
             selections[0].SettingsPage.Should().BeSameAs(childPage);
             selections[0].IsTriggeredByGoto.Should().BeTrue();
 
+            tree.GotoPage(new TestPageReference(Guid.NewGuid()));
+            selections.Should().ContainSingle("an unknown page reference must not fall back to the first root");
+
+            tree.GotoPage(rootPage.PageReference);
+            selections.Should().HaveCount(2);
+            selections[1].SettingsPage.Should().BeSameAs(rootPage);
+
+            tree.GotoPage(childPage.PageReference);
+
             TextBox search = tree.FindControl<TextBox>("textBoxFind")
                 ?? throw new InvalidOperationException("Settings search box was not created.");
             search.Text = "searchable";
@@ -1998,6 +2091,12 @@ public sealed class SettingsDialogTests
 
         public SettingsPageReference PageReference { get; } = new TestPageReference(Guid.NewGuid());
 
+        public int LoadCount { get; private set; }
+
+        public int SaveCount { get; private set; }
+
+        public Exception? SaveException { get; set; }
+
         public string GetTitle() => title;
 
         public IEnumerable<string> GetSearchKeywords() => keywords;
@@ -2008,10 +2107,16 @@ public sealed class SettingsDialogTests
 
         public void LoadSettings()
         {
+            LoadCount++;
         }
 
         public void SaveSettings()
         {
+            SaveCount++;
+            if (SaveException is not null)
+            {
+                throw SaveException;
+            }
         }
     }
 
@@ -2076,10 +2181,13 @@ public sealed class SettingsDialogTests
 
     private sealed class TestHost : ISettingsPageHost
     {
+        public List<SettingsPageReference> GotoPages { get; } = [];
+
         public CheckSettingsLogic CheckSettingsLogic => throw new NotSupportedException();
 
         public void GotoPage(SettingsPageReference settingsPageReference)
         {
+            GotoPages.Add(settingsPageReference);
         }
 
         public void LoadAll()
@@ -2088,6 +2196,23 @@ public sealed class SettingsDialogTests
 
         public void SaveAll()
         {
+        }
+    }
+
+    private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
+    {
+        public List<(string Caption, string Text)> Messages { get; } = [];
+
+        public WinFormsShims.DialogResult Show(
+            WinFormsShims.IWin32Window? owner,
+            string? text,
+            string? caption,
+            WinFormsShims.MessageBoxButtons buttons,
+            WinFormsShims.MessageBoxIcon icon,
+            WinFormsShims.MessageBoxDefaultButton defaultButton)
+        {
+            Messages.Add((caption ?? string.Empty, text ?? string.Empty));
+            return WinFormsShims.DialogResult.OK;
         }
     }
 }
