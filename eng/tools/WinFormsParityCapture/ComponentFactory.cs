@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
@@ -8,6 +8,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
 using GitUI.LeftPanel;
@@ -44,6 +45,14 @@ internal static class ComponentFactory
             "GitUI.FormFindInCommitFilesGitGrep" => CreateWithCommands(component.TypeName, commands),
             "GitUI.CommandsDialogs.SettingsDialog.Pages.ColorsSettingsPage" =>
                 new ColorsSettingsPage(GitUICommands.EmptyServiceProvider),
+            "GitUI.CommandsDialogs.SettingsDialog.Pages.BlameViewerSettingsPage" =>
+                CreateSettingsPage(new BlameViewerSettingsPage(commands)),
+            "GitUI.CommandsDialogs.SettingsDialog.Pages.CommitDialogSettingsPage" =>
+                CreateSettingsPage(new CommitDialogSettingsPage(commands)),
+            "GitUI.CommandsDialogs.SettingsDialog.Pages.FormBrowseRepoSettingsPage" =>
+                CreateSettingsPage(new FormBrowseRepoSettingsPage(commands)),
+            "GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage" =>
+                CreateSettingsPage(new ShellExtensionSettingsPage(commands)),
             _ => CreateParameterless(component.TypeName)
         };
         PrepareInitialSize(control);
@@ -58,6 +67,13 @@ internal static class ComponentFactory
         }
 
         return control;
+    }
+
+    // parity-scaffolding: Standalone settings pages are normally loaded by FormSettings.
+    private static T CreateSettingsPage<T>(T page) where T : SettingsPageBase
+    {
+        page.LoadSettings();
+        return page;
     }
 
     // parity-scaffolding: Code-only controls have no Designer-owned size when hosted standalone.

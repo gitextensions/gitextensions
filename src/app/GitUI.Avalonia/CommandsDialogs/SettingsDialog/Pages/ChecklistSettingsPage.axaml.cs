@@ -7,6 +7,7 @@ using GitCommands.DiffMergeTools;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
+using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -460,7 +461,15 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
     }
 
     private void translationConfig_Click(object? sender, EventArgs e)
-        => PageHost.GotoPage(GeneralSettingsPage.GetPageReference());
+    {
+        using FormChooseTranslation frm = new();
+        frm.ShowDialog(TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window); // will set Settings.Translation
+
+        PageHost.LoadAll();
+
+        Translator.Translate(this, AppSettings.CurrentTranslation);
+        SaveAndRescan_Click(this, EventArgs.Empty);
+    }
 
     private void GcmDetectedFix_Click(object? sender, EventArgs e)
         => OsShellUtil.OpenUrlInDefaultBrowser(
