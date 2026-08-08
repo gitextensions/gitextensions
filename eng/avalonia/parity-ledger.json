@@ -25683,651 +25683,746 @@
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/BoolSettingControlBinding.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/BoolSettingControlBinding.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/BoolSettingControlBinding.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 5,
+          "note": "The same-named class and original member boundary are restored; the inventory still reports its logic-only .cs path as an expected .axaml.cs partial."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/BoolSettingControlBinding.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-winforms.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 5,
+          "note": "Focused original and Avalonia tests cover nullable, effective-default, explicit-value, and unchanged-save behavior; exact source closure remains open."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/ChoiceSettingControlBinding.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/ChoiceSettingControlBinding.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/ChoiceSettingControlBinding.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 6,
+          "note": "The same-named class and original member boundary are restored; inventory findings retain the logic-only path and Avalonia unmatched-value presentation difference."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/ChoiceSettingControlBinding.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 6,
+          "note": "Focused tests cover declared choices, matching selection, unmatched legacy values, null saves, and effective comparisons; exhaustive UI states remain open."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/CredentialsSettingControlBinding.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/CredentialsSettingControlBinding.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/CredentialsSettingControlBinding.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 22,
+          "note": "The same-named class is restored; native credential-field storage adds framework-forced members and Grid signatures recorded by the inventory."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/CredentialsSettingControlBinding.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 22,
+          "note": "Focused tests cover supported/unsupported levels, masking, labels, queued save, and post-save reload without persisting a real credential; exhaustive backend states remain open."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/NumberSettingControlBinding.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/NumberSettingControlBinding.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/NumberSettingControlBinding.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 2,
+          "note": "The original static class and PlaceholderText property are restored; only the inventory's logic-only .cs path expectation remains."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/NumberSettingControlBinding.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 2,
+          "note": "Focused tests prove the translated placeholder reaches native numeric controls; full translated-theme rendering remains open."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/NumberSettingNumericUpDownBinding.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/NumberSettingNumericUpDownBinding.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/NumberSettingNumericUpDownBinding.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 9,
+          "note": "The same-named class, TODO, and member sequence are restored; Avalonia nullable-value and attached-tooltip substitutions retain explicit inventory findings."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/NumberSettingNumericUpDownBinding.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-winforms.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 9,
+          "note": "Focused tests cover Int32 range, effective default, explicit null, placeholder tooltip, valid save, and unchanged save; visual states remain open."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/NumberSettingTextBoxBinding.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/NumberSettingTextBoxBinding.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/NumberSettingTextBoxBinding.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 9,
+          "note": "The original generic class and member sequence are restored; the cross-assembly parser copy and Avalonia validation class remain explicit framework-boundary findings."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/NumberSettingTextBoxBinding.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-winforms.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 9,
+          "note": "Focused tests cover supported numeric types, current-culture parsing, null/default semantics, invalid styling, invalid-null save, and valid recovery; exhaustive states remain open."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/PasswordSettingControlBinding.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/PasswordSettingControlBinding.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/PasswordSettingControlBinding.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 6,
+          "note": "The same-named class, comments, and original member boundary are restored; logic-only path and native-control substitutions remain inventoried."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/PasswordSettingControlBinding.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-winforms.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 6,
+          "note": "Focused tests cover masking, translated placeholder, null, explicit empty, trim, default/effective, and explicit saves; exhaustive visual states remain open."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/PseudoSettingControlBinding.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/PseudoSettingControlBinding.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/PseudoSettingControlBinding.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 10,
+          "note": "The same-named class is restored; the required portable-model adapter field and synchronization methods remain explicit structural differences."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/PseudoSettingControlBinding.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 10,
+          "note": "Focused tests cover text/check/choice/link model adaptation, link activation, and no setting persistence; unsupported model types remain explicit errors."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/SettingControlBindingsProvider.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/SettingControlBindingsProvider.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/SettingControlBindingsProvider.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 3,
+          "note": "The original provider class, overload sequence, and runtime dispatch are restored; return-type documentation records the native binding boundary."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/SettingControlBindingsProvider.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 3,
+          "note": "Focused tests prove all ten dispatch boundaries, exact custom-binding instance preservation, and the original actionable unsupported-setting error."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
     {
       "source": "src/app/GitUI/SettingControlBindings/StringSettingControlBinding.cs",
-      "twin": "src/app/GitUI.Avalonia/Compat/PluginSettingControlFactory.cs",
+      "twin": "src/app/GitUI.Avalonia/SettingControlBindings/StringSettingControlBinding.cs",
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/StringSettingControlBinding.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 8,
+          "note": "The original class, constants, property, comments, and member sequence are restored; native-control and logic-only path findings remain explicit."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P6.2/inventory/StringSettingControlBinding.json",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-winforms.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows"],
+          "findingCount": 8,
+          "note": "Focused tests cover null, explicit empty, translated placeholder, trim, multiline normalization, default/effective, and explicit saves; exhaustive states remain open."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "These bindings materialize native controls; no paired WinForms/Avalonia binding-specific capture matrix was produced in P6.2."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "unverified",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
           "evidence": [],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Light, dark, custom-theme, resolved-color, and invalid-state correspondence remains unverified."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/tests/windows-avalonia.trx",
+            "eng/avalonia/parity-evidence/P6.2/tests/linux-avalonia.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Representative load, save, null, default, validation, disabled, custom-control, and exact-binding-instance states pass; the exhaustive interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-08",
+          "commit": "f9e0283026ae5b88ce751e35b439e5cf52cf5981",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P6.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime smokes passed with isolated settings and repositories; macOS and exhaustive binding-level platform parity remain open."
         }
       }
     },
