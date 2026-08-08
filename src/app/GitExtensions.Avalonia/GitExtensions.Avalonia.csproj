@@ -52,6 +52,9 @@
     <ProjectReference Include="..\..\plugins\GitHub3\GitExtensions.Plugins.GitHub3.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />
+    <ProjectReference Include="..\..\plugins\Gource\GitExtensions.Plugins.Gource.csproj"
+                      ReferenceOutputAssembly="false"
+                      AdditionalProperties="BuildAvalonia=true" />
     <ProjectReference Include="..\..\plugins\Statistics\GitImpact\GitExtensions.Plugins.GitImpact.csproj"
                       ReferenceOutputAssembly="false"
                       AdditionalProperties="BuildAvalonia=true" />

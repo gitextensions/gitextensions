@@ -13,6 +13,7 @@
     <ProjectReference Include="..\ParityCaptureSchema\ParityCaptureSchema.csproj" />
     <ProjectReference Include="..\..\..\src\app\GitUI\GitUI.csproj" />
     <ProjectReference Include="..\..\..\src\app\GitExtensions\GitExtensions.csproj" />
+    <ProjectReference Include="..\..\..\src\plugins\Gource\GitExtensions.Plugins.Gource.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,88 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitExtensions.Plugins.Gource.GourceStart"
+        Width="718"
+        Height="165"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Gource">
+  <Grid>
+    <Grid x:Name="tableLayoutPanel1"
+          Margin="15,15,15,0"
+          Height="99"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Top"
+          ColumnDefinitions="125,*,125"
+          RowDefinitions="*,*,*">
+      <TextBlock x:Name="label1"
+                 Classes="gitextensions-dialog-label"
+                 Margin="4,6,4,0"
+                 VerticalAlignment="Top"
+                 Text="Path to Gource" />
+      <TextBox x:Name="GourcePath"
+               Grid.Column="1"
+               Margin="4"
+               VerticalAlignment="Stretch" />
+      <Button x:Name="GourceBrowse"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="2"
+              Margin="4"
+              Content="Browse" />
+
+      <TextBlock x:Name="label2"
+                 Classes="gitextensions-dialog-label"
+                 Grid.Row="1"
+                 Margin="4,6,4,0"
+                 VerticalAlignment="Top"
+                 Text="Repository" />
+      <TextBox x:Name="WorkingDir"
+               Grid.Row="1"
+               Grid.Column="1"
+               Margin="4"
+               VerticalAlignment="Stretch" />
+      <Button x:Name="WorkingDirBrowse"
+              Classes="gitextensions-dialog-action"
+              Grid.Row="1"
+              Grid.Column="2"
+              Margin="4"
+              Content="Browse" />
+
+      <TextBlock x:Name="ArgumentsLabel"
+                 Classes="gitextensions-dialog-label"
+                 Grid.Row="2"
+                 Margin="4,6,4,0"
+                 VerticalAlignment="Top"
+                 Text="Arguments" />
+      <TextBox x:Name="Arguments"
+               Grid.Row="2"
+               Grid.Column="1"
+               Grid.ColumnSpan="2"
+               Margin="4"
+               VerticalAlignment="Stretch" />
+    </Grid>
+
+    <Grid Margin="15,0,15,11"
+          Height="29"
+          VerticalAlignment="Bottom"
+          ColumnDefinitions="*,Auto">
+      <StackPanel x:Name="flowLayoutPanel1"
+                  Orientation="Horizontal"
+                  VerticalAlignment="Center">
+        <HyperlinkButton x:Name="linkLabel1"
+                         Margin="4,0"
+                         Padding="0"
+                         Content="Gource project" />
+        <HyperlinkButton x:Name="linkLabel2"
+                         Margin="4,0"
+                         Padding="0"
+                         Content="Gource command line" />
+      </StackPanel>
+      <Button x:Name="button1"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="1"
+              Width="94"
+              Height="29"
+              Content="Start" />
+    </Grid>
+  </Grid>
+</Window>
