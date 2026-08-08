@@ -20,6 +20,12 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
 {
     public static readonly string HotkeySettingsName = "Scripts";
 
+    #region Translation
+
+    private readonly TranslationString _cantSaveSettings = new("Failed to save all settings");
+
+    #endregion
+
     private static Type? _lastSelectedSettingsPageType;
     private readonly CommonLogic? _commonLogic;
     private readonly CheckSettingsLogic? _checkSettingsLogic;
@@ -103,15 +109,18 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             return;
         }
 
-        LoadSettings();
-
-        if (_initialPage is null && _lastSelectedSettingsPageType is not null)
+        using (WaitCursorScope.Enter())
         {
-            _initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
-        }
+            LoadSettings();
 
-        settingsTreeView.GotoPage(_initialPage);
-        settingsTreeView.Focus();
+            if (_initialPage is null && _lastSelectedSettingsPageType is not null)
+            {
+                _initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
+            }
+
+            settingsTreeView.GotoPage(_initialPage);
+            settingsTreeView.Focus();
+        }
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)
@@ -139,17 +148,11 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             : EmptyServiceProvider.Instance;
         ChecklistSettingsPage checklistSettingsPage =
             SettingsPageBase.Create<ChecklistSettingsPage>(this, serviceProvider);
-        SettingsPlaceholderPage placeholder = new(serviceProvider);
-        placeholder.InitForHost(this);
-        settingsTreeView.AddSettingsPage(
-            placeholder,
-            GitExtensionsSettingsGroup.GetPageReference(),
-            icon: null,
-            asRoot: true);
         settingsTreeView.AddSettingsPage(
             checklistSettingsPage,
             GitExtensionsSettingsGroup.GetPageReference(),
-            Images.StatusBadgeSuccess);
+            icon: null,
+            asRoot: true);
         settingsTreeView.AddSettingsPage(
             SettingsPageBase.Create<GeneralSettingsPage>(this, serviceProvider),
             GitExtensionsSettingsGroup.GetPageReference(),
@@ -293,8 +296,23 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             return;
         }
 
-        Text = $"{_translatedTitle} - {settingsPage.GetTitle()}";
-        settingsPage.OnPageShown();
+        string title = settingsPage.GetTitle();
+        if (settingsPage is PluginSettingsPage)
+        {
+            title = "Plugin: " + title;
+        }
+
+        Text = _translatedTitle + " - " + title;
+
+        // Avalonia's previewer constructs the parameterless form without runtime services.
+        if (_checkSettingsLogic is not null)
+        {
+            using (WaitCursorScope.Enter())
+            {
+                settingsPage.OnPageShown();
+            }
+        }
+
         labelInstantSaveNotice.IsVisible = settingsPage.IsInstantSavePage;
         buttonOk.IsEnabled = true;
         buttonCancel.IsEnabled = true;
@@ -323,22 +341,32 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
 
             _commonLogic.GitConfigSettingsSet.Save();
             _commonLogic.DistributedSettingsSet.Save();
+
+            if (OperatingSystem.IsWindows())
+            {
+                FormFixHome.CheckHomePath();
+            }
+
+            // TODO: this method has a generic sounding name but only saves some specific settings
             AppSettings.SaveSettings();
             _saved = true;
             return true;
         }
-        catch (Exception exception)
+        catch (SaveSettingsException exception) when (exception.InnerException is not null)
         {
-            MessageBoxes.ShowError(this, exception.Message, "Failed to save all settings");
+            MessageBoxes.ShowError(this, exception.InnerException.Message, _cantSaveSettings.Text);
             return false;
         }
     }
 
     private void Ok_Click(object? sender, RoutedEventArgs e)
     {
-        if (Save())
+        using (WaitCursorScope.Enter())
         {
-            Close();
+            if (Save())
+            {
+                Close();
+            }
         }
     }
 
@@ -346,10 +374,20 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         => Close();
 
     private void buttonDiscard_Click(object? sender, RoutedEventArgs e)
-        => LoadSettings();
+    {
+        using (WaitCursorScope.Enter())
+        {
+            LoadSettings();
+        }
+    }
 
     private void buttonApply_Click(object? sender, RoutedEventArgs e)
-        => Save();
+    {
+        using (WaitCursorScope.Enter())
+        {
+            Save();
+        }
+    }
 
     private void InitializeControls()
     {
@@ -365,6 +403,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
 #endif
     }
 
+    // parity-scaffolding: Exposes settings-shell lifecycle controls to the cross-platform parity tests.
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor(FormSettings form)
@@ -377,60 +416,17 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
 
         public Button CancelButton => form.buttonCancel;
 
+        public Button DiscardButton => form.buttonDiscard;
+
+        public Button ApplyButton => form.buttonApply;
+
+        public Control InstantSaveNotice => form.labelInstantSaveNotice;
+
         public void InitializePages() => form.InitializeSettingsPages();
 
         public void MarkSaved() => form._saved = true;
-    }
-}
 
-internal sealed class SettingsPlaceholderPage : SettingsPageBase
-{
-    private static readonly EmptySettingsSource EmptySettings = new();
-
-    public SettingsPlaceholderPage(IServiceProvider serviceProvider)
-        : base(serviceProvider)
-    {
-        Text = AppSettings.ApplicationName;
-        Content = new StackPanel
-        {
-            Margin = new Avalonia.Thickness(24),
-            Spacing = 10,
-            Children =
-            {
-                new Image
-                {
-                    Width = 32,
-                    Height = 32,
-                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-                    Source = Images.Settings,
-                },
-                new TextBlock
-                {
-                    FontSize = 20,
-                    FontWeight = Avalonia.Media.FontWeight.SemiBold,
-                    Text = "Settings",
-                },
-                new TextBlock
-                {
-                    Text = "Settings pages will appear here as they are ported to Avalonia.",
-                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                },
-            },
-        };
-        InitializeComplete();
-    }
-
-    internal void InitForHost(ISettingsPageHost host) => Init(host);
-
-    protected override SettingsSource GetCurrentSettings() => EmptySettings;
-
-    private sealed class EmptySettingsSource : SettingsSource
-    {
-        public override string? GetValue(string name) => null;
-
-        public override void SetValue(string name, string? value)
-        {
-        }
+        public bool SaveSettings() => form.Save();
     }
 }
 

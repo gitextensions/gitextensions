@@ -314,7 +314,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormSettings))
         {
-            return new FormSettings(context.Commands, GeneralSettingsPage.GetPageReference());
+            return new FormSettings(context.Commands);
         }
 
         if (viewType == typeof(HotkeysSettingsPage))
