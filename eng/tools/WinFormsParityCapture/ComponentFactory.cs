@@ -4,6 +4,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
+using GitExtensions.Plugins.Gource;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -53,6 +54,7 @@ internal static class ComponentFactory
                 CreateSettingsPage(new FormBrowseRepoSettingsPage(commands)),
             "GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage" =>
                 CreateSettingsPage(new ShellExtensionSettingsPage(commands)),
+            "GitExtensions.Plugins.Gource.GourceStart" => new GourceStart(string.Empty, null!, string.Empty),
             _ => CreateParameterless(component.TypeName)
         };
         PrepareInitialSize(control);
