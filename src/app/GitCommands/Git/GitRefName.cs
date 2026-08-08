@@ -1,18 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
 using GitUIPluginInterfaces;
 
 namespace GitCommands;
 
-public static partial class GitRefName
+public static class GitRefName
 {
-    [GeneratedRegex(@"^refs/remotes/[^/]+/HEAD$", RegexOptions.ExplicitCapture)]
-    private static partial Regex RemoteHeadRegex { get; }
-    [GeneratedRegex(@"^refs/remotes/(?<remote>[^/]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex RemoteNameRegex { get; }
-
     /// <summary>"refs/tags/".</summary>
     public static string RefsTagsPrefix { get; } = "refs/tags/";
 
@@ -46,19 +40,18 @@ public static partial class GitRefName
     [Pure]
     public static string GetRemoteName(string refName)
     {
-        Match match = RemoteNameRegex.Match(refName);
-
-        if (match.Success)
+        if (!refName.StartsWith(RefsRemotesPrefix))
         {
-            return match.Groups["remote"].Value;
+            // This method requires the full form of the ref path, which begins with "refs/".
+            // The overload which accepts multiple remote names can be used when the format might
+            // be abbreviated to "remote/branch".
+            DebugHelpers.Assert(refName.StartsWith("refs/"), "Must begin with \"refs/\".");
+            return string.Empty;
         }
 
-        // This method requires the full form of the ref path, which begins with "refs/".
-        // The overload which accepts multiple remote names can be used when the format might
-        // be abbreviated to "remote/branch".
-        DebugHelpers.Assert(refName.StartsWith("refs/"), "Must begin with \"refs/\".");
-
-        return string.Empty;
+        ReadOnlySpan<char> afterPrefix = refName.AsSpan(RefsRemotesPrefix.Length);
+        int slash = afterPrefix.IndexOf('/');
+        return (slash < 0 ? afterPrefix : afterPrefix[..slash]).ToString();
     }
 
     [Pure]
@@ -120,12 +113,52 @@ public static partial class GitRefName
             return branch;
         }
 
-        return "refs/heads/" + branch;
+        return RefsHeadsPrefix + branch;
+    }
+
+    [Pure]
+    [return: NotNullIfNotNull(nameof(branch))]
+    public static string? GetFullRemoteName(string? branch, string remote)
+    {
+        if (branch is null)
+        {
+            return null;
+        }
+
+        branch = branch.Trim();
+
+        if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
+        {
+            return branch;
+        }
+
+        // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
+        // NOTE: We can use `String.IsNullOrEmpty(Module.RevParse(srcRev))` instead
+        if (GitRevision.Sha1HashRegex.IsMatch(branch))
+        {
+            return branch;
+        }
+
+        return RefsRemotesPrefix + remote + "/" + branch;
     }
 
     [Pure]
     public static bool IsRemoteHead(string refName)
     {
-        return RemoteHeadRegex.IsMatch(refName);
+        const string headSuffix = "/HEAD";
+        if (!refName.StartsWith(RefsRemotesPrefix) || !refName.EndsWith(headSuffix))
+        {
+            return false;
+        }
+
+        // The remote name segment between "refs/remotes/" and "/HEAD" must be non-empty and contain no '/'
+        int remoteStart = RefsRemotesPrefix.Length;
+        int remoteEnd = refName.Length - headSuffix.Length;
+        if (remoteEnd <= remoteStart)
+        {
+            return false;
+        }
+
+        return refName.AsSpan()[remoteStart..remoteEnd].IndexOf('/') < 0;
     }
 }

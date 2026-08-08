@@ -850,7 +850,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
 
         string pushTo;
-        if (string.IsNullOrEmpty(currentBranch.TrackingRemote) || string.IsNullOrEmpty(currentBranch.MergeWith))
+        if (string.IsNullOrEmpty(currentBranch.TrackingRemote))
         {
             string? defaultRemote = Module.GetRemoteNames().FirstOrDefault(r => r == "origin") ?? Module.GetRemoteNames().OrderBy(r => r).FirstOrDefault();
 
