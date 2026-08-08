@@ -146,7 +146,7 @@ public sealed class BuildServerIntegrationTests
             BuildServerSettings.IntegrationEnabled[settings] = originalEnabled;
             BuildServerSettings.ShowBuildResultPage[settings] = originalShowResult;
             BuildServerSettings.ServerName[settings] = originalServerName;
-            form.GotoPage(new SettingsPageReferenceByType(typeof(SettingsPlaceholderPage)));
+            form.GotoPage(ChecklistSettingsPage.GetPageReference());
             form.Close();
         }
     }
