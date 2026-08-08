@@ -123,12 +123,12 @@ public partial class PluginSettingsPage : DistributedSettingsPage
     {
         base.TranslateItems(translation);
         string numberPlaceholder = translation.TranslateItem(
-            nameof(SettingsPageBase),
+            nameof(DistributedSettingsPage),
             "_numberSettingPlaceholder",
             "Text",
             () => PluginSettingControlFactory.NumberPlaceholder) ?? PluginSettingControlFactory.NumberPlaceholder;
         string stringPlaceholder = translation.TranslateItem(
-            nameof(SettingsPageBase),
+            nameof(DistributedSettingsPage),
             "_stringSettingPlaceholder",
             "Text",
             () => PluginSettingControlFactory.StringPlaceholder) ?? PluginSettingControlFactory.StringPlaceholder;
@@ -145,11 +145,12 @@ public partial class PluginSettingsPage : DistributedSettingsPage
             ColumnDefinitions = new ColumnDefinitions("Auto,*"),
             ColumnSpacing = 10,
         };
-        if (binding.Caption is not null)
+        string? caption = binding.Caption();
+        if (caption is not null)
         {
             TextBlock label = new()
             {
-                Text = binding.Caption,
+                Text = caption,
                 Margin = new Avalonia.Thickness(0, 2, 0, 0),
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
             };

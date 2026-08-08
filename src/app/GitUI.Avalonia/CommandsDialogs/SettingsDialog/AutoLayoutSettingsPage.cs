@@ -136,15 +136,16 @@ public class TableSettingsLayout : BaseSettingsLayout
     public override void AddSettingControlImpl(ISettingControlBinding controlBinding)
     {
         _currentRow++;
-        PluginSettingBinding binding = PluginSettingControlFactory.Create(controlBinding.GetSetting());
+        PluginSettingBinding binding = PluginSettingControlFactory.Create(controlBinding);
         GetRootLayout().AddAvaloniaBinding(binding);
         Panel.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
 
-        if (binding.Caption is not null)
+        string? caption = binding.Caption();
+        if (caption is not null)
         {
             TextBlock label = new()
             {
-                Text = binding.Caption,
+                Text = caption,
                 Margin = new Avalonia.Thickness(0, 2, 0, 0),
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
             };
