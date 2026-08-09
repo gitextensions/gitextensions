@@ -174,7 +174,12 @@ The Avalonia application uses the shared MEF plugin infrastructure, but scans th
 `UserPlugins.Avalonia` directory under the Git Extensions local application-data folder.
 It does not load the Windows Forms `UserPlugins` directory because existing plugins can carry
 Windows-only UI and `System.Drawing` dependencies. Portable user plugins can use the separate
-directory without affecting the Windows Forms installation.
+directory without affecting the Windows Forms installation. In the Flatpak this resolves to
+`$XDG_DATA_HOME/GitExtensions/UserPlugins.Avalonia`, normally
+`~/.var/app/com.github.gitextensions.GitExtensions.Avalonia.Devel/data/GitExtensions/UserPlugins.Avalonia`
+for the development package. The application creates and checks this directory before MEF
+initialization. If it cannot be created or enumerated, startup continues with bundled plugins
+only and writes a diagnostic; it never falls back to the Windows Forms or host plugin directory.
 
 ## Testing
 
