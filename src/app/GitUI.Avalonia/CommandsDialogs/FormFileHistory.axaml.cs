@@ -254,6 +254,11 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
 
         string? initialDirectory = Path.GetDirectoryName(fullName);
         string extension = Path.GetExtension(fullName);
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return;
+        }
+
         IStorageFile? file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             SuggestedFileName = Path.GetFileName(fullName),

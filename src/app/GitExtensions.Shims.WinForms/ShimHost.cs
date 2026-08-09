@@ -62,6 +62,18 @@ public static class ShimHost
         set => _folderPicker = value;
     }
 
+    private static IOsShell? _osShell;
+
+    /// <summary>
+    ///  Gets or sets the desktop-shell service used by portable shared code.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">No service has been installed.</exception>
+    public static IOsShell OsShell
+    {
+        get => _osShell ?? throw new InvalidOperationException($"No {nameof(IOsShell)} has been installed. The application must assign {nameof(ShimHost)}.{nameof(OsShell)} at startup.");
+        set => _osShell = value;
+    }
+
     /// <summary>
     ///  Gets or sets the text-measurement service behind <see cref="TextRenderer"/>.
     ///  The default is a documented approximation (average character width) so that headless

@@ -16,6 +16,11 @@ public sealed class AvaloniaFolderPicker(IClassicDesktopStyleApplicationLifetime
 
         async Task<string?> PickAsync()
         {
+            if (!await PortalPickerGuard.IsAvailableAsync())
+            {
+                return null;
+            }
+
             if (desktop.MainWindow?.StorageProvider is not { } storageProvider)
             {
                 return null;

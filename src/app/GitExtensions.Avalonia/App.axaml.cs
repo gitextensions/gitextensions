@@ -97,6 +97,9 @@ public partial class App : Application
 
             // parity-scaffolding: opt-in native Wayland evidence until the platform gate closes.
             WaylandConformanceProbe.StartIfRequested(desktop);
+
+            // parity-scaffolding: opt-in XDG portal evidence until the platform gate closes.
+            PortalConformanceProbe.StartIfRequested(desktop);
         }
         catch (Exception exception)
         {

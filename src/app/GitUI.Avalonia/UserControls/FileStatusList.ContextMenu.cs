@@ -904,7 +904,12 @@ partial class FileStatusList
     {
         FileStatusItem[] selected = [.. SelectedItems];
         TopLevel? topLevel = TopLevel.GetTopLevel(this);
-        if (selected.Length == 0 || topLevel?.StorageProvider is null)
+        if (selected.Length == 0 || topLevel is null)
+        {
+            return;
+        }
+
+        if (!await PortalPickerGuard.IsAvailableAsync())
         {
             return;
         }

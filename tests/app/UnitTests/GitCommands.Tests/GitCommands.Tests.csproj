@@ -12,7 +12,12 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Remove="Git\OsShellUtilTests.cs" />
     <Compile Include="$(RepoRoot)\src\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
+    <Compile Remove="Git\OsShellUtil.NonWindowsTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
