@@ -1,9 +1,10 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Compat;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -19,8 +20,6 @@ namespace GitExtensions;
 
 public partial class App : Application
 {
-    private const string AvaloniaUserPluginsDirectoryName = "UserPlugins.Avalonia";
-
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -43,7 +42,9 @@ public partial class App : Application
             Shims.WinForms.Application.ThreadException += (_, e) => ReportUnhandledException(e.Exception, isTerminating: false);
 
             AvaloniaFontSettings.InstallSystemDefaults();
-            string userPluginsPath = Path.Join(AppSettings.LocalApplicationDataPath.Value!, AvaloniaUserPluginsDirectoryName);
+
+            // Cross-platform constraint: portable plugins are isolated from WinForms-only user plugins.
+            string? userPluginsPath = UserPluginsDirectory.GetPath(AppSettings.LocalApplicationDataPath.Value);
             ManagedExtensibility.Initialise(userPluginsPath: userPluginsPath);
             AppSettings.LoadSettings();
             AvaloniaThemeSettings.ApplyAppSettings();

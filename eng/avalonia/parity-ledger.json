@@ -159,14 +159,21 @@
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-09",
+          "commit": "4031f51333e0dc84af6eb432ac72d1f922133c36",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
+            "eng/avalonia/parity-evidence/P7.3/tests/windows/plugin-discovery-tests.trx",
+            "eng/avalonia/parity-evidence/P7.3/tests/linux/plugin-discovery-tests.trx",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/plugin-discovery.txt"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux",
+            "flatpak"
+          ],
           "findingCount": 62,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "P7.3 verifies isolated UserPlugins.Avalonia path selection, Flatpak XDG_DATA_HOME resolution, and bundled-only fallback when the directory is unavailable. The earlier entry-point member/event/menu/hotkey/settings/translation inventory findings remain open."
         },
         "visual": {
           "status": "notApplicable",
@@ -187,22 +194,40 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-09",
+          "commit": "4031f51333e0dc84af6eb432ac72d1f922133c36",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P7.3/tests/windows/plugin-discovery-tests.trx",
+            "eng/avalonia/parity-evidence/P7.3/tests/linux/plugin-discovery-tests.trx",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/plugin-discovery.txt"
+          ],
+          "platforms": [
+            "windows",
+            "linux",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Normal and inaccessible user-plugin directory states are verified, including no fallback to the WinForms directory; the complete application interaction matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-09",
+          "commit": "4031f51333e0dc84af6eb432ac72d1f922133c36",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P7.3/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak startup pass; Flatpak additionally verifies the real XDG plugin path and inaccessible-path fallback. macOS remains open."
         }
       }
     },
