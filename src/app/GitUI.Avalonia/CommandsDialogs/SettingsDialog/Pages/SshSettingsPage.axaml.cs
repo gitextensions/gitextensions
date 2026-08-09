@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
+using GitUI.Compat;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -170,7 +171,7 @@ public sealed partial class SshSettingsPage : SettingsPageWithHeader
     private async Task BrowseExecutableAsync(TextBox target, string title, IReadOnlyList<string> patterns)
     {
         TopLevel? topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel?.StorageProvider is null)
+        if (topLevel is null)
         {
             return;
         }
@@ -189,6 +190,11 @@ public sealed partial class SshSettingsPage : SettingsPageWithHeader
         if (!string.IsNullOrEmpty(currentDirectory))
         {
             options.SuggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(currentDirectory);
+        }
+
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return;
         }
 
         IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(options);

@@ -10,6 +10,7 @@ using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Settings;
+using GitUI.Compat;
 using GitUI.Properties;
 using Microsoft;
 using ResourceManager;
@@ -331,7 +332,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
     private async Task<string?> SelectFileAsync(string initialDirectory, string pattern)
     {
         TopLevel? topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel?.StorageProvider is null)
+        if (topLevel is null)
         {
             return null;
         }
@@ -349,6 +350,11 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         if (Directory.Exists(initialDirectory))
         {
             options.SuggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(initialDirectory);
+        }
+
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return null;
         }
 
         IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(options);

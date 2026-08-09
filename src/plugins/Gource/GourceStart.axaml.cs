@@ -173,6 +173,11 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
                     Path.GetDirectoryName(GourcePath.Text) ?? string.Empty);
             }
 
+            if (!await PortalPickerGuard.IsAvailableAsync())
+            {
+                return null;
+            }
+
             IReadOnlyList<IStorageFile> files = await StorageProvider.OpenFilePickerAsync(options);
             return files.Count > 0 ? files[0].TryGetLocalPath() : null;
         }
@@ -192,6 +197,11 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
             if (!string.IsNullOrWhiteSpace(WorkingDir.Text))
             {
                 options.SuggestedStartLocation = await StorageProvider.TryGetFolderFromPathAsync(WorkingDir.Text);
+            }
+
+            if (!await PortalPickerGuard.IsAvailableAsync())
+            {
+                return null;
             }
 
             IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(options);
