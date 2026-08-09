@@ -2382,37 +2382,37 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ForkAndCloneForm.axaml.cs",
     "status": "functional",
     "basedOn": "93d538f6c9a878f010044a021fa53d08cf4e64c0",
-    "notes": "Retains provider-owned repository listing, repository and user search, fork and homepage actions, destination/history fallback, clone protocol and depth selection, optional upstream remote, FormRemoteProcess clone, and the GitModuleEventArgs callback. Provider calls are owned by one cancellable form TaskManager and native typed ListBox rows preserve the original eight translated column identities. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization."
+    "notes": "Retains provider-owned repository listing, repository and user search, fork and homepage actions, destination/history fallback, clone protocol and depth selection, optional upstream remote, FormRemoteProcess clone, and the GitModuleEventArgs callback. Provider calls are owned by one cancellable form TaskManager and native typed ListBox rows preserve the original eight translated column identities. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. P7.2 re-verified the deterministic provider workflow at all required themes/scales/states; the retained source and paired-capture findings are explicitly owned by P8.6i."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/ForkAndCloneForm.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ForkAndCloneForm.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native 744x552 two-tab layout with source column metrics, shared dialog/group styles, clone destination, protocol, parent-remote, depth, and action controls; no ListView or ColumnHeader shim types are introduced. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
+    "notes": "Native 744x552 two-tab layout with source column metrics, shared dialog/group styles, clone destination, protocol, parent-remote, depth, and action controls; no ListView or ColumnHeader shim types are introduced. P1.8 centralizes recurring AXAML values through the shared visual vocabulary. P7.2 measured the current WinForms/Avalonia surface at all required themes/scales/states without claiming visual parity; P8.6i owns exact closure."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/CreatePullRequestForm.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/CreatePullRequestForm.axaml.cs",
     "status": "functional",
     "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
-    "notes": "Retains foreign target and user-owned source repository selection, provider branch loading, default and requested branch selection, commit-title suggestion, local pull-request template loading, validation, and provider creation. All provider and repository work is owned by one cancellable form TaskManager; the chooseBranch command parameter is honored instead of being overwritten during load. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization."
+    "notes": "Retains foreign target and user-owned source repository selection, provider branch loading, default and requested branch selection, commit-title suggestion, local pull-request template loading, validation, and provider creation. All provider and repository work is owned by one cancellable form TaskManager; the chooseBranch command parameter is honored instead of being overwritten during load. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. P7.2 re-verified the deterministic provider workflow at all required themes/scales/states; the retained source and paired-capture findings are explicitly owned by P8.6i."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/CreatePullRequestForm.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/CreatePullRequestForm.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native 546x323 title/body dialog preserves the original control names, translation identities, repository and branch selectors, EditNetSpell body editor, and create action."
+    "notes": "Native 546x323 title/body dialog preserves the original control names, translation identities, repository and branch selectors, EditNetSpell body editor, and create action. P7.2 measured the current WinForms/Avalonia surface at all required themes/scales/states without claiming visual parity; P8.6b owns the composite body-focus capture gap and P8.6i owns exact closure."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/ViewPullRequestsForm.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Retains current-remote hosted-repository selection and fallback, pull-request rows, provider diff/discussion loading, selected-file patch viewing, fetch, add-remote/fetch/checkout, close, refresh, and post-comment actions. Provider work is latest-selection-wins under one form-owned TaskManager; structured Git command builders replace the original raw fetch/checkout strings. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization."
+    "notes": "Retains current-remote hosted-repository selection and fallback, pull-request rows, provider diff/discussion loading, selected-file patch viewing, fetch, add-remote/fetch/checkout, close, refresh, and post-comment actions. Provider work is latest-selection-wins under one form-owned TaskManager; structured Git command builders replace the original raw fetch/checkout strings. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. P7.2 routes discussion data through the same-path native presentation twin and re-verified the deterministic provider workflow at all required themes/scales/states; retained findings are P8.6i debt."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/ViewPullRequestsForm.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native 754x511 split layout preserves the repository selector, five-column pull-request list, action rail, Diff/Comments tabs, FileStatusList/FileViewer and EditNetSpell boundaries. Discussion entries use typed Avalonia rows instead of the WinForms WebBrowser/GDI HTML renderer, while the four translated header identities and literal # header remain unchanged. P1.8 centralizes recurring AXAML values through the shared visual vocabulary; the zero-tolerance Avalonia baseline comparison is recorded at eng/avalonia/parity-evidence/P1.8/diff-final-exact/findings.json."
+    "notes": "Native 754x511 split layout preserves the repository selector, five-column pull-request list, action rail, Diff/Comments tabs, FileStatusList/FileViewer and EditNetSpell boundaries. Discussion entries use typed Avalonia rows instead of the WinForms WebBrowser/GDI HTML renderer, while the four translated header identities and literal # header remain unchanged. P1.8 centralizes recurring AXAML values through the shared visual vocabulary. P7.2 measured the current WinForms/Avalonia surface at all required themes/scales/states without claiming visual parity; P8.6i owns exact closure."
   },
   "src/app/GitUI/GitUICommands.cs": {
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
@@ -3092,8 +3092,10 @@
     "notes": "Framework-neutral remembered-file diff selection is linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/DiscussionHtmlCreator.cs": {
-    "status": "unported",
-    "plannedIn": "P7.2"
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/DiscussionHtmlCreator.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "The same-path portable twin projects provider discussion entries into typed native presentation rows consumed by ViewPullRequestsForm. This is the documented framework exception to the WinForms WebBrowser/GDI HTML and CSS renderer: author, created time, multiline body, optional commit SHA, and unknown-value substitution are preserved without a browser or System.Drawing dependency; P8.6i owns exact rendered closure in the consuming form."
   },
   "src/app/GitUI/CommandsDialogs/RevisionDiffContoller.ContextMenuSelectionInfo.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/RevisionDiffContoller.ContextMenuSelectionInfo.cs",
