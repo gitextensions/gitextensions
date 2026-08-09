@@ -23,6 +23,7 @@ using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Plugins.Gource;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
@@ -33,6 +34,7 @@ using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.Menus;
+using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SubmodulesDialog;
@@ -292,6 +294,119 @@ public sealed partial class ParityScreenshotTests
         => new[] { AppSourcePath, "src/Commands/Checkout.cs", "tests/SearchTests.cs" }
             .Where(candidate => candidate.Contains(value, StringComparison.OrdinalIgnoreCase));
 
+    // parity-scaffolding: Gives all three repository-host dialogs the WinForms capture model.
+    private static IRepositoryHostPlugin CreateRepositoryHostCaptureFixture(CaptureContext context)
+    {
+        IHostedBranch mainBranch = Substitute.For<IHostedBranch>();
+        mainBranch.Name.Returns(MainBranchName);
+        mainBranch.Sha.Returns(context.ParentRevision.ObjectId);
+        IHostedBranch featureBranch = Substitute.For<IHostedBranch>();
+        featureBranch.Name.Returns(FeatureBranchName);
+        featureBranch.Sha.Returns(context.HeadRevision.ObjectId);
+
+        IHostedRepository mine = CreateHostedRepository(
+            "contributor",
+            "repository",
+            isMine: true,
+            [mainBranch, featureBranch]);
+        IHostedRepository target = CreateHostedRepository(
+            "gitextensions",
+            "gitextensions",
+            isMine: false,
+            [mainBranch, featureBranch]);
+
+        IDiscussionEntry comment = Substitute.For<IDiscussionEntry>();
+        comment.Author.Returns("Contributor");
+        comment.Created.Returns(new DateTime(2026, 8, 8, 12, 30, 0, DateTimeKind.Utc));
+        comment.Body.Returns("The native discussion surface preserves multiline text.\nReady for review.");
+        ICommitDiscussionEntry commit = Substitute.For<ICommitDiscussionEntry>();
+        commit.Author.Returns("Git Extensions Team");
+        commit.Created.Returns(new DateTime(2026, 8, 8, 13, 0, 0, DateTimeKind.Utc));
+        commit.Body.Returns("Updated the repository-host integration.");
+        commit.Sha.Returns("2222222");
+        IPullRequestDiscussion discussion = Substitute.For<IPullRequestDiscussion>();
+        discussion.Entries.Returns([comment, commit]);
+
+        IPullRequestInformation pullRequest = Substitute.For<IPullRequestInformation>();
+        pullRequest.Title.Returns("Complete repository-host parity");
+        pullRequest.Body.Returns("Keep provider workflows aligned across desktop platforms.");
+        pullRequest.Owner.Returns("contributor");
+        pullRequest.Created.Returns(new DateTime(2026, 8, 8, 12, 0, 0, DateTimeKind.Utc));
+        pullRequest.BaseRepo.Returns(target);
+        pullRequest.HeadRepo.Returns(mine);
+        pullRequest.BaseSha.Returns(context.ParentRevision.ObjectId.ToString());
+        pullRequest.HeadSha.Returns(context.HeadRevision.ObjectId.ToString());
+        pullRequest.BaseRef.Returns(MainBranchName);
+        pullRequest.HeadRef.Returns(FeatureBranchName);
+        pullRequest.Id.Returns("42");
+        pullRequest.DetailedInfo.Returns("#42 Complete repository-host parity");
+        pullRequest.FetchBranch.Returns("pr/42");
+        pullRequest.GetDiscussion().Returns(discussion);
+        pullRequest.GetDiffDataAsync().Returns(Task.FromResult(
+            "diff --git a/src/App.cs b/src/App.cs\n"
+            + "index 1111111..2222222 100644\n"
+            + "--- a/src/App.cs\n"
+            + "+++ b/src/App.cs\n"
+            + "@@ -1 +1 @@\n"
+            + "-old\n"
+            + "+new\n"));
+        target.GetPullRequests().Returns([pullRequest]);
+
+        IHostedRemote targetRemote = CreateHostedRemote("origin", target, isOwnedByMe: false);
+        IHostedRemote mineRemote = CreateHostedRemote("contributor", mine, isOwnedByMe: true);
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.Name.Returns("Parity Host");
+        host.ConfigurationOk.Returns(true);
+        host.OwnerLogin.Returns("contributor");
+        host.GetMyRepos().Returns([mine]);
+        host.SearchForRepository(Arg.Any<string>()).Returns([target]);
+        host.GetHostedRemotesForModule().Returns([targetRemote, mineRemote]);
+        return host;
+    }
+
+    private static IHostedRepository CreateHostedRepository(
+        string owner,
+        string name,
+        bool isMine,
+        IReadOnlyList<IHostedBranch> branches)
+    {
+        IHostedRepository repository = Substitute.For<IHostedRepository>();
+        repository.Owner.Returns(owner);
+        repository.Name.Returns(name);
+        repository.Description.Returns("Representative repository used by the parity capture harness.");
+        repository.IsAFork.Returns(isMine);
+        repository.IsMine.Returns(isMine);
+        repository.IsPrivate.Returns(false);
+        repository.Forks.Returns(42);
+        repository.Homepage.Returns($"https://example.test/{owner}/{name}");
+        repository.ParentUrl.Returns(isMine ? "https://example.test/gitextensions/gitextensions" : null);
+        repository.ParentOwner.Returns(isMine ? "gitextensions" : null);
+        repository.CloneUrl.Returns($"https://example.test/{owner}/{name}.git");
+        repository.CloneProtocol.Returns(GitProtocol.Https);
+        repository.SupportedCloneProtocols.Returns([GitProtocol.Https, GitProtocol.Ssh]);
+        repository.GetBranches().Returns(branches);
+        repository.GetDefaultBranch().Returns(MainBranchName);
+        return repository;
+    }
+
+    private static IHostedRemote CreateHostedRemote(
+        string name,
+        IHostedRepository repository,
+        bool isOwnedByMe)
+    {
+        IHostedRemote remote = Substitute.For<IHostedRemote>();
+        remote.Name.Returns(name);
+        remote.Data.Returns($"{repository.Owner}/{repository.Name}");
+        remote.DisplayData.Returns($"{remote.Data} ({name})");
+        remote.IsOwnedByMe.Returns(isOwnedByMe);
+        remote.Owner.Returns(repository.Owner);
+        remote.RemoteRepositoryName.Returns(repository.Name);
+        remote.RemoteUrl.Returns(repository.CloneUrl);
+        remote.CloneProtocol.Returns(GitProtocol.Https);
+        remote.GetHostedRepository().Returns(repository);
+        return remote;
+    }
+
     private static Control CreateView(CaptureContext context, Type viewType)
     {
         if (viewType == typeof(SimplePrompt))
@@ -316,6 +431,28 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormSettings))
         {
             return new FormSettings(context.Commands);
+        }
+
+        if (viewType == typeof(CreatePullRequestForm))
+        {
+            return new CreatePullRequestForm(
+                context.Commands,
+                CreateRepositoryHostCaptureFixture(context),
+                chooseRemote: "origin",
+                chooseBranch: FeatureBranchName);
+        }
+
+        if (viewType == typeof(ForkAndCloneForm))
+        {
+            return new ForkAndCloneForm(
+                context.Commands,
+                CreateRepositoryHostCaptureFixture(context),
+                gitModuleChanged: null);
+        }
+
+        if (viewType == typeof(ViewPullRequestsForm))
+        {
+            return new ViewPullRequestsForm(context.Commands, CreateRepositoryHostCaptureFixture(context));
         }
 
         if (viewType == typeof(HotkeysSettingsPage))
@@ -1210,6 +1347,51 @@ public sealed partial class ParityScreenshotTests
 
     private static async Task WaitForAsyncViewsAsync(Control root)
     {
+        if (root is CreatePullRequestForm)
+        {
+            // parity-scaffolding: Wait for both provider branch loaders before capturing the settled form.
+            Button create = GetRequiredControl<Button>(root, "_createBtn");
+            Stopwatch createStopwatch = Stopwatch.StartNew();
+            while (!create.IsEnabled && createStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            create.IsEnabled.Should().BeTrue();
+        }
+
+        if (root is ForkAndCloneForm)
+        {
+            // parity-scaffolding: Wait for the provider-owned repository list to replace its loading row.
+            ListBox repositories = GetRequiredControl<ListBox>(root, "myReposLV");
+            Stopwatch repositoryStopwatch = Stopwatch.StartNew();
+            while (repositories.ItemCount == 0 && repositoryStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            repositories.ItemCount.Should().BeGreaterThan(0);
+        }
+
+        if (root is ViewPullRequestsForm)
+        {
+            // parity-scaffolding: Wait for the selected provider's pull request and discussion loaders.
+            ListBox pullRequests = GetRequiredControl<ListBox>(root, "_pullRequestsList");
+            ListBox discussion = GetRequiredControl<ListBox>(root, "_discussionWB");
+            Stopwatch pullRequestStopwatch = Stopwatch.StartNew();
+            while ((pullRequests.ItemCount == 0 || discussion.ItemCount == 0)
+                   && pullRequestStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            pullRequests.ItemCount.Should().BeGreaterThan(0);
+            discussion.ItemCount.Should().BeGreaterThan(0);
+        }
+
         if (root is FormGoToCommit)
         {
             // parity-scaffolding: Wait for the reference/tag loaders so the capture records the settled dialog.
@@ -1479,6 +1661,21 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormBrowse))
         {
             return (1400, 850);
+        }
+
+        if (viewType == typeof(CreatePullRequestForm))
+        {
+            return (546, 323);
+        }
+
+        if (viewType == typeof(ForkAndCloneForm))
+        {
+            return (744, 552);
+        }
+
+        if (viewType == typeof(ViewPullRequestsForm))
+        {
+            return (754, 511);
         }
 
         if (viewType == typeof(Dashboard))

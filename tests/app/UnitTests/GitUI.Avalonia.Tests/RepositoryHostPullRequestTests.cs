@@ -176,6 +176,36 @@ public sealed class RepositoryHostPullRequestTests
         items[0].IsTracked.Should().BeTrue();
     }
 
+    [Test]
+    public void DiscussionHtmlCreator_should_project_comment_and_commit_entries_to_native_rows()
+    {
+        IDiscussionEntry comment = Substitute.For<IDiscussionEntry>();
+        comment.Author.Returns((string?)null);
+        comment.Created.Returns(new DateTime(2026, 7, 27, 12, 0, 0, DateTimeKind.Utc));
+        comment.Body.Returns("First line\nSecond line");
+        ICommitDiscussionEntry commit = Substitute.For<ICommitDiscussionEntry>();
+        commit.Author.Returns("Contributor");
+        commit.Created.Returns(new DateTime(2026, 7, 27, 13, 0, 0, DateTimeKind.Utc));
+        commit.Body.Returns((string?)null);
+        commit.Sha.Returns((string?)null);
+
+        IReadOnlyList<DiscussionHtmlCreator.DiscussionEntryPresentation> rows =
+            DiscussionHtmlCreator.CreateFor([comment, commit]);
+
+        rows.Should().Equal(
+            new DiscussionHtmlCreator.DiscussionEntryPresentation(
+                "[UNKNOWN]",
+                comment.Created.ToString(),
+                "First line\nSecond line",
+                null),
+            new DiscussionHtmlCreator.DiscussionEntryPresentation(
+                "Contributor",
+                commit.Created.ToString(),
+                "[UNKNOWN]",
+                "[UNKNOWN]"));
+        DiscussionHtmlCreator.CreateFor().Should().BeEmpty();
+    }
+
     [AvaloniaTest]
     public void StartPullRequestsDialog_should_open_provider_configuration_when_required()
     {
