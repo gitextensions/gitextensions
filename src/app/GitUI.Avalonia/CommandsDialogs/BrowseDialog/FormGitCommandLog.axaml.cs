@@ -191,6 +191,11 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
 
     private async Task SaveToFileAsync()
     {
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return;
+        }
+
         IStorageFile? file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = Title,

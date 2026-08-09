@@ -185,6 +185,7 @@
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="ExCSS" />
     <PackageReference Include="JetBrains.Annotations" />
+    <PackageReference Include="Tmds.DBus.Protocol" />
   </ItemGroup>
 
   <ItemGroup>

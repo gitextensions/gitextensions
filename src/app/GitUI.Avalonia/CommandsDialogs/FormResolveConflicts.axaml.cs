@@ -1376,6 +1376,11 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void SaveAs(string side)
     {
+        if (!PortalPickerGuard.IsAvailable())
+        {
+            return;
+        }
+
         using (WaitCursorScope.Enter())
         {
             ConflictData conflictData = GetConflict();

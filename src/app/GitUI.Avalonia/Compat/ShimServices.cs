@@ -15,6 +15,7 @@ public static class ShimServices
         ShimHost.TaskDialogHost = new AvaloniaTaskDialogHost();
         ShimHost.Clipboard = new AvaloniaClipboard(desktop);
         ShimHost.FolderPicker = new AvaloniaFolderPicker(desktop);
+        ShimHost.OsShell = new AvaloniaOsShell(desktop, new XdgDesktopPortal());
         ShimHost.TextMeasurer = new AvaloniaTextMeasurer();
     }
 }
