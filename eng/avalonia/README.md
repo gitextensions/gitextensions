@@ -72,7 +72,8 @@ container:
 ```console
 sudo apt-get update
 sudo apt-get install libice6 libsm6 libfontconfig1 libwayland-client0 libxkbcommon0 libegl1 \
-  rsync lsof weston wayland-utils xserver-xephyr x11-apps xdotool imagemagick \
+  rsync lsof weston wayland-utils xserver-xephyr x11-apps xdotool imagemagick iproute2 \
+  sway wl-clipboard \
   flatpak flatpak-builder
 ```
 
@@ -84,6 +85,12 @@ wsl -d Ubuntu -- bash -lc `
 
 wsl -d Ubuntu -- bash -lc `
   '/mnt/c/path/to/gitextensions/eng/avalonia/wsl-gate.sh runtime'
+
+wsl -d Ubuntu -- bash -lc `
+  'cd ~/src/gitextensions-wsl && eng/avalonia/wayland-conformance.sh /mnt/c/path/to/gitextensions/eng/avalonia/parity-evidence/P8.1/protocols'
+
+wsl -d Ubuntu -- bash -lc `
+  'cd ~/src/gitextensions-wsl && eng/avalonia/wayland-fractional-scale.sh /mnt/c/path/to/gitextensions/eng/avalonia/parity-evidence/P8.1/fractional'
 ```
 
 The Windows command launches from a disposable portable runtime and captures the prerequisite
@@ -94,6 +101,13 @@ loaded backend packages, and proves the active path through an exclusive composi
 capture. It writes isolated evidence below `eng/avalonia/parity-evidence/P0.6/`. The Linux
 smokes use temporary XDG settings and never read or write the operator's Git Extensions
 configuration.
+
+The P8.1 conformance commands use the same isolated settings and repository discipline. The
+rendered Weston run verifies modal ownership, edge tooltip/context-menu placement, external
+plain-text and `text/html` clipboard reads, and drag/drop. The Sway headless run supplies real
+1.25 and 1.5 output scales and moves the live window between differently scaled outputs. A
+headless wlroots compositor without a DRM renderer is protocol/scaling evidence only; it is
+never reported as a rendered surface capture.
 
 WSLg currently advertises `xdg_wm_base` version 1 on this machine, while Avalonia requires
 version 3 or later. The harness therefore hosts the native Wayland process in nested Weston
