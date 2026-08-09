@@ -152,7 +152,7 @@ public partial class FormApplyPatch : GitModuleForm
     private async Task BrowsePatchAsync()
     {
         TopLevel? topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel?.StorageProvider is null)
+        if (topLevel is null)
         {
             return;
         }
@@ -173,6 +173,11 @@ public partial class FormApplyPatch : GitModuleForm
         if (!string.IsNullOrEmpty(currentDirectory))
         {
             options.SuggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(currentDirectory);
+        }
+
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return;
         }
 
         IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(options);

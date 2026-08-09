@@ -674,6 +674,11 @@ public sealed partial class FormVerify : GitModuleForm
             return;
         }
 
+        if (!PortalPickerGuard.IsAvailable())
+        {
+            return;
+        }
+
         string fileName = _defaultFilename ?? lostObject.ObjectId + "_LOST_FOUND.txt";
         string extension = Path.GetExtension(fileName).TrimStart('.');
         List<FilePickerFileType> fileTypes = [CreateFileType(extension)];

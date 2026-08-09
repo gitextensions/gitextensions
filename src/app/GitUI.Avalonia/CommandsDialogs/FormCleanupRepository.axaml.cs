@@ -184,6 +184,11 @@ public partial class FormCleanupRepository : GitModuleForm
 
     private string? RequestUserFolderPath()
     {
+        if (!PortalPickerGuard.IsAvailable())
+        {
+            return null;
+        }
+
         FolderPickerOpenOptions options = new()
         {
             AllowMultiple = false,
@@ -218,6 +223,11 @@ public partial class FormCleanupRepository : GitModuleForm
 
     private string? RequestUserFilePath()
     {
+        if (!PortalPickerGuard.IsAvailable())
+        {
+            return null;
+        }
+
         FilePickerOpenOptions options = new()
         {
             AllowMultiple = false,
