@@ -94,6 +94,9 @@ public partial class App : Application
             {
                 RunCommand(desktop, commands, args);
             }
+
+            // parity-scaffolding: opt-in native Wayland evidence until the platform gate closes.
+            WaylandConformanceProbe.StartIfRequested(desktop);
         }
         catch (Exception exception)
         {
