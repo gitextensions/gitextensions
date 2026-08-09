@@ -20,11 +20,18 @@ repo_root="$(git rev-parse --show-toplevel)"
 flatpak_root="$repo_root/eng/avalonia/flatpak"
 manifest="$flatpak_root/com.github.gitextensions.GitExtensions.Avalonia.Devel.json"
 publish_root="$flatpak_root/publish"
-build_root="$repo_root/artifacts/P0.6/flatpak-build"
-app_id="com.github.gitextensions.GitExtensions.Avalonia.Devel"
+flatpak_cache_root="$HOME/.cache/gitextensions-avalonia/flatpak"
+build_root="$flatpak_cache_root/build"
+state_root="$flatpak_cache_root/state"
+smoke_manifest="$flatpak_cache_root/smoke-manifest.json"
+package_app_id="com.github.gitextensions.GitExtensions.Avalonia.Devel"
+app_id="com.github.gitextensions.GitExtensions.Avalonia.P73Smoke"
+flatpak_home="$HOME/.var/app/$app_id"
 smoke_parent="$HOME/.local/share/gitextensions-parity-smoke"
 smoke_repo="$smoke_parent/repository"
-settings_root="$smoke_parent/settings"
+data_root="$flatpak_home/data"
+user_plugins_directory="$data_root/GitExtensions/UserPlugins.Avalonia"
+unreachable_user_plugins_path="$user_plugins_directory"
 
 case "$publish_root" in
     "$flatpak_root"/publish) ;;
@@ -40,9 +47,31 @@ case "$smoke_parent" in
         exit 2
         ;;
 esac
+case "$flatpak_cache_root" in
+    "$HOME"/.cache/gitextensions-avalonia/flatpak) ;;
+    *)
+        echo "error: refusing unsafe Flatpak cache path '$flatpak_cache_root'" >&2
+        exit 2
+        ;;
+esac
+case "$flatpak_home" in
+    "$HOME"/.var/app/com.github.gitextensions.GitExtensions.Avalonia.P73Smoke) ;;
+    *)
+        echo "error: refusing unsafe Flatpak home path '$flatpak_home'" >&2
+        exit 2
+        ;;
+esac
 
-settings_directory="$settings_root/config/GitExtensions/GitExtensions"
-mkdir -p "$evidence_dir" "$publish_root" "$build_root" "$smoke_repo" "$settings_directory"
+settings_directory="$flatpak_home/config/GitExtensions/GitExtensions"
+rm -rf -- "$flatpak_home"
+mkdir -p \
+    "$evidence_dir" \
+    "$publish_root" \
+    "$build_root" \
+    "$state_root" \
+    "$smoke_repo" \
+    "$settings_directory" \
+    "$data_root/GitExtensions"
 find "$publish_root" -mindepth 1 -maxdepth 1 ! -name .gitignore -exec rm -rf -- {} +
 
 cat > "$settings_directory/GitExtensions.settings" <<'EOF'
@@ -58,6 +87,23 @@ cat > "$settings_directory/GitExtensions.settings" <<'EOF'
   </item>
 </dictionary>
 EOF
+
+case "$user_plugins_directory" in
+    "$flatpak_home"/data/GitExtensions/UserPlugins.Avalonia) ;;
+    *)
+        echo "error: refusing unsafe user-plugin fixture path '$user_plugins_directory'" >&2
+        exit 2
+        ;;
+esac
+case "$unreachable_user_plugins_path" in
+    "$flatpak_home"/data/GitExtensions/UserPlugins.Avalonia) ;;
+    *)
+        echo "error: refusing unsafe inaccessible-plugin fixture path '$unreachable_user_plugins_path'" >&2
+        exit 2
+        ;;
+esac
+rm -rf -- "$unreachable_user_plugins_path"
+printf 'inaccessible user-plugin fixture\n' > "$unreachable_user_plugins_path"
 
 prebuilt_publish=${GITEXTENSIONS_FLATPAK_PREBUILT:-}
 if [[ -n "$prebuilt_publish" ]]; then
@@ -76,6 +122,11 @@ else
         --output "$publish_root"
 fi
 
+sed \
+    -e "s/$package_app_id/$app_id/g" \
+    -e "s#\"path\": \"publish\"#\"path\": \"$publish_root\"#" \
+    "$manifest" > "$smoke_manifest"
+
 git -C "$smoke_repo" init --quiet --initial-branch=main
 git -C "$smoke_repo" config user.name "P0.6 Flatpak Smoke"
 git -C "$smoke_repo" config user.email "p06-flatpak@example.invalid"
@@ -89,11 +140,13 @@ flatpak remote-add --user --if-not-exists flathub \
     https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak-builder \
     --user \
+    --disable-rofiles-fuse \
+    --state-dir="$state_root" \
     --install-deps-from=flathub \
     --force-clean \
     --install \
     "$build_root" \
-    "$manifest"
+    "$smoke_manifest"
 
 stdout_log="$evidence_dir/stdout.log"
 stderr_log="$evidence_dir/stderr.log"
@@ -103,6 +156,9 @@ manifest_output="$evidence_dir/smoke.json"
 weston_log="$evidence_dir/weston.log"
 backend_log="$evidence_dir/backend-evidence.txt"
 permissions_log="$evidence_dir/flatpak-permissions.txt"
+plugin_discovery_log="$evidence_dir/plugin-discovery.txt"
+unreachable_stdout_log="$evidence_dir/plugin-unreachable-stdout.log"
+unreachable_stderr_log="$evidence_dir/plugin-unreachable-stderr.log"
 rm -f -- \
     "$stdout_log" \
     "$stderr_log" \
@@ -111,7 +167,10 @@ rm -f -- \
     "$manifest_output" \
     "$weston_log" \
     "$backend_log" \
-    "$permissions_log"
+    "$permissions_log" \
+    "$plugin_discovery_log" \
+    "$unreachable_stdout_log" \
+    "$unreachable_stderr_log"
 
 flatpak info --user --show-permissions "$app_id" >"$permissions_log"
 filesystem_permissions="$(sed -n 's/^filesystems=//p' "$permissions_log")"
@@ -163,10 +222,80 @@ if [[ ! -S "$weston_runtime/$weston_socket" ]]; then
     exit 1
 fi
 
+flatpak_pid=
+cleanup()
+{
+    flatpak kill "$app_id" 2>/dev/null || true
+    if [[ -n "$flatpak_pid" ]]; then
+        wait "$flatpak_pid" 2>/dev/null || true
+    fi
+    kill -TERM "$weston_pid" 2>/dev/null || true
+    wait "$weston_pid" 2>/dev/null || true
+}
+trap cleanup EXIT
+
+wait_for_flatpak_start()
+{
+    local process_id=$1
+    for _ in {1..30}; do
+        if ! kill -0 "$process_id" 2>/dev/null; then
+            wait "$process_id" || true
+            return 1
+        fi
+        if flatpak ps --columns=application | grep -Fx "$app_id" >/dev/null 2>&1; then
+            return 0
+        fi
+        sleep 1
+    done
+
+    return 1
+}
+
+# First prove that an inaccessible UserPlugins.Avalonia entry does not abort confined startup.
 flatpak run --user \
     --nosocket=x11 \
     --nosocket=fallback-x11 \
-    --env=XDG_CONFIG_HOME="$settings_root/config" \
+    --env=XDG_RUNTIME_DIR="$weston_runtime" \
+    --env=WAYLAND_DISPLAY="$weston_socket" \
+    --env=LIBGL_ALWAYS_SOFTWARE=1 \
+    --env=MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
+    --env=GALLIUM_DRIVER=llvmpipe \
+    "$app_id" \
+    browse \
+    "$smoke_repo" >"$unreachable_stdout_log" 2>"$unreachable_stderr_log" &
+flatpak_pid=$!
+if ! wait_for_flatpak_start "$flatpak_pid"; then
+    echo "error: confined application did not start with an inaccessible user-plugin directory" >&2
+    sed -n '1,160p' "$unreachable_stderr_log" >&2
+    exit 1
+fi
+sleep 3
+if ! kill -0 "$flatpak_pid" 2>/dev/null; then
+    echo "error: confined application exited during the inaccessible user-plugin probe" >&2
+    sed -n '1,160p' "$unreachable_stderr_log" >&2
+    exit 1
+fi
+if ! grep -Fq "User plugin discovery is disabled because '$unreachable_user_plugins_path' is inaccessible:" \
+    "$unreachable_stderr_log"; then
+    echo "error: confined application did not report the inaccessible user-plugin directory" >&2
+    sed -n '1,160p' "$unreachable_stderr_log" >&2
+    exit 1
+fi
+flatpak kill "$app_id" 2>/dev/null || true
+wait "$flatpak_pid" 2>/dev/null || true
+flatpak_pid=
+for _ in {1..20}; do
+    if ! flatpak ps --columns=application | grep -Fx "$app_id" >/dev/null 2>&1; then
+        break
+    fi
+    sleep 0.25
+done
+
+rm -f -- "$unreachable_user_plugins_path"
+
+flatpak run --user \
+    --nosocket=x11 \
+    --nosocket=fallback-x11 \
     --env=XDG_RUNTIME_DIR="$weston_runtime" \
     --env=WAYLAND_DISPLAY="$weston_socket" \
     --env=LIBGL_ALWAYS_SOFTWARE=1 \
@@ -176,27 +305,27 @@ flatpak run --user \
     browse \
     "$smoke_repo" >"$stdout_log" 2>"$stderr_log" &
 flatpak_pid=$!
-cleanup()
-{
-    flatpak kill "$app_id" 2>/dev/null || true
-    wait "$flatpak_pid" 2>/dev/null || true
-    kill -TERM "$weston_pid" 2>/dev/null || true
-    wait "$weston_pid" 2>/dev/null || true
-}
-trap cleanup EXIT
-
-for _ in {1..30}; do
-    if ! kill -0 "$flatpak_pid" 2>/dev/null; then
-        wait "$flatpak_pid" || true
-        echo "error: confined application exited before capture" >&2
-        sed -n '1,160p' "$stderr_log" >&2
-        exit 1
-    fi
-    if flatpak ps --columns=application | grep -Fx "$app_id" >/dev/null 2>&1; then
-        break
-    fi
-    sleep 1
+if ! wait_for_flatpak_start "$flatpak_pid"; then
+    echo "error: confined application exited before capture" >&2
+    sed -n '1,160p' "$stderr_log" >&2
+    exit 1
+fi
+for _ in {1..20}; do
+    [[ -d "$user_plugins_directory" ]] && break
+    sleep 0.25
 done
+if [[ ! -d "$user_plugins_directory" ]] || [[ ! -r "$user_plugins_directory" ]]; then
+    echo "error: confined application did not create a readable XDG user-plugin directory" >&2
+    exit 1
+fi
+
+cat > "$plugin_discovery_log" <<EOF
+directory=<XDG_DATA_HOME>/GitExtensions/UserPlugins.Avalonia
+normal=created-and-readable
+unreachable=bundled-plugins-only
+unreachableDiagnostic=plugin-unreachable-stderr.log
+winFormsUserPluginsFallback=false
+EOF
 
 printf '%s\n' \
     'selector=WAYLAND_DISPLAY present' \
@@ -234,6 +363,7 @@ cat > "$manifest_output" <<EOF
 {
   "schemaVersion": 1,
   "appId": "$app_id",
+  "packageAppId": "$package_app_id",
   "runtime": "org.freedesktop.Sdk//25.08",
   "confined": true,
   "backend": "wayland",
@@ -242,6 +372,10 @@ cat > "$manifest_output" <<EOF
   "sessionHost": "nestedWestonOnWslgX11",
   "command": "browse <dedicated-smoke-repository>",
   "filesystemGrant": "--filesystem=host",
+  "userPluginsDirectory": "<XDG_DATA_HOME>/GitExtensions/UserPlugins.Avalonia",
+  "userPluginsNormal": "created-and-readable",
+  "userPluginsUnreachable": "bundled-plugins-only",
+  "pluginDiscoveryEvidence": "plugin-discovery.txt",
   "permissionsEvidence": "flatpak-permissions.txt",
   "screenshot": "window.png",
   "screenshotSha256": "$screenshot_sha256",
