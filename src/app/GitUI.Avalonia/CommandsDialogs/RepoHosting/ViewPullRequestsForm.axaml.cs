@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using GitCommands;
 using GitCommands.Git;
@@ -395,7 +396,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
                     return result;
                 },
                 cancellationToken);
-            DiscussionRow[] rows = discussion.Entries.Select(DiscussionRow.FromEntry).ToArray();
+            DiscussionRow[] rows = DiscussionHtmlCreator.CreateFor(discussion.Entries)
+                .Select(DiscussionRow.FromPresentation)
+                .ToArray();
 
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             if (!ReferenceEquals(_currentPullRequestInfo, pullRequest))
@@ -709,14 +712,55 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private static Control CreateDiscussionRow(DiscussionRow? row, Avalonia.Controls.INameScope nameScope)
     {
         DiscussionRow item = row ?? DiscussionRow.Placeholder(string.Empty);
-        StackPanel content = new() { Spacing = 3 };
-        if (!string.IsNullOrEmpty(item.AuthorAndDate))
+        StackPanel content = new();
+        if (!string.IsNullOrEmpty(item.Author) || !string.IsNullOrEmpty(item.Created))
         {
-            content.Children.Add(new TextBlock
+            TextBlock author = new()
             {
                 FontWeight = FontWeight.SemiBold,
-                Text = item.AuthorAndDate,
-            });
+                Text = item.Author,
+            };
+            if (item.Commit is null)
+            {
+                author[!TextBlock.ForegroundProperty] = new DynamicResourceExtension("GitExtensionsHighlightBackgroundBrush");
+            }
+            else
+            {
+                author.Foreground = Brushes.Red;
+            }
+
+            TextBlock created = new()
+            {
+                Text = item.Created,
+                TextAlignment = TextAlignment.Right,
+            };
+            Grid.SetColumn(created, 1);
+            Grid headingContent = new()
+            {
+                ColumnDefinitions = new ColumnDefinitions("*,Auto"),
+                Children = { author, created },
+            };
+            if (!string.IsNullOrEmpty(item.Commit))
+            {
+                TextBlock commit = new()
+                {
+                    FontSize = 9.333,
+                    Text = $"Commit:  {item.Commit}",
+                };
+                Grid.SetColumnSpan(commit, 2);
+                Grid.SetRow(commit, 1);
+                headingContent.RowDefinitions = new RowDefinitions("Auto,Auto");
+                headingContent.Children.Add(commit);
+            }
+
+            Border heading = new()
+            {
+                BorderThickness = new Avalonia.Thickness(0, 0, 0, 1),
+                Child = headingContent,
+            };
+            heading[!Border.BackgroundProperty] = new DynamicResourceExtension("GitExtensionsControlPointerOverBackgroundBrush");
+            heading[!Border.BorderBrushProperty] = new DynamicResourceExtension("GitExtensionsControlForegroundBrush");
+            content.Children.Add(heading);
         }
 
         content.Children.Add(new TextBlock
@@ -724,14 +768,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
             Text = item.Body,
             TextWrapping = TextWrapping.Wrap,
         });
-        if (!string.IsNullOrEmpty(item.Commit))
-        {
-            content.Children.Add(new TextBlock
-            {
-                Opacity = 0.7,
-                Text = item.Commit,
-            });
-        }
 
         return new Border
         {
@@ -901,19 +937,16 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 pullRequest.FetchBranch);
     }
 
-    private sealed record DiscussionRow(string AuthorAndDate, string Body, string? Commit)
+    private sealed record DiscussionRow(string Author, string Created, string Body, string? Commit)
     {
-        public static DiscussionRow Placeholder(string text) => new(string.Empty, text, null);
+        public static DiscussionRow Placeholder(string text) => new(string.Empty, string.Empty, text, null);
 
-        public static DiscussionRow FromEntry(IDiscussionEntry entry)
+        public static DiscussionRow FromPresentation(DiscussionHtmlCreator.DiscussionEntryPresentation entry)
             => new(
-                string.IsNullOrEmpty(entry.Author)
-                    ? entry.Created.ToString()
-                    : $"{entry.Author} — {entry.Created}",
-                entry.Body ?? string.Empty,
-                entry is ICommitDiscussionEntry commitEntry && !string.IsNullOrEmpty(commitEntry.Sha)
-                    ? commitEntry.Sha
-                    : null);
+                entry.Author,
+                entry.Created,
+                entry.Body,
+                entry.Commit);
     }
 
     private sealed record DiffSnapshot(

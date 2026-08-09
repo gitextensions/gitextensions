@@ -9062,64 +9062,12 @@
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/CreatePullRequestForm.axaml",
       "complete": false,
       "axes": {
-        "structural": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 65,
-          "note": "The P0.4 source inventory found structural/member differences."
-        },
-        "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 119,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
-        },
-        "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
-        },
-        "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "structural": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/CreatePullRequestForm.json"], "platforms": [], "findingCount": 65, "note": "The P7.2 inventory retains framework-forced Designer-to-AXAML and member-shape differences; P8.6i owns exact closure." },
+        "functional": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/CreatePullRequestForm.json"], "platforms": [], "findingCount": 119, "note": "Focused provider, branch, template, validation, and create tests pass, while the source inventory retains event, member, menu, translation, and comment findings for P8.6i." },
+        "visual": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 82523, "note": "The joined three-dialog matrix exposes unresolved geometry, layout, font, control, text, and image differences; P8.6i owns per-component exact closure." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 21309, "note": "Light, dark, and custom captures retain resolved-color differences; no theme axis is claimed." },
+        "behavioralState": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 7170, "note": "Normal, focus, and disabled requests were measured, but the complete provider, validation, pointer, keyboard, popup, and error-state matrix remains P8.6i debt." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json", "eng/avalonia/parity-evidence/P0.6/x11/smoke.json", "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime gates passed; macOS and exhaustive component-level platform parity remain open." }
       }
     },
     {
@@ -9127,64 +9075,12 @@
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/CreatePullRequestForm.axaml.cs",
       "complete": false,
       "axes": {
-        "structural": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 65,
-          "note": "The P0.4 source inventory found structural/member differences."
-        },
-        "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 119,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
-        },
-        "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
-        },
-        "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "structural": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/CreatePullRequestForm.json"], "platforms": [], "findingCount": 65, "note": "The P7.2 inventory retains framework-forced member and part-shape differences; P8.6i owns exact closure." },
+        "functional": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/CreatePullRequestForm.json"], "platforms": [], "findingCount": 119, "note": "Focused provider, branch, template, validation, and create tests pass, while the source inventory retains event, member, menu, translation, and comment findings for P8.6i." },
+        "visual": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 82523, "note": "The joined three-dialog matrix exposes unresolved geometry, layout, font, control, text, and image differences; P8.6i owns per-component exact closure." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 21309, "note": "Light, dark, and custom captures retain resolved-color differences; no theme axis is claimed." },
+        "behavioralState": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 7170, "note": "Normal, focus, and disabled requests were measured, but the complete provider, validation, pointer, keyboard, popup, and error-state matrix remains P8.6i debt." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json", "eng/avalonia/parity-evidence/P0.6/x11/smoke.json", "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime gates passed; macOS and exhaustive component-level platform parity remain open." }
       }
     },
     {
@@ -9192,64 +9088,12 @@
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ForkAndCloneForm.axaml",
       "complete": false,
       "axes": {
-        "structural": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 171,
-          "note": "The P0.4 source inventory found structural/member differences."
-        },
-        "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 389,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
-        },
-        "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
-        },
-        "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "structural": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/ForkAndCloneForm.json"], "platforms": [], "findingCount": 171, "note": "The P7.2 inventory retains framework-forced Designer-to-AXAML and member-shape differences; P8.6i owns exact closure." },
+        "functional": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/ForkAndCloneForm.json"], "platforms": [], "findingCount": 389, "note": "Focused listing, search, sort, selection, destination, protocol, and depth tests pass, while exact event/member/translation/comment closure remains P8.6i debt." },
+        "visual": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 82523, "note": "The joined three-dialog matrix exposes unresolved geometry, layout, font, control, text, and image differences; P8.6i owns per-component exact closure." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 21309, "note": "Light, dark, and custom captures retain resolved-color differences; no theme axis is claimed." },
+        "behavioralState": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 7170, "note": "Normal, repository-focus, destination-focus, and disabled-clone requests were measured; exhaustive search/fork/clone/picker/error states remain P8.6i debt." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json", "eng/avalonia/parity-evidence/P0.6/x11/smoke.json", "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime gates passed; macOS and exhaustive component-level platform parity remain open." }
       }
     },
     {
@@ -9257,64 +9101,12 @@
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ForkAndCloneForm.axaml.cs",
       "complete": false,
       "axes": {
-        "structural": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 171,
-          "note": "The P0.4 source inventory found structural/member differences."
-        },
-        "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 389,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
-        },
-        "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
-        },
-        "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "structural": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/ForkAndCloneForm.json"], "platforms": [], "findingCount": 171, "note": "The P7.2 inventory retains framework-forced member and part-shape differences; P8.6i owns exact closure." },
+        "functional": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/ForkAndCloneForm.json"], "platforms": [], "findingCount": 389, "note": "Focused listing, search, sort, selection, destination, protocol, and depth tests pass, while exact event/member/translation/comment closure remains P8.6i debt." },
+        "visual": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 82523, "note": "The joined three-dialog matrix exposes unresolved geometry, layout, font, control, text, and image differences; P8.6i owns per-component exact closure." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 21309, "note": "Light, dark, and custom captures retain resolved-color differences; no theme axis is claimed." },
+        "behavioralState": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 7170, "note": "Normal, repository-focus, destination-focus, and disabled-clone requests were measured; exhaustive search/fork/clone/picker/error states remain P8.6i debt." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json", "eng/avalonia/parity-evidence/P0.6/x11/smoke.json", "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime gates passed; macOS and exhaustive component-level platform parity remain open." }
       }
     },
     {
@@ -9322,64 +9114,12 @@
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml",
       "complete": false,
       "axes": {
-        "structural": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 131,
-          "note": "The P0.4 source inventory found structural/member differences."
-        },
-        "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 265,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
-        },
-        "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
-        },
-        "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "structural": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/ViewPullRequestsForm.json"], "platforms": [], "findingCount": 131, "note": "The P7.2 inventory retains framework-forced Designer-to-AXAML and member-shape differences; P8.6i owns exact closure." },
+        "functional": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/ViewPullRequestsForm.json"], "platforms": [], "findingCount": 265, "note": "Focused provider, remote fallback, pull-request, diff, native-discussion, post, refresh, and close paths pass, while exact event/member/translation/comment closure remains P8.6i debt." },
+        "visual": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 82523, "note": "The joined three-dialog matrix exposes unresolved geometry, layout, font, control, text, and image differences; P8.6i owns per-component exact closure." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 21309, "note": "Light, dark, and custom captures retain resolved-color differences; the native discussion heading consumes the shared resolved control/highlight resources." },
+        "behavioralState": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 7170, "note": "Normal, repository-focus, pull-request-focus, and disabled-close requests were measured; exhaustive diff/comment/action/popup/error states remain P8.6i debt." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json", "eng/avalonia/parity-evidence/P0.6/x11/smoke.json", "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime gates passed; macOS and exhaustive component-level platform parity remain open." }
       }
     },
     {
@@ -9387,64 +9127,25 @@
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml.cs",
       "complete": false,
       "axes": {
-        "structural": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 131,
-          "note": "The P0.4 source inventory found structural/member differences."
-        },
-        "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 265,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
-        },
-        "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
-        },
-        "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "structural": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/ViewPullRequestsForm.json"], "platforms": [], "findingCount": 131, "note": "The P7.2 inventory retains framework-forced member and part-shape differences; P8.6i owns exact closure." },
+        "functional": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/ViewPullRequestsForm.json"], "platforms": [], "findingCount": 265, "note": "Focused provider, remote fallback, pull-request, diff, native-discussion, post, refresh, and close paths pass, while exact event/member/translation/comment closure remains P8.6i debt." },
+        "visual": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 82523, "note": "The joined three-dialog matrix exposes unresolved geometry, layout, font, control, text, and image differences; P8.6i owns per-component exact closure." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 21309, "note": "Light, dark, and custom captures retain resolved-color differences; the native discussion heading consumes the shared resolved control/highlight resources." },
+        "behavioralState": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 7170, "note": "Normal, repository-focus, pull-request-focus, and disabled-close requests were measured; exhaustive diff/comment/action/popup/error states remain P8.6i debt." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json", "eng/avalonia/parity-evidence/P0.6/x11/smoke.json", "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Windows, native Wayland, X11, and Wayland-only Flatpak runtime gates passed; macOS and exhaustive component-level platform parity remain open." }
+      }
+    },
+    {
+      "source": "src/app/GitUI/CommandsDialogs/RepoHosting/DiscussionHtmlCreator.cs",
+      "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/DiscussionHtmlCreator.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/DiscussionHtmlCreator.json"], "platforms": [], "findingCount": 11, "note": "The native-row presentation boundary deliberately replaces the WebBrowser HTML/CSS implementation; the inventory retains the return/model and omitted browser-CSS member differences plus one analyzer path-shape artifact." },
+        "functional": { "status": "gap", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/inventory/DiscussionHtmlCreator.json", "eng/avalonia/parity-evidence/P7.2/tests/windows/repository-host-tests.trx", "eng/avalonia/parity-evidence/P7.2/tests/linux/repository-host-tests.trx"], "platforms": ["windows", "linux"], "findingCount": 2, "note": "Tests preserve comment/commit projection, dates, multiline body text, commit SHA, unknown-value substitution, and null-list behavior; the two original browser-CSS comments remain analyzer findings under the accepted native-row exception." },
+        "visual": { "status": "notApplicable", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": [], "findingCount": 0, "note": "The helper has no standalone surface; its native row renderer is measured as part of ViewPullRequestsForm." },
+        "themingAndColor": { "status": "notApplicable", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/final/diff/findings.json"], "platforms": [], "findingCount": 0, "note": "Resolved colors and inherited fonts belong to the ViewPullRequestsForm native-row renderer and are measured there." },
+        "behavioralState": { "status": "notApplicable", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": [], "platforms": [], "findingCount": 0, "note": "This pure presentation projection owns no interactive state; the consuming list and form own focus, selection, scrolling, and actions." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-09", "commit": "25b1961f1a38d87816cf3522521bb4cbe5a2e287", "evidence": ["eng/avalonia/parity-evidence/P7.2/tests/windows/repository-host-tests.trx", "eng/avalonia/parity-evidence/P7.2/tests/linux/repository-host-tests.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The framework-neutral projection runs on Windows and Linux; macOS and the consuming form's exhaustive platform sweep remain open." }
       }
     },
     {
