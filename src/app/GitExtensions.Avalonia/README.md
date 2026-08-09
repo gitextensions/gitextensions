@@ -41,6 +41,10 @@ configured default terminal, followed by `x-terminal-emulator`, GNOME Terminal, 
 xterm; Windows prefers Windows Terminal and falls back to Command Prompt; macOS opens
 Terminal.app. Linux launch removes inherited Snap-specific GTK/GIO overrides so a system
 terminal can start correctly when Git Extensions was launched from a Snap-hosted IDE.
+On Linux, file and folder dialogs use the XDG FileChooser portal. Opening a file or URI and
+showing a path in the file manager use the XDG OpenURI portal. If the desktop portal or its
+backend is unavailable, Git Extensions reports the failure and does not fall back to an
+unconfined toolkit dialog or invoke `xdg-open` directly.
 
 ## Requirements
 
@@ -48,6 +52,8 @@ terminal can start correctly when Git Extensions was launched from a Snap-hosted
 - [Git](https://git-scm.com/) available on `PATH`
 - On Linux, `setsid` from util-linux for reliable process-tree cleanup (included by standard
   desktop distributions; descendant traversal remains available when it is absent)
+- On Linux, `xdg-desktop-portal` and a desktop-appropriate backend such as
+  `xdg-desktop-portal-gtk`, `xdg-desktop-portal-gnome`, or `xdg-desktop-portal-kde`
 - On minimal Linux installations, the desktop libraries required by Avalonia:
   `libice6`, `libsm6`, `libfontconfig1`, `libwayland-client0`, `libxkbcommon0`, and `libegl1`
 - On macOS, the Xcode Command Line Tools (`cc`) to build the process-group launcher
@@ -169,6 +175,15 @@ On Linux, a session with `WAYLAND_DISPLAY` set uses Avalonia's native Wayland ba
 An X11-only session, or an explicit launch with `WAYLAND_DISPLAY` unset, uses the X11
 backend. Both paths are exercised by the development runtime harness under `eng/avalonia`.
 The development Flatpak is Wayland-only; it does not expose an X11 socket to the application.
+The portal backend must provide `org.freedesktop.portal.FileChooser` and
+`org.freedesktop.portal.OpenURI`. Contributors can exercise both the available and unavailable
+paths on Linux after a Debug build:
+
+```console
+bash eng/avalonia/portal-conformance.sh eng/avalonia/parity-evidence/portal
+```
+
+The harness uses a temporary XDG profile and throwaway repository outside the working tree.
 
 The Avalonia application uses the shared MEF plugin infrastructure, but scans the separate
 `UserPlugins.Avalonia` directory under the Git Extensions local application-data folder.

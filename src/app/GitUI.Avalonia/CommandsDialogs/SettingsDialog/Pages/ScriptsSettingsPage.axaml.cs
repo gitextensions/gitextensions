@@ -10,6 +10,7 @@ using Avalonia.Platform.Storage;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
+using GitUI.Compat;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using ResourceManager;
@@ -456,7 +457,7 @@ Diff selection:
     private async Task BrowseFileAsync(TextBox target, string title, IReadOnlyList<FilePickerFileType> fileTypes)
     {
         TopLevel? topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel?.StorageProvider is null)
+        if (topLevel is null)
         {
             return;
         }
@@ -471,6 +472,11 @@ Diff selection:
         if (!string.IsNullOrEmpty(currentDirectory))
         {
             options.SuggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(currentDirectory);
+        }
+
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return;
         }
 
         IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(options);

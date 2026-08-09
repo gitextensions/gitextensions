@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitExtUtils;
+using GitUI.Compat;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -33,7 +34,7 @@ internal sealed partial class FormFilePrompt : GitExtensionsForm, IUserInputProm
     private async Task BrowseAsync()
     {
         TopLevel? topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel?.StorageProvider is null)
+        if (topLevel is null)
         {
             return;
         }
@@ -44,6 +45,11 @@ internal sealed partial class FormFilePrompt : GitExtensionsForm, IUserInputProm
             Title = Text,
             SuggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync("."),
         };
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return;
+        }
+
         IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(options);
         string[] paths = [.. files.Select(file => file.TryGetLocalPath()).OfType<string>()];
         if (paths.Length > 0)

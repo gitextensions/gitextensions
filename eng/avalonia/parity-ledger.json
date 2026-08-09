@@ -142,6 +142,91 @@
       }
     },
     {
+      "source": "src/app/GitCommands/Git/OsShellUtil.cs",
+      "twin": "src/app/GitCommands/Git/OsShellUtil.NonWindows.cs",
+      "complete": false,
+      "axes": {
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-09",
+          "commit": "35490bd44549a4d8b90ef032b07f26c392f4ac4a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "The framework-forced portable substitute preserves the public class and member boundary but replaces the private Executable factory with an IOsShell adapter and direct XDG portal client. The exact structural delta remains open for the final source inventory."
+        },
+        "functional": {
+          "status": "partial",
+          "verifiedOn": "2026-08-09",
+          "commit": "35490bd44549a4d8b90ef032b07f26c392f4ac4a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.2/portal/manifest.json",
+            "eng/avalonia/parity-evidence/P8.2/tests/windows/os-shell-tests.trx",
+            "eng/avalonia/parity-evidence/P8.2/tests/linux/os-shell-tests.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-x11"
+          ],
+          "findingCount": 2,
+          "note": "The portable public methods route to the installed shell service, report a missing portal explicitly, distinguish default-open from OpenAs on Linux, and preserve folder cancellation. Windows Avalonia still maps OpenAs to the default launcher and reveal to opening the containing folder rather than selecting the file; P8.6h owns those two original-behavior gaps."
+        },
+        "visual": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-09",
+          "commit": "35490bd44549a4d8b90ef032b07f26c392f4ac4a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping declares no application-owned UI chrome; dialogs and application choosers are desktop-portal surfaces."
+        },
+        "themingAndColor": {
+          "status": "notApplicable",
+          "verifiedOn": "2026-08-09",
+          "commit": "35490bd44549a4d8b90ef032b07f26c392f4ac4a",
+          "evidence": [],
+          "platforms": [],
+          "findingCount": 0,
+          "note": "This source mapping declares no application-owned colors."
+        },
+        "behavioralState": {
+          "status": "partial",
+          "verifiedOn": "2026-08-09",
+          "commit": "35490bd44549a4d8b90ef032b07f26c392f4ac4a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.2/portal/manifest.json",
+            "eng/avalonia/parity-evidence/P8.2/portal/present/report.json",
+            "eng/avalonia/parity-evidence/P8.2/portal/absent/report.json"
+          ],
+          "platforms": [
+            "linux-x11"
+          ],
+          "findingCount": 1,
+          "note": "The real portal backend completed open-file, open-folder, save-file, default-open, application-choice, show-in-folder, and URI states; the absent backend produced explicit false results without fallback. Avalonia 12.1 did not complete a GTK portal cancellation response, which is explicit P8.3 debt. Exhaustive consumer interaction states remain with their component owners."
+        },
+        "platform": {
+          "status": "partial",
+          "verifiedOn": "2026-08-09",
+          "commit": "35490bd44549a4d8b90ef032b07f26c392f4ac4a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.2/portal/manifest.json",
+            "eng/avalonia/parity-evidence/P8.2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.2/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.2/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.2/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
+          "findingCount": 0,
+          "note": "Windows, Wayland, X11, and Wayland-only Flatpak startup regressions are covered. Direct XDG portal present/absent actions are verified unconfined under X11 because WSLg lacks the Wayland protocol version required by Avalonia; the confined action walk remains P8.3 and macOS remains P8.4."
+        }
+      }
+    },
+    {
       "source": "src/app/GitExtensions/Program.cs",
       "twin": "src/app/GitExtensions.Avalonia/Program.cs",
       "complete": false,
@@ -220,7 +305,8 @@
             "eng/avalonia/parity-evidence/P8.1/runtime/x11/smoke.json",
             "eng/avalonia/parity-evidence/P8.1/runtime/flatpak/smoke.json",
             "eng/avalonia/parity-evidence/P8.1/protocols/manifest.json",
-            "eng/avalonia/parity-evidence/P8.1/fractional/manifest.json"
+            "eng/avalonia/parity-evidence/P8.1/fractional/manifest.json",
+            "eng/avalonia/parity-evidence/P8.2/portal/manifest.json"
           ],
           "platforms": [
             "windows",
@@ -229,7 +315,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak startup pass. P8.1 additionally verifies native Wayland modal ownership, edge tooltip/context-menu placement, external plain and HTML clipboard reads, drag/drop, real 1.25/1.5 output scales, a mixed-scale output move, and compositor-owned global placement. Flatpak verifies the real XDG plugin path and inaccessible-path fallback. macOS and exhaustive component-level state walks remain open."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak startup pass. P8.1 additionally verifies native Wayland modal ownership, edge tooltip/context-menu placement, external plain and HTML clipboard reads, drag/drop, real 1.25/1.5 output scales, a mixed-scale output move, and compositor-owned global placement. P8.2 verifies XDG FileChooser/OpenURI portal transport with the backend present and explicit no-fallback behavior when absent. Flatpak verifies the real XDG plugin path and inaccessible-path fallback. The confined portal action walk, macOS, and exhaustive component-level state walks remain open."
         }
       }
     },

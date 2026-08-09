@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
+using GitUI.Compat;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -109,7 +110,7 @@ public sealed partial class GitSettingsPage : SettingsPageWithHeader
     private async Task BrowseGitPathAsync()
     {
         TopLevel? topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel?.StorageProvider is null)
+        if (topLevel is null)
         {
             return;
         }
@@ -131,6 +132,11 @@ public sealed partial class GitSettingsPage : SettingsPageWithHeader
         if (!string.IsNullOrEmpty(currentDirectory))
         {
             options.SuggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(currentDirectory);
+        }
+
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return;
         }
 
         IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(options);
