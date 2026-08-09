@@ -9,6 +9,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
@@ -35,6 +36,12 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormFormatPatch" => new FormFormatPatch(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
             "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),
+            "GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm" =>
+                new CreatePullRequestForm(commands, RepositoryHostCaptureFixture.Create(commands), null, null),
+            "GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm" =>
+                new ForkAndCloneForm(commands, RepositoryHostCaptureFixture.Create(commands), null),
+            "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm" =>
+                new ViewPullRequestsForm(commands, RepositoryHostCaptureFixture.Create(commands)),
             "GitUI.CommandsDialogs.SearchControl" => CreateSearchControl(),
             "GitUI.CommandsDialogs.SearchWindow" => CreateSearchWindow(),
             "GitUI.CommitInfo.CommitInfo" => CreateCommitInfo(),
