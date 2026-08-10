@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
@@ -259,7 +259,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             return;
         }
 
-        IStorageFile? file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        IStorageFile? file = await PortalPickerGuard.SaveFilePickerAsync(StorageProvider, new FilePickerSaveOptions
         {
             SuggestedFileName = Path.GetFileName(fullName),
             SuggestedStartLocation = initialDirectory is null ? null : await StorageProvider.TryGetFolderFromPathAsync(initialDirectory),

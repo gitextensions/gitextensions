@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "platform": "windows",
+  "command": "browse <temporary-repository>",
+  "observedSurface": "prerequisiteChecklist",
+  "settingsFileIsolation": "disposablePortableRuntime",
+  "registryAccess": "readOnly",
+  "repositoryLocation": "outsideWorkingTree",
+  "screenshot": "window.png",
+  "screenshotSha256": "a86bee5144e40d30eea40303a273a9c187d4cea4f766483636d904a02844473b",
+  "stdout": "stdout.log",
+  "stderr": "stderr.log"
+}

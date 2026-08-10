@@ -18,14 +18,15 @@ done
 
 repo_root="$(git rev-parse --show-toplevel)"
 flatpak_root="$repo_root/eng/avalonia/flatpak"
-manifest="$flatpak_root/com.github.gitextensions.GitExtensions.Avalonia.Devel.json"
+manifest="$flatpak_root/com.github.gitextensions.GitExtensions.Avalonia.json"
 publish_root="$flatpak_root/publish"
-flatpak_cache_root="$HOME/.cache/gitextensions-avalonia/flatpak"
+flatpak_cache_root="$HOME/.cache/gitextensions-avalonia/p83"
 build_root="$flatpak_cache_root/build"
 state_root="$flatpak_cache_root/state"
 smoke_manifest="$flatpak_cache_root/smoke-manifest.json"
-package_app_id="com.github.gitextensions.GitExtensions.Avalonia.Devel"
-app_id="com.github.gitextensions.GitExtensions.Avalonia.P73Smoke"
+packaging_root="$flatpak_cache_root/packaging"
+package_app_id="com.github.gitextensions.GitExtensions.Avalonia"
+app_id="com.github.gitextensions.GitExtensions.Avalonia.P83Smoke"
 flatpak_home="$HOME/.var/app/$app_id"
 smoke_parent="$HOME/.local/share/gitextensions-parity-smoke"
 smoke_repo="$smoke_parent/repository"
@@ -48,14 +49,14 @@ case "$smoke_parent" in
         ;;
 esac
 case "$flatpak_cache_root" in
-    "$HOME"/.cache/gitextensions-avalonia/flatpak) ;;
+    "$HOME"/.cache/gitextensions-avalonia/p83) ;;
     *)
         echo "error: refusing unsafe Flatpak cache path '$flatpak_cache_root'" >&2
         exit 2
         ;;
 esac
 case "$flatpak_home" in
-    "$HOME"/.var/app/com.github.gitextensions.GitExtensions.Avalonia.P73Smoke) ;;
+    "$HOME"/.var/app/com.github.gitextensions.GitExtensions.Avalonia.P83Smoke) ;;
     *)
         echo "error: refusing unsafe Flatpak home path '$flatpak_home'" >&2
         exit 2
@@ -63,12 +64,13 @@ case "$flatpak_home" in
 esac
 
 settings_directory="$flatpak_home/config/GitExtensions/GitExtensions"
-rm -rf -- "$flatpak_home"
+rm -rf -- "$flatpak_home" "$smoke_parent"
 mkdir -p \
     "$evidence_dir" \
     "$publish_root" \
     "$build_root" \
     "$state_root" \
+    "$packaging_root" \
     "$smoke_repo" \
     "$settings_directory" \
     "$data_root/GitExtensions"
@@ -84,6 +86,14 @@ cat > "$settings_directory/GitExtensions.settings" <<'EOF'
   <item>
     <key><string>translation</string></key>
     <value><string>English</string></value>
+  </item>
+  <item>
+    <key><string>uitheme_v2</string></key>
+    <value><string>P83Confined</string></value>
+  </item>
+  <item>
+    <key><string>uithemeisbuiltin_v2</string></key>
+    <value><string>false</string></value>
   </item>
 </dictionary>
 EOF
@@ -122,9 +132,23 @@ else
         --output "$publish_root"
 fi
 
+mkdir -p "$settings_directory/Themes"
+cp "$publish_root/Themes/dark.css" "$settings_directory/Themes/P83Confined.css"
+
+desktop_source="$flatpak_root/$package_app_id.desktop"
+metainfo_source="$flatpak_root/$package_app_id.metainfo.xml"
+desktop="$packaging_root/$app_id.desktop"
+metainfo="$packaging_root/$app_id.metainfo.xml"
+logo="$repo_root/setup/assets/Logo/git-extensions-logo-512px.png"
+sed "s/$package_app_id/$app_id/g" "$desktop_source" > "$desktop"
+sed "s/$package_app_id/$app_id/g" "$metainfo_source" > "$metainfo"
+
 sed \
     -e "s/$package_app_id/$app_id/g" \
     -e "s#\"path\": \"publish\"#\"path\": \"$publish_root\"#" \
+    -e "s#\"path\": \"$app_id.desktop\"#\"path\": \"$desktop\"#" \
+    -e "s#\"path\": \"$app_id.metainfo.xml\"#\"path\": \"$metainfo\"#" \
+    -e "s#\"path\": \"../../../setup/assets/Logo/git-extensions-logo-512px.png\"#\"path\": \"$logo\"#" \
     "$manifest" > "$smoke_manifest"
 
 git -C "$smoke_repo" init --quiet --initial-branch=main
@@ -364,7 +388,7 @@ cat > "$manifest_output" <<EOF
   "schemaVersion": 1,
   "appId": "$app_id",
   "packageAppId": "$package_app_id",
-  "runtime": "org.freedesktop.Sdk//25.08",
+  "runtime": "org.freedesktop.Platform//25.08",
   "confined": true,
   "backend": "wayland",
   "backendAssembly": "Avalonia.Wayland.dll",
@@ -372,6 +396,8 @@ cat > "$manifest_output" <<EOF
   "sessionHost": "nestedWestonOnWslgX11",
   "command": "browse <dedicated-smoke-repository>",
   "filesystemGrant": "--filesystem=host",
+  "theme": "P83Confined",
+  "themeSource": "<XDG_CONFIG_HOME>/GitExtensions/GitExtensions/Themes/P83Confined.css",
   "userPluginsDirectory": "<XDG_DATA_HOME>/GitExtensions/UserPlugins.Avalonia",
   "userPluginsNormal": "created-and-readable",
   "userPluginsUnreachable": "bundled-plugins-only",

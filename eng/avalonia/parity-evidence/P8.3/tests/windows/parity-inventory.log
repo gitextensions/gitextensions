@@ -1,0 +1,8 @@
+  ParityInventory -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityInventory\net10.0\ParityInventory.dll
+  ParityInventory.Tests -> C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityInventory.Tests\net10.0\ParityInventory.Tests.dll
+Test run for C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityInventory.Tests\net10.0\ParityInventory.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+WARNING: Overwriting results file: C:\Users\Begota\Documents\GitHub\gitextensions\eng\avalonia\parity-evidence\P8.3\tests\windows\P8.3-parity-inventory.trx
+Results File: C:\Users\Begota\Documents\GitHub\gitextensions\eng\avalonia\parity-evidence\P8.3\tests\windows\P8.3-parity-inventory.trx
+
+Passed!  - Failed:     0, Passed:    20, Skipped:     0, Total:    20, Duration: 1 s - ParityInventory.Tests.dll (net10.0)

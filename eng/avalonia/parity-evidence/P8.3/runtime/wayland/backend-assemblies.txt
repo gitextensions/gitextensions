@@ -1,0 +1,2 @@
+/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Avalonia.Wayland.dll
+/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Avalonia.X11.dll

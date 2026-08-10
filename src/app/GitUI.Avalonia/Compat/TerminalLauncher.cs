@@ -10,6 +10,7 @@ internal interface ITerminalLauncher
 internal sealed class TerminalLauncher : ITerminalLauncher
 {
     private readonly Func<string, string?> _getEnvironmentVariable;
+    private readonly Func<bool> _isFlatpak;
     private readonly Func<string, string?> _resolveExecutable;
     private readonly Action<ProcessStartInfo> _startProcess;
     private readonly TerminalPlatform _platform;
@@ -19,7 +20,8 @@ internal sealed class TerminalLauncher : ITerminalLauncher
             Environment.GetEnvironmentVariable,
             ResolveExecutable,
             startInfo => Process.Start(startInfo),
-            GetCurrentPlatform())
+            GetCurrentPlatform(),
+            FlatpakEnvironment.IsFlatpak)
     {
     }
 
@@ -27,9 +29,11 @@ internal sealed class TerminalLauncher : ITerminalLauncher
         Func<string, string?> getEnvironmentVariable,
         Func<string, string?> resolveExecutable,
         Action<ProcessStartInfo> startProcess,
-        TerminalPlatform platform)
+        TerminalPlatform platform,
+        Func<bool>? isFlatpak = null)
     {
         _getEnvironmentVariable = getEnvironmentVariable;
+        _isFlatpak = isFlatpak ?? (() => false);
         _resolveExecutable = resolveExecutable;
         _startProcess = startProcess;
         _platform = platform;
@@ -71,6 +75,11 @@ internal sealed class TerminalLauncher : ITerminalLauncher
                 break;
 
             default:
+                if (_isFlatpak())
+                {
+                    throw new PlatformNotSupportedException("External terminals are not available in this Flatpak installation.");
+                }
+
                 string? configuredTerminal = _getEnvironmentVariable("TERMINAL");
                 if (!string.IsNullOrWhiteSpace(configuredTerminal))
                 {
