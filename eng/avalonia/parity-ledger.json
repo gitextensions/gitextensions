@@ -36483,12 +36483,18 @@
         },
         "platform": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "verifiedOn": "2026-08-10",
+          "commit": "dc19a3dfc7e524a662593dbf1c788a6f2f205f23",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.5/x11/manifest.json",
+            "eng/avalonia/parity-evidence/P8.5/wayland/manifest.json"
+          ],
+          "platforms": [
+            "linux-x11-wsl",
+            "linux-wayland-wsl"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "External plain-text and HTML clipboard round-trips pass with the same UTF-8 MIME payload under rendered nested X11 and native Wayland. Windows Avalonia, Flatpak, and macOS clipboard parity remain unverified."
         }
       }
     },
