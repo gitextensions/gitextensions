@@ -28515,50 +28515,70 @@
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c1.json"
           ],
           "platforms": [],
-          "findingCount": 1335,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 1329,
+          "note": "P8.6c.1 removed the Avalonia-only count label and restored the original filter overlay, but the current family inventory still reports 1,329 findings for P8.6c.2."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/paired-diff-shared-fixed2-125/"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 16800,
+          "note": "The corrected shared-repository 125% matrix joins 18 states and retains toolbar, tree metric, selection, separator, and popup-composition differences for P8.6c.3."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/paired-diff-shared-fixed2-125/"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 16800,
+          "note": "Light, dark, and custom captures now render the filter, but exact resolved-color parity remains part of the 16,800 P8.6c.3 findings."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/paired-winforms-shared-125/",
+            "eng/avalonia/parity-evidence/P8.6c/paired-avalonia-shared-fixed2-125/"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Eighteen standalone theme/focus/disabled/menu states use one shared repository; the complete four-consumer interaction matrix remains P8.6c.3."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/c1/"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Build, focused tests, and isolated runtime smokes passed on Windows, native Wayland, X11, and Wayland-only Flatpak; exhaustive component review and macOS remain open."
         }
       }
     },
@@ -28580,14 +28600,14 @@
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c1.json"
           ],
           "platforms": [],
-          "findingCount": 1335,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 1329,
+          "note": "P8.6c.1 routes the original FileAssociatedIconProvider through native platform icon sources while retaining its cache and pending-image behavior; the family inventory still has 1,329 findings for P8.6c.2."
         },
         "visual": {
           "status": "notApplicable",
@@ -28608,22 +28628,36 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/paired-avalonia-shared-fixed2-125/"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Focused tests cover shared-provider caching, freedesktop lookup, and the Windows shell source, and shared-repository captures show resolved icons; macOS and the complete consumer state matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/c1/"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "The native icon boundary built and its focused/runtime gates passed on Windows, Wayland, X11, and Flatpak; the macOS implementation compiles but awaits P8.4 runtime verification."
         }
       }
     },
@@ -29165,50 +29199,71 @@
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c1.json"
           ],
           "platforms": [],
-          "findingCount": 1335,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 1329,
+          "note": "P8.6c.1 restores associated-icon loading for ordinary and git-grep rows and removes the non-original count-label path; 1,329 family findings remain for P8.6c.2."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/paired-diff-shared-fixed2-125/"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 16800,
+          "note": "The corrected shared-repository 125% matrix joins 18 states and retains 16,800 visual/tree findings for P8.6c.3."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/paired-diff-shared-fixed2-125/"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 16800,
+          "note": "Light, dark, and custom states render with the corrected filter theme, but exact resolved-color parity remains open in P8.6c.3."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/paired-winforms-shared-125/",
+            "eng/avalonia/parity-evidence/P8.6c/paired-avalonia-shared-fixed2-125/",
+            "eng/avalonia/parity-evidence/P8.6c/c1/previewer.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "A common fixture now drives 18 standalone theme/focus/disabled/menu states and the IDE preview renders; the complete Commit, Stash, revision Diff, and File tree walk remains P8.6c.3."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-10",
+          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/c1/"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Build, focused tests, and isolated runtime smokes passed on Windows, native Wayland, X11, and Wayland-only Flatpak; exhaustive component review and macOS remain open."
         }
       }
     },

@@ -1,4 +1,4 @@
-using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia.Controls.ApplicationLifetimes;
 using GitExtensions.Shims.WinForms;
 
 namespace GitUI.Compat;
@@ -17,5 +17,6 @@ public static class ShimServices
         ShimHost.FolderPicker = new AvaloniaFolderPicker(desktop);
         ShimHost.OsShell = new AvaloniaOsShell(desktop, new XdgDesktopPortal());
         ShimHost.TextMeasurer = new AvaloniaTextMeasurer();
+        ShimHost.IconExtractor = new AssociatedFileIconExtractor();
     }
 }

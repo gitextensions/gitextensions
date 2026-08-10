@@ -209,6 +209,9 @@ internal static class ComponentFactory
                 caseSensitiveComboBox.Items.AddRange(["Main", "main", "release/1.0"]);
                 caseSensitiveComboBox.Text = "main";
                 break;
+            case FileStatusList fileStatusList:
+                SeedFileStatusList(fileStatusList, commands);
+                break;
 
             // parity-scaffolding: Seeds the isolated Dashboard history before paired capture.
             case Dashboard dashboard:
@@ -240,6 +243,28 @@ internal static class ComponentFactory
         {
             InvokeNonPublic(revisionGrid, "CancelBackgroundTasks");
         }
+    }
+
+    // parity-scaffolding: Gives the original standalone list the same repository-backed groups as the twin capture host.
+    private static void SeedFileStatusList(FileStatusList fileStatusList, IGitUICommands commands)
+    {
+        IReadOnlyList<GitItemStatus> changedFiles = commands.Module.GetAllChangedFilesWithSubmodulesStatus(
+            excludeIgnoredFiles: true,
+            excludeAssumeUnchangedFiles: true,
+            excludeSkipWorktreeFiles: true,
+            untrackedFiles: UntrackedFilesMode.Default,
+            cancellationToken: default);
+        int splitIndex = Math.Max(1, changedFiles.Count / 2);
+        fileStatusList.GroupByRevision = true;
+        fileStatusList.SetStashDiffs(
+            CreateRevision(commands),
+            new GitRevision(ObjectId.IndexId),
+            "Working directory",
+            [.. changedFiles.Skip(splitIndex)],
+            new GitRevision(ObjectId.WorkTreeId),
+            "Diff with parent",
+            [.. changedFiles.Take(splitIndex)]);
+        fileStatusList.SetFilter("src|CHANGELOG");
     }
 
     // parity-scaffolding: Gives both diff surfaces the same adjacent representative revisions.
