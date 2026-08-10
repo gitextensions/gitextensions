@@ -45,6 +45,7 @@ public partial class FileStatusList : GitModuleControl
     private IGitUICommands? _boundCommands;
     private bool _isFileTreeMode;
     private bool _isSortSubscriptionActive;
+    private bool _enableDisablingShowDiffForAllParents;
     private bool _showDiffGroups;
     private bool _suppressSelectionChanged;
     private Regex? _filter;
@@ -427,6 +428,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SetDiffs(IReadOnlyList<GitRevision> revisions)
     {
+        _enableDisablingShowDiffForAllParents = true;
         _diffCalculator.SetDiff(revisions, headId: default, allowMultiDiff: false);
         IReadOnlyList<FileStatusWithDescription> groups = _diffCalculator.Calculate(
             prevList: [],
@@ -441,6 +443,7 @@ public partial class FileStatusList : GitModuleControl
         LoadingFiles.IsVisible = true;
         UpdateToolbar(revisions);
         bool isFileTreeMode = _isFileTreeMode;
+        _enableDisablingShowDiffForAllParents = !isFileTreeMode;
         bool showSkipWorktreeFiles = tsmiShowSkipWorktreeFiles.IsChecked == true;
         bool showUntrackedFiles = tsmiShowUntrackedFiles.IsChecked == true;
         IReadOnlyList<FileStatusWithDescription> groups = await Task.Run(() =>
@@ -785,10 +788,12 @@ public partial class FileStatusList : GitModuleControl
         bool isFileTreeMode = false)
     {
         Bind(refreshArtificial);
+        btnRefresh.IsVisible = true;
+        tsmiRefreshOnFormFocus.IsVisible = canAutoRefresh;
+        sepToolbar.IsVisible = canAutoRefresh;
         _diffCalculator.DescribeRevision = describeRevision;
         _diffCalculator.GetActualRevision = getActualRevision;
         SetFileTreeMode(isFileTreeMode);
-        btnRefresh.IsVisible = canAutoRefresh;
     }
 
     public FileStatusItem? SelectNextItem(bool backwards, bool loop, bool notify = true)
@@ -891,9 +896,16 @@ public partial class FileStatusList : GitModuleControl
     private void SetFileTreeMode(bool isFileTreeMode)
     {
         _isFileTreeMode = isFileTreeMode;
+        Toolbar.IsVisible = !isFileTreeMode;
+        lblSplitter.Height = isFileTreeMode ? 1 : 0;
         lstFiles.IsVisible = !isFileTreeMode;
         tvDiffFiles.IsVisible = false;
         tvFiles.IsVisible = isFileTreeMode;
+        if (isFileTreeMode)
+        {
+            SetFindInCommitFilesGitGrepVisibilityImpl(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+            GroupByRevision = false;
+        }
     }
 
     private void RaiseSelectedIndexChanged()
@@ -1927,6 +1939,19 @@ public partial class FileStatusList : GitModuleControl
         internal ToggleButton ByPathButton => control.btnByPath;
         internal ToggleButton ByExtensionButton => control.btnByExtension;
         internal ToggleButton ByStatusButton => control.btnByStatus;
+        internal Button RefreshButton => control.btnRefresh;
+        internal MenuItem RefreshOnFormFocusMenuItem => control.tsmiRefreshOnFormFocus;
+        internal Separator ToolbarSeparator => control.sepToolbar;
+        internal IconSplitButton FindInFilesButton => control.btnFindInFilesGitGrep;
+        internal MenuItem FindUsingMatchCaseMenuItem => control.tsmiFindUsingMatchCase;
+        internal MenuItem FindUsingWholeWordMenuItem => control.tsmiFindUsingWholeWord;
+        internal MenuItem FindUsingOptionsMenuItem => control.tsmiFindUsingOptions;
+        internal MenuItem FindUsingBasicMenuItem => control._NO_TRANSLATE_tsmiFindUsingBasic;
+        internal MenuItem FindUsingInputBoxMenuItem => control.tsmiFindUsingInputBox;
+        internal MenuItem ShowDiffForAllParentsMenuItem => control.tsmiShowDiffForAllParents;
+        internal MenuItem ToolbarMenuItem => control.tsmiToolbar;
+        internal Grid FindInFilesPanel => control.FindInCommitFilesGitGrepPanel;
+        internal Separator Splitter => control.lblSplitter;
 
         internal void UpdateContextMenu()
             => control.ItemContextMenu_Opening(control.ItemContextMenu, EventArgs.Empty);
@@ -1936,6 +1961,21 @@ public partial class FileStatusList : GitModuleControl
             DiffListSortService.Instance.DiffListSorting = sortType;
             control.UpdateToolbar();
         }
+
+        internal void UpdateToolbar()
+            => control.UpdateToolbar();
+
+        internal void OpenFindInFilesMenu()
+            => control.FindInFilesGitGrep_DropDownOpening(control.btnFindInFilesGitGrep, EventArgs.Empty);
+
+        internal void ToggleFindInFiles()
+            => control.FindInFilesGitGrep_ButtonClick(control.btnFindInFilesGitGrep, EventArgs.Empty);
+
+        internal void OpenSettingsMenu()
+            => control.Settings_DropDownOpening(control.btnSettings, EventArgs.Empty);
+
+        internal void EnableShowDiffForAllParents()
+            => control._enableDisablingShowDiffForAllParents = true;
 
         internal void SetDiffStatusVisible(DiffBranchStatus status, bool visible)
         {

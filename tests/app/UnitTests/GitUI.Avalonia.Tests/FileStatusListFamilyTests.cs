@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -201,5 +202,128 @@ public sealed class FileStatusListFamilyTests
 
         accessor.SetDiffStatusVisible(DiffBranchStatus.OnlyAChange, visible: false);
         control.GitItemFilteredStatuses.Should().ContainSingle().Which.Name.Should().Be("only-b.cs");
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_persist_git_grep_mode_and_options_from_the_original_toolbar_routes()
+    {
+        bool originalIgnoreCase = AppSettings.GitGrepIgnoreCase.Value;
+        bool originalWholeWord = AppSettings.GitGrepMatchWholeWord.Value;
+        string originalArguments = AppSettings.GitGrepUserArguments.Value;
+        int originalTypeIndex = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value;
+        bool originalVisible = AppSettings.ShowFindInCommitFilesGitGrep.Value;
+        try
+        {
+            AppSettings.GitGrepIgnoreCase.Value = false;
+            AppSettings.GitGrepMatchWholeWord.Value = true;
+            AppSettings.GitGrepUserArguments.Value = "--extended-regexp";
+            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = 1;
+            AppSettings.ShowFindInCommitFilesGitGrep.Value = false;
+            FileStatusList control = new();
+            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+
+            accessor.OpenFindInFilesMenu();
+
+            accessor.FindUsingMatchCaseMenuItem.IsChecked.Should().BeTrue();
+            accessor.FindUsingWholeWordMenuItem.IsChecked.Should().BeTrue();
+            accessor.FindUsingOptionsMenuItem.Header.Should().Be("_Options: --extended-regexp");
+
+            accessor.FindUsingMatchCaseMenuItem.IsChecked = false;
+            accessor.FindUsingMatchCaseMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            AppSettings.GitGrepIgnoreCase.Value.Should().BeTrue();
+
+            accessor.FindUsingWholeWordMenuItem.IsChecked = false;
+            accessor.FindUsingWholeWordMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            AppSettings.GitGrepMatchWholeWord.Value.Should().BeFalse();
+
+            accessor.FindUsingBasicMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            AppSettings.GitGrepUserArguments.Value.Should().Be("--basic-regexp");
+
+            control.CanUseFindInCommitFilesGitGrep = true;
+            accessor.UpdateToolbar();
+            accessor.FindUsingInputBoxMenuItem.IsChecked = true;
+            accessor.FindUsingInputBoxMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value.Should().Be(1);
+            AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeTrue();
+            accessor.FindInFilesPanel.IsVisible.Should().BeTrue();
+
+            accessor.ToggleFindInFiles();
+            AppSettings.ShowFindInCommitFilesGitGrep.Value.Should().BeFalse();
+            accessor.FindInFilesPanel.IsVisible.Should().BeFalse();
+        }
+        finally
+        {
+            AppSettings.GitGrepIgnoreCase.Value = originalIgnoreCase;
+            AppSettings.GitGrepMatchWholeWord.Value = originalWholeWord;
+            AppSettings.GitGrepUserArguments.Value = originalArguments;
+            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = originalTypeIndex;
+            AppSettings.ShowFindInCommitFilesGitGrep.Value = originalVisible;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_persist_each_toolbar_item_visibility()
+    {
+        const string settingsKey = "FileStatusList.Toolbar.Visibility.btnByPath";
+        bool originalValue = AppSettings.GetBool(settingsKey, defaultValue: true);
+        try
+        {
+            AppSettings.SetBool(settingsKey, false);
+            FileStatusList control = new();
+            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+            int buttonIndex = accessor.Toolbar.Children.IndexOf(accessor.ByPathButton);
+            MenuItem visibilityItem = (MenuItem)accessor.ToolbarMenuItem.Items[buttonIndex]!;
+
+            visibilityItem.IsChecked.Should().BeFalse();
+            accessor.ByPathButton.IsVisible.Should().BeFalse();
+
+            visibilityItem.IsChecked = true;
+            visibilityItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            AppSettings.GetBool(settingsKey, defaultValue: true).Should().BeTrue();
+            accessor.ByPathButton.IsVisible.Should().BeTrue();
+        }
+        finally
+        {
+            AppSettings.SetBool(settingsKey, originalValue ? null : false);
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_restore_refresh_settings_and_file_tree_toolbar_boundaries()
+    {
+        bool originalShowAllParents = AppSettings.ShowDiffForAllParents;
+        try
+        {
+            AppSettings.ShowDiffForAllParents = true;
+            FileStatusList control = new();
+            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+
+            control.Bind(() => { }, canAutoRefresh: false);
+
+            accessor.RefreshButton.IsVisible.Should().BeTrue();
+            accessor.RefreshOnFormFocusMenuItem.IsVisible.Should().BeFalse();
+            accessor.ToolbarSeparator.IsVisible.Should().BeFalse();
+
+            accessor.EnableShowDiffForAllParents();
+            accessor.OpenSettingsMenu();
+            accessor.ShowDiffForAllParentsMenuItem.IsVisible.Should().BeTrue();
+            accessor.ShowDiffForAllParentsMenuItem.IsChecked.Should().BeTrue();
+
+            control.SetDiffs([], isFileTreeMode: true);
+
+            accessor.Toolbar.IsVisible.Should().BeFalse();
+            accessor.Splitter.Height.Should().Be(1);
+
+            FileStatusList autoRefreshControl = new();
+            FileStatusList.TestAccessor autoRefreshAccessor = autoRefreshControl.GetTestAccessor();
+            autoRefreshControl.Bind(() => { }, canAutoRefresh: true);
+            autoRefreshAccessor.RefreshOnFormFocusMenuItem.IsVisible.Should().BeTrue();
+            autoRefreshAccessor.ToolbarSeparator.IsVisible.Should().BeTrue();
+        }
+        finally
+        {
+            AppSettings.ShowDiffForAllParents = originalShowAllParents;
+        }
     }
 }
