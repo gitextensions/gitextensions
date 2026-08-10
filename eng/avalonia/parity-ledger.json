@@ -29058,25 +29058,25 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-10",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2a.json"
           ],
           "platforms": [],
-          "findingCount": 622,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 629,
+          "note": "P8.6c.2a restores original toolbar member and handler names where implemented; 629 family member findings remain for P8.6c.2b/c review and framework-representation justification."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-10",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2a.json"
           ],
           "platforms": [],
-          "findingCount": 1335,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 1303,
+          "note": "P8.6c.2a restores git-grep option/mode routing, toolbar-item visibility persistence, and settings opening behavior. The family inventory falls from 1,329 to 1,303 findings; context-menu and core list/tree closure remain P8.6c.2b/c."
         },
         "visual": {
           "status": "notApplicable",
@@ -29097,22 +29097,35 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-10",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/c2a/avalonia-125/",
+            "eng/avalonia/parity-evidence/P8.6c/c2a/manual-review.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2a/previewer.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Focused tests and the three-theme settings-menu capture cover restored git-grep routing, toolbar visibility persistence, and settings opening; the complete interaction matrix remains P8.6c.3."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-10",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6c/c2a/"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Build, focused tests, and isolated runtime smokes passed on Windows, native Wayland, X11, and Wayland-only Flatpak; exhaustive component review and macOS remain open."
         }
       }
     },
@@ -29188,73 +29201,76 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-10",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2a.json"
           ],
           "platforms": [],
-          "findingCount": 622,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 629,
+          "note": "P8.6c.2a restores the original all-parents gate and file-tree toolbar boundary; 629 family member findings remain for P8.6c.2b/c review and framework-representation justification."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c1.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2a.json"
           ],
           "platforms": [],
-          "findingCount": 1329,
-          "note": "P8.6c.1 restores associated-icon loading for ordinary and git-grep rows and removes the non-original count-label path; 1,329 family findings remain for P8.6c.2."
+          "findingCount": 1303,
+          "note": "P8.6c.2a restores the original toolbar/search persistence and binding boundaries. The family inventory falls from 1,329 to 1,303 findings; context-menu and core list/tree closure remain P8.6c.2b/c."
         },
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/paired-diff-shared-fixed2-125/"
+            "eng/avalonia/parity-evidence/P8.6c/c2a/diff-125/",
+            "eng/avalonia/parity-evidence/P8.6c/c2a/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 16800,
-          "note": "The corrected shared-repository 125% matrix joins 18 states and retains 16,800 visual/tree findings for P8.6c.3."
+          "findingCount": 16854,
+          "note": "The shared-repository 125% matrix joins all 18 FileStatusList states and retains 16,854 visual/tree findings for P8.6c.3; 21 separate availability findings belong to out-of-scope reference components."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/paired-diff-shared-fixed2-125/"
+            "eng/avalonia/parity-evidence/P8.6c/c2a/diff-125/",
+            "eng/avalonia/parity-evidence/P8.6c/c2a/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 16800,
-          "note": "Light, dark, and custom states render with the corrected filter theme, but exact resolved-color parity remains open in P8.6c.3."
+          "findingCount": 16854,
+          "note": "Light, dark, and custom settings-menu states retain the restored toolbar contract, but exact resolved-color and rendering parity remains open in P8.6c.3."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6c/paired-winforms-shared-125/",
-            "eng/avalonia/parity-evidence/P8.6c/paired-avalonia-shared-fixed2-125/",
-            "eng/avalonia/parity-evidence/P8.6c/c1/previewer.json"
+            "eng/avalonia/parity-evidence/P8.6c/c2a/avalonia-125/",
+            "eng/avalonia/parity-evidence/P8.6c/c2a/manual-review.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2a/previewer.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "A common fixture now drives 18 standalone theme/focus/disabled/menu states and the IDE preview renders; the complete Commit, Stash, revision Diff, and File tree walk remains P8.6c.3."
+          "note": "A verified common fixture drives 18 standalone theme/focus/disabled/menu states, focused tests cover the restored toolbar/search transitions, and the IDE preview renders; the complete Commit, Stash, revision Diff, and File tree walk remains P8.6c.3."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c1/"
+            "eng/avalonia/parity-evidence/P8.6c/c2a/"
           ],
           "platforms": [
             "windows",
