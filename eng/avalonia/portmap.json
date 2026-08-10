@@ -1851,13 +1851,13 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Reusable list/tree boundary with the original regex filter, revision grouping, repository tree, selection/navigation, status images, and WinForms-shaped events. P2.2 restores the cancellable git-grep calculation path, search history, persisted visibility, active search surface, and modeless FormFindInCommitFilesGitGrep integration for diff and file-tree consumers. P4.2 restores the same-named CopyPathsToolStripMenuItem with the original selection callback and translation identities. P8.6c.1 routes the original FileAssociatedIconProvider through the portable icon shim to native Windows, freedesktop, and AppKit sources. P8.6c.2a restores the original refresh/settings and file-tree toolbar boundaries, including the all-parents setting gate and persisted git-grep panel state."
+    "notes": "Reusable list/tree boundary with the original regex filter, revision grouping, repository tree, selection/navigation, status images, and WinForms-shaped events. P2.2 restores the cancellable git-grep calculation path, search history, persisted visibility, active search surface, and modeless FormFindInCommitFilesGitGrep integration for diff and file-tree consumers. P4.2 restores the same-named CopyPathsToolStripMenuItem with the original selection callback and translation identities. P8.6c.1 routes the original FileAssociatedIconProvider through the portable icon shim to native Windows, freedesktop, and AppKit sources. P8.6c.2a restores the original refresh/settings and file-tree toolbar boundaries, including the all-parents setting gate and persisted git-grep panel state. P8.6c.2b restores the original dynamically inserted Open Submodule and Sort/Group entries, revision descriptions, submodule emphasis option, and context-menu test surface."
   },
   "src/app/GitUI/UserControls/FileStatusList.ContextMenu.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.ContextMenu.cs",
     "status": "functional",
     "basedOn": "2e5471ed438fbc0c6d7dee441aca731a669515a7",
-    "notes": "Same-named context-menu boundary restores stage, unstage, reset, submodule, difftool, open/edit/save/move/delete, copy, folder, filtering, history, blame, tree, script and index-bit actions. P2.2 enables the git-grep dialog/toggle entries and both mode-specific hotkey commands now that their native dialog and calculation path exist; P3.1 applies the shared native MenuUtil caption treatment to the two difftool revision headings; P4.2 delegates path copying and file/folder reveal behavior to the same-named menu/helper twins. Later-owned ignore actions remain hidden rather than inert."
+    "notes": "Same-named context-menu boundary restores stage, unstage, reset, submodule, difftool, open/edit/save/move/delete, copy, folder, filtering, history, blame, tree, script and index-bit actions. P2.2 enables the git-grep dialog/toggle entries and both mode-specific hotkey commands now that their native dialog and calculation path exist; P3.1 applies the shared native MenuUtil caption treatment to the two difftool revision headings; P4.2 delegates path copying and file/folder reveal behavior to the same-named menu/helper twins. P8.6c.2b restores the shared RevisionDiffController state rules, all original action bindings and focus-gated keyboard routes, interactive add/reset, ignore and Visual Studio actions, exact reset/difftool revision semantics, and popup cancellation. Framework representation and remaining core-source findings stay visible for P8.6c.2c."
   },
   "src/app/GitUI/UserControls/FileStatusList.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml",
@@ -2435,8 +2435,8 @@
   "src/app/GitUI/MessageBoxes.cs": {
     "twin": "src/app/GitUI.Avalonia/MessageBoxes.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated helpers in use: revision-not-found/filter messages, missing submodule/Git Extensions directories, FailedToRunShell, Confirm, ConfirmResolveMergeConflicts, MiddleOfRebase, MiddleOfPatchApply, and ConfirmUpdateSubmodules (task dialog). Other domain-specific helpers join with their consumers."
+    "basedOn": "57d3739f1eb87b5b3fed33138b51ec0ee5a173f6",
+    "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated helpers in use: revision-not-found/filter messages, missing submodule/Git Extensions directories, FailedToRunShell, Confirm, ConfirmResolveMergeConflicts, MiddleOfRebase, MiddleOfPatchApply, ConfirmUpdateSubmodules (task dialog), and the Visual Studio retry prompt. Other domain-specific helpers join with their consumers."
   },
   "src/app/GitUI/HelperDialogs/FormChooseCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormChooseCommit.axaml.cs",
@@ -3089,7 +3089,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/ToolStripMenuItemEx.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native MenuItem base preserves the original UICommands/module initialization, owner, translation, shortcut refresh, and state refresh contract. Avalonia resolves the owner from the menu's TopLevel and uses native KeyGesture values instead of WinForms shortcut display strings."
+    "notes": "Native MenuItem base preserves the original UICommands/module initialization, owner, translation, shortcut refresh, and state refresh contract. Avalonia resolves the owner from the menu's TopLevel, uses native KeyGesture values instead of WinForms shortcut display strings, and opts derived items into the standard MenuItem style key so their templates render."
   },
   "src/app/GitUI/CommandsDialogs/RememberFileContextMenuController.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/RememberFileContextMenuController.cs",
@@ -3986,8 +3986,8 @@
   "src/app/GitUI/UserControls/FileStatusList.TreeContextMenu.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.TreeContextMenu.cs",
     "status": "functional",
-    "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
-    "notes": "Native context items preserve collapse-all, collapse-root, expand-all and select-all behavior for both tree modes."
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "Native context items preserve the original dynamically inserted collapse-all, collapse-root, expand-all and select-all state and behavior for the selected subtree in both tree modes."
   },
   "src/app/GitUI/UserControls/InteractiveGitActionControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/InteractiveGitActionControl.axaml.cs",
@@ -4169,7 +4169,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/SortDiffListContextMenuItem.cs",
     "status": "functional",
     "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
-    "notes": "Native menu preserves all six shared DiffListSortType choices and re-queries the live setting whenever opened."
+    "notes": "Native menu preserves all six shared DiffListSortType choices and re-queries the live setting whenever opened. Its derived control uses the standard MenuItem style key so the dynamically inserted entry retains the framework menu template."
   },
   "src/app/GitUI/UserControls/TextBoxEx.cs": {
     "status": "windowsOnly",
@@ -4213,9 +4213,10 @@
     "plannedIn": "P5.8"
   },
   "src/app/GitUI/VisualStudioIntegration.cs": {
-    "status": "windowsOnly",
-    "justification": "EnvDTE automation is available only to Visual Studio on Windows.",
-    "substitute": "No IDE automation integration."
+    "twin": "src/app/GitUI.Avalonia/VisualStudioIntegration.cs",
+    "status": "functional",
+    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "notes": "P8.6c.2b preserves the original EnvDTE running-instance discovery, file/line navigation, foreground activation, retry prompt, and devenv fallback under an explicit Windows platform guard. The menu is absent on Linux and macOS because Visual Studio EnvDTE has no non-Windows product capability."
   },
   "src/app/GitUI/WebBrowserEmulationMode.cs": {
     "status": "windowsOnly",

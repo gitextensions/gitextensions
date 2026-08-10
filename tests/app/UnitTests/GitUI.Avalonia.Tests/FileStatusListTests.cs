@@ -52,9 +52,9 @@ public sealed class FileStatusListTests
     public void FileStatusList_should_expose_multi_selection_and_invoke_only_bound_context_actions()
     {
         FileStatusList control = new() { SelectionMode = SelectionMode.Multiple };
-        GitItemStatus first = new("first.txt") { IsChanged = true, IsTracked = true };
-        GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true };
-        control.SetDiffs([first, second]);
+        GitItemStatus first = new("first.txt") { IsChanged = true, IsTracked = true, Staged = StagedStatus.WorkTree };
+        GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true, Staged = StagedStatus.WorkTree };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [first, second]);
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
         Window window = new() { Width = 320, Height = 180, Content = control };
         int stageCalls = 0;
@@ -65,8 +65,8 @@ public sealed class FileStatusListTests
             window.Show();
             Dispatcher.UIThread.RunJobs();
             accessor.List.SelectedItems!.Clear();
-            accessor.List.SelectedItems.Add(first);
-            accessor.List.SelectedItems.Add(second);
+            accessor.List.SelectedItems.Add(accessor.List.Items[0]!);
+            accessor.List.SelectedItems.Add(accessor.List.Items[1]!);
 
             control.SelectedGitItems.Should().Equal(first, second);
             accessor.UpdateContextMenu();

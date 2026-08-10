@@ -174,6 +174,147 @@ public sealed class FileStatusListFamilyTests
     }
 
     [AvaloniaTest]
+    public void FileStatusList_context_menu_should_restore_dynamic_entries_state_and_action_routes()
+    {
+        FileStatusList control = new();
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        GitItemStatus worktree = new("tracked.txt")
+        {
+            IsChanged = true,
+            IsTracked = true,
+            Staged = StagedStatus.WorkTree,
+        };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
+        accessor.List.SelectedIndex = 0;
+
+        int stageCalls = 0;
+        int filterCalls = 0;
+        int showInTreeCalls = 0;
+        control.BindContextMenu(
+            blame: null,
+            cherryPickChanges: null,
+            filterFileInGrid: () => filterCalls++,
+            refreshParent: () => { },
+            openInFileTreeTab_AsBlame: _ => showInTreeCalls++,
+            getCurrentRevision: null,
+            getLineNumber: () => 0,
+            getSelectedText: null,
+            getSupportLinePatching: () => true);
+        control.BindContextMenu(() => { }, canAutoRefresh: true, () => stageCalls++, unstage: null);
+
+        accessor.UpdateContextMenu().Should().BeFalse();
+        accessor.StageMenuItem.IsVisible.Should().BeTrue();
+        accessor.UnstageMenuItem.IsVisible.Should().BeFalse();
+        accessor.ResetChunkMenuItem.IsVisible.Should().BeTrue();
+        accessor.InteractiveAddMenuItem.IsVisible.Should().BeTrue();
+        accessor.ResetToMenuItem.IsVisible.Should().BeTrue();
+        accessor.ResetToSelectedMenuItem.IsVisible.Should().BeFalse();
+        accessor.ResetToParentMenuItem.IsVisible.Should().BeTrue();
+        accessor.ResetToParentMenuItem.Header.Should().Be("First: A Commit index");
+        accessor.AddToGitIgnoreMenuItem.IsVisible.Should().BeTrue();
+        accessor.AddToGitInfoExcludeMenuItem.IsVisible.Should().BeTrue();
+        accessor.SkipWorktreeMenuItem.IsVisible.Should().BeTrue();
+        accessor.StopTrackingMenuItem.IsVisible.Should().BeTrue();
+        accessor.OpenSubmoduleMenuItem.IsVisible.Should().BeFalse();
+        accessor.SortByContextMenuItem.IsVisible.Should().BeTrue();
+        accessor.ContextMenu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
+
+        accessor.UpdateContextMenu().Should().BeFalse();
+        accessor.ContextMenu.Items.OfType<SortDiffListContextMenuItem>().Should().ContainSingle();
+
+        control.ExecuteCommand(RevisionDiffControl.Command.StageSelectedFile).Should().BeTrue();
+        control.ExecuteCommand(RevisionDiffControl.Command.FilterFileInGrid).Should().BeTrue();
+        control.ExecuteCommand(RevisionDiffControl.Command.ShowFileTree).Should().BeTrue();
+        stageCalls.Should().Be(1);
+        filterCalls.Should().Be(1);
+        showInTreeCalls.Should().Be(1);
+        control.ExecuteCommand(RevisionDiffControl.Command.AddFileToGitIgnore).Should().BeFalse("the original route requires list focus");
+
+        GitItemStatus submodule = new("submodule") { IsSubmodule = true, IsTracked = true };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [submodule]);
+        accessor.List.SelectedIndex = 0;
+        accessor.UpdateContextMenu().Should().BeFalse();
+        accessor.OpenSubmoduleMenuItem.IsVisible.Should().BeTrue();
+
+        GitItemStatus statusOnly = new("summary") { IsStatusOnly = true };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [statusOnly]);
+        accessor.List.SelectedIndex = 0;
+        accessor.UpdateContextMenu().Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_context_menu_should_render_derived_menu_items_with_the_standard_menu_theme()
+    {
+        FileStatusList control = new();
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        GitItemStatus worktree = new("tracked.txt")
+        {
+            IsChanged = true,
+            IsTracked = true,
+            Staged = StagedStatus.WorkTree,
+        };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
+        accessor.List.SelectedIndex = 0;
+        accessor.UpdateContextMenu().Should().BeFalse();
+        Window window = new() { Content = control };
+
+        try
+        {
+            window.Show();
+            accessor.ContextMenu.Open(accessor.List);
+            global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+            accessor.CopyPathsMenuItem.Bounds.Height.Should().BeGreaterThan(0);
+            accessor.SortByContextMenuItem.Bounds.Height.Should().BeGreaterThan(0);
+        }
+        finally
+        {
+            accessor.ContextMenu.Close();
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_tree_context_menu_should_scope_expand_collapse_and_select_all_to_the_selected_subtree()
+    {
+        FileStatusList control = new() { SelectionMode = SelectionMode.Multiple };
+        GitRevision index = new(ObjectId.IndexId);
+        GitRevision workTree = new(ObjectId.WorkTreeId);
+        control.SetDiffs(
+        [
+            new FileStatusWithDescription(
+                index,
+                workTree,
+                "working tree",
+                [
+                    new GitItemStatus("folder/first.txt") { IsChanged = true, IsTracked = true, Staged = StagedStatus.WorkTree },
+                    new GitItemStatus("folder/nested/second.txt") { IsChanged = true, IsTracked = true, Staged = StagedStatus.WorkTree },
+                ]),
+        ],
+        isFileTreeMode: true);
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+
+        accessor.SelectFirstTreeRoot();
+        accessor.UpdateContextMenu().Should().BeFalse();
+        accessor.ExpandAllMenuItem.IsVisible.Should().BeTrue();
+        accessor.CollapseAllMenuItem.IsVisible.Should().BeTrue();
+        accessor.SelectAllMenuItem.IsVisible.Should().BeTrue();
+
+        accessor.ExpandAllMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        accessor.FirstTreeRootExpanded.Should().BeTrue();
+        accessor.CollapseAllMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        accessor.FirstTreeRootExpanded.Should().BeFalse();
+
+        accessor.ExpandAllMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        accessor.SelectAllMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        control.SelectedGitItems.Should().HaveCount(2);
+
+        accessor.SelectFirstTreeLeaf();
+        accessor.CollapseRootFoldersMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        accessor.FirstTreeRootExpanded.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_should_apply_all_sort_and_branch_diff_filters()
     {
         FileStatusList control = new() { GroupByRevision = true };
