@@ -1,6 +1,7 @@
 using System.ComponentModel.Design;
 using Avalonia;
 using GitCommands;
+using GitExtensions.Compat;
 using GitUI;
 
 namespace GitExtensions;
@@ -10,13 +11,20 @@ internal static class Program
     internal static readonly ServiceContainer ServiceContainer = new();
 
     [STAThread]
-    private static int Main(string[] args)
+    private static async Task<int> Main(string[] args)
     {
         ServiceContainerRegistry.RegisterServices(ServiceContainer);
 
         AppSettings.SetDocumentationBaseUrl(AppSettings.ProductVersion);
         AppTitleGenerator.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.Branch);
         UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
+
+        // parity-scaffolding: exercises product process-tree cancellation inside the release-shaped Flatpak.
+        if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(FlatpakConformanceProbe.ReportPathEnvironmentVariable)))
+        {
+            int? flatpakConformanceExitCode = await FlatpakConformanceProbe.RunIfRequestedAsync();
+            return flatpakConformanceExitCode!.Value;
+        }
 
         int exitCode = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 

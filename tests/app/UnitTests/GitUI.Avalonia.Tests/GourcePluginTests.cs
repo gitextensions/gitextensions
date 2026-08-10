@@ -14,6 +14,13 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class GourcePluginTests
 {
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    public void IsLaunchAvailable_should_reject_host_executable_in_Flatpak(bool isFlatpak, bool expected)
+    {
+        GourceStart.IsLaunchAvailable(isFlatpak).Should().Be(expected);
+    }
+
     [AvaloniaTest]
     public void Gource_form_should_construct_with_original_layout_and_translation_keys()
     {

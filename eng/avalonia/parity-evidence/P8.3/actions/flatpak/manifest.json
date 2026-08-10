@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "appId": "com.github.gitextensions.GitExtensions.Avalonia.P83Smoke",
+  "confined": true,
+  "backend": "wayland",
+  "filesystemGrant": "--filesystem=host",
+  "releaseAssets": "passed",
+  "bundledGit": "2.51.0",
+  "bundledOpenSsh": "10.0p2",
+  "runtimeFonts": "passed",
+  "fileDialogsAndCancellation": "passed",
+  "externalOpen": "passed",
+  "sshAgentPush": "passed",
+  "credentialHelper": "passed",
+  "mergetool": "passed",
+  "themeDirectories": "passed",
+  "processGroupCancellation": "passed",
+  "externalTerminal": "explicitly-unavailable",
+  "gource": "explicitly-unavailable",
+  "repositoryLocation": "outsideWorkingTree",
+  "evidence": {
+    "portal": "portal/manifest.json",
+    "sshAgent": "ssh-agent.txt",
+    "sshPush": "ssh-push.txt",
+    "credentialHelper": "credential-helper.txt",
+    "mergetool": "mergetool.txt",
+    "processCancellation": "process-cancellation.json",
+    "runtimeAssets": "runtime-assets.txt"
+  }
+}

@@ -1,0 +1,32 @@
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.132: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.156: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.186: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.187: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.187: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.188: Choosing gtk.portal for org.freedesktop.impl.portal.Settings as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.189: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.190: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.192: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.193: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.194: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+[W][10:04:48.198541] pw.conf      | [          conf.c: 1182 try_load_conf()] can't load config client.conf: No such file or directory
+[E][10:04:48.198923] pw.conf      | [          conf.c: 1215 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.198: Failed to connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.199: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.200: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:133891): xdg-desktop-portal-WARNING **: 10:04:48.201: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback

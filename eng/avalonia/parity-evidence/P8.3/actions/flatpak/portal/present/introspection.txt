@@ -1,0 +1,361 @@
+node /org/freedesktop/portal/desktop {
+  interface org.freedesktop.DBus.Properties {
+    methods:
+      Get(in  s interface_name,
+          in  s property_name,
+          out v value);
+      GetAll(in  s interface_name,
+             out a{sv} properties);
+      Set(in  s interface_name,
+          in  s property_name,
+          in  v value);
+    signals:
+      PropertiesChanged(s interface_name,
+                        a{sv} changed_properties,
+                        as invalidated_properties);
+    properties:
+  };
+  interface org.freedesktop.DBus.Introspectable {
+    methods:
+      Introspect(out s xml_data);
+    signals:
+    properties:
+  };
+  interface org.freedesktop.DBus.Peer {
+    methods:
+      Ping();
+      GetMachineId(out s machine_uuid);
+    signals:
+    properties:
+  };
+  interface org.freedesktop.portal.Trash {
+    methods:
+      TrashFile(in  h fd,
+                out u result);
+    signals:
+    properties:
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.Location {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In0("QVariantMap")
+      CreateSession(in  a{sv} options,
+                    out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      Start(in  o session_handle,
+            in  s parent_window,
+            in  a{sv} options,
+            out o handle);
+    signals:
+      @org.qtproject.QtDBus.QtTypeName.Out1("QVariantMap")
+      LocationUpdated(o session_handle,
+                      a{sv} location);
+    properties:
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.Notification {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In1("QVariantMap")
+      AddNotification(in  s id,
+                      in  a{sv} notification);
+      RemoveNotification(in  s id);
+    signals:
+      ActionInvoked(s id,
+                    s action,
+                    av parameter);
+    properties:
+      @org.qtproject.QtDBus.QtTypeName("QVariantMap")
+      readonly a{sv} SupportedOptions = {};
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.Account {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In1("QVariantMap")
+      GetUserInformation(in  s window,
+                         in  a{sv} options,
+                         out o handle);
+    signals:
+    properties:
+      readonly u version = 1;
+  };
+  interface org.freedesktop.host.portal.Registry {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In1("QVariantMap")
+      Register(in  s app_id,
+               in  a{sv} options);
+    signals:
+    properties:
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.ProxyResolver {
+    methods:
+      Lookup(in  s uri,
+             out as proxies);
+    signals:
+    properties:
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.NetworkMonitor {
+    methods:
+      GetAvailable(out b available);
+      GetMetered(out b metered);
+      GetConnectivity(out u connectivity);
+      @org.qtproject.QtDBus.QtTypeName.Out0("QVariantMap")
+      GetStatus(out a{sv} status);
+      CanReach(in  s hostname,
+               in  u port,
+               out b reachable);
+    signals:
+      changed();
+    properties:
+      readonly u version = 3;
+  };
+  interface org.freedesktop.portal.Print {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      @org.qtproject.QtDBus.QtTypeName.In3("QVariantMap")
+      @org.qtproject.QtDBus.QtTypeName.In4("QVariantMap")
+      PreparePrint(in  s parent_window,
+                   in  s title,
+                   in  a{sv} settings,
+                   in  a{sv} page_setup,
+                   in  a{sv} options,
+                   out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In3("QVariantMap")
+      Print(in  s parent_window,
+            in  s title,
+            in  h fd,
+            in  a{sv} options,
+            out o handle);
+    signals:
+    properties:
+      readonly u version = 4;
+  };
+  interface org.freedesktop.portal.Settings {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.Out0("QMap<QString,QVariantMap>")
+      ReadAll(in  as namespaces,
+              out a{sa{sv}} value);
+      @org.freedesktop.DBus.Deprecated("true")
+      Read(in  s namespace,
+           in  s key,
+           out v value);
+      ReadOne(in  s namespace,
+              in  s key,
+              out v value);
+    signals:
+      SettingChanged(s namespace,
+                     s key,
+                     v value);
+    properties:
+      readonly u version = 2;
+  };
+  interface org.freedesktop.portal.GameMode {
+    methods:
+      QueryStatus(in  i pid,
+                  out i result);
+      RegisterGame(in  i pid,
+                   out i result);
+      UnregisterGame(in  i pid,
+                     out i result);
+      QueryStatusByPid(in  i target,
+                       in  i requester,
+                       out i result);
+      RegisterGameByPid(in  i target,
+                        in  i requester,
+                        out i result);
+      UnregisterGameByPid(in  i target,
+                          in  i requester,
+                          out i result);
+      QueryStatusByPIDFd(in  h target,
+                         in  h requester,
+                         out i result);
+      RegisterGameByPIDFd(in  h target,
+                          in  h requester,
+                          out i result);
+      UnregisterGameByPIDFd(in  h target,
+                            in  h requester,
+                            out i result);
+    signals:
+    properties:
+      readonly b Active = false;
+      readonly u version = 4;
+  };
+  interface org.freedesktop.portal.OpenURI {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      OpenURI(in  s parent_window,
+              in  s uri,
+              in  a{sv} options,
+              out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      OpenFile(in  s parent_window,
+               in  h fd,
+               in  a{sv} options,
+               out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      OpenDirectory(in  s parent_window,
+                    in  h fd,
+                    in  a{sv} options,
+                    out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In1("QVariantMap")
+      SchemeSupported(in  s scheme,
+                      in  a{sv} options,
+                      out b supported);
+    signals:
+    properties:
+      readonly u version = 5;
+  };
+  interface org.freedesktop.portal.MemoryMonitor {
+    methods:
+    signals:
+      LowMemoryWarning(y level);
+    properties:
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.Realtime {
+    methods:
+      MakeThreadRealtimeWithPID(in  t process,
+                                in  t thread,
+                                in  u priority);
+      MakeThreadHighPriorityWithPID(in  t process,
+                                    in  t thread,
+                                    in  i priority);
+    signals:
+    properties:
+      readonly i MaxRealtimePriority = 0;
+      readonly i MinNiceLevel = 0;
+      readonly x RTTimeUSecMax = 0;
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.DynamicLauncher {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In3("QVariantMap")
+      Install(in  s token,
+              in  s desktop_file_id,
+              in  s desktop_entry,
+              in  a{sv} options);
+      @org.qtproject.QtDBus.QtTypeName.In3("QVariantMap")
+      PrepareInstall(in  s parent_window,
+                     in  s name,
+                     in  v icon_v,
+                     in  a{sv} options,
+                     out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      RequestInstallToken(in  s name,
+                          in  v icon_v,
+                          in  a{sv} options,
+                          out s token);
+      @org.qtproject.QtDBus.QtTypeName.In1("QVariantMap")
+      Uninstall(in  s desktop_file_id,
+                in  a{sv} options);
+      GetDesktopEntry(in  s desktop_file_id,
+                      out s contents);
+      GetIcon(in  s desktop_file_id,
+              out v icon_v,
+              out s icon_format,
+              out u icon_size);
+      @org.qtproject.QtDBus.QtTypeName.In1("QVariantMap")
+      Launch(in  s desktop_file_id,
+             in  a{sv} options);
+    signals:
+    properties:
+      readonly u SupportedLauncherTypes = 3;
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.WebExtensions {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In0("QVariantMap")
+      CreateSession(in  a{sv} options,
+                    out o session_handle);
+      GetManifest(in  o session_handle,
+                  in  s name,
+                  in  s extension_or_origin,
+                  out s json_manifest);
+      @org.qtproject.QtDBus.QtTypeName.In3("QVariantMap")
+      Start(in  o session_handle,
+            in  s name,
+            in  s extension_or_origin,
+            in  a{sv} options,
+            out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In1("QVariantMap")
+      GetPipes(in  o session_handle,
+               in  a{sv} options,
+               out h stdin,
+               out h stdout,
+               out h stderr);
+    signals:
+    properties:
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.Camera {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In0("QVariantMap")
+      AccessCamera(in  a{sv} options,
+                   out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In0("QVariantMap")
+      OpenPipeWireRemote(in  a{sv} options,
+                         out h fd);
+    signals:
+    properties:
+      readonly b IsCameraPresent = false;
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.PowerProfileMonitor {
+    methods:
+    signals:
+    properties:
+      readonly b power-saver-enabled = false;
+      readonly u version = 1;
+  };
+  interface org.freedesktop.portal.Email {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In1("QVariantMap")
+      ComposeEmail(in  s parent_window,
+                   in  a{sv} options,
+                   out o handle);
+    signals:
+    properties:
+      readonly u version = 4;
+  };
+  interface org.freedesktop.portal.Inhibit {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      Inhibit(in  s window,
+              in  u flags,
+              in  a{sv} options,
+              out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In1("QVariantMap")
+      CreateMonitor(in  s window,
+                    in  a{sv} options,
+                    out o handle);
+      QueryEndResponse(in  o session_handle);
+    signals:
+      @org.qtproject.QtDBus.QtTypeName.Out1("QVariantMap")
+      StateChanged(o session_handle,
+                   a{sv} state);
+    properties:
+      readonly u version = 3;
+  };
+  interface org.freedesktop.portal.FileChooser {
+    methods:
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      OpenFile(in  s parent_window,
+               in  s title,
+               in  a{sv} options,
+               out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      SaveFile(in  s parent_window,
+               in  s title,
+               in  a{sv} options,
+               out o handle);
+      @org.qtproject.QtDBus.QtTypeName.In2("QVariantMap")
+      SaveFiles(in  s parent_window,
+                in  s title,
+                in  a{sv} options,
+                out o handle);
+    signals:
+    properties:
+      readonly u version = 4;
+  };
+};

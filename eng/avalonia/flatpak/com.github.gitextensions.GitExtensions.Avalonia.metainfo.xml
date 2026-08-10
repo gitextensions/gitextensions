@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.github.gitextensions.GitExtensions.Avalonia</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  <name>Git Extensions</name>
+  <summary>Graphical user interface for Git</summary>
+  <description>
+    <p>
+      Git Extensions is a graphical user interface for managing Git repositories,
+      viewing history, staging changes, and working with branches and remotes.
+    </p>
+  </description>
+  <launchable type="desktop-id">com.github.gitextensions.GitExtensions.Avalonia.desktop</launchable>
+  <provides>
+    <binary>GitExtensions.Avalonia</binary>
+  </provides>
+  <url type="homepage">https://gitextensions.github.io/</url>
+  <url type="bugtracker">https://github.com/gitextensions/gitextensions/issues</url>
+  <developer id="com.github.gitextensions">
+    <name>Git Extensions contributors</name>
+  </developer>
+  <content_rating type="oars-1.1" />
+</component>

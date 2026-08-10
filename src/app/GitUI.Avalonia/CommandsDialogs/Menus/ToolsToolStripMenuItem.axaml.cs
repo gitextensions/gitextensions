@@ -91,6 +91,11 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         {
             UICommands.GetRequiredService<ITerminalLauncher>().Launch(UICommands.Module.WorkingDir);
         }
+        catch (PlatformNotSupportedException exception) when (FlatpakEnvironment.IsFlatpak())
+        {
+            // Cross-platform constraint: a confined app cannot execute a host terminal.
+            MessageBoxes.FailedToRunShell(OwnerForm, "Git bash", exception);
+        }
         catch (Exception exception)
         {
             MessageBoxes.FailedToRunShell(OwnerForm, "Git bash", exception);

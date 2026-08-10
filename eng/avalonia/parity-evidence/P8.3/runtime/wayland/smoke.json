@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "backend": "wayland",
+  "backendAssembly": "Avalonia.Wayland.dll",
+  "backendEvidence": "westonOutputScreenshotWithDisplayUnset",
+  "sessionHost": "nestedWestonOnWslgX11",
+  "sessionLog": "weston.log",
+  "command": "browse <temporary-repository>",
+  "settingsIsolation": "temporaryXdgHome",
+  "repositoryLocation": "outsideWorkingTree",
+  "screenshot": "window.png",
+  "screenshotSha256": "1a91890cc7b6c71e3ecf3577a44e7830904ce03983c46b640517861527819927",
+  "stdout": "stdout.log",
+  "stderr": "stderr.log"
+}

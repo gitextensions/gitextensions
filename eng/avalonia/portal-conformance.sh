@@ -5,6 +5,9 @@ set -euo pipefail
 
 mode=
 evidence_dir=
+flatpak_app_id=${GITEXTENSIONS_PORTAL_CONFORMANCE_FLATPAK_APP_ID:-}
+flatpak_host_home=$HOME
+flatpak_host_data_home=${XDG_DATA_HOME:-$HOME/.local/share}
 if [[ "${1:-}" == "--mode" ]]; then
     mode=${2:-}
     evidence_dir=${3:-}
@@ -25,6 +28,41 @@ esac
 
 if [[ -z "$mode" ]]; then
     mkdir -p "$evidence_dir"
+    if [[ -n "$flatpak_app_id" ]]; then
+        dbus-run-session -- bash "$0" --mode present "$evidence_dir/present"
+        python3 - "$evidence_dir/present/report.json" "$evidence_dir/manifest.json" "$flatpak_app_id" <<'PY'
+import json
+import sys
+
+report_path, manifest_path, app_id = sys.argv[1:]
+report = json.load(open(report_path, encoding="utf-8"))
+assert report["stage"] == "completed" and report["error"] is None, report
+assert report["interfaces"] == {"fileChooser": True, "openUri": True}, report
+assert all(value is True for value in report["pickers"].values()), report
+assert all(value is True for value in report["shellActions"].values()), report
+manifest = {
+    "schemaVersion": 1,
+    "execution": "flatpak",
+    "appId": app_id,
+    "backendPresent": "passed",
+    "pickerTransport": "org.freedesktop.portal.FileChooser",
+    "shellTransport": "org.freedesktop.portal.OpenURI",
+    "defaultHandlerLaunchesObserved": 3,
+    "openFileApplicationChooserAccepted": True,
+    "pickerCancellationCompleted": True,
+    "backend": "wayland",
+    "settingsIsolation": "temporaryXdgHomeInsideDedicatedFlatpakId",
+    "repositoryLocation": "outsideWorkingTree",
+    "reports": ["present/report.json"],
+}
+with open(manifest_path, "w", encoding="utf-8", newline="\n") as output:
+    json.dump(manifest, output, indent=2)
+    output.write("\n")
+PY
+        printf 'confined XDG portal conformance passed; backend=present pickers=3 cancellation=1 shellActions=4\n'
+        exit 0
+    fi
+
     dbus-run-session -- bash "$0" --mode present "$evidence_dir/present"
     bash "$0" --mode absent "$evidence_dir/absent"
     python3 - "$evidence_dir/present/report.json" "$evidence_dir/absent/report.json" "$evidence_dir/manifest.json" <<'PY'
@@ -67,11 +105,20 @@ for command_name in python3 git; do
     command -v "$command_name" >/dev/null 2>&1 || { echo "error: '$command_name' is required" >&2; exit 2; }
 done
 app="$repo_root/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/GitExtensions.Avalonia"
-[[ -x "$app" ]] || { echo "error: build the Avalonia solution before running the portal sweep" >&2; exit 2; }
+if [[ -z "$flatpak_app_id" ]]; then
+    [[ -x "$app" ]] || { echo "error: build the Avalonia solution before running the portal sweep" >&2; exit 2; }
+else
+    command -v flatpak >/dev/null 2>&1 || { echo "error: 'flatpak' is required" >&2; exit 2; }
+    flatpak info --user "$flatpak_app_id" >/dev/null
+fi
 [[ -n "${DISPLAY:-}" ]] || { echo "error: DISPLAY is required" >&2; exit 2; }
 
 mkdir -p "$evidence_dir"
-probe_root="$(mktemp -d "${TMPDIR:-/tmp}/gitextensions-p82-portal.XXXXXX")"
+if [[ -n "$flatpak_app_id" ]]; then
+    probe_root="$(mktemp -d "$HOME/.local/share/gitextensions-p83-flatpak-portal.XXXXXX")"
+else
+    probe_root="$(mktemp -d "${TMPDIR:-/tmp}/gitextensions-p82-portal.XXXXXX")"
+fi
 settings_root="$probe_root/settings"
 fixture_repo="$probe_root/repository"
 fixture_file="$fixture_repo/portal.txt"
@@ -84,6 +131,10 @@ backend_pid=
 monitor_pid=
 cleanup()
 {
+    if [[ -n "$flatpak_app_id" ]]; then
+        env HOME="$flatpak_host_home" XDG_DATA_HOME="$flatpak_host_data_home" \
+            flatpak kill "$flatpak_app_id" 2>/dev/null || true
+    fi
     for pid_name in app_pid monitor_pid portal_pid backend_pid; do
         pid=${!pid_name:-}
         if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
@@ -110,6 +161,15 @@ git -C "$fixture_repo" add portal.txt
 git -C "$fixture_repo" -c commit.gpgSign=false commit --quiet -m initial
 
 report="$evidence_dir/report.json"
+report_output="$report"
+report_for_app="$report"
+if [[ -n "$flatpak_app_id" ]]; then
+    flatpak_report_root="$flatpak_host_home/.var/app/$flatpak_app_id/data/p83-portal"
+    rm -rf -- "$flatpak_report_root"
+    mkdir -p "$flatpak_report_root"
+    report="$flatpak_report_root/report.json"
+    report_for_app=/var/data/p83-portal/report.json
+fi
 stdout_log="$evidence_dir/stdout.log"
 stderr_log="$evidence_dir/stderr.log"
 portal_log="$evidence_dir/portal.log"
@@ -190,7 +250,30 @@ else
     export DBUS_SESSION_BUS_ADDRESS="unix:path=$probe_root/missing-session-bus"
 fi
 
-env -u WAYLAND_DISPLAY "$app" browse "$fixture_repo" >"$stdout_log" 2>"$stderr_log" &
+if [[ -n "$flatpak_app_id" ]]; then
+    env HOME="$flatpak_host_home" XDG_DATA_HOME="$flatpak_host_data_home" \
+    flatpak run --user \
+        --nosocket=x11 \
+        --nosocket=fallback-x11 \
+        --env=XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
+        --env=WAYLAND_DISPLAY="$WAYLAND_DISPLAY" \
+        --env=XDG_CONFIG_HOME="$XDG_CONFIG_HOME" \
+        --env=XDG_DATA_HOME="$XDG_DATA_HOME" \
+        --env=XDG_CACHE_HOME="$XDG_CACHE_HOME" \
+        --env=GIT_CONFIG_GLOBAL=/dev/null \
+        --env=GITEXTENSIONS_DEBUG_FAIL_FAST=1 \
+        --env=GITEXTENSIONS_PORTAL_CONFORMANCE_REPORT="$report_for_app" \
+        --env=GITEXTENSIONS_PORTAL_CONFORMANCE_EXPECTED="$mode" \
+        --env=GITEXTENSIONS_PORTAL_CONFORMANCE_FIXTURE="$fixture_file" \
+        --env=LIBGL_ALWAYS_SOFTWARE=1 \
+        --env=MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
+        --env=GALLIUM_DRIVER=llvmpipe \
+        "$flatpak_app_id" \
+        browse \
+        "$fixture_repo" >"$stdout_log" 2>"$stderr_log" &
+else
+    env -u WAYLAND_DISPLAY "$app" browse "$fixture_repo" >"$stdout_log" 2>"$stderr_log" &
+fi
 app_pid=$!
 
 wait_for_stage()
@@ -260,6 +343,40 @@ PY
     return 1
 }
 
+cancel_picker()
+{
+    local stage=$1
+    local title=$2
+    wait_for_stage "$stage"
+    local window=
+    for _ in {1..80}; do
+        window=$(DISPLAY="$host_display" xdotool search --name "$title" 2>/dev/null | tail -n 1 || true)
+        [[ -n "$window" ]] && break
+        sleep 0.25
+    done
+    [[ -n "$window" ]] || { echo "error: portal cancel dialog '$title' was not found" >&2; return 1; }
+    DISPLAY="$host_display" xdotool getwindowname "$window" >> "$evidence_dir/picker-windows.txt"
+    DISPLAY="$host_display" xdotool windowactivate --sync "$window" 2>/dev/null || true
+    DISPLAY="$host_display" xdotool key Escape
+    for _ in {1..40}; do
+        if [[ -s "$report" ]] && ! python3 - "$report" "$stage" <<'PY'
+import json
+import sys
+try:
+    report = json.load(open(sys.argv[1], encoding="utf-8"))
+except (FileNotFoundError, json.JSONDecodeError):
+    raise SystemExit(0)
+raise SystemExit(0 if report["stage"] == sys.argv[2] else 1)
+PY
+        then
+            return 0
+        fi
+        sleep 0.25
+    done
+    echo "error: portal dialog '$title' did not complete cancellation" >&2
+    return 1
+}
+
 complete_app_chooser()
 {
     wait_for_stage openFileAction
@@ -297,9 +414,14 @@ if [[ "$mode" == "present" ]]; then
     complete_picker openFilePicker 'P8.2 Open file' "$fixture_file"
     complete_picker openFolderPicker 'P8.2 Open folder' "$fixture_repo"
     complete_picker saveFilePicker 'P8.2 Save file' "$probe_root/p82-saved.txt"
+    cancel_picker cancelFilePicker 'P8.3 Cancel file'
     complete_app_chooser
 fi
 wait_for_stage completed
+
+if [[ -n "$flatpak_app_id" ]]; then
+    cp "$report" "$report_output"
+fi
 
 if grep -Eiq 'Unhandled exception|fatal error|JIT debugger' "$stdout_log" "$stderr_log"; then
     echo "error: runtime logs contain a failure signature" >&2

@@ -1,0 +1,6 @@
+git version 2.51.0
+OpenSSH_10.0p2, OpenSSL 3.5.7 9 Jun 2026
+sans=DejaVu Sans
+mono=DejaVu Sans Mono
+bundledTheme=/app/bin/Themes/dark.css
+userTheme=/var/config/GitExtensions/GitExtensions/Themes/P83Confined.css

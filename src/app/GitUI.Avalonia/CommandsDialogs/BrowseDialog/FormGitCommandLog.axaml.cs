@@ -196,7 +196,7 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
             return;
         }
 
-        IStorageFile? file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        IStorageFile? file = await PortalPickerGuard.SaveFilePickerAsync(StorageProvider, new FilePickerSaveOptions
         {
             Title = Title,
             DefaultExtension = "txt",
