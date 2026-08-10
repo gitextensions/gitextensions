@@ -15,6 +15,8 @@ namespace GitExtensionsTests;
 
 internal sealed class AvaloniaControlStateDriver : IDisposable
 {
+    private readonly List<TopLevel> _externalTopLevels = [];
+    private readonly List<Control> _popupSurfaceRoots = [];
     private readonly List<Action> _restoreActions = [];
     private readonly Control _root;
     private readonly TopLevel _topLevel;
@@ -25,7 +27,11 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         _topLevel = topLevel;
     }
 
-    public bool RequiresExternalSurfaceCapture { get; private set; }
+    public IReadOnlyList<TopLevel> ExternalTopLevels => _externalTopLevels;
+
+    public IReadOnlyList<Control> PopupSurfaceRoots => _popupSurfaceRoots;
+
+    public bool RequiresExternalSurfaceCapture => _externalTopLevels.Count > 0;
 
     public static AvaloniaControlStateDriver Apply(Control root, CaptureStatePlan state)
     {
@@ -37,6 +43,8 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         {
             throw new AvaloniaCaptureStateUnsupportedException($"Field '{state.TargetField}' was not found.");
         }
+
+        target = ResolveFrameworkSplitTarget(root, target);
 
         switch (state.Kind)
         {
@@ -71,6 +79,20 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         return driver;
     }
 
+    // parity-scaffolding: The original FileStatusList has one FileStatusListView while the
+    // Avalonia twin uses separate list/tree visuals; drive whichever native visual owns that state.
+    private static object ResolveFrameworkSplitTarget(Control root, object target)
+    {
+        if (target is Control { Name: "FileStatusListView", IsEffectivelyVisible: false }
+            && EnumerateLogicalControls(root).FirstOrDefault(
+                control => control.Name == "tvDiffFiles" && control.IsEffectivelyVisible) is Control activeDiffTree)
+        {
+            return activeDiffTree;
+        }
+
+        return target;
+    }
+
     public void Dispose()
     {
         for (int i = _restoreActions.Count - 1; i >= 0; i--)
@@ -83,18 +105,53 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
     private static object? FindFieldValue(Control root, string fieldName)
     {
-        for (Type? type = root.GetType(); type is not null; type = type.BaseType)
+        foreach (Control owner in EnumerateFieldControls(root))
         {
-            FieldInfo? field = type.GetField(
-                fieldName,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-            if (field is not null)
+            for (Type? type = owner.GetType(); type is not null; type = type.BaseType)
             {
-                return field.GetValue(root);
+                FieldInfo? field = type.GetField(
+                    fieldName,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                if (field is not null)
+                {
+                    return field.GetValue(owner);
+                }
             }
         }
 
         return EnumerateLogicalControls(root).FirstOrDefault(control => control.Name == fieldName);
+    }
+
+    private static IEnumerable<Control> EnumerateFieldControls(Control root)
+    {
+        HashSet<Control> visited = new(ReferenceEqualityComparer.Instance);
+        return Enumerate(root);
+
+        IEnumerable<Control> Enumerate(Control control)
+        {
+            if (!visited.Add(control))
+            {
+                yield break;
+            }
+
+            yield return control;
+            for (Type? type = control.GetType(); type is not null; type = type.BaseType)
+            {
+                foreach (FieldInfo field in type.GetFields(
+                             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+                {
+                    if (field.GetValue(control) is not Control child)
+                    {
+                        continue;
+                    }
+
+                    foreach (Control descendant in Enumerate(child))
+                    {
+                        yield return descendant;
+                    }
+                }
+            }
+        }
     }
 
     private static IEnumerable<Control> EnumerateLogicalControls(Control root)
@@ -165,7 +222,42 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             throw new AvaloniaCaptureStateUnsupportedException("The focused state requires a focusable Control.");
         }
 
-        Control? focusTarget = control.Focusable
+        ActivateContainingTabs(control);
+
+        MethodInfo? hostedFocusMethod = control.GetType().GetMethod(
+            nameof(InputElement.Focus),
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly,
+            binder: null,
+            types: Type.EmptyTypes,
+            modifiers: null);
+        if (!control.Focusable
+            && hostedFocusMethod?.ReturnType == typeof(bool)
+            && hostedFocusMethod.Invoke(control, null) is true)
+        {
+            Dispatcher.UIThread.RunJobs();
+            if (IsFocusWithin(control))
+            {
+                return;
+            }
+        }
+
+        if (!control.Focusable
+            && control.IsEffectivelyVisible
+            && control.Bounds.Width > 0
+            && control.Bounds.Height > 0)
+        {
+            Point point = GetCenter(control);
+            _topLevel.MouseMove(point, RawInputModifiers.None);
+            _topLevel.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+            _topLevel.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            if (IsFocusWithin(control))
+            {
+                return;
+            }
+        }
+
+        Control? focusTarget = control.Focusable && control.IsEffectivelyVisible
             ? control
             : control.GetVisualDescendants()
                 .OfType<Control>()
@@ -178,9 +270,41 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         focusTarget.Focus(NavigationMethod.Tab);
         Dispatcher.UIThread.RunJobs();
-        if (!focusTarget.IsFocused)
+        if (!IsFocusWithin(control))
         {
-            throw new AvaloniaCaptureStateUnsupportedException("The headless focus manager did not focus the requested Control.");
+            throw new AvaloniaCaptureStateUnsupportedException(
+                $"The headless focus manager did not focus the requested {control.GetType().FullName} "
+                + $"named '{control.Name}' (visible={control.IsEffectivelyVisible}, enabled={control.IsEffectivelyEnabled}, "
+                + $"bounds={control.Bounds}).");
+        }
+    }
+
+    private bool IsFocusWithin(Control control)
+    {
+        IInputElement? focusedElement = _topLevel.FocusManager?.GetFocusedElement();
+        return ReferenceEquals(focusedElement, control)
+            || (focusedElement is Visual focusedVisual
+                && focusedVisual.GetVisualAncestors().Contains(control));
+    }
+
+    private void ActivateContainingTabs(Control control)
+    {
+        TabItem[] tabItems = control.GetLogicalAncestors()
+            .OfType<TabItem>()
+            .Reverse()
+            .ToArray();
+        foreach (TabItem tabItem in tabItems)
+        {
+            TabControl? tabControl = tabItem.GetLogicalAncestors().OfType<TabControl>().FirstOrDefault();
+            if (tabControl is null || ReferenceEquals(tabControl.SelectedItem, tabItem))
+            {
+                continue;
+            }
+
+            object? previous = tabControl.SelectedItem;
+            tabControl.SelectedItem = tabItem;
+            Dispatcher.UIThread.RunJobs();
+            _restoreActions.Add(() => tabControl.SelectedItem = previous);
         }
     }
 
@@ -214,8 +338,31 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
                 ?? throw new AvaloniaCaptureStateUnsupportedException("The ContextMenu is not attached to a control in the captured view.");
             contextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
-            RequiresExternalSurfaceCapture = true;
+            TrackExternalTopLevels(contextMenu);
             _restoreActions.Add(contextMenu.Close);
+            return;
+        }
+
+        if (target is Control { ContextMenu: { } attachedContextMenu })
+        {
+            attachedContextMenu.Open((Control)target);
+            Dispatcher.UIThread.RunJobs();
+            TrackExternalTopLevels(attachedContextMenu);
+            _restoreActions.Add(attachedContextMenu.Close);
+            return;
+        }
+
+        if (target is Control controlWithFlyout && GetFlyout(controlWithFlyout) is PopupFlyoutBase flyout)
+        {
+            flyout.ShowAt(controlWithFlyout);
+            Dispatcher.UIThread.RunJobs();
+            if (!flyout.IsOpen)
+            {
+                throw new AvaloniaCaptureStateUnsupportedException("The headless flyout did not open.");
+            }
+
+            TrackPopup(flyout.Popup);
+            _restoreActions.Add(flyout.Hide);
             return;
         }
 
@@ -230,6 +377,20 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             throw new AvaloniaCaptureStateUnsupportedException("The open-menu state requires a Menu or MenuItem.");
         }
 
+        ContextMenu? owningContextMenu = EnumerateLogicalControls(_root)
+            .Select(control => control.ContextMenu)
+            .OfType<ContextMenu>()
+            .FirstOrDefault(contextMenu => ContainsMenuItem(contextMenu, menuItem));
+        if (owningContextMenu is not null && !owningContextMenu.IsOpen)
+        {
+            Control owner = EnumerateLogicalControls(_root)
+                .First(control => ReferenceEquals(control.ContextMenu, owningContextMenu));
+            owningContextMenu.Open(owner);
+            Dispatcher.UIThread.RunJobs();
+            TrackExternalTopLevels(owningContextMenu);
+            _restoreActions.Add(owningContextMenu.Close);
+        }
+
         bool previous = menuItem.IsSubMenuOpen;
         menuItem.IsSubMenuOpen = true;
         Dispatcher.UIThread.RunJobs();
@@ -238,8 +399,129 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             throw new AvaloniaCaptureStateUnsupportedException("The headless menu did not open.");
         }
 
-        RequiresExternalSurfaceCapture = true;
+        TrackExternalTopLevels(menuItem);
         _restoreActions.Add(() => menuItem.IsSubMenuOpen = previous);
+
+        static bool ContainsMenuItem(ItemsControl owner, MenuItem expected)
+        {
+            foreach (object? item in owner.Items)
+            {
+                if (ReferenceEquals(item, expected)
+                    || (item is ItemsControl child && ContainsMenuItem(child, expected)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    private static FlyoutBase? GetFlyout(Control control)
+        => control switch
+        {
+            Button button => button.Flyout,
+            SplitButton splitButton => splitButton.Flyout,
+            _ => null
+        };
+
+    private void TrackExternalTopLevels(Control popupOwner)
+    {
+        TrackPopupHost(popupOwner);
+
+        if (popupOwner is ItemsControl itemsControl)
+        {
+            foreach (Control subItem in EnumerateMenuItems(itemsControl))
+            {
+                TrackTopLevel(TopLevel.GetTopLevel(subItem));
+            }
+        }
+
+        Control[] controls = EnumerateLogicalControls(popupOwner)
+            .Concat(popupOwner.GetVisualDescendants().OfType<Control>())
+            .ToArray();
+        foreach (Control control in controls)
+        {
+            TrackTopLevel(TopLevel.GetTopLevel(control));
+            if (control is Popup popup)
+            {
+                TrackPopup(popup);
+            }
+        }
+
+        if (_externalTopLevels.Count == 0)
+        {
+            if (_popupSurfaceRoots.Count == 0)
+            {
+                throw new AvaloniaCaptureStateUnsupportedException(
+                    "The requested popup opened without a capturable popup host.");
+            }
+        }
+
+        static IEnumerable<Control> EnumerateMenuItems(ItemsControl owner)
+        {
+            foreach (Control item in owner.Items.OfType<Control>())
+            {
+                yield return item;
+                if (item is not ItemsControl childItemsControl)
+                {
+                    continue;
+                }
+
+                foreach (Control descendant in EnumerateMenuItems(childItemsControl))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+    }
+
+    // parity-scaffolding: Avalonia exposes popup placement publicly but keeps the created
+    // IPopupHost internal; the capture harness needs that actual host, never a fabricated surface.
+    private void TrackPopupHost(Control popupOwner)
+    {
+        FieldInfo? popupField = null;
+        for (Type? type = popupOwner.GetType(); type is not null && popupField is null; type = type.BaseType)
+        {
+            popupField = type.GetField("_popup", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+        }
+
+        if (popupField?.GetValue(popupOwner) is not Popup popup)
+        {
+            return;
+        }
+
+        TrackPopup(popup);
+    }
+
+    private void TrackPopup(Popup popup)
+    {
+        PropertyInfo? hostProperty = typeof(Popup).GetProperty("Host", BindingFlags.Instance | BindingFlags.NonPublic);
+        object? popupHost = hostProperty?.GetValue(popup);
+        if (popupHost is TopLevel popupTopLevel)
+        {
+            TrackTopLevel(popupTopLevel);
+        }
+        else if (popupHost is Control popupSurfaceRoot
+                 && !_popupSurfaceRoots.Contains(popupSurfaceRoot, ReferenceEqualityComparer.Instance))
+        {
+            _popupSurfaceRoots.Add(popupSurfaceRoot);
+        }
+
+        if (popup.Child is Control child)
+        {
+            TrackTopLevel(TopLevel.GetTopLevel(child));
+        }
+    }
+
+    private void TrackTopLevel(TopLevel? topLevel)
+    {
+        if (topLevel is not null
+            && !ReferenceEquals(topLevel, _topLevel)
+            && !_externalTopLevels.Contains(topLevel, ReferenceEqualityComparer.Instance))
+        {
+            _externalTopLevels.Add(topLevel);
+        }
     }
 
     private void OpenAutoComplete(EditNetSpell editNetSpell)

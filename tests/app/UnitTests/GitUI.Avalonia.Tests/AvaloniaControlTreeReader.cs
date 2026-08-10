@@ -24,10 +24,22 @@ internal sealed class AvaloniaControlTreeReader
     }
 
     public CaptureSurface ReadPrimary(Control root, PixelSize imageSize) =>
+        ReadSurface(
+            root,
+            "primary",
+            new PixelRect(0, 0, imageSize.Width, imageSize.Height));
+
+    public CaptureSurface ReadSurface(Control root, string role, PixelRect screenBounds) =>
         new()
         {
-            Role = "primary",
-            ScreenBoundsPx = new CaptureRectangle { X = 0, Y = 0, Width = imageSize.Width, Height = imageSize.Height },
+            Role = role,
+            ScreenBoundsPx = new CaptureRectangle
+            {
+                X = screenBounds.X,
+                Y = screenBounds.Y,
+                Width = screenBounds.Width,
+                Height = screenBounds.Height
+            },
             Root = ReadControl(root, parentId: string.Empty, ordinal: 0)
         };
 

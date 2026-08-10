@@ -56,6 +56,8 @@ internal static partial class NativeMethods
     internal static bool PrintWindowContent(IntPtr handle, IntPtr deviceContext) =>
         PrintWindow(handle, deviceContext, PwRenderFullContent);
 
+    internal static void FocusWindow(IntPtr handle) => SetFocus(handle);
+
     internal static void SendDpiChanged(IntPtr handle, int dpi, Rectangle suggestedBounds)
     {
         NativeRectangle rectangle = new()
@@ -119,6 +121,9 @@ internal static partial class NativeMethods
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool PrintWindow(IntPtr window, IntPtr deviceContext, uint flags);
+
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr SetFocus(IntPtr window);
 
     [LibraryImport("user32.dll", EntryPoint = "SendMessageW")]
     private static partial IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
