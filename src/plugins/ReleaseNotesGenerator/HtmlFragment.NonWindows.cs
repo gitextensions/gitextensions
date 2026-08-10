@@ -1,3 +1,4 @@
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
@@ -6,12 +7,13 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator;
 
 internal static class HtmlFragment
 {
-    private static readonly DataFormat<string> HtmlFormat = DataFormat.CreateStringPlatformFormat(
+    private static readonly DataFormat<string> HtmlStringFormat = DataFormat.CreateStringPlatformFormat(
         OperatingSystem.IsWindows()
             ? "HTML Format"
             : OperatingSystem.IsMacOS()
                 ? "public.html"
                 : "text/html");
+    private static readonly DataFormat<byte[]> LinuxHtmlFormat = DataFormat.CreateBytesPlatformFormat("text/html");
 
     internal static string To8DigitString(int value) => $"{value:00000000}";
 
@@ -56,7 +58,15 @@ internal static class HtmlFragment
             : htmlFragment;
         DataTransferItem item = new();
         item.SetText(htmlFragment);
-        item.Set(HtmlFormat, richHtml);
+        if (OperatingSystem.IsLinux())
+        {
+            // Cross-platform constraint: X11 serves custom MIME text reliably only as raw UTF-8 bytes.
+            item.Set(LinuxHtmlFormat, Encoding.UTF8.GetBytes(richHtml));
+        }
+        else
+        {
+            item.Set(HtmlStringFormat, richHtml);
+        }
 
         DataTransfer data = new();
         data.Add(item);

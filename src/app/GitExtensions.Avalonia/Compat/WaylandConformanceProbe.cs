@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
@@ -11,19 +12,23 @@ using Avalonia.Threading;
 
 namespace GitExtensions.Compat;
 
-// parity-scaffolding: records native Wayland protocol evidence until the platform gate closes.
+// parity-scaffolding: records native Linux desktop protocol evidence until the platform gate closes.
 internal sealed class WaylandConformanceProbe
 {
     internal const string ReportPathEnvironmentVariable = "GITEXTENSIONS_WAYLAND_CONFORMANCE_REPORT";
-    internal const string WindowTitle = "Git Extensions Wayland conformance";
-    internal const string ClipboardText = "Git Extensions Wayland plain-text clipboard";
-    internal const string ClipboardHtml = "<strong>Git Extensions Wayland rich clipboard</strong>";
-    internal const string DragText = "Git Extensions Wayland drag-and-drop";
+    internal const string X11ReportPathEnvironmentVariable = "GITEXTENSIONS_X11_CONFORMANCE_REPORT";
 
-    private static readonly DataFormat<string> HtmlFormat =
-        DataFormat.CreateStringPlatformFormat("text/html");
+    private static readonly DataFormat<byte[]> HtmlBytesFormat =
+        DataFormat.CreateBytesPlatformFormat("text/html");
 
     private readonly string _reportPath;
+    private readonly string _backend;
+    private readonly string _backendName;
+    private readonly string _display;
+    private readonly string _windowTitle;
+    private readonly string _clipboardText;
+    private readonly string _clipboardHtml;
+    private readonly string _dragText;
     private readonly Window _mainWindow;
     private readonly Window _probeWindow;
     private readonly Border _dragSource;
@@ -39,9 +44,16 @@ internal sealed class WaylandConformanceProbe
     private bool _contextMenuOpened;
     private string? _error;
 
-    private WaylandConformanceProbe(string reportPath, Window mainWindow)
+    private WaylandConformanceProbe(string reportPath, string backend, string display, Window mainWindow)
     {
         _reportPath = reportPath;
+        _backend = backend;
+        _display = display;
+        _backendName = backend == "wayland" ? "Wayland" : "X11";
+        _windowTitle = $"Git Extensions {_backendName} conformance";
+        _clipboardText = $"Git Extensions {_backendName} plain-text clipboard";
+        _clipboardHtml = $"<strong>Git Extensions {_backendName} rich clipboard</strong>";
+        _dragText = $"Git Extensions {_backendName} drag-and-drop";
         _mainWindow = mainWindow;
         (_probeWindow, _dragSource, _dropTarget, _edgeButton) = CreateProbeWindow();
         _reportTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(250), DispatcherPriority.Background, (_, _) => WriteReport());
@@ -52,16 +64,41 @@ internal sealed class WaylandConformanceProbe
             && isLinux
             && !string.IsNullOrWhiteSpace(waylandDisplay);
 
+    internal static string? SelectBackend(
+        bool isLinux,
+        string? waylandReportPath,
+        string? waylandDisplay,
+        string? x11ReportPath,
+        string? x11Display)
+    {
+        if (IsSupportedRequest(waylandReportPath, isLinux, waylandDisplay))
+        {
+            return "wayland";
+        }
+
+        return IsSupportedRequest(x11ReportPath, isLinux, x11Display) ? "x11" : null;
+    }
+
     internal static void StartIfRequested(IClassicDesktopStyleApplicationLifetime desktop)
     {
-        string? reportPath = Environment.GetEnvironmentVariable(ReportPathEnvironmentVariable);
-        if (!IsSupportedRequest(reportPath, OperatingSystem.IsLinux(), Environment.GetEnvironmentVariable("WAYLAND_DISPLAY"))
-            || desktop.MainWindow is not { } mainWindow)
+        string? waylandReportPath = Environment.GetEnvironmentVariable(ReportPathEnvironmentVariable);
+        string? waylandDisplay = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY");
+        string? x11ReportPath = Environment.GetEnvironmentVariable(X11ReportPathEnvironmentVariable);
+        string? x11Display = Environment.GetEnvironmentVariable("DISPLAY");
+        string? backend = SelectBackend(
+            OperatingSystem.IsLinux(),
+            waylandReportPath,
+            waylandDisplay,
+            x11ReportPath,
+            x11Display);
+        if (backend is null || desktop.MainWindow is not { } mainWindow)
         {
             return;
         }
 
-        WaylandConformanceProbe probe = new(Path.GetFullPath(reportPath!), mainWindow);
+        string reportPath = backend == "wayland" ? waylandReportPath! : x11ReportPath!;
+        string display = backend == "wayland" ? waylandDisplay! : x11Display!;
+        WaylandConformanceProbe probe = new(Path.GetFullPath(reportPath), backend, display, mainWindow);
         probe.Start();
     }
 
@@ -82,7 +119,7 @@ internal sealed class WaylandConformanceProbe
     {
         TextBlock introduction = new()
         {
-            Text = "Native Wayland protocol probe",
+            Text = $"Native {_backendName} protocol probe",
             FontSize = 20,
             FontWeight = FontWeight.Bold,
         };
@@ -97,7 +134,7 @@ internal sealed class WaylandConformanceProbe
             Height = 42,
         };
 
-        ToolTip.SetTip(edgeButton, "Wayland edge tooltip");
+        ToolTip.SetTip(edgeButton, $"{_backendName} edge tooltip");
         ToolTip.AddToolTipOpeningHandler(edgeButton, (_, _) =>
         {
             _tooltipOpened = true;
@@ -116,7 +153,7 @@ internal sealed class WaylandConformanceProbe
         {
             ItemsSource = new object[]
             {
-                new MenuItem { Header = "Wayland edge context menu" },
+                new MenuItem { Header = $"{_backendName} edge context menu" },
             },
         };
         contextMenu.Opened += (_, _) =>
@@ -164,7 +201,7 @@ internal sealed class WaylandConformanceProbe
 
         Window window = new()
         {
-            Title = WindowTitle,
+            Title = _windowTitle,
             Width = 680,
             Height = 460,
             MinWidth = 680,
@@ -235,18 +272,18 @@ internal sealed class WaylandConformanceProbe
         _dragStarted = true;
         WriteReport();
         using DataTransfer data = new();
-        data.Add(DataTransferItem.CreateText(DragText));
+        data.Add(DataTransferItem.CreateText(_dragText));
         await DragDrop.DoDragDropAsync(e, data, DragDropEffects.Copy);
     }
 
-    private static void DropTarget_DragOver(object? sender, DragEventArgs e)
-        => e.DragEffects = e.DataTransfer.TryGetText() == DragText
+    private void DropTarget_DragOver(object? sender, DragEventArgs e)
+        => e.DragEffects = e.DataTransfer.TryGetText() == _dragText
             ? DragDropEffects.Copy
             : DragDropEffects.None;
 
     private void DropTarget_Drop(object? sender, DragEventArgs e)
     {
-        _dropReceived = e.DataTransfer.TryGetText() == DragText;
+        _dropReceived = e.DataTransfer.TryGetText() == _dragText;
         WriteReport();
     }
 
@@ -255,12 +292,13 @@ internal sealed class WaylandConformanceProbe
         IClipboard? clipboard = _probeWindow.Clipboard;
         if (clipboard is null)
         {
-            throw new InvalidOperationException("The native Wayland window did not expose a clipboard.");
+            throw new InvalidOperationException($"The native {_backend} window did not expose a clipboard.");
         }
 
         DataTransferItem item = new();
-        item.SetText(ClipboardText);
-        item.Set(HtmlFormat, ClipboardHtml);
+        item.SetText(_clipboardText);
+        item.Set(HtmlBytesFormat, Encoding.UTF8.GetBytes(_clipboardHtml));
+
         _clipboardData = new DataTransfer();
         _clipboardData.Add(item);
         await clipboard.SetDataAsync(_clipboardData);
@@ -281,8 +319,10 @@ internal sealed class WaylandConformanceProbe
             object report = new
             {
                 schemaVersion = 1,
-                backend = "wayland",
-                waylandDisplay = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY"),
+                backend = _backend,
+                display = _display,
+                waylandDisplay = _backend == "wayland" ? _display : null,
+                x11Display = _backend == "x11" ? _display : null,
                 mainWindow = WindowSnapshot(_mainWindow),
                 modalProbe = new
                 {
@@ -298,8 +338,8 @@ internal sealed class WaylandConformanceProbe
                 clipboard = new
                 {
                     published = _clipboardPublished,
-                    plainText = ClipboardText,
-                    html = ClipboardHtml,
+                    plainText = _clipboardText,
+                    html = _clipboardHtml,
                 },
                 interactions = new
                 {

@@ -95,7 +95,7 @@ public partial class App : Application
                 RunCommand(desktop, commands, args);
             }
 
-            // parity-scaffolding: opt-in native Wayland evidence until the platform gate closes.
+            // parity-scaffolding: opt-in native Linux desktop evidence until the platform gate closes.
             WaylandConformanceProbe.StartIfRequested(desktop);
 
             // parity-scaffolding: opt-in XDG portal evidence until the platform gate closes.
