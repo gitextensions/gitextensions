@@ -664,7 +664,7 @@
     "twin": "src/plugins/ReleaseNotesGenerator/HtmlFragment.NonWindows.cs",
     "status": "functional",
     "basedOn": "090464d5f5c350497427ad5b4717651df9c4f4d2",
-    "notes": "Avalonia DataTransfer preserves plain text plus native rich HTML: CF_HTML on Windows, text/html on Linux, and public.html on macOS. The unchanged Windows flavor retains its WinForms DataObject implementation."
+    "notes": "Avalonia DataTransfer preserves plain text plus native rich HTML: CF_HTML on Windows, UTF-8 text/html bytes on Linux (required for reliable X11 selection conversion and accepted by Wayland), and public.html on macOS. The unchanged Windows flavor retains its WinForms DataObject implementation."
   },
   "src/plugins/FindLargeFiles/FindLargeFilesForm.cs": {
     "twin": "src/plugins/FindLargeFiles/FindLargeFilesForm.axaml.cs",
