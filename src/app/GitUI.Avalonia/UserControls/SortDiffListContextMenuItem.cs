@@ -16,6 +16,9 @@ public class SortDiffListContextMenuItem : MenuItem
     private readonly IDiffListSortService _sortService;
     private readonly MenuItem[] _allItems;
 
+    // Avalonia resolves control themes by concrete type; the ported sort item retains the MenuItem theme.
+    protected override Type StyleKeyOverride => typeof(MenuItem);
+
     public SortDiffListContextMenuItem(IDiffListSortService sortService)
     {
         _sortService = sortService ?? throw new ArgumentNullException(nameof(sortService));
