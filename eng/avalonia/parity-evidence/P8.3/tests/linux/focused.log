@@ -1,0 +1,37 @@
+
+  ParityCaptureSchema -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityCaptureSchema/net10.0/ParityCaptureSchema.dll
+  ImagesResxToAvalonia -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ImagesResxToAvalonia/net10.0/ImagesResxToAvalonia.dll
+  Git.hub.Portable -> /home/begota/src/gitextensions-wsl/externals/Git.hub.Portable/bin/Debug/net10.0/Git.hub.Portable.dll
+  SpellChecker -> /home/begota/src/gitextensions-wsl/externals/NetSpell.SpellChecker/bin/Debug/net10.0/SpellChecker.dll
+  GitExtensions.Shims.WinForms -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Shims.WinForms/net10.0/GitExtensions.Shims.WinForms.dll
+  GitExtensions.Extensibility -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Extensibility/net10.0/GitExtensions.Extensibility.dll
+  GitExtUtils -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtUtils/net10.0/GitExtUtils.dll
+  GitUIPluginInterfaces -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitUIPluginInterfaces/net10.0/GitUIPluginInterfaces.dll
+  GitCommands -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitCommands/net10.0/GitCommands.dll
+  ResourceManager -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ResourceManager/net10.0/ResourceManager.dll
+  GitUI.Avalonia -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitUI.Avalonia/net10.0/GitUI.Avalonia.dll
+  GitExtensions.Plugins.ReleaseNotesGenerator -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/ReleaseNotesGenerator/GitExtensions.Plugins.ReleaseNotesGenerator.dll
+  GitExtensions.Plugins.TeamCityIntegration -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/TeamCityIntegration/GitExtensions.Plugins.TeamCityIntegration.dll
+  GitExtensions.Plugins.AutoCompileSubmodules -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/AutoCompileSubmodules/GitExtensions.Plugins.AutoCompileSubmodules.dll
+  GitExtensions.Plugins.FindLargeFiles -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/FindLargeFiles/GitExtensions.Plugins.FindLargeFiles.dll
+  GitExtensions.Plugins.JenkinsIntegration -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/JenkinsIntegration/GitExtensions.Plugins.JenkinsIntegration.dll
+  GitExtensions.Plugins.GitImpact -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/GitImpact/GitExtensions.Plugins.GitImpact.dll
+  GitExtensions.Plugins.CreateLocalBranches -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/CreateLocalBranches/GitExtensions.Plugins.CreateLocalBranches.dll
+  GitExtensions.Plugins.BackgroundFetch -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/BackgroundFetch/GitExtensions.Plugins.BackgroundFetch.dll
+  GitExtensions.Plugins.DeleteUnusedBranches -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/DeleteUnusedBranches/GitExtensions.Plugins.DeleteUnusedBranches.dll
+  GitExtensions.Plugins.Gource -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/Gource/GitExtensions.Plugins.Gource.dll
+  GitExtensions.Plugins.GitlabIntegration -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/GitlabIntegration/GitExtensions.Plugins.GitlabIntegration.dll
+  GitExtensions.Plugins.GitHub3 -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/GitHub3/GitExtensions.Plugins.GitHub3.dll
+  GitExtensions.Plugins.ProxySwitcher -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/ProxySwitcher/GitExtensions.Plugins.ProxySwitcher.dll
+  GitExtensions.Plugins.AppVeyorIntegration -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.dll
+  GitExtensions.Plugins.GitStatistics -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/GitStatistics/GitExtensions.Plugins.GitStatistics.dll
+  GitExtensions.Plugins.GitHubActionsIntegration -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.dll
+  GitExtensions.Plugins.AzureDevOpsIntegration -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/Plugins/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.dll
+  GitExtensions.Avalonia -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/GitExtensions.Avalonia/net10.0/GitExtensions.Avalonia.dll
+  CommonTestUtils -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/CommonTestUtils/net10.0/CommonTestUtils.dll
+  GitUI.Avalonia.Tests -> /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/tests/UnitTests/GitUI.Avalonia.Tests/net10.0/GitUI.Avalonia.Tests.dll
+Test run for /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/tests/UnitTests/GitUI.Avalonia.Tests/net10.0/GitUI.Avalonia.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /home/begota/src/gitextensions-wsl/eng/avalonia/parity-evidence/P8.3/tests/linux/P8.3-focused.trx
+
+Passed!  - Failed:     0, Passed:    31, Skipped:     0, Total:    31, Duration: 1 s - GitUI.Avalonia.Tests.dll (net10.0)

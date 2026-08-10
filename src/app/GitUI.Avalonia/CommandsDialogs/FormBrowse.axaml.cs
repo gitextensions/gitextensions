@@ -1716,6 +1716,11 @@ public sealed partial class FormBrowse : GitModuleForm
         {
             UICommands.GetRequiredService<ITerminalLauncher>().Launch(Module.WorkingDir);
         }
+        catch (PlatformNotSupportedException exception) when (FlatpakEnvironment.IsFlatpak())
+        {
+            // Cross-platform constraint: a confined app cannot execute a host terminal.
+            MessageBoxes.FailedToRunShell(this, "Git bash", exception);
+        }
         catch (Exception exception)
         {
             MessageBoxes.FailedToRunShell(this, "Git bash", exception);

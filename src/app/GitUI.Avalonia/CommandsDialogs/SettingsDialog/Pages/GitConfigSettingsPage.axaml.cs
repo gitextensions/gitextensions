@@ -357,7 +357,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
             return null;
         }
 
-        IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(options);
+        IReadOnlyList<IStorageFile> files = await PortalPickerGuard.OpenFilePickerAsync(topLevel.StorageProvider, options);
         return files.FirstOrDefault()?.TryGetLocalPath();
     }
 

@@ -101,7 +101,7 @@ public partial class FormViewPatch : GitModuleForm
             return;
         }
 
-        IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(
+        IReadOnlyList<IStorageFile> files = await PortalPickerGuard.OpenFilePickerAsync(topLevel.StorageProvider,
             new FilePickerOpenOptions
             {
                 AllowMultiple = false,

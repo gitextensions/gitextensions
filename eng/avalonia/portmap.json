@@ -682,13 +682,13 @@
     "twin": "src/plugins/Gource/GourcePlugin.NonWindows.cs",
     "status": "functional",
     "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
-    "notes": "Portable-only same-named plugin retains repository validation, missing-path reset, settings, icon, dialog, result persistence, and the original Windows gource.exe ZIP download. Linux and macOS instead select an installed native executable in the same dialog because the upstream archive is Windows-only."
+    "notes": "Portable-only same-named plugin retains repository validation, missing-path reset, settings, icon, dialog, result persistence, and the original Windows gource.exe ZIP download. Linux and macOS instead select an installed native executable in the same dialog because the upstream archive is Windows-only. A Flatpak cannot execute an arbitrary host Gource binary merely because --filesystem=host makes its path visible, so the confined substitute is an explicit translated unavailable error."
   },
   "src/plugins/Gource/GourceStart.cs": {
     "twin": "src/plugins/Gource/GourceStart.axaml.cs",
     "status": "functional",
     "basedOn": "96b00fa263048f9bd70e62f363926d1433f946c3",
-    "notes": "Portable-only same-named dialog retains executable, repository, arguments, avatar generation, detached launch, and documentation actions. Native storage providers replace WinForms pickers; encoded avatar bytes replace System.Drawing image saves; executable and arguments launch separately without a shell."
+    "notes": "Portable-only same-named dialog retains executable, repository, arguments, avatar generation, detached launch, and documentation actions. PortalPickerGuard replaces WinForms pickers; encoded avatar bytes replace System.Drawing image saves; executable and arguments launch separately without a shell. In Flatpak the host-executable launch boundary reports Gource as explicitly unavailable rather than attempting or silently failing a host launch."
   },
   "src/plugins/Gource/GourceStart.Designer.cs": {
     "twin": "src/plugins/Gource/GourceStart.axaml",

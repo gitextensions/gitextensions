@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -688,7 +688,7 @@ public sealed partial class FormVerify : GitModuleForm
         }
 
         fileTypes.Add(FilePickerFileTypes.All);
-        IStorageFile? file = DispatcherPump.Wait(() => StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        IStorageFile? file = DispatcherPump.Wait(() => PortalPickerGuard.SaveFilePickerAsync(StorageProvider, new FilePickerSaveOptions
         {
             SuggestedFileName = fileName,
             DefaultExtension = extension,
