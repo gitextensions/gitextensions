@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitCommands.Git;
@@ -32,6 +33,7 @@ partial class FileStatusList
     private Action? _refreshParent;
     private Action? _stage;
     private Action? _unstage;
+    private readonly CancellationTokenSequence _interactiveAddResetChunkSequence = new();
     private readonly IFileStatusListContextMenuController _itemContextMenuController = new FileStatusListContextMenuController();
     private readonly IFindFilePredicateProvider _findFilePredicateProvider = new FindFilePredicateProvider();
     private readonly RememberFileContextMenuController _rememberFileContextMenuController = RememberFileContextMenuController.Default;
@@ -102,13 +104,15 @@ partial class FileStatusList
         ItemContextMenu.Opening += ItemContextMenu_Opening;
         tsmiStageFile.Click += StageFile_Click;
         tsmiUnstageFile.Click += UnstageFile_Click;
-        tsmiCherryPickChanges.Click += (_, _) => _cherryPickChanges?.Invoke();
+        tsmiResetChunkOfFile.Click += ResetChunkOfFile_Click;
+        tsmiInteractiveAdd.Click += InteractiveAdd_Click;
+        tsmiCherryPickChanges.Click += CherryPickChanges_Click;
         btnRefresh.Click += (_, _) => RequestRefresh();
         tsmiOpenWorkingDirectoryFile.Click += OpenWorkingDirectoryFile_Click;
         tsmiShowInFolder.Click += ShowInFolder_Click;
-        tsmiShowInFileTree.Click += (_, _) => _openInFileTreeTab_AsBlame?.Invoke(false);
-        tsmiFilterFileInGrid.Click += (_, _) => _filterFileInGrid?.Invoke();
-        tsmiFileHistory.Click += (_, _) => StartFileHistoryDialog(showBlame: false);
+        tsmiShowInFileTree.Click += ShowInFileTree_Click;
+        tsmiFilterFileInGrid.Click += FilterFileInGrid_Click;
+        tsmiFileHistory.Click += FileHistory_Click;
         tsmiBlame.Click += Blame_Click;
         tsmiFindFile.Click += FindFile_Click;
         tsmiUpdateSubmodule.Click += UpdateSubmodule_Click;
@@ -130,11 +134,12 @@ partial class FileStatusList
         tsmiOpenRevisionFile.Click += (_, _) => SaveSelectedItemToTempFile(OsShellUtil.Open);
         tsmiOpenRevisionFileWith.Click += (_, _) => SaveSelectedItemToTempFile(OsShellUtil.OpenAs);
         tsmiEditWorkingDirectoryFile.Click += EditWorkingDirectoryFile_Click;
+        tsmiOpenInVisualStudio.Click += OpenInVisualStudio_Click;
         tsmiSaveAs.Click += (_, _) => this.InvokeAndForget(SaveAsAsync);
         tsmiMove.Click += Move_Click;
         tsmiDeleteFile.Click += DeleteFile_Click;
-        tsmiAddFileToGitIgnore.Click += (_, _) => AddFileToIgnoreFile(localExclude: false);
-        tsmiAddFileToGitInfoExclude.Click += (_, _) => AddFileToIgnoreFile(localExclude: true);
+        tsmiAddFileToGitIgnore.Click += AddFileToGitIgnore_Click;
+        tsmiAddFileToGitInfoExclude.Click += AddFileToGitInfoExclude_Click;
         tsmiSkipWorktree.Click += SkipWorktree_Click;
         tsmiAssumeUnchanged.Click += AssumeUnchanged_Click;
         tsmiStopTracking.Click += StopTracking_Click;
@@ -174,42 +179,42 @@ partial class FileStatusList
     private WinFormsShims.IWin32Window? GetOwner()
         => TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window;
 
-    private void ItemContextMenu_Opening(object? sender, EventArgs e)
+    private void ItemContextMenu_Opening(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        UpdateStatusOfMenuItems();
-        IReadOnlyList<GitItemStatus> selectedItems = SelectedGitItems;
-        bool hasItems = selectedItems.Count > 0;
-        bool hasSingleItem = selectedItems.Count == 1;
-        bool hasPath = hasItems || SelectedFolder is not null;
-        if (!hasPath && e is System.ComponentModel.CancelEventArgs cancelEventArgs)
+        if (sender is null || (SelectedFileStatusItem?.Item.IsStatusOnly ?? false))
         {
-            cancelEventArgs.Cancel = true;
+            e.Cancel = true;
             return;
         }
 
-        string? absolutePath = GetSelectedAbsolutePath();
-        bool workingFileExists = absolutePath is not null && File.Exists(absolutePath);
+        System.Collections.IList items = ItemContextMenu.Items;
+        InsertTreeContextMenuItems(items, index: 0);
+        UpdateStatusOfTreeContextMenuItems();
 
-        tsmiStageFile.IsVisible = _stage is not null;
-        tsmiStageFile.IsEnabled = _stage is not null
-                                  && selectedItems.Any(item => !item.IsAssumeUnchanged && !item.IsSkipWorktree);
-        tsmiUnstageFile.IsVisible = _unstage is not null;
-        tsmiUnstageFile.IsEnabled = _unstage is not null && hasItems;
-        tsmiCherryPickChanges.IsVisible = _cherryPickChanges is not null;
-        tsmiCherryPickChanges.IsEnabled = hasSingleItem && (_getSupportLinePatching?.Invoke() ?? false);
-        sepGit.IsVisible = tsmiStageFile.IsVisible || tsmiUnstageFile.IsVisible || tsmiCherryPickChanges.IsVisible;
+        UpdateStatusOfMenuItems();
 
-        tsmiOpenWorkingDirectoryFile.IsVisible = workingFileExists;
-        tsmiCopyPaths.IsEnabled = hasPath;
-        tsmiShowInFolder.IsEnabled = absolutePath is not null
-                                     && FormBrowseUtil.FileOrParentDirectoryExists(absolutePath);
-        sepBrowse.IsVisible = hasPath;
-        tsmiShowInFileTree.IsVisible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null;
-        tsmiShowInFileTree.IsEnabled = hasSingleItem;
-        tsmiFilterFileInGrid.IsVisible = _filterFileInGrid is not null;
-        tsmiFilterFileInGrid.IsEnabled = hasPath;
-        tsmiFileHistory.IsEnabled = hasSingleItem && selectedItems[0].IsTracked;
-        tsmiBlame.IsEnabled = hasSingleItem && selectedItems[0].IsTracked;
+        // TODO The handling of _NO_TRANSLATE_openSubmoduleMenuItem need to be revised
+        // This code handles the 'bold' in the menu for submodules. Other default actions are not set to bold.
+        // The actual implementation of the default handling with doubleclick is in each form,
+        // separate from this menu item
+        if (!items.Contains(_NO_TRANSLATE_openSubmoduleMenuItem))
+        {
+            items.Insert(0, _NO_TRANSLATE_openSubmoduleMenuItem);
+        }
+
+        bool isSubmoduleSelected = SelectedFileStatusItem?.Item.IsSubmodule ?? false;
+        _NO_TRANSLATE_openSubmoduleMenuItem.IsVisible = isSubmoduleSelected;
+        _NO_TRANSLATE_openSubmoduleMenuItem.FontWeight = isSubmoduleSelected && !DisableSubmoduleMenuItemBold
+            ? FontWeight.Bold
+            : FontWeight.Normal;
+
+        _sortBySeparator.IsVisible = !_isFileTreeMode;
+        _sortByContextMenu.IsVisible = !_isFileTreeMode;
+        if (!items.Contains(_sortByContextMenu))
+        {
+            items.Add(_sortBySeparator);
+            items.Add(_sortByContextMenu);
+        }
 
         if (TryGetUICommandsDirect(out IGitUICommands? commands))
         {
@@ -224,8 +229,28 @@ partial class FileStatusList
             ItemContextMenu.RemoveUserScripts(tsmiRunScript);
             sepScripts.IsVisible = false;
         }
+    }
 
-        UpdateStatusOfTreeContextMenuItems();
+    private void AddFileToGitIgnore_Click(object? sender, EventArgs e)
+    {
+        AddFileToIgnoreFile(localExclude: false);
+    }
+
+    private void AddFileToGitInfoExclude_Click(object? sender, EventArgs e)
+    {
+        AddFileToIgnoreFile(localExclude: true);
+    }
+
+    private static bool CanResetToFirst(ObjectId parentId, IEnumerable<FileStatusItem> selectedItems)
+    {
+        return CanResetToSecond(parentId) || (parentId == ObjectId.IndexId && selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId));
+    }
+
+    private static bool CanResetToSecond(ObjectId resetId) => !resetId.IsZeroOrArtificial;
+
+    private void CherryPickChanges_Click(object? sender, EventArgs e)
+    {
+        _cherryPickChanges?.Invoke();
     }
 
     private void OpenWorkingDirectoryFile_Click(object? sender, EventArgs e)
@@ -233,58 +258,6 @@ partial class FileStatusList
         if (GetSelectedAbsolutePath() is string path && File.Exists(path))
         {
             OsShellUtil.Open(path);
-        }
-    }
-
-    private void SetTreeExpansion(bool expanded, bool rootOnly)
-    {
-        if (_showDiffGroups)
-        {
-            foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>())
-            {
-                SetDiffExpansion(node);
-            }
-
-            return;
-        }
-
-        foreach (FileTreeNode node in tvFiles.Items.Cast<FileTreeNode>())
-        {
-            SetExpansion(node);
-        }
-
-        return;
-
-        void SetExpansion(FileTreeNode node)
-        {
-            if (node.IsFolder)
-            {
-                node.IsExpanded = expanded;
-            }
-
-            if (!rootOnly)
-            {
-                foreach (FileTreeNode child in node.Children)
-                {
-                    SetExpansion(child);
-                }
-            }
-        }
-
-        void SetDiffExpansion(DiffTreeNode node)
-        {
-            if (node.Children.Count > 0)
-            {
-                node.IsExpanded = expanded;
-            }
-
-            if (!rootOnly)
-            {
-                foreach (DiffTreeNode child in node.Children)
-                {
-                    SetDiffExpansion(child);
-                }
-            }
         }
     }
 
@@ -369,6 +342,108 @@ partial class FileStatusList
         RequestRefresh();
     }
 
+    private static ContextMenuSelectionInfo GetSelectionInfo(FileStatusItem[] selectedItems, RelativePath? selectedFolder, bool isBareRepository, bool supportLinePatching, IFullPathResolver fullPathResolver)
+    {
+        // Some items are not supported if more than one revision is selected
+        List<GitRevision> revisions = [.. selectedItems.SecondRevs()];
+        GitRevision? selectedRev = revisions.Count == 1 ? revisions[0] : null;
+
+        // First (A) is parent if one revision selected or if parent, then selected
+        List<ObjectId> parentIds = [.. selectedItems.FirstIds()];
+
+        // Combined diff, range diff etc are for display only, no manipulations
+        bool isStatusOnly = selectedItems.Any(item => item.Item.IsRangeDiff || item.Item.IsStatusOnly);
+        bool isDisplayOnlyDiff = parentIds.Contains(ObjectId.CombinedDiffId) || isStatusOnly;
+        int selectedGitItemCount = selectedItems.Length;
+
+        bool isAnyTracked = selectedItems.Any(item => item.Item.IsTracked);
+        bool isAnyIndex = selectedItems.Any(item => item.Item.Staged == StagedStatus.Index);
+        bool isAnyWorkTree = selectedItems.Any(item => item.Item.Staged == StagedStatus.WorkTree);
+        bool supportPatches = selectedGitItemCount == 1 && supportLinePatching;
+        bool isDeleted = selectedItems.Any(item => item.Item.IsDeleted);
+        bool isAnySubmodule = selectedItems.Any(item => item.Item.IsSubmodule);
+        (bool allFilesExist, bool allDirectoriesExist, bool allFilesOrUntrackedDirectoriesExist) = FileOrUntrackedDirExists(selectedItems, fullPathResolver);
+
+        ContextMenuSelectionInfo selectionInfo = new(
+            SelectedRevision: selectedRev,
+            SelectedFolder: selectedFolder,
+            IsDisplayOnlyDiff: isDisplayOnlyDiff,
+            IsStatusOnly: isStatusOnly,
+            SelectedGitItemCount: selectedGitItemCount,
+            IsAnyItemIndex: isAnyIndex,
+            IsAnyItemWorkTree: isAnyWorkTree,
+            IsBareRepository: isBareRepository,
+            AllFilesExist: allFilesExist,
+            AllDirectoriesExist: allDirectoriesExist,
+            AllFilesOrUntrackedDirectoriesExist: allFilesOrUntrackedDirectoriesExist,
+            IsAnyTracked: isAnyTracked,
+            SupportPatches: supportPatches,
+            IsDeleted: isDeleted,
+            IsAnySubmodule: isAnySubmodule);
+        return selectionInfo;
+
+        static (bool allFilesExist, bool allDirectoriesExist, bool allFilesOrUntrackedDirectoriesExist) FileOrUntrackedDirExists(FileStatusItem[] items, IFullPathResolver fullPathResolver)
+        {
+            bool allFilesExist = items.Length != 0;
+            bool allDirectoriesExist = allFilesExist;
+            bool allFilesOrUntrackedDirectoriesExist = allFilesExist;
+            foreach (FileStatusItem item in items)
+            {
+                string? path = fullPathResolver.Resolve(item.Item.Name);
+                bool fileExists = File.Exists(path);
+                bool directoryExists = Directory.Exists(path);
+                allFilesExist &= fileExists;
+                allDirectoriesExist &= directoryExists;
+                bool fileOrUntrackedDirectoryExists = fileExists || (!item.Item.IsTracked && allDirectoriesExist);
+                allFilesOrUntrackedDirectoriesExist &= fileOrUntrackedDirectoryExists;
+
+                if (!allFilesExist && !allDirectoriesExist && !allFilesOrUntrackedDirectoriesExist)
+                {
+                    break;
+                }
+            }
+
+            return (allFilesExist, allDirectoriesExist, allFilesOrUntrackedDirectoriesExist);
+        }
+    }
+
+    private void FileHistory_Click(object? sender, EventArgs e)
+    {
+        StartFileHistoryDialog(showBlame: false);
+    }
+
+    private void FilterFileInGrid_Click(object? sender, EventArgs e)
+    {
+        _filterFileInGrid?.Invoke();
+    }
+
+    public void InitResetFileToToolStripMenuItem()
+    {
+        // Multiple parent/child can be selected, only the the first is shown.
+        // The only artificial commit that can be reset to is Index<-WorkTree
+        ObjectId selectedId = SelectedItems.SecondIds().FirstOrDefault();
+        ObjectId parentId = SelectedItems.FirstIds().FirstOrDefault();
+
+        bool canResetToSecond = CanResetToSecond(selectedId);
+        tsmiResetFileToSelected.IsEnabled = canResetToSecond;
+        tsmiResetFileToSelected.IsVisible = canResetToSecond;
+        if (canResetToSecond)
+        {
+            tsmiResetFileToSelected.Header = _selectedRevision.Text + GetDescriptionForRevision(selectedId);
+        }
+
+        bool canResetToFirst = CanResetToFirst(parentId, SelectedItems);
+        tsmiResetFileToParent.IsEnabled = canResetToFirst;
+        tsmiResetFileToParent.IsVisible = canResetToFirst;
+        if (canResetToFirst)
+        {
+            tsmiResetFileToParent.Header = _firstRevision.Text + GetDescriptionForRevision(parentId);
+        }
+
+        bool canReset = canResetToSecond || canResetToFirst;
+        tsmiResetFileTo.IsEnabled = canReset;
+    }
+
     private void UnstageFile_Click(object? sender, EventArgs e)
     {
         if (_unstage is not null)
@@ -386,86 +461,108 @@ partial class FileStatusList
 
     public void UpdateStatusOfMenuItems()
     {
-        FileStatusItem[] selected = [.. SelectedItems];
-        bool hasItems = selected.Length > 0;
-        bool singleItem = selected.Length == 1;
-        bool singleFolder = SelectedFolder is not null;
-        bool anyTracked = selected.Any(item => item.Item.IsTracked);
-        bool anyWorkTree = selected.Any(item => item.Item.Staged == StagedStatus.WorkTree);
-        bool anyIndex = selected.Any(item => item.Item.Staged == StagedStatus.Index);
-        bool anySubmodule = selected.Any(item => item.Item.IsSubmodule);
-        bool allFilesExist = hasItems && selected.All(item => File.Exists(_fullPathResolver.Resolve(item.Item.Name)));
-        bool allDirectoriesExist = hasItems && selected.All(item => Directory.Exists(_fullPathResolver.Resolve(item.Item.Name)));
-        bool anyArtificial = selected.Any(item => item.SecondRevision.IsArtificial);
-        bool displayOnly = selected.Any(item => item.Item.IsRangeDiff || item.Item.IsStatusOnly)
-                           || selected.FirstIds().Contains(ObjectId.CombinedDiffId);
+        FileStatusItem[] selectedItems = [.. SelectedItems];
+        bool isBareRepository = TryGetUICommandsDirect(out IGitUICommands? commands) && commands.Module.IsBareRepository();
+        ContextMenuSelectionInfo selectionInfo = GetSelectionInfo(selectedItems, SelectedFolder, isBareRepository, supportLinePatching: _getSupportLinePatching?.Invoke() ?? false, _fullPathResolver);
 
-        bool showSubmodule = anySubmodule && allDirectoriesExist && selected.SecondIds().All(id => id == ObjectId.WorkTreeId);
-        tsmiUpdateSubmodule.IsVisible = showSubmodule;
-        tsmiResetSubmoduleChanges.IsVisible = showSubmodule;
-        tsmiStashSubmoduleChanges.IsVisible = showSubmodule;
-        tsmiCommitSubmoduleChanges.IsVisible = showSubmodule;
-        sepSubmodule.IsVisible = showSubmodule;
+        // Many options have no meaning for artificial commits or submodules
+        // Hide the obviously no action options when single selected, handle them in actions if multi select
 
-        tsmiStageFile.IsVisible = anyWorkTree;
-        tsmiStageFile.IsEnabled = anyWorkTree;
-        tsmiUnstageFile.IsVisible = anyIndex;
-        tsmiUnstageFile.IsEnabled = anyIndex;
-        tsmiResetFileTo.IsVisible = hasItems && anyTracked && !displayOnly && !Module.IsBareRepository();
-        tsmiResetFileTo.IsEnabled = tsmiResetFileTo.IsVisible;
-        tsmiResetFileToSelected.IsVisible = selected.SecondIds().Any(id => !id.IsZeroOrArtificial);
-        tsmiResetFileToSelected.IsEnabled = tsmiResetFileToSelected.IsVisible;
-        tsmiResetFileToSelected.Header = _selectedRevision.Text + DescribeRevisions([.. selected.SecondRevs()]);
-        tsmiResetFileToParent.IsVisible = selected.FirstIds().Any(id => !id.IsZeroOrArtificial);
-        tsmiResetFileToParent.IsEnabled = tsmiResetFileToParent.IsVisible;
-        tsmiResetFileToParent.Header = _firstRevision.Text + DescribeRevisions([.. selected.FirstRevs()]);
-        tsmiCherryPickChanges.IsVisible = _cherryPickChanges is not null;
-        tsmiCherryPickChanges.IsEnabled = singleItem && (_getSupportLinePatching?.Invoke() ?? false);
+        // open submodule is added in FileStatusList
+        tsmiUpdateSubmodule.IsVisible
+            = tsmiResetSubmoduleChanges.IsVisible
+            = tsmiStashSubmoduleChanges.IsVisible
+            = tsmiCommitSubmoduleChanges.IsVisible
+            = sepSubmodule.IsVisible
+            = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
-        tsmiOpenWithDifftool.IsVisible = hasItems && !displayOnly;
-        tsmiOpenWithDifftool.IsEnabled = tsmiOpenWithDifftool.IsVisible;
-        tsmiOpenWorkingDirectoryFile.IsVisible = singleItem && allFilesExist;
-        tsmiOpenWorkingDirectoryFileWith.IsVisible = singleItem && allFilesExist;
-        tsmiEditWorkingDirectoryFile.IsVisible = singleItem && allFilesExist;
-        tsmiOpenRevisionFile.IsVisible = singleItem && !anySubmodule && !anyArtificial && !displayOnly;
-        tsmiOpenRevisionFileWith.IsVisible = tsmiOpenRevisionFile.IsVisible;
-        tsmiSaveAs.IsVisible = hasItems && !anySubmodule && !anyArtificial && !displayOnly;
-        tsmiMove.IsVisible = (singleItem && anyTracked && !anySubmodule) || singleFolder;
-        tsmiDeleteFile.IsVisible = anyArtificial && (allFilesExist || allDirectoriesExist);
-        tsmiDeleteFile.IsEnabled = tsmiDeleteFile.IsVisible;
-        tsmiOpenInVisualStudio.IsVisible = false;
-        sepFile.IsVisible = tsmiOpenWithDifftool.IsVisible
-                            || tsmiOpenWorkingDirectoryFile.IsVisible
-                            || tsmiOpenRevisionFile.IsVisible
-                            || tsmiSaveAs.IsVisible
-                            || tsmiMove.IsVisible
-                            || tsmiDeleteFile.IsVisible;
+        tsmiStageFile.IsEnabled
+            = tsmiStageFile.IsVisible
+            = _revisionDiffController.ShouldShowMenuStage(selectionInfo);
+        tsmiUnstageFile.IsEnabled
+            = tsmiUnstageFile.IsVisible
+            = _revisionDiffController.ShouldShowMenuUnstage(selectionInfo);
+        InitResetFileToToolStripMenuItem();
+        tsmiResetFileTo.IsVisible = _revisionDiffController.ShouldShowResetFileMenus(selectionInfo);
+        if (!tsmiResetFileTo.IsVisible)
+        {
+            tsmiResetFileTo.IsEnabled = false;
+        }
 
-        tsmiCopyPaths.IsEnabled = (hasItems || singleFolder) && !selected.Any(item => item.Item.IsStatusOnly);
-        tsmiShowInFolder.IsVisible = hasItems || singleFolder;
-        tsmiShowInFolder.IsEnabled = GetSelectedAbsolutePath() is string absolute
-                                     && FormBrowseUtil.FileOrParentDirectoryExists(absolute);
-        tsmiShowInFileTree.IsVisible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null && (singleItem || singleFolder);
+        tsmiCherryPickChanges.IsVisible = _revisionDiffController.ShouldShowMenuCherryPick(selectionInfo);
+        tsmiCherryPickChanges.IsEnabled = tsmiCherryPickChanges.IsVisible;
+
+        sepFile.IsVisible = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo)
+            || _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo)
+            || _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo)
+            || _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
+
+        tsmiOpenWithDifftool.IsEnabled = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo);
+        tsmiOpenWithDifftool.IsVisible = tsmiOpenWithDifftool.IsEnabled;
+        tsmiOpenWorkingDirectoryFileWith.IsVisible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
+        tsmiOpenRevisionFile.IsVisible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
+        tsmiOpenRevisionFile.IsEnabled = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+        tsmiOpenRevisionFileWith.IsVisible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
+        tsmiOpenRevisionFileWith.IsEnabled = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+        tsmiSaveAs.IsVisible = _revisionDiffController.ShouldShowMenuSaveAs(selectionInfo);
+        tsmiShowInFolder.IsVisible = _revisionDiffController.ShouldShowMenuShowInFolder(selectionInfo);
+        tsmiEditWorkingDirectoryFile.IsVisible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
+        tsmiOpenInVisualStudio.IsVisible = OperatingSystem.IsWindows()
+            && commands is not null
+            && VisualStudioIntegration.IsVisualStudioInstalled
+            && tsmiEditWorkingDirectoryFile.IsVisible;
+        tsmiMove.IsVisible = _revisionDiffController.ShouldShowMenuMove(selectionInfo);
+        tsmiDeleteFile.Header = ResourceManager.TranslatedStrings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
+        tsmiDeleteFile.IsEnabled = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
+        tsmiDeleteFile.IsVisible = tsmiDeleteFile.IsEnabled;
+
+        tsmiCopyPaths.IsEnabled = _revisionDiffController.ShouldShowMenuCopyFileName(selectionInfo);
+        tsmiShowInFolder.IsEnabled = selectedItems.Any(item => _fullPathResolver.Resolve(item.Item.Name) is string filePath && FormBrowseUtil.FileOrParentDirectoryExists(filePath));
+
+        tsmiShowInFileTree.IsVisible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         tsmiFilterFileInGrid.IsVisible = _filterFileInGrid is not null;
-        tsmiFilterFileInGrid.IsEnabled = singleItem || singleFolder;
-        tsmiFileHistory.IsEnabled = (singleItem || singleFolder) && anyTracked;
-        tsmiBlame.IsEnabled = singleItem && anyTracked && !anySubmodule;
+        tsmiFilterFileInGrid.IsEnabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
+        tsmiFileHistory.IsEnabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
+        tsmiBlame.IsEnabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null
+            ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
+            : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+        if (!tsmiBlame.IsEnabled)
+        {
+            tsmiBlame.IsChecked = false;
+        }
+
         tsmiFindFile.IsVisible = true;
         tsmiOpenFindInCommitFilesGitGrepDialog.IsVisible = CanUseFindInCommitFilesGitGrep;
         tsmiShowFindInCommitFilesGitGrep.IsVisible = CanUseFindInCommitFilesGitGrep;
         tsmiShowFindInCommitFilesGitGrep.IsChecked = FindInCommitFilesGitGrepVisible;
 
-        bool canIgnoreFiles = anyWorkTree && !anySubmodule;
+        bool isSubmodule = selectionInfo.SelectedGitItemCount == 1 && selectionInfo.IsAnySubmodule;
+        bool isSingleFile = selectionInfo.SelectedGitItemCount == 1 && !isSubmodule;
+
+        bool canResetAddInteractively = selectionInfo.IsAnyItemWorkTree && isSingleFile;
+        tsmiResetChunkOfFile.IsVisible = canResetAddInteractively;
+        tsmiInteractiveAdd.IsVisible = canResetAddInteractively;
+
+        bool canOpenFile = selectionInfo.SelectedGitItemCount == 1 && selectionInfo.AllFilesExist;
+        tsmiOpenWorkingDirectoryFile.IsVisible = canOpenFile;
+        tsmiOpenWorkingDirectoryFileWith.IsVisible = canOpenFile;
+
+        bool canIgnoreFiles = selectionInfo.IsAnyItemWorkTree && !isSubmodule;
+        bool canStopTracking = isSingleFile && selectionInfo.IsAnyTracked;
+
+        sepIgnore.IsVisible = canIgnoreFiles || canStopTracking;
+
         tsmiAddFileToGitIgnore.IsVisible = canIgnoreFiles;
         tsmiAddFileToGitInfoExclude.IsVisible = canIgnoreFiles;
-        tsmiSkipWorktree.IsVisible = canIgnoreFiles && anyTracked;
-        tsmiAssumeUnchanged.IsVisible = tsmiSkipWorktree.IsVisible;
-        tsmiStopTracking.IsVisible = singleItem && anyTracked;
-        tsmiSkipWorktree.IsChecked = selected.Any(item => item.Item.IsSkipWorktree);
-        tsmiAssumeUnchanged.IsChecked = selected.Any(item => item.Item.IsAssumeUnchanged);
+        tsmiSkipWorktree.IsVisible = canIgnoreFiles && selectionInfo.IsAnyTracked;
+        tsmiAssumeUnchanged.IsVisible = canIgnoreFiles && selectionInfo.IsAnyTracked;
+        tsmiSkipWorktree.IsChecked = selectedItems.Any(item => item.Item.IsSkipWorktree);
+        tsmiAssumeUnchanged.IsChecked = selectedItems.Any(item => item.Item.IsAssumeUnchanged);
+
+        tsmiStopTracking.IsVisible = canStopTracking;
+
         ToolTip.SetTip(tsmiSkipWorktree, _skipWorktreeToolTip.Text);
         ToolTip.SetTip(tsmiAssumeUnchanged, _assumeUnchangedToolTip.Text);
-        sepIgnore.IsVisible = canIgnoreFiles || tsmiStopTracking.IsVisible;
     }
 
     public void RepositoryChanged()
@@ -526,60 +623,120 @@ partial class FileStatusList
 
     protected override bool ExecuteCommand(int cmd)
     {
+        WinFormsShims.Keys shortcutKeys = Hotkeys.FirstOrDefault(hotkey => hotkey.CommandCode == cmd)?.KeyData ?? WinFormsShims.Keys.None;
+        if ((FilterFilesByNameRegexFocused || FindInCommitFilesGitGrepFocused) && IsTextEditKey(shortcutKeys))
+        {
+            return false;
+        }
+
+        UpdateStatusOfMenuItems();
+
         switch ((RevisionDiffControl.Command)cmd)
         {
-            case RevisionDiffControl.Command.DeleteSelectedFiles: DeleteFile_Click(this, EventArgs.Empty); break;
-            case RevisionDiffControl.Command.ShowHistory: StartFileHistoryDialog(showBlame: false); break;
-            case RevisionDiffControl.Command.Blame: Blame_Click(this, EventArgs.Empty); break;
+            case RevisionDiffControl.Command.DeleteSelectedFiles: tsmiDeleteFile.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.ShowHistory: tsmiFileHistory.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.Blame: tsmiBlame.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
             case RevisionDiffControl.Command.OpenWithDifftool: OpenFilesWithDiffTool(RevisionDiffKind.DiffAB); break;
-            case RevisionDiffControl.Command.EditFile: EditWorkingDirectoryFile_Click(this, EventArgs.Empty); break;
-            case RevisionDiffControl.Command.OpenAsTempFile: SaveSelectedItemToTempFile(OsShellUtil.Open); break;
-            case RevisionDiffControl.Command.OpenAsTempFileWith: SaveSelectedItemToTempFile(OsShellUtil.OpenAs); break;
             case RevisionDiffControl.Command.OpenWithDifftoolFirstToLocal: OpenFilesWithDiffTool(RevisionDiffKind.DiffALocal); break;
             case RevisionDiffControl.Command.OpenWithDifftoolSelectedToLocal: OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal); break;
-            case RevisionDiffControl.Command.ResetSelectedFiles: ResetSelectedItemsWithConfirmation(resetToParent: true); break;
-            case RevisionDiffControl.Command.StageSelectedFile: StageFile_Click(this, EventArgs.Empty); break;
-            case RevisionDiffControl.Command.UnStageSelectedFile: UnstageFile_Click(this, EventArgs.Empty); break;
-            case RevisionDiffControl.Command.ShowFileTree: _openInFileTreeTab_AsBlame?.Invoke(false); break;
-            case RevisionDiffControl.Command.FilterFileInGrid: _filterFileInGrid?.Invoke(); break;
-            case RevisionDiffControl.Command.SelectFirstGroupChanges:
-                SelectedItems = FirstGroupItems;
-                break;
-            case RevisionDiffControl.Command.OpenWorkingDirectoryFileWith: OpenWorkingDirectoryFileWith_Click(this, EventArgs.Empty); break;
-            case RevisionDiffControl.Command.OpenWorkingDirectoryFile: OpenWorkingDirectoryFile_Click(this, EventArgs.Empty); break;
-            case RevisionDiffControl.Command.RenameMove: Move_Click(this, EventArgs.Empty); break;
-            case RevisionDiffControl.Command.FindFile: FindFile_Click(this, EventArgs.Empty); break;
+            case RevisionDiffControl.Command.OpenWorkingDirectoryFile: tsmiOpenWorkingDirectoryFile.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.OpenWorkingDirectoryFileWith: tsmiOpenWorkingDirectoryFileWith.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.EditFile: tsmiEditWorkingDirectoryFile.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.OpenAsTempFile: tsmiOpenRevisionFile.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.OpenAsTempFileWith: tsmiOpenRevisionFileWith.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.ResetSelectedFiles: return ResetSelectedFilesWithConfirmation();
+            case RevisionDiffControl.Command.StageSelectedFile: tsmiStageFile.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.UnStageSelectedFile: tsmiUnstageFile.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.ShowFileTree: tsmiShowInFileTree.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.FilterFileInGrid: tsmiFilterFileInGrid.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFocused();
+            case RevisionDiffControl.Command.FindFile: tsmiFindFile.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
             case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab:
                 if (_isFileTreeMode)
                 {
                     return false;
                 }
 
-                ShowFindInCommitFileGitGrepDialog(_getSelectedText?.Invoke() ?? string.Empty);
+                tsmiOpenFindInCommitFilesGitGrepDialog.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
                 break;
-            case RevisionDiffControl.Command.GoToFirstParent:
-            case RevisionDiffControl.Command.GoToLastParent:
-            case RevisionDiffControl.Command.OpenInVisualStudio:
-            case RevisionDiffControl.Command.AddFileToGitIgnore:
-                return false;
             case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab:
                 if (!_isFileTreeMode)
                 {
                     return false;
                 }
 
-                ShowFindInCommitFileGitGrepDialog(_getSelectedText?.Invoke() ?? string.Empty);
+                tsmiOpenFindInCommitFilesGitGrepDialog.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
                 break;
+            case RevisionDiffControl.Command.OpenInVisualStudio: tsmiOpenInVisualStudio.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
+            case RevisionDiffControl.Command.AddFileToGitIgnore: return AddFileToGitIgnore();
+            case RevisionDiffControl.Command.RenameMove: tsmiMove.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent)); break;
             default:
-                return false;
+                return base.ExecuteCommand(cmd);
         }
 
         return true;
+
+        bool AddFileToGitIgnore()
+        {
+            if (!IsKeyboardFocusWithin)
+            {
+                return false;
+            }
+
+            tsmiAddFileToGitIgnore.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+            return true;
+        }
+
+        bool ResetSelectedFilesWithConfirmation()
+        {
+            if (!IsKeyboardFocusWithin)
+            {
+                return false;
+            }
+
+            InitResetFileToToolStripMenuItem();
+            if (!tsmiResetFileToParent.IsEnabled)
+            {
+                // Hotkey executed when menu is disabled
+                return true;
+            }
+
+            // Reset to first (parent)
+            ResetSelectedItemsWithConfirmation(resetToParent: true);
+            return true;
+        }
+
+        bool SelectFirstGroupChangesIfFocused()
+        {
+            if (!IsKeyboardFocusWithin)
+            {
+                return false;
+            }
+
+            SelectedItems = FirstGroupItems;
+            return true;
+        }
     }
 
     private void OpenFindInCommitFilesGitGrepDialog_Click(object? sender, EventArgs e)
     {
         ShowFindInCommitFileGitGrepDialog(_getSelectedText?.Invoke() ?? string.Empty);
+    }
+
+    private void InteractiveAdd_Click(object? sender, EventArgs e)
+    {
+        if (SelectedGitItem is not GitItemStatus item)
+        {
+            return;
+        }
+
+        CancellationToken token = _interactiveAddResetChunkSequence.Next();
+        ThreadHelper.FileAndForget(async () =>
+        {
+            await Module.AddInteractiveAsync(item);
+            await this.SwitchToMainThreadAsync(token);
+            RequestRefresh();
+        });
     }
 
     private void ShowFindInCommitFilesGitGrep_Click(object? sender, EventArgs e)
@@ -680,10 +837,15 @@ partial class FileStatusList
             return;
         }
 
-        bool firstUsesSecondRevision = _rememberFileContextMenuController.ShouldEnableFirstItemDiff(diffFiles[0], isSecondRevision: true);
-        string? first = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, diffFiles[0], firstUsesSecondRevision);
-        bool secondUsesSecondRevision = _rememberFileContextMenuController.ShouldEnableSecondItemDiff(diffFiles[1], isSecondRevision: true);
-        string? second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, diffFiles[1], secondUsesSecondRevision);
+        // The order is always the order in the list, not clicked order, but the (last) selected is known
+        int firstIndex = SelectedFileStatusItem == diffFiles[0] ? 1 : 0;
+        int secondIndex = 1 - firstIndex;
+
+        // Fallback to first revision if second revision cannot be used
+        bool firstUsesSecondRevision = _rememberFileContextMenuController.ShouldEnableFirstItemDiff(diffFiles[firstIndex], isSecondRevision: true);
+        string? first = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, diffFiles[firstIndex], firstUsesSecondRevision);
+        bool secondUsesSecondRevision = _rememberFileContextMenuController.ShouldEnableSecondItemDiff(diffFiles[secondIndex], isSecondRevision: true);
+        string? second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, diffFiles[secondIndex], secondUsesSecondRevision);
         Module.OpenFilesWithDifftool(first, second, GetCustomTool(sender));
     }
 
@@ -757,7 +919,7 @@ partial class FileStatusList
         MenuUtil.SetAsCaptionMenuItem(tsmiSecondDiffCaption, tsmiOpenWithDifftool);
         MenuUtil.SetAsCaptionMenuItem(tsmiFirstDiffCaption, tsmiOpenWithDifftool);
 
-        ContextMenuDiffToolInfo info = GetContextMenuDiffToolInfo(selected);
+        ContextMenuDiffToolInfo info = GetContextMenuDiffToolInfo();
         tsmiDiffFirstToSelected.IsEnabled = _itemContextMenuController.ShouldShowMenuFirstToSelected(info);
         tsmiDiffFirstToLocal.IsEnabled = _itemContextMenuController.ShouldShowMenuFirstToLocal(info);
         tsmiDiffSelectedToLocal.IsEnabled = _itemContextMenuController.ShouldShowMenuSelectedToLocal(info);
@@ -765,12 +927,19 @@ partial class FileStatusList
         tsmiDiffFirstToLocal.IsVisible = !hideToLocal;
         tsmiDiffSelectedToLocal.IsVisible = !hideToLocal;
 
+        sepDifftoolRemember.IsVisible = selected.Count is 1 or 2;
+
+        // The order is always the order in the list, not clicked order, but the (last) selected is known
+        int firstIndex = selected.Count == 2 && SelectedFileStatusItem == selected[0] ? 1 : 0;
+        int secondIndex = 1 - firstIndex;
+
         tsmiDiffTwoSelected.IsVisible = selected.Count == 2;
         tsmiDiffTwoSelected.IsEnabled = selected.Count == 2
-                                         && _rememberFileContextMenuController.ShouldEnableFirstItemDiff(selected[0])
-                                         && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(selected[1]);
+                                         && _rememberFileContextMenuController.ShouldEnableFirstItemDiff(selected[firstIndex])
+                                         && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(selected[secondIndex]);
         tsmiDiffWithRemembered.IsVisible = selected.Count == 1 && _rememberFileContextMenuController.RememberedDiffFileItem is not null;
         tsmiDiffWithRemembered.IsEnabled = tsmiDiffWithRemembered.IsVisible
+                                           && selected[0] != _rememberFileContextMenuController.RememberedDiffFileItem
                                            && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(selected[0]);
         tsmiDiffWithRemembered.Header = _rememberFileContextMenuController.RememberedDiffFileItem is FileStatusItem remembered
             ? string.Format(TranslatedStrings.DiffSelectedWithRememberedFile, remembered.Item.Name)
@@ -783,26 +952,41 @@ partial class FileStatusList
                                              && _rememberFileContextMenuController.ShouldEnableFirstItemDiff(selected[0], isSecondRevision: false);
     }
 
-    private string? DescribeRevisions(List<GitRevision> revisions)
-        => revisions.Count switch
+    /// <summary>
+    /// Gets the description of the selected parents.
+    /// </summary>
+    /// <param name="parents">The selected parents.</param>
+    /// <returns>A description of the selected parent.</returns>
+    private string? DescribeRevisions(List<GitRevision> parents)
+    {
+        return parents.Count switch
         {
-            1 => revisions[0].ObjectId.ToShortString(),
+            1 => GetDescriptionForRevision(parents[0]?.ObjectId ?? default(ObjectId)),
             > 1 => _multipleDescription.Text,
             _ => null
         };
+    }
 
-    private static ContextMenuDiffToolInfo GetContextMenuDiffToolInfo(IReadOnlyList<FileStatusItem> selected)
+    private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
     {
-        List<GitRevision> revisions = [.. selected.SecondRevs()];
-        GitRevision? selectedRevision = revisions.Count == 1 ? revisions[0] : null;
-        ObjectId[] parentIds = [.. selected.FirstIds()];
+        // Some items are not supported if more than one revision is selected
+        List<GitRevision> revisions = [.. SelectedItems.SecondRevs()];
+        GitRevision? selectedRev = revisions.Count == 1 ? revisions[0] : null;
+
+        List<ObjectId> parentIds = [.. SelectedItems.FirstIds()];
+        bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(parentIds, selectedRev);
+        bool localExists = _gitRevisionTester.AnyLocalFileExists(SelectedItems.Select(i => i.Item));
+
+        bool allAreNew = SelectedItems.All(i => i.Item.IsNew);
+        bool allAreDeleted = SelectedItems.All(i => i.Item.IsDeleted);
+
         return new ContextMenuDiffToolInfo(
-            selectedRevision,
-            parentIds,
-            allAreNew: selected.All(item => item.Item.IsNew),
-            allAreDeleted: selected.All(item => item.Item.IsDeleted),
-            firstIsParent: parentIds.Length > 0,
-            localExists: selected.All(item => !item.Item.IsDeleted));
+            selectedRevision: selectedRev,
+            selectedItemParentRevs: parentIds,
+            allAreNew: allAreNew,
+            allAreDeleted: allAreDeleted,
+            firstIsParent: firstIsParent,
+            localExists: localExists);
     }
 
     private void OpenWorkingDirectoryFileWith_Click(object? sender, EventArgs e)
@@ -812,6 +996,21 @@ partial class FileStatusList
             OsShellUtil.OpenAs(path);
         }
     }
+
+    private void OpenInVisualStudio_Click(object? sender, EventArgs e)
+    {
+        if (OperatingSystem.IsWindows()
+            && VisualStudioIntegration.IsVisualStudioInstalled
+            && GetSelectedAbsolutePath() is string itemName)
+        {
+            VisualStudioIntegration.OpenFile(itemName, GetLineNumber());
+        }
+    }
+
+    private int GetLineNumber()
+        => _getLineNumber is not null
+            ? _getLineNumber()
+            : int.Parse(FindScriptOptionsProvider().GetValues(ScriptOptionsProvider._lineNumber).FirstOrDefault("0"));
 
     private void RememberFirstRevDiff_Click(object? sender, EventArgs e)
     {
@@ -830,7 +1029,34 @@ partial class FileStatusList
         => _rememberFileContextMenuController.RememberedDiffFileItem = SelectedFileStatusItem;
 
     private void ResetFile_Click(object? sender, EventArgs e)
-        => ResetSelectedItemsWithConfirmation(resetToParent: !ReferenceEquals(sender, tsmiResetFileToSelected));
+    {
+        if (ReferenceEquals(sender, tsmiResetFileTo))
+        {
+            sender = tsmiResetFileToParent;
+            if (!tsmiResetFileToParent.IsEnabled)
+            {
+                return;
+            }
+        }
+
+        ResetSelectedItemsWithConfirmation(resetToParent: ReferenceEquals(sender, tsmiResetFileToParent));
+    }
+
+    private void ResetChunkOfFile_Click(object? sender, EventArgs e)
+    {
+        if (SelectedGitItem is not GitItemStatus item)
+        {
+            return;
+        }
+
+        CancellationToken token = _interactiveAddResetChunkSequence.Next();
+        ThreadHelper.FileAndForget(async () =>
+        {
+            await Module.ResetInteractiveAsync(item);
+            await this.SwitchToMainThreadAsync(token);
+            RequestRefresh();
+        });
+    }
 
     public void ResetSelectedItemsWithConfirmation(bool resetToParent)
     {
@@ -971,6 +1197,14 @@ partial class FileStatusList
     {
         Module.SkipWorktreeFiles([.. SelectedItems.Items()], tsmiSkipWorktree.IsChecked, out _);
         RequestRefresh();
+    }
+
+    private void ShowInFileTree_Click(object? sender, EventArgs e)
+    {
+        if (!_isFileTreeMode)
+        {
+            _openInFileTreeTab_AsBlame?.Invoke(false);
+        }
     }
 
     private void StashSubmoduleChanges_Click(object? sender, EventArgs e)

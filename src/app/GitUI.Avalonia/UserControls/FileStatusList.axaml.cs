@@ -8,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
@@ -33,7 +34,11 @@ public partial class FileStatusList : GitModuleControl
     private readonly FileStatusDiffCalculator _diffCalculator;
     private readonly FileAssociatedIconProvider _iconProvider = new();
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
+    private readonly GitRevisionTester _gitRevisionTester;
+    private readonly MenuItem _NO_TRANSLATE_openSubmoduleMenuItem;
     private readonly CancellationTokenSequence _reloadSequence = new();
+    private readonly SortDiffListContextMenuItem _sortByContextMenu;
+    private readonly Separator _sortBySeparator = new();
     private readonly DispatcherTimer _filterTimer = new() { Interval = FilterThrottleDuration };
     private readonly List<object?> _gitGrepSearchItems = [];
     private IReadOnlyList<object> _allListItems = [];
@@ -58,9 +63,15 @@ public partial class FileStatusList : GitModuleControl
     public FileStatusList()
     {
         _diffCalculator = new FileStatusDiffCalculator(() => Module);
-        _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+        _fullPathResolver = new FullPathResolver(() => TryGetUICommandsDirect(out IGitUICommands? commands) ? commands.Module.WorkingDir : string.Empty);
+        _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
         _revisionDiffController = new RevisionDiffController(() => Module, _fullPathResolver);
         InitializeComponent();
+        _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
+        _sortByContextMenu = new SortDiffListContextMenuItem(DiffListSortService.Instance)
+        {
+            Name = "sortListByContextMenuItem",
+        };
         tsmiCopyPaths.Initialize(
             () => TryGetUICommandsDirect(out IGitUICommands? commands)
                 ? commands
@@ -141,6 +152,19 @@ public partial class FileStatusList : GitModuleControl
         };
 
         InitializeComplete();
+
+        MenuItem CreateOpenSubmoduleMenuItem()
+        {
+            MenuItem item = new()
+            {
+                Name = "openSubmoduleMenuItem",
+                Tag = "1",
+                Header = TranslatedStrings.OpenWithGitExtensions,
+                Icon = new Image { Source = Images.GitExtensionsLogo16 }
+            };
+            item.Click += (_, _) => this.InvokeAndForget(OpenSubmoduleAsync);
+            return item;
+        }
     }
 
     public override void AddTranslationItems(ITranslation translation)
@@ -342,6 +366,10 @@ public partial class FileStatusList : GitModuleControl
 
     public bool SelectFirstItemOnSetItems { get; set; } = true;
 
+    [Description("Disable showing open submodule menu items as bold")]
+    [DefaultValue(false)]
+    public bool DisableSubmoduleMenuItemBold { get; set; }
+
     /// <summary>
     ///  Gets or sets the selected Git item (named like the WinForms property).
     /// </summary>
@@ -478,6 +506,12 @@ public partial class FileStatusList : GitModuleControl
             .ToList();
         SetRevisionEntries(entries);
     }
+
+    private string? GetDescriptionForRevision(ObjectId objectId)
+        => _diffCalculator.DescribeRevision is not null ? _diffCalculator.DescribeRevision(objectId)
+            : objectId == ObjectId.WorkTreeId ? ResourceManager.TranslatedStrings.Workspace
+            : objectId == ObjectId.IndexId ? ResourceManager.TranslatedStrings.Index
+            : objectId.ToShortString();
 
     /// <summary>
     ///  Shows calculated revision groups as either the ordinary diff list or a repository tree.
@@ -1933,6 +1967,22 @@ public partial class FileStatusList : GitModuleControl
         internal MenuItem UnstageMenuItem => control.tsmiUnstageFile;
         internal MenuItem CherryPickMenuItem => control.tsmiCherryPickChanges;
         internal MenuItem OpenWithDifftoolMenuItem => control.tsmiOpenWithDifftool;
+        internal MenuItem OpenSubmoduleMenuItem => control._NO_TRANSLATE_openSubmoduleMenuItem;
+        internal MenuItem CopyPathsMenuItem => control.tsmiCopyPaths;
+        internal SortDiffListContextMenuItem SortByContextMenuItem => control._sortByContextMenu;
+        internal Separator SortBySeparator => control._sortBySeparator;
+        internal MenuItem ResetChunkMenuItem => control.tsmiResetChunkOfFile;
+        internal MenuItem InteractiveAddMenuItem => control.tsmiInteractiveAdd;
+        internal MenuItem ResetToMenuItem => control.tsmiResetFileTo;
+        internal MenuItem ResetToSelectedMenuItem => control.tsmiResetFileToSelected;
+        internal MenuItem ResetToParentMenuItem => control.tsmiResetFileToParent;
+        internal MenuItem AddToGitIgnoreMenuItem => control.tsmiAddFileToGitIgnore;
+        internal MenuItem AddToGitInfoExcludeMenuItem => control.tsmiAddFileToGitInfoExclude;
+        internal MenuItem OpenInVisualStudioMenuItem => control.tsmiOpenInVisualStudio;
+        internal MenuItem SelectAllMenuItem => control._selectAll;
+        internal MenuItem CollapseAllMenuItem => control._collapseAll;
+        internal MenuItem ExpandAllMenuItem => control._expandAll;
+        internal MenuItem CollapseRootFoldersMenuItem => control._collapseRootFolders;
         internal MenuItem SkipWorktreeMenuItem => control.tsmiSkipWorktree;
         internal MenuItem AssumeUnchangedMenuItem => control.tsmiAssumeUnchanged;
         internal MenuItem StopTrackingMenuItem => control.tsmiStopTracking;
@@ -1953,8 +2003,20 @@ public partial class FileStatusList : GitModuleControl
         internal Grid FindInFilesPanel => control.FindInCommitFilesGitGrepPanel;
         internal Separator Splitter => control.lblSplitter;
 
-        internal void UpdateContextMenu()
-            => control.ItemContextMenu_Opening(control.ItemContextMenu, EventArgs.Empty);
+        internal bool UpdateContextMenu()
+        {
+            CancelEventArgs eventArgs = new();
+            control.ItemContextMenu_Opening(control.ItemContextMenu, eventArgs);
+            return eventArgs.Cancel;
+        }
+
+        internal bool FirstTreeRootExpanded => ((FileTreeNode)control.tvFiles.Items[0]!).IsExpanded;
+
+        internal void SelectFirstTreeRoot()
+            => control.tvFiles.SelectedItem = control.tvFiles.Items[0];
+
+        internal void SelectFirstTreeLeaf()
+            => control.tvFiles.SelectedItem = control.tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).First(node => node.Item is not null);
 
         internal void SetSort(DiffListSortType sortType)
         {
