@@ -50,7 +50,7 @@ internal sealed partial class FormFilePrompt : GitExtensionsForm, IUserInputProm
             return;
         }
 
-        IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(options);
+        IReadOnlyList<IStorageFile> files = await PortalPickerGuard.OpenFilePickerAsync(topLevel.StorageProvider, options);
         string[] paths = [.. files.Select(file => file.TryGetLocalPath()).OfType<string>()];
         if (paths.Length > 0)
         {

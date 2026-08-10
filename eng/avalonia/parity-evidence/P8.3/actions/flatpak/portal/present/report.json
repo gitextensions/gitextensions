@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "expectedMode": "present",
+  "stage": "completed",
+  "backend": "xdgDesktopPortal",
+  "interfaces": {
+    "fileChooser": true,
+    "openUri": true
+  },
+  "pickers": {
+    "openFileCompleted": true,
+    "openFolderCompleted": true,
+    "saveFileCompleted": true,
+    "cancelFileCompleted": true
+  },
+  "shellActions": {
+    "openFileAccepted": true,
+    "openDirectoryAccepted": true,
+    "showInDirectoryAccepted": true,
+    "openUriAccepted": true
+  },
+  "error": null
+}

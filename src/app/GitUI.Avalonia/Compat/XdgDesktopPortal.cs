@@ -7,13 +7,43 @@ using Tmds.DBus.Protocol;
 namespace GitUI.Compat;
 
 /// <summary>
-///  Minimal client for the freedesktop OpenURI portal.
+///  Minimal client for the freedesktop FileChooser and OpenURI portals.
 /// </summary>
 public interface IXdgDesktopPortal
 {
     Task<bool> IsInterfaceAvailableAsync(string interfaceName);
 
+    Task<XdgFileChooserResult> ShowFileChooserAsync(XdgFileChooserRequest request);
+
     Task<bool> TryLaunchAsync(string target, OsShellLaunchKind kind);
+}
+
+/// <summary>
+///  Describes one native XDG FileChooser request without depending on a toolkit dialog.
+/// </summary>
+public sealed record XdgFileChooserRequest(
+    string Title,
+    bool Directory,
+    bool Multiple,
+    bool Save,
+    string? CurrentFolder,
+    string? SuggestedFileName,
+    IReadOnlyList<XdgFileChooserFilter> Filters);
+
+/// <summary>
+///  Describes one XDG FileChooser filter and its glob and MIME rules.
+/// </summary>
+public sealed record XdgFileChooserFilter(
+    string Name,
+    IReadOnlyList<string> Patterns,
+    IReadOnlyList<string> MimeTypes);
+
+/// <summary>
+///  Contains the portal response code and any selected file URIs.
+/// </summary>
+public sealed record XdgFileChooserResult(uint Response, IReadOnlyList<Uri> Uris)
+{
+    public bool Accepted => Response == 0;
 }
 
 /// <summary>
@@ -26,6 +56,8 @@ public sealed class XdgDesktopPortal : IXdgDesktopPortal
 
     private const string Destination = "org.freedesktop.portal.Desktop";
     private const string DesktopPath = "/org/freedesktop/portal/desktop";
+    private const uint FileChooserRuleGlob = 0;
+    private const uint FileChooserRuleMimeType = 1;
     private const int OpenReadOnly = 0;
     private const int OpenDirectory = 0x10000;
     private const int OpenCloseOnExec = 0x80000;
@@ -55,6 +87,24 @@ public sealed class XdgDesktopPortal : IXdgDesktopPortal
         {
             return false;
         }
+    }
+
+    public async Task<XdgFileChooserResult> ShowFileChooserAsync(XdgFileChooserRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        using DBusConnection connection = await ConnectAsync();
+        MessageWriter writer = connection.GetMessageWriter();
+        writer.WriteMethodCallHeader(
+            Destination,
+            DesktopPath,
+            FileChooserInterface,
+            request.Save ? "SaveFile" : "OpenFile",
+            "ssa{sv}");
+        writer.WriteString(string.Empty);
+        writer.WriteString(request.Title);
+        string requestPath = WriteFileChooserOptions(connection, ref writer, request);
+        return await WaitForFileChooserResponseAsync(connection, writer.CreateMessage(), requestPath);
     }
 
     public async Task<bool> TryLaunchAsync(string target, OsShellLaunchKind kind)
@@ -171,6 +221,155 @@ public sealed class XdgDesktopPortal : IXdgDesktopPortal
             ["handle_token"] = handleToken,
         });
         return writer.CreateMessage();
+    }
+
+    private static string WriteFileChooserOptions(
+        DBusConnection connection,
+        ref MessageWriter writer,
+        XdgFileChooserRequest request)
+    {
+        string handleToken = $"gitextensions_{Guid.NewGuid():N}";
+        string uniqueName = connection.UniqueName
+            ?? throw new InvalidOperationException("The D-Bus connection has no unique name.");
+        string sender = uniqueName.TrimStart(':').Replace('.', '_');
+        string requestPath = $"/org/freedesktop/portal/desktop/request/{sender}/{handleToken}";
+
+        ArrayStart dictionary = writer.WriteDictionaryStart();
+        WriteBooleanOption(ref writer, "directory", request.Directory);
+        WriteStringOption(ref writer, "handle_token", handleToken);
+        WriteBooleanOption(ref writer, "modal", true);
+        WriteBooleanOption(ref writer, "multiple", request.Multiple);
+
+        if (!string.IsNullOrWhiteSpace(request.CurrentFolder))
+        {
+            WriteByteArrayOption(ref writer, "current_folder", PathToNullTerminatedBytes(request.CurrentFolder));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.SuggestedFileName))
+        {
+            WriteStringOption(ref writer, "current_name", request.SuggestedFileName);
+        }
+
+        if (request.Filters.Count > 0)
+        {
+            writer.WriteDictionaryEntryStart();
+            writer.WriteString("filters");
+            writer.WriteSignature("a(sa(us))");
+            ArrayStart filters = writer.WriteArrayStart(DBusType.Struct);
+            foreach (XdgFileChooserFilter filter in request.Filters)
+            {
+                writer.WriteStructureStart();
+                writer.WriteString(filter.Name);
+                ArrayStart rules = writer.WriteArrayStart(DBusType.Struct);
+                foreach (string pattern in filter.Patterns)
+                {
+                    WriteFilterRule(ref writer, FileChooserRuleGlob, pattern);
+                }
+
+                foreach (string mimeType in filter.MimeTypes)
+                {
+                    WriteFilterRule(ref writer, FileChooserRuleMimeType, mimeType);
+                }
+
+                writer.WriteArrayEnd(rules);
+            }
+
+            writer.WriteArrayEnd(filters);
+        }
+
+        writer.WriteDictionaryEnd(dictionary);
+        return requestPath;
+    }
+
+    private static byte[] PathToNullTerminatedBytes(string path)
+        => System.Text.Encoding.UTF8.GetBytes(Path.GetFullPath(path) + '\0');
+
+    private static void WriteBooleanOption(ref MessageWriter writer, string name, bool value)
+    {
+        writer.WriteDictionaryEntryStart();
+        writer.WriteString(name);
+        writer.WriteVariantBool(value);
+    }
+
+    private static void WriteByteArrayOption(ref MessageWriter writer, string name, byte[] value)
+    {
+        writer.WriteDictionaryEntryStart();
+        writer.WriteString(name);
+        writer.WriteSignature("ay");
+        writer.WriteArray(value);
+    }
+
+    private static void WriteFilterRule(ref MessageWriter writer, uint kind, string value)
+    {
+        writer.WriteStructureStart();
+        writer.WriteUInt32(kind);
+        writer.WriteString(value);
+    }
+
+    private static void WriteStringOption(ref MessageWriter writer, string name, string value)
+    {
+        writer.WriteDictionaryEntryStart();
+        writer.WriteString(name);
+        writer.WriteVariantString(value);
+    }
+
+    private static async Task<XdgFileChooserResult> WaitForFileChooserResponseAsync(
+        DBusConnection connection,
+        MessageBuffer message,
+        string requestPath)
+    {
+        TaskCompletionSource<XdgFileChooserResult> response = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using IDisposable observer = await connection.AddMatchAsync(
+            new MatchRule
+            {
+                Type = MessageType.Signal,
+                Path = requestPath,
+                Interface = "org.freedesktop.portal.Request",
+                Member = "Response",
+            },
+            static (message, _) =>
+            {
+                Reader reader = message.GetBodyReader();
+                uint responseCode = reader.ReadUInt32();
+                Dictionary<string, VariantValue> results = reader.ReadDictionaryOfStringToVariantValue();
+                List<Uri> uris = [];
+                if (results.TryGetValue("uris", out VariantValue uriValue))
+                {
+                    foreach (string value in uriValue.GetArray<string>())
+                    {
+                        if (Uri.TryCreate(value, UriKind.Absolute, out Uri? uri))
+                        {
+                            uris.Add(uri);
+                        }
+                    }
+                }
+
+                return new XdgFileChooserResult(responseCode, uris);
+            },
+            notification =>
+            {
+                if (notification.HasValue)
+                {
+                    response.TrySetResult(notification.Value);
+                }
+                else if (notification.Exception is { } exception)
+                {
+                    response.TrySetException(exception);
+                }
+            },
+            emitOnCapturedContext: false,
+            ObserverFlags.EmitOnConnectionClosed,
+            state: null);
+        ObjectPath actualRequestPath = await connection.CallMethodAsync(
+            message,
+            static (message, _) => message.GetBodyReader().ReadObjectPath(),
+            null).WaitAsync(RequestTimeout);
+        if (!string.Equals(actualRequestPath.ToString(), requestPath, StringComparison.Ordinal))
+        {
+            return new XdgFileChooserResult(2, []);
+        }
+
+        return await response.Task;
     }
 
     private static async Task<bool> WaitForResponseAsync(

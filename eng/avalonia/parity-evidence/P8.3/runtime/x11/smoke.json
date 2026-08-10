@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "backend": "x11",
+  "backendAssembly": "Avalonia.X11.dll",
+  "backendEvidence": "xwdWindowCaptureWithWaylandUnset",
+  "sessionHost": "nestedXephyrOnWslgX11",
+  "sessionLog": "xephyr.log",
+  "command": "browse <temporary-repository>",
+  "settingsIsolation": "temporaryXdgHome",
+  "repositoryLocation": "outsideWorkingTree",
+  "screenshot": "window.png",
+  "screenshotSha256": "f6f68313731c15c460259cd816c7e5f1a0a2f060cc21accd0e02e371afc03a18",
+  "stdout": "stdout.log",
+  "stderr": "stderr.log"
+}
