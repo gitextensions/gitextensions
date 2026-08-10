@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="df702b44-da9d-48c9-9f95-a2e2a8cc5147" name="@DESKTOP-QT4V7RG 2026-08-10 10:16:25" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-10T10:16:25.5033829+02:00" queuing="2026-08-10T10:16:25.5033830+02:00" start="2026-08-10T10:16:24.6713466+02:00" finish="2026-08-10T10:16:25.6523932+02:00" />
+  <TestSettings name="default" id="b29caadb-7b77-4d26-a65f-d5f3195232b4">
+    <Deployment runDeploymentRoot="_DESKTOP-QT4V7RG_2026-08-10_10_16_25" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="a5e72abf-23de-4242-a2e4-128e4631e99d" testId="302ba132-2b3c-9448-627d-1bd45bf24654" testName="Sweep_should_record_analyzed_linked_and_unsupported_mappings" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0768430" startTime="2026-08-10T10:16:25.4131250+02:00" endTime="2026-08-10T10:16:25.4899673+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a5e72abf-23de-4242-a2e4-128e4631e99d" />
+    <UnitTestResult executionId="99e99e63-e330-4481-9dc5-9900d5b916f0" testId="abd1d81c-e86e-3190-ea41-7e95d77a8d09" testName="Run_should_report_a_comment_that_drifted_to_another_partial" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0032370" startTime="2026-08-10T10:16:25.3068344+02:00" endTime="2026-08-10T10:16:25.3100703+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="99e99e63-e330-4481-9dc5-9900d5b916f0" />
+    <UnitTestResult executionId="5b249b1b-0883-4560-907b-a27357f61cb2" testId="b274a82c-18a5-eef0-c8bc-f56905a8801f" testName="Run_should_not_cascade_findings_after_one_comment_is_deleted" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0010650" startTime="2026-08-10T10:16:25.3038358+02:00" endTime="2026-08-10T10:16:25.3049011+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5b249b1b-0883-4560-907b-a27357f61cb2" />
+    <UnitTestResult executionId="23d1e4cc-506a-4d99-a8e5-afc0883a2bbe" testId="ac90fa27-6901-ec24-d7f3-f21132a718ca" testName="Run_should_write_byte_identical_json_for_identical_inputs" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0012390" startTime="2026-08-10T10:16:25.5497316+02:00" endTime="2026-08-10T10:16:25.5509700+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="23d1e4cc-506a-4d99-a8e5-afc0883a2bbe" />
+    <UnitTestResult executionId="d7a1fe00-10ff-42d5-bf92-3d051548d7e1" testId="543b8698-1dde-8da2-ec6d-4ea8768c8a7c" testName="Run_should_localize_a_deleted_comment_to_its_anchor_member" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0022070" startTime="2026-08-10T10:16:25.3015899+02:00" endTime="2026-08-10T10:16:25.3037970+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d7a1fe00-10ff-42d5-bf92-3d051548d7e1" />
+    <UnitTestResult executionId="3be67f21-11e9-44ac-ac34-ebdc4e82bc46" testId="48afc4cf-9756-c81a-33cb-7d08012cb84b" testName="Run_should_extract_csharp_and_axaml_menu_trees" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0176790" startTime="2026-08-10T10:16:25.5002971+02:00" endTime="2026-08-10T10:16:25.5179753+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3be67f21-11e9-44ac-ac34-ebdc4e82bc46" />
+    <UnitTestResult executionId="1b8f2d6b-dad0-45a9-addc-8d1ecca68b19" testId="8f66639c-deb7-fc88-cdbe-47dcc899592a" testName="Repository_portmap_should_not_claim_parity_without_complete_ledger" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0298080" startTime="2026-08-10T10:16:25.3832405+02:00" endTime="2026-08-10T10:16:25.4130476+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1b8f2d6b-dad0-45a9-addc-8d1ecca68b19" />
+    <UnitTestResult executionId="8a31a0f6-0e5f-468b-863b-96d4ba3feed3" testId="eed6cfff-cd5b-a1ac-1f7e-651a6d69a275" testName="Run_should_extract_members_events_hotkeys_and_settings" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0192729" startTime="2026-08-10T10:16:25.5180540+02:00" endTime="2026-08-10T10:16:25.5373268+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8a31a0f6-0e5f-468b-863b-96d4ba3feed3" />
+    <UnitTestResult executionId="13cc72c0-830f-4fc5-9eec-901bf5a06ea2" testId="d7f3155a-4d95-91fd-c991-6e721693207c" testName="Run_should_diff_member_accessibility_signature_and_order" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0040050" startTime="2026-08-10T10:16:25.4962363+02:00" endTime="2026-08-10T10:16:25.5002405+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="13cc72c0-830f-4fc5-9eec-901bf5a06ea2" />
+    <UnitTestResult executionId="358c20ae-b0ea-4505-ab62-813b743a8e54" testId="ee0a9ae8-9acc-e237-b850-bcfffb99310d" testName="Repository_portmap_should_classify_every_GitUI_CSharp_source" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0125570" startTime="2026-08-10T10:16:25.5675920+02:00" endTime="2026-08-10T10:16:25.5801486+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="358c20ae-b0ea-4505-ab62-813b743a8e54" />
+    <UnitTestResult executionId="5b7a4278-f819-45c4-81f6-1acd283a0681" testId="279f15a4-02ba-4542-4023-275268a6ffb0" testName="Ledger_schema_should_fix_axis_order_and_evidence_contract" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0045180" startTime="2026-08-10T10:16:25.3131299+02:00" endTime="2026-08-10T10:16:25.3176470+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5b7a4278-f819-45c4-81f6-1acd283a0681" />
+    <UnitTestResult executionId="6e138bcb-d03b-49d2-8782-426e7b8074e2" testId="5d26be2e-6517-75cd-52f0-80206858f4e6" testName="Run_should_report_missing_partial_with_expected_twin_path" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0069120" startTime="2026-08-10T10:16:25.5427717+02:00" endTime="2026-08-10T10:16:25.5496828+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6e138bcb-d03b-49d2-8782-426e7b8074e2" />
+    <UnitTestResult executionId="29004b10-abce-4e08-9186-e44dcaa365d1" testId="01a7d609-bcf4-6e05-c388-b8361693ae23" testName="Repository_portmap_should_use_the_non_twin_contract" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0140940" startTime="2026-08-10T10:16:25.5802063+02:00" endTime="2026-08-10T10:16:25.5942995+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="29004b10-abce-4e08-9186-e44dcaa365d1" />
+    <UnitTestResult executionId="c1e000a4-6e2f-4131-9ec1-07fd049be949" testId="ff28a786-9b1b-31c1-556f-456d98c2f782" testName="Repository_portmap_non_twin_entries_should_name_existing_originals" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0162970" startTime="2026-08-10T10:16:25.5511753+02:00" endTime="2026-08-10T10:16:25.5674718+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c1e000a4-6e2f-4131-9ec1-07fd049be949" />
+    <UnitTestResult executionId="bdfb6be2-201f-40ea-ae92-ab113c5f15e9" testId="be259a9c-b6c5-ca10-a5ae-47ffc59389f2" testName="Run_should_inventory_xml_inline_todo_and_issue_comments" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0272500" startTime="2026-08-10T10:16:25.2742725+02:00" endTime="2026-08-10T10:16:25.3015228+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bdfb6be2-201f-40ea-ae92-ab113c5f15e9" />
+    <UnitTestResult executionId="7d58f4c5-7b90-4a3d-a8f5-1f4a47f79400" testId="ac230a06-1b02-9b07-ee6e-8f28af2a848e" testName="Repository_ledger_should_cover_every_portmap_mapping_with_six_axes" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0654489" startTime="2026-08-10T10:16:25.3177090+02:00" endTime="2026-08-10T10:16:25.3831572+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7d58f4c5-7b90-4a3d-a8f5-1f4a47f79400" />
+    <UnitTestResult executionId="25112f87-8599-4528-9c1f-df7b9bb6e4ba" testId="a4a0ae1c-fed5-fbb4-c079-d9b0e23ebc6b" testName="Run_should_extract_translation_strings_and_catalog_presence" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0052890" startTime="2026-08-10T10:16:25.5374044+02:00" endTime="2026-08-10T10:16:25.5426926+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="25112f87-8599-4528-9c1f-df7b9bb6e4ba" />
+    <UnitTestResult executionId="f7d37eca-ad2f-4cb4-96c9-aae3428b7045" testId="413c85a8-6451-0621-e468-a2df6e3a316e" testName="Run_should_report_a_comment_that_drifted_to_another_member" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0018310" startTime="2026-08-10T10:16:25.3049473+02:00" endTime="2026-08-10T10:16:25.3067781+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f7d37eca-ad2f-4cb4-96c9-aae3428b7045" />
+    <UnitTestResult executionId="599188cd-d761-45e0-a2e6-d3d455b91e07" testId="6451981d-e683-5518-9f8e-80003ca02c5c" testName="Sweep_should_write_byte_identical_aggregate_for_identical_inputs" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0058840" startTime="2026-08-10T10:16:25.4900414+02:00" endTime="2026-08-10T10:16:25.4959244+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="599188cd-d761-45e0-a2e6-d3d455b91e07" />
+    <UnitTestResult executionId="bd4c56e8-b0a8-40b2-adb0-6bac2b3d20e1" testId="a4d9e361-e8b4-1eb5-18cc-3fca33f9ce52" testName="Run_should_distinguish_changed_and_framework_adapted_comments" computerName="DESKTOP-QT4V7RG" duration="00:00:00.1604120" startTime="2026-08-10T10:16:25.1130677+02:00" endTime="2026-08-10T10:16:25.2734439+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bd4c56e8-b0a8-40b2-adb0-6bac2b3d20e1" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Repository_portmap_should_classify_every_GitUI_CSharp_source" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="ee0a9ae8-9acc-e237-b850-bcfffb99310d">
+      <Execution id="358c20ae-b0ea-4505-ab62-813b743a8e54" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.PortMapCoverageTests" name="Repository_portmap_should_classify_every_GitUI_CSharp_source" />
+    </UnitTest>
+    <UnitTest name="Run_should_not_cascade_findings_after_one_comment_is_deleted" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="b274a82c-18a5-eef0-c8bc-f56905a8801f">
+      <Execution id="5b249b1b-0883-4560-907b-a27357f61cb2" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.CommentParityTests" name="Run_should_not_cascade_findings_after_one_comment_is_deleted" />
+    </UnitTest>
+    <UnitTest name="Sweep_should_write_byte_identical_aggregate_for_identical_inputs" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="6451981d-e683-5518-9f8e-80003ca02c5c">
+      <Execution id="599188cd-d761-45e0-a2e6-d3d455b91e07" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityBaselineTests" name="Sweep_should_write_byte_identical_aggregate_for_identical_inputs" />
+    </UnitTest>
+    <UnitTest name="Ledger_schema_should_fix_axis_order_and_evidence_contract" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="279f15a4-02ba-4542-4023-275268a6ffb0">
+      <Execution id="5b7a4278-f819-45c4-81f6-1acd283a0681" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityBaselineTests" name="Ledger_schema_should_fix_axis_order_and_evidence_contract" />
+    </UnitTest>
+    <UnitTest name="Run_should_distinguish_changed_and_framework_adapted_comments" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="a4d9e361-e8b4-1eb5-18cc-3fca33f9ce52">
+      <Execution id="bd4c56e8-b0a8-40b2-adb0-6bac2b3d20e1" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.CommentParityTests" name="Run_should_distinguish_changed_and_framework_adapted_comments" />
+    </UnitTest>
+    <UnitTest name="Repository_portmap_non_twin_entries_should_name_existing_originals" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="ff28a786-9b1b-31c1-556f-456d98c2f782">
+      <Execution id="c1e000a4-6e2f-4131-9ec1-07fd049be949" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.PortMapCoverageTests" name="Repository_portmap_non_twin_entries_should_name_existing_originals" />
+    </UnitTest>
+    <UnitTest name="Run_should_extract_members_events_hotkeys_and_settings" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="eed6cfff-cd5b-a1ac-1f7e-651a6d69a275">
+      <Execution id="8a31a0f6-0e5f-468b-863b-96d4ba3feed3" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityInventoryTests" name="Run_should_extract_members_events_hotkeys_and_settings" />
+    </UnitTest>
+    <UnitTest name="Run_should_inventory_xml_inline_todo_and_issue_comments" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="be259a9c-b6c5-ca10-a5ae-47ffc59389f2">
+      <Execution id="bdfb6be2-201f-40ea-ae92-ab113c5f15e9" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.CommentParityTests" name="Run_should_inventory_xml_inline_todo_and_issue_comments" />
+    </UnitTest>
+    <UnitTest name="Run_should_report_a_comment_that_drifted_to_another_member" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="413c85a8-6451-0621-e468-a2df6e3a316e">
+      <Execution id="f7d37eca-ad2f-4cb4-96c9-aae3428b7045" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.CommentParityTests" name="Run_should_report_a_comment_that_drifted_to_another_member" />
+    </UnitTest>
+    <UnitTest name="Run_should_diff_member_accessibility_signature_and_order" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="d7f3155a-4d95-91fd-c991-6e721693207c">
+      <Execution id="13cc72c0-830f-4fc5-9eec-901bf5a06ea2" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityInventoryTests" name="Run_should_diff_member_accessibility_signature_and_order" />
+    </UnitTest>
+    <UnitTest name="Run_should_write_byte_identical_json_for_identical_inputs" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="ac90fa27-6901-ec24-d7f3-f21132a718ca">
+      <Execution id="23d1e4cc-506a-4d99-a8e5-afc0883a2bbe" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityInventoryTests" name="Run_should_write_byte_identical_json_for_identical_inputs" />
+    </UnitTest>
+    <UnitTest name="Run_should_extract_translation_strings_and_catalog_presence" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="a4a0ae1c-fed5-fbb4-c079-d9b0e23ebc6b">
+      <Execution id="25112f87-8599-4528-9c1f-df7b9bb6e4ba" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityInventoryTests" name="Run_should_extract_translation_strings_and_catalog_presence" />
+    </UnitTest>
+    <UnitTest name="Run_should_localize_a_deleted_comment_to_its_anchor_member" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="543b8698-1dde-8da2-ec6d-4ea8768c8a7c">
+      <Execution id="d7a1fe00-10ff-42d5-bf92-3d051548d7e1" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.CommentParityTests" name="Run_should_localize_a_deleted_comment_to_its_anchor_member" />
+    </UnitTest>
+    <UnitTest name="Repository_portmap_should_use_the_non_twin_contract" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="01a7d609-bcf4-6e05-c388-b8361693ae23">
+      <Execution id="29004b10-abce-4e08-9186-e44dcaa365d1" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.PortMapCoverageTests" name="Repository_portmap_should_use_the_non_twin_contract" />
+    </UnitTest>
+    <UnitTest name="Run_should_report_missing_partial_with_expected_twin_path" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="5d26be2e-6517-75cd-52f0-80206858f4e6">
+      <Execution id="6e138bcb-d03b-49d2-8782-426e7b8074e2" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityInventoryTests" name="Run_should_report_missing_partial_with_expected_twin_path" />
+    </UnitTest>
+    <UnitTest name="Repository_ledger_should_cover_every_portmap_mapping_with_six_axes" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="ac230a06-1b02-9b07-ee6e-8f28af2a848e">
+      <Execution id="7d58f4c5-7b90-4a3d-a8f5-1f4a47f79400" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityBaselineTests" name="Repository_ledger_should_cover_every_portmap_mapping_with_six_axes" />
+    </UnitTest>
+    <UnitTest name="Run_should_extract_csharp_and_axaml_menu_trees" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="48afc4cf-9756-c81a-33cb-7d08012cb84b">
+      <Execution id="3be67f21-11e9-44ac-ac34-ebdc4e82bc46" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityInventoryTests" name="Run_should_extract_csharp_and_axaml_menu_trees" />
+    </UnitTest>
+    <UnitTest name="Repository_portmap_should_not_claim_parity_without_complete_ledger" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="8f66639c-deb7-fc88-cdbe-47dcc899592a">
+      <Execution id="1b8f2d6b-dad0-45a9-addc-8d1ecca68b19" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityBaselineTests" name="Repository_portmap_should_not_claim_parity_without_complete_ledger" />
+    </UnitTest>
+    <UnitTest name="Run_should_report_a_comment_that_drifted_to_another_partial" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="abd1d81c-e86e-3190-ea41-7e95d77a8d09">
+      <Execution id="99e99e63-e330-4481-9dc5-9900d5b916f0" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.CommentParityTests" name="Run_should_report_a_comment_that_drifted_to_another_partial" />
+    </UnitTest>
+    <UnitTest name="Sweep_should_record_analyzed_linked_and_unsupported_mappings" storage="/home/begota/src/gitextensions-wsl/artifacts/debug/bin/parityinventory.tests/net10.0/parityinventory.tests.dll" id="302ba132-2b3c-9448-627d-1bd45bf24654">
+      <Execution id="a5e72abf-23de-4242-a2e4-128e4631e99d" />
+      <TestMethod codeBase="/home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityInventory.Tests.ParityBaselineTests" name="Sweep_should_record_analyzed_linked_and_unsupported_mappings" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="302ba132-2b3c-9448-627d-1bd45bf24654" executionId="a5e72abf-23de-4242-a2e4-128e4631e99d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="abd1d81c-e86e-3190-ea41-7e95d77a8d09" executionId="99e99e63-e330-4481-9dc5-9900d5b916f0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b274a82c-18a5-eef0-c8bc-f56905a8801f" executionId="5b249b1b-0883-4560-907b-a27357f61cb2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ac90fa27-6901-ec24-d7f3-f21132a718ca" executionId="23d1e4cc-506a-4d99-a8e5-afc0883a2bbe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="543b8698-1dde-8da2-ec6d-4ea8768c8a7c" executionId="d7a1fe00-10ff-42d5-bf92-3d051548d7e1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="48afc4cf-9756-c81a-33cb-7d08012cb84b" executionId="3be67f21-11e9-44ac-ac34-ebdc4e82bc46" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8f66639c-deb7-fc88-cdbe-47dcc899592a" executionId="1b8f2d6b-dad0-45a9-addc-8d1ecca68b19" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="eed6cfff-cd5b-a1ac-1f7e-651a6d69a275" executionId="8a31a0f6-0e5f-468b-863b-96d4ba3feed3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d7f3155a-4d95-91fd-c991-6e721693207c" executionId="13cc72c0-830f-4fc5-9eec-901bf5a06ea2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ee0a9ae8-9acc-e237-b850-bcfffb99310d" executionId="358c20ae-b0ea-4505-ab62-813b743a8e54" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="279f15a4-02ba-4542-4023-275268a6ffb0" executionId="5b7a4278-f819-45c4-81f6-1acd283a0681" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5d26be2e-6517-75cd-52f0-80206858f4e6" executionId="6e138bcb-d03b-49d2-8782-426e7b8074e2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="01a7d609-bcf4-6e05-c388-b8361693ae23" executionId="29004b10-abce-4e08-9186-e44dcaa365d1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ff28a786-9b1b-31c1-556f-456d98c2f782" executionId="c1e000a4-6e2f-4131-9ec1-07fd049be949" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="be259a9c-b6c5-ca10-a5ae-47ffc59389f2" executionId="bdfb6be2-201f-40ea-ae92-ab113c5f15e9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ac230a06-1b02-9b07-ee6e-8f28af2a848e" executionId="7d58f4c5-7b90-4a3d-a8f5-1f4a47f79400" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a4a0ae1c-fed5-fbb4-c079-d9b0e23ebc6b" executionId="25112f87-8599-4528-9c1f-df7b9bb6e4ba" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="413c85a8-6451-0621-e468-a2df6e3a316e" executionId="f7d37eca-ad2f-4cb4-96c9-aae3428b7045" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6451981d-e683-5518-9f8e-80003ca02c5c" executionId="599188cd-d761-45e0-a2e6-d3d455b91e07" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a4d9e361-e8b4-1eb5-18cc-3fca33f9ce52" executionId="bd4c56e8-b0a8-40b2-adb0-6bac2b3d20e1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="20" executed="20" passed="20" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 5.0.0.0: Test execution started
+Running all tests in /home/begota/src/gitextensions-wsl/artifacts/Debug/bin/ParityInventory.Tests/net10.0/ParityInventory.Tests.dll
+   NUnit3TestExecutor discovered 20 of 20 NUnit test cases using Current Discovery mode, Non-Explicit run
+NUnit Adapter 5.0.0.0: Test execution complete
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

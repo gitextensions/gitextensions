@@ -1,0 +1,31 @@
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:50.534: Unhandled parent window type
+
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:50.534: Failed to associate portal window with parent window
+
+(xdg-desktop-portal-gtk:133890): Gtk-CRITICAL **: 10:04:50.907: gtk_widget_event: assertion 'WIDGET_REALIZED_FOR_EVENT (widget, event)' failed
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:52.626: Unhandled parent window type
+
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:52.626: Failed to associate portal window with parent window
+
+(xdg-desktop-portal-gtk:133890): Gtk-CRITICAL **: 10:04:52.777: gtk_widget_event: assertion 'WIDGET_REALIZED_FOR_EVENT (widget, event)' failed
+
+(xdg-desktop-portal-gtk:133890): Gtk-CRITICAL **: 10:04:53.890: _gtk_file_system_model_get_info: assertion 'GTK_IS_FILE_SYSTEM_MODEL (model)' failed
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:54.171: Unhandled parent window type
+
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:54.171: Failed to associate portal window with parent window
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:55.438: Unhandled parent window type
+
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:55.438: Failed to associate portal window with parent window
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:55.605: Unhandled parent window type
+
+
+(xdg-desktop-portal-gtk:133890): xdg-desktop-portal-gtk-WARNING **: 10:04:55.605: Failed to associate portal window with parent window

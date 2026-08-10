@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -1392,7 +1392,7 @@ public partial class FormResolveConflicts : GitModuleForm
             string ext = Path.GetExtension(fileName);
             string? savePath = DispatcherPump.Wait(async () =>
             {
-                IStorageFile? file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                IStorageFile? file = await PortalPickerGuard.SaveFilePickerAsync(StorageProvider, new FilePickerSaveOptions
                 {
                     SuggestedFileName = fileName,
                     SuggestedStartLocation = initialDirectory is null ? null : await StorageProvider.TryGetFolderFromPathAsync(initialDirectory),

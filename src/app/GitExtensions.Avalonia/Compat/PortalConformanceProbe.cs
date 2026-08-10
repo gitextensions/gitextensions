@@ -30,6 +30,7 @@ internal sealed class PortalConformanceProbe
     private bool? _openFilePickerCompleted;
     private bool? _openFolderPickerCompleted;
     private bool? _saveFilePickerCompleted;
+    private bool? _cancelFilePickerCompleted;
     private string? _error;
 
     private PortalConformanceProbe(string reportPath, string expectedMode, string fixturePath, Window mainWindow)
@@ -108,7 +109,7 @@ internal sealed class PortalConformanceProbe
         IStorageProvider storageProvider = _mainWindow.StorageProvider;
         _stage = "openFilePicker";
         WriteReport();
-        IReadOnlyList<IStorageFile> files = await storageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        IReadOnlyList<IStorageFile> files = await PortalPickerGuard.OpenFilePickerAsync(storageProvider, new FilePickerOpenOptions
         {
             AllowMultiple = false,
             Title = "P8.2 Open file",
@@ -117,7 +118,7 @@ internal sealed class PortalConformanceProbe
 
         _stage = "openFolderPicker";
         WriteReport();
-        IReadOnlyList<IStorageFolder> folders = await storageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        IReadOnlyList<IStorageFolder> folders = await PortalPickerGuard.OpenFolderPickerAsync(storageProvider, new FolderPickerOpenOptions
         {
             AllowMultiple = false,
             Title = "P8.2 Open folder",
@@ -126,12 +127,21 @@ internal sealed class PortalConformanceProbe
 
         _stage = "saveFilePicker";
         WriteReport();
-        IStorageFile? file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        IStorageFile? file = await PortalPickerGuard.SaveFilePickerAsync(storageProvider, new FilePickerSaveOptions
         {
             SuggestedFileName = "p82-portal.txt",
             Title = "P8.2 Save file",
         });
         _saveFilePickerCompleted = file is not null;
+
+        _stage = "cancelFilePicker";
+        WriteReport();
+        files = await PortalPickerGuard.OpenFilePickerAsync(storageProvider, new FilePickerOpenOptions
+        {
+            AllowMultiple = false,
+            Title = "P8.3 Cancel file",
+        });
+        _cancelFilePickerCompleted = files.Count == 0;
     }
 
     private void WriteReport()
@@ -152,6 +162,7 @@ internal sealed class PortalConformanceProbe
                 openFileCompleted = _openFilePickerCompleted,
                 openFolderCompleted = _openFolderPickerCompleted,
                 saveFileCompleted = _saveFilePickerCompleted,
+                cancelFileCompleted = _cancelFilePickerCompleted,
             },
             shellActions = new
             {

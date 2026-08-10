@@ -149,7 +149,7 @@ public sealed partial class FormArchive : GitModuleForm
         }
 
         FilePickerSaveOptions options = CreateSaveFileOptions();
-        IStorageFile? file = await StorageProvider.SaveFilePickerAsync(options);
+        IStorageFile? file = await PortalPickerGuard.SaveFilePickerAsync(StorageProvider, options);
         string? fileName = file?.TryGetLocalPath();
         if (string.IsNullOrWhiteSpace(fileName))
         {

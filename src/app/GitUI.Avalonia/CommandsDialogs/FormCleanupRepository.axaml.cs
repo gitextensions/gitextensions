@@ -198,7 +198,7 @@ public partial class FormCleanupRepository : GitModuleForm
             options.SuggestedStartLocation = DispatcherPump.Wait(() => StorageProvider.TryGetFolderFromPathAsync(Module.WorkingDir));
         }
 
-        IReadOnlyList<IStorageFolder> folders = DispatcherPump.Wait(() => StorageProvider.OpenFolderPickerAsync(options));
+        IReadOnlyList<IStorageFolder> folders = DispatcherPump.Wait(() => PortalPickerGuard.OpenFolderPickerAsync(StorageProvider, options));
         string? selectedPath = folders.FirstOrDefault()?.TryGetLocalPath();
 
         string? subFoldersToClean;
@@ -237,7 +237,7 @@ public partial class FormCleanupRepository : GitModuleForm
             options.SuggestedStartLocation = DispatcherPump.Wait(() => StorageProvider.TryGetFolderFromPathAsync(Module.WorkingDir));
         }
 
-        IReadOnlyList<IStorageFile> files = DispatcherPump.Wait(() => StorageProvider.OpenFilePickerAsync(options));
+        IReadOnlyList<IStorageFile> files = DispatcherPump.Wait(() => PortalPickerGuard.OpenFilePickerAsync(StorageProvider, options));
         string? selectedPath = files.FirstOrDefault()?.TryGetLocalPath();
 
         string? fileToExclude;

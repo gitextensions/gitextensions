@@ -3,11 +3,14 @@ using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using GitCommands;
+using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+using GitUI.CommandsDialogs.Menus;
 using GitUI.Compat;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -75,6 +78,22 @@ public sealed class TerminalLauncherTests
 
         candidates.Should().Equal("xdg-terminal-exec", "x-terminal-emulator", "gnome-terminal");
         captured!.FileName.Should().Be("/usr/bin/gnome-terminal");
+    }
+
+    [Test]
+    public void Launch_should_report_external_terminal_as_unavailable_in_Flatpak()
+    {
+        TerminalLauncher launcher = new(
+            _ => null,
+            _ => throw new InvalidOperationException("Executable resolution must not run inside Flatpak."),
+            _ => throw new InvalidOperationException("Process launch must not run inside Flatpak."),
+            TerminalPlatform.Linux,
+            () => true);
+
+        Action action = () => launcher.Launch("/work/repository");
+
+        action.Should().Throw<PlatformNotSupportedException>()
+            .WithMessage("*not available in this Flatpak installation*");
     }
 
     [Test]
@@ -165,7 +184,7 @@ public sealed class TerminalLauncherTests
     [AvaloniaTest]
     public void FormBrowse_terminal_menu_and_toolbar_should_preserve_their_original_translation_keys()
     {
-        FormBrowse form = new();
+        FormBrowse form = CreateBrowseForm(new RecordingTerminalLauncher());
         ITranslation translation = Substitute.For<ITranslation>();
         translation.TranslateItem(
                 nameof(FormBrowse),
@@ -186,7 +205,7 @@ public sealed class TerminalLauncherTests
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "userShell", "ToolTipText", "Git bash");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "gitBashToolStripMenuItem", "Text", "Git &bash");
         ToolTip.GetTip(form.FindControl<Button>("userShell")!).Should().Be("Translated terminal");
-        form.FindControl<MenuItem>("gitBashToolStripMenuItem")!.Header.Should().Be("Translated Git bash menu");
+        form.toolsToolStripMenuItem.GetTestAccessor().GitBashMenuItem.Header.Should().Be("Translated Git bash menu");
     }
 
     private static FormBrowse CreateBrowseForm(ITerminalLauncher launcher)
@@ -200,9 +219,15 @@ public sealed class TerminalLauncherTests
 
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(Substitute.For<ILockableNotifier>());
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(RepositoryHistoryTestHelper.CreateEmptyService());
+        IUserRepositoriesListController repositoriesController = Substitute.For<IUserRepositoriesListController>();
+        repositoriesController.PreRenderRepositories(Arg.Any<string>()).Returns((
+            Array.Empty<RecentRepoInfo>(),
+            Array.Empty<RecentRepoInfo>()));
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
         commands.GetService(typeof(ITerminalLauncher)).Returns(launcher);
 
         return new FormBrowse(commands);

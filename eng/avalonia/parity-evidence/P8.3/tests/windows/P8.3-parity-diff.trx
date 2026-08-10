@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="f2573df9-92d8-45a6-83fd-a0af5e3917ef" name="Begota@DESKTOP-QT4V7RG 2026-08-09 23:50:43" runUser="DESKTOP-QT4V7RG\Begota" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-09T23:50:43.0336201+02:00" queuing="2026-08-09T23:50:43.0336207+02:00" start="2026-08-09T23:50:40.9118722+02:00" finish="2026-08-09T23:50:43.3140996+02:00" />
+  <TestSettings name="default" id="db05577d-7d77-4331-a6ae-d03e682635b8">
+    <Deployment runDeploymentRoot="Begota_DESKTOP-QT4V7RG_2026-08-09_23_50_43" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="ddc47f4f-59e5-4804-9ca8-e16d240bbd73" testId="7bc48ee8-a7eb-72ef-abda-b0e56f123462" testName="Run_should_localize_a_dark_theme_only_color_perturbation" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0235750" startTime="2026-08-09T23:50:43.1021813+02:00" endTime="2026-08-09T23:50:43.1257552+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ddc47f4f-59e5-4804-9ca8-e16d240bbd73" />
+    <UnitTestResult executionId="14893b18-dbef-4673-8966-5074cfbe07e0" testId="a39e62eb-0b79-3df2-a3cd-bc7e988bece4" testName="Run_should_report_missing_and_extra_controls_without_a_semantic_join" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0197770" startTime="2026-08-09T23:50:43.2265273+02:00" endTime="2026-08-09T23:50:43.2463027+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="14893b18-dbef-4673-8966-5074cfbe07e0" />
+    <UnitTestResult executionId="370b8a80-4ade-4f3b-a7c1-5d0acee5edde" testId="d7748fb9-188b-425e-4027-3ff91d76ec8f" testName="Run_should_localize_a_uniquely_renamed_control" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0173530" startTime="2026-08-09T23:50:43.1258007+02:00" endTime="2026-08-09T23:50:43.1431523+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="370b8a80-4ade-4f3b-a7c1-5d0acee5edde" />
+    <UnitTestResult executionId="aa01e8d4-8cb3-45e2-8644-edace1423ce0" testId="ca2445ff-17d9-e6d1-279a-f354323b7a41" testName="Run_should_localize_mismatched_missing_and_undeclared_roles" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0688360" startTime="2026-08-09T23:50:42.9246390+02:00" endTime="2026-08-09T23:50:42.9934744+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aa01e8d4-8cb3-45e2-8644-edace1423ce0" />
+    <UnitTestResult executionId="bd8b125a-1967-4606-b7c8-22f2fd6af516" testId="5c13fe6b-0935-875f-ae1b-473c66d3a33e" testName="Run_should_report_duplicate_field_identities_without_aborting(1,2,1,0,1)" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0183920" startTime="2026-08-09T23:50:43.2080183+02:00" endTime="2026-08-09T23:50:43.2264082+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bd8b125a-1967-4606-b7c8-22f2fd6af516" />
+    <UnitTestResult executionId="2275182a-964a-42a1-ae46-ae7330b17728" testId="73e39463-4f9c-0aea-e533-17a3500b6e9d" testName="Run_should_preserve_explicit_unavailable_capture_notes" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0176280" startTime="2026-08-09T23:50:42.9935166+02:00" endTime="2026-08-09T23:50:43.0111435+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2275182a-964a-42a1-ae46-ae7330b17728" />
+    <UnitTestResult executionId="2ff2355f-04b4-4f38-85dc-9a0a39e0b05f" testId="5813a055-ec03-4dde-9a1d-da94f189821a" testName="Run_should_preserve_explicit_unsupported_state_notes" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0220300" startTime="2026-08-09T23:50:43.1432248+02:00" endTime="2026-08-09T23:50:43.1652537+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2ff2355f-04b4-4f38-85dc-9a0a39e0b05f" />
+    <UnitTestResult executionId="fc0e7fdb-4e6c-4fa9-9ed1-2fc44afa0c82" testId="a139ff78-d469-f1ad-b062-478d4478bf4b" testName="Run_should_emit_no_findings_for_identical_sets" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0200880" startTime="2026-08-09T23:50:43.0820423+02:00" endTime="2026-08-09T23:50:43.1021290+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fc0e7fdb-4e6c-4fa9-9ed1-2fc44afa0c82" />
+    <UnitTestResult executionId="164ae455-30bf-4df2-bc40-7695a3e41ea6" testId="82ba8d45-dae1-d1ca-dc8e-0624b7a5eab2" testName="Run_should_report_duplicate_field_identities_without_aborting(2,2,1,0,0)" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0243590" startTime="2026-08-09T23:50:43.1653721+02:00" endTime="2026-08-09T23:50:43.1897302+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="164ae455-30bf-4df2-bc40-7695a3e41ea6" />
+    <UnitTestResult executionId="7e4936aa-31ca-4ce3-ae86-2b2c82ffd535" testId="5a48a8df-c9f6-f501-c253-5703c33fc7e0" testName="Run_should_report_duplicate_field_identities_without_aborting(2,1,1,1,0)" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0181910" startTime="2026-08-09T23:50:43.1897760+02:00" endTime="2026-08-09T23:50:43.2079662+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7e4936aa-31ca-4ce3-ae86-2b2c82ffd535" />
+    <UnitTestResult executionId="52782461-85c2-44a2-a3f9-7cdfb79f99c0" testId="decb6865-5668-e09a-3ee5-66c9a88fb723" testName="Run_should_emit_an_empty_report_when_every_declared_role_matches" computerName="DESKTOP-QT4V7RG" duration="00:00:00.1886640" startTime="2026-08-09T23:50:42.7359285+02:00" endTime="2026-08-09T23:50:42.9245915+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="52782461-85c2-44a2-a3f9-7cdfb79f99c0" />
+    <UnitTestResult executionId="fb8cb354-16ac-4f90-99ca-03aff7838940" testId="eaf4aeaa-ad39-5292-daaf-e11f57be6feb" testName="Catalog_should_reject_a_role_without_one_framework_neutral_meaning" computerName="DESKTOP-QT4V7RG" duration="00:00:00.3909950" startTime="2026-08-09T23:50:42.3231111+02:00" endTime="2026-08-09T23:50:42.7140655+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fb8cb354-16ac-4f90-99ca-03aff7838940" />
+    <UnitTestResult executionId="71198244-a4c2-49e1-85de-c41d767b395b" testId="3d71535a-20fd-6dda-1752-4bd9805b0c94" testName="Run_should_apply_ssim_and_per_pixel_channel_budgets" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0456520" startTime="2026-08-09T23:50:43.0135397+02:00" endTime="2026-08-09T23:50:43.0591904+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="71198244-a4c2-49e1-85de-c41d767b395b" />
+    <UnitTestResult executionId="35bb2c0e-4b2f-48c7-bfee-bce503870e30" testId="ecb2b2a6-8283-b33e-6c21-9135d28e5a2b" testName="Catalog_should_reject_an_empty_role_set" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0209210" startTime="2026-08-09T23:50:42.7149531+02:00" endTime="2026-08-09T23:50:42.7358729+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="35bb2c0e-4b2f-48c7-bfee-bce503870e30" />
+    <UnitTestResult executionId="c7bab5f3-578c-4c36-9c41-88f1e9aeca80" testId="c596269d-fe4b-aabc-67c7-14cb1769181b" testName="Run_should_detect_and_localize_one_metric_perturbation" computerName="DESKTOP-QT4V7RG" duration="00:00:00.0227620" startTime="2026-08-09T23:50:43.0592373+02:00" endTime="2026-08-09T23:50:43.0819981+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c7bab5f3-578c-4c36-9c41-88f1e9aeca80" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Run_should_emit_no_findings_for_identical_sets" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="a139ff78-d469-f1ad-b062-478d4478bf4b">
+      <Execution id="fc0e7fdb-4e6c-4fa9-9ed1-2fc44afa0c82" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_emit_no_findings_for_identical_sets" />
+    </UnitTest>
+    <UnitTest name="Run_should_preserve_explicit_unavailable_capture_notes" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="73e39463-4f9c-0aea-e533-17a3500b6e9d">
+      <Execution id="2275182a-964a-42a1-ae46-ae7330b17728" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ColorRoleRunnerTests" name="Run_should_preserve_explicit_unavailable_capture_notes" />
+    </UnitTest>
+    <UnitTest name="Run_should_localize_a_dark_theme_only_color_perturbation" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="7bc48ee8-a7eb-72ef-abda-b0e56f123462">
+      <Execution id="ddc47f4f-59e5-4804-9ca8-e16d240bbd73" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_localize_a_dark_theme_only_color_perturbation" />
+    </UnitTest>
+    <UnitTest name="Catalog_should_reject_an_empty_role_set" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="ecb2b2a6-8283-b33e-6c21-9135d28e5a2b">
+      <Execution id="35bb2c0e-4b2f-48c7-bfee-bce503870e30" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ColorRoleRunnerTests" name="Catalog_should_reject_an_empty_role_set" />
+    </UnitTest>
+    <UnitTest name="Run_should_localize_mismatched_missing_and_undeclared_roles" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="ca2445ff-17d9-e6d1-279a-f354323b7a41">
+      <Execution id="aa01e8d4-8cb3-45e2-8644-edace1423ce0" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ColorRoleRunnerTests" name="Run_should_localize_mismatched_missing_and_undeclared_roles" />
+    </UnitTest>
+    <UnitTest name="Run_should_preserve_explicit_unsupported_state_notes" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="5813a055-ec03-4dde-9a1d-da94f189821a">
+      <Execution id="2ff2355f-04b4-4f38-85dc-9a0a39e0b05f" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_preserve_explicit_unsupported_state_notes" />
+    </UnitTest>
+    <UnitTest name="Catalog_should_reject_a_role_without_one_framework_neutral_meaning" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="eaf4aeaa-ad39-5292-daaf-e11f57be6feb">
+      <Execution id="fb8cb354-16ac-4f90-99ca-03aff7838940" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ColorRoleRunnerTests" name="Catalog_should_reject_a_role_without_one_framework_neutral_meaning" />
+    </UnitTest>
+    <UnitTest name="Run_should_report_duplicate_field_identities_without_aborting(2,1,1,1,0)" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="5a48a8df-c9f6-f501-c253-5703c33fc7e0">
+      <Execution id="7e4936aa-31ca-4ce3-ae86-2b2c82ffd535" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_report_duplicate_field_identities_without_aborting(2,1,1,1,0)" />
+    </UnitTest>
+    <UnitTest name="Run_should_report_missing_and_extra_controls_without_a_semantic_join" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="a39e62eb-0b79-3df2-a3cd-bc7e988bece4">
+      <Execution id="14893b18-dbef-4673-8966-5074cfbe07e0" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_report_missing_and_extra_controls_without_a_semantic_join" />
+    </UnitTest>
+    <UnitTest name="Run_should_report_duplicate_field_identities_without_aborting(1,2,1,0,1)" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="5c13fe6b-0935-875f-ae1b-473c66d3a33e">
+      <Execution id="bd8b125a-1967-4606-b7c8-22f2fd6af516" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_report_duplicate_field_identities_without_aborting(1,2,1,0,1)" />
+    </UnitTest>
+    <UnitTest name="Run_should_apply_ssim_and_per_pixel_channel_budgets" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="3d71535a-20fd-6dda-1752-4bd9805b0c94">
+      <Execution id="71198244-a4c2-49e1-85de-c41d767b395b" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_apply_ssim_and_per_pixel_channel_budgets" />
+    </UnitTest>
+    <UnitTest name="Run_should_report_duplicate_field_identities_without_aborting(2,2,1,0,0)" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="82ba8d45-dae1-d1ca-dc8e-0624b7a5eab2">
+      <Execution id="164ae455-30bf-4df2-bc40-7695a3e41ea6" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_report_duplicate_field_identities_without_aborting(2,2,1,0,0)" />
+    </UnitTest>
+    <UnitTest name="Run_should_detect_and_localize_one_metric_perturbation" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="c596269d-fe4b-aabc-67c7-14cb1769181b">
+      <Execution id="c7bab5f3-578c-4c36-9c41-88f1e9aeca80" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_detect_and_localize_one_metric_perturbation" />
+    </UnitTest>
+    <UnitTest name="Run_should_emit_an_empty_report_when_every_declared_role_matches" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="decb6865-5668-e09a-3ee5-66c9a88fb723">
+      <Execution id="52782461-85c2-44a2-a3f9-7cdfb79f99c0" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ColorRoleRunnerTests" name="Run_should_emit_an_empty_report_when_every_declared_role_matches" />
+    </UnitTest>
+    <UnitTest name="Run_should_localize_a_uniquely_renamed_control" storage="c:\users\begota\documents\github\gitextensions\artifacts\debug\bin\paritydiff.tests\net10.0\paritydiff.tests.dll" id="d7748fb9-188b-425e-4027-3ff91d76ec8f">
+      <Execution id="370b8a80-4ade-4f3b-a7c1-5d0acee5edde" />
+      <TestMethod codeBase="C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="GitExtensions.ParityDiff.Tests.ParityDiffRunnerTests" name="Run_should_localize_a_uniquely_renamed_control" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="7bc48ee8-a7eb-72ef-abda-b0e56f123462" executionId="ddc47f4f-59e5-4804-9ca8-e16d240bbd73" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a39e62eb-0b79-3df2-a3cd-bc7e988bece4" executionId="14893b18-dbef-4673-8966-5074cfbe07e0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d7748fb9-188b-425e-4027-3ff91d76ec8f" executionId="370b8a80-4ade-4f3b-a7c1-5d0acee5edde" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ca2445ff-17d9-e6d1-279a-f354323b7a41" executionId="aa01e8d4-8cb3-45e2-8644-edace1423ce0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5c13fe6b-0935-875f-ae1b-473c66d3a33e" executionId="bd8b125a-1967-4606-b7c8-22f2fd6af516" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="73e39463-4f9c-0aea-e533-17a3500b6e9d" executionId="2275182a-964a-42a1-ae46-ae7330b17728" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5813a055-ec03-4dde-9a1d-da94f189821a" executionId="2ff2355f-04b4-4f38-85dc-9a0a39e0b05f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a139ff78-d469-f1ad-b062-478d4478bf4b" executionId="fc0e7fdb-4e6c-4fa9-9ed1-2fc44afa0c82" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="82ba8d45-dae1-d1ca-dc8e-0624b7a5eab2" executionId="164ae455-30bf-4df2-bc40-7695a3e41ea6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5a48a8df-c9f6-f501-c253-5703c33fc7e0" executionId="7e4936aa-31ca-4ce3-ae86-2b2c82ffd535" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="decb6865-5668-e09a-3ee5-66c9a88fb723" executionId="52782461-85c2-44a2-a3f9-7cdfb79f99c0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="eaf4aeaa-ad39-5292-daaf-e11f57be6feb" executionId="fb8cb354-16ac-4f90-99ca-03aff7838940" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3d71535a-20fd-6dda-1752-4bd9805b0c94" executionId="71198244-a4c2-49e1-85de-c41d767b395b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ecb2b2a6-8283-b33e-6c21-9135d28e5a2b" executionId="35bb2c0e-4b2f-48c7-bfee-bce503870e30" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c596269d-fe4b-aabc-67c7-14cb1769181b" executionId="c7bab5f3-578c-4c36-9c41-88f1e9aeca80" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="15" executed="15" passed="15" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 5.0.0.0: Test execution started&#xD;
+Running all tests in C:\Users\Begota\Documents\GitHub\gitextensions\artifacts\Debug\bin\ParityDiff.Tests\net10.0\ParityDiff.Tests.dll&#xD;
+   NUnit3TestExecutor discovered 15 of 15 NUnit test cases using Current Discovery mode, Non-Explicit run&#xD;
+NUnit Adapter 5.0.0.0: Test execution complete&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

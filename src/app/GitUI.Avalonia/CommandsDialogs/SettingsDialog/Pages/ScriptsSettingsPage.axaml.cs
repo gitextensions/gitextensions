@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -479,7 +479,7 @@ Diff selection:
             return;
         }
 
-        IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(options);
+        IReadOnlyList<IStorageFile> files = await PortalPickerGuard.OpenFilePickerAsync(topLevel.StorageProvider, options);
         string? path = files.FirstOrDefault()?.TryGetLocalPath();
         if (!string.IsNullOrWhiteSpace(path))
         {

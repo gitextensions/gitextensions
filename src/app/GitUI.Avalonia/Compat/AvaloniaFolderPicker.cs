@@ -32,7 +32,7 @@ public sealed class AvaloniaFolderPicker(IClassicDesktopStyleApplicationLifetime
                 options.SuggestedStartLocation = await storageProvider.TryGetFolderFromPathAsync(selectedPath);
             }
 
-            IReadOnlyList<IStorageFolder> folders = await storageProvider.OpenFolderPickerAsync(options);
+            IReadOnlyList<IStorageFolder> folders = await PortalPickerGuard.OpenFolderPickerAsync(storageProvider, options);
             return folders.Count > 0 ? folders[0].TryGetLocalPath() : null;
         }
     }

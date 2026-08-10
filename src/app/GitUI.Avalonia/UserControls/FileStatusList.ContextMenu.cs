@@ -917,7 +917,7 @@ partial class FileStatusList
         if (selected.Length == 1)
         {
             FileStatusItem item = selected[0];
-            IStorageFile? target = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            IStorageFile? target = await PortalPickerGuard.SaveFilePickerAsync(topLevel.StorageProvider, new FilePickerSaveOptions
             {
                 SuggestedFileName = Path.GetFileName(item.Item.Name),
             });
@@ -929,7 +929,7 @@ partial class FileStatusList
             return;
         }
 
-        IReadOnlyList<IStorageFolder> folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        IReadOnlyList<IStorageFolder> folders = await PortalPickerGuard.OpenFolderPickerAsync(topLevel.StorageProvider, new FolderPickerOpenOptions
         {
             AllowMultiple = false,
         });

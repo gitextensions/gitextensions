@@ -77,6 +77,16 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
+        if (!IsLaunchAvailable(FlatpakEnvironment.IsFlatpak()))
+        {
+            // Cross-platform constraint: host executables are visible but not executable in Flatpak.
+            MessageBoxes.FailedToRunShell(
+                this,
+                "Gource",
+                new PlatformNotSupportedException("Gource is not available in this Flatpak installation."));
+            return;
+        }
+
         if (!File.Exists(GourcePath.Text))
         {
             MessageBoxes.ShowError(this, "Cannot find Gource.\nPlease download Gource and set the correct path.");
@@ -94,6 +104,9 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         RunRealCmdDetached(GourcePath.Text, arguments);
         Close();
     }
+
+    internal static bool IsLaunchAvailable(bool isFlatpak)
+        => !isFlatpak;
 
     private async Task<string> LoadAvatarsAsync()
     {
@@ -178,7 +191,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
                 return null;
             }
 
-            IReadOnlyList<IStorageFile> files = await StorageProvider.OpenFilePickerAsync(options);
+            IReadOnlyList<IStorageFile> files = await PortalPickerGuard.OpenFilePickerAsync(StorageProvider, options);
             return files.Count > 0 ? files[0].TryGetLocalPath() : null;
         }
     }
@@ -204,7 +217,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
                 return null;
             }
 
-            IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(options);
+            IReadOnlyList<IStorageFolder> folders = await PortalPickerGuard.OpenFolderPickerAsync(StorageProvider, options);
             return folders.Count > 0 ? folders[0].TryGetLocalPath() : null;
         }
     }

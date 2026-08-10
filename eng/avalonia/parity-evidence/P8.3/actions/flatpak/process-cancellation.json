@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "confined": true,
+  "processTreeCancellation": {
+    "cancellationObserved": true,
+    "childProcessTerminated": true
+  },
+  "passed": true
+}
