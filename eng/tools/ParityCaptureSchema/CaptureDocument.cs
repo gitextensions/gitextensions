@@ -19,6 +19,7 @@ public enum CaptureMethod
     PrintWindow,
     ScreenGrab,
     HeadlessSkia,
+    HeadlessSkiaComposite,
     Unsupported
 }
 

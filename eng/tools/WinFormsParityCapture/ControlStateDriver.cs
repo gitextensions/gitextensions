@@ -212,13 +212,35 @@ internal sealed class ControlStateDriver : IDisposable
 
     private void Focus(object target)
     {
-        if (target is not Control control || !control.CanFocus)
+        if (target is not Control control)
         {
             throw new CaptureStateUnsupportedException("The focused state requires a focusable Control.");
         }
 
-        Control? previous = control.FindForm()?.ActiveControl;
+        _ = control.Handle;
+        Form? form = control.FindForm();
+        form?.Activate();
+        PumpEvents();
+        Control? previous = form?.ActiveControl;
+        control.Select();
+        if (form is not null)
+        {
+            form.ActiveControl = control;
+        }
+
         control.Focus();
+        PumpEvents();
+        if (!control.Focused && !control.ContainsFocus)
+        {
+            NativeMethods.FocusWindow(control.Handle);
+            PumpEvents();
+        }
+
+        if (!control.Focused && !control.ContainsFocus)
+        {
+            throw new CaptureStateUnsupportedException("WinForms did not focus the requested Control.");
+        }
+
         _restoreActions.Add(() => previous?.Focus());
     }
 
