@@ -1851,7 +1851,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Reusable list/tree boundary with the original regex filter, revision grouping, repository tree, selection/navigation, status images, and WinForms-shaped events. P2.2 restores the cancellable git-grep calculation path, search history, persisted visibility, active search surface, and modeless FormFindInCommitFilesGitGrep integration for diff and file-tree consumers. P4.2 restores the same-named CopyPathsToolStripMenuItem with the original selection callback and translation identities. P8.6c.1 routes the original FileAssociatedIconProvider through the portable icon shim to native Windows, freedesktop, and AppKit sources."
+    "notes": "Reusable list/tree boundary with the original regex filter, revision grouping, repository tree, selection/navigation, status images, and WinForms-shaped events. P2.2 restores the cancellable git-grep calculation path, search history, persisted visibility, active search surface, and modeless FormFindInCommitFilesGitGrep integration for diff and file-tree consumers. P4.2 restores the same-named CopyPathsToolStripMenuItem with the original selection callback and translation identities. P8.6c.1 routes the original FileAssociatedIconProvider through the portable icon shim to native Windows, freedesktop, and AppKit sources. P8.6c.2a restores the original refresh/settings and file-tree toolbar boundaries, including the all-parents setting gate and persisted git-grep panel state."
   },
   "src/app/GitUI/UserControls/FileStatusList.ContextMenu.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.ContextMenu.cs",
@@ -3981,7 +3981,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.Toolbar.cs",
     "status": "functional",
     "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
-    "notes": "Native toolbar preserves all six sorting modes, diff-status filters, tree/list choice, refresh and settings state; later ignore-dialog commands remain hidden until P5.4."
+    "notes": "Native toolbar preserves all six sorting modes, diff-status filters, tree/list choice, refresh and settings state. P8.6c.2a restores the original git-grep button and option routes, mode persistence, settings visibility, and per-item toolbar visibility menu. Remaining FileStatusList source and functional findings are owned by P8.6c.2b/c."
   },
   "src/app/GitUI/UserControls/FileStatusList.TreeContextMenu.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.TreeContextMenu.cs",
