@@ -72,8 +72,8 @@ container:
 ```console
 sudo apt-get update
 sudo apt-get install libice6 libsm6 libfontconfig1 libwayland-client0 libxkbcommon0 libegl1 \
-  rsync lsof weston wayland-utils xserver-xephyr x11-apps xdotool imagemagick iproute2 \
-  sway wl-clipboard \
+  rsync lsof weston wayland-utils xserver-xephyr x11-apps x11-utils xdotool imagemagick iproute2 \
+  sway wl-clipboard xclip \
   flatpak flatpak-builder
 ```
 
@@ -91,6 +91,9 @@ wsl -d Ubuntu -- bash -lc `
 
 wsl -d Ubuntu -- bash -lc `
   'cd ~/src/gitextensions-wsl && eng/avalonia/wayland-fractional-scale.sh /mnt/c/path/to/gitextensions/eng/avalonia/parity-evidence/P8.1/fractional'
+
+wsl -d Ubuntu -- bash -lc `
+  'cd ~/src/gitextensions-wsl && eng/avalonia/x11-conformance.sh /mnt/c/path/to/gitextensions/eng/avalonia/parity-evidence/P8.5/x11'
 ```
 
 The Windows command launches from a disposable portable runtime and captures the prerequisite
@@ -108,6 +111,11 @@ plain-text and `text/html` clipboard reads, and drag/drop. The Sway headless run
 1.25 and 1.5 output scales and moves the live window between differently scaled outputs. A
 headless wlroots compositor without a DRM renderer is protocol/scaling evidence only; it is
 never reported as a rendered surface capture.
+
+The P8.5 X11 conformance command hosts the application directly in nested Xephyr. It proves
+the exclusive X11 backend load, modal ownership and global window movement, external
+plain-text and `text/html` clipboard reads, native tooltip/context-menu windows at the server
+edge, and drag/drop while retaining the same temporary settings and repository isolation.
 
 WSLg currently advertises `xdg_wm_base` version 1 on this machine, while Avalonia requires
 version 3 or later. The harness therefore hosts the native Wayland process in nested Weston

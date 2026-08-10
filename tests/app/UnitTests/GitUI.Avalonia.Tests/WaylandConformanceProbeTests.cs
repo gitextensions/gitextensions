@@ -26,4 +26,27 @@ public sealed class WaylandConformanceProbeTests
                 waylandDisplay: "wayland-0")
             .Should().BeTrue();
     }
+
+    [TestCase(false, "wayland.json", "wayland-0", null, null, null)]
+    [TestCase(true, null, "wayland-0", null, ":100", null)]
+    [TestCase(true, null, null, "x11.json", null, null)]
+    [TestCase(true, "wayland.json", "wayland-0", null, null, "wayland")]
+    [TestCase(true, null, null, "x11.json", ":100", "x11")]
+    [TestCase(true, "wayland.json", "wayland-0", "x11.json", ":100", "wayland")]
+    public void SelectBackend_should_require_an_explicit_report_and_matching_display(
+        bool isLinux,
+        string? waylandReportPath,
+        string? waylandDisplay,
+        string? x11ReportPath,
+        string? x11Display,
+        string? expected)
+    {
+        GitExtensions.Compat.WaylandConformanceProbe.SelectBackend(
+                isLinux,
+                waylandReportPath,
+                waylandDisplay,
+                x11ReportPath,
+                x11Display)
+            .Should().Be(expected);
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using System.Text;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
@@ -152,7 +153,15 @@ public sealed class ReleaseNotesGeneratorPluginTests
         string expectedRichText = OperatingSystem.IsWindows()
             ? HtmlFragment.CreateHtmlFormatClipboardText(fragment)
             : fragment;
-        data.Items.Single().TryGetRaw(richDataFormat).Should().Be(expectedRichText);
+        object? rawRichText = data.Items.Single().TryGetRaw(richDataFormat);
+        if (OperatingSystem.IsLinux())
+        {
+            rawRichText.Should().BeEquivalentTo(Encoding.UTF8.GetBytes(expectedRichText));
+        }
+        else
+        {
+            rawRichText.Should().Be(expectedRichText);
+        }
 
         if (OperatingSystem.IsWindows())
         {
