@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
@@ -18,9 +19,11 @@ using GitExtensions.Extensibility.Settings;
 using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
+using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
 using GitUI.SpellChecker;
+using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
 using WinFormsFont = GitExtensions.Shims.WinForms.Font;
 
@@ -29,6 +32,9 @@ namespace GitExtensionsTests;
 public sealed partial class ParityScreenshotTests
 {
     private const string CapturePlanEnvironmentVariable = "GITEXT_CAPTURE_PARITY_PLAN";
+    // parity-scaffolding: Isolate renderer-hostile capture matrix cells in separate processes.
+    private const string CaptureScaleEnvironmentVariable = "GITEXT_CAPTURE_PARITY_SCALE";
+    private const string CaptureThemeEnvironmentVariable = "GITEXT_CAPTURE_PARITY_THEME";
     private const string P02Category = "P0_2";
 
     [Test]
@@ -150,11 +156,92 @@ public sealed partial class ParityScreenshotTests
         using (AvaloniaControlStateDriver menuDriver = AvaloniaControlStateDriver.Apply(menuWindow, menuState))
         {
             parentMenu.IsSubMenuOpen.Should().BeTrue();
-            menuDriver.RequiresExternalSurfaceCapture.Should().BeTrue(
-                "a separate popup top level must never be mislabeled as a primary-frame capture");
+            menuDriver.PopupSurfaceRoots.Should().ContainSingle(
+                "headless Skia renders the real overlay popup host into the owning frame");
+            menuDriver.RequiresExternalSurfaceCapture.Should().BeFalse(
+                "an overlay popup host is not a separate top-level capture");
         }
 
         menuWindow.Close();
+
+        Window flyoutWindow = new() { Width = 240, Height = 100 };
+        Button flyoutButton = new()
+        {
+            Name = "btnFlyout",
+            Content = "Flyout",
+            Flyout = new MenuFlyout
+            {
+                ItemsSource = new[] { new MenuItem { Header = "Choice" } }
+            }
+        };
+        flyoutWindow.Content = flyoutButton;
+        flyoutWindow.Show();
+        Dispatcher.UIThread.RunJobs();
+        CaptureStatePlan flyoutState = new()
+        {
+            Id = "flyout.open",
+            Kind = CaptureStateKind.MenuOpen,
+            TargetField = "btnFlyout"
+        };
+        using (AvaloniaControlStateDriver flyoutDriver = AvaloniaControlStateDriver.Apply(flyoutWindow, flyoutState))
+        {
+            flyoutButton.Flyout!.IsOpen.Should().BeTrue();
+            flyoutDriver.PopupSurfaceRoots.Should().ContainSingle();
+            flyoutDriver.RequiresExternalSurfaceCapture.Should().BeFalse();
+        }
+
+        flyoutWindow.Close();
+
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        EditNetSpell hostedEditor = new() { Name = "editHosted" };
+        Window hostedEditorWindow = new() { Width = 240, Height = 100, Content = hostedEditor };
+        hostedEditorWindow.Show();
+        Dispatcher.UIThread.RunJobs();
+        CaptureStatePlan hostedFocusState = new()
+        {
+            Id = "hosted.focused",
+            Kind = CaptureStateKind.Focus,
+            TargetField = "editHosted"
+        };
+        using (AvaloniaControlStateDriver.Apply(hostedEditorWindow, hostedFocusState))
+        {
+            hostedEditor.GetTestAccessor().TextBox.IsFocused.Should().BeTrue();
+        }
+
+        CaptureStatePlan hostedTextBoxFocusState = new()
+        {
+            Id = "hosted-textbox.focused",
+            Kind = CaptureStateKind.Focus,
+            TargetField = "TextBox"
+        };
+        using (AvaloniaControlStateDriver.Apply(hostedEditorWindow, hostedTextBoxFocusState))
+        {
+            hostedEditor.GetTestAccessor().TextBox.IsFocused.Should().BeTrue();
+        }
+
+        hostedEditorWindow.Close();
+
+        Button secondTabButton = new() { Name = "btnSecondTab", Content = "Second" };
+        TabItem firstTab = new() { Header = "First", Content = "First content" };
+        TabItem secondTab = new() { Header = "Second", Content = secondTabButton };
+        TabControl tabs = new() { ItemsSource = new[] { firstTab, secondTab }, SelectedItem = firstTab };
+        Window tabWindow = new() { Width = 240, Height = 100, Content = tabs };
+        tabWindow.Show();
+        Dispatcher.UIThread.RunJobs();
+        CaptureStatePlan hiddenTabFocusState = new()
+        {
+            Id = "second.focused",
+            Kind = CaptureStateKind.Focus,
+            TargetField = "btnSecondTab"
+        };
+        using (AvaloniaControlStateDriver.Apply(tabWindow, hiddenTabFocusState))
+        {
+            tabs.SelectedItem.Should().BeSameAs(secondTab);
+            secondTabButton.IsFocused.Should().BeTrue();
+        }
+
+        tabs.SelectedItem.Should().BeSameAs(firstTab);
+        tabWindow.Close();
 
         Window unsupportedWindow = new() { Width = 240, Height = 100 };
         unsupportedWindow.Content = new Button { Name = "btnTarget", Content = "Target" };
@@ -249,6 +336,16 @@ public sealed partial class ParityScreenshotTests
                 .Where(component => component.TypeName.Contains(viewFilter, StringComparison.OrdinalIgnoreCase))
                 .ToArray();
         components.Should().NotBeEmpty($"{CaptureViewEnvironmentVariable} should match at least one capture-plan component");
+        string? themeFilter = Environment.GetEnvironmentVariable(CaptureThemeEnvironmentVariable);
+        IReadOnlyList<CaptureThemePlan> themes = string.IsNullOrWhiteSpace(themeFilter)
+            ? plan.Themes
+            : plan.Themes.Where(theme => theme.Id.Equals(themeFilter, StringComparison.OrdinalIgnoreCase)).ToArray();
+        themes.Should().NotBeEmpty($"{CaptureThemeEnvironmentVariable} should match one capture-plan theme");
+        string? scaleFilter = Environment.GetEnvironmentVariable(CaptureScaleEnvironmentVariable);
+        IReadOnlyList<int> scales = string.IsNullOrWhiteSpace(scaleFilter)
+            ? plan.Scales
+            : plan.Scales.Where(scale => scale.ToString(System.Globalization.CultureInfo.InvariantCulture) == scaleFilter).ToArray();
+        scales.Should().NotBeEmpty($"{CaptureScaleEnvironmentVariable} should match one capture-plan scale");
 
         Dictionary<string, ViewDescriptor> descriptors = GetViewDescriptors()
             .ToDictionary(descriptor => descriptor.ClassName, StringComparer.Ordinal);
@@ -274,10 +371,10 @@ public sealed partial class ParityScreenshotTests
         try
         {
             ApplyCaptureProfile(profile);
-            foreach (CaptureThemePlan theme in plan.Themes)
+            foreach (CaptureThemePlan theme in themes)
             {
                 ApplyCaptureTheme(theme);
-                foreach (int scalePercent in plan.Scales)
+                foreach (int scalePercent in scales)
                 {
                     foreach (CaptureComponentPlan component in components)
                     {
@@ -313,7 +410,7 @@ public sealed partial class ParityScreenshotTests
         string manifestPath = Path.Combine(outputDirectory, "manifest.json");
         File.WriteAllText(manifestPath, SerializeManifest(manifest));
 
-        int expectedCount = components.Sum(component => component.States.Count) * plan.Themes.Count * plan.Scales.Count;
+        int expectedCount = components.Sum(component => component.States.Count) * themes.Count * scales.Count;
         entries.Should().HaveCount(expectedCount);
         entries.Should().NotContain(entry => entry.Status == CaptureStateStatus.Failed);
         entries.Where(entry => entry.Status == CaptureStateStatus.Captured).Should().OnlyContain(
@@ -334,7 +431,24 @@ public sealed partial class ParityScreenshotTests
         string outputRoot)
     {
         Control view = CreateView(context, descriptor.ViewType);
-        (double width, double height) = GetCaptureSize(descriptor.ViewType);
+        Control captureHost = view;
+        if (descriptor.ViewType == typeof(WatermarkComboBox))
+        {
+            captureHost = CreateView(context, typeof(FileStatusList));
+            (view as IDisposable)?.Dispose();
+            view = FindNamedControl(captureHost, "cboFilterComboBox")
+                ?? throw new InvalidDataException("The FileStatusList capture host did not create cboFilterComboBox.");
+        }
+        else if (descriptor.ViewType == typeof(CaseSensitiveComboBox))
+        {
+            captureHost = CreateView(context, typeof(FormRemotes));
+            (view as IDisposable)?.Dispose();
+            view = FindNamedControl(captureHost, "Url")
+                ?? throw new InvalidDataException("The FormRemotes capture host did not create Url.");
+        }
+
+        bool cropToComponent = !ReferenceEquals(view, captureHost);
+        (double width, double height) = GetCaptureSize(captureHost.GetType());
         double renderScale = scalePercent / 100d;
         if (descriptor.ViewType == typeof(EditNetSpell)
             || descriptor.ViewType == typeof(RevisionGridControl)
@@ -345,12 +459,12 @@ public sealed partial class ParityScreenshotTests
             height = (height - 0.75) / renderScale;
         }
 
-        bool isWindow = view is Window;
-        Window window = view as Window
+        bool isWindow = captureHost is Window;
+        Window window = captureHost as Window
             ?? new Window
             {
                 Title = descriptor.ClassName,
-                Content = view,
+                Content = captureHost,
             };
         window.Width = width;
         window.Height = height;
@@ -359,71 +473,136 @@ public sealed partial class ParityScreenshotTests
 
         try
         {
-            PrepareView(view, context);
+            PrepareView(captureHost, context);
             window.Show();
             window.SetRenderScaling(renderScale);
             if (!isWindow)
+            {
+                await SeedStandaloneControlAsync(captureHost, context);
+            }
+
+            if (cropToComponent)
             {
                 await SeedStandaloneControlAsync(view, context);
             }
 
             ApplyTextValues(view, component);
 
-            await WaitForAsyncViewsAsync(view);
+            await WaitForAsyncViewsAsync(captureHost);
             // parity-scaffolding: Async loaders may replace seeded text; the capture plan remains authoritative.
             ApplyTextValues(view, component);
             Dispatcher.UIThread.RunJobs();
             using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(view, state);
-            if (driver.RequiresExternalSurfaceCapture)
+            using WriteableBitmap primaryFrame = CaptureRenderedFrame(window);
+            PixelRect primarySurfaceBounds = cropToComponent
+                ? GetScreenBounds(view, window, renderScale)
+                : GetScreenBounds(window, primaryFrame.PixelSize);
+            List<WriteableBitmap> externalFrames = [];
+            List<CapturedTopLevelFrame> capturedFrames =
+            [
+                new CapturedTopLevelFrame(
+                    view,
+                    primaryFrame,
+                    GetScreenBounds(window, primaryFrame.PixelSize))
+            ];
+            try
             {
-                throw new AvaloniaCaptureStateUnsupportedException(
-                    "The state opened a separate popup top level that headless Skia cannot compose into the primary frame.");
+                foreach (TopLevel externalTopLevel in driver.ExternalTopLevels)
+                {
+                    WriteableBitmap externalFrame = CaptureRenderedFrame(
+                        externalTopLevel,
+                        "Headless Skia did not render an opened popup top level.");
+                    externalFrames.Add(externalFrame);
+                    capturedFrames.Add(new CapturedTopLevelFrame(
+                        externalTopLevel,
+                        externalFrame,
+                        GetScreenBounds(externalTopLevel, externalFrame.PixelSize)));
+                }
+
+                PixelRect imageBounds = cropToComponent && capturedFrames.Count == 1
+                    ? primarySurfaceBounds
+                    : UnionBounds(capturedFrames.Select(frame => frame.ScreenBounds));
+                CaptureMethod captureMethod = capturedFrames.Count == 1
+                    ? CaptureMethod.HeadlessSkia
+                    : CaptureMethod.HeadlessSkiaComposite;
+                using RenderTargetBitmap? composite = capturedFrames.Count == 1
+                    ? null
+                    : ComposeTopLevels(capturedFrames, imageBounds, renderScale);
+                using WriteableBitmap? componentCrop = cropToComponent && capturedFrames.Count == 1
+                    ? CropToComponent(primaryFrame, view, window, imageBounds.Size, renderScale)
+                    : null;
+                if (componentCrop is not null)
+                {
+                    EnsureRenderedContent(
+                        componentCrop,
+                        "The owning consumer rendered a blank component region.");
+                }
+
+                Bitmap image = composite is not null
+                    ? composite
+                    : componentCrop is not null
+                        ? componentCrop
+                        : primaryFrame;
+
+                string relativeDirectory = Path.Combine(
+                    Sanitize(component.TypeName),
+                    Sanitize(theme.Id),
+                    scalePercent.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                string absoluteDirectory = Path.Combine(outputRoot, relativeDirectory);
+                Directory.CreateDirectory(absoluteDirectory);
+                string imagePath = Path.Combine(absoluteDirectory, $"{Sanitize(state.Id)}.png");
+                string treePath = Path.Combine(absoluteDirectory, $"{Sanitize(state.Id)}.tree.json");
+                using (FileStream stream = File.Create(imagePath))
+                {
+                    image.Save(stream, PngBitmapEncoderOptions.Default);
+                }
+
+                AvaloniaControlTreeReader reader = new(view, renderScale);
+                List<CaptureSurface> surfaces = capturedFrames
+                    .Select((capturedFrame, index) => reader.ReadSurface(
+                        capturedFrame.TreeRoot,
+                        index == 0 ? "primary" : $"popup:{index - 1}",
+                        index == 0 ? primarySurfaceBounds : capturedFrame.ScreenBounds))
+                    .ToList();
+                surfaces.AddRange(driver.PopupSurfaceRoots.Select((popupRoot, index) => reader.ReadSurface(
+                    popupRoot,
+                    $"popup:{capturedFrames.Count - 1 + index}",
+                    GetScreenBounds(popupRoot, window, renderScale))));
+                CaptureDocument document = CreateDocument(
+                    view,
+                    surfaces,
+                    imageBounds.Size,
+                    captureMethod,
+                    theme,
+                    GetThemeSourceSha256(theme),
+                    scalePercent,
+                    state.Id,
+                    component.TypeName);
+                string treeJson = CaptureJson.Serialize(document);
+                CaptureJson.Serialize(CaptureJson.Deserialize(treeJson)).Should().Be(treeJson);
+                File.WriteAllText(treePath, treeJson);
+
+                return new CaptureManifestEntry
+                {
+                    ComponentType = component.TypeName,
+                    ThemeId = theme.Id,
+                    ScalePercent = scalePercent,
+                    State = state.Id,
+                    Status = CaptureStateStatus.Captured,
+                    Note = null,
+                    DpiMode = CaptureDpiMode.HeadlessRenderScale,
+                    CaptureMethod = captureMethod,
+                    ImageFile = Path.GetRelativePath(outputRoot, imagePath).Replace('\\', '/'),
+                    TreeFile = Path.GetRelativePath(outputRoot, treePath).Replace('\\', '/')
+                };
             }
-
-            WriteableBitmap frame = window.CaptureRenderedFrame()
-                ?? throw new AvaloniaCaptureStateUnsupportedException("Headless Skia did not render a frame.");
-            EnsureRenderedContent(frame);
-
-            string relativeDirectory = Path.Combine(
-                Sanitize(component.TypeName),
-                Sanitize(theme.Id),
-                scalePercent.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            string absoluteDirectory = Path.Combine(outputRoot, relativeDirectory);
-            Directory.CreateDirectory(absoluteDirectory);
-            string imagePath = Path.Combine(absoluteDirectory, $"{Sanitize(state.Id)}.png");
-            string treePath = Path.Combine(absoluteDirectory, $"{Sanitize(state.Id)}.tree.json");
-            using (FileStream stream = File.Create(imagePath))
+            finally
             {
-                frame.Save(stream, PngBitmapEncoderOptions.Default);
+                foreach (WriteableBitmap externalFrame in externalFrames)
+                {
+                    externalFrame.Dispose();
+                }
             }
-
-            AvaloniaControlTreeReader reader = new(view, renderScale);
-            CaptureDocument document = CreateDocument(
-                view,
-                reader.ReadPrimary(view, frame.PixelSize),
-                frame.PixelSize,
-                theme,
-                GetThemeSourceSha256(theme),
-                scalePercent,
-                state.Id,
-                component.TypeName);
-            string treeJson = CaptureJson.Serialize(document);
-            CaptureJson.Serialize(CaptureJson.Deserialize(treeJson)).Should().Be(treeJson);
-            File.WriteAllText(treePath, treeJson);
-
-            return new CaptureManifestEntry
-            {
-                ComponentType = component.TypeName,
-                ThemeId = theme.Id,
-                ScalePercent = scalePercent,
-                State = state.Id,
-                Status = CaptureStateStatus.Captured,
-                Note = null,
-                DpiMode = CaptureDpiMode.HeadlessRenderScale,
-                CaptureMethod = CaptureMethod.HeadlessSkia,
-                ImageFile = Path.GetRelativePath(outputRoot, imagePath).Replace('\\', '/'),
-                TreeFile = Path.GetRelativePath(outputRoot, treePath).Replace('\\', '/')
-            };
         }
         catch (AvaloniaCaptureStateUnsupportedException exception)
         {
@@ -448,10 +627,12 @@ public sealed partial class ParityScreenshotTests
         finally
         {
             window.Close();
-            if (!ReferenceEquals(window, view) && view is IDisposable disposableView)
+            if (!ReferenceEquals(window, captureHost) && captureHost is IDisposable disposableHost)
             {
-                disposableView.Dispose();
+                disposableHost.Dispose();
             }
+
+            Dispatcher.UIThread.RunJobs();
         }
     }
 
@@ -459,6 +640,27 @@ public sealed partial class ParityScreenshotTests
         Control root,
         CaptureSurface surface,
         PixelSize imageSize,
+        CaptureThemePlan theme,
+        string sourceSha256,
+        int scalePercent,
+        string state,
+        string? componentType = null)
+        => CreateDocument(
+            root,
+            [surface],
+            imageSize,
+            CaptureMethod.HeadlessSkia,
+            theme,
+            sourceSha256,
+            scalePercent,
+            state,
+            componentType);
+
+    private static CaptureDocument CreateDocument(
+        Control root,
+        IReadOnlyList<CaptureSurface> surfaces,
+        PixelSize imageSize,
+        CaptureMethod captureMethod,
         CaptureThemePlan theme,
         string sourceSha256,
         int scalePercent,
@@ -494,11 +696,124 @@ public sealed partial class ParityScreenshotTests
             {
                 WidthPx = imageSize.Width,
                 HeightPx = imageSize.Height,
-                CaptureMethod = CaptureMethod.HeadlessSkia
+                CaptureMethod = captureMethod
             },
-            Surfaces = [surface]
+            Surfaces = surfaces
         };
     }
+
+    private static PixelRect GetScreenBounds(TopLevel topLevel, PixelSize frameSize)
+    {
+        PixelPoint origin = topLevel.PointToScreen(default);
+        return new PixelRect(origin.X, origin.Y, frameSize.Width, frameSize.Height);
+    }
+
+    private static PixelRect GetScreenBounds(Control control, TopLevel topLevel, double renderScale)
+    {
+        Point relativeOrigin = control.TranslatePoint(default, topLevel)
+            ?? throw new AvaloniaCaptureStateUnsupportedException("The popup host could not be translated into owning-window coordinates.");
+        PixelPoint topLevelOrigin = topLevel.PointToScreen(default);
+        return new PixelRect(
+            checked(topLevelOrigin.X + ToPixel(relativeOrigin.X, renderScale)),
+            checked(topLevelOrigin.Y + ToPixel(relativeOrigin.Y, renderScale)),
+            Math.Max(1, ToPixel(control.Bounds.Width, renderScale)),
+            Math.Max(1, ToPixel(control.Bounds.Height, renderScale)));
+
+        static int ToPixel(double value, double scale) =>
+            checked((int)Math.Round(value * scale, MidpointRounding.AwayFromZero));
+    }
+
+    private static PixelRect UnionBounds(IEnumerable<PixelRect> bounds)
+    {
+        PixelRect[] values = bounds.ToArray();
+        if (values.Length == 0)
+        {
+            throw new AvaloniaCaptureStateUnsupportedException("No rendered top-level surfaces were available for capture.");
+        }
+
+        int left = values.Min(value => value.X);
+        int top = values.Min(value => value.Y);
+        int right = values.Max(value => value.Right);
+        int bottom = values.Max(value => value.Bottom);
+        return new PixelRect(left, top, checked(right - left), checked(bottom - top));
+    }
+
+    // parity-scaffolding: Exact-height combo boxes are cropped from a real owning consumer,
+    // preserving the product template and layout instead of enlarging the standalone control.
+    private static WriteableBitmap CropToComponent(
+        WriteableBitmap source,
+        Control component,
+        TopLevel topLevel,
+        PixelSize targetSize,
+        double renderScale)
+    {
+        Point relativeOrigin = component.TranslatePoint(default, topLevel)
+            ?? throw new AvaloniaCaptureStateUnsupportedException("The component could not be translated into owning-window coordinates.");
+        int sourceX = checked((int)Math.Round(relativeOrigin.X * renderScale, MidpointRounding.AwayFromZero));
+        int sourceY = checked((int)Math.Round(relativeOrigin.Y * renderScale, MidpointRounding.AwayFromZero));
+        if (sourceX < 0
+            || sourceY < 0
+            || sourceX + targetSize.Width > source.PixelSize.Width
+            || sourceY + targetSize.Height > source.PixelSize.Height)
+        {
+            throw new AvaloniaCaptureStateUnsupportedException("The owning consumer did not contain the requested component crop.");
+        }
+
+        using WriteableBitmap normalizedSource = new(
+            source.PixelSize,
+            source.Dpi,
+            PixelFormat.Bgra8888,
+            AlphaFormat.Unpremul);
+        using (ILockedFramebuffer normalizedFramebuffer = normalizedSource.Lock())
+        {
+            source.CopyPixels(normalizedFramebuffer);
+        }
+
+        WriteableBitmap crop = new(targetSize, source.Dpi, PixelFormat.Bgra8888, AlphaFormat.Unpremul);
+        using ILockedFramebuffer sourceFramebuffer = normalizedSource.Lock();
+        using ILockedFramebuffer targetFramebuffer = crop.Lock();
+        byte[] row = new byte[targetSize.Width * 4];
+        for (int y = 0; y < targetSize.Height; y++)
+        {
+            Marshal.Copy(
+                IntPtr.Add(sourceFramebuffer.Address, ((sourceY + y) * sourceFramebuffer.RowBytes) + (sourceX * 4)),
+                row,
+                0,
+                row.Length);
+            Marshal.Copy(row, 0, IntPtr.Add(targetFramebuffer.Address, y * targetFramebuffer.RowBytes), row.Length);
+        }
+
+        return crop;
+    }
+
+    // parity-scaffolding: Headless Skia renders each real Avalonia top level independently;
+    // preserve their reported screen placement when producing the one image shared with ParityDiff.
+    private static RenderTargetBitmap ComposeTopLevels(
+        IReadOnlyList<CapturedTopLevelFrame> frames,
+        PixelRect imageBounds,
+        double renderScale)
+    {
+        RenderTargetBitmap composite = new(
+            imageBounds.Size,
+            new Vector(96 * renderScale, 96 * renderScale));
+        using DrawingContext context = composite.CreateDrawingContext();
+        foreach (CapturedTopLevelFrame frame in frames)
+        {
+            Rect destination = new(
+                (frame.ScreenBounds.X - imageBounds.X) / renderScale,
+                (frame.ScreenBounds.Y - imageBounds.Y) / renderScale,
+                frame.Frame.PixelSize.Width / renderScale,
+                frame.Frame.PixelSize.Height / renderScale);
+            context.DrawImage(frame.Frame, new Rect(frame.Frame.Size), destination);
+        }
+
+        return composite;
+    }
+
+    private sealed record CapturedTopLevelFrame(
+        Control TreeRoot,
+        WriteableBitmap Frame,
+        PixelRect ScreenBounds);
 
     private static void ApplyTextValues(Control root, CaptureComponentPlan component)
     {
@@ -594,7 +909,39 @@ public sealed partial class ParityScreenshotTests
         return JsonSerializer.Serialize(manifest, options) + Environment.NewLine;
     }
 
-    private static void EnsureRenderedContent(WriteableBitmap bitmap)
+    private static void EnsureRenderedContent(
+        WriteableBitmap bitmap,
+        string unsupportedMessage = "Headless Skia returned a blank image.")
+    {
+        if (HasRenderedContent(bitmap))
+        {
+            return;
+        }
+
+        throw new AvaloniaCaptureStateUnsupportedException(unsupportedMessage);
+    }
+
+    private static WriteableBitmap CaptureRenderedFrame(
+        TopLevel topLevel,
+        string unsupportedMessage = "Headless Skia returned a blank image.")
+    {
+        for (int attempt = 0; attempt < 4; attempt++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            WriteableBitmap? frame = topLevel.CaptureRenderedFrame();
+            if (frame is not null && HasRenderedContent(frame))
+            {
+                return frame;
+            }
+
+            frame?.Dispose();
+            topLevel.InvalidateVisual();
+        }
+
+        throw new AvaloniaCaptureStateUnsupportedException(unsupportedMessage);
+    }
+
+    private static bool HasRenderedContent(WriteableBitmap bitmap)
     {
         using ILockedFramebuffer framebuffer = bitmap.Lock();
         int bytesPerPixel = framebuffer.Format.BitsPerPixel / 8;
@@ -608,12 +955,12 @@ public sealed partial class ParityScreenshotTests
                 IntPtr address = IntPtr.Add(framebuffer.Address, (y * framebuffer.RowBytes) + (x * bytesPerPixel));
                 if (Marshal.ReadInt32(address) != firstPixel)
                 {
-                    return;
+                    return true;
                 }
             }
         }
 
-        throw new AvaloniaCaptureStateUnsupportedException("Headless Skia returned a blank image.");
+        return false;
     }
 
     private static string GetCapturePlanPath()

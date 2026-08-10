@@ -52,7 +52,7 @@ internal static class ComponentFactory
             // parity-scaffolding: Hosts the internal modeless editor-search dialog without changing GitUI visibility.
             "GitUI.FormFindInCommitFilesGitGrep" => CreateWithCommands(component.TypeName, commands),
             "GitUI.CommandsDialogs.SettingsDialog.Pages.ColorsSettingsPage" =>
-                new ColorsSettingsPage(GitUICommands.EmptyServiceProvider),
+                CreateSettingsPage(new ColorsSettingsPage(GitUICommands.EmptyServiceProvider)),
             "GitUI.CommandsDialogs.SettingsDialog.Pages.BlameViewerSettingsPage" =>
                 CreateSettingsPage(new BlameViewerSettingsPage(commands)),
             "GitUI.CommandsDialogs.SettingsDialog.Pages.CommitDialogSettingsPage" =>
