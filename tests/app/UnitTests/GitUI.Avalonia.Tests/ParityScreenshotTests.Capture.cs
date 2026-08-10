@@ -493,6 +493,28 @@ public sealed partial class ParityScreenshotTests
             // parity-scaffolding: Async loaders may replace seeded text; the capture plan remains authoritative.
             ApplyTextValues(view, component);
             Dispatcher.UIThread.RunJobs();
+            if (view is FileStatusList fileStatusList)
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    string vswhere = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}\Microsoft Visual Studio\Installer\vswhere.exe";
+                    if (File.Exists(vswhere))
+                    {
+                        // parity-scaffolding: Settle the original asynchronous Visual Studio discovery before the first menu state.
+                        VisualStudioIntegration.Init();
+                        for (int attempt = 0; attempt < 200 && !VisualStudioIntegration.IsVisualStudioInstalled; attempt++)
+                        {
+                            await Task.Delay(10);
+                        }
+
+                        VisualStudioIntegration.IsVisualStudioInstalled.Should().BeTrue();
+                    }
+                }
+
+                // parity-scaffolding: Apply the real opening contract after the paired selection has settled.
+                fileStatusList.GetTestAccessor().UpdateContextMenu().Should().BeFalse();
+            }
+
             using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(view, state);
             using WriteableBitmap primaryFrame = CaptureRenderedFrame(window);
             PixelRect primarySurfaceBounds = cropToComponent

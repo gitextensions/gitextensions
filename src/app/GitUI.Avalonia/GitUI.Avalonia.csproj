@@ -184,6 +184,7 @@
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="ExCSS" />
+    <PackageReference Include="EnvDTE" />
     <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="Tmds.DBus.Protocol" />
   </ItemGroup>
