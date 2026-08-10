@@ -26,6 +26,9 @@ public class MessageBoxes : Translate
     private readonly TranslationString _confirmBranchCheckoutCaption = new("Confirm checkout");
     private readonly TranslationString _confirmBranchCheckout = new(@"Are you sure you want to check out branch ""{0}""?");
 
+    private readonly TranslationString _retry = new("Retry");
+    private readonly TranslationString _retryOpenVisualStudio = new("Visual Studio failed to open the file.\nThis can be caused by an opened dialog window or other pending operations.\nTry again?");
+
     private readonly TranslationString _unresolvedMergeConflictsCaption = new("Merge conflicts");
     private readonly TranslationString _unresolvedMergeConflicts = new("There are unresolved merge conflicts, solve conflicts now?");
 
@@ -103,6 +106,9 @@ public class MessageBoxes : Translate
     public static bool ConfirmBranchCheckout(WinFormsShims.IWin32Window? owner, string branchName)
         => !AppSettings.ConfirmBranchCheckout.Value
            || Confirm(owner, string.Format(Instance._confirmBranchCheckout.Text, branchName), Instance._confirmBranchCheckoutCaption.Text);
+
+    public static bool ConfirmRetryOpenVisualStudio(WinFormsShims.IWin32Window? owner = null)
+        => Confirm(owner, Instance._retryOpenVisualStudio.Text, Instance._retry.Text);
 
     public static bool ConfirmUpdateSubmodules(WinFormsShims.IWin32Window? owner)
     {

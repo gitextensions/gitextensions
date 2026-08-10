@@ -1201,25 +1201,44 @@ public sealed partial class ParityScreenshotTests
                 case FileStatusList fileStatusList:
                     int splitIndex = Math.Max(1, context.ChangedFiles.Count / 2);
                     fileStatusList.GroupByRevision = true;
-                    fileStatusList.SetDiffs(
-                    [
-                        new FileStatusWithDescription(
-                            null,
+                    if (Environment.GetEnvironmentVariable(CaptureFileStatusTreeEnvironmentVariable) == "1")
+                    {
+                        fileStatusList.SetDiffs(
+                        [
+                            new FileStatusWithDescription(
+                                null,
+                                context.HeadRevision,
+                                "Diff with parent",
+                                [.. context.ChangedFiles.Take(splitIndex)]),
+                            new FileStatusWithDescription(
+                                null,
+                                context.HeadRevision,
+                                "Working directory",
+                                [.. context.ChangedFiles.Skip(splitIndex)]),
+                        ],
+                        isFileTreeMode: true);
+                    }
+                    else
+                    {
+                        // parity-scaffolding: Match the original standalone list's revision pairs and group order.
+                        fileStatusList.SetStashDiffs(
                             context.HeadRevision,
-                            "Diff with parent",
-                            [.. context.ChangedFiles.Take(splitIndex)]),
-                        new FileStatusWithDescription(
-                            null,
-                            context.HeadRevision,
+                            new GitRevision(ObjectId.IndexId),
                             "Working directory",
-                            [.. context.ChangedFiles.Skip(splitIndex)]),
-                    ],
-                    isFileTreeMode:
-                        Environment.GetEnvironmentVariable(CaptureFileStatusTreeEnvironmentVariable) == "1");
+                            [.. context.ChangedFiles.Skip(splitIndex)],
+                            new GitRevision(ObjectId.WorkTreeId),
+                            "Diff with parent",
+                            [.. context.ChangedFiles.Take(splitIndex)]);
+                    }
+
                     if (ReferenceEquals(fileStatusList, root)
                         && Environment.GetEnvironmentVariable(CaptureFileStatusTreeEnvironmentVariable) != "1")
                     {
                         fileStatusList.SetFilter("src|CHANGELOG");
+                        // parity-scaffolding: Keep the paired context-menu capture on the same fixture path as WinForms.
+                        fileStatusList.ClearSelected();
+                        fileStatusList.SelectFileOrFolder(RelativePath.From("CHANGELOG.md")).Should().BeTrue();
+                        fileStatusList.SelectedGitItems.Should().ContainSingle(item => item.Name == "CHANGELOG.md" && !item.IsSubmodule);
                     }
 
                     break;
