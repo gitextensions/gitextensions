@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -31,6 +31,7 @@ public partial class FileStatusList : GitModuleControl
     private static readonly TimeSpan FilterThrottleDuration = TimeSpan.FromMilliseconds(250);
 
     private readonly FileStatusDiffCalculator _diffCalculator;
+    private readonly FileAssociatedIconProvider _iconProvider = new();
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private readonly CancellationTokenSequence _reloadSequence = new();
     private readonly DispatcherTimer _filterTimer = new() { Interval = FilterThrottleDuration };
@@ -551,7 +552,6 @@ public partial class FileStatusList : GitModuleControl
         lstFiles.ItemsSource = null;
         tvDiffFiles.ItemsSource = null;
         tvFiles.ItemsSource = null;
-        UpdateCount(0);
         UpdateEmptyState();
     }
 
@@ -1116,7 +1116,6 @@ public partial class FileStatusList : GitModuleControl
             lstFiles.ItemsSource = visibleItems;
         }
 
-        UpdateCount(_gitItemFilteredStatuses.Count);
         UpdateEmptyState();
         bool selectionRestored = selectedFileStatus is not null && SelectFileStatusItem(selectedFileStatus, notify: false);
         selectionRestored |= !selectionRestored
@@ -1637,6 +1636,10 @@ public partial class FileStatusList : GitModuleControl
         if (node.Item is not null)
         {
             UpdateSubmoduleImageWhenReady(image, node.Item.Item);
+            if (!node.Item.Item.IsSubmodule && !string.IsNullOrWhiteSpace(node.Item.Item.GrepString))
+            {
+                LoadFileIcons([(image, node.Item.Item.Name)], CancellationToken.None);
+            }
         }
 
         return new StackPanel
@@ -1669,6 +1672,10 @@ public partial class FileStatusList : GitModuleControl
         if (node.Item is not null)
         {
             UpdateSubmoduleImageWhenReady(image, node.Item.Item);
+            if (!node.Item.Item.IsSubmodule && !string.IsNullOrWhiteSpace(node.Item.Item.GrepString))
+            {
+                LoadFileIcons([(image, node.Item.Item.Name)], CancellationToken.None);
+            }
         }
 
         return new StackPanel
@@ -1685,14 +1692,6 @@ public partial class FileStatusList : GitModuleControl
                 },
             },
         };
-    }
-
-    private void UpdateCount(int count)
-    {
-        string suffix = _gitItemStatuses.Count == 1 ? "file" : "files";
-        lblCount.Text = count == _gitItemStatuses.Count
-            ? $"{count} {suffix}"
-            : $"{count} / {_gitItemStatuses.Count} {suffix}";
     }
 
     private void BindCommands(IGitUICommands commands)
@@ -1762,6 +1761,11 @@ public partial class FileStatusList : GitModuleControl
             Margin = new Avalonia.Thickness(3, 0, 3, 0),
         };
         UpdateSubmoduleImageWhenReady(image, gitItemStatus);
+        if (!gitItemStatus.IsSubmodule && !string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
+        {
+            LoadFileIcons([(image, gitItemStatus.Name)], CancellationToken.None);
+        }
+
         row.Children.Add(image);
         row.Children.Add(
             new TextBlock
@@ -1907,7 +1911,6 @@ public partial class FileStatusList : GitModuleControl
     internal readonly struct TestAccessor(FileStatusList control)
     {
         internal WatermarkComboBox FilterComboBox => control.cboFilterComboBox;
-        internal TextBlock CountLabel => control.lblCount;
         internal TextBlock NoFilesLabel => control.NoFiles;
         internal ListBox List => control.lstFiles;
         internal TreeView DiffTree => control.tvDiffFiles;

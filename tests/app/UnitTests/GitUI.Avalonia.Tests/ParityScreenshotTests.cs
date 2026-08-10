@@ -74,6 +74,8 @@ public sealed partial class ParityScreenshotTests
     private const string CaptureWorkingDirectoryMenuEnvironmentVariable = "GITEXT_CAPTURE_WORKING_DIRECTORY_MENU";
     // parity-scaffolding: Gives before/after extraction captures identical rendered repository text.
     private const string CaptureDeterministicRepositoryEnvironmentVariable = "GITEXT_CAPTURE_PARITY_DETERMINISTIC_REPOSITORY";
+    // parity-scaffolding: Lets paired WinForms/Avalonia captures consume one externally-owned repository fixture.
+    private const string CaptureRepositoryEnvironmentVariable = "GITEXT_CAPTURE_PARITY_REPOSITORY";
     private const string AxamlExtension = ".axaml";
     private const string AppSourcePath = "src/App.cs";
     private const string FeatureBranchName = "feature/visual-parity";
@@ -1583,6 +1585,11 @@ public sealed partial class ParityScreenshotTests
             return (682, 235);
         }
 
+        if (viewType == typeof(FileStatusList))
+        {
+            return (682, 485);
+        }
+
         if (viewType == typeof(ErrorControl))
         {
             return (2080, 1447);
@@ -1989,6 +1996,7 @@ public sealed partial class ParityScreenshotTests
 
     private sealed class CaptureContext : IDisposable, IGitUICommandsSource
     {
+        private readonly bool _ownsWorkingDirectory;
         private readonly ServiceContainer _serviceContainer;
         private readonly string _workingDirectory;
 
@@ -2008,18 +2016,37 @@ public sealed partial class ParityScreenshotTests
             GitCommands.ServiceContainerRegistry.RegisterServices(_serviceContainer);
             GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
 
-            string repositoryDirectoryName = Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
-                ? "GitExtensions.Parity-Deterministic"
-                : $"GitExtensions.Parity-{Guid.NewGuid():N}";
-            _workingDirectory = Path.Combine(Path.GetTempPath(), repositoryDirectoryName);
-            if (Directory.Exists(_workingDirectory))
+            string? captureRepository = Environment.GetEnvironmentVariable(CaptureRepositoryEnvironmentVariable);
+            _ownsWorkingDirectory = string.IsNullOrWhiteSpace(captureRepository);
+            if (_ownsWorkingDirectory)
             {
-                TestDirectory.Delete(_workingDirectory);
+                string repositoryDirectoryName = Environment.GetEnvironmentVariable(CaptureDeterministicRepositoryEnvironmentVariable) == "1"
+                    ? "GitExtensions.Parity-Deterministic"
+                    : $"GitExtensions.Parity-{Guid.NewGuid():N}";
+                _workingDirectory = Path.Combine(Path.GetTempPath(), repositoryDirectoryName);
+                if (Directory.Exists(_workingDirectory))
+                {
+                    TestDirectory.Delete(_workingDirectory);
+                }
+
+                Directory.CreateDirectory(_workingDirectory);
+            }
+            else
+            {
+                _workingDirectory = Path.GetFullPath(captureRepository!);
+                if (!Directory.Exists(Path.Combine(_workingDirectory, ".git")))
+                {
+                    throw new InvalidDataException(
+                        $"Capture repository '{_workingDirectory}' is not an existing non-bare Git repository.");
+                }
             }
 
-            Directory.CreateDirectory(_workingDirectory);
             Module = new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
-            CreateRepository();
+            if (_ownsWorkingDirectory)
+            {
+                CreateRepository();
+            }
+
             Commands = new GitUICommands(_serviceContainer, Module);
 
             Refs = Module.GetRefs(RefsFilter.NoFilter);
@@ -2095,7 +2122,10 @@ public sealed partial class ParityScreenshotTests
         public void Dispose()
         {
             _serviceContainer.Dispose();
-            TestDirectory.Delete(_workingDirectory);
+            if (_ownsWorkingDirectory)
+            {
+                TestDirectory.Delete(_workingDirectory);
+            }
         }
 
         private void CreateRepository()

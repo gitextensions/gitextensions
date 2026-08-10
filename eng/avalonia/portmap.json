@@ -1851,7 +1851,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Reusable list/tree boundary with the original regex filter, revision grouping, repository tree, selection/navigation, status images, and WinForms-shaped events. P2.2 restores the cancellable git-grep calculation path, search history, persisted visibility, active search surface, and modeless FormFindInCommitFilesGitGrep integration for diff and file-tree consumers. P4.2 restores the same-named CopyPathsToolStripMenuItem with the original selection callback and translation identities. Associated shell icons still use the generic file icon until a cross-platform provider exists."
+    "notes": "Reusable list/tree boundary with the original regex filter, revision grouping, repository tree, selection/navigation, status images, and WinForms-shaped events. P2.2 restores the cancellable git-grep calculation path, search history, persisted visibility, active search surface, and modeless FormFindInCommitFilesGitGrep integration for diff and file-tree consumers. P4.2 restores the same-named CopyPathsToolStripMenuItem with the original selection callback and translation identities. P8.6c.1 routes the original FileAssociatedIconProvider through the portable icon shim to native Windows, freedesktop, and AppKit sources."
   },
   "src/app/GitUI/UserControls/FileStatusList.ContextMenu.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.ContextMenu.cs",
@@ -1863,7 +1863,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Restores the full toolbar, filter/search/loading surfaces, status list, repository tree and same-named context-menu identities. P2.2 makes the previously-deferred git-grep row functional; P2.1 capture evidence remains diagnostic rather than an exact visual completion claim."
+    "notes": "Restores the full toolbar, filter/search/loading surfaces, status list, repository tree and same-named context-menu identities. P2.2 makes the previously-deferred git-grep row functional. P8.6c.1 restores the WatermarkComboBox base theme and original overlapping filter/delete layout, and removes the Avalonia-only count label. Paired capture evidence remains diagnostic rather than an exact visual completion claim."
   },
   "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs": {
     "twin": "src/app/GitUI/UserControls/FileStatusDiffCalculator.cs",
@@ -3943,7 +3943,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.FileIcons.cs",
     "status": "functional",
     "basedOn": "ba802d6bc5464f1120062c0b6cd808d1fb6c4e0b",
-    "notes": "Preserves extension-keyed icon caching through native Avalonia images; platform shell associated icons remain explicit visual debt."
+    "notes": "Preserves the original FileAssociatedIconProvider and extension-keyed cache. P8.6c.1 supplies native Windows shell, freedesktop shared-MIME/icon-theme, and AppKit icon sources through the portable Icon shim; macOS runtime verification remains P8.4 debt."
   },
   "src/app/GitUI/UserControls/FileStatusList.GitGrepState.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.GitGrepState.cs",

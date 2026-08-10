@@ -341,6 +341,18 @@
   <Style Selector="TextBox.file-filter-invalid">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidFilterBackgroundBrush}" />
   </Style>
+  <Style Selector="ComboBox.file-filter-active">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsValidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox.file-filter-active /template/ TextBox#PART_EditableTextBox">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsValidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox.file-filter-invalid">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidFilterBackgroundBrush}" />
+  </Style>
+  <Style Selector="ComboBox.file-filter-invalid /template/ TextBox#PART_EditableTextBox">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInvalidFilterBackgroundBrush}" />
+  </Style>
   <Style Selector="TextBox.plugin-setting-invalid">
     <Setter Property="Background" Value="{StaticResource GitExtensionsInvalidSettingBackgroundBrush}" />
     <Setter Property="Foreground" Value="{StaticResource GitExtensionsInvalidSettingForegroundBrush}" />
