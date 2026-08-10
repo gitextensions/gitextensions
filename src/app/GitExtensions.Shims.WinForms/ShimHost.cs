@@ -1,4 +1,4 @@
-namespace GitExtensions.Shims.WinForms;
+﻿namespace GitExtensions.Shims.WinForms;
 
 /// <summary>
 ///  Registry for the platform services behind the WinForms stand-in types.
@@ -7,6 +7,11 @@ namespace GitExtensions.Shims.WinForms;
 /// </summary>
 public static class ShimHost
 {
+    /// <summary>
+    ///  Gets or sets the optional desktop file-icon extractor behind <see cref="Icon.ExtractAssociatedIcon"/>.
+    /// </summary>
+    public static IIconExtractor? IconExtractor { get; set; }
+
     private static IMessageBoxHost? _messageBoxHost;
 
     /// <summary>

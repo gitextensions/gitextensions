@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Avalonia.Controls;
 using GitExtensions.Extensibility.Translations.Xliff;
 
@@ -17,6 +17,8 @@ public sealed class WatermarkComboBox : ComboBox
         IsEditable = true;
         Watermark = string.Empty;
     }
+
+    protected override Type StyleKeyOverride => typeof(ComboBox);
 
     /// <summary>
     ///  Gets or sets the watermark text to display when the ComboBox is empty.

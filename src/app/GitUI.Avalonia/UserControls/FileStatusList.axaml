@@ -154,17 +154,16 @@
         </compat:IconDropDownButton.Flyout>
       </compat:IconDropDownButton>
     </StackPanel>
-    <Grid DockPanel.Dock="Top" Height="25" ColumnDefinitions="*,Auto,Auto">
-      <userControls:WatermarkComboBox x:Name="cboFilterComboBox" Grid.Column="0" MinHeight="23" Padding="4,1" Watermark="Filter files using a regular expression..." />
-      <Button x:Name="DeleteFilterButton" Grid.Column="1" Classes="gitextensions-toolbar-button gitextensions-icon-only" Width="23" Height="23" IsVisible="False">
+    <Grid DockPanel.Dock="Top" Height="23">
+      <userControls:WatermarkComboBox x:Name="cboFilterComboBox" HorizontalAlignment="Stretch" MinHeight="23" Padding="4,1" Watermark="Filter files using a regular expression..." />
+      <Button x:Name="DeleteFilterButton" Classes="gitextensions-toolbar-button gitextensions-icon-only" Width="18" Height="23" Margin="0,0,18,0" HorizontalAlignment="Right" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="/Resources/Icons/DeleteText.png" />
       </Button>
-      <TextBlock x:Name="lblCount" Grid.Column="2" Margin="6,0,4,0" MinWidth="44" Opacity="0.7" VerticalAlignment="Center" />
     </Grid>
     <Separator x:Name="lblSplitter" DockPanel.Dock="Top" />
-    <Grid x:Name="FindInCommitFilesGitGrepPanel" DockPanel.Dock="Top" Height="25" ColumnDefinitions="*,Auto" IsVisible="False">
-      <userControls:WatermarkComboBox x:Name="cboFindInCommitFilesGitGrep" Grid.Column="0" Watermark="Find in commit files using git-grep regular expression..." />
-      <Button x:Name="DeleteSearchButton" Grid.Column="1" Classes="gitextensions-toolbar-button gitextensions-icon-only" Width="23">
+    <Grid x:Name="FindInCommitFilesGitGrepPanel" DockPanel.Dock="Top" Height="23" IsVisible="False">
+      <userControls:WatermarkComboBox x:Name="cboFindInCommitFilesGitGrep" HorizontalAlignment="Stretch" Watermark="Find in commit files using git-grep regular expression..." />
+      <Button x:Name="DeleteSearchButton" Classes="gitextensions-toolbar-button gitextensions-icon-only" Width="18" Height="23" Margin="0,0,18,0" HorizontalAlignment="Right">
         <Image Classes="gitextensions-icon-16" Source="/Resources/Icons/DeleteText.png" />
       </Button>
     </Grid>
