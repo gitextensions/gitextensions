@@ -1,6 +1,7 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitUI;
 using GitUI.UserControls;
 using GitUI.UserControls.Settings;
@@ -97,11 +98,25 @@ public sealed class SmallControlParityTests
     public void WatermarkComboBox_should_leave_text_unchanged_while_exposing_watermark()
     {
         WatermarkComboBox control = new() { Watermark = "Find...", Text = "needle" };
+        Window window = new() { Content = control };
 
-        control.PlaceholderText.Should().Be("Find...");
-        control.Text.Should().Be("needle");
-        control.GetTestAccessor().BaseText.Should().Be("needle");
-        control.IsWatermarkVisible.Should().BeFalse();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            control.PlaceholderText.Should().Be("Find...");
+            control.Text.Should().Be("needle");
+            control.GetTestAccessor().BaseText.Should().Be("needle");
+            control.IsWatermarkVisible.Should().BeFalse();
+            control.GetVisualDescendants().OfType<TextBox>()
+                .Should().ContainSingle(textBox => textBox.Name == "PART_EditableTextBox")
+                .Which.Text.Should().Be("needle");
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
