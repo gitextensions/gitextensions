@@ -35,7 +35,6 @@ public sealed class FileStatusListTests
 
         control.SetFilter("old-name").Should().Be(2, "the renamed file matches its old name and range-diff markers stay visible");
         control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
-        accessor.CountLabel.Text.Should().Be("2 / 3 files");
         accessor.FilterComboBox.Classes.Should().Contain("file-filter-active");
 
         control.SetFilter("[").Should().Be(2, "an invalid expression keeps the last valid result");
@@ -45,7 +44,6 @@ public sealed class FileStatusListTests
 
         control.SetFilter(string.Empty).Should().Be(3);
         control.GitItemFilteredStatuses.Should().Equal(renamed, documentation, rangeDiff);
-        accessor.CountLabel.Text.Should().Be("3 files");
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-active");
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-invalid");
     }

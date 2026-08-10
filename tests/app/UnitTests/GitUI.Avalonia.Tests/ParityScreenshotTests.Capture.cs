@@ -451,6 +451,7 @@ public sealed partial class ParityScreenshotTests
         (double width, double height) = GetCaptureSize(captureHost.GetType());
         double renderScale = scalePercent / 100d;
         if (descriptor.ViewType == typeof(EditNetSpell)
+            || descriptor.ViewType == typeof(FileStatusList)
             || descriptor.ViewType == typeof(RevisionGridControl)
             || descriptor.ViewType == typeof(BlameViewerSettingsPage))
         {

@@ -1,4 +1,4 @@
-namespace GitExtensions.Shims.WinForms;
+﻿namespace GitExtensions.Shims.WinForms;
 
 /// <summary>
 ///  Stand-in for <c>System.Drawing.Icon</c>: an opaque icon reference.
@@ -14,11 +14,10 @@ public sealed class Icon : IDisposable
     public object? PlatformIcon { get; set; }
 
     /// <summary>
-    ///  Returns the icon associated with a file. There is no cross-platform file-association
-    ///  icon source, so this documented no-op always returns <see langword="null"/>,
-    ///  which callers already treat as "no icon available".
+    ///  Returns the icon associated with a file through the installed desktop host.
+    ///  A missing host means no icon is available, which callers already support.
     /// </summary>
-    public static Icon? ExtractAssociatedIcon(string filePath) => null;
+    public static Icon? ExtractAssociatedIcon(string filePath) => ShimHost.IconExtractor?.Extract(filePath);
 
     public void Dispose()
     {
@@ -28,4 +27,18 @@ public sealed class Icon : IDisposable
             PlatformIcon = null;
         }
     }
+}
+
+/// <summary>
+///  Resolves the desktop icon associated with a file path.
+/// </summary>
+/// <remarks>
+///  Consumed by: <c>Icon.cs</c> and <c>GitUI.Avalonia/Compat/AssociatedFileIconExtractor.cs</c>.
+/// </remarks>
+public interface IIconExtractor
+{
+    /// <summary>
+    ///  Returns the associated icon, or <see langword="null"/> when the desktop has none.
+    /// </summary>
+    Icon? Extract(string filePath);
 }
