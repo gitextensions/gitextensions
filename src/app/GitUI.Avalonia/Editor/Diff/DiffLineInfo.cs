@@ -1,4 +1,4 @@
-using AvaloniaEdit.Document;
+﻿using AvaloniaEdit.Document;
 
 namespace GitUI.Editor.Diff;
 
@@ -15,12 +15,12 @@ public class DiffLineInfo
     public DiffLineType LineType { get; set; }
 
     /// <summary>
-    /// Gets or sets the document range occupied by an added or removed line.
+    /// offset and length in document, set for line type Minus/Plus.
     /// </summary>
     public ISegment? LineSegment { get; set; }
 
     /// <summary>
-    /// Gets or sets whether Git's ANSI colors identify this as a moved line.
+    /// Heuristics for Minus/Plus lines where Git coloring indicates that the line is not standard added/removed line.
     /// </summary>
     public bool IsMovedLine { get; set; }
 }
