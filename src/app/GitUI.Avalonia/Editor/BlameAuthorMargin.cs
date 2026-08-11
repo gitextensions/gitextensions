@@ -10,15 +10,9 @@ using GitUI.Avatars;
 namespace GitUI.Editor;
 
 /// <summary>
-/// This class displays the author gutter of a blame control.
+/// This class display avatars in the gutter in a blame control.
 /// </summary>
-/// <remarks>
-/// Twin of GitUI/Editor/BlameAuthorMargin.cs with an extended role: the WinForms margin
-/// renders only the avatars while the author text is a second, scroll-synchronised
-/// editor. This AvaloniaEdit margin renders the age marker and the author line itself,
-/// which replaces that second editor and its scroll synchronisation. Encoded avatar bytes
-/// remain owned by the entries; this margin owns and disposes the decoded Avalonia bitmaps.
-/// </remarks>
+// Avalonia framework constraint: one native margin replaces WinForms' avatar margin and scroll-synchronised author editor.
 public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
 {
     private const int AgeBucketMarkerWidth = 4;
@@ -62,8 +56,11 @@ public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
         _authorLines = gutter.Split('\n').Select(line => line.TrimEnd('\r', ' ')).ToArray();
         _blameLines = [.. blameLines];
         _showAvatars = showAvatars;
+
+        // Update the resolution otherwise the image is not drawn at the good size :(
         ReplaceAvatars([.. _blameLines.Select(entry => AvatarImage.Decode(entry.Avatar))]);
 
+        // Build brushes
         RebuildAgeBrushes();
 
         double maxTextWidth = 0;

@@ -1,4 +1,4 @@
-namespace GitUI.Editor.Diff;
+﻿namespace GitUI.Editor.Diff;
 
 public sealed class DiffLinesInfo
 {
@@ -7,7 +7,7 @@ public sealed class DiffLinesInfo
     public IReadOnlyDictionary<int, DiffLineInfo> DiffLines => _diffLines;
 
     /// <summary>
-    /// Gets the maximum line number from either side of the diff.
+    /// Gets the maximum line number from either left or right version.
     /// </summary>
     public int MaxLineNumber { get; private set; }
 

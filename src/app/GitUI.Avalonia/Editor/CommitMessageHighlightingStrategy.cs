@@ -1,4 +1,4 @@
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using AvaloniaEdit.Document;
 using GitExtensions.Extensibility.Git;
 
@@ -15,8 +15,6 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
         : base("GitCommitMessage", module)
     {
     }
-
-    // TODO pending issue is that when text is pasted into the editor, validation markers are not updated until their lines are modified (seems like a bug in the editor)
 
     internal IReadOnlyList<CommitMessageValidationMarker> ValidationMarkers => _validationMarkers;
 
@@ -59,8 +57,11 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
         }
     }
 
+    // TODO pending issue is that when text is pasted into the editor, validation markers are not updated until their lines are modified (seems like a bug in the editor)
+
     protected override void MarkTokens(TextDocument document, DocumentLine line)
     {
+        // NOTE the pattern of removing then adding markers might look suboptimal, but tracking their presence isn't reliable as they can be removed without warning
         if (TryHighlightComment(document, line))
         {
             return;
