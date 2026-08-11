@@ -173,12 +173,34 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
 
     internal static IReadOnlyList<HotkeySettings> CreateDefaultSettingsCore(IScriptsManager? scriptsManager)
     {
+        const WinFormsShims.Keys OpenWithDifftoolHotkey = WinFormsShims.Keys.F3;
+
         HotkeyCommand Hk<TCommand>(TCommand command, WinFormsShims.Keys key)
             where TCommand : struct, Enum
             => new(Convert.ToInt32(command), command.ToString()) { KeyData = key };
 
         return
         [
+            new HotkeySettings(
+                FormCommit.HotkeySettingsName,
+                Hk(FormCommit.Command.AddSelectionToCommitMessage, WinFormsShims.Keys.C),
+                Hk(FormCommit.Command.ConventionalCommit_PrefixMessage, WinFormsShims.Keys.Control | WinFormsShims.Keys.T),
+                Hk(FormCommit.Command.ConventionalCommit_PrefixMessageWithScope, WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.T),
+                Hk(FormCommit.Command.CreateBranch, WinFormsShims.Keys.Control | WinFormsShims.Keys.B),
+                Hk(FormCommit.Command.FocusCommitMessage, WinFormsShims.Keys.Control | WinFormsShims.Keys.D4),
+                Hk(FormCommit.Command.FocusSelectedDiff, WinFormsShims.Keys.Control | WinFormsShims.Keys.D3),
+                Hk(FormCommit.Command.FocusStagedFiles, WinFormsShims.Keys.Control | WinFormsShims.Keys.D2),
+                Hk(FormCommit.Command.FocusUnstagedFiles, WinFormsShims.Keys.Control | WinFormsShims.Keys.D1),
+                Hk(FormCommit.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
+                Hk(FormCommit.Command.Refresh, WinFormsShims.Keys.F5),
+                Hk(FormCommit.Command.SelectNext, WinFormsShims.Keys.Control | WinFormsShims.Keys.N),
+                Hk(FormCommit.Command.SelectNext_AlternativeHotkey1, WinFormsShims.Keys.Alt | WinFormsShims.Keys.Down),
+                Hk(FormCommit.Command.SelectNext_AlternativeHotkey2, WinFormsShims.Keys.Alt | WinFormsShims.Keys.Right),
+                Hk(FormCommit.Command.SelectPrevious, WinFormsShims.Keys.Control | WinFormsShims.Keys.P),
+                Hk(FormCommit.Command.SelectPrevious_AlternativeHotkey1, WinFormsShims.Keys.Alt | WinFormsShims.Keys.Up),
+                Hk(FormCommit.Command.SelectPrevious_AlternativeHotkey2, WinFormsShims.Keys.Alt | WinFormsShims.Keys.Left),
+                Hk(FormCommit.Command.StageAll, WinFormsShims.Keys.Control | WinFormsShims.Keys.S),
+                Hk(FormCommit.Command.ToggleSelectionFilter, WinFormsShims.Keys.Control | WinFormsShims.Keys.F)),
             new HotkeySettings(
                 FormBrowse.HotkeySettingsName,
                 Hk(FormBrowse.Command.GitBash, WinFormsShims.Keys.Control | WinFormsShims.Keys.G),
