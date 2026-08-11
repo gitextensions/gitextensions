@@ -13,7 +13,7 @@ internal static class InventorySweepRunner
         foreach (PortMapMapping mapping in mappings)
         {
             string sourceFile = Path.GetFullPath(mapping.Source);
-            IReadOnlyList<string> typeNames = SourceInventoryReader.DiscoverTopLevelClassNames(sourceFile);
+            IReadOnlyList<string> typeNames = SourceInventoryReader.DiscoverTopLevelTypeNames(sourceFile);
             mappingTypes[mapping.Source] = typeNames;
             foreach (string typeName in typeNames)
             {
@@ -169,12 +169,12 @@ internal static class InventorySweepRunner
 
         if (typeNames.Count == 0)
         {
-            return ("unsupported", "P0.4 inventories classes; this mapping declares no top-level class.");
+            return ("unsupported", "P0.4 inventories C# type declarations; this mapping declares no supported top-level type.");
         }
 
         if (analyzedTypes.Count != typeNames.Count)
         {
-            return ("unsupported", "At least one original class could not be resolved in the mapped twin files.");
+            return ("unsupported", "At least one original type could not be resolved in the mapped twin files.");
         }
 
         return ("analyzed", null);
@@ -248,7 +248,7 @@ internal static class InventorySweepRunner
     {
         foreach (string file in Directory.EnumerateFiles(root, pattern, SearchOption.AllDirectories))
         {
-            foreach (string typeName in SourceInventoryReader.DiscoverTopLevelClassNames(file))
+            foreach (string typeName in SourceInventoryReader.DiscoverTopLevelTypeNames(file))
             {
                 if (!workByType.TryGetValue(typeName, out TypeWork? work))
                 {
@@ -274,7 +274,7 @@ internal static class InventorySweepRunner
 
     private static string NormalizePath(string path) => path.Replace('\\', '/');
 
-    // parity-scaffolding: Accumulates the mapped partial files for one class-level comparison.
+    // parity-scaffolding: Accumulates the mapped partial files for one type-level comparison.
     private sealed class TypeWork(string typeName)
     {
         public string TypeName { get; } = typeName;

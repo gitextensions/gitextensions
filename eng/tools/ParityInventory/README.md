@@ -1,7 +1,7 @@
-# ParityInventory
+﻿# ParityInventory
 
 `ParityInventory` is a temporary, cross-platform source-analysis tool for the Avalonia parity
-work. It compares an original partial class with its twin and writes deterministic
+work. It compares an original C# type with its twin and writes deterministic
 `functional-findings.json` evidence. It does not belong to either solution.
 
 ```powershell
@@ -32,5 +32,6 @@ are all included. Whitespace and comment delimiters are normalized; text is not 
 discarded. AXAML comments are not treated as substitutes for C# reasoning because they cannot
 be anchored to an original code member.
 
-The analyzer is deliberately syntax based. Facts that cannot be represented safely become
-findings rather than guessed semantic matches.
+The analyzer is deliberately syntax based. It enumerates top-level classes, structs, and
+interfaces. Facts that cannot be represented safely become findings rather than
+guessed semantic matches.
