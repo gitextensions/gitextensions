@@ -147,6 +147,8 @@ public sealed partial class FormCommit : GitModuleForm
         SelectedDiff.PatchApplied += (_, _) => ReloadChanges();
         Unstaged.SelectedIndexChanged += Unstaged_SelectedIndexChanged;
         Staged.SelectedIndexChanged += Staged_SelectedIndexChanged;
+        Unstaged.Enter += Unstaged_Enter;
+        Staged.Enter += Staged_Enter;
         Unstaged.DoubleClick += Unstaged_DoubleClick;
         Staged.DoubleClick += Staged_DoubleClick;
         toolStageItem.Click += StageClick;
@@ -375,6 +377,61 @@ public sealed partial class FormCommit : GitModuleForm
         _changingSelection = false;
         UpdateStageButtons();
         ShowChanges(item, staged: true);
+    }
+
+    private void Unstaged_Enter(object? sender, EnterEventArgs e)
+    {
+        _currentFilesList = Unstaged;
+        _changingSelection = false;
+        if (!Unstaged.HasSelection)
+        {
+            if (Unstaged.FocusedItem is null)
+            {
+                Unstaged.SelectFirstVisibleItem();
+                if (!Unstaged.HasSelection)
+                {
+                    Unstaged_SelectedIndexChanged(Unstaged, EventArgs.Empty);
+                }
+            }
+            else
+            {
+                Unstaged.SelectedItems = [Unstaged.FocusedItem];
+            }
+        }
+        else
+        {
+            Unstaged_SelectedIndexChanged(Unstaged, EventArgs.Empty);
+        }
+    }
+
+    private void Staged_Enter(object? sender, EnterEventArgs e)
+    {
+        SelectStaged();
+    }
+
+    private void SelectStaged()
+    {
+        _currentFilesList = Staged;
+        _changingSelection = false;
+        if (!Staged.HasSelection)
+        {
+            if (Staged.FocusedItem is null)
+            {
+                Staged.SelectFirstVisibleItem();
+                if (!Staged.HasSelection)
+                {
+                    Staged_SelectedIndexChanged(Staged, EventArgs.Empty);
+                }
+            }
+            else
+            {
+                Staged.SelectedItems = [Staged.FocusedItem];
+            }
+        }
+        else
+        {
+            Staged_SelectedIndexChanged(Staged, EventArgs.Empty);
+        }
     }
 
     private void StageClick(object? sender, EventArgs e) => StageSelected();

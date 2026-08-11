@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -145,7 +145,7 @@ partial class FileStatusList
         SetFindInCommitFilesGitGrepVisibility(inputBoxVisible);
         if (!inputBoxVisible)
         {
-            FocusFiles();
+            Focus();
         }
 
         if (setVisible && usingDialog)
@@ -291,7 +291,7 @@ partial class FileStatusList
         tsmiDenseTree.IsChecked = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
         tsmiShowGroupNodesInFlatList.IsEnabled = flatList;
         tsmiShowGroupNodesInFlatList.IsChecked = AppSettings.FileStatusShowGroupNodesInFlatList.Value;
-        bool filterByDiffStatus = _revisionGroups.Any(group => group.IconName is nameof(Images.DiffA) or nameof(Images.DiffB));
+        bool filterByDiffStatus = GitItemStatusesWithDescription.Any(group => group.IconName is nameof(Images.DiffA) or nameof(Images.DiffB));
         sepFilter.IsVisible = filterByDiffStatus;
         btnUnequalChange.IsVisible = filterByDiffStatus;
         btnOnlyB.IsVisible = filterByDiffStatus;

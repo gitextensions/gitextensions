@@ -154,7 +154,7 @@ public sealed class CommitAndPatchDetailTests
             await WaitUntilAsync(() => !string.IsNullOrEmpty(commitDiff.FileViewer.TextEditor.Text));
 
             commitDiff.FileStatusList.AllItems.Should().ContainSingle();
-            commitDiff.FileStatusList.SelectedItem!.Name.Should().Be("tracked.txt");
+            commitDiff.FileStatusList.SelectedItem!.Item.Name.Should().Be("tracked.txt");
             commitDiff.CommitInformation.Revision!.ObjectId.Should().Be(headId);
             form.Text.Should().StartWith("Diff - " + headId.ToShortString());
             commitDiff.FileViewer.TextEditor.Text.Should().Contain("+after");
