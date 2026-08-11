@@ -20,6 +20,19 @@
             Grid.Column="0"
             RowDefinitions="*,5,*">
         <DockPanel Grid.Row="0">
+          <StackPanel x:Name="toolbarSelectionFilter"
+                      DockPanel.Dock="Top"
+                      Margin="0,0,0,4"
+                      Orientation="Horizontal"
+                      IsVisible="False">
+            <TextBlock x:Name="toolStripLabel1"
+                       Margin="0,0,8,0"
+                       VerticalAlignment="Center"
+                       Text="Selection Filter" />
+            <ComboBox x:Name="selectionFilter"
+                      Width="180"
+                      IsEditable="True" />
+          </StackPanel>
           <WrapPanel DockPanel.Dock="Top"
                      MaxWidth="380"
                      HorizontalAlignment="Right"
@@ -85,6 +98,9 @@
                                        Content="Commit _message">
               <compat:IconDropDownButton.Flyout>
                 <MenuFlyout>
+                  <MenuItem x:Name="generateListOfChangesInSubmodulesChangesToolStripMenuItem"
+                            Header="Generate list of changes in submodules" />
+                  <Separator />
                   <MenuItem x:Name="ShowOnlyMyMessagesToolStripMenuItem"
                             Header="Show only my messages"
                             ToggleType="CheckBox" />
@@ -134,9 +150,10 @@
                                 Content="Sign-off commit" />
                       <CheckBox x:Name="noVerifyToolStripMenuItem"
                                 Content="No verify" />
-                      <TextBlock x:Name="toolAuthorLabelItem"
-                                 Margin="0,4,0,0"
-                                 Text="Author: (Format: &quot;name &lt;mail&gt;&quot;)" />
+                      <CheckBox x:Name="toolAuthorLabelItem"
+                                Margin="0,4,0,0"
+                                Content="Author: (Format: &quot;name &lt;mail&gt;&quot;)"
+                                IsEnabled="False" />
                       <TextBox x:Name="toolAuthor" />
                       <Separator Margin="0,4" />
                       <ComboBox x:Name="gpgSignCommitToolStripComboBox"
@@ -207,6 +224,11 @@
                                Icon="{x:Static properties:Images.RepoStateClean}"
                                Content="_Commit"
                                IsEnabled="False" />
+            <compat:IconButton x:Name="StashStaged"
+                               Margin="6,0,0,0"
+                               Icon="{x:Static properties:Images.Stash}"
+                               Content="_Stash staged"
+                               IsVisible="False" />
             <compat:IconButton x:Name="CommitAndPush"
                                compat:TranslationCompat.TranslateText="False"
                                Margin="6,0,0,0"
@@ -239,10 +261,10 @@
             BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
             BorderThickness="1,1,1,0">
       <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-        <TextBlock x:Name="commitAuthorStatus"
-                   Grid.Column="0"
-                   VerticalAlignment="Center"
-                   TextTrimming="CharacterEllipsis" />
+        <HyperlinkButton x:Name="commitAuthorStatus"
+                         Grid.Column="0"
+                         Padding="0"
+                         VerticalAlignment="Center" />
         <Image Classes="gitextensions-icon-16" x:Name="toolStripStatusBranchIcon"
                Grid.Column="1"
                Margin="12,0,0,0"
