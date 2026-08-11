@@ -61,6 +61,8 @@ public partial class FileStatusList : GitModuleControl
     private bool _suppressSelectionChanged;
     private bool _hasKeyboardFocus;
     private bool _mouseEntered;
+    private Avalonia.Rect _dragBoxFromMouseDown;
+    private PointerPressedEventArgs? _dragPointerPressedEventArgs;
     private Regex? _filter;
     private GitItemStatus? _nextItemToSelect;
     private FormFindInCommitFilesGitGrep? _formFindInCommitFilesGitGrep;
@@ -102,6 +104,7 @@ public partial class FileStatusList : GitModuleControl
         tvDiffFiles.SelectionChanged += (_, _) => DiffTreeSelectionChanged();
         tvDiffFiles.ContainerPrepared += DiffTreeContainerPrepared;
         tvFiles.SelectionChanged += (_, _) => RaiseSelectedIndexChanged();
+        tvFiles.ContainerPrepared += TreeContainerPrepared;
         lstFiles.DoubleTapped += FileStatusListView_DoubleClick;
         tvDiffFiles.DoubleTapped += (_, _) =>
         {
@@ -137,7 +140,9 @@ public partial class FileStatusList : GitModuleControl
         KeyDown += FileStatusListView_KeyDown;
         GotFocus += FileStatusList_Enter;
         LostFocus += FileStatusList_LostFocus;
-        PointerPressed += FileStatusList_PointerPressed;
+        PointerPressed += FileStatusListView_MouseDown;
+        PointerMoved += FileStatusListView_MouseMove;
+        PointerReleased += FileStatusListView_MouseUp;
         WireToolbar();
         WireContextMenu();
         AttachedToLogicalTree += (_, _) =>
@@ -783,6 +788,7 @@ public partial class FileStatusList : GitModuleControl
         tvDiffFiles.ItemsSource = null;
         tvFiles.ItemsSource = null;
         UpdateEmptyState();
+        UpdateToolbar();
     }
 
     /// <summary>
@@ -1182,6 +1188,119 @@ public partial class FileStatusList : GitModuleControl
         _mouseEntered = !IsKeyboardFocusWithin;
     }
 
+    private void FileStatusListView_MouseDown(object? sender, PointerPressedEventArgs e)
+    {
+        FileStatusList_PointerPressed(sender, e);
+        PointerPoint point = e.GetCurrentPoint(this);
+
+        // SELECT
+        if (point.Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
+        {
+            Avalonia.Visual? source = e.Source as Avalonia.Visual;
+            if (source?.FindAncestorOfType<TreeViewItem>(includeSelf: true) is { DataContext: object treeItem })
+            {
+                if (_isFileTreeMode)
+                {
+                    tvFiles.SelectedItem = treeItem;
+                }
+                else if (_showDiffGroups)
+                {
+                    tvDiffFiles.SelectedItem = treeItem;
+                }
+            }
+            else if (source?.FindAncestorOfType<ListBoxItem>(includeSelf: true) is { DataContext: object listItem })
+            {
+                lstFiles.SelectedItem = listItem;
+            }
+        }
+
+        // DRAG
+        if (point.Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed)
+        {
+            if (SelectedItems.Any())
+            {
+                // Remember the point where the mouse down occurred.
+                // The DragSize indicates the size that the mouse can move
+                // before a drag event should be started.
+                // Avalonia exposes pointer drag initiation but not the desktop drag-size setting.
+                Avalonia.Size dragSize = new(4, 4);
+                Avalonia.Point position = e.GetPosition(this);
+
+                // Create a rectangle using the DragSize, with the mouse position being
+                // at the center of the rectangle.
+                _dragBoxFromMouseDown = new Avalonia.Rect(
+                    position.X - (dragSize.Width / 2),
+                    position.Y - (dragSize.Height / 2),
+                    dragSize.Width,
+                    dragSize.Height);
+                _dragPointerPressedEventArgs = e;
+            }
+            else
+            {
+                // Reset the rectangle if the mouse is not over an item in the ListView.
+                ClearDragState();
+            }
+        }
+    }
+
+    private void FileStatusListView_MouseUp(object? sender, PointerReleasedEventArgs e)
+    {
+        // Release the drag capture
+        if (e.InitialPressMouseButton == MouseButton.Left)
+        {
+            ClearDragState();
+        }
+    }
+
+    private void FileStatusListView_MouseMove(object? sender, PointerEventArgs e)
+    {
+        // DRAG
+        // If the mouse moves outside the rectangle, start the drag.
+        if (_dragBoxFromMouseDown != default
+            && !_dragBoxFromMouseDown.Contains(e.GetPosition(this))
+            && _dragPointerPressedEventArgs is PointerPressedEventArgs pressedEventArgs
+            && SelectedItems.Any())
+        {
+            ClearDragState();
+            this.InvokeAndForget(() => StartFileDragAsync(pressedEventArgs));
+        }
+    }
+
+    private async Task StartFileDragAsync(PointerPressedEventArgs pressedEventArgs)
+    {
+        TopLevel? topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null)
+        {
+            ClearDragState();
+            return;
+        }
+
+        DataTransfer data = new();
+        foreach (FileStatusItem item in SelectedItems)
+        {
+            string? fileName = _fullPathResolver.Resolve(item.Item.Name);
+            if (!string.IsNullOrWhiteSpace(fileName)
+                && await topLevel.StorageProvider.TryGetFileFromPathAsync(new Uri(fileName)) is { } file)
+            {
+                data.Add(DataTransferItem.CreateFile(file));
+            }
+        }
+
+        if (data.Items.Count > 0)
+        {
+            // Proceed with the drag and drop, passing in the list item.
+            await DragDrop.DoDragDropAsync(pressedEventArgs, data, DragDropEffects.Copy);
+        }
+
+        ClearDragState();
+    }
+
+    private void ClearDragState()
+    {
+        _dragBoxFromMouseDown = default;
+        _dragPointerPressedEventArgs = null;
+    }
+
     private void FileStatusList_Enter(object? sender, EventArgs e)
     {
         if (_hasKeyboardFocus)
@@ -1486,6 +1605,7 @@ public partial class FileStatusList : GitModuleControl
         }
 
         UpdateEmptyState();
+        UpdateToolbar();
         bool selectionRestored = selectedFileStatus is not null && SelectFileStatusItem(selectedFileStatus, notify: false);
         selectionRestored |= !selectionRestored
                              && selectedPath is not null
@@ -1659,7 +1779,16 @@ public partial class FileStatusList : GitModuleControl
         }
 
         e.Container.Classes.Set("diff-group-header", node.IsGroupHeader);
+        e.Container.Classes.Set("leaf-node", node.Children.Count == 0);
         e.Container.Focusable = !node.IsGroupHeader;
+    }
+
+    private void TreeContainerPrepared(object? sender, ContainerPreparedEventArgs e)
+    {
+        if (e.Container.DataContext is FileTreeNode node)
+        {
+            e.Container.Classes.Set("leaf-node", node.Children.Count == 0);
+        }
     }
 
     private void SelectAdjacentDiffFile(int offset)
@@ -1804,7 +1933,7 @@ public partial class FileStatusList : GitModuleControl
                 text,
                 sortType is DiffListSortType.FileExtension or DiffListSortType.FileExtensionFlat
                     ? Images.File
-                    : GetItemImage(groupItems[0].Item),
+                    : GetItemImageKey(groupItems[0].Item),
                 item: null,
                 folderPath: null,
                 parent,
@@ -1915,7 +2044,7 @@ public partial class FileStatusList : GitModuleControl
             item.Item.OldName is null
                 ? showFullPath ? item.Item.Name : item.Item.Name.Split('/')[^1]
                 : $"{(showFullPath ? item.Item.Name : item.Item.Name.Split('/')[^1])} ({item.Item.OldName})",
-            GetItemImage(item.Item),
+            GetItemImageKey(item.Item),
             item,
             folderPath: null,
             parent,
@@ -2026,6 +2155,13 @@ public partial class FileStatusList : GitModuleControl
 
     private Control CreateDiffTreeRow(DiffTreeNode node)
     {
+        TextBlock text = new()
+        {
+            Text = node.Item is null ? node.Text : AppendItemSubmoduleStatus(node.Text, node.Item.Item),
+            FontWeight = FontWeight.Normal,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+        };
         Image image = new()
         {
             Width = 16,
@@ -2036,7 +2172,7 @@ public partial class FileStatusList : GitModuleControl
         };
         if (node.Item is not null)
         {
-            UpdateSubmoduleImageWhenReady(image, node.Item.Item);
+            UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item, node.Text);
             if (!node.Item.Item.IsSubmodule && !string.IsNullOrWhiteSpace(node.Item.Item.GrepString))
             {
                 LoadFileIcons([(image, node.Item.Item.Name)], CancellationToken.None);
@@ -2049,30 +2185,30 @@ public partial class FileStatusList : GitModuleControl
             Children =
             {
                 image,
-                new TextBlock
-                {
-                    Text = node.Text,
-                    FontWeight = node.IsGroupHeader ? FontWeight.Bold : FontWeight.Normal,
-                    TextTrimming = TextTrimming.CharacterEllipsis,
-                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                },
+                text,
             },
         };
     }
 
     private Control CreateTreeRow(FileTreeNode node)
     {
+        TextBlock text = new()
+        {
+            Text = node.Item is null ? node.Name : AppendItemSubmoduleStatus(node.Name, node.Item.Item),
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+        };
         Image image = new()
         {
             Width = 16,
             Height = 16,
             Stretch = Stretch.Uniform,
-            Source = node.Item is null ? Images.FolderClosed : GetItemImage(node.Item.Item),
+            Source = node.Item is null ? Images.FolderClosed : GetItemImageKey(node.Item.Item),
             Margin = new Avalonia.Thickness(1, 0, 3, 0),
         };
         if (node.Item is not null)
         {
-            UpdateSubmoduleImageWhenReady(image, node.Item.Item);
+            UpdateSubmoduleVisualWhenReady(image, text, node.Item.Item, node.Name);
             if (!node.Item.Item.IsSubmodule && !string.IsNullOrWhiteSpace(node.Item.Item.GrepString))
             {
                 LoadFileIcons([(image, node.Item.Item.Name)], CancellationToken.None);
@@ -2085,12 +2221,7 @@ public partial class FileStatusList : GitModuleControl
             Children =
             {
                 image,
-                new TextBlock
-                {
-                    Text = node.Name,
-                    TextTrimming = TextTrimming.CharacterEllipsis,
-                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                },
+                text,
             },
         };
     }
@@ -2158,29 +2289,30 @@ public partial class FileStatusList : GitModuleControl
             Width = 16,
             Height = 16,
             Stretch = Stretch.Uniform,
-            Source = GetItemImage(gitItemStatus),
+            Source = GetItemImageKey(gitItemStatus),
             Margin = new Avalonia.Thickness(3, 0, 3, 0),
         };
-        UpdateSubmoduleImageWhenReady(image, gitItemStatus);
+        string itemText = gitItemStatus.OldName is null
+            ? gitItemStatus.Name
+            : $"{gitItemStatus.Name} ({gitItemStatus.OldName})";
+        TextBlock text = new()
+        {
+            Text = AppendItemSubmoduleStatus(itemText, gitItemStatus),
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
+        UpdateSubmoduleVisualWhenReady(image, text, gitItemStatus, itemText);
         if (!gitItemStatus.IsSubmodule && !string.IsNullOrWhiteSpace(gitItemStatus.GrepString))
         {
             LoadFileIcons([(image, gitItemStatus.Name)], CancellationToken.None);
         }
 
         row.Children.Add(image);
-        row.Children.Add(
-            new TextBlock
-            {
-                Text = gitItemStatus.OldName is null
-                    ? gitItemStatus.Name
-                    : $"{gitItemStatus.Name} ({gitItemStatus.OldName})",
-                TextTrimming = TextTrimming.CharacterEllipsis,
-            });
+        row.Children.Add(text);
 
         return row;
     }
 
-    private static IImage GetItemImage(GitItemStatus item)
+    private static IImage GetItemImageKey(GitItemStatus item)
     {
         if (item.IsDeleted)
         {
@@ -2262,10 +2394,11 @@ public partial class FileStatusList : GitModuleControl
             };
         }
 
+        // Illegal flag combinations or no flags set?
         return Images.FileStatusUnknown;
     }
 
-    private static IImage GetSubmoduleImage(GitItemStatus item, GitSubmoduleStatus? status)
+    private static IImage GetSubmoduleItemImageKey(GitItemStatus item, GitSubmoduleStatus? status)
     {
         if (status is null)
         {
@@ -2287,7 +2420,19 @@ public partial class FileStatusList : GitModuleControl
         };
     }
 
-    private static void UpdateSubmoduleImageWhenReady(Image image, GitItemStatus item)
+    private static string AppendItemSubmoduleStatus(string text, GitItemStatus item)
+    {
+        if (item.IsSubmodule
+            && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus?> { IsCompleted: true } task
+            && task.CompletedResult() is GitSubmoduleStatus status)
+        {
+            text += status.AddedAndRemovedString();
+        }
+
+        return text;
+    }
+
+    private static void UpdateSubmoduleVisualWhenReady(Image image, TextBlock text, GitItemStatus item, string itemText)
     {
         if (!item.IsSubmodule)
         {
@@ -2300,7 +2445,11 @@ public partial class FileStatusList : GitModuleControl
 #pragma warning disable VSTHRD003 // GitItemStatus owns and starts the cached status task.
             GitSubmoduleStatus? status = await task.ConfigureAwait(false);
 #pragma warning restore VSTHRD003
-            await Dispatcher.UIThread.InvokeAsync(() => image.Source = GetSubmoduleImage(item, status));
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                image.Source = GetSubmoduleItemImageKey(item, status);
+                text.Text = AppendItemSubmoduleStatus(itemText, item);
+            });
         });
     }
 
@@ -2345,6 +2494,7 @@ public partial class FileStatusList : GitModuleControl
         internal ToggleButton ByExtensionButton => control.btnByExtension;
         internal ToggleButton ByStatusButton => control.btnByStatus;
         internal Button RefreshButton => control.btnRefresh;
+        internal Button CollapseGroupsButton => control.btnCollapseGroups;
         internal MenuItem RefreshOnFormFocusMenuItem => control.tsmiRefreshOnFormFocus;
         internal Separator ToolbarSeparator => control.sepToolbar;
         internal IconSplitButton FindInFilesButton => control.btnFindInFilesGitGrep;
@@ -2409,7 +2559,7 @@ public partial class FileStatusList : GitModuleControl
         }
 
         internal static IImage GetItemImageForTesting(GitItemStatus item)
-            => FileStatusList.GetItemImage(item);
+            => FileStatusList.GetItemImageKey(item);
 
         // parity-scaffolding: verifies the WinForms delayed-expansion contract against Avalonia's lazy containers.
         internal void RestoreDiffTreeChildrenForTesting(bool delayExpansion, Action? afterAction = null)
@@ -2422,7 +2572,7 @@ public partial class FileStatusList : GitModuleControl
         }
 
         internal static IImage GetSubmoduleImageForTesting(GitItemStatus item, GitSubmoduleStatus? status)
-            => FileStatusList.GetSubmoduleImage(item, status);
+            => FileStatusList.GetSubmoduleItemImageKey(item, status);
     }
 
     private enum FilterState

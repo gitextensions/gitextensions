@@ -19,6 +19,21 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed partial class ThemeCapabilityTests
 {
+    [TestCase(false, true, 0xC8, 0xFF, 0xC8)]
+    [TestCase(false, false, 0xFF, 0xC8, 0xC8)]
+    [TestCase(true, true, 0x00, 0x95, 0x00)]
+    [TestCase(true, false, 0x95, 0x00, 0x00)]
+    public void Filter_background_should_match_the_original_resolved_color(
+        bool isDark,
+        bool isValid,
+        byte red,
+        byte green,
+        byte blue)
+    {
+        AvaloniaThemeResources.ResolveFilterBackground(isDark, isValid)
+            .Should().Be(System.Drawing.Color.FromArgb(red, green, blue));
+    }
+
     [GeneratedRegex(@"\bSystemColors\.(?<name>[A-Za-z_][A-Za-z0-9_]*)\b")]
     private static partial Regex SystemColorRegex();
 
