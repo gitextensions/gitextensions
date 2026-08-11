@@ -145,6 +145,7 @@
           <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#6D6D6D" />
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#0078D7" />
           <SolidColorBrush x:Key="GitExtensionsHighlightForegroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSelectionForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionForegroundBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsSystemInactiveSelectionBackgroundBrush" Color="#BFCDDB" />
           <SolidColorBrush x:Key="GitExtensionsToolTipBackgroundBrush" Color="#FFFFE1" />
@@ -230,6 +231,7 @@
           <SolidColorBrush x:Key="GitExtensionsDisabledForegroundBrush" Color="#969696" />
           <SolidColorBrush x:Key="GitExtensionsHighlightBackgroundBrush" Color="#2864B4" />
           <SolidColorBrush x:Key="GitExtensionsHighlightForegroundBrush" Color="#000000" />
+          <SolidColorBrush x:Key="GitExtensionsFileStatusSelectionForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsInactiveSelectionForegroundBrush" Color="#BEBEBE" />
           <SolidColorBrush x:Key="GitExtensionsSystemInactiveSelectionBackgroundBrush" Color="#374B5A" />
           <SolidColorBrush x:Key="GitExtensionsToolTipBackgroundBrush" Color="#50503C" />
@@ -648,6 +650,7 @@
     <Setter Property="CornerRadius" Value="0" />
   </Style>
   <Style Selector="Button.gitextensions-toolbar-button,
+                   ToggleButton.gitextensions-toolbar-button,
                    compat|IconButton.gitextensions-toolbar-button,
                    compat|IconToggleButton.gitextensions-toolbar-button,
                    compat|IconSplitButton.gitextensions-toolbar-button,
@@ -683,6 +686,20 @@
     <Setter Property="Height" Value="17" />
     <Setter Property="Margin" Value="3,3" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+  </Style>
+  <Style Selector="Separator.gitextensions-toolbar-separator">
+    <Setter Property="Width" Value="5" />
+    <Setter Property="Height" Value="25" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Width="1"
+                Height="17"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
+      </ControlTemplate>
+    </Setter>
   </Style>
   <Style Selector="TextBlock.gitextensions-toolbar-label">
     <Setter Property="VerticalAlignment" Value="Center" />
@@ -870,7 +887,7 @@
                   TemplatedControl.IsTemplateFocusTarget="True">
             <Grid x:Name="PART_Header">
               <leftpanel:TreeConnectorControl IsHitTestVisible="False" />
-              <Grid ColumnDefinitions="Auto,*">
+              <Grid x:Name="PART_NativeHeaderContent" ColumnDefinitions="Auto,Auto" HorizontalAlignment="Left">
                 <Grid.Margin>
                   <MultiBinding Converter="{x:Static converters:TreeViewItemIndentConverter.Instance}">
                     <Binding Path="Level" RelativeSource="{RelativeSource TemplatedParent}" />
@@ -902,6 +919,27 @@
         </StackPanel>
       </ControlTemplate>
     </Setter>
+  </Style>
+  <Style Selector="TreeView.gitextensions-native-tree TreeViewItem.leaf-node /template/ Panel#PART_ExpandCollapseChevronContainer,
+                   TreeView.gitextensions-native-tree TreeViewItem.diff-group-header /template/ Panel#PART_ExpandCollapseChevronContainer">
+    <Setter Property="Width" Value="0" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-native-tree TreeViewItem:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-native-tree:focus-within TreeViewItem:selected /template/ Grid#PART_NativeHeaderContent">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-native-tree:focus-within TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsFileStatusSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-native-tree:not(:focus-within) TreeViewItem:selected /template/ Grid#PART_NativeHeaderContent">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="TreeView.gitextensions-native-tree:not(:focus-within) TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
   </Style>
 
   <Style Selector="MenuItem">
