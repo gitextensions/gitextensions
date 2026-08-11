@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
@@ -21,7 +22,11 @@ internal sealed record MultiRepositoryStatus
     public int? Behind { get; init; }
     public DateTimeOffset LastCheckedUtc { get; init; }
     public DateTimeOffset? LastFetchUtc { get; init; }
-    public string? Error { get; init; }
+    public string? StatusError { get; init; }
+    public string? FetchError { get; init; }
+
+    [JsonIgnore]
+    public string? Error => FetchError ?? StatusError;
 
     public bool HasWorkingTreeChanges => StagedCount != 0 || ModifiedCount != 0 || UntrackedCount != 0;
 }
@@ -93,7 +98,7 @@ internal sealed class MultiRepositoryStatusProvider(IGitExecutorProvider executo
             RepositoryPath = path,
             LastCheckedUtc = checkedUtc,
             LastFetchUtc = lastFetchUtc,
-            Error = error
+            StatusError = error
         };
     }
 
@@ -339,6 +344,64 @@ internal sealed class MultiRepositoryStatusCache
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             // The status view remains usable when its optional cache cannot be persisted.
+        }
+    }
+}
+
+internal sealed record MultiRepositoryStatusLayout
+{
+    public List<string> GroupOrder { get; init; } = [];
+    public Dictionary<string, List<string>> RepositoryOrder { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    public HashSet<string> CollapsedGroups { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+}
+
+internal sealed class MultiRepositoryStatusLayoutCache
+{
+    private const string CacheFileName = "MultiRepositoryStatusLayout.json";
+    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+
+    private static string CacheFilePath => Path.Join(AppSettings.LocalApplicationDataPath.Value!, CacheFileName);
+
+    public MultiRepositoryStatusLayout Load()
+    {
+        try
+        {
+            if (!File.Exists(CacheFilePath))
+            {
+                return new MultiRepositoryStatusLayout();
+            }
+
+            MultiRepositoryStatusLayout? layout = JsonSerializer.Deserialize<MultiRepositoryStatusLayout>(File.ReadAllText(CacheFilePath), JsonOptions);
+            return layout is null
+                ? new MultiRepositoryStatusLayout()
+                : new MultiRepositoryStatusLayout
+                {
+                    GroupOrder = [.. layout.GroupOrder.Distinct(StringComparer.OrdinalIgnoreCase)],
+                    RepositoryOrder = layout.RepositoryOrder.ToDictionary(
+                        pair => pair.Key,
+                        pair => pair.Value.Distinct(StringComparer.OrdinalIgnoreCase).ToList(),
+                        StringComparer.OrdinalIgnoreCase),
+                    CollapsedGroups = new HashSet<string>(layout.CollapsedGroups, StringComparer.OrdinalIgnoreCase)
+                };
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            return new MultiRepositoryStatusLayout();
+        }
+    }
+
+    public void Save(MultiRepositoryStatusLayout layout)
+    {
+        try
+        {
+            string cacheFilePath = CacheFilePath;
+            string temporaryFilePath = cacheFilePath + ".tmp";
+            File.WriteAllText(temporaryFilePath, JsonSerializer.Serialize(layout, JsonOptions));
+            File.Move(temporaryFilePath, cacheFilePath, overwrite: true);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // The status view remains usable when its optional layout cannot be persisted.
         }
     }
 }

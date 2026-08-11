@@ -14,15 +14,16 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
 {
     private static readonly TimeSpan LocalRefreshInterval = TimeSpan.FromMinutes(1);
 
-    private readonly Button _backButton = new() { AutoSize = true, Text = "返回仓库列表" };
     private readonly Button _fetchAllButton = new() { AutoSize = true, Text = "Fetch 全部" };
     private readonly Button _fetchButton = new() { AutoSize = true, Text = "Fetch 选中" };
-    private readonly DataGridView _grid = new();
     private readonly FlowLayoutPanel _headerActions = new();
     private readonly Label _operationLabel = new() { AutoSize = true, Margin = new Padding(12, 7, 3, 3) };
     private readonly Button _openButton = new() { AutoSize = true, Text = "打开" };
+    private readonly MultiRepositoryStatusView _repositoryView = new();
+    private readonly Button _resetOrderingButton = new() { AutoSize = true, Text = "重置排序" };
     private readonly Button _refreshAllButton = new() { AutoSize = true, Text = "刷新全部" };
     private readonly Button _refreshButton = new() { AutoSize = true, Text = "刷新选中" };
+    private readonly TextBox _searchBox = new() { PlaceholderText = "搜索项目、路径、分类或分支", Width = 230 };
     private readonly Label _titleLabel = new() { AutoSize = true, Text = "仓库状态总览" };
     private readonly System.Windows.Forms.Timer _timer = new() { Interval = 1000 };
     private readonly CancellationTokenSource _lifetimeCancellation = new();
@@ -34,6 +35,7 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
     private List<Repository> _repositories = [];
     private IMultiRepositoryStatusProvider? _statusProvider;
     private DateTimeOffset _lastLocalRefreshUtc;
+    private DateTimeOffset _lastTimeDisplayRefreshUtc;
     private bool _initialized;
     private bool _initializationStarted;
     private bool _operationInProgress;
@@ -50,20 +52,17 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
         InitializeUi();
         InitializeComplete();
 
-        _backButton.Click += (_, _) => RepositoriesRequested?.Invoke(this, EventArgs.Empty);
         _openButton.Click += (_, _) => OpenSelectedRepository();
         _refreshButton.Click += (_, _) => this.InvokeAndForget(RefreshSelectedAsync, cancellationToken: _lifetimeCancellation.Token);
         _refreshAllButton.Click += (_, _) => this.InvokeAndForget(() => RefreshAllAsync(reloadRepositories: true), cancellationToken: _lifetimeCancellation.Token);
         _fetchButton.Click += (_, _) => this.InvokeAndForget(FetchSelectedAsync, cancellationToken: _lifetimeCancellation.Token);
         _fetchAllButton.Click += (_, _) => this.InvokeAndForget(() => FetchRepositoriesAsync(_repositories, isAutomatic: false), cancellationToken: _lifetimeCancellation.Token);
-        _grid.CellDoubleClick += (_, e) =>
-        {
-            if (e.RowIndex >= 0)
-            {
-                OpenSelectedRepository();
-            }
-        };
-        _grid.SelectionChanged += (_, _) => UpdateButtonState();
+        _resetOrderingButton.Click += (_, _) => _repositoryView.ResetOrdering();
+        _searchBox.TextChanged += (_, _) => _repositoryView.SetSearchText(_searchBox.Text);
+        _repositoryView.RepositoryActivated += (_, _) => OpenSelectedRepository();
+        _repositoryView.RefreshSelectedRequested += (_, _) => this.InvokeAndForget(RefreshSelectedAsync, cancellationToken: _lifetimeCancellation.Token);
+        _repositoryView.ReturnToTraditionalRequested += (_, _) => RepositoriesRequested?.Invoke(this, EventArgs.Empty);
+        _repositoryView.SelectedRepositoryChanged += (_, _) => UpdateButtonState();
         _timer.Tick += Timer_Tick;
     }
 
@@ -83,13 +82,9 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
         _headerActions.BackColor = theme.HeaderBackColor;
         _titleLabel.ForeColor = theme.SecondaryHeadingText;
         _operationLabel.ForeColor = theme.SecondaryText;
-        _grid.BackgroundColor = SystemColors.Window;
-        _grid.DefaultCellStyle.BackColor = SystemColors.Window;
-        _grid.DefaultCellStyle.ForeColor = theme.PrimaryText;
-        _grid.DefaultCellStyle.SelectionBackColor = theme.StartBackColor;
-        _grid.DefaultCellStyle.SelectionForeColor = theme.PrimaryText;
-        _grid.ColumnHeadersDefaultCellStyle.BackColor = theme.SearchBackColor;
-        _grid.ColumnHeadersDefaultCellStyle.ForeColor = theme.PrimaryText;
+        _searchBox.BackColor = theme.SearchBackColor;
+        _searchBox.ForeColor = theme.PrimaryText;
+        _repositoryView.ApplyTheme(theme);
         Invalidate(true);
     }
 
@@ -149,58 +144,21 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
         _headerActions.WrapContents = true;
         _headerActions.Controls.AddRange([
             _titleLabel,
-            _backButton,
             _openButton,
             _refreshButton,
             _refreshAllButton,
             _fetchButton,
             _fetchAllButton,
+            _resetOrderingButton,
+            _searchBox,
             _operationLabel]);
 
-        ConfigureGrid();
-        Controls.Add(_grid);
+        Controls.Add(_repositoryView);
         Controls.Add(_headerActions);
         Dock = DockStyle.Fill;
         AutoScaleMode = AutoScaleMode.Dpi;
 
         ResumeLayout(performLayout: true);
-    }
-
-    private void ConfigureGrid()
-    {
-        _grid.AllowUserToAddRows = false;
-        _grid.AllowUserToDeleteRows = false;
-        _grid.AllowUserToOrderColumns = false;
-        _grid.AllowUserToResizeRows = false;
-        _grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        _grid.BorderStyle = BorderStyle.None;
-        _grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        _grid.Dock = DockStyle.Fill;
-        _grid.EnableHeadersVisualStyles = false;
-        _grid.MultiSelect = false;
-        _grid.ReadOnly = true;
-        _grid.RowHeadersVisible = false;
-        _grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-
-        AddColumn("仓库", 180);
-        AddColumn("分类", 90);
-        AddColumn("分支", 110);
-        AddColumn("工作区", 150);
-        AddColumn("同步状态", 120);
-        AddColumn("上次 Fetch", 115);
-        AddColumn("检查时间", 115);
-        AddColumn("错误", 220);
-
-        void AddColumn(string header, float fillWeight)
-        {
-            _grid.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = header,
-                Name = header.Replace(" ", "", StringComparison.Ordinal),
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                FillWeight = fillWeight
-            });
-        }
     }
 
     private async Task InitializeAsync()
@@ -234,7 +192,9 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
                 _repositories = NormalizeRepositories(repositories);
             }
 
-            IReadOnlyList<MultiRepositoryStatus> results = await GetStatusesAsync(_repositories, _lifetimeCancellation.Token);
+            IReadOnlyList<MultiRepositoryStatus> results = (await GetStatusesAsync(_repositories, _lifetimeCancellation.Token))
+                .Select(PreserveFetchError)
+                .ToList();
             MergeStatuses(results);
             _lastLocalRefreshUtc = DateTimeOffset.UtcNow;
             RenderRows(cached: false);
@@ -261,7 +221,7 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
         try
         {
             DateTimeOffset? lastFetchUtc = GetLastFetchUtc(repository.Path);
-            MultiRepositoryStatus status = await _statusProvider.GetStatusAsync(repository, lastFetchUtc, _lifetimeCancellation.Token);
+            MultiRepositoryStatus status = PreserveFetchError(await _statusProvider.GetStatusAsync(repository, lastFetchUtc, _lifetimeCancellation.Token));
             MergeStatuses([status]);
             RenderRows(cached: false);
             SaveCache();
@@ -303,7 +263,7 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
                     MultiRepositoryFetchResult fetchResult = await _statusProvider.FetchAllRemotesAsync(repository, timeout, _lifetimeCancellation.Token);
                     DateTimeOffset? lastFetchUtc = fetchResult.FetchedUtc ?? GetLastFetchUtc(repository.Path);
                     MultiRepositoryStatus status = await _statusProvider.GetStatusAsync(repository, lastFetchUtc, _lifetimeCancellation.Token);
-                    return status with { Error = fetchResult.Error ?? status.Error };
+                    return status with { FetchError = fetchResult.Error };
                 }
                 finally
                 {
@@ -387,6 +347,12 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
         try
         {
             DateTimeOffset now = DateTimeOffset.UtcNow;
+            if (Visible && now - _lastTimeDisplayRefreshUtc >= TimeSpan.FromMinutes(1))
+            {
+                _lastTimeDisplayRefreshUtc = now;
+                _repositoryView.RefreshRelativeTimes();
+            }
+
             if (Visible && now - _lastLocalRefreshUtc >= LocalRefreshInterval)
             {
                 await RefreshAllAsync(reloadRepositories: true);
@@ -435,43 +401,7 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
 
     private void RenderRows(bool cached)
     {
-        string? selectedPath = GetSelectedRepository()?.Path;
-        _grid.SuspendLayout();
-        try
-        {
-            _grid.Rows.Clear();
-            foreach (Repository repository in _repositories)
-            {
-                _statuses.TryGetValue(repository.Path, out MultiRepositoryStatus? status);
-                int rowIndex = _grid.Rows.Add(
-                    GetRepositoryName(repository),
-                    repository.Category ?? "",
-                    status?.Branch ?? "",
-                    FormatWorkingTree(status),
-                    FormatSynchronization(status),
-                    FormatTimestamp(status?.LastFetchUtc),
-                    FormatTimestamp(status?.LastCheckedUtc),
-                    status?.Error ?? "");
-
-                DataGridViewRow row = _grid.Rows[rowIndex];
-                row.Tag = repository;
-                row.Cells[0].ToolTipText = repository.Path;
-                if (!string.IsNullOrWhiteSpace(status?.Error))
-                {
-                    row.Cells[7].Style.ForeColor = Color.Firebrick.AdaptBackColor();
-                    row.Cells[7].ToolTipText = status.Error;
-                }
-
-                if (selectedPath is not null && PathsEqual(selectedPath, repository.Path))
-                {
-                    row.Selected = true;
-                }
-            }
-        }
-        finally
-        {
-            _grid.ResumeLayout();
-        }
+        _repositoryView.SetContent(_repositories, _statuses);
 
         if (!_operationInProgress)
         {
@@ -507,7 +437,8 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
         _fetchButton.Enabled = !_operationInProgress && hasSelection;
         _refreshAllButton.Enabled = !_operationInProgress && _repositories.Count != 0;
         _fetchAllButton.Enabled = !_operationInProgress && _repositories.Count != 0;
-        _backButton.Enabled = !_operationInProgress;
+        _resetOrderingButton.Enabled = !_operationInProgress && _repositories.Count != 0;
+        _searchBox.Enabled = !_operationInProgress;
     }
 
     private void OpenSelectedRepository()
@@ -523,7 +454,12 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
     }
 
     private Repository? GetSelectedRepository()
-        => _grid.SelectedRows.Count == 0 ? null : _grid.SelectedRows[0].Tag as Repository;
+        => _repositoryView.SelectedRepository;
+
+    private MultiRepositoryStatus PreserveFetchError(MultiRepositoryStatus status)
+        => _statuses.TryGetValue(status.RepositoryPath, out MultiRepositoryStatus? previous)
+            ? status with { FetchError = previous.FetchError }
+            : status;
 
     private DateTimeOffset? GetLastFetchUtc(string path)
         => _statuses.TryGetValue(path, out MultiRepositoryStatus? status) ? status.LastFetchUtc : null;
@@ -538,67 +474,6 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
         string path = repository.Path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         return Path.GetFileName(path) is { Length: > 0 } name ? name : path;
     }
-
-    private static string FormatWorkingTree(MultiRepositoryStatus? status)
-    {
-        if (status is null)
-        {
-            return "等待检查";
-        }
-
-        if (status.IsBare)
-        {
-            return "裸仓库";
-        }
-
-        if (!status.HasWorkingTreeChanges)
-        {
-            return "干净";
-        }
-
-        List<string> parts = [];
-        if (status.StagedCount != 0)
-        {
-            parts.Add($"已暂存 {status.StagedCount}");
-        }
-
-        if (status.ModifiedCount != 0)
-        {
-            parts.Add($"已修改 {status.ModifiedCount}");
-        }
-
-        if (status.UntrackedCount != 0)
-        {
-            parts.Add($"未跟踪 {status.UntrackedCount}");
-        }
-
-        return string.Join(" · ", parts);
-    }
-
-    private static string FormatSynchronization(MultiRepositoryStatus? status)
-    {
-        if (status is null)
-        {
-            return "等待检查";
-        }
-
-        if (status.IsDetached)
-        {
-            return "分离 HEAD";
-        }
-
-        if (string.IsNullOrWhiteSpace(status.Upstream))
-        {
-            return "未设置上游";
-        }
-
-        return $"↑{status.Ahead ?? 0} ↓{status.Behind ?? 0}";
-    }
-
-    private static string FormatTimestamp(DateTimeOffset? timestamp)
-        => timestamp is null || timestamp == default
-            ? "从未"
-            : timestamp.Value.ToLocalTime().ToString("g");
 
     private static bool PathsEqual(string left, string right)
         => string.Equals(left.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),

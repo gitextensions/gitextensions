@@ -11,6 +11,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 
 public partial class Dashboard : GitModuleControl
 {
+    private bool _showRepositoryStatus = true;
     private readonly TranslationString _cloneFork = new("Clone {0} repository");
     private readonly TranslationString _cloneRepository = new("Clone repository");
     private readonly TranslationString _createRepository = new("Create new repository");
@@ -19,6 +20,7 @@ public partial class Dashboard : GitModuleControl
     private readonly TranslationString _issues = new("Issues");
     private readonly TranslationString _openRepository = new("Open repository");
     private readonly TranslationString _repositoryStatus = new("仓库状态总览");
+    private readonly TranslationString _traditionalView = new("回到传统视图");
     private readonly TranslationString _translate = new("Translate");
 
     public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
@@ -43,6 +45,8 @@ public partial class Dashboard : GitModuleControl
         multiRepositoryStatusControl.GitModuleChanged += OnModuleChanged;
         multiRepositoryStatusControl.RepositoriesRequested += (_, _) => ShowRepositories();
 
+        ApplyViewVisibility();
+
         // apply scaling
         pnlLogo.Padding = DpiUtil.Scale(pnlLogo.Padding);
         userRepositoriesList.HeaderHeight = pnlLogo.Height;
@@ -54,12 +58,14 @@ public partial class Dashboard : GitModuleControl
 
         if (Visible)
         {
+            ApplyViewVisibility();
+
             // Start the idle scheduler as soon as the dashboard is available, even if the status view stays hidden.
             multiRepositoryStatusControl.Start(UICommands);
         }
 
         // Focus the control in order for the search bar to have focus once the dashboard is shown
-        (multiRepositoryStatusControl.Visible ? (Control)multiRepositoryStatusControl : userRepositoriesList).Focus();
+        (_showRepositoryStatus ? (Control)multiRepositoryStatusControl : userRepositoriesList).Focus();
     }
 
     public void RefreshContent()
@@ -69,7 +75,7 @@ public partial class Dashboard : GitModuleControl
         InitDashboardLayout();
         ApplyTheme();
         userRepositoriesList.ShowRecentRepositories();
-        if (multiRepositoryStatusControl.Visible)
+        if (_showRepositoryStatus)
         {
             multiRepositoryStatusControl.RefreshContent();
         }
@@ -129,7 +135,11 @@ public partial class Dashboard : GitModuleControl
                 AddLinks(flpnlStart,
                     panel =>
                     {
-                        CreateLink(panel, _repositoryStatus.Text, Images.ReloadRevisions, RepositoryStatusItem_Click);
+                        CreateLink(
+                            panel,
+                            _showRepositoryStatus ? _traditionalView.Text : _repositoryStatus.Text,
+                            _showRepositoryStatus ? Images.NavigateBackward : Images.ReloadRevisions,
+                            RepositoryStatusItem_Click);
                         CreateLink(panel, _createRepository.Text, Images.RepoCreate, createItem_Click);
                         CreateLink(panel, _openRepository.Text, Images.RepoOpen, openItem_Click);
                         Control lastControl = CreateLink(panel, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
@@ -251,19 +261,36 @@ public partial class Dashboard : GitModuleControl
 
     private void RepositoryStatusItem_Click(object? sender, EventArgs e)
     {
-        userRepositoriesList.Visible = false;
-        multiRepositoryStatusControl.Visible = true;
-        multiRepositoryStatusControl.BringToFront();
+        if (_showRepositoryStatus)
+        {
+            ShowRepositories();
+            return;
+        }
+
+        ShowRepositoryStatus();
+    }
+
+    private void ShowRepositoryStatus()
+    {
+        _showRepositoryStatus = true;
+        ApplyViewVisibility();
         multiRepositoryStatusControl.Focus();
-        multiRepositoryStatusControl.RefreshContent();
+        RefreshContent();
     }
 
     private void ShowRepositories()
     {
-        multiRepositoryStatusControl.Visible = false;
-        userRepositoriesList.Visible = true;
-        userRepositoriesList.BringToFront();
+        _showRepositoryStatus = false;
+        ApplyViewVisibility();
         userRepositoriesList.Focus();
+        RefreshContent();
+    }
+
+    private void ApplyViewVisibility()
+    {
+        multiRepositoryStatusControl.Visible = _showRepositoryStatus;
+        userRepositoriesList.Visible = !_showRepositoryStatus;
+        (_showRepositoryStatus ? (Control)multiRepositoryStatusControl : userRepositoriesList).BringToFront();
     }
 
     private static void DonateItem_Click(object? sender, EventArgs e)
