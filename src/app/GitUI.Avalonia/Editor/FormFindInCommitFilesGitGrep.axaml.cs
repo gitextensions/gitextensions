@@ -36,7 +36,7 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         chkMatchWholeWord.IsCheckedChanged += chkMatchWholeWord_CheckedChanged;
         chkShowSearchBox.IsCheckedChanged += chkShowSearchBox_CheckedChanged;
         txtOptions.TextChanged += txtOptions_TextChanged;
-        Opened += FormFindInCommitFilesGitGrep_Shown;
+        Opened += (_, e) => OnShown(e);
         Closing += FormFindInCommitFilesGitGrep_FormClosing;
         AcceptButton = btnSearch;
         ManualSectionAnchorName = "diff";
@@ -107,7 +107,8 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         }
     }
 
-    private void FormFindInCommitFilesGitGrep_Shown(object? sender, EventArgs e)
+    // Avalonia has OnOpened rather than WinForms OnShown; retain the original product method boundary.
+    protected void OnShown(EventArgs e)
     {
         txtOptions.Text = AppSettings.GitGrepUserArguments.Value;
         chkMatchCase.IsChecked = !AppSettings.GitGrepIgnoreCase.Value;
@@ -119,22 +120,22 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     private void Search()
         => FilesGitGrepLocator?.Invoke(GitGrepExpressionText!);
 
-    private void btnSearch_Click(object? sender, EventArgs e)
+    private void btnSearch_Click(object sender, EventArgs e)
     {
         Search();
     }
 
-    private void chkMatchCase_CheckedChanged(object? sender, EventArgs e)
+    private void chkMatchCase_CheckedChanged(object sender, EventArgs e)
     {
         AppSettings.GitGrepIgnoreCase.Value = chkMatchCase.IsChecked != true;
     }
 
-    private void chkMatchWholeWord_CheckedChanged(object? sender, EventArgs e)
+    private void chkMatchWholeWord_CheckedChanged(object sender, EventArgs e)
     {
         AppSettings.GitGrepMatchWholeWord.Value = chkMatchWholeWord.IsChecked == true;
     }
 
-    private void chkShowSearchBox_CheckedChanged(object? sender, EventArgs e)
+    private void chkShowSearchBox_CheckedChanged(object sender, EventArgs e)
     {
         AppSettings.ShowFindInCommitFilesGitGrep.Value = chkShowSearchBox.IsChecked == true;
         if (!_hasLoaded)
@@ -145,11 +146,12 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         FindInCommitFilesGitGrepToggle?.Invoke(chkShowSearchBox.IsChecked == true);
     }
 
-    private void txtOptions_TextChanged(object? sender, TextChangedEventArgs e)
+    private void txtOptions_TextChanged(object sender, EventArgs e)
     {
         AppSettings.GitGrepUserArguments.Value = txtOptions.Text ?? string.Empty;
     }
 
+    // parity-scaffolding: exposes the original dialog state to focused parity tests.
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor
