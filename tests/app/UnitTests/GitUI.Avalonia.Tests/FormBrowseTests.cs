@@ -138,6 +138,16 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public void AddNotes_should_ignore_a_missing_revision_selection()
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+
+        form.ExecuteCommand(FormBrowse.Command.AddNotes).Should().BeTrue();
+    }
+
+    [AvaloniaTest]
     [NonParallelizable]
     public async Task FormBrowse_branch_selector_should_open_and_checkout_the_selected_branch()
     {

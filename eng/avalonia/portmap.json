@@ -2115,13 +2115,13 @@
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfo.axaml.cs",
     "status": "functional",
     "basedOn": "c3c0ff94b63d1e8cb431565835b187997060530e",
-    "notes": "Ports the original commit-data renderers, asynchronous body/notes/external-link/branch/tag/annotated-tag/git-describe loads, sorting, show-all links, context-menu settings and commands, note editing, navigation buttons, plain-text copy, hotkey reload, and cancellation cleanup. Avalonia's native measure pass replaces WinForms ContentsResized/OnLayout sizing, and Compat/XhtmlTextBlock renders the exact encoded-text/anchor/underline/line-break subset emitted by the shared renderers. P2.3 capture evidence records 24 native 125% pairs and explicit Windows DPI debt for the unavailable 100/150/200 pairs; full visual and interaction-state parity remains unverified."
+    "notes": "Ports the original commit-data renderers, asynchronous body/notes/external-link/branch/tag/annotated-tag/git-describe loads, sorting, show-all links, context-menu settings and commands, note editing, navigation buttons, plain-text copy, hotkey reload, and cancellation cleanup. P8.6e.1 projects the original AddNotes shortcut onto the native context-menu gesture and restores the owner command ID/dispatch in FormBrowse. Avalonia's native measure pass replaces WinForms ContentsResized/OnLayout sizing, and Compat/XhtmlTextBlock renders the exact encoded-text/anchor/underline/line-break subset emitted by the shared renderers. The 160 surviving inventory findings are classified WinForms Designer, native event-signature, measurement, and parity-test-seam representation differences with no unclassified product-functional debt. Exact visual and exhaustive interaction-state closure remains P8.6e.2."
   },
   "src/app/GitUI/CommitInfo/CommitInfo.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfo.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Same-named three-row header/message/revision-info surface and shared context-menu fields. AXAML uses native auto measurement and the exact resolved WinForms message-background semantic color; generated Designer member/comment parity and the complete state matrix remain open findings."
+    "notes": "Same-named three-row header/message/revision-info surface and shared context-menu fields. AXAML uses native auto measurement and the exact resolved WinForms message-background semantic color. Empty runtime text is no longer registered as three false translation keys. Generated Designer representation and the complete visual/state matrix remain P8.6e.2 findings."
   },
   "src/app/GitUI/UserControls/CommitPickerSmallControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/CommitPickerSmallControl.axaml.cs",
@@ -3218,19 +3218,19 @@
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfoHeader.axaml.cs",
     "status": "functional",
     "basedOn": "57d3739f1eb87b5b3fed33138b51ec0ee5a173f6",
-    "notes": "Uses the original CommitDataHeaderRenderer and LinkFactory with the same avatar, command-link, plain-text copy, extra-mouse-button navigation, and context-menu behavior. Native Avalonia measurement replaces the WinForms RichTextBox ContentsResized subscription; complete structural, visual, and interaction-state parity remains unverified."
+    "notes": "Uses the original CommitDataHeaderRenderer and LinkFactory with the same avatar, command-link, plain-text copy, extra-mouse-button navigation, and context-menu behavior. P8.6e.1 verifies that the owner context menu is applied to the header text surface. Native Avalonia measurement replaces the WinForms RichTextBox ContentsResized subscription; the 40 surviving inventory findings are classified framework/Designer representation differences, while exact structural, visual, and exhaustive interaction-state closure remains P8.6e.2."
   },
   "src/app/GitUI/CommitInfo/CommitInfoHeader.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfoHeader.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Same-named avatarControl and rtbRevisionHeader fields in the original two-column layout, with the shared UI font resources and native no-wrap rich-header surface."
+    "notes": "Same-named avatarControl and rtbRevisionHeader fields in the original two-column layout, with the shared UI font resources and native no-wrap rich-header surface. Empty runtime text is deliberately not registered as the original Designer's false, uncatalogued translation key; exact visual/state closure remains P8.6e.2."
   },
   "src/app/GitUI/CommitInfo/RefsFormatter.cs": {
     "twin": "src/app/GitUI.Avalonia/CommitInfo/RefsFormatter.cs",
     "status": "functional",
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Byte-equivalent portable copy of the original nonvisual formatter. ParityInventory currently expects an .axaml.cs twin for every C# source and therefore reports nine path/partial findings for this deliberately plain .cs twin."
+    "notes": "Byte-equivalent portable copy of the original nonvisual formatter. The path-aware ParityInventory reports zero source findings, and the unchanged original formatter and branch-comparer tests run against the twin on Windows and Linux."
   },
   "src/app/GitUI/ConsoleEmulation/ConEmu/ConEmuConsoleCommandRunner.cs": {
     "status": "windowsOnly",

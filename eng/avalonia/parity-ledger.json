@@ -4616,25 +4616,25 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json"
           ],
           "platforms": [],
-          "findingCount": 564,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 563,
+          "note": "The current inventory retains framework, partial-file, and member representation differences; P8.6h owns whole-FormBrowse structural closure."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json"
           ],
           "platforms": [],
-          "findingCount": 1517,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 1515,
+          "note": "P8.6e.1 restores the original AddNotes command ID and owner dispatch required by CommitInfo. The remaining whole-FormBrowse findings stay open for P8.6h and are not claimed by this subtranche."
         },
         "visual": {
           "status": "unverified",
@@ -15809,15 +15809,19 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json",
+            "eng/avalonia/parity-evidence/P8.6e/e1/inventory-classification.json"
           ],
-          "platforms": [],
-          "findingCount": 163,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 160,
+          "note": "Focused construction, visibility, context-menu setting, shortcut, translation, formatter, and branch-comparer tests close the product-functional contract. The raw findings are classified Designer/AXAML, native event-signature, measurement-lifecycle, false uncatalogued translation-key, and parity-test-seam representation differences."
         },
         "visual": {
           "status": "unverified",
@@ -15874,15 +15878,19 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json",
+            "eng/avalonia/parity-evidence/P8.6e/e1/inventory-classification.json"
           ],
-          "platforms": [],
-          "findingCount": 163,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 160,
+          "note": "Focused construction, visibility, context-menu setting, shortcut, translation, formatter, and branch-comparer tests close the product-functional contract. The raw findings are classified Designer/AXAML, native event-signature, measurement-lifecycle, false uncatalogued translation-key, and parity-test-seam representation differences."
         },
         "visual": {
           "status": "unverified",
@@ -15939,15 +15947,19 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json",
+            "eng/avalonia/parity-evidence/P8.6e/e1/inventory-classification.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 40,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "Focused named-surface and context-menu ownership tests close the header's product-functional contract. The raw findings are classified Designer/AXAML, native pointer/link/key event, native measurement/disposal, false uncatalogued translation-key, and parity-test-seam representation differences."
         },
         "visual": {
           "status": "unverified",
@@ -16004,15 +16016,19 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json",
+            "eng/avalonia/parity-evidence/P8.6e/e1/inventory-classification.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 40,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "Focused named-surface and context-menu ownership tests close the header's product-functional contract. The raw findings are classified Designer/AXAML, native pointer/link/key event, native measurement/disposal, false uncatalogued translation-key, and parity-test-seam representation differences."
         },
         "visual": {
           "status": "unverified",
@@ -16058,26 +16074,32 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json"
           ],
-          "platforms": [],
-          "findingCount": 9,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The path-aware inventory finds the plain same-path C# twin byte-equivalent to the original."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json"
           ],
-          "platforms": [],
-          "findingCount": 8,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "The exact source plus the unchanged RefsFormatter and BranchComparer suites close the formatter contract."
         },
         "visual": {
           "status": "notApplicable",
@@ -16098,13 +16120,18 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "The linked original suites exercise empty and populated refs, branch sorting, tag sorting, escaping, links, and formatting states against this exact implementation."
         },
         "platform": {
           "status": "unverified",

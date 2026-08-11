@@ -125,6 +125,7 @@ public partial class CommitInfoHeader : GitModuleControl
     // WinForms catches a System.Reactive handle-creation race during resource disposal.
     // Avalonia has no ContentsResized subscription, so no custom resource is created here.
 
+    // parity-scaffolding: Exposes the original named surfaces to focused parity tests.
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor(CommitInfoHeader header)
