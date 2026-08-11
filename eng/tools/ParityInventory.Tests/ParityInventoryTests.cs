@@ -78,6 +78,30 @@ public sealed class ParityInventoryTests
             item.Key == "SetBool:\"widget.enabled\"" && item.Access == "write");
     }
 
+    [TestCase("struct")]
+    [TestCase("interface")]
+    public void Run_should_extract_non_class_type_members_and_comments(string declarationKind)
+    {
+        string code = $$"""
+            namespace Sample;
+            /// <summary>Comparable type.</summary>
+            public {{declarationKind}} Widget
+            {
+                /// <summary>Comparable value.</summary>
+                public int Value { get; set; }
+            }
+            """;
+        using InventoryFixture fixture = new();
+        fixture.WriteMatching(code);
+
+        SourceInventory inventory = fixture.Run().Original;
+
+        inventory.Members.Should().ContainSingle(item => item.Name == "Value");
+        inventory.Comments.Select(item => item.Text).Should().Contain(
+            "<summary>Comparable type.</summary>",
+            "<summary>Comparable value.</summary>");
+    }
+
     [Test]
     public void Run_should_diff_member_accessibility_signature_and_order()
     {

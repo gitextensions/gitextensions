@@ -16,12 +16,12 @@ public sealed class ParityBaselineTests
 
         InventorySweepResult result = InventorySweepRunner.Run(fixture.Options);
 
-        result.Summary.MappingCount.Should().Be(3);
-        result.Summary.AnalyzedTypeCount.Should().Be(1);
+        result.Summary.MappingCount.Should().Be(4);
+        result.Summary.AnalyzedTypeCount.Should().Be(2);
         result.Summary.LinkedExactCount.Should().Be(1);
         result.Summary.UnsupportedMappingCount.Should().Be(1);
         result.Mappings.Select(mapping => mapping.AnalysisStatus)
-            .Should().BeEquivalentTo("analyzed", "linkedExact", "unsupported");
+            .Should().BeEquivalentTo("analyzed", "analyzed", "linkedExact", "unsupported");
     }
 
     [Test]
@@ -157,6 +157,8 @@ internal sealed class BaselineFixture : IDisposable
         string linked = Write(original, "Linked.cs", "namespace Sample; public sealed class Linked { }");
         string interfaceSource = Write(original, "IThing.cs", "namespace Sample; public interface IThing { }");
         string interfaceTwin = Write(twin, "IThing.cs", "namespace Sample; public interface IThing { }");
+        string delegateSource = Write(original, "Callback.cs", "namespace Sample; public delegate void Callback();");
+        string delegateTwin = Write(twin, "Callback.cs", "namespace Sample; public delegate void Callback();");
         string missingLinkedTwin = Path.Combine(twin, "Linked.cs");
         string portMap = $$"""
             {
@@ -173,6 +175,11 @@ internal sealed class BaselineFixture : IDisposable
               },
               "{{Normalize(interfaceSource)}}": {
                 "twin": "{{Normalize(interfaceTwin)}}",
+                "status": "functional",
+                "basedOn": "0000000000000000000000000000000000000000"
+              },
+              "{{Normalize(delegateSource)}}": {
+                "twin": "{{Normalize(delegateTwin)}}",
                 "status": "functional",
                 "basedOn": "0000000000000000000000000000000000000000"
               },

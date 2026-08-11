@@ -61,7 +61,7 @@ internal sealed record SweepMappingResult
     public string? Note { get; init; }
 }
 
-// parity-scaffolding: Summarizes one class-level P0.4 report within a full sweep.
+// parity-scaffolding: Summarizes one type-level P0.4 report within a full sweep.
 internal sealed record SweepTypeResult
 {
     public required string TypeName { get; init; }

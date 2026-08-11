@@ -20,7 +20,7 @@ internal static class Program
             {
                 InventorySweepResult sweep = InventorySweepRunner.Run(SweepOptions.Parse(args));
                 Console.WriteLine(
-                    $"Assessed {sweep.Summary.MappingCount} mappings and {sweep.Summary.AnalyzedTypeCount} class types; "
+                    $"Assessed {sweep.Summary.MappingCount} mappings and {sweep.Summary.AnalyzedTypeCount} types; "
                     + $"wrote {sweep.Summary.FindingCount} findings and recorded "
                     + $"{sweep.Summary.AdaptedCommentCount} adapted comments at "
                     + $"{Path.GetFullPath(sweep.OutputFile)}.");
