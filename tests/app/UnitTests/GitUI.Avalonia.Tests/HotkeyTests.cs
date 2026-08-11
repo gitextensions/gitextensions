@@ -117,6 +117,48 @@ public sealed class HotkeyTests
     }
 
     [Test]
+    public void HotkeySettingsManager_should_load_the_original_commit_dialog_hotkeys()
+    {
+        string? serializedHotkeys = AppSettings.SerializedHotkeys;
+        AppSettings.SerializedHotkeys = string.Empty;
+        try
+        {
+            IHotkeySettingsLoader loader = new HotkeySettingsManager();
+            IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(FormCommit.HotkeySettingsName);
+
+            hotkeys.Should().HaveCount(18);
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormCommit.Command.FocusUnstagedFiles
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D1));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormCommit.Command.FocusCommitMessage
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.D4));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormCommit.Command.ToggleSelectionFilter
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.F));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormCommit.Command.StageAll
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.S));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormCommit.Command.OpenWithDifftool
+                && command.KeyData == WinFormsShims.Keys.F3);
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormCommit.Command.ConventionalCommit_PrefixMessageWithScope
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.T));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormCommit.Command.SelectNext_AlternativeHotkey1
+                && command.KeyData == (WinFormsShims.Keys.Alt | WinFormsShims.Keys.Down));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormCommit.Command.SelectPrevious_AlternativeHotkey2
+                && command.KeyData == (WinFormsShims.Keys.Alt | WinFormsShims.Keys.Left));
+        }
+        finally
+        {
+            AppSettings.SerializedHotkeys = serializedHotkeys ?? string.Empty;
+        }
+    }
+
+    [Test]
     public void HotkeySettingsManager_should_expose_user_scripts_in_the_original_settings_category()
     {
         string? serializedHotkeys = AppSettings.SerializedHotkeys;
