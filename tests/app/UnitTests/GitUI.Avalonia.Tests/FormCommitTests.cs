@@ -513,8 +513,7 @@ public sealed class FormCommitTests
                 ?? throw new InvalidOperationException("Staged file list was not created.");
             FileViewer selectedDiff = form.FindControl<FileViewer>("SelectedDiff")
                 ?? throw new InvalidOperationException("Diff viewer was not created.");
-            TextEditor diffEditor = selectedDiff.FindControl<TextEditor>("TextEditor")
-                ?? throw new InvalidOperationException("Diff editor was not created.");
+            TextEditor diffEditor = selectedDiff.TextEditor;
 
             await WaitUntilAsync(() =>
                 unstaged.GitItemStatuses.Count == 1
