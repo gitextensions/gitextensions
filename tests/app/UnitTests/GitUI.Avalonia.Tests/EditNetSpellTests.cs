@@ -15,6 +15,7 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class EditNetSpellTests
 {
+    private string _originalApplicationExecutablePath = null!;
     private string _originalDictionary = null!;
     private bool _originalMarkIllFormedLines;
     private bool _originalProvideAutocompletion;
@@ -22,6 +23,10 @@ public sealed class EditNetSpellTests
     [SetUp]
     public void SetUp()
     {
+        GitUI.ThreadHelper.JoinableTaskContext = new Microsoft.VisualStudio.Threading.JoinableTaskContext();
+        AppSettings.TestAccessor settingsAccessor = AppSettings.GetTestAccessor();
+        _originalApplicationExecutablePath = settingsAccessor.ApplicationExecutablePath;
+        settingsAccessor.ApplicationExecutablePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "GitExtensions.Avalonia.exe");
         _originalDictionary = AppSettings.Dictionary;
         _originalMarkIllFormedLines = AppSettings.MarkIllFormedLinesInCommitMsg;
         _originalProvideAutocompletion = AppSettings.ProvideAutocompletion;
@@ -33,6 +38,7 @@ public sealed class EditNetSpellTests
     [TearDown]
     public void TearDown()
     {
+        AppSettings.GetTestAccessor().ApplicationExecutablePath = _originalApplicationExecutablePath;
         AppSettings.Dictionary = _originalDictionary;
         AppSettings.MarkIllFormedLinesInCommitMsg = _originalMarkIllFormedLines;
         AppSettings.ProvideAutocompletion = _originalProvideAutocompletion;
@@ -93,6 +99,14 @@ public sealed class EditNetSpellTests
         control.Text = "\nbody";
         control.CaretIndex = 0;
         control.CurrentColumn.Should().Be(1);
+
+        control.Text = "subject\n\nbody";
+        control.ChangeTextColor(2, 0, 4, System.Drawing.Color.Red);
+        control.GetTestAccessor().ForegroundRanges.Should().ContainSingle()
+            .Which.Should().Be(new SpellCheckAdorner.TextColorRange(new TextPos(9, 13), Colors.Red));
+
+        control.EnsureEmptyLine(addBullet: true, afterLine: 2);
+        control.Text.Should().Be($"subject\n\n{Environment.NewLine} - body");
     }
 
     [AvaloniaTest]
@@ -149,14 +163,19 @@ public sealed class EditNetSpellTests
         try
         {
             window.Show();
-            control.CheckSpelling();
             await Task.Delay(300);
+            Dispatcher.UIThread.RunJobs();
+            control.CheckSpelling();
+            control.ChangeTextColor(0, 0, 4, System.Drawing.Color.Red);
+            control.GetTestAccessor().ForegroundRanges.Should().ContainSingle();
             Dispatcher.UIThread.RunJobs();
             window.CaptureRenderedFrame().Should().NotBeNull();
 
             EditNetSpell.TestAccessor accessor = control.GetTestAccessor();
+            accessor.ForegroundRanges.Should().ContainSingle();
             accessor.MisspelledWords.Should().NotBeEmpty();
             accessor.RenderedMisspellingCount.Should().Be(accessor.MisspelledWords.Count);
+            accessor.RenderedForegroundRangeCount.Should().Be(1);
         }
         finally
         {
