@@ -1,4 +1,4 @@
-using Avalonia.Input;
+﻿using Avalonia.Input;
 using GitCommands;
 
 namespace GitUI.Editor;
@@ -20,6 +20,7 @@ public sealed class ContinuousScrollEventManager
     {
     }
 
+    // parity-scaffolding: injects settings and time so the original throttle contract is deterministic in tests.
     internal ContinuousScrollEventManager(
         Func<bool> getAutomaticContinuousScroll,
         Func<int> getAutomaticContinuousScrollDelay,
@@ -41,6 +42,7 @@ public sealed class ContinuousScrollEventManager
     public void RaiseBottomScrollReached(object sender, EventArgs e)
         => RaiseBottomScrollReached(GetKeyModifiers(e));
 
+    // parity-scaffolding: exposes Avalonia's captured pointer modifiers to deterministic tests.
     internal bool RaiseBottomScrollReached(KeyModifiers keyModifiers)
     {
         DateTime currentTime = _getCurrentTime();
@@ -57,6 +59,7 @@ public sealed class ContinuousScrollEventManager
     public void RaiseTopScrollReached(object sender, EventArgs e)
         => RaiseTopScrollReached(GetKeyModifiers(e));
 
+    // parity-scaffolding: exposes Avalonia's captured pointer modifiers to deterministic tests.
     internal bool RaiseTopScrollReached(KeyModifiers keyModifiers)
     {
         DateTime currentTime = _getCurrentTime();

@@ -12,8 +12,8 @@ namespace GitUI.Editor.Diff;
 /// </summary>
 public partial class DifftasticHighlightService : DiffHighlightService
 {
-    protected readonly List<TextMarker> _textMarkers = [];
-    private DiffLinesInfo _diffLinesInfo = new();
+    protected new readonly List<TextMarker> _textMarkers = [];
+    private new DiffLinesInfo _diffLinesInfo = new();
 
     [GeneratedRegex(@"^(\s*(?<matchStart>(?<lineNo>\d+)|(\.+)) )", RegexOptions.ExplicitCapture)]
     private static partial Regex LineNoRegex { get; }

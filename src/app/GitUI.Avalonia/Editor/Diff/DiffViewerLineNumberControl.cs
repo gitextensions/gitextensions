@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Avalonia.Media;
 using AvaloniaEdit;
 using AvaloniaEdit.Editing;
@@ -12,11 +12,12 @@ namespace GitUI.Editor.Diff;
 
 public class DiffViewerLineNumberControl : AbstractMargin
 {
-    private const double TextHorizontalMargin = 4;
+    private const double _textHorizontalMargin = 4;
     private static readonly IReadOnlyDictionary<int, DiffLineInfo> _empty = new Dictionary<int, DiffLineInfo>();
 
     private readonly TextEditor _editor;
     private IReadOnlyDictionary<int, DiffLineInfo> _diffLines = _empty;
+    private bool _visible = true;
     private bool _showLeftColumn = true;
 
     public DiffViewerLineNumberControl(TextEditor editor)
@@ -25,13 +26,17 @@ public class DiffViewerLineNumberControl : AbstractMargin
     }
 
     /// <summary>
-    /// Gets the maximum line number from either side of the diff.
+    /// Gets the maximum line number from either left or right version.
     /// </summary>
     public int MaxLineNumber { get; private set; }
 
-    public DiffLineInfo? GetLineInfo(int zeroBasedDocumentLine)
+    /// <summary>
+    /// returns the according line numbers or null if the caretLine is not mapped.
+    /// </summary>
+    /// <param name="caretLine">0-based (in contrast to the displayed line numbers which are 1-based).</param>
+    public DiffLineInfo? GetLineInfo(int caretLine)
     {
-        _diffLines.TryGetValue(zeroBasedDocumentLine + 1, out DiffLineInfo? info);
+        _diffLines.TryGetValue(caretLine + 1, out DiffLineInfo? info);
         return info;
     }
 
@@ -40,7 +45,6 @@ public class DiffViewerLineNumberControl : AbstractMargin
         _diffLines = result.DiffLines;
         MaxLineNumber = result.MaxLineNumber;
         _showLeftColumn = showLeftColumn;
-        IsVisible = true;
         InvalidateMeasure();
         InvalidateVisual();
     }
@@ -49,22 +53,23 @@ public class DiffViewerLineNumberControl : AbstractMargin
     {
         _diffLines = _empty;
         MaxLineNumber = 0;
-        IsVisible = false;
         InvalidateMeasure();
         InvalidateVisual();
     }
 
     protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
     {
-        if (!IsVisible || _diffLines.Count == 0)
+        if (!_visible || _diffLines.Count == 0)
         {
             return default;
         }
 
         int digits = MaxLineNumber > 0 ? ((int)Math.Log10(MaxLineNumber) + 1) : 1;
         double digitWidth = CreateFormattedText("0", bold: false, Brushes.Black).Width;
+
+        // add a space behind each number
         int columnCount = _showLeftColumn ? 2 : 1;
-        return new Avalonia.Size(TextHorizontalMargin + (columnCount * digitWidth * (digits + 1)), 0);
+        return new Avalonia.Size(_textHorizontalMargin + (columnCount * digitWidth * (digits + 1)), 0);
     }
 
     protected override void OnTextViewChanged(TextView oldTextView, TextView newTextView)
@@ -84,7 +89,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
     public override void Render(DrawingContext context)
     {
         TextView? textView = TextView;
-        if (!IsVisible || textView is null || !textView.VisualLinesValid)
+        if (!_visible || textView is null || !textView.VisualLinesValid)
         {
             return;
         }
@@ -96,7 +101,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
         (double backgroundSplit, double rightNumberX) = _showLeftColumn
             ? GetTwoColumnGeometry(Bounds.Width)
-            : (0, TextHorizontalMargin);
+            : (0, _textHorizontalMargin);
         foreach (VisualLine visualLine in textView.VisualLines)
         {
             int documentLine = visualLine.FirstDocumentLine.LineNumber;
@@ -113,7 +118,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
             IBrush textBrush = current ? selectedBrush : numberBrush;
             if (info.LeftLineNumber != DiffLineInfo.NotApplicableLineNum)
             {
-                DrawNumber(context, info.LeftLineNumber, TextHorizontalMargin, y, current, textBrush);
+                DrawNumber(context, info.LeftLineNumber, _textHorizontalMargin, y, current, textBrush);
             }
 
             if (info.RightLineNumber != DiffLineInfo.NotApplicableLineNum)
@@ -125,8 +130,8 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
     internal static (double BackgroundSplit, double RightNumberX) GetTwoColumnGeometry(double width)
     {
-        double numbersWidth = width - TextHorizontalMargin;
-        return (width / 2, TextHorizontalMargin + (numbersWidth / 2));
+        double numbersWidth = width - _textHorizontalMargin;
+        return (width / 2, _textHorizontalMargin + (numbersWidth / 2));
     }
 
     private void DrawSemanticBackground(DrawingContext context, Avalonia.Rect row, double leftWidth, DiffLineInfo info)
@@ -178,6 +183,14 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
     private static MediaColor GetSystemColor(System.Drawing.KnownColor name)
         => AvaloniaThemeResources.ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, name));
+
+    public void SetVisibility(bool visible)
+    {
+        _visible = visible;
+        IsVisible = visible;
+        InvalidateMeasure();
+        InvalidateVisual();
+    }
 
     private void TextView_VisualLinesChanged(object? sender, EventArgs e) => InvalidateVisual();
 }

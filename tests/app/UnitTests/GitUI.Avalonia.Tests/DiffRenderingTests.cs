@@ -1,17 +1,77 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Media;
 using Avalonia.Threading;
 using AvaloniaEdit;
+using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitUI.Editor;
 using GitUI.Editor.Diff;
+using NSubstitute;
 
 namespace GitExtensionsTests;
 
 [TestFixture]
 public sealed class DiffRenderingTests
 {
+    [Test]
+    public void Diff_services_should_preserve_original_prefix_and_command_configuration_contracts()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetEffectiveSetting(Arg.Any<string>()).Returns(string.Empty);
+        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        try
+        {
+            AppSettings.ReverseGitColoring.Value = false;
+
+            PatchHighlightService.GetGitCommandConfiguration(module, useGitColoring: false).Should().BeNull();
+            IGitCommandConfiguration patchConfiguration = PatchHighlightService.GetGitCommandConfiguration(module, useGitColoring: true);
+            patchConfiguration.Get("diff").Should().Contain(item => item.Key == "diff.colormoved" && item.Value == "dimmed-zebra");
+            patchConfiguration.Get("diff").Should().Contain(item => item.Key == "color.diff.old" && item.Value == "red ");
+
+            IGitCommandConfiguration rangeConfiguration = RangeDiffHighlightService.GetGitCommandConfiguration(module);
+            rangeConfiguration.Get("range-diff").Should().Contain(item => item.Key == "color.diff.oldbold" && item.Value == "brightred ");
+
+            string patch = string.Empty;
+            string combined = string.Empty;
+            string range = string.Empty;
+            new PatchHighlightService(ref patch, useGitColoring: false).GetFullDiffPrefixes().Should().Equal(" ", "+", "-");
+            new CombinedDiffHighlightService(ref combined, useGitColoring: false).GetFullDiffPrefixes().Should().Contain("++", "--");
+            new RangeDiffHighlightService(ref range).GetFullDiffPrefixes().Should().Contain("    +-", "    -+");
+        }
+        finally
+        {
+            AppSettings.ReverseGitColoring.Value = reverseGitColoring;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Original_diff_service_constructors_should_populate_the_supplied_margin()
+    {
+        TextEditor editor = new();
+        DiffViewerLineNumberControl margin = new(editor);
+        string patch = "@@ -3 +7 @@\n-old\n+new\n";
+
+        PatchHighlightService service = new(ref patch, useGitColoring: false, margin);
+
+        margin.GetLineInfo(1).Should().Match<DiffLineInfo>(line => line.LeftLineNumber == 3 && line.LineType == DiffLineType.Minus);
+        margin.GetLineInfo(2).Should().Match<DiffLineInfo>(line => line.RightLineNumber == 7 && line.LineType == DiffLineType.Plus);
+        service.LinesInfo.Should().NotBeNull();
+    }
+
+    [Test]
+    public void Range_diff_should_use_the_original_header_parser()
+    {
+        string text = "  1: unchanged\n  -: removed\n  text: context\n";
+
+        RangeDiffHighlightService service = new(ref text);
+
+        service.LinesInfo.DiffLines[1].LineType.Should().Be(DiffLineType.Header);
+        service.LinesInfo.DiffLines[2].LineType.Should().Be(DiffLineType.Header);
+        service.LinesInfo.DiffLines[3].LineType.Should().Be(DiffLineType.Context);
+    }
+
     [Test]
     public void Patch_analyzer_should_map_replacement_insertion_and_multiple_hunks()
     {

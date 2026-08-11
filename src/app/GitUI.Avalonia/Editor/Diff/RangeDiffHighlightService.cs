@@ -1,36 +1,52 @@
-using AvaloniaEdit.Document;
+﻿using System.Text.RegularExpressions;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI.Editor.Diff;
 
-public class RangeDiffHighlightService : DiffHighlightService
+/// <summary>
+/// Highlight git-range-diff
+/// </summary>
+public partial class RangeDiffHighlightService : DiffHighlightService
 {
+    [GeneratedRegex(@"^(\u001b\[.*?m)?\s*(\d+|-):", RegexOptions.ExplicitCapture)]
+    private static partial Regex RangeHeaderRegex { get; }
+
+    private static readonly string[] _diffFullPrefixes = ["      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    "];
+
+    public RangeDiffHighlightService(ref string text, DiffViewerLineNumberControl lineNumbersControl)
+        : this(ref text)
+    {
+        lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: false);
+    }
+
     public RangeDiffHighlightService(ref string text)
         : base(ref text, useGitColoring: true)
     {
-        TextDocument document = new(text);
-        foreach (DocumentLine line in document.Lines)
+        _diffLinesInfo = new();
+        int bufferLine = 0;
+        ReadOnlySpan<char> textAsSpan = text.AsSpan();
+        foreach (Range range in textAsSpan.Split(Delimiters.LineFeed))
         {
-            string lineText = document.GetText(line.Offset, line.Length);
-            LinesInfo.Add(new DiffLineInfo
+            ++bufferLine;
+            _diffLinesInfo.Add(new DiffLineInfo
             {
-                LineNumInDiff = line.LineNumber,
+                LineNumInDiff = bufferLine,
                 LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
-                RightLineNumber = line.LineNumber,
-                LineType = IsRangeHeader(lineText) ? DiffLineType.Header : DiffLineType.Context,
+                RightLineNumber = bufferLine,
+
+                // Note that Git output occasionally corrupts context lines, so parse headers
+                LineType = RangeHeaderRegex.IsMatch(textAsSpan[range]) ? DiffLineType.Header : DiffLineType.Context
             });
         }
     }
 
-    private static bool IsRangeHeader(string text)
-    {
-        ReadOnlySpan<char> trimmed = text.AsSpan().TrimStart();
-        int colon = trimmed.IndexOf(':');
-        if (colon <= 0)
-        {
-            return false;
-        }
+    // git-range-diff has an extended subset of git-diff options, base is the same
+    public static IGitCommandConfiguration GetGitCommandConfiguration(IGitModule module)
+        => DiffHighlightService.GetGitCommandConfiguration(module, useGitColoring: true, "range-diff");
 
-        ReadOnlySpan<char> prefix = trimmed[..colon];
-        return prefix.SequenceEqual("-") || int.TryParse(prefix, out _);
-    }
+    public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
+        => lineNumbersControl.GetLineInfo(indexInText)?.LineType is DiffLineType.Header;
+
+    public override string[] GetFullDiffPrefixes() => _diffFullPrefixes;
 }
