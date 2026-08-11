@@ -467,4 +467,20 @@ public sealed class FileStatusListFamilyTests
             AppSettings.ShowDiffForAllParents = originalShowAllParents;
         }
     }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_show_the_collapse_button_when_revision_groups_are_rendered()
+    {
+        FileStatusList control = new() { GroupByRevision = true };
+        GitRevision revision = new(ObjectId.Random());
+
+        control.SetDiffs(
+        [
+            new FileStatusWithDescription(null, revision, "First", [new GitItemStatus("first.cs") { IsChanged = true }]),
+            new FileStatusWithDescription(null, revision, "Second", [new GitItemStatus("second.cs") { IsChanged = true }]),
+        ],
+        isFileTreeMode: false);
+
+        control.GetTestAccessor().CollapseGroupsButton.IsVisible.Should().BeTrue();
+    }
 }
