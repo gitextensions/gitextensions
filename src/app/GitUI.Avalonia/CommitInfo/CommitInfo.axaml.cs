@@ -86,6 +86,9 @@ public partial class CommitInfo : GitModuleControl
     public CommitInfo(ICommitDataManager? commitDataManager)
     {
         InitializeComponent();
+
+        // Avalonia's compatibility hotkey table is opt-in; WinForms enables control hotkeys through its runtime lifecycle.
+        HotkeysEnabled = true;
         InitializeComplete();
 
         _commitDataManager = commitDataManager ?? new CommitDataManager(() => Module);
@@ -97,12 +100,11 @@ public partial class CommitInfo : GitModuleControl
         _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
         _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
-        // This issue surfaces in WinForms at 150% scale factor.
+        // This issue surfaces at 150% scale factor.
         // At this point rtbxCommitMessage.Bounds = {X = 8 Y = 8 Width = 440 Height = 0}
-        // and with Height=0 WinForms won't receive any ContentsResizedEvents.
-        // Avalonia constraint: the native measure pass replaces that event-driven workaround.
-        // Avalonia's dynamic font resources are published from these same settings; retain the
-        // original control-level reads so changing either setting remains this surface's contract.
+        // and with Height=0 we won't be receiving any ContentsResizedEvents.
+        // To workaround the zero-height - force the min size.
+        // Avalonia constraint: native measurement does not need the WinForms minimum-size workaround.
         _ = AppSettings.CommitFont;
         _ = AppSettings.Font;
 
@@ -151,6 +153,10 @@ public partial class CommitInfo : GitModuleControl
     internal void ReloadHotkeys()
     {
         LoadHotkeys(FormBrowse.HotkeySettingsName);
+
+        // Avalonia menus display their native gesture instead of WinForms' ShortcutKeyDisplayString.
+        addNoteToolStripMenuItem.InputGesture = KeysMapper.ToKeyGesture(
+            Hotkeys.FirstOrDefault(hotkey => hotkey.CommandCode == (int)FormBrowse.Command.AddNotes)?.KeyData);
     }
 
     private void RefreshSortedTags()
@@ -902,6 +908,7 @@ public partial class CommitInfo : GitModuleControl
         }
     }
 
+    // parity-scaffolding: Exposes the original named surfaces and menu state to focused parity tests.
     internal TestAccessor GetTestAccessor()
         => new(this);
 
@@ -921,6 +928,22 @@ public partial class CommitInfo : GitModuleControl
         public XhtmlTextBlock RevisionInfo => _commitInfo.RevisionInfo;
 
         public CommitInfoHeader Header => _commitInfo.commitInfoHeader;
+
+        public MenuItem AddNoteMenuItem => _commitInfo.addNoteToolStripMenuItem;
+
+        public MenuItem ShowLocalBranchesMenuItem => _commitInfo.showContainedInBranchesToolStripMenuItem;
+
+        public MenuItem ShowRemoteBranchesMenuItem => _commitInfo.showContainedInBranchesRemoteToolStripMenuItem;
+
+        public MenuItem ShowRemoteBranchesIfNoLocalMenuItem => _commitInfo.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem;
+
+        public MenuItem ShowTagsMenuItem => _commitInfo.showContainedInTagsToolStripMenuItem;
+
+        public MenuItem ShowAnnotatedTagMessagesMenuItem => _commitInfo.showMessagesOfAnnotatedTagsToolStripMenuItem;
+
+        public MenuItem ShowDerivedTagMenuItem => _commitInfo.showTagThisCommitDerivesFromMenuItem;
+
+        public Grid TableLayout => _commitInfo.tableLayout;
 
         public IDictionary<string, int> GetSortedTags() => _commitInfo.GetSortedTags();
 
