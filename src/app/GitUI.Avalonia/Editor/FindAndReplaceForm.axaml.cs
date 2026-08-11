@@ -5,64 +5,66 @@ using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Compat;
 using GitUI.UserControls;
 using ResourceManager;
+using DrawingColor = System.Drawing.Color;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
-/// <summary>Loads the next file while a search spans multiple files.</summary>
-/// <param name="seekBackward">Whether to select the previous file.</param>
-/// <param name="loop">Whether navigation may wrap at the end of the list.</param>
-/// <param name="fileStatusItem">Receives the selected file.</param>
-/// <param name="loadFileContent">Receives the asynchronous content load.</param>
-/// <returns><see langword="true"/> when another file was selected.</returns>
 public delegate bool GetNextFileFnc(bool seekBackward, bool loop, out FileStatusItem? fileStatusItem, out Task loadFileContent);
 
-/// <summary>Finds and optionally replaces text in an AvaloniaEdit editor.</summary>
 public partial class FindAndReplaceForm : GitExtensionsForm
 {
-    private readonly TranslationString _findAndReplaceString = new("Find & replace");
-    private readonly TranslationString _findString = new("Find");
-    private readonly TranslationString _selectionOnlyString = new("selection only");
-    private readonly TranslationString _textNotFoundString = new("Text not found");
-    private readonly TranslationString _noSearchString = new("No string specified to look for!");
-    private readonly TranslationString _textNotFoundString2 = new("Search text not found.");
-    private readonly TranslationString _notFoundString = new("Not found");
-    private readonly TranslationString _noOccurrencesFoundString = new("No occurrences found.");
-    private readonly TranslationString _replacedOccurrencesString = new("Replaced {0} occurrences.");
+    private readonly TranslationString _findAndReplaceString =
+        new("Find & replace");
+    private readonly TranslationString _findString =
+        new("Find");
+    private readonly TranslationString _selectionOnlyString =
+        new("selection only");
+    private readonly TranslationString _textNotFoundString =
+        new("Text not found");
+    private readonly TranslationString _noSearchString =
+        new("No string specified to look for!");
+    private readonly TranslationString _textNotFoundString2 =
+        new("Search text not found.");
+    private readonly TranslationString _notFoundString =
+        new("Not found");
+    private readonly TranslationString _noOccurrencesFoundString =
+        new("No occurrences found.");
+    private readonly TranslationString _replacedOccurrencesString =
+        new("Replaced {0} occurrences.");
 
-    private readonly Dictionary<TextEditor, HighlightGroup> _highlightGroups = [];
+    private readonly Dictionary<TextEditor, HighlightGroup> _highlightGroups =
+        [];
+
     private readonly TextEditorSearcher _search;
     private TextEditor? _editor;
     private bool _lastSearchLoopedAround;
     private bool _lastSearchWasBackward;
     private GetNextFileFnc? _fileLoader;
 
-    /// <summary>Initializes a reusable Find/Replace window.</summary>
     public FindAndReplaceForm()
     {
         InitializeComponent();
-
-        btnFindPrevious.Click += (_, _) => this.InvokeAndForget(
-            () => FindNextAsync(viaF3: false, searchBackward: true, _textNotFoundString.Text));
-        btnFindNext.Click += (_, _) => this.InvokeAndForget(
-            () => FindNextAsync(viaF3: false, searchBackward: false, _textNotFoundString.Text));
-        btnReplace.Click += (_, _) => this.InvokeAndForget(ReplaceAsync);
-        btnReplaceAll.Click += (_, _) => this.InvokeAndForget(ReplaceAllAsync);
+        btnFindPrevious.Click += btnFindPrevious_Click;
+        btnFindNext.Click += btnFindNext_Click;
+        btnReplace.Click += btnReplace_Click;
+        btnReplaceAll.Click += btnReplaceAll_Click;
         btnHighlightAll.Click += btnHighlightAll_Click;
-        btnCancel.Click += (_, _) => Hide();
-        Closing += FindAndReplaceForm_Closing;
+        btnCancel.Click += btnCancel_Click;
+        Closing += FindAndReplaceForm_FormClosing;
         Closed += FindAndReplaceForm_Closed;
-
         InitializeComplete();
-
         _search = new TextEditorSearcher();
         _search.ScanRegionChanged += ScanRegionChanged;
+
+        ShowInTaskbar = false;
         AcceptButton = btnFindNext;
     }
 
-    /// <summary>Gets or sets whether replacement controls are displayed.</summary>
     public bool ReplaceMode
     {
         get => txtReplaceWith.IsVisible;
@@ -78,12 +80,17 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         }
     }
 
-    /// <summary>Gets the current search text.</summary>
     public string LookFor => txtLookFor.Text ?? string.Empty;
 
     private void UpdateTitleBar()
     {
         string text = ReplaceMode ? _findAndReplaceString.Text : _findString.Text;
+
+        if (_editor?.Tag is string fileName)
+        {
+            text += " - " + Path.GetFileName(fileName);
+        }
+
         if (_search.HasScanRegion)
         {
             text += " (" + _selectionOnlyString.Text + ")";
@@ -92,7 +99,6 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         Text = text;
     }
 
-    /// <summary>Shows this reusable window for the specified editor.</summary>
     public void ShowFor(TextEditor editor, bool replaceMode)
     {
         SetEditor(editor);
@@ -112,10 +118,11 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         }
         else
         {
+            // Get the current word that the caret is on
             txtLookFor.Text = GetWordAtCaret(editor);
         }
 
-        ReplaceMode = replaceMode && !editor.IsReadOnly;
+        ReplaceMode = replaceMode;
 
         Window? owner = TopLevel.GetTopLevel(editor) as Window;
         if (!IsVisible)
@@ -160,7 +167,16 @@ public partial class FindAndReplaceForm : GitExtensionsForm
     private static bool IsWordCharacter(char character)
         => char.IsLetterOrDigit(character) || character == '_';
 
-    /// <summary>Finds and selects the next matching range.</summary>
+    private void btnFindPrevious_Click(object sender, EventArgs e)
+    {
+        this.InvokeAndForget(() => FindNextAsync(viaF3: false, searchBackward: true, _textNotFoundString.Text));
+    }
+
+    private void btnFindNext_Click(object sender, EventArgs e)
+    {
+        this.InvokeAndForget(() => FindNextAsync(viaF3: false, searchBackward: false, _textNotFoundString.Text));
+    }
+
     public async Task<TextRange?> FindNextAsync(bool viaF3, bool searchBackward, string? messageIfNotFound)
     {
         if (string.IsNullOrEmpty(LookFor))
@@ -190,6 +206,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
                 && _search.HasScanRegion
                 && !Globals.IsInRange(editor.CaretOffset, _search.BeginOffset, _search.EndOffset))
             {
+                // user moved outside of the originally selected region
                 _search.ClearScanRegion();
             }
 
@@ -257,6 +274,10 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         editor.Select(range.Offset, range.Length);
         TextLocation location = editor.Document.GetLocation(range.Offset);
         editor.ScrollTo(location.Line, location.Column);
+
+        // Also move the caret to the end of the selection, because when the user
+        // presses F3, the caret is where we start searching next time.
+        editor.CaretOffset = range.EndOffset;
     }
 
     private void ScanRegionChanged(object? sender, EventArgs e)
@@ -264,7 +285,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         UpdateTitleBar();
     }
 
-    private void btnHighlightAll_Click(object? sender, EventArgs e)
+    private void btnHighlightAll_Click(object sender, EventArgs e)
     {
         TextEditor editor = _editor ?? throw new InvalidOperationException("The search window has no text editor.");
         if (!_highlightGroups.TryGetValue(editor, out HighlightGroup? group))
@@ -273,12 +294,14 @@ public partial class FindAndReplaceForm : GitExtensionsForm
             _highlightGroups[editor] = group;
         }
 
-        group.ClearMarkers();
         if (string.IsNullOrEmpty(LookFor))
         {
+            // Clear highlights
+            group.ClearMarkers();
             return;
         }
 
+        group.ClearMarkers();
         _search.LookFor = LookFor;
         _search.MatchCase = chkMatchCase.IsChecked == true;
         _search.MatchWholeWordOnly = chkMatchWholeWord.IsChecked == true;
@@ -309,19 +332,26 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         }
         else
         {
-            Hide();
+            HideAndClearSearch();
         }
     }
 
-    private void FindAndReplaceForm_Closing(object? sender, WindowClosingEventArgs e)
+    private void FindAndReplaceForm_FormClosing(object? sender, WindowClosingEventArgs e)
     {
+        // Prevent dispose, as this form can be re-used
         if (e.CloseReason == WindowCloseReason.WindowClosing && !e.IsProgrammatic)
         {
+            Owner?.Activate(); // prevent another app from being activated instead
+
             e.Cancel = true;
-            Hide();
-            _search.ClearScanRegion();
-            _editor?.TextArea.TextView.Redraw();
+            HideAndClearSearch();
         }
+    }
+
+    private void btnCancel_Click(object sender, EventArgs e)
+    {
+        // Avalonia treats Close() as programmatic disposal; hide to preserve the reusable original form lifetime.
+        HideAndClearSearch();
     }
 
     private void FindAndReplaceForm_Closed(object? sender, EventArgs e)
@@ -335,6 +365,11 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         _highlightGroups.Clear();
     }
 
+    private void btnReplace_Click(object sender, EventArgs e)
+    {
+        this.InvokeAndForget(ReplaceAsync);
+    }
+
     private async Task ReplaceAsync()
     {
         TextEditor editor = _editor ?? throw new InvalidOperationException("The search window has no text editor.");
@@ -346,9 +381,19 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         await FindNextAsync(viaF3: false, _lastSearchWasBackward, _textNotFoundString.Text);
     }
 
+    private void btnReplaceAll_Click(object sender, EventArgs e)
+    {
+        this.InvokeAndForget(ReplaceAllAsync);
+    }
+
     private async Task ReplaceAllAsync()
     {
         TextEditor editor = _editor ?? throw new InvalidOperationException("The search window has no text editor.");
+
+        // BUG FIX: if the replacement string contains the original search string
+        // (e.g. replace "red" with "very red") we must avoid looping around and
+        // replacing forever! To fix, start replacing at beginning of region (by
+        // moving the caret) and stop as soon as we loop around.
         editor.CaretOffset = _search.BeginOffset;
 
         int count = 0;
@@ -406,7 +451,17 @@ public partial class FindAndReplaceForm : GitExtensionsForm
     {
         _editor = editor;
         _search.Document = editor.Document;
+        _search.Editor = editor;
         UpdateTitleBar();
+    }
+
+    private void HideAndClearSearch()
+    {
+        Hide();
+
+        // Discard search region
+        _search.ClearScanRegion();
+        _editor?.TextArea.TextView.Redraw(); // must repaint manually
     }
 
     internal void SetFileLoader(GetNextFileFnc fileLoader)
@@ -434,6 +489,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         editor.ScrollToLine(editor.Document.GetLineByOffset(marker.Offset).LineNumber);
     }
 
+    // parity-scaffolding: exposes search state without broadening the product API.
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor
@@ -450,6 +506,8 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         public TextBox TxtReplaceWith => _control.txtReplaceWith;
         public CheckBox ChkMatchCase => _control.chkMatchCase;
         public CheckBox ChkMatchWholeWord => _control.chkMatchWholeWord;
+        public string? Title => _control.Text;
+        public bool HasScanRegionRenderer => _control._search.HasScanRegionRenderer;
 
         public Task ReplaceAsync() => _control.ReplaceAsync();
 
@@ -486,7 +544,9 @@ public sealed class TextRange : ISegment
 public sealed class TextEditorSearcher : IDisposable
 {
     private TextDocument? _document;
+    private TextEditor? _editor;
     private string? _lookForComparison;
+    private ScanRegionRenderer? _regionRenderer;
     private int? _scanOffset;
     private int _scanLength;
 
@@ -515,8 +575,27 @@ public sealed class TextEditorSearcher : IDisposable
         }
     }
 
+    // AvaloniaEdit keeps background renderers on the view rather than markers on the document.
+    internal TextEditor? Editor
+    {
+        get => _editor;
+        set
+        {
+            if (ReferenceEquals(_editor, value))
+            {
+                return;
+            }
+
+            RemoveRegionRenderer();
+            _editor = value;
+            UpdateRegionRenderer();
+        }
+    }
+
     /// <summary>Gets whether searching is restricted to a range.</summary>
     public bool HasScanRegion => _scanOffset is not null;
+
+    internal bool HasScanRegionRenderer => _regionRenderer is not null;
 
     /// <summary>Gets the first searchable offset.</summary>
     public int BeginOffset => _scanOffset ?? 0;
@@ -549,6 +628,7 @@ public sealed class TextEditorSearcher : IDisposable
         _scanOffset = offset;
         _scanLength = length;
         document.TextChanged += DocumentOnTextChanged;
+        UpdateRegionRenderer();
         ScanRegionChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -567,6 +647,7 @@ public sealed class TextEditorSearcher : IDisposable
 
         _scanOffset = null;
         _scanLength = 0;
+        RemoveRegionRenderer();
         ScanRegionChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -670,6 +751,60 @@ public sealed class TextEditorSearcher : IDisposable
     private void DocumentOnTextChanged(object? sender, EventArgs e)
     {
         ClearScanRegion();
+    }
+
+    private void UpdateRegionRenderer()
+    {
+        if (_editor is null || _scanOffset is null)
+        {
+            return;
+        }
+
+        RemoveRegionRenderer();
+        DrawingColor regionColor = DrawingColor.FromArgb(160, 160, 160).AdaptBackColor().DimColor();
+        _regionRenderer = new ScanRegionRenderer(
+            new TextRange(_scanOffset.Value, _scanLength),
+            new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(regionColor)).ToImmutable());
+        _editor.TextArea.TextView.BackgroundRenderers.Add(_regionRenderer);
+        _editor.TextArea.TextView.Redraw();
+    }
+
+    private void RemoveRegionRenderer()
+    {
+        if (_editor is not null && _regionRenderer is not null)
+        {
+            _editor.TextArea.TextView.BackgroundRenderers.Remove(_regionRenderer);
+            _editor.TextArea.TextView.Redraw();
+        }
+
+        _regionRenderer = null;
+    }
+
+    private sealed class ScanRegionRenderer : IBackgroundRenderer
+    {
+        private readonly IBrush _brush;
+        private readonly TextRange _region;
+
+        public ScanRegionRenderer(TextRange region, IBrush brush)
+        {
+            _region = region;
+            _brush = brush;
+        }
+
+        public KnownLayer Layer => KnownLayer.Background;
+
+        public void Draw(AvaloniaEdit.Rendering.TextView textView, DrawingContext drawingContext)
+        {
+            if (!textView.VisualLinesValid)
+            {
+                return;
+            }
+
+            foreach (Rect rectangle in BackgroundGeometryBuilder.GetRectsForSegment(textView, _region))
+            {
+                drawingContext.FillRectangle(_brush, rectangle);
+            }
+        }
     }
 }
 

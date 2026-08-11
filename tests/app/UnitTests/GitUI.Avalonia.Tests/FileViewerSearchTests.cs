@@ -2,6 +2,8 @@ using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using AvaloniaEdit.Document;
+using GitCommands;
+using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
@@ -104,6 +106,106 @@ public sealed class FileViewerSearchTests
         accessor.Search.EndOffset.Should().Be(viewer.TextEditor.Text.Length);
 
         form.Close();
+    }
+
+    [AvaloniaTest]
+    public async Task FileViewerInternal_should_highlight_and_navigate_selected_text_occurrences()
+    {
+        FileViewer viewer = new();
+        await viewer.ViewTextAsync("sample.txt", "one two one");
+        FileViewerInternal internalViewer = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+
+        viewer.TextEditor.Select(0, 3);
+
+        internalViewer.GetTestAccessor().SelectionOccurrences.Should().HaveCount(2);
+
+        viewer.TextEditor.TextArea.Caret.Offset = 0;
+        viewer.GoToNextOccurrence();
+        viewer.TextEditor.TextArea.Caret.Offset.Should().Be(8);
+
+        viewer.GoToPreviousOccurrence();
+        viewer.TextEditor.TextArea.Caret.Offset.Should().Be(0);
+    }
+
+    [AvaloniaTest]
+    public async Task FindAndReplaceForm_should_show_the_file_name_and_render_the_scan_region()
+    {
+        FileViewer viewer = new();
+        await viewer.ViewTextAsync("folder/sample.txt", "first\nselected text\nlast");
+        FindAndReplaceForm form = viewer.GetTestAccessor().FindAndReplaceForm;
+        FindAndReplaceForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.SetEditor(viewer.TextEditor);
+        form.ReplaceMode = false;
+
+        accessor.Title.Should().Be("Find - sample.txt");
+
+        accessor.Search.SetScanRegion(offset: 6, length: 13);
+
+        accessor.Title.Should().Be("Find - sample.txt (selection only)");
+        accessor.HasScanRegionRenderer.Should().BeTrue();
+
+        accessor.Search.ClearScanRegion();
+        accessor.HasScanRegionRenderer.Should().BeFalse();
+        form.Close();
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
+    public void FileViewer_should_restore_diff_appearance_text_and_continuous_scroll_options()
+    {
+        DiffDisplayAppearance originalAppearance = AppSettings.DiffDisplayAppearance.Value;
+        bool originalContinuousScroll = AppSettings.AutomaticContinuousScroll;
+        string? originalColor = Environment.GetEnvironmentVariable("DFT_COLOR");
+        string? originalBackground = Environment.GetEnvironmentVariable("DFT_BACKGROUND");
+        string? originalSyntax = Environment.GetEnvironmentVariable("DFT_SYNTAX_HIGHLIGHT");
+        string? originalContext = Environment.GetEnvironmentVariable("DFT_CONTEXT");
+        string? originalStripCr = Environment.GetEnvironmentVariable("DFT_STRIP_CR");
+        string? originalWidth = Environment.GetEnvironmentVariable("DFT_WIDTH");
+        string? originalWslEnv = Environment.GetEnvironmentVariable("WSLENV");
+        try
+        {
+            AppSettings.DiffDisplayAppearance.Value = DiffDisplayAppearance.Patch;
+            AppSettings.AutomaticContinuousScroll = false;
+            FileViewer viewer = new();
+            FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+            int reloadRequests = 0;
+            viewer.ExtraDiffArgumentsChanged += (_, _) => reloadRequests++;
+
+            accessor.ShowGitWordColoringMenuItem.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+
+            AppSettings.DiffDisplayAppearance.Value.Should().Be(DiffDisplayAppearance.GitWordDiff);
+            viewer.GetExtraDiffArguments().ToString().Should().Contain("--word-diff=color");
+
+            accessor.TreatAllFilesAsTextMenuItem.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+
+            viewer.GetExtraDiffArguments().ToString().Should().Contain("--text");
+            viewer.GetExtraGrepArguments().ToString().Should().Contain("--text");
+
+            (GitExtensions.Extensibility.ArgumentString args, string extraCacheKey) = viewer.GetDifftasticArguments();
+            args.ToString().Should().Contain("--tool=difftastic").And.Contain("--text");
+            extraCacheKey.Should().Contain(";DFT_COLOR=always").And.Contain(";DFT_BACKGROUND=light");
+            Environment.GetEnvironmentVariable("DFT_WIDTH").Should().Be("88");
+
+            accessor.AutomaticContinuousScrollMenuItem.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(MenuItem.ClickEvent));
+
+            AppSettings.AutomaticContinuousScroll.Should().BeTrue();
+            reloadRequests.Should().Be(2);
+            viewer.FindControl<MenuItem>("showPatchToolStripMenuItem").Should().NotBeNull();
+            viewer.FindControl<MenuItem>("showDifftasticToolStripMenuItem").Should().NotBeNull();
+            viewer.FindControl<Button>("settingsButton").Should().NotBeNull();
+        }
+        finally
+        {
+            AppSettings.DiffDisplayAppearance.Value = originalAppearance;
+            AppSettings.AutomaticContinuousScroll = originalContinuousScroll;
+            Environment.SetEnvironmentVariable("DFT_COLOR", originalColor);
+            Environment.SetEnvironmentVariable("DFT_BACKGROUND", originalBackground);
+            Environment.SetEnvironmentVariable("DFT_SYNTAX_HIGHLIGHT", originalSyntax);
+            Environment.SetEnvironmentVariable("DFT_CONTEXT", originalContext);
+            Environment.SetEnvironmentVariable("DFT_STRIP_CR", originalStripCr);
+            Environment.SetEnvironmentVariable("DFT_WIDTH", originalWidth);
+            Environment.SetEnvironmentVariable("WSLENV", originalWslEnv);
+        }
     }
 
     [AvaloniaTest]
