@@ -292,6 +292,8 @@ public partial class InteractiveGitActionControl : GitModuleControl
         internal Button ContinueButton => control.ContinueButton;
         internal Button AbortButton => control.AbortButton;
         internal Button MoreButton => control.MoreButton;
+        internal IImage? Icon => control.IconBox.Source;
+        internal bool HasIconClass(string className) => control.IconBox.Classes.Contains(className);
         internal TextBlock TextLabel => control.TextLabel;
         internal void SetGitAction(GitAction action, bool conflicts) => control.SetGitAction(action, conflicts);
     }

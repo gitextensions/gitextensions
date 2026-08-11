@@ -51,6 +51,39 @@ internal static class WinFormsInputMetadata
                 new("pnlHeader", 0, null, null),
                 new("textBoxSearch", 0, null, null),
             ],
+            ["GitUI.CommandsDialogs.BrowseDialog.FormBisect"] =
+            [
+                new("Bad", 1, null, null),
+                new("Good", 2, null, null),
+                new("Start", 0, null, null),
+                new("Stop", 4, null, null),
+                new("btnSkip", 3, null, null),
+            ],
+            ["GitUI.CommandsDialogs.BrowseDialog.FormChangeLog"] =
+            [
+                new("ChangeLog", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.BrowseDialog.FormDonate"] =
+            [
+                new("lblText", 0, null, null),
+                new("pbxDonate", 0, false, null),
+                new("tableLayoutPanel", 2, null, null),
+            ],
+            ["GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog"] =
+            [
+                new("CommandCacheItems", 0, null, null),
+                new("LogItems", 0, null, null),
+                new("LogOutput", 0, null, null),
+                new("TabControl", 1, null, null),
+                new("chkAlwaysOnTop", 2, null, null),
+                new("chkCaptureCallStacks", 4, null, null),
+                new("chkWordWrap", 3, null, null),
+                new("commandCacheOutput", 0, null, null),
+                new("splitContainer1", 0, null, null),
+                new("splitContainer2", 1, null, null),
+                new("tabPageCommandCache", 1, null, null),
+                new("tabPageCommandLog", 0, null, null),
+            ],
             ["GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit"] =
             [
                 new("comboBoxBranches", 2, null, null),
@@ -63,6 +96,14 @@ internal static class WinFormsInputMetadata
                 new("label4", 5, null, null),
                 new("linkGitRevParse", 0, true, null),
                 new("textboxCommitExpression", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.BrowseDialog.FormOpenDirectory"] =
+            [
+                new("Load", 3, null, null),
+                new("_NO_TRANSLATE_Directory", 1, null, null),
+                new("folderBrowserButton", 4, null, null),
+                new("folderGoUpButton", 5, null, null),
+                new("label1", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.BrowseDialog.FormRecentReposSettings"] =
             [
@@ -102,6 +143,55 @@ internal static class WinFormsInputMetadata
                 new("linkRequiredDotNetRuntime", 2, null, null),
                 new("progressBar1", 1, null, null),
             ],
+            ["GitUI.CommandsDialogs.CommitDialog.FormCommitTemplateSettings"] =
+            [
+                new("_NO_TRANSLATE_comboBoxCommitTemplates", 0, null, null),
+                new("_NO_TRANSLATE_numericMaxFirstLineLength", 4, null, null),
+                new("_NO_TRANSLATE_numericMaxLineLength", 6, null, null),
+                new("_NO_TRANSLATE_textBoxCommitTemplateName", 1, null, null),
+                new("_NO_TRANSLATE_textBoxCommitValidationRegex", 14, null, null),
+                new("_NO_TRANSLATE_textCommitTemplateText", 2, null, null),
+                new("buttonCancel", 22, null, null),
+                new("buttonOk", 20, null, null),
+                new("checkBoxAutoWrap", 12, null, null),
+                new("checkBoxRegexEnabled", 8, null, null),
+                new("checkBoxSecondLineEmpty", 18, null, null),
+                new("checkBoxUseIndent", 16, null, null),
+                new("labelAutoWrap", 7, null, null),
+                new("labelCommitTemplate", 5, null, null),
+                new("labelCommitTemplateName", 7, null, null),
+                new("labelMaxFirstLineLength", 3, null, null),
+                new("labelMaxLineLength", 5, null, null),
+                new("labelRegExCheck", 13, null, null),
+                new("labelSecondLineEmpty", 17, null, null),
+                new("labelUseIndent", 15, null, null),
+                new("tabControl1", 4, null, null),
+                new("tabPage1", 0, null, null),
+                new("tabPage2", 1, null, null),
+            ],
+            ["GitUI.CommandsDialogs.EnvironmentInfo"] =
+            [
+                new("copyButton", 1, null, null),
+                new("environmentIssueInfo", 0, null, null),
+                new("lblSeparatorBottom", 1, null, null),
+                new("lblSeparatorTop", 0, null, null),
+                new("tableLayoutPanel1", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.FormAbout"] =
+            [
+                new("_NO_TRANSLATE_ThanksTo", 3, true, null),
+                new("_NO_TRANSLATE_labelCopyright", 2, null, null),
+                new("_NO_TRANSLATE_labelProductDescription", 1, null, null),
+                new("_NO_TRANSLATE_labelProductName", 0, true, null),
+                new("environmentInfo", 5, null, null),
+                new("flowLayoutPanel1", 0, null, null),
+                new("label1", 6, null, null),
+                new("label2", 0, null, null),
+                new("linkLabelIcons", 4, true, null),
+                new("logoPictureBox", 12, false, null),
+                new("pictureDonate", 25, false, null),
+                new("tableLayoutPanel1", 0, null, null),
+            ],
             ["GitUI.CommandsDialogs.FormAddFiles"] =
             [
                 new("AddFiles", 2, null, null),
@@ -109,6 +199,20 @@ internal static class WinFormsInputMetadata
                 new("ShowFiles", 3, null, null),
                 new("force", 4, null, null),
                 new("label1", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.FormAddToGitIgnore"] =
+            [
+                new("AddToIgnore", 7, null, null),
+                new("FilePattern", 6, null, null),
+                new("_NO_TRANSLATE_Preview", 2, null, null),
+                new("_NO_TRANSLATE_filesWillBeIgnored", 11, null, null),
+                new("btnCancel", 8, null, null),
+                new("groupBox1", 9, false, null),
+                new("groupFilePattern", 11, false, null),
+                new("label2", 1, null, null),
+                new("noMatchPanel", 2, null, null),
+                new("panel1", 10, null, null),
+                new("pictureBox1", 0, false, null),
             ],
             ["GitUI.CommandsDialogs.FormApplyPatch"] =
             [
@@ -159,6 +263,10 @@ internal static class WinFormsInputMetadata
                 new("tableLayoutPanel2", 2, null, null),
                 new("tableLayoutPanel4", 6, null, null),
                 new("textBoxPaths", 1, null, null),
+            ],
+            ["GitUI.CommandsDialogs.FormBlame"] =
+            [
+                new("blameControl1", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.FormBrowse"] =
             [
@@ -237,6 +345,28 @@ internal static class WinFormsInputMetadata
                 new("lvParentsList", 7, null, null),
                 new("tlPnlMain", 0, null, null),
             ],
+            ["GitUI.CommandsDialogs.FormCleanupRepository"] =
+            [
+                new("AddExclusivePath", 7, null, null),
+                new("AddInclusivePath", 3, null, null),
+                new("CleanSubmodules", 8, null, null),
+                new("Cleanup", 11, null, null),
+                new("Preview", 10, null, null),
+                new("PreviewOutput", 14, null, null),
+                new("RemoveAll", 0, true, null),
+                new("RemoveDirectories", 1, null, null),
+                new("RemoveIgnored", 2, null, null),
+                new("RemoveNonIgnored", 1, null, null),
+                new("_NO_TRANSLATE_Close", 12, null, null),
+                new("checkBoxExcludePathFilter", 6, null, null),
+                new("checkBoxIncludePathFilter", 2, null, null),
+                new("groupBox1", 0, false, null),
+                new("label1", 13, null, null),
+                new("labelPathHintExclude", 9, null, null),
+                new("labelPathHintInclude", 5, null, null),
+                new("textBoxExcludePaths", 8, null, null),
+                new("textBoxIncludePaths", 4, null, null),
+            ],
             ["GitUI.CommandsDialogs.FormClone"] =
             [
                 new("CentralRepository", 0, null, null),
@@ -259,6 +389,12 @@ internal static class WinFormsInputMetadata
                 new("subdirectoryLabel", 6, null, null),
                 new("tableLayoutPanel1", 0, null, null),
             ],
+            ["GitUI.CommandsDialogs.FormCommandlineHelp"] =
+            [
+                new("_NO_TRANSLATE_commands", 0, null, null),
+                new("flowLayoutPanel1", 2, null, null),
+                new("label1", 1, null, null),
+            ],
             ["GitUI.CommandsDialogs.FormCommit"] =
             [
                 new("Amend", 104, null, null),
@@ -272,6 +408,7 @@ internal static class WinFormsInputMetadata
                 new("SolveMergeconflicts", 0, null, null),
                 new("StageInSuperproject", 103, null, null),
                 new("Staged", 0, null, null),
+                new("StashStaged", 107, null, null),
                 new("Unstaged", 0, null, null),
                 new("btnResetAllChanges", 108, null, null),
                 new("btnResetUnstagedChanges", 109, null, null),
@@ -280,6 +417,7 @@ internal static class WinFormsInputMetadata
                 new("splitMain", 0, false, null),
                 new("splitRight", 0, false, null),
                 new("toolbarCommit", 110, null, null),
+                new("toolbarSelectionFilter", 13, null, null),
             ],
             ["GitUI.CommandsDialogs.FormCompareToBranch"] =
             [
@@ -321,6 +459,16 @@ internal static class WinFormsInputMetadata
                 new("Branches", 1, null, null),
                 new("Delete", 2, null, null),
                 new("labelSelectBranches", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.FormDeleteRemoteBranch"] =
+            [
+                new("Branches", 1, null, null),
+                new("Delete", 2, null, null),
+                new("DeleteLocalTrackingBranch", 3, null, null),
+                new("DeleteRemote", 2, null, null),
+                new("_NO_TRANSLATE_labelLocalTrackingBranches", 4, null, null),
+                new("labelSelectBranches", 0, null, null),
+                new("tlpnlMain", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.FormDeleteTag"] =
             [
@@ -379,6 +527,28 @@ internal static class WinFormsInputMetadata
                 new("ViewTab", 0, null, null),
                 new("tabControl1", 0, null, null),
             ],
+            ["GitUI.CommandsDialogs.FormGitAttributes"] =
+            [
+                new("Save", 0, null, null),
+                new("_NO_TRANSLATE_GitAttributesText", 0, null, null),
+                new("label1", 1, null, null),
+                new("splitContainer1", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.FormGitIgnore"] =
+            [
+                new("AddDefault", 2, null, null),
+                new("AddPattern", 3, null, null),
+                new("Save", 1, null, null),
+                new("_NO_TRANSLATE_GitIgnoreEdit", 0, null, null),
+                new("btnCancel", 2, null, null),
+                new("flowLayoutPanel1", 1, null, null),
+                new("flowLayoutPanel2", 6, null, null),
+                new("label1", 4, null, null),
+                new("lnkGitIgnoreGenerate", 7, true, null),
+                new("lnkGitIgnorePatterns", 6, true, null),
+                new("panel1", 5, null, null),
+                new("splitContainer1", 0, null, null),
+            ],
             ["GitUI.CommandsDialogs.FormInit"] =
             [
                 new("Browse", 2, null, null),
@@ -388,6 +558,21 @@ internal static class WinFormsInputMetadata
                 new("_NO_TRANSLATE_Directory", 1, null, null),
                 new("groupBox1", 3, false, null),
                 new("label1", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.FormLog"] =
+            [
+                new("DiffFiles", 0, null, null),
+                new("RevisionGrid", 1, null, null),
+                new("diffViewer", 1, null, null),
+                new("splitContainer1", 0, null, null),
+                new("splitContainer3", 1, null, null),
+            ],
+            ["GitUI.CommandsDialogs.FormMailMap"] =
+            [
+                new("Save", 0, null, null),
+                new("_NO_TRANSLATE_MailMapText", 0, null, null),
+                new("label1", 1, null, null),
+                new("splitContainer1", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.FormMergeBranch"] =
             [
@@ -935,6 +1120,22 @@ internal static class WinFormsInputMetadata
                 new("truncatePathMethod", 4, null, null),
                 new("txtCustomAvatarTemplate", 5, null, null),
             ],
+            ["GitUI.CommandsDialogs.SettingsDialog.Pages.BlameViewerSettingsPage"] =
+            [
+                new("cbDetectMoveAndCopyInAllFiles", 2, null, null),
+                new("cbDetectMoveAndCopyInThisFile", 1, null, null),
+                new("cbDisplayAuthorFirst", 0, null, null),
+                new("cbIgnoreWhitespace", 0, null, null),
+                new("cbShowAuthor", 1, null, null),
+                new("cbShowAuthorAvatar", 6, null, null),
+                new("cbShowAuthorDate", 2, null, null),
+                new("cbShowAuthorTime", 3, null, null),
+                new("cbShowLineNumbers", 4, null, null),
+                new("cbShowOriginalFilePath", 5, null, null),
+                new("groupBoxBlameSettings", 0, false, null),
+                new("groupBoxDisplayResult", 1, false, null),
+                new("tableLayoutPanelBlameSettings", 0, null, null),
+            ],
             ["GitUI.CommandsDialogs.SettingsDialog.Pages.BuildServerIntegrationSettingsPage"] =
             [
                 new("BuildServerType", 3, null, null),
@@ -989,6 +1190,23 @@ internal static class WinFormsInputMetadata
                 new("tableLayoutPanel1", 9, null, null),
                 new("tlpnlMain", 0, null, null),
                 new("tlpnlRevisionGraph", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.SettingsDialog.Pages.CommitDialogSettingsPage"] =
+            [
+                new("_NO_TRANSLATE_CommitDialogNumberOfPreviousMessages", 4, null, null),
+                new("cbRememberAmendCommitState", 5, null, null),
+                new("chkAutocomplete", 0, null, null),
+                new("chkEnsureCommitMessageSecondLineEmpty", 2, null, null),
+                new("chkShowCommitAndPush", 0, null, null),
+                new("chkShowErrorsWhenStagingFiles", 1, null, null),
+                new("chkShowResetAllChanges", 2, null, null),
+                new("chkShowResetWorkTreeChanges", 1, null, null),
+                new("chkWriteCommitMessageInCommitWindow", 3, null, null),
+                new("flowLayoutPanel1", 0, null, null),
+                new("groupBoxBehaviour", 56, false, null),
+                new("grpAdditionalButtons", 6, false, null),
+                new("lblCommitDialogNumberOfPreviousMessages", 2, null, null),
+                new("tableLayoutPanelBehaviour", 57, null, null),
             ],
             ["GitUI.CommandsDialogs.SettingsDialog.Pages.ConfirmationsSettingsPage"] =
             [
@@ -1065,6 +1283,31 @@ internal static class WinFormsInputMetadata
                 new("gbDiffColoring", 0, false, null),
                 new("gbGeneral", null, false, null),
                 new("tlpnlDiffColoring", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.SettingsDialog.Pages.FormBrowseRepoSettingsPage"] =
+            [
+                new("_NO_TRANSLATE_OutputHistoryDepth", 10, null, null),
+                new("cboTerminal", 1, null, null),
+                new("chkShowConsoleTab", 0, null, null),
+                new("chkShowFindInCommitFilesGitGrep", 4, null, null),
+                new("chkShowGpgInformation", 1, null, null),
+                new("chkShowOutputHistoryAsTab", 8, null, null),
+                new("chkShowRevisionGridTooltip", 5, null, null),
+                new("chkUseBrowseForFileHistory", 2, null, null),
+                new("chkUseDiffViewerForBlame", 3, null, null),
+                new("gbTabs", 1, false, null),
+                new("groupBox1", 0, false, null),
+                new("lblDefaultShell", 0, null, null),
+                new("lblOutputHistoryDepth", 9, null, null),
+                new("tlpnlGeneral", 0, null, null),
+                new("tlpnlMain", 0, null, null),
+                new("tlpnlTabs", 0, null, null),
+            ],
+            ["GitUI.CommandsDialogs.SettingsDialog.Pages.FormChooseTranslation"] =
+            [
+                new("label1", 0, null, null),
+                new("label2", 7, null, null),
+                new("lvTranslations", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.SettingsDialog.Pages.FormFixHome"] =
             [
@@ -1219,6 +1462,22 @@ internal static class WinFormsInputMetadata
                 new("panelButtons", 1, null, null),
                 new("propertyGrid1", 2, null, null),
                 new("tableLayoutPanel1", 4, null, null),
+            ],
+            ["GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage"] =
+            [
+                new("RegisterButton", 1, null, null),
+                new("UnregisterButton", 2, null, null),
+                new("_NO_TRANSLATE_chlMenuEntries", 5, null, null),
+                new("cbAlwaysShowAllCommands", 3, null, null),
+                new("flpnlExplorerIntegration", 0, null, null),
+                new("gbCascadingMenu", 0, false, null),
+                new("gbExplorerIntegration", 0, false, null),
+                new("label1", 4, null, null),
+                new("labelPreview", 1, null, null),
+                new("lblMenuEntries", 4, null, null),
+                new("menuHelp", 13, false, null),
+                new("tlpnlCascadingMenu", 0, null, null),
+                new("tlpnlMain", 0, null, null),
             ],
             ["GitUI.CommandsDialogs.SettingsDialog.Pages.SortingSettingsPage"] =
             [
@@ -1417,6 +1676,21 @@ internal static class WinFormsInputMetadata
             ["GitUI.HelperDialogs.FormEdit"] =
             [
                 new("Viewer", 0, null, null),
+            ],
+            ["GitUI.HelperDialogs.FormResetAnotherBranch"] =
+            [
+                new("BranchInfo", 1, null, null),
+                new("Branches", 2, null, null),
+                new("Cancel", 1, null, null),
+                new("ForceReset", 5, null, null),
+                new("Ok", 0, null, null),
+                new("cbxCheckoutBranch", 4, null, null),
+                new("commitSummaryUserControl", 3, false, null),
+                new("flowLayoutPanel1", 6, null, null),
+                new("lblResetBranchWarning", 0, null, null),
+                new("pictureBox1", 11, false, null),
+                new("tableLayoutPanel1", 0, null, null),
+                new("tlpnlWarning", 0, null, null),
             ],
             ["GitUI.HelperDialogs.FormResetCurrentBranch"] =
             [

@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
   "analyzedCommit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
@@ -27757,15 +27757,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6g/g1/final/inventory/BranchSelector.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/windows/p8.6g1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/linux/p8.6g1-focused-linux.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 52,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "Focused Windows/Linux tests verify both local-to-remote and remote-to-local reloads, containment, selection, and count behavior. All current findings are classified generated Designer/AXAML fields, framework events, comments, and dynamic translation identities; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
         "visual": {
           "status": "unverified",
@@ -27822,15 +27828,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6g/g1/final/inventory/BranchSelector.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/windows/p8.6g1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/linux/p8.6g1-focused-linux.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 52,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "Focused Windows/Linux tests verify both local-to-remote and remote-to-local reloads, containment, selection, and count behavior. All current findings are classified generated Designer/AXAML fields, framework events, comments, and dynamic translation identities; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
         "visual": {
           "status": "unverified",
@@ -27887,15 +27899,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6g/g1/final/inventory/CaseSensitiveComboBox.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/windows/p8.6g1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/linux/p8.6g1-focused-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 18,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 20,
+          "note": "Focused Windows/Linux tests verify ordinal exact-case completion through the realized editable template, and the paired capture confirms FormRemotes no longer renders a blank derived control. All current findings are classified framework type/template/member representation; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
         "visual": {
           "status": "notApplicable",
@@ -29860,15 +29878,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6g/g1/final/inventory/InteractiveGitActionControl.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/windows/p8.6g1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/linux/p8.6g1-focused-linux.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 55,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "Focused Windows/Linux tests verify the complete original action/conflict message and image matrix, including the shared icon class/source and FormBrowse refresh boundary. All current findings are classified generated layout, framework events/members, comments, and dynamic text identities; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
         "visual": {
           "status": "unverified",
@@ -29925,15 +29949,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6g/g1/final/inventory/InteractiveGitActionControl.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/windows/p8.6g1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/linux/p8.6g1-focused-linux.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 55,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "Focused Windows/Linux tests verify the complete original action/conflict message and image matrix, including the shared icon class/source and FormBrowse refresh boundary. All current findings are classified generated layout, framework events/members, comments, and dynamic text identities; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
         "visual": {
           "status": "unverified",
@@ -33890,15 +33920,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6g/g1/final/inventory/SettingsCheckBox.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/windows/p8.6g1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/linux/p8.6g1-focused-linux.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 42,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "Focused Windows/Linux tests verify checked/text/tooltip/manual-link properties and events plus the original information image identity and shared icon class. All current findings are classified generated layout, framework event/member, comment, and dynamic translation representation; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
         "visual": {
           "status": "unverified",
@@ -33955,15 +33991,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6g/g1/final/inventory/SettingsCheckBox.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/windows/p8.6g1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/linux/p8.6g1-focused-linux.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 42,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "Focused Windows/Linux tests verify checked/text/tooltip/manual-link properties and events plus the original information image identity and shared icon class. All current findings are classified generated layout, framework event/member, comment, and dynamic translation representation; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
         "visual": {
           "status": "unverified",
@@ -34280,15 +34322,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6g/g1/final/inventory/WaitSpinner.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/windows/p8.6g1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/linux/p8.6g1-focused-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 27,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 29,
+          "note": "Focused Windows/Linux tests prove the native timer advances the 11-dot animation only while enabled and stops through the public product boundary. All current findings are classified framework inheritance, rendering, timer, and test-access representation; exact structure and rendered visual/theme/exhaustive-state closure remain P8.6g.3."
         },
         "visual": {
           "status": "notApplicable",
@@ -34345,15 +34393,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "ab01219e064eec58120bff13fe02067cf576c1e4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6g/g1/final/inventory/WatermarkComboBox.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/windows/p8.6g1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6g/g1/tests/linux/p8.6g1-focused-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 32,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 34,
+          "note": "Focused Windows/Linux tests verify watermark/placeholder behavior without replacing observable text, and the paired capture renders every requested FileStatusList consumer state. All current findings are classified framework property, inheritance, member, and test-access representation; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
         "visual": {
           "status": "notApplicable",
