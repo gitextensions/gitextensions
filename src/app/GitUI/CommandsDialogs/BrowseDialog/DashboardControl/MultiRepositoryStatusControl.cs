@@ -52,10 +52,10 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
 
         _backButton.Click += (_, _) => RepositoriesRequested?.Invoke(this, EventArgs.Empty);
         _openButton.Click += (_, _) => OpenSelectedRepository();
-        _refreshButton.Click += (_, _) => ThreadHelper.FileAndForget(RefreshSelectedAsync);
-        _refreshAllButton.Click += (_, _) => ThreadHelper.FileAndForget(() => RefreshAllAsync(reloadRepositories: true));
-        _fetchButton.Click += (_, _) => ThreadHelper.FileAndForget(FetchSelectedAsync);
-        _fetchAllButton.Click += (_, _) => ThreadHelper.FileAndForget(() => FetchRepositoriesAsync(_repositories, isAutomatic: false));
+        _refreshButton.Click += (_, _) => this.InvokeAndForget(RefreshSelectedAsync, cancellationToken: _lifetimeCancellation.Token);
+        _refreshAllButton.Click += (_, _) => this.InvokeAndForget(() => RefreshAllAsync(reloadRepositories: true), cancellationToken: _lifetimeCancellation.Token);
+        _fetchButton.Click += (_, _) => this.InvokeAndForget(FetchSelectedAsync, cancellationToken: _lifetimeCancellation.Token);
+        _fetchAllButton.Click += (_, _) => this.InvokeAndForget(() => FetchRepositoriesAsync(_repositories, isAutomatic: false), cancellationToken: _lifetimeCancellation.Token);
         _grid.CellDoubleClick += (_, e) =>
         {
             if (e.RowIndex >= 0)
@@ -100,7 +100,7 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
             return;
         }
 
-        ThreadHelper.FileAndForget(() => RefreshAllAsync(reloadRepositories: true));
+        this.InvokeAndForget(() => RefreshAllAsync(reloadRepositories: true), cancellationToken: _lifetimeCancellation.Token);
     }
 
     internal void Start(IServiceProvider serviceProvider)
@@ -364,7 +364,7 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
         }
 
         _schedulerTickInProgress = true;
-        ThreadHelper.FileAndForget(async () =>
+        this.InvokeAndForget(async () =>
         {
             try
             {
@@ -374,7 +374,7 @@ internal sealed class MultiRepositoryStatusControl : GitExtensionsControl
             {
                 _schedulerTickInProgress = false;
             }
-        });
+        }, cancellationToken: _lifetimeCancellation.Token);
     }
 
     private async Task OnTimerTickAsync()
