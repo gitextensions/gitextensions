@@ -75,7 +75,7 @@ internal static class SourceInventoryReader
         return CreateInventory(root, className, englishKeys, isTwin, parts);
     }
 
-    public static IReadOnlyList<string> DiscoverTopLevelClassNames(string file)
+    public static IReadOnlyList<string> DiscoverTopLevelTypeNames(string file)
     {
         if (!File.Exists(file))
         {
@@ -99,7 +99,8 @@ internal static class SourceInventoryReader
             File.ReadAllText(file),
             new CSharpParseOptions(LanguageVersion.Preview));
         return tree.GetCompilationUnitRoot().DescendantNodes()
-            .OfType<ClassDeclarationSyntax>()
+            .OfType<TypeDeclarationSyntax>()
+            .Where(IsSupportedTypeDeclaration)
             .Where(declaration => !declaration.Ancestors().OfType<TypeDeclarationSyntax>().Any())
             .Select(GetTypeName)
             .Distinct(StringComparer.Ordinal)
@@ -182,7 +183,8 @@ internal static class SourceInventoryReader
         string text = File.ReadAllText(file);
         SyntaxTree tree = CSharpSyntaxTree.ParseText(text, new CSharpParseOptions(LanguageVersion.Preview));
         CompilationUnitSyntax unit = tree.GetCompilationUnitRoot();
-        foreach (ClassDeclarationSyntax declaration in unit.DescendantNodes().OfType<ClassDeclarationSyntax>())
+        foreach (TypeDeclarationSyntax declaration in unit.DescendantNodes().OfType<TypeDeclarationSyntax>()
+                     .Where(IsSupportedTypeDeclaration))
         {
             if (!MatchesType(declaration, typeName))
             {
@@ -204,7 +206,7 @@ internal static class SourceInventoryReader
     }
 
     private static void ExtractComments(
-        ClassDeclarationSyntax declaration,
+        TypeDeclarationSyntax declaration,
         SyntaxTree tree,
         MutablePart part)
     {
@@ -248,7 +250,7 @@ internal static class SourceInventoryReader
         || trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia);
 
     private static string GetCommentAnchor(
-        ClassDeclarationSyntax declaration,
+        TypeDeclarationSyntax declaration,
         MemberDeclarationSyntax member)
     {
         return string.Join(
@@ -325,10 +327,13 @@ internal static class SourceInventoryReader
             " ").Trim();
     }
 
-    private static bool MatchesType(ClassDeclarationSyntax declaration, string typeName) =>
+    private static bool MatchesType(TypeDeclarationSyntax declaration, string typeName) =>
         string.Equals(GetTypeName(declaration), typeName, StringComparison.Ordinal);
 
-    private static string GetTypeName(ClassDeclarationSyntax declaration)
+    private static bool IsSupportedTypeDeclaration(TypeDeclarationSyntax declaration) =>
+        declaration is ClassDeclarationSyntax or StructDeclarationSyntax or InterfaceDeclarationSyntax;
+
+    private static string GetTypeName(TypeDeclarationSyntax declaration)
     {
         string namespaceName = string.Join(
             ".",
@@ -341,7 +346,7 @@ internal static class SourceInventoryReader
         return candidate;
     }
 
-    private static void ExtractMembers(ClassDeclarationSyntax declaration, MutablePart part)
+    private static void ExtractMembers(TypeDeclarationSyntax declaration, MutablePart part)
     {
         int order = 0;
         foreach (MemberDeclarationSyntax member in declaration.Members)
@@ -406,7 +411,7 @@ internal static class SourceInventoryReader
             Signature = Normalize(signature)
         };
 
-    private static void ExtractEventWiring(ClassDeclarationSyntax declaration, MutablePart part)
+    private static void ExtractEventWiring(TypeDeclarationSyntax declaration, MutablePart part)
     {
         foreach (AssignmentExpressionSyntax assignment in declaration.DescendantNodes()
                      .OfType<AssignmentExpressionSyntax>()
@@ -447,7 +452,7 @@ internal static class SourceInventoryReader
         }
     }
 
-    private static void ExtractMenus(ClassDeclarationSyntax declaration, MutablePart part)
+    private static void ExtractMenus(TypeDeclarationSyntax declaration, MutablePart part)
     {
         HashSet<string> menuNames = declaration.DescendantNodes().OfType<FieldDeclarationSyntax>()
             .Where(field =>
@@ -517,7 +522,7 @@ internal static class SourceInventoryReader
             _ => [expression]
         };
 
-    private static void ExtractHotkeys(ClassDeclarationSyntax declaration, MutablePart part)
+    private static void ExtractHotkeys(TypeDeclarationSyntax declaration, MutablePart part)
     {
         foreach (MethodDeclarationSyntax method in declaration.Members.OfType<MethodDeclarationSyntax>()
                      .Where(item => item.Identifier.ValueText.Contains("Command", StringComparison.Ordinal)))
@@ -551,7 +556,7 @@ internal static class SourceInventoryReader
         }
     }
 
-    private static void ExtractSettings(ClassDeclarationSyntax declaration, MutablePart part)
+    private static void ExtractSettings(TypeDeclarationSyntax declaration, MutablePart part)
     {
         HashSet<string> settingsSources = declaration.DescendantNodes()
             .OfType<VariableDeclarationSyntax>()
@@ -636,7 +641,7 @@ internal static class SourceInventoryReader
     }
 
     private static void ExtractTranslationStrings(
-        ClassDeclarationSyntax declaration,
+        TypeDeclarationSyntax declaration,
         string className,
         MutablePart part)
     {
@@ -659,7 +664,7 @@ internal static class SourceInventoryReader
     }
 
     private static void ExtractDesignerTranslationKeys(
-        ClassDeclarationSyntax declaration,
+        TypeDeclarationSyntax declaration,
         string className,
         MutablePart part)
     {
