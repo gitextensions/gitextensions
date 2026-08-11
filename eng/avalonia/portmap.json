@@ -1916,7 +1916,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/ContinuousScrollEventManager.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Same-named Alt/automatic preference gate and shared navigation delay, using Avalonia pointer modifiers at the native FileViewer boundary. Text and image edge-wheel paths share this manager; Shift-wheel remains reserved for horizontal scrolling."
+    "notes": "Same-named Alt/automatic preference gate and shared navigation delay, using the pointer-event modifiers Avalonia supplies instead of WinForms' process-global Control.ModifierKeys. Text and image edge-wheel paths share this manager; Shift-wheel remains reserved for horizontal scrolling. The additional injected settings/time constructor and bool-returning modifier overloads are parity-scaffolding for deterministic tests; the public event boundary retains the original contract."
   },
   "src/app/GitUI/Editor/FileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
@@ -1986,40 +1986,43 @@
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffLineNumAnalyzer.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Normal, combined, ANSI word-diff, moved-line, multiple-hunk, and no-newline mapping over AvaloniaEdit documents."
+    "notes": "The original normal, combined, ANSI word-diff, moved-line, multiple-hunk, and no-newline heuristics are preserved over AvaloniaEdit documents, including the original configured-color tests and trailing-whitespace handling. Five private document-line construction helpers isolate AvaloniaEdit's one-based DocumentLine representation."
   },
   "src/app/GitUI/Editor/Diff/LinesMatcher.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/LinesMatcher.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "AvaloniaEdit segment twin used for bounded replacement-line pairing and common-word matching."
+    "notes": "AvaloniaEdit-segment twin of the original bounded replacement-line pairing and common-word/subword matcher. The algorithm, helper names/accessibility, comments, combination ordering, O(n^2) cutoff, and trimmed-line-before-word-score behavior now mirror the original exactly; only the ISegment namespace and the framework-neutral word-character predicate differ."
   },
   "src/app/GitUI/Editor/Diff/DiffHighlightService.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffHighlightService.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Framework-native highlight model retains ANSI semantic spans and computes dimmed common spans; rendering is split between AvaloniaEdit background and text layers."
+    "notes": "The original Git command-configuration overrides, diff prefixes, recursive common-span matcher, gap/moved-line handling, marker colors, comments, and member names are retained. AvaloniaEdit forces nine extra renderer-facing members and a TextDocument AddTextHighlighting signature: native background/text layers consume resolved marker and semantic-line models instead of mutating an ICSharpCode marker strategy."
   },
   "src/app/GitUI/Editor/Diff/PatchHighlightService.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/PatchHighlightService.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Original settings-driven constructor, diff command configuration, full-prefix contract, analysis, and supplied-margin population are present. The additional explicit isGitWordDiff constructor keeps capture/tests independent of ambient settings and accounts for the two visible member-order findings."
   },
   "src/app/GitUI/Editor/Diff/CombinedDiffHighlightService.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/CombinedDiffHighlightService.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Original constructor, diff command configuration, full-prefix contract, combined-line analysis, and supplied-margin population are present. The second constructor is the Avalonia FileViewer composition overload and accounts for the two visible member-order findings."
   },
   "src/app/GitUI/Editor/Diff/RangeDiffHighlightService.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/RangeDiffHighlightService.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3"
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Original range-header regex, line classification, range-diff command configuration, search matching, full prefixes, and supplied-margin constructor are present. The additional no-margin constructor is the Avalonia FileViewer composition seam and accounts for the remaining order/comment-anchor findings."
   },
   "src/app/GitUI/Editor/Diff/DiffViewerLineNumberControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/DiffViewerLineNumberControl.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "AvaloniaEdit AbstractMargin with separate old/new columns, semantic gutter backgrounds, and bold current-line numbers. Configurable and system-color fallbacks resolve through the shared AppColor/theme boundary rather than local literals."
+    "notes": "AvaloniaEdit AbstractMargin with the original data API, old/new columns, semantic gutter backgrounds, visibility contract, current-line emphasis, geometry comments, and AppColor/theme resolution. The remaining members/events replace GDI Paint/TextArea with Avalonia MeasureOverride/Render/TextView invalidation and are classified framework representation, not suppressed."
   },
   "src/app/GitUI/Editor/IFileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/IFileViewer.cs",
@@ -2031,13 +2034,13 @@
     "twin": "src/app/GitUI.Avalonia/Editor/GitBlameEntry.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Age-bucket index/color plus encoded Avatar bytes. The Avalonia twin deliberately keeps disposable Bitmap ownership out of this data record."
+    "notes": "Age-bucket index/color plus encoded Avatar bytes. The sole inventory finding is the deliberate byte[]/System.Drawing.Image signature boundary: the cross-platform record never owns a disposable framework bitmap, while BlameAuthorMargin alone decodes and disposes Avalonia images."
   },
   "src/app/GitUI/Editor/BlameAuthorMargin.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/BlameAuthorMargin.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Extended role: an AvaloniaEdit margin that renders theme-aware age-bucket markers, line-height avatars, and author text itself, replacing the second scroll-synchronised author editor of the WinForms BlameControl. It alone decodes/owns/disposes Avalonia Bitmaps, rejects stale content generations, preserves in-flight avatars across theme-color refreshes, and keeps a transparent right-edge resize grip participating in Blame splitter persistence."
+    "notes": "Extended framework role: one AvaloniaEdit margin renders theme-aware age-bucket markers, line-height avatars, and author text, replacing WinForms' GDI avatar margin plus second scroll-synchronised author editor. It preserves the original summary and brush/resolution rationale, alone decodes/owns/disposes Avalonia Bitmaps, rejects stale generations, and owns native pointer resizing. The 61 margin findings (plus GitBlameEntry's one image-carrier signature) are this deliberate renderer/composition substitution; no product-functional item is left unclassified."
   },
   "src/app/GitUI/UserControls/BlameControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/BlameControl.axaml.cs",
@@ -3308,7 +3311,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/CommitMessageHighlightingStrategy.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "AvaloniaEdit colorizer preserves comment-character discovery, bold summary rendering, 50/80-column validation, missing-spacer detection, and red wave markers."
+    "notes": "AvaloniaEdit colorizer preserves comment-character discovery, bold summary rendering, 50/80-column validation, missing-spacer detection, red wave markers, and the original TODO/marker-lifecycle rationale. The 15 visible member/comment-anchor findings are the required DocumentColorizingTransformer and native validation-marker representation."
   },
   "src/app/GitUI/Editor/Diff/AnsiEscapeUtilities.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/AnsiEscapeUtilities.cs",
@@ -3320,13 +3323,13 @@
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/DifftasticHighlightService.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same marker accumulation, line-number stripping, side-by-side alignment, semantic line classification, ANSI range preservation, and DFT_WIDTH ruler boundary. Avalonia renderers consume the accumulated markers instead of mutating the AvaloniaEdit TextDocument."
+    "notes": "Same marker accumulation, line-number stripping, side-by-side alignment, semantic line classification, ANSI range preservation, and DFT_WIDTH ruler boundary. Avalonia renderers consume the accumulated markers instead of mutating the AvaloniaEdit TextDocument; the explicit new modifiers document that this service's original private working sets hide the renderer base's product-facing marker model."
   },
   "src/app/GitUI/Editor/Diff/GrepHighlightService.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/GrepHighlightService.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same marker accumulation, git-grep prefix parsing, function/separator handling, line mapping, ANSI highlighting, command configuration, and match navigation. Avalonia renderers consume the accumulated markers instead of mutating the AvaloniaEdit TextDocument."
+    "notes": "Same marker accumulation, git-grep prefix parsing, function/separator handling, line mapping, ANSI highlighting, command configuration, and match navigation. Avalonia renderers consume the accumulated markers instead of mutating the AvaloniaEdit TextDocument; the explicit new modifiers document that this service's original private working sets hide the renderer base's product-facing marker model."
   },
   "src/app/GitUI/Editor/Diff/HighlightInfo.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/HighlightInfo.cs",
@@ -3386,13 +3389,13 @@
     "twin": "src/app/GitUI.Avalonia/Editor/GitHighlightingStrategyBase.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same comment-character discovery and line classifiers adapted to an AvaloniaEdit document colorizing transformer."
+    "notes": "Same comment-character discovery, original explanatory comments, and line classifiers adapted to AvaloniaEdit's DocumentColorizingTransformer. The 20 visible findings are the framework replacement of IHighlightingStrategy/HighlightColor/IDocument/LineSegment with native line colorization and SetStyle."
   },
   "src/app/GitUI/Editor/RebaseTodoHighlightingStrategy.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/RebaseTodoHighlightingStrategy.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same interactive-rebase command, option, object-id, comment, and theme-aware command-color classification on AvaloniaEdit."
+    "notes": "Same interactive-rebase command, option, object-id, comment, and theme-aware command-color classification on AvaloniaEdit. The three signature findings are the required HighlightColor-to-Avalonia Color and IDocument/LineSegment-to-TextDocument/DocumentLine substitutions."
   },
   "src/app/GitUI/Editor/RichTextBoxXhtmlSupportExtension.cs": {
     "status": "windowsOnly",
