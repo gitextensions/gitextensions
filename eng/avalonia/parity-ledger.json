@@ -402,14 +402,17 @@
         },
         "functional": {
           "status": "verified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "85dad31da44be9a5d45925aa59b05678fdfb0680",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6f/f1/windows-focused.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 0,
-          "note": "The exact original implementation is compiled into the twin."
+          "note": "The exact original implementation is compiled into the twin; prefix, camel-hump, equality, and editor filtering behavior pass on Windows and Linux."
         },
         "visual": {
           "status": "notApplicable",
@@ -467,14 +470,18 @@
         },
         "functional": {
           "status": "verified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "85dad31da44be9a5d45925aa59b05678fdfb0680",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6f/f1/windows-focused.trx",
+            "eng/avalonia/parity-evidence/P8.6f/f1/fixture-verification.json"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 0,
-          "note": "The exact original implementation is compiled into the twin."
+          "note": "The exact original implementation is compiled into the twin. A deterministic real repository outside the working tree verifies changed filenames, symbols, rename metadata, untracked files, and cancellation on Windows and Linux."
         },
         "visual": {
           "status": "notApplicable",
@@ -532,14 +539,17 @@
         },
         "functional": {
           "status": "verified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "85dad31da44be9a5d45925aa59b05678fdfb0680",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6f/f1/windows-focused.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 0,
-          "note": "The exact original implementation is compiled into the twin."
+          "note": "The exact original implementation is compiled into the twin; the original trailer keyword sequence passes on Windows and Linux."
         },
         "visual": {
           "status": "notApplicable",
@@ -26359,15 +26369,20 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "85dad31da44be9a5d45925aa59b05678fdfb0680",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6f/f1/functional-findings.after.json",
+            "eng/avalonia/parity-evidence/P8.6f/f1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6f/f1/windows-focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 261,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 252,
+          "note": "Focused editor/provider tests close the editor-owned product-functional contract on Windows and Linux. The raw findings are classified generated Designer/AXAML fields, native event/menu/timer/tooltip signatures, watermark/lifecycle representation, false inferred translation keys, and framework test seams; exact structural/visual/state closure remains P8.6f.3."
         },
         "visual": {
           "status": "unverified",
@@ -26424,15 +26439,20 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "85dad31da44be9a5d45925aa59b05678fdfb0680",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6f/f1/functional-findings.after.json",
+            "eng/avalonia/parity-evidence/P8.6f/f1/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6f/f1/windows-focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 261,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 252,
+          "note": "Focused editor/provider tests close the editor-owned product-functional contract on Windows and Linux, including fonts, colored validation ranges, empty-line insertion, settings-backed dictionaries, paste/newline routes, autocomplete refresh/cancellation/navigation/acceptance/placement, and real-repository provider data. FormCommit owner integration remains P8.6f.2; exact structural/visual/state closure remains P8.6f.3."
         },
         "visual": {
           "status": "unverified",
@@ -26489,33 +26509,40 @@
           "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "85dad31da44be9a5d45925aa59b05678fdfb0680",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6f/f1/windows-focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "Focused rendering tests verify native text-layout spelling waves, ill-formed-line marks, resolved theme colors, caret geometry, and per-range validation foregrounds on Windows and Linux."
+        },
+        "visual": {
+          "status": "unverified",
+          "verifiedOn": "2026-08-11",
+          "commit": "85dad31da44be9a5d45925aa59b05678fdfb0680",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6f/f1/diff/findings.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
-        },
-        "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "This mapping renders editor overlays; exact paired visual closure remains P8.6f.3."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "unverified",
+          "verifiedOn": "2026-08-11",
+          "commit": "85dad31da44be9a5d45925aa59b05678fdfb0680",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6f/f1/diff/findings.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Resolved light/dark/custom captures exist, but exact color closure remains P8.6f.3."
         },
         "behavioralState": {
           "status": "unverified",

@@ -1462,7 +1462,7 @@
     "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml.cs",
     "status": "functional",
     "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
-    "notes": "Same-named multiline commit-message editor with the original text, selection, caret, line, watermark, and enabled-state boundary. NetSpell dictionary selection, debounced checking, theme-adapted red misspelling waves, exact 120-alpha adapted ill-formed-line marks, correction/add/ignore/remove context actions, and editing commands are functional. The original provider aggregation, debounce, Ctrl+Space activation, prefix/camel-hump filtering, keyboard navigation, acceptance, cancellation, setting toggle, tooltip, and caret-positioned native autocomplete list are functional. A dedicated semantic editor-background resource resolves through WinForms' Window/ControlLight theme boundary. In design mode command discovery stops before walking a command-less parent form."
+    "notes": "Same-named multiline commit-message editor with the original text, selection, caret, line, watermark, enabled-state, point-font, colored-range, and empty-line insertion boundaries. NetSpell dictionary selection resolves through AppSettings with the deployed portable dictionary fallback; debounced checking, theme-adapted red misspelling waves, exact 120-alpha adapted ill-formed-line marks, correction/add/ignore/remove context actions, vertical-tab-normalizing keyboard and context-menu paste, Shift+Enter newline insertion, and editing commands are functional. The original provider aggregation, debounce, Ctrl+Space activation, prefix/camel-hump filtering, keyboard navigation, acceptance, cancellation, setting toggle, tooltip, and caret-positioned native autocomplete list are functional. A deterministic real-repository audit covers changed names, symbols, rename metadata, and cancellation. A dedicated semantic editor-background resource resolves through WinForms' Window/ControlLight theme boundary. In design mode command discovery stops before walking a command-less parent form. P8.6f.2 owns FormCommit validation/auto-wrap use of these boundaries; P8.6f.3 owns exact visual/theme/state/platform closure."
   },
   "src/app/GitUI/SpellChecker/EditNetSpell.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml",
@@ -1474,7 +1474,7 @@
     "twin": "src/app/GitUI.Avalonia/SpellChecker/SpellCheckAdorner.cs",
     "status": "functional",
     "basedOn": "58937dbe78448761e69f47d7170b991c511425ef",
-    "notes": "Avalonia DrawingContext twin renders wrapped-range spelling waves and commit-message length highlights over the native text presenter without platform window handles. The same presenter layout exposes caret geometry for EditNetSpell's autocomplete popup. The red spelling foreground is adapted against the resolved editor background and the ill-formed mark uses the original 120-alpha yellow AdaptBackColor result. Its public parameterless constructor lets Avalonia's out-of-process previewer instantiate the otherwise internal AXAML control. WinForms IME composition suppression has no direct Avalonia hook and remains a focused macOS/Linux validation item."
+    "notes": "Avalonia DrawingContext twin renders wrapped-range spelling waves, commit-message length highlights, and the original per-range validation foreground over the native text presenter without platform window handles. The same presenter layout exposes caret geometry for EditNetSpell's autocomplete popup. The red spelling foreground is adapted against the resolved editor background and the ill-formed mark uses the original 120-alpha yellow AdaptBackColor result. Its public parameterless constructor lets Avalonia's out-of-process previewer instantiate the otherwise internal AXAML control. WinForms IME composition suppression has no direct Avalonia hook and remains a focused macOS/Linux validation item."
   },
   "src/app/GitUI/SpellChecker/SpellCheckerHelper.cs": {
     "twin": "src/app/GitUI/SpellChecker/SpellCheckerHelper.cs",
@@ -2595,31 +2595,31 @@
     "twin": "src/app/GitUI/AutoCompletion/AutoCompleteRegexes.cs",
     "status": "functional",
     "basedOn": "d558831375033c12f220b080d075be730cfbe3b3",
-    "notes": "Framework-neutral autocomplete regex catalog linked unchanged into GitUI.Avalonia."
+    "notes": "Framework-neutral autocomplete regex catalog linked unchanged into GitUI.Avalonia and exercised through the editor/provider focused suite."
   },
   "src/app/GitUI/AutoCompletion/AutoCompleteWord.cs": {
     "twin": "src/app/GitUI/AutoCompletion/AutoCompleteWord.cs",
     "status": "functional",
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Framework-neutral autocomplete word and camel-hump matcher linked unchanged into GitUI.Avalonia."
+    "notes": "Framework-neutral autocomplete word and camel-hump matcher linked unchanged into GitUI.Avalonia; prefix and camel-hump behavior is exercised on Windows and Linux."
   },
   "src/app/GitUI/AutoCompletion/CommitAutoCompleteProvider.cs": {
     "twin": "src/app/GitUI/AutoCompletion/CommitAutoCompleteProvider.cs",
     "status": "functional",
     "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
-    "notes": "Framework-neutral changed-file and symbol provider linked unchanged into GitUI.Avalonia."
+    "notes": "Framework-neutral changed-file and symbol provider linked unchanged into GitUI.Avalonia. A deterministic real-repository audit outside the working tree covers changed filenames, symbols, rename metadata, untracked files, and cancellation on Windows and Linux."
   },
   "src/app/GitUI/AutoCompletion/CommitMessageMetadataProvider.cs": {
     "twin": "src/app/GitUI/AutoCompletion/CommitMessageMetadataProvider.cs",
     "status": "functional",
     "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "Framework-neutral commit-trailer provider linked unchanged into GitUI.Avalonia."
+    "notes": "Framework-neutral commit-trailer provider linked unchanged into GitUI.Avalonia and exercised through the editor/provider focused suite on Windows and Linux."
   },
   "src/app/GitUI/AutoCompletion/IAutoCompleteProvider.cs": {
     "twin": "src/app/GitUI/AutoCompletion/IAutoCompleteProvider.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Framework-neutral autocomplete provider contract linked unchanged into GitUI.Avalonia."
+    "notes": "Framework-neutral autocomplete provider contract linked unchanged into GitUI.Avalonia and exercised by static, cancellation-aware, repository, and metadata providers on Windows and Linux."
   },
   "src/app/GitUI/BitmapExtensions.cs": {
     "status": "windowsOnly",
