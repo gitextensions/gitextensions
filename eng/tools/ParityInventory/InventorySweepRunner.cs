@@ -59,6 +59,7 @@ internal static class InventorySweepRunner
                     englishKeys,
                     isTwin: false,
                     work.OriginalFiles);
+                original = ApplyMappedTwinPaths(original, work.Mappings, options.TwinRoot);
                 SourceInventory twin = SourceInventoryReader.ReadFiles(
                     options.TwinRoot,
                     work.TypeName,
@@ -202,6 +203,27 @@ internal static class InventorySweepRunner
             Findings = comparison.Findings,
             AdaptedComments = comparison.AdaptedComments
         };
+
+    private static SourceInventory ApplyMappedTwinPaths(
+        SourceInventory original,
+        IReadOnlyList<PortMapMapping> mappings,
+        string twinRoot)
+    {
+        Dictionary<string, string> mappedTwinPaths = mappings.ToDictionary(
+            mapping => Path.GetFullPath(mapping.Source),
+            mapping => NormalizePath(Path.GetRelativePath(twinRoot, Path.GetFullPath(mapping.Twin))),
+            OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+        return original with
+        {
+            Parts = original.Parts.Select(part =>
+            {
+                string originalPath = Path.GetFullPath(Path.Combine(original.Root, part.Path));
+                return mappedTwinPaths.TryGetValue(originalPath, out string? twinPath)
+                    ? part with { ExpectedTwinPath = twinPath }
+                    : part;
+            }).ToArray()
+        };
+    }
 
     private static IReadOnlyList<PortMapMapping> ReadPortMap(string path)
     {

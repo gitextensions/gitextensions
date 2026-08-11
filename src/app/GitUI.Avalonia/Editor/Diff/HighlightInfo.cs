@@ -1,4 +1,4 @@
-namespace GitUI.Editor.Diff;
+﻿namespace GitUI.Editor.Diff;
 
 public struct HighlightInfo
 {
@@ -21,7 +21,9 @@ public sealed class TextMarker
 
     public int Offset { get; set; }
     public int Length { get; set; }
-    public int EndOffset => Offset + Length;
+
+    // Avalonia framework constraint: preserve the inclusive end used by the original editor marker.
+    public int EndOffset => Offset + Length - 1;
     public Color Color { get; }
     public Color? ForeColor { get; }
 }
