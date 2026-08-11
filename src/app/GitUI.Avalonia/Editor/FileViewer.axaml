@@ -68,7 +68,34 @@
           <MenuItem x:Name="ignoreAllWhitespaceChangesToolStripMenuItem"
                     Header="Ignore all _whitespace changes"
                     ToggleType="CheckBox" />
+          <MenuItem x:Name="diffAppearanceToolStripMenuItem"
+                    Header="Diff appea_rance">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Diff}" /></MenuItem.Icon>
+            <MenuItem x:Name="showPatchToolStripMenuItem"
+                      Header="_Patch"
+                      ToggleType="Radio">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Diff}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="showGitWordColoringToolStripMenuItem"
+                      Header="Git wor_d diff"
+                      ToggleType="Radio">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.EditColor}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="showDifftasticToolStripMenuItem"
+                      Header="Diff_tastic"
+                      ToggleType="Radio">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Difftastic}" /></MenuItem.Icon>
+            </MenuItem>
+          </MenuItem>
           <Separator x:Name="toolStripSeparator2" />
+          <MenuItem x:Name="treatAllFilesAsTextToolStripMenuItem"
+                    Header="_Treat all files as text"
+                    ToggleType="CheckBox" />
+          <MenuItem x:Name="automaticContinuousScrollToolStripMenuItem"
+                    Header=""
+                    ToggleType="CheckBox">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.UiScrollBar}" /></MenuItem.Icon>
+          </MenuItem>
           <MenuItem x:Name="findToolStripMenuItem"
                     Header="_Find..."
                     InputGesture="Ctrl+F" />
@@ -148,6 +175,9 @@
                   Classes="gitextensions-toolbar-input"
                   Width="140"
                   Height="23" />
+        <compat:IconButton x:Name="settingsButton"
+                           Classes="gitextensions-toolbar-button image-only"
+                           Icon="{x:Static properties:Images.Settings}" />
       </StackPanel>
     </Border>
   </Grid>

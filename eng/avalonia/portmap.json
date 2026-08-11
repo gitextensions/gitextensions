@@ -1,4 +1,4 @@
-﻿{
+{
   "//": [
     "Complete classification of GitUI C# sources plus mappings for other port inputs.",
     "Twin status: scaffolded (compiles, layout unfinished) | functional (works, reduced feature set) | parity (feature-complete twin).",
@@ -1922,7 +1922,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range/fixed/difftastic/grep views, old/new line-number mapping, resolved ANSI foreground/background ranges, semantic line and inline coloring, and the same-named FileViewerInternal composition boundary. Commit and rebase files select their original Git-specific highlighting strategies. Revision-aware Git diff loading, Escape handling, settings-backed continuous scrolling, search/navigation, selected-line patching, text/binary/image/large-file loading, syntax/nonprinting/whitespace/encoding settings, and external-difftool F3 behavior remain functional. The P2.2 inventory records 696 findings, so this status is functional rather than a full parity claim."
+    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range/fixed/difftastic/grep views, old/new line-number mapping, resolved ANSI foreground/background ranges, semantic line and inline coloring, and the same-named FileViewerInternal composition boundary. Commit and rebase files select their original Git-specific highlighting strategies. Revision-aware Git diff and configured Difftastic loading, original appearance/text/continuous-scroll/settings actions, Escape/double-click/context/scroll events, search/navigation, selected-line patching, text/binary/image/large-file loading, syntax/nonprinting/whitespace/encoding settings, and external-difftool F3 behavior are functional. P8.6d.2c classifies the remaining source findings as framework representation and composition differences; P8.6d.3 retains exact visual/state/platform closure."
   },
   "src/app/GitUI/Editor/FileViewer.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml",
@@ -1946,7 +1946,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/FindAndReplaceForm.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same-named reusable modeless Find/Replace window with forward/backward wrapping, case and whole-word matching, selection scan regions, multi-file loader boundary, replace/replace-all, framework-native highlight-all rendering, and next/previous highlighted-occurrence navigation consumed by FileViewer. The current FileViewer exposes Find mode only because it remains read-only; scan-region shading and the optional editor filename in the title remain deferred."
+    "notes": "Same-named reusable modeless Find/Replace window with forward/backward wrapping, case and whole-word matching, shaded selection scan regions, optional editor filename in the title, multi-file loader boundary, replace/replace-all, framework-native highlight-all rendering, and next/previous highlighted-occurrence navigation consumed by FileViewer. P8.6d.2c restores the original handler and reusable-hide boundaries; remaining findings are classified Avalonia/AvaloniaEdit representation differences."
   },
   "src/app/GitUI/Editor/FindAndReplaceForm.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FindAndReplaceForm.axaml",
@@ -3365,7 +3365,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewerInternal.axaml.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Restores the same-named internal editor composition boundary. AvaloniaEdit owns native selection, scrolling, input, colorizers, and validation rendering while FileViewer retains orchestration methods pending exact member-order closure."
+    "notes": "Restores the same-named internal editor composition boundary. AvaloniaEdit owns native selection, scrolling, input, colorizers, validation rendering, selected-text occurrence rendering/navigation, and the native blame margin while FileViewer retains the original public orchestration facade. P8.6d.2c classifies the remaining member/order/signature findings as framework representation differences rather than product-functional debt."
   },
   "src/app/GitUI/Editor/FileViewerInternal.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewerInternal.axaml",
@@ -3377,7 +3377,7 @@
     "twin": "src/app/GitUI.Avalonia/Editor/FormFindInCommitFilesGitGrep.axaml.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same modeless search/toggle callbacks, history replacement, Escape/close behavior, and persisted case/whole-word/options settings, integrated with FileStatusList's cancellable git-grep refresh."
+    "notes": "Same modeless search/toggle callbacks, original OnShown boundary, history replacement, Escape/close behavior, and persisted case/whole-word/options settings, integrated with FileStatusList's cancellable git-grep refresh. P8.6d.2c restores original handler identities and classifies the remaining window/input representation findings."
   },
   "src/app/GitUI/Editor/FormFindInCommitFilesGitGrep.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FormFindInCommitFilesGitGrep.axaml",
