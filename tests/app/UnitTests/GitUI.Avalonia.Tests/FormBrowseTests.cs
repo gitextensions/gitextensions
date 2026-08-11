@@ -1340,7 +1340,7 @@ public sealed class FormBrowseTests
                     && form.fileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
 
                 form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.CommitInfoTabPage);
-                form.fileStatusList.SelectedItem!.Name.Should().Be("tracked.txt");
+                form.fileStatusList.SelectedItem!.Item.Name.Should().Be("tracked.txt");
 
                 form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
                 Dispatcher.UIThread.RunJobs();
@@ -1396,7 +1396,7 @@ public sealed class FormBrowseTests
                 await WaitUntilAsync(() =>
                     form.fileTree.DisplayedRevision?.Subject == "add tree"
                     && form.fileTree.FileStatusList.GitItemStatuses.Count == 3
-                    && form.fileTree.FileStatusList.SelectedItem?.Name == "src/followed.txt"
+                    && form.fileTree.FileStatusList.SelectedItem?.Item.Name == "src/followed.txt"
                     && form.fileTree.FileViewer.TextEditor.Text.Contains("followed file", StringComparison.Ordinal));
 
                 TreeView tree = form.fileTree.FileStatusList.FindControl<TreeView>("tvFiles")!;
@@ -1435,7 +1435,7 @@ public sealed class FormBrowseTests
                 TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
                 await WaitUntilAsync(() =>
                     loadingStatus.Text == "2 revisions"
-                    && form.fileStatusList.SelectedItem?.Name == "tracked.txt"
+                    && form.fileStatusList.SelectedItem?.Item.Name == "tracked.txt"
                     && form.fileViewer.TextEditor.Text.Contains("+second", StringComparison.Ordinal));
 
                 form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
@@ -1490,7 +1490,7 @@ public sealed class FormBrowseTests
                 TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
                 await WaitUntilAsync(() =>
                     loadingStatus.Text == "2 revisions"
-                    && form.fileStatusList.SelectedItem?.Name == "tracked.txt");
+                    && form.fileStatusList.SelectedItem?.Item.Name == "tracked.txt");
 
                 form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
                 Dispatcher.UIThread.RunJobs();
@@ -1500,7 +1500,7 @@ public sealed class FormBrowseTests
                 BlameControl blame = form.fileTree.FindControl<BlameControl>("BlameControl")!;
                 await WaitUntilAsync(() =>
                     ReferenceEquals(form.CommitInfoTabControl.SelectedItem, form.TreeTabPage)
-                    && form.fileTree.FileStatusList.SelectedItem?.Name == "tracked.txt"
+                    && form.fileTree.FileStatusList.SelectedItem?.Item.Name == "tracked.txt"
                     && blame.IsVisible
                     && blame.BlameFile.TextEditor.Text.Contains("second", StringComparison.Ordinal));
                 form.fileTree.FileStatusList.FindControl<MenuItem>("tsmiBlame")!.IsChecked.Should().BeTrue();
