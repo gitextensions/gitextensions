@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -16,6 +17,8 @@ namespace GitUI.SpellChecker;
 
 internal sealed class SpellCheckAdorner : Control
 {
+    internal readonly record struct TextColorRange(TextPos Range, Color Color);
+
     // Avalonia's out-of-process previewer constructs AXAML controls from a generated assembly.
     public SpellCheckAdorner()
     {
@@ -27,9 +30,13 @@ internal sealed class SpellCheckAdorner : Control
 
     public List<TextPos> MisspelledWords { get; } = [];
 
+    public List<TextColorRange> ForegroundRanges { get; } = [];
+
     public bool MarkFirstLineBlank { get; set; }
 
     internal int RenderedMisspellingCount { get; private set; }
+
+    internal int RenderedForegroundRangeCount { get; private set; }
 
     internal Color IllFormedMarkColor
         => AvaloniaThemeResources.ToMediaColor(
@@ -51,6 +58,7 @@ internal sealed class SpellCheckAdorner : Control
         base.Render(context);
 
         RenderedMisspellingCount = 0;
+        RenderedForegroundRangeCount = 0;
 
         if (!TryGetTextLayout(out TextPresenter? presenter, out TextLayout? layout, out Point origin))
         {
@@ -71,6 +79,8 @@ internal sealed class SpellCheckAdorner : Control
                 context.DrawRectangle(markBrush, null, new Rect(origin.X, origin.Y, Bounds.Width - origin.X, firstPosition.Height));
             }
 
+            DrawForegroundRanges(context, presenter, layout, origin);
+
             IPen spellingPen = new Pen(new SolidColorBrush(SpellingWaveColor), 1);
             foreach (TextPos range in MisspelledWords)
             {
@@ -78,6 +88,43 @@ internal sealed class SpellCheckAdorner : Control
                 RenderedMisspellingCount++;
             }
         }
+    }
+
+    private void DrawForegroundRanges(DrawingContext context, TextPresenter presenter, TextLayout layout, Point origin)
+    {
+        TextBox? textBox = TextBox;
+        string text = textBox?.Text ?? string.Empty;
+        if (textBox is null || text.Length == 0 || ForegroundRanges.Count == 0)
+        {
+            return;
+        }
+
+        FormattedText formattedText = new(
+            text,
+            CultureInfo.CurrentCulture,
+            textBox.FlowDirection,
+            new Typeface(textBox.FontFamily, textBox.FontStyle, textBox.FontWeight, textBox.FontStretch),
+            textBox.FontSize,
+            Brushes.Transparent)
+        {
+            MaxTextWidth = textBox.TextWrapping == TextWrapping.NoWrap
+                ? double.PositiveInfinity
+                : Math.Max(0, presenter.Bounds.Width),
+            LineHeight = layout.LineHeight,
+            TextAlignment = textBox.TextAlignment,
+        };
+        foreach (TextColorRange range in ForegroundRanges)
+        {
+            int start = Math.Clamp(range.Range.Start, 0, text.Length);
+            int length = Math.Clamp(range.Range.End - range.Range.Start, 0, text.Length - start);
+            if (length > 0)
+            {
+                formattedText.SetForegroundBrush(new SolidColorBrush(range.Color), start, length);
+                RenderedForegroundRangeCount++;
+            }
+        }
+
+        context.DrawText(formattedText, origin);
     }
 
     public int GetTextIndex(Point textBoxPoint)
