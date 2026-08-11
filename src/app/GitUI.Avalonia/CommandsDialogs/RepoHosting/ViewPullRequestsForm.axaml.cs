@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
@@ -639,7 +639,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     private void _fileStatusList_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        GitItemStatus? item = _fileStatusList.SelectedItem;
+        GitItemStatus? item = _fileStatusList.SelectedItem?.Item;
         if (item is null || !_diffCache.TryGetValue(item.Name, out string? patch))
         {
             return;

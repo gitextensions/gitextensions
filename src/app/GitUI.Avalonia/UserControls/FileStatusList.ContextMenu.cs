@@ -22,6 +22,40 @@ namespace GitUI;
 
 partial class FileStatusList
 {
+    // Mnemonics
+    // A Save as
+    // B Blame
+    // C Find in commit files, Commit submodule
+    // D Open with difftool
+    // E Edit, Reset submodule, Select all (on folder)
+    // F Find file
+    // G Filter in grid
+    // H History
+    // I Show in folder
+    // J
+    // K Skip worktree
+    // L Delete, Show "Find in commit files"
+    // M Move, Assume unchanged
+    // N Open temp
+    // O Open (on file), Open (submodule), Collapse all (folder)
+    // P Copy paths
+    // Q
+    // R Reset files
+    // S Stage, Sort and group by, Collapse root folders (file tree only)
+    // T Show in file tree, Stash submodule
+    // U Unstage, Update submodule
+    // V Open in VS
+    // W Open temp with
+    // X Add file to .git/info/exclude, Expand all (on folder)
+    // Y Cherry pick
+    // Z
+    // . Add file to .gitignore
+    // Without mnemonic but with hotkey
+    // - Open with
+    // Not important
+    // - Stop tracking this file
+    // - Reset chunk of file
+    // - Interactive add
     private Action? _blame;
     private Action? _cherryPickChanges;
     private Action? _filterFileInGrid;
@@ -44,6 +78,8 @@ partial class FileStatusList
     private readonly TranslationString _multipleDescription = new("<multiple>");
     private readonly TranslationString _newName = new("New name");
     private readonly TranslationString _resetSelectedChangesText = new("Are you sure you want to reset all selected files to {0}?");
+    private readonly TranslationString _saveFileFilterAllFiles = new("All files");
+    private readonly TranslationString _saveFileFilterCurrentFormat = new("Current format");
     private readonly TranslationString _selectedRevision = new("Second: B ");
     private readonly TranslationString _stopTrackingFail = new("Fail to stop tracking the file '{0}'.");
     private readonly TranslationString _skipWorktreeToolTip = new("Hide already tracked files that will change but that you don\'t want to commit."
@@ -122,7 +158,7 @@ partial class FileStatusList
         tsmiResetFileTo.Click += ResetFile_Click;
         tsmiResetFileToSelected.Click += ResetFile_Click;
         tsmiResetFileToParent.Click += ResetFile_Click;
-        tsmiOpenWithDifftool.SubmenuOpened += (_, _) => OpenWithDifftool_DropDownOpening();
+        tsmiOpenWithDifftool.SubmenuOpened += OpenWithDifftool_DropDownOpening;
         tsmiDiffFirstToSelected.Click += DiffFirstToSelected_Click;
         tsmiDiffSelectedToLocal.Click += DiffSelectedToLocal_Click;
         tsmiDiffFirstToLocal.Click += DiffFirstToLocal_Click;
@@ -131,11 +167,11 @@ partial class FileStatusList
         tsmiRememberSecondRevDiff.Click += RememberSecondRevDiff_Click;
         tsmiRememberFirstRevDiff.Click += RememberFirstRevDiff_Click;
         tsmiOpenWorkingDirectoryFileWith.Click += OpenWorkingDirectoryFileWith_Click;
-        tsmiOpenRevisionFile.Click += (_, _) => SaveSelectedItemToTempFile(OsShellUtil.Open);
-        tsmiOpenRevisionFileWith.Click += (_, _) => SaveSelectedItemToTempFile(OsShellUtil.OpenAs);
+        tsmiOpenRevisionFile.Click += OpenRevisionFile_Click;
+        tsmiOpenRevisionFileWith.Click += OpenRevisionFileWith_Click;
         tsmiEditWorkingDirectoryFile.Click += EditWorkingDirectoryFile_Click;
         tsmiOpenInVisualStudio.Click += OpenInVisualStudio_Click;
-        tsmiSaveAs.Click += (_, _) => this.InvokeAndForget(SaveAsAsync);
+        tsmiSaveAs.Click += SaveAs_Click;
         tsmiMove.Click += Move_Click;
         tsmiDeleteFile.Click += DeleteFile_Click;
         tsmiAddFileToGitIgnore.Click += AddFileToGitIgnore_Click;
@@ -204,7 +240,9 @@ partial class FileStatusList
 
         bool isSubmoduleSelected = SelectedFileStatusItem?.Item.IsSubmodule ?? false;
         _NO_TRANSLATE_openSubmoduleMenuItem.IsVisible = isSubmoduleSelected;
-        _NO_TRANSLATE_openSubmoduleMenuItem.FontWeight = isSubmoduleSelected && !DisableSubmoduleMenuItemBold
+        _NO_TRANSLATE_openSubmoduleMenuItem.FontWeight = isSubmoduleSelected
+                                                          && !DisableSubmoduleMenuItemBold
+                                                          && AppSettings.OpenSubmoduleDiffInSeparateWindow
             ? FontWeight.Bold
             : FontWeight.Normal;
 
@@ -241,11 +279,22 @@ partial class FileStatusList
         AddFileToIgnoreFile(localExclude: true);
     }
 
+    /// <summary>
+    /// Return whether it is possible to reset to the first commit.
+    /// </summary>
+    /// <param name="parentId">The parent commit id.</param>
+    /// <param name="selectedItems">The selected file status items.</param>
+    /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
     private static bool CanResetToFirst(ObjectId parentId, IEnumerable<FileStatusItem> selectedItems)
     {
         return CanResetToSecond(parentId) || (parentId == ObjectId.IndexId && selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId));
     }
 
+    /// <summary>
+    /// Return whether it is possible to reset to the second (selected) commit.
+    /// </summary>
+    /// <param name="resetId">The selected commit id.</param>
+    /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
     private static bool CanResetToSecond(ObjectId resetId) => !resetId.IsZeroOrArtificial;
 
     private void CherryPickChanges_Click(object? sender, EventArgs e)
@@ -409,7 +458,14 @@ partial class FileStatusList
 
     private void FileHistory_Click(object? sender, EventArgs e)
     {
-        StartFileHistoryDialog(showBlame: false);
+        if (AppSettings.OpenSubmoduleDiffInSeparateWindow && (SelectedItem?.Item.IsSubmodule ?? false))
+        {
+            this.InvokeAndForget(OpenSubmoduleAsync);
+        }
+        else
+        {
+            StartFileHistoryDialog(showBlame: false);
+        }
     }
 
     private void FilterFileInGrid_Click(object? sender, EventArgs e)
@@ -798,6 +854,7 @@ partial class FileStatusList
         StoreNextItemToSelect();
         try
         {
+            // If any file is staged, it must be unstaged
             Module.BatchUnstageFiles(selected
                 .Where(item => item.Item.Staged == StagedStatus.Index)
                 .Select(item => item.Item));
@@ -831,6 +888,7 @@ partial class FileStatusList
 
     private void DiffTwoSelected_Click(object? sender, EventArgs e)
     {
+        // Avalonia closes the flyout automatically when the "main menu" is clicked before invoking the default difftool.
         List<FileStatusItem> diffFiles = [.. SelectedItems];
         if (diffFiles.Count != 2)
         {
@@ -851,11 +909,16 @@ partial class FileStatusList
 
     private void DiffWithRemembered_Click(object? sender, EventArgs e)
     {
+        // Avalonia closes the flyout automatically when the "main menu" is clicked before invoking the default difftool.
         FileStatusItem? selected = SelectedFileStatusItem;
+
+        // For first item, the second revision is explicitly remembered
         string? first = _rememberFileContextMenuController.GetGitCommit(
             Module.GetFileBlobHash,
             _rememberFileContextMenuController.RememberedDiffFileItem,
             isSecondRevision: true);
+
+        // Fallback to first revision if second cannot be used
         bool useSecondRevision = _rememberFileContextMenuController.ShouldEnableSecondItemDiff(selected, isSecondRevision: true);
         string? second = _rememberFileContextMenuController.GetGitCommit(Module.GetFileBlobHash, selected, useSecondRevision);
         Module.OpenFilesWithDifftool(first, second, GetCustomTool(sender));
@@ -871,18 +934,24 @@ partial class FileStatusList
     }
 
     private void DiffFirstToSelected_Click(object? sender, EventArgs e)
-        => OpenFilesWithDiffTool(RevisionDiffKind.DiffAB, GetCustomTool(sender));
+        => OpenFilesWithDiffTool(RevisionDiffKind.DiffAB, sender);
 
     private void DiffSelectedToLocal_Click(object? sender, EventArgs e)
-        => OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal, GetCustomTool(sender));
+        => OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal, sender);
 
     private void DiffFirstToLocal_Click(object? sender, EventArgs e)
-        => OpenFilesWithDiffTool(RevisionDiffKind.DiffALocal, GetCustomTool(sender));
+        => OpenFilesWithDiffTool(RevisionDiffKind.DiffALocal, sender);
 
     private static string? GetCustomTool(object? sender)
         => (sender as MenuItem)?.Tag as string;
 
-    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, string? customTool = null)
+    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
+    {
+        // Avalonia closes the flyout automatically when the "main menu" is clicked before invoking the default mergetool.
+        OpenFilesWithDiffTool(diffKind, GetCustomTool(sender));
+    }
+
+    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, string? toolName = null)
     {
         if (!TryGetUICommandsDirect(out IGitUICommands? commands))
         {
@@ -894,9 +963,11 @@ partial class FileStatusList
             if (item.FirstRevision?.ObjectId == ObjectId.CombinedDiffId)
             {
                 // CombinedDiff cannot be viewed in a difftool
+                // Disabled in menus but can be activated from shortcuts, just ignore
                 continue;
             }
 
+            // If item.FirstRevision is null, compare to root commit
             GitRevision?[] revisions = [item.SecondRevision, item.FirstRevision];
             commands.OpenWithDifftool(
                 GetOwner(),
@@ -905,11 +976,21 @@ partial class FileStatusList
                 item.Item.OldName,
                 diffKind,
                 item.Item.IsTracked,
-                customTool);
+                toolName);
         }
     }
 
-    private void OpenWithDifftool_DropDownOpening()
+    private void OpenRevisionFile_Click(object? sender, EventArgs e)
+    {
+        SaveSelectedItemToTempFile(OsShellUtil.Open);
+    }
+
+    private void OpenRevisionFileWith_Click(object? sender, EventArgs e)
+    {
+        SaveSelectedItemToTempFile(OsShellUtil.OpenAs);
+    }
+
+    private void OpenWithDifftool_DropDownOpening(object? sender, EventArgs e)
     {
         List<FileStatusItem> selected = [.. SelectedItems];
         List<GitRevision> secondRevisions = [.. selected.SecondRevs()];
@@ -953,9 +1034,8 @@ partial class FileStatusList
     }
 
     /// <summary>
-    /// Gets the description of the selected parents.
+    /// Provide a description for the first selected or parent to the "primary" selected last.
     /// </summary>
-    /// <param name="parents">The selected parents.</param>
     /// <returns>A description of the selected parent.</returns>
     private string? DescribeRevisions(List<GitRevision> parents)
     {
@@ -1060,15 +1140,19 @@ partial class FileStatusList
 
     public void ResetSelectedItemsWithConfirmation(bool resetToParent)
     {
-        FileStatusItem[] selected = [.. SelectedItems];
-        if (selected.Length == 0)
+        FileStatusItem[] items = [.. SelectedItems];
+        if (items.Length == 0)
         {
             return;
         }
 
-        bool hasNewFiles = !selected.All(item => item.Item.IsChanged);
-        bool hasExistingFiles = selected.Any(item => !item.Item.IsUncommittedAdded);
-        string description = resetToParent ? _firstRevision.Text : _selectedRevision.Text;
+        // The "new" state could change when resetting, allow user to tick the checkbox.
+        // If there are only changed files, it is safe to disable the checkboc (also for restting to selected).
+        bool hasNewFiles = !items.All(item => item.Item.IsChanged);
+        bool hasExistingFiles = items.Any(item => !(item.Item.IsUncommittedAdded || IsRenamedIndexItem(item)));
+        string description = resetToParent
+            ? $"{_firstRevision.Text}{DescribeRevisions([.. items.FirstRevs()])}"
+            : $"{_selectedRevision.Text}{DescribeRevisions([.. items.SecondRevs()])}";
         FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(
             GetOwner(),
             hasExistingFiles,
@@ -1079,39 +1163,62 @@ partial class FileStatusList
             return;
         }
 
-        foreach (ObjectId id in resetToParent ? selected.FirstIds() : selected.SecondIds())
+        bool resetAndDelete = resetType == FormResetChanges.ActionEnum.ResetAndDelete;
+        ResetSelectedItemsTo(resetToParent, resetAndDelete);
+
+        return;
+
+        static bool IsRenamedIndexItem(FileStatusItem item) => item.Item.IsRenamed && item.Item.Staged == StagedStatus.Index;
+
+        void ResetSelectedItemsTo(bool resetToParent, bool resetAndDelete)
         {
-            if (id.IsZeroOrArtificial)
+            FileStatusItem[] selectedItems = [.. SelectedItems];
+            if (selectedItems.Length == 0)
             {
-                continue;
+                return;
             }
 
-            GitItemStatus[] items = resetToParent
-                ? [.. selected.Items()]
-                : [.. selected.Items().Select(item => item.InvertStatus())];
-            Module.ResetChanges(
-                id,
-                items,
-                resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete,
-                _fullPathResolver,
-                out System.Text.StringBuilder output,
-                progressAction: null);
-            if (output.Length > 0)
+            try
             {
-                MessageBoxes.Show(
-                    GetOwner(),
-                    output.ToString(),
-                    TranslatedStrings.ResetChangesCaption,
-                    WinFormsShims.MessageBoxButtons.OK,
-                    WinFormsShims.MessageBoxIcon.Error);
+                foreach (ObjectId id in resetToParent ? selectedItems.FirstIds() : selectedItems.SecondIds())
+                {
+                    if (resetToParent ? !CanResetToFirst(id, selectedItems) : !CanResetToSecond(id))
+                    {
+                        // Cannot reset to artificial commit, may be included in multi selections
+                        continue;
+                    }
+
+                    GitItemStatus[] resetItems = resetToParent
+                        ? [.. selectedItems.Items()]
+                        : [.. selectedItems.Items().Select(item => item.InvertStatus())];
+                    Module.ResetChanges(
+                        id,
+                        resetItems,
+                        resetAndDelete,
+                        _fullPathResolver,
+                        out System.Text.StringBuilder output,
+                        progressAction: null);
+                    if (output.Length > 0)
+                    {
+                        MessageBoxes.Show(
+                            GetOwner(),
+                            output.ToString(),
+                            TranslatedStrings.ResetChangesCaption,
+                            WinFormsShims.MessageBoxButtons.OK,
+                            WinFormsShims.MessageBoxIcon.Error);
+                    }
+                }
+            }
+            finally
+            {
+                RequestRefresh();
             }
         }
-
-        RequestRefresh();
     }
 
     private void ResetSubmoduleChanges_Click(object? sender, EventArgs e)
     {
+        // Show a form asking the user if they want to reset the changes.
         FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(GetOwner(), true, true);
         if (resetType == FormResetChanges.ActionEnum.Cancel)
         {
@@ -1143,9 +1250,21 @@ partial class FileStatusList
         if (selected.Length == 1)
         {
             FileStatusItem item = selected[0];
+            string extension = Path.GetExtension(item.Item.Name);
             IStorageFile? target = await PortalPickerGuard.SaveFilePickerAsync(topLevel.StorageProvider, new FilePickerSaveOptions
             {
                 SuggestedFileName = Path.GetFileName(item.Item.Name),
+                FileTypeChoices =
+                [
+                    new FilePickerFileType(_saveFileFilterCurrentFormat.Text)
+                    {
+                        Patterns = [string.IsNullOrEmpty(extension) ? "*" : $"*{extension}"]
+                    },
+                    new FilePickerFileType(_saveFileFilterAllFiles.Text)
+                    {
+                        Patterns = ["*"]
+                    }
+                ]
             });
             if (target is not null)
             {
@@ -1207,6 +1326,11 @@ partial class FileStatusList
         }
     }
 
+    private void SaveAs_Click(object? sender, EventArgs e)
+    {
+        this.InvokeAndForget(SaveAsAsync);
+    }
+
     private void StashSubmoduleChanges_Click(object? sender, EventArgs e)
     {
         if (!TryGetUICommandsDirect(out IGitUICommands? commands))
@@ -1224,7 +1348,7 @@ partial class FileStatusList
 
     private void StopTracking_Click(object? sender, EventArgs e)
     {
-        if (SelectedItem?.Name is not string fileName)
+        if (SelectedItem?.Item.Name is not string fileName)
         {
             return;
         }
@@ -1263,7 +1387,7 @@ partial class FileStatusList
 
     private void Move_Click(object? sender, EventArgs e)
     {
-        string? oldName = SelectedItem?.Name ?? SelectedFolder?.Value;
+        string? oldName = SelectedItem?.Item.Name ?? SelectedFolder?.Value;
         if (oldName is null || !TryGetUICommandsDirect(out IGitUICommands? commands))
         {
             return;
@@ -1271,19 +1395,39 @@ partial class FileStatusList
 
         using IUserInputPrompt prompt = commands.GetRequiredService<ISimplePromptCreator>()
             .Create(tsmiMove.Header?.ToString(), _newName.Text, oldName);
-        if (GetOwner() is not WinFormsShims.IWin32Window owner
-            || prompt.ShowDialog(owner) != WinFormsShims.DialogResult.OK
-            || prompt.UserInput == oldName)
+        if (GetOwner() is not WinFormsShims.IWin32Window owner)
         {
             return;
         }
 
-        MoveCommand.Arguments arguments = new(SelectedItem is null, oldName, prompt.UserInput);
-        MoveCommand command = new(Module.GitExecutable);
-        if (command.Validate(arguments))
+        // Repeat if name not different or if failed, let the user cancel explicitly
+        while (prompt.ShowDialog(owner) == WinFormsShims.DialogResult.OK)
         {
-            command.Execute(arguments);
-            RequestRefresh();
+            MoveCommand.Arguments arguments = new(SelectedItem is null, oldName, prompt.UserInput);
+            MoveCommand command = new(Module.GitExecutable);
+            if (!command.Validate(arguments))
+            {
+                continue;
+            }
+
+            try
+            {
+                command.Execute(arguments);
+                return;
+            }
+            catch (Exception exception)
+            {
+                MessageBoxes.Show(
+                    GetOwner(),
+                    exception.Message,
+                    tsmiMove.Header?.ToString() ?? _newName.Text,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
+            }
+            finally
+            {
+                RequestRefresh();
+            }
         }
     }
 
