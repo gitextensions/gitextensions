@@ -2,9 +2,14 @@
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using GitCommands.Git;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI;
+using GitUI.Properties;
 using GitUI.UserControls;
 using GitUI.UserControls.Settings;
+using NSubstitute;
 
 namespace GitExtensionsTests;
 
@@ -22,6 +27,33 @@ public sealed class SmallControlParityTests
         accessor.Branches.IsEditable.Should().BeTrue();
         control.IsRemoteBranchChecked.Should().BeFalse();
         control.SelectedBranchName.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public void BranchSelector_should_reload_the_selected_branch_source_in_both_directions()
+    {
+        IGitRef localBranch = Substitute.For<IGitRef>();
+        localBranch.Name.Returns("main");
+        IGitRef remoteBranch = Substitute.For<IGitRef>();
+        remoteBranch.Name.Returns("origin/main");
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetRefs(RefsFilter.Heads).Returns([localBranch]);
+        module.GetRefs(RefsFilter.Remotes).Returns([remoteBranch]);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        BranchSelector control = new() { UICommandsSource = source };
+        BranchSelector.TestAccessor accessor = control.GetTestAccessor();
+
+        control.Initialize(remote: false, containObjectIds: null);
+        accessor.Branches.ItemsSource.Should().BeEquivalentTo(new[] { "main" });
+
+        accessor.Remotebranch.IsChecked = true;
+        accessor.Branches.ItemsSource.Should().BeEquivalentTo(new[] { "origin/main" });
+
+        accessor.LocalBranch.IsChecked = true;
+        accessor.Branches.ItemsSource.Should().BeEquivalentTo(new[] { "main" });
     }
 
     [AvaloniaTest]
@@ -45,6 +77,13 @@ public sealed class SmallControlParityTests
 
         accessor.Action.Should().Be(action);
         accessor.HasConflicts.Should().Be(conflicts);
+        if (accessor.Visible)
+        {
+            accessor.HasIconClass("gitextensions-icon-16").Should().BeTrue();
+            accessor.Icon.Should().BeSameAs(conflicts ? Images.SolveMerge : Images.Information);
+            accessor.TextLabel.Text.Should().Be(ExpectedMessage(action, conflicts));
+        }
+
         switch (action)
         {
             case InteractiveGitActionControl.GitAction.None:
@@ -72,6 +111,19 @@ public sealed class SmallControlParityTests
                 accessor.Controls.Contains(accessor.MoreButton).Should().BeFalse();
                 break;
         }
+
+        static string ExpectedMessage(InteractiveGitActionControl.GitAction action, bool conflicts)
+        {
+            if (action == InteractiveGitActionControl.GitAction.None)
+            {
+                return "There are unresolved merge conflicts.";
+            }
+
+            string actionName = action.ToString();
+            return conflicts
+                ? $"{actionName} is currently in progress with merge conflicts."
+                : $"{actionName} is currently in progress.";
+        }
     }
 
     [AvaloniaTest]
@@ -90,6 +142,8 @@ public sealed class SmallControlParityTests
         control.Checked.Should().BeTrue();
         checkedChanges.Should().Be(1);
         accessor.PictureBox.IsVisible.Should().BeTrue();
+        accessor.PictureBox.Classes.Should().Contain("gitextensions-icon-16");
+        accessor.PictureBox.Source.Should().BeSameAs(Images.Information);
         ToolTip.GetTip(accessor.CheckBox).Should().Be("More information");
         ToolTip.GetTip(accessor.PictureBox).Should().Be("More information");
     }
@@ -123,16 +177,35 @@ public sealed class SmallControlParityTests
     public void CaseSensitiveComboBox_should_select_only_an_exact_case_match()
     {
         CaseSensitiveComboBox control = new() { ItemsSource = new[] { "Main", "main" } };
+        Window window = new() { Content = control };
 
-        control.Text = "main";
-        control.NotifyAutoCompleteForTest();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
 
-        control.SelectedIndex.Should().Be(1);
-        control.Text.Should().Be("main");
+            control.Text = "main";
+            control.NotifyAutoCompleteForTest();
+
+            control.SelectedIndex.Should().Be(1);
+            control.Text.Should().Be("main");
+
+            control.Text = "Main";
+            control.NotifyAutoCompleteForTest();
+
+            control.SelectedIndex.Should().Be(0);
+            control.Text.Should().Be("Main");
+            control.GetVisualDescendants().OfType<TextBox>()
+                .Should().ContainSingle(textBox => textBox.Name == "PART_EditableTextBox");
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
-    public void WaitSpinner_should_expose_the_original_animation_boundary()
+    public async Task WaitSpinner_should_expose_the_original_animation_boundary()
     {
         WaitSpinner control = new() { Width = 48, Height = 48 };
         Window window = new() { Content = control };
@@ -143,9 +216,16 @@ public sealed class SmallControlParityTests
             Dispatcher.UIThread.RunJobs();
             control.IsAnimating.Should().BeTrue();
 
+            int initialProgress = control.ProgressForTest;
+            await WaitUntilAsync(() => control.ProgressForTest != initialProgress);
+
             control.SetProgressForCapture(7);
             control.IsAnimating = false;
             control.IsAnimating.Should().BeFalse();
+            int stoppedProgress = control.ProgressForTest;
+            await Task.Delay(80);
+            Dispatcher.UIThread.RunJobs();
+            control.ProgressForTest.Should().Be(stoppedProgress);
         }
         finally
         {
@@ -158,5 +238,20 @@ public sealed class SmallControlParityTests
     {
         new EnterEventArgs(byMouse: true).ByMouse.Should().BeTrue();
         new EnterEventArgs(byMouse: false).ByMouse.Should().BeFalse();
+    }
+
+    private static async Task WaitUntilAsync(Func<bool> predicate)
+    {
+        DateTime deadline = DateTime.UtcNow.AddSeconds(2);
+        while (!predicate())
+        {
+            if (DateTime.UtcNow >= deadline)
+            {
+                Assert.Fail("Timed out waiting for the spinner animation timer.");
+            }
+
+            await Task.Delay(20);
+            Dispatcher.UIThread.RunJobs();
+        }
     }
 }

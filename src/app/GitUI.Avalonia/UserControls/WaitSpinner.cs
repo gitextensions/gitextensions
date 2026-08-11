@@ -125,4 +125,7 @@ public sealed class WaitSpinner : Control
         _progress = Math.Abs(progress) % _dotCount;
         InvalidateVisual();
     }
+
+    // parity-scaffolding: Exposes timer progress so focused tests prove the animation starts and stops.
+    internal int ProgressForTest => _progress;
 }

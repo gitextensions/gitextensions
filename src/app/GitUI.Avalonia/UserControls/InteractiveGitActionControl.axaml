@@ -9,8 +9,7 @@
              Background="{DynamicResource GitExtensionsInteractiveActionBackgroundBrush}">
   <Grid ColumnDefinitions="28,*,Auto">
     <Image x:Name="IconBox"
-           Width="16"
-           Height="16"
+           Classes="gitextensions-icon-16"
            HorizontalAlignment="Center"
            VerticalAlignment="Center"
            Source="{x:Static properties:Images.Information}" />

@@ -37,8 +37,8 @@ public sealed class InputAccessibilityTests
         File.ReadAllText(generatedPath).ReplaceLineEndings("\n").Should().Be(InputMetadataGenerator.Generate(
             Path.Combine(repositoryRoot, "src", "app", "GitUI"),
             Path.Combine(repositoryRoot, "src", "app", "GitUI.Avalonia")));
-        WinFormsInputMetadata.ByType.Should().HaveCount(105);
-        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1177);
+        WinFormsInputMetadata.ByType.Should().HaveCount(141);
+        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1463);
     }
 
     [AvaloniaTest]
