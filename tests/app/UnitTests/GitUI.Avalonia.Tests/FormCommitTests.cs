@@ -33,6 +33,7 @@ public sealed class FormCommitTests
 {
     private const string FeatCommitTypeForTest = "feat";
 
+    private string _originalApplicationExecutablePath = null!;
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
 
@@ -41,6 +42,9 @@ public sealed class FormCommitTests
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        AppSettings.TestAccessor settingsAccessor = AppSettings.GetTestAccessor();
+        _originalApplicationExecutablePath = settingsAccessor.ApplicationExecutablePath;
+        settingsAccessor.ApplicationExecutablePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "GitExtensions.Avalonia.exe");
 
         _serviceContainer = new ServiceContainer();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(_serviceContainer);
@@ -62,6 +66,7 @@ public sealed class FormCommitTests
     [TearDown]
     public void TearDown()
     {
+        AppSettings.GetTestAccessor().ApplicationExecutablePath = _originalApplicationExecutablePath;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
@@ -317,6 +322,105 @@ public sealed class FormCommitTests
             AppSettings.CommitValidationRegEx = validationRegex;
             WinFormsShims.ShimHost.MessageBoxHost = new StubMessageBoxHost { Result = WinFormsShims.DialogResult.Yes };
             form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormCommit_should_apply_commit_font_auto_wrap_and_second_line_indentation()
+    {
+        WinFormsShims.Font commitFont = AppSettings.CommitFont;
+        int maxFirstLine = AppSettings.CommitValidationMaxCntCharsFirstLine;
+        int maxPerLine = AppSettings.CommitValidationMaxCntCharsPerLine;
+        bool secondLineEmpty = AppSettings.CommitValidationSecondLineMustBeEmpty;
+        bool autoWrap = AppSettings.CommitValidationAutoWrap;
+        bool indentAfterFirstLine = AppSettings.CommitValidationIndentAfterFirstLine;
+        using WinFormsShims.Font expectedFont = new("Consolas", 13F);
+        try
+        {
+            AppSettings.CommitFont = expectedFont;
+            AppSettings.CommitValidationMaxCntCharsFirstLine = 0;
+            AppSettings.CommitValidationMaxCntCharsPerLine = 20;
+            AppSettings.CommitValidationSecondLineMustBeEmpty = true;
+            AppSettings.CommitValidationAutoWrap = true;
+            AppSettings.CommitValidationIndentAfterFirstLine = true;
+            FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithTwoUnstagedChanges()));
+            try
+            {
+                GitUI.SpellChecker.EditNetSpell message = form.GetTestAccessor().Message;
+                message.TextBoxFont.Name.Should().Be(expectedFont.Name);
+                message.TextBoxFont.Size.Should().Be(expectedFont.Size);
+
+                message.Text = "Subject\nbody words that must wrap onto another line";
+
+                string[] lines = message.Text.ReplaceLineEndings("\n").Split('\n');
+                lines[1].Should().BeEmpty();
+                lines[2].Should().StartWith(" - ");
+                lines.Skip(2).Should().OnlyContain(line => line.Length <= 20);
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CommitFont = commitFont;
+            AppSettings.CommitValidationMaxCntCharsFirstLine = maxFirstLine;
+            AppSettings.CommitValidationMaxCntCharsPerLine = maxPerLine;
+            AppSettings.CommitValidationSecondLineMustBeEmpty = secondLineEmpty;
+            AppSettings.CommitValidationAutoWrap = autoWrap;
+            AppSettings.CommitValidationIndentAfterFirstLine = indentAfterFirstLine;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_restore_selection_filter_and_visibility_settings()
+    {
+        bool selectionFilterVisible = AppSettings.CommitDialogSelectionFilter;
+        bool showResetAll = AppSettings.ShowResetAllChanges;
+        bool showResetWorkTree = AppSettings.ShowResetWorkTreeChanges;
+        bool showCommitAndPush = AppSettings.ShowCommitAndPush;
+        try
+        {
+            AppSettings.CommitDialogSelectionFilter = true;
+            AppSettings.ShowResetAllChanges = false;
+            AppSettings.ShowResetWorkTreeChanges = false;
+            AppSettings.ShowCommitAndPush = false;
+            FormCommit form = new(new GitUICommands(_serviceContainer, CreateRepositoryWithTwoUnstagedChanges()));
+            try
+            {
+                form.Show();
+                FormCommit.TestAccessor accessor = form.GetTestAccessor();
+                FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")!;
+                await WaitUntilAsync(() => unstaged.GitItemStatuses.Count == 2);
+
+                accessor.SelectionFilterVisible.Should().BeTrue();
+                form.FindControl<Button>("btnResetAllChanges")!.IsVisible.Should().BeFalse();
+                form.FindControl<Button>("btnResetUnstagedChanges")!.IsVisible.Should().BeFalse();
+                form.FindControl<Button>("CommitAndPush")!.IsVisible.Should().BeFalse();
+
+                accessor.SelectionFilter.Text = "tracked";
+                accessor.ApplySelectionFilter();
+                unstaged.SelectedGitItems.Should().ContainSingle(item => item.Name == "tracked.txt");
+
+                accessor.SelectionFilter.Text = "[";
+                accessor.ApplySelectionFilter();
+                accessor.SelectionFilter.Classes.Should().Contain("file-filter-invalid");
+
+                accessor.ExecuteCommand(FormCommit.Command.ToggleSelectionFilter).Should().BeTrue();
+                accessor.SelectionFilterVisible.Should().BeFalse();
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.CommitDialogSelectionFilter = selectionFilterVisible;
+            AppSettings.ShowResetAllChanges = showResetAll;
+            AppSettings.ShowResetWorkTreeChanges = showResetWorkTree;
+            AppSettings.ShowCommitAndPush = showCommitAndPush;
         }
     }
 
