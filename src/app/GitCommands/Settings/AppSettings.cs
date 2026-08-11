@@ -1703,6 +1703,36 @@ public static partial class AppSettings
         set => SetBool("dashboardshowcurrentbranch", value);
     }
 
+    public static bool MultiRepositoryStatusAutoFetchEnabled
+    {
+        get => GetBool("multirepositorystatus.autofetchenabled", true);
+        set => SetBool("multirepositorystatus.autofetchenabled", value);
+    }
+
+    public static int MultiRepositoryStatusIdleMinutes
+    {
+        get => GetInt("multirepositorystatus.idleminutes", 5);
+        set => SetInt("multirepositorystatus.idleminutes", value);
+    }
+
+    public static int MultiRepositoryStatusFetchIntervalMinutes
+    {
+        get => GetInt("multirepositorystatus.fetchintervalminutes", 30);
+        set => SetInt("multirepositorystatus.fetchintervalminutes", value);
+    }
+
+    public static int MultiRepositoryStatusFetchConcurrency
+    {
+        get => GetInt("multirepositorystatus.fetchconcurrency", 4);
+        set => SetInt("multirepositorystatus.fetchconcurrency", value);
+    }
+
+    public static int MultiRepositoryStatusFetchTimeoutSeconds
+    {
+        get => GetInt("multirepositorystatus.fetchtimeoutseconds", 120);
+        set => SetInt("multirepositorystatus.fetchtimeoutseconds", value);
+    }
+
     public static string? OwnScripts
     {
         get => GetString("ownScripts", "");

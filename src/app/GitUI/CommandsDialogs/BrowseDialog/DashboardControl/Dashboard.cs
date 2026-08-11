@@ -18,6 +18,7 @@ public partial class Dashboard : GitModuleControl
     private readonly TranslationString _donate = new("Donate");
     private readonly TranslationString _issues = new("Issues");
     private readonly TranslationString _openRepository = new("Open repository");
+    private readonly TranslationString _repositoryStatus = new("仓库状态总览");
     private readonly TranslationString _translate = new("Translate");
 
     public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
@@ -39,6 +40,8 @@ public partial class Dashboard : GitModuleControl
         flpnlContribute.SendToBack();
 
         userRepositoriesList.GitModuleChanged += OnModuleChanged;
+        multiRepositoryStatusControl.GitModuleChanged += OnModuleChanged;
+        multiRepositoryStatusControl.RepositoriesRequested += (_, _) => ShowRepositories();
 
         // apply scaling
         pnlLogo.Padding = DpiUtil.Scale(pnlLogo.Padding);
@@ -49,8 +52,14 @@ public partial class Dashboard : GitModuleControl
     {
         base.OnVisibleChanged(e);
 
+        if (Visible)
+        {
+            // Start the idle scheduler as soon as the dashboard is available, even if the status view stays hidden.
+            multiRepositoryStatusControl.Start(UICommands);
+        }
+
         // Focus the control in order for the search bar to have focus once the dashboard is shown
-        userRepositoriesList.Focus();
+        (multiRepositoryStatusControl.Visible ? (Control)multiRepositoryStatusControl : userRepositoriesList).Focus();
     }
 
     public void RefreshContent()
@@ -60,6 +69,10 @@ public partial class Dashboard : GitModuleControl
         InitDashboardLayout();
         ApplyTheme();
         userRepositoriesList.ShowRecentRepositories();
+        if (multiRepositoryStatusControl.Visible)
+        {
+            multiRepositoryStatusControl.RefreshContent();
+        }
 
         void ApplyTheme()
         {
@@ -78,6 +91,7 @@ public partial class Dashboard : GitModuleControl
             userRepositoriesList.HeaderBackColor = selectedTheme.HeaderBackColor;
             userRepositoriesList.HoverColor = selectedTheme.StartBackColor;
             userRepositoriesList.SearchBackColor = selectedTheme.SearchBackColor;
+            multiRepositoryStatusControl.ApplyTheme(selectedTheme);
 
             foreach (LinkLabel item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
             {
@@ -115,6 +129,7 @@ public partial class Dashboard : GitModuleControl
                 AddLinks(flpnlStart,
                     panel =>
                     {
+                        CreateLink(panel, _repositoryStatus.Text, Images.ReloadRevisions, RepositoryStatusItem_Click);
                         CreateLink(panel, _createRepository.Text, Images.RepoCreate, createItem_Click);
                         CreateLink(panel, _openRepository.Text, Images.RepoOpen, openItem_Click);
                         Control lastControl = CreateLink(panel, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
@@ -232,6 +247,23 @@ public partial class Dashboard : GitModuleControl
     private void createItem_Click(object? sender, EventArgs e)
     {
         UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
+    }
+
+    private void RepositoryStatusItem_Click(object? sender, EventArgs e)
+    {
+        userRepositoriesList.Visible = false;
+        multiRepositoryStatusControl.Visible = true;
+        multiRepositoryStatusControl.BringToFront();
+        multiRepositoryStatusControl.Focus();
+        multiRepositoryStatusControl.RefreshContent();
+    }
+
+    private void ShowRepositories()
+    {
+        multiRepositoryStatusControl.Visible = false;
+        userRepositoriesList.Visible = true;
+        userRepositoriesList.BringToFront();
+        userRepositoriesList.Focus();
     }
 
     private static void DonateItem_Click(object? sender, EventArgs e)

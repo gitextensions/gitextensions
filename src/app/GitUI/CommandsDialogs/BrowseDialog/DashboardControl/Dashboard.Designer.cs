@@ -35,6 +35,7 @@ partial class Dashboard
         pnlLogo = new Panel();
         pbLogo = new PictureBox();
         userRepositoriesList = new GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList();
+        multiRepositoryStatusControl = new GitUI.CommandsDialogs.BrowseDialog.DashboardControl.MultiRepositoryStatusControl();
         tableLayoutPanel1 = new TableLayoutPanel();
         pnlLeft.SuspendLayout();
         flpnlContribute.SuspendLayout();
@@ -121,6 +122,17 @@ partial class Dashboard
         userRepositoriesList.Name = "userRepositoriesList";
         userRepositoriesList.Size = new Size(405, 358);
         userRepositoriesList.TabIndex = 1;
+        //
+        // multiRepositoryStatusControl
+        //
+        multiRepositoryStatusControl.Dock = DockStyle.Fill;
+        multiRepositoryStatusControl.HeaderHeight = 70;
+        multiRepositoryStatusControl.Location = new Point(246, 0);
+        multiRepositoryStatusControl.Margin = new Padding(0);
+        multiRepositoryStatusControl.Name = "multiRepositoryStatusControl";
+        multiRepositoryStatusControl.Size = new Size(405, 358);
+        multiRepositoryStatusControl.TabIndex = 2;
+        multiRepositoryStatusControl.Visible = false;
         // 
         // tableLayoutPanel1
         // 
@@ -132,6 +144,7 @@ partial class Dashboard
         tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7.142857F));
         tableLayoutPanel1.Controls.Add(pnlLeft, 1, 0);
         tableLayoutPanel1.Controls.Add(userRepositoriesList, 2, 0);
+        tableLayoutPanel1.Controls.Add(multiRepositoryStatusControl, 2, 0);
         tableLayoutPanel1.Dock = DockStyle.Fill;
         tableLayoutPanel1.Location = new Point(0, 0);
         tableLayoutPanel1.Margin = new Padding(0);
@@ -170,6 +183,7 @@ partial class Dashboard
     private Label lblContribute;
     private Panel pnlLogo;
     private UserRepositoriesList userRepositoriesList;
+    private MultiRepositoryStatusControl multiRepositoryStatusControl;
     private TableLayoutPanel tableLayoutPanel1;
     private PictureBox pbLogo;
 }
