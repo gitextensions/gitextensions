@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -103,6 +103,7 @@ internal static class AvaloniaThemeResources
 
     public static void Apply(Application application, ThemeSettings settings)
     {
+        ColorHelper.ThemeSettings = settings;
         bool isDark = settings.Theme.SystemColorMode == GitExtensions.Shims.WinForms.SystemColorMode.Dark;
         ResourceDictionary resources = GetThemeResources(application, isDark ? ThemeVariant.Dark : ThemeVariant.Light);
 
@@ -193,6 +194,7 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsDisabledForegroundBrush", grayText);
         SetBrush(resources, "GitExtensionsHighlightBackgroundBrush", highlight);
         SetBrush(resources, "GitExtensionsHighlightForegroundBrush", highlightText);
+        SetBrush(resources, "GitExtensionsFileStatusSelectionForegroundBrush", isDark ? controlText : highlightText);
         SetBrush(resources, "GitExtensionsInactiveSelectionForegroundBrush", inactiveSelectionText);
         SetBrush(resources, "GitExtensionsSystemInactiveSelectionBackgroundBrush", inactiveSelection);
         SetBrush(resources, "GitExtensionsToolTipBackgroundBrush", info);
@@ -213,8 +215,8 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsRevisionAlternatingRowBrush", alternatingRow);
         SetBrush(resources, "GitExtensionsRevisionAuthoredBrush", ResolveAppColor(settings, AppColor.AuthoredHighlight));
 
-        SetBrush(resources, "GitExtensionsValidFilterBackgroundBrush", isDark ? dimmedAddedBackground : addedBackground);
-        SetBrush(resources, "GitExtensionsInvalidFilterBackgroundBrush", isDark ? dimmedRemovedBackground : removedBackground);
+        SetBrush(resources, "GitExtensionsValidFilterBackgroundBrush", ResolveFilterBackground(isDark, isValid: true));
+        SetBrush(resources, "GitExtensionsInvalidFilterBackgroundBrush", ResolveFilterBackground(isDark, isValid: false));
         SetBrush(resources, "GitExtensionsResetSoftBackgroundBrush", resetSoft);
         SetBrush(resources, "GitExtensionsResetMixedBackgroundBrush", resetMixed);
         SetBrush(resources, "GitExtensionsResetHardBackgroundBrush", resetHard);
@@ -348,6 +350,15 @@ internal static class AvaloniaThemeResources
         resources[key] = mediaColor;
         resources[key + "Brush"] = new SolidColorBrush(mediaColor);
     }
+
+    internal static DrawingColor ResolveFilterBackground(bool isDark, bool isValid)
+        => (isDark, isValid) switch
+        {
+            (true, true) => DrawingColor.FromArgb(0x00, 0x95, 0x00),
+            (true, false) => DrawingColor.FromArgb(0x95, 0x00, 0x00),
+            (false, true) => DrawingColor.FromArgb(0xC8, 0xFF, 0xC8),
+            _ => DrawingColor.FromArgb(0xFF, 0xC8, 0xC8),
+        };
 
     private static void SetBrush(ResourceDictionary resources, string key, DrawingColor color)
         => SetBrush(resources, key, ToMediaColor(color));

@@ -28519,41 +28519,44 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c1.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c3.json",
+            "eng/avalonia/parity-evidence/P8.6c/c3/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 1329,
-          "note": "P8.6c.1 removed the Avalonia-only count label and restored the original filter overlay, but the current family inventory still reports 1,329 findings for P8.6c.2."
+          "findingCount": 0,
+          "note": "The complete family inventory remains visible and is disjointly classified. P8.6c.3 closes the retained pointer, submodule, icon, color, and state behavior through tested Avalonia framework adaptations; no product-functional finding remains in the classification."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "verifiedOn": "2026-08-11",
+          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/paired-diff-shared-fixed2-125/"
+            "eng/avalonia/parity-evidence/P8.6c/c3/diff-core-125-final/",
+            "eng/avalonia/parity-evidence/P8.6c/c3/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 16800,
-          "note": "The corrected shared-repository 125% matrix joins 18 states and retains toolbar, tree metric, selection, separator, and popup-composition differences for P8.6c.3."
+          "findingCount": 6384,
+          "note": "Fresh native-125% paired evidence verifies the toolbar/tree/selection corrections and reduces different pixels from about 11% to 7-8%. Exact native-DPI rendering and surrounding consumer layouts remain open under their recorded owners."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "verifiedOn": "2026-08-11",
+          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/paired-diff-shared-fixed2-125/"
+            "eng/avalonia/parity-evidence/P8.6c/c3/diff-core-125-final/",
+            "eng/avalonia/parity-evidence/P8.6c/c3/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 16800,
-          "note": "Light, dark, and custom captures now render the filter, but exact resolved-color parity remains part of the 16,800 P8.6c.3 findings."
+          "findingCount": 6384,
+          "note": "Valid/invalid filter colors and focused FileStatusList selection now resolve through the same original semantic color boundary in light, dark, and custom themes. The axis remains open until all remaining visual diagnostics and native-DPI states close."
         },
         "behavioralState": {
           "status": "partial",
@@ -28567,7 +28570,7 @@
             "windows"
           ],
           "findingCount": 0,
-          "note": "Eighteen standalone theme/focus/disabled/menu states use one shared repository; the complete four-consumer interaction matrix remains P8.6c.3."
+          "note": "The 156-request shared-repository matrix now covers the standalone control plus Commit, Stash, revision Diff, and File tree in light, dark, and custom themes. Eighty-one WinForms states paired; 75 unavailable native-DPI requests and the exhaustive live interaction walk remain explicit debt."
         },
         "platform": {
           "status": "partial",
@@ -28583,7 +28586,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Build, focused tests, and isolated runtime smokes passed on Windows, native Wayland, X11, and Wayland-only Flatpak; exhaustive component review and macOS remain open."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak are exercised by the tranche gates; native-DPI hardware coverage and macOS remain open."
         }
       }
     },
@@ -29210,75 +29213,76 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c3.json",
+            "eng/avalonia/parity-evidence/P8.6c/c3/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 21,
-          "note": "P8.6c.2c restores or tests the core list/tree source contract and classifies every remaining family finding without suppression. Of 648 member findings, 627 are documented Designer/AXAML, native event/menu/data-node, partial-placement, or framework-signature representation differences; 21 owner-draw, scaling, pointer-drag, icon, and submodule-presentation members remain real P8.6c.3 debt."
+          "findingCount": 1234,
+          "note": "All 1,234 inventory findings remain visible and classified without suppression. The former product-debt selector now identifies 53 tested framework adaptations; the remaining 1,181 are Designer/AXAML, native event/menu/data-node, partial-placement, and framework-signature representation differences."
         },
         "functional": {
-          "status": "gap",
+          "status": "verified",
           "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c3.json",
+            "eng/avalonia/parity-evidence/P8.6c/c3/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6c/c3/manual-review.json"
           ],
           "platforms": [],
-          "findingCount": 50,
-          "note": "P8.6c.2c restores selection/focus/filter/delayed-expansion contracts, two-stage git-grep calculation, loading, settings rebinding, revision descriptions, reset/move behavior, and affected consumer routes. The family inventory falls from 1,273 to 1,227; 1,177 are explicitly justified framework-representation findings, while 50 product-facing owner-draw/layout/pointer/icon/state findings remain assigned to P8.6c.3."
+          "findingCount": 0,
+          "note": "P8.6c.3 closes the retained pointer drag/right-click, asynchronous submodule text/icon, image selection, toolbar state, and color behavior through tested Avalonia adaptations. The inventory classification contains no remaining product-functional debt."
         },
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c2c/diff-125/",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6c/c3/diff-core-125-final/",
+            "eng/avalonia/parity-evidence/P8.6c/c3/diff-consumers-final/",
+            "eng/avalonia/parity-evidence/P8.6c/c3/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 7098,
-          "note": "The shared-repository native-125% normal/focused/disabled matrix joins all nine light/dark/custom states and retains 7,098 diagnostics. Toolbar spacing, icon and row metrics, tree geometry, and selection rendering remain P8.6c.3."
+          "findingCount": 6384,
+          "note": "The final native-125% core matrix joins all nine states and reduces diagnostics from 7,098 to 6,384, with 7-8% different pixels. Native-DPI physical rendering and containing-form layouts remain explicit P8.6a/P8.6h/P8.6i debt, so no visual completion is claimed."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c2c/diff-125/",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6c/c3/diff-core-125-final/",
+            "eng/avalonia/parity-evidence/P8.6c/c3/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 7098,
-          "note": "All nine native-125% light/dark/custom core-state pairs are available. Exact resolved colors, focused/unfocused selection treatment, and remaining theme rendering deltas remain open in P8.6c.3."
+          "findingCount": 6384,
+          "note": "Captured filter backgrounds and focused selection now match the original resolved system colors in all three themes. The axis remains open because the remaining visual diagnostics and unavailable native-DPI states have not closed."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c2c/winforms-125/",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/avalonia-125/",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6c/c3/winforms-consumers/",
+            "eng/avalonia/parity-evidence/P8.6c/c3/avalonia-consumers-final/",
+            "eng/avalonia/parity-evidence/P8.6c/c3/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "A verified common fixture drives normal, focused, and disabled states in all three themes; 79 focused tests cover the restored selection, focus, filtering, expansion, loading, git-grep, context action, and consumer routes. The complete Commit, Stash, revision Diff, and File tree walk remains P8.6c.3."
+          "note": "The common fixture drives 156 standalone and Commit/Stash/revision-Diff/File-tree requests across all themes/scales. Eighty-one WinForms states pair with Avalonia; 75 native-DPI requests and the exhaustive live interaction walk remain explicit debt."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6c/c2c/windows/",
             "eng/avalonia/parity-evidence/P8.6c/c2c/wayland/",
@@ -29292,7 +29296,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Build, 79 focused tests, and isolated runtime smokes passed on Windows, exclusive Wayland, exclusive X11, and Wayland-only Flatpak with --filesystem=host; exhaustive component review and macOS remain open."
+          "note": "Build, focused tests, and isolated runtime smokes cover Windows, exclusive Wayland, exclusive X11, and Wayland-only Flatpak with --filesystem=host. Native-DPI hardware coverage, exhaustive manual review, and macOS remain open."
         }
       }
     },
