@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Avalonia.Media;
 using AvaloniaEdit;
 using AvaloniaEdit.Editing;
@@ -17,6 +17,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
 
     private readonly TextEditor _editor;
     private IReadOnlyDictionary<int, DiffLineInfo> _diffLines = _empty;
+    private bool _markSelectedLine = true;
     private bool _visible = true;
     private bool _showLeftColumn = true;
 
@@ -114,7 +115,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
             Avalonia.Rect row = new(0, y, Bounds.Width, visualLine.Height);
             DrawSemanticBackground(context, row, backgroundSplit, info);
 
-            bool current = documentLine == _editor.TextArea.Caret.Line;
+            bool current = _markSelectedLine && documentLine == _editor.TextArea.Caret.Line;
             IBrush textBrush = current ? selectedBrush : numberBrush;
             if (info.LeftLineNumber != DiffLineInfo.NotApplicableLineNum)
             {
@@ -189,6 +190,12 @@ public class DiffViewerLineNumberControl : AbstractMargin
         _visible = visible;
         IsVisible = visible;
         InvalidateMeasure();
+        InvalidateVisual();
+    }
+
+    public void DontMarkSelectedLine()
+    {
+        _markSelectedLine = false;
         InvalidateVisual();
     }
 
