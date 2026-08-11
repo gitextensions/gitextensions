@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!-- Cross-platform Avalonia tests; part of GitExtensions.Avalonia.slnx only, so the
@@ -97,6 +97,9 @@
           CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\..\..\src\app\GitUI\Translation\*.gif"
           Link="Translation\%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\GitUI.Tests\Editor\Diff\SampleDifftastic.diff"
+          Link="Editor\Diff\SampleDifftastic.diff"
           CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
