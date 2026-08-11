@@ -5091,15 +5091,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "039822d94d0c382e33476ebc335d2df435ef06d1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6f/f2/functional-findings.after.json",
+            "eng/avalonia/parity-evidence/P8.6f/f2/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6f/f2/tests/windows/p8.6f2-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6f/f2/tests/linux/p8.6f2-focused-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 914,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 845,
+          "note": "Focused Windows/Linux tests close the FormCommit product-functional contract, including commit font, validation auto-wrap/indent/color formatting, selection-filter behavior, external settings, provider refresh, staging reload ordering, the original 18 hotkeys, and restored toolbar/menu/status owner routes. The raw findings are fully classified generated Designer/AXAML fields, framework event/menu/lifecycle/async representations, dynamic translations, and analyzer parser false positives; exact structural/visual/theme/exhaustive-state closure remains P8.6f.3."
         },
         "visual": {
           "status": "unverified",
