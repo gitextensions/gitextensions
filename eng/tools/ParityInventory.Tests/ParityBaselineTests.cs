@@ -22,6 +22,7 @@ public sealed class ParityBaselineTests
         result.Summary.UnsupportedMappingCount.Should().Be(1);
         result.Mappings.Select(mapping => mapping.AnalysisStatus)
             .Should().BeEquivalentTo("analyzed", "analyzed", "linkedExact", "unsupported");
+        result.Types.Single(type => type.TypeName == "Sample.IThing").FindingCount.Should().Be(0);
     }
 
     [Test]

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using Avalonia.Styling;
@@ -12,8 +12,8 @@ public partial class AnsiEscapeUtilities
 {
     [GeneratedRegex(@"\u001b\[((?<escNo>\d+)\s*[:;]?\s*)*m", RegexOptions.ExplicitCapture)]
     private static partial Regex EscapeRegex { get; }
-    private static int DefaultForeColorId
-        => Avalonia.Application.Current?.ActualThemeVariant == ThemeVariant.Dark ? _whiteId : _blackId;
+    private static readonly int _defaultForeColorId
+        = Avalonia.Application.Current?.ActualThemeVariant == ThemeVariant.Dark ? _whiteId : _blackId;
 
     // Color code definitions
     private const int _blackId = 0;
@@ -32,7 +32,7 @@ public partial class AnsiEscapeUtilities
     /// </summary>
     public static void PrintColors(StringBuilder sb, List<TextMarker> textMarkers)
     {
-        int currentColorId = DefaultForeColorId;
+        int currentColorId = _defaultForeColorId;
         StringBuilder rawSb = new();
         rawSb.Append("\nnormal, normal dim, bold, bold dim, bold bold, bold bold dim\nFor foreground, background choosen by GE\nNote: GE configures black foreground for bold yellow/blue/magenta/cyan\nGenerated from AnsiEscapeUtilities.cs PrintColors());\n\n");
         sb.Append('\n');
@@ -112,7 +112,7 @@ public partial class AnsiEscapeUtilities
     {
         int errorCount = 0;
         int prevLineOffset = 0;
-        int currentColorId = DefaultForeColorId; // current color, used when just bold etc is set
+        int currentColorId = _defaultForeColorId; // current color, used when just bold etc is set
         HighlightInfo currentHighlight = new()
         {
             DocOffset = sb.Length,
@@ -234,7 +234,7 @@ public partial class AnsiEscapeUtilities
                     reverse = false;
                     backColor = null;
                     foreColor = null;
-                    currentColorId = DefaultForeColorId;
+                    currentColorId = _defaultForeColorId;
                     currentFore = -1;
                     currentBack = -1;
                     bold = false;
@@ -263,7 +263,7 @@ public partial class AnsiEscapeUtilities
                     break;
                 case 39: // Default foreground color
                     foreColor = null;
-                    currentFore = currentColorId = DefaultForeColorId;
+                    currentFore = currentColorId = _defaultForeColorId;
                     break;
                 case 49: // Default background color
                     backColor = null;
@@ -325,7 +325,7 @@ public partial class AnsiEscapeUtilities
 
                         // Unknown fixed identifier, reset id
                         // Reset also for background to avoid CS0165
-                        currentColorId = DefaultForeColorId;
+                        currentColorId = _defaultForeColorId;
 
                         // Set the color, override if set later
                         if (fore)

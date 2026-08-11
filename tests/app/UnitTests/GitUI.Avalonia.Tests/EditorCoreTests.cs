@@ -1,8 +1,9 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Text;
 using Avalonia.Headless.NUnit;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.Editor;
@@ -42,6 +43,24 @@ public sealed class EditorCoreTests
         markers[0].ForeColor.Should().Be(Color.FromArgb(255, 0, 0));
     }
 
+    [Test]
+    public void Ansi_palette_should_preserve_original_cube_gray_and_range_contracts()
+    {
+        AnsiEscapeUtilities.TestAccessor.Get8bitColor(196, fore: true, bold: false, dim: false)
+            .Should().Be(Color.FromArgb(255, 0, 0));
+        AnsiEscapeUtilities.TestAccessor.Get8bitColor(231, fore: true, bold: false, dim: false)
+            .Should().Be(Color.FromArgb(255, 255, 255));
+        AnsiEscapeUtilities.TestAccessor.Get8bitColor(232, fore: true, bold: false, dim: false)
+            .Should().Be(Color.FromArgb(0, 0, 0));
+        AnsiEscapeUtilities.TestAccessor.Get8bitColor(255, fore: true, bold: false, dim: false)
+            .Should().Be(Color.FromArgb(253, 253, 253));
+        ((Action)(() => AnsiEscapeUtilities.TestAccessor.Get8bitColor(
+            256,
+            fore: true,
+            bold: false,
+            dim: false))).Should().Throw<ArgumentOutOfRangeException>();
+    }
+
     [AvaloniaTest]
     public void Grep_highlighter_should_strip_line_prefixes_and_preserve_semantic_lines()
     {
@@ -56,6 +75,8 @@ public sealed class EditorCoreTests
         service.LinesInfo.DiffLines.Values.Should().Contain(line => line.RightLineNumber == 11 && line.LineType == DiffLineType.Context);
         service.LinesInfo.DiffLines.Values.Should().Contain(line => line.RightLineNumber == 12 && line.LineType == DiffLineType.Header);
         service.TextMarkers.Should().ContainSingle(marker => marker.ForeColor.HasValue);
+        service.GetGrepLineNum(rowIndexInText: 1, next: true).Should().Be(3);
+        service.GetGrepLineNum(rowIndexInText: 4, next: false).Should().Be(2);
     }
 
     [AvaloniaTest]
@@ -71,6 +92,62 @@ public sealed class EditorCoreTests
         rightColumnStart.Should().Be(0);
         service.LinesInfo.DiffLines.Values.Should().ContainSingle(line => line.LineType == DiffLineType.Header);
         service.TextMarkers.Should().ContainSingle(marker => marker.ForeColor == Color.FromArgb(4, 5, 6));
+    }
+
+    [AvaloniaTest]
+    public void Difftastic_highlighter_should_match_original_sample_line_contracts()
+    {
+        string sample = Path.Combine(TestContext.CurrentContext.TestDirectory, "Editor", "Diff", "SampleDifftastic.diff");
+        string text = File.ReadAllText(sample);
+        TextEditor editor = new();
+        DiffViewerLineNumberControl margin = new(editor);
+        EnvironmentAbstraction environment = new();
+        string? oldWidth = environment.GetEnvironmentVariable("DFT_WIDTH");
+        bool oldReverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        try
+        {
+            environment.SetEnvironmentVariable("DFT_WIDTH", "200");
+            AppSettings.ReverseGitColoring.Value = false;
+
+            DifftasticHighlightService service = new(ref text, margin, out int rightColumnStart);
+
+            rightColumnStart.Should().Be(97);
+            service.LinesInfo.DiffLines[5].Should().Match<DiffLineInfo>(line =>
+                line.LeftLineNumber == DiffLineInfo.NotApplicableLineNum
+                && line.RightLineNumber == 16
+                && line.LineType == DiffLineType.PlusRight);
+            service.LinesInfo.DiffLines[22].Should().Match<DiffLineInfo>(line =>
+                line.LeftLineNumber == 51
+                && line.RightLineNumber == DiffLineInfo.NotApplicableLineNum
+                && line.LineType == DiffLineType.MinusLeft);
+            service.LinesInfo.DiffLines[33].Should().Match<DiffLineInfo>(line =>
+                line.LeftLineNumber == 109
+                && line.RightLineNumber == 114
+                && line.LineType == DiffLineType.MinusPlus);
+        }
+        finally
+        {
+            AppSettings.ReverseGitColoring.Value = oldReverseGitColoring;
+            environment.SetEnvironmentVariable("DFT_WIDTH", oldWidth);
+        }
+    }
+
+    [Test]
+    public void Diff_segment_primitives_should_preserve_zero_based_line_contracts()
+    {
+        TextDocument document = new("first\nsecond");
+        LineSegmentGetter getter = new();
+        ISegment first = getter.GetSegment(document, lineNumber: 0);
+        ISegment second = getter.GetSegment(document, lineNumber: 1);
+        Segment segment = new() { Offset = 4, Length = 7 };
+        TextMarker marker = new(offset: 4, length: 7, default);
+
+        first.Offset.Should().Be(0);
+        first.Length.Should().Be(5);
+        second.Offset.Should().Be(6);
+        second.Length.Should().Be(6);
+        segment.EndOffset.Should().Be(11);
+        marker.EndOffset.Should().Be(10);
     }
 
     [AvaloniaTest]

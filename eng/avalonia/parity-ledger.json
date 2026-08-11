@@ -1,4 +1,4 @@
-{
+﻿{
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
   "analyzedCommit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
@@ -16578,26 +16578,28 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.AnsiEscapeUtilities.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 18,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 0,
+          "note": "The post-P8.6d.2a inventory reports no structural, member, or comment difference for the mapped type."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.AnsiEscapeUtilities.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 17,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 0,
+          "note": "The exact decoder inventory plus focused palette, range, and resolved-color tests close the scoped functional contract."
         },
         "visual": {
           "status": "notApplicable",
@@ -16609,13 +16611,16 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.AnsiEscapeUtilities.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/diff/findings.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Focused tests verify the palette and resolved ARGB range contract. Exact light/dark/custom rendered ANSI comparison remains P8.6d.3 work."
         },
         "behavioralState": {
           "status": "unverified",
@@ -17099,25 +17104,27 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.DifftasticHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 10,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 1,
+          "note": "The sole retained finding is the required AvaloniaEdit TextDocument signature replacing the original editor's IDocument."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.DifftasticHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 9,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 0,
+          "note": "Focused sample coverage proves the original DFT_WIDTH boundary, marker accumulation, side-by-side line numbers, and PlusRight/MinusLeft/MinusPlus classifications."
         },
         "visual": {
           "status": "notApplicable",
@@ -17129,13 +17136,16 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.DifftasticHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/diff/findings.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Focused tests verify foreground-based semantic classification. Exact light/dark/custom rendered Difftastic colors remain P8.6d.3 work."
         },
         "behavioralState": {
           "status": "unverified",
@@ -17164,25 +17174,27 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.GrepHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 22,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 1,
+          "note": "The sole retained finding is the required AvaloniaEdit TextDocument signature replacing the original editor's IDocument."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.GrepHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 21,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 0,
+          "note": "Focused coverage proves original prefix stripping, semantic line mapping, ANSI marker accumulation, and forward/backward grep navigation."
         },
         "visual": {
           "status": "notApplicable",
@@ -17194,13 +17206,16 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.GrepHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/diff/findings.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "Focused tests verify resolved foreground marker output. Exact light/dark/custom rendered grep colors remain P8.6d.3 work."
         },
         "behavioralState": {
           "status": "unverified",
@@ -17228,26 +17243,28 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.HighlightInfo.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "note": "The struct-aware inventory reports no structural, member, or comment difference for the mapped type."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.HighlightInfo.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "note": "The exact mapped struct contract and focused resolved-color/range tests close the scoped functional contract."
         },
         "visual": {
           "status": "notApplicable",
@@ -17259,13 +17276,16 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.HighlightInfo.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/diff/findings.json"
+          ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "The exact resolved-color carrier contract is source-verified. Exact light/dark/custom rendered use remains P8.6d.3 work."
         },
         "behavioralState": {
           "status": "unverified",
@@ -17293,26 +17313,28 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.ITextHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 2,
+          "note": "The required TextDocument-for-IDocument signature produces one member finding and moves the unchanged documentation anchor, producing one comment finding."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.ITextHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "note": "The document-type substitution preserves the same highlighting and search contract and is exercised through the concrete service tests."
         },
         "visual": {
           "status": "notApplicable",
@@ -17359,25 +17381,27 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.LineSegmentGetter.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 3,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 1,
+          "note": "The sole retained finding is the required AvaloniaEdit TextDocument signature replacing the original editor's IDocument."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.LineSegmentGetter.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 2,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 0,
+          "note": "Focused tests prove that the AvaloniaEdit adapter preserves the original zero-based line contract and returned offsets and lengths."
         },
         "visual": {
           "status": "notApplicable",
@@ -17618,26 +17642,28 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.Segment.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "findingCount": 1,
+          "note": "AvaloniaEdit's ISegment contract requires the derived EndOffset property; Offset and Length retain the original member order and shape."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.Segment.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "note": "Focused tests prove the same mutable offset/length range with the framework-required derived endpoint."
         },
         "visual": {
           "status": "notApplicable",
@@ -17684,25 +17710,27 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.TextHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 6,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 1,
+          "note": "The sole retained finding is the required AvaloniaEdit TextDocument signature replacing the original editor's IDocument."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "7006107d51d08e626a958256ae6ad7f0a1c32435",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2a/types/GitUI.Editor.Diff.TextHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6d/d2a/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 5,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 0,
+          "note": "The singleton no-highlighting behavior and unexpected-search guard retain the original contract through the AvaloniaEdit document type."
         },
         "visual": {
           "status": "notApplicable",
