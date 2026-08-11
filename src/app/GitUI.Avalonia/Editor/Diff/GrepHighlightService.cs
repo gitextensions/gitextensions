@@ -16,8 +16,8 @@ public partial class GrepHighlightService : DiffHighlightService
     private const string _grepResultKind_Separator = "--";
     private const string _grepResultKind_Unknown = "";
 
-    private readonly List<TextMarker> _textMarkers = [];
-    private DiffLinesInfo _diffLinesInfo = new();
+    private new readonly List<TextMarker> _textMarkers = [];
+    private new DiffLinesInfo _diffLinesInfo = new();
 
     [GeneratedRegex(@"^(?<line>\d+)(?<kind>:|.)(?<text>.*)$", RegexOptions.ExplicitCapture)]
     private static partial Regex GrepLineRegex { get; }

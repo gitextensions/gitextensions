@@ -1,5 +1,6 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using AvaloniaEdit.Document;
+using GitExtensions.Extensibility;
 
 namespace GitUI.Editor.Diff;
 
@@ -10,14 +11,15 @@ internal static class LinesMatcher
         IReadOnlyList<ISegment> removedLines,
         IReadOnlyList<ISegment> addedLines)
     {
-        int combinations = removedLines.Count * addedLines.Count;
-        if (combinations < 1)
+        int numberOfCombinations = removedLines.Count * addedLines.Count;
+        if (numberOfCombinations < 1)
         {
             yield break;
         }
 
+        // Do not try to match more lines than usually visible at the same time, because it costs O(n^2) operations
         const int maxCombinations = 100 * 100;
-        if (combinations == 1 || combinations > maxCombinations)
+        if (numberOfCombinations == 1 || numberOfCombinations > maxCombinations)
         {
             for (int index = 0; index < Math.Min(removedLines.Count, addedLines.Count); ++index)
             {
@@ -61,23 +63,16 @@ internal static class LinesMatcher
 
     private static (int RemovedIndex, int AddedIndex) FindBestMatch(LineData[] removed, LineData[] added)
     {
-        LineData? longestRemoved = null;
-        int longestAddedIndex = -1;
-        foreach (LineData removedLine in removed)
+        // first, search longest match of trimmed lines, i.e. detect indented lines
+        (LineData longestMatchingRemoved, int matchingAddedIndex)
+            = removed.Select(r => (r, addedIndex: added.IndexOf(a => a.Trimmed == r.Trimmed)))
+                     .MaxBy(pair => pair.addedIndex < 0 ? -1 : pair.r.Trimmed.Length);
+        if (matchingAddedIndex >= 0)
         {
-            int addedIndex = Array.FindIndex(added, addedLine => addedLine.Trimmed == removedLine.Trimmed);
-            if (addedIndex >= 0 && (longestRemoved is null || removedLine.Trimmed.Length > longestRemoved.Value.Trimmed.Length))
-            {
-                longestRemoved = removedLine;
-                longestAddedIndex = addedIndex;
-            }
+            return (Array.IndexOf(removed, longestMatchingRemoved), matchingAddedIndex);
         }
 
-        if (longestRemoved is not null)
-        {
-            return (Array.IndexOf(removed, longestRemoved.Value), longestAddedIndex);
-        }
-
+        // then match lines whose common words have the maximum summed-up length
         int bestRemovedIndex = 0;
         int bestAddedIndex = 0;
         float bestScore = -1;
@@ -137,8 +132,13 @@ internal static class LinesMatcher
             : (commonWord, removedSubwords.First(pair => pair.Word == commonWord).StartIndex, addedStart);
     }
 
+    /// <summary>
+    ///  Iterates all combinations of indices - starting with (0,0), (1,0), (0,1), (2,0), (1,1), ...
+    /// </summary>
+    /// <returns>an enumeration of the index pairs</returns>
     internal static IEnumerable<(int FirstIndex, int SecondIndex)> GetAllCombinations(int firstEnd, int secondEnd)
     {
+        // upper left half including prinicipal diagonal
         for (int diagonalIndex = 0; diagonalIndex < firstEnd; ++diagonalIndex)
         {
             int diagonalEnd = Math.Min(diagonalIndex + 1, secondEnd);
@@ -148,6 +148,7 @@ internal static class LinesMatcher
             }
         }
 
+        // lower right half
         for (int diagonalIndex = 1; diagonalIndex < secondEnd; ++diagonalIndex)
         {
             int diagonalEnd = Math.Min(firstEnd + diagonalIndex, secondEnd);
@@ -175,6 +176,7 @@ internal static class LinesMatcher
                 previousUpper = currentUpper;
                 if (currentUpper)
                 {
+                    // emit previous word, but no single '_'
                     if (!(index == 1 && !char.IsLetterOrDigit(word[0])))
                     {
                         yield return (word[start..index], start);
@@ -184,6 +186,7 @@ internal static class LinesMatcher
                 }
             }
 
+            // end word at '_', but join preceding '_' to first word
             if (index > 0 && !char.IsLetterOrDigit(word[index]))
             {
                 if (start < index && char.IsLetterOrDigit(word[index - 1]))
@@ -213,52 +216,66 @@ internal static class LinesMatcher
         }
     }
 
-    internal static IEnumerable<(string Word, int StartIndex)> GetWords(string text)
+    internal static IEnumerable<(string Word, int StartIndex)> GetWords(string text) => GetWords(text, IsWordChar);
+
+    internal static IEnumerable<(string Word, int StartIndex)> GetWords(string text, Func<char, bool> isWordChar)
     {
+        int length = text.Length;
         int start = 0;
-        while (start < text.Length)
+        while (true)
         {
-            while (start < text.Length && !IsWordChar(text[start]))
+            for (; ; ++start)
             {
-                ++start;
+                if (start >= length)
+                {
+                    // no (more) word found, exit function
+                    yield break;
+                }
+
+                if (isWordChar(text[start]))
+                {
+                    break;
+                }
             }
 
-            int end = start;
-            while (end < text.Length && IsWordChar(text[end]))
-            {
-                ++end;
-            }
+            // start of word found
 
-            if (start < end)
+            for (int end = start + 1; ; ++end)
             {
-                yield return (text[start..end], start);
+                if (end >= length || !isWordChar(text[end]))
+                {
+                    // word end found, yield and find next word
+                    yield return (text[start..end], start);
+                    start = end + 1;
+                    break;
+                }
             }
-
-            start = end + 1;
         }
     }
 
-    private static bool IsWordChar(char character) => char.IsLetterOrDigit(character) || character == '_';
+    // Cross-platform framework constraint: the original TextUtilities helper belongs to WinForms.
+    internal static bool IsWordChar(char c) => char.IsLetterOrDigit(c) || c == '_';
 
-    private static string SelectWord((string Word, int StartIndex) pair) => pair.Word;
+    internal static string SelectWord((string Word, int StartIndex) pair) => pair.Word;
+
+    internal static int SelectStartIndex((string Word, int StartIndex) pair) => pair.StartIndex;
 
     [DebuggerDisplay("{Line.Offset}: {Trimmed}")]
     private readonly struct LineData
     {
-        public LineData(ISegment line, string text)
+        internal ISegment Line { get; }
+        internal string Full { get; }
+        internal string Trimmed { get; }
+        internal IReadOnlySet<string> Words { get; }
+        internal int WordsTotalLength { get; }
+
+        internal LineData(ISegment line, string text)
         {
             Line = line;
+            Full = text;
             Trimmed = text.Trim();
             Words = GetWords(Trimmed).Select(SelectWord).ToHashSet();
             WordsTotalLength = Words.Sum(word => word.Length);
         }
-
-        internal ISegment Line { get; }
-
-        internal string Trimmed { get; }
-
-        internal IReadOnlySet<string> Words { get; }
-
-        internal int WordsTotalLength { get; }
     }
 }

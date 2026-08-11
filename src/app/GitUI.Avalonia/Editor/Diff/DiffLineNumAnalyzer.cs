@@ -1,5 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using AvaloniaEdit.Document;
+using GitCommands;
+using GitExtensions.Extensibility;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 
 namespace GitUI.Editor.Diff;
 
@@ -8,13 +12,10 @@ public partial class DiffLineNumAnalyzer
     [GeneratedRegex(@"\-(?<leftStart>\d+)(?:,(?<leftCount>\d*))?\s+\+(?<rightStart>\d+)(?:,(?<rightCount>\d*))?", RegexOptions.ExplicitCapture)]
     private static partial Regex DiffRegex { get; }
 
-    internal static DiffLinesInfo Analyze(
-        string text,
-        IReadOnlyList<DiffTextMarker> allTextMarkers,
-        bool isCombinedDiff,
-        bool isGitWordDiff = false)
+    public static DiffLinesInfo Analyze(string text, IReadOnlyList<TextMarker> allTextMarkers, bool isCombinedDiff, bool isGitWordDiff = false)
     {
         DiffLinesInfo result = new();
+        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
         int leftLineNumber = DiffLineInfo.NotApplicableLineNum;
         int rightLineNumber = DiffLineInfo.NotApplicableLineNum;
         bool foundHunk = false;
@@ -47,24 +48,28 @@ public partial class DiffLineNumAnalyzer
 
             if (!foundHunk)
             {
+                // No marker to add
                 continue;
             }
 
-            IReadOnlyList<DiffTextMarker> lineMarkers =
+            List<TextMarker> lineMarkers =
                 [.. allTextMarkers.Where(marker => marker.Offset < line.EndOffset && marker.EndOffset >= line.Offset)];
 
             DiffLineInfo info;
             if (isCombinedDiff)
             {
+                // left line is from two documents, so undefined
                 info = CreateCombinedInfo(line, lineText, ref rightLineNumber);
             }
             else if (lineText.StartsWith('\\'))
             {
+                // git-diff has inserted this line, present it as a header
+                // The only known string is GitModule.NoNewLineAtTheEnd
                 info = CreateInfo(line, DiffLineType.Header);
             }
             else if (isGitWordDiff)
             {
-                info = CreateWordDiffInfo(line, lineMarkers, ref leftLineNumber, ref rightLineNumber);
+                info = CreateWordDiffInfo(line, lineText, lineMarkers, ref leftLineNumber, ref rightLineNumber);
             }
             else
             {
@@ -75,6 +80,111 @@ public partial class DiffLineNumAnalyzer
         }
 
         return result;
+
+        // git-diff colors moved lines in other than red green
+        // However, Git may mark trailing whitespaces (diff.colormovedws is ignored)
+        bool IsMovedLine(List<TextMarker> textMarkers, DiffLineInfo meta)
+            => textMarkers.Count > 0
+                && !MarkerColorMatch(textMarkers[0], meta.LineType)
+                && (textMarkers.Count <= 1 || !MarkerColorMatch(textMarkers[^1], meta.LineType) || text.AsSpan()[textMarkers[^1].Offset..textMarkers[^1].EndOffset].IsWhiteSpace())
+                && (textMarkers.Count <= 2 || !textMarkers[1..^1].All(m => MarkerColorMatch(m, meta.LineType)));
+
+        bool IsGitWordMatch(DiffLineType lineType, string lineText, DocumentLine line, List<TextMarker> textMarkers)
+        {
+            // Heuristics (or wild guessing): For GitWordDiff find if the line is exclusive (otherwise DiffLineType.MinusPlus).
+            // If the marker covers the line this should be true.
+            // Git output is impossible to parse, some guesses are done.
+            // Whitespace only lines are still incorrect (no marker at all in Git),
+            // as well as some other situations.
+
+            int firstNonWhiteSpace = lineText.Length - lineText.AsSpan().TrimStart().Length;
+
+            return textMarkers.Count == 1
+
+                    // start may be indented, if a new block of changes starts with white spaces
+                    && (textMarkers[0].Offset <= line.Offset || (firstNonWhiteSpace > 0 && textMarkers[0].Offset <= line.Offset + firstNonWhiteSpace))
+
+                    // Compensate length->ending and remove the trailing newline chars (no check for \r\n vs \n)
+                    && (textMarkers[0].EndOffset >= line.Offset + line.Length - 3)
+
+                    // Assume the user has not overridden colors
+                    && MarkerColorMatch(textMarkers[0], lineType);
+        }
+
+        bool MarkerColorMatch(TextMarker textMarker, DiffLineType lineType)
+        {
+            // The expected marker color for a line type, for heuristics.
+
+            return lineType is (DiffLineType.Minus or DiffLineType.MinusLeft)
+                ? (reverseGitColoring
+                    ? textMarker.Color == AppColor.AnsiTerminalRedBackNormal.GetThemeColor()
+                    : textMarker.ForeColor == AppColor.AnsiTerminalRedForeNormal.GetThemeColor())
+                : (reverseGitColoring
+                    ? textMarker.Color == AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()
+                    : textMarker.ForeColor == AppColor.AnsiTerminalGreenForeNormal.GetThemeColor());
+        }
+
+        DiffLineInfo CreateWordDiffInfo(
+            DocumentLine line,
+            string lineText,
+            List<TextMarker> lineMarkers,
+            ref int currentLeftLineNumber,
+            ref int currentRightLineNumber)
+        {
+            bool isRemoved = IsGitWordMatch(DiffLineType.MinusLeft, lineText, line, lineMarkers);
+            bool isAdded = IsGitWordMatch(DiffLineType.PlusRight, lineText, line, lineMarkers);
+            DiffLineType type = isRemoved
+                ? DiffLineType.MinusLeft
+                : isAdded
+                    ? DiffLineType.PlusRight
+                    : lineMarkers.Count > 0
+                        ? DiffLineType.MinusPlus
+                        : DiffLineType.Context;
+
+            DiffLineInfo info = CreateInfo(line, type);
+            if (isRemoved || !isAdded)
+            {
+                info.LeftLineNumber = currentLeftLineNumber++;
+            }
+
+            if (isAdded || !isRemoved)
+            {
+                info.RightLineNumber = currentRightLineNumber++;
+            }
+
+            return info;
+        }
+
+        DiffLineInfo CreateOrdinaryInfo(
+            DocumentLine line,
+            string lineText,
+            List<TextMarker> lineMarkers,
+            ref int currentLeftLineNumber,
+            ref int currentRightLineNumber)
+        {
+            if (lineText.StartsWith("-", StringComparison.Ordinal))
+            {
+                DiffLineInfo removed = CreateInfo(line, DiffLineType.Minus);
+                removed.LeftLineNumber = currentLeftLineNumber++;
+                removed.LineSegment = new SimpleSegment(line.Offset, line.Length);
+                removed.IsMovedLine = IsMovedLine(lineMarkers, removed);
+                return removed;
+            }
+
+            if (lineText.StartsWith("+", StringComparison.Ordinal))
+            {
+                DiffLineInfo added = CreateInfo(line, DiffLineType.Plus);
+                added.RightLineNumber = currentRightLineNumber++;
+                added.LineSegment = new SimpleSegment(line.Offset, line.Length);
+                added.IsMovedLine = IsMovedLine(lineMarkers, added);
+                return added;
+            }
+
+            DiffLineInfo context = CreateInfo(line, DiffLineType.Context);
+            context.LeftLineNumber = currentLeftLineNumber++;
+            context.RightLineNumber = currentRightLineNumber++;
+            return context;
+        }
     }
 
     private static bool TryCreateHunkInfo(
@@ -117,67 +227,6 @@ public partial class DiffLineNumAnalyzer
         }
 
         return info;
-    }
-
-    private static DiffLineInfo CreateWordDiffInfo(
-        DocumentLine line,
-        IReadOnlyList<DiffTextMarker> lineMarkers,
-        ref int leftLineNumber,
-        ref int rightLineNumber)
-    {
-        bool hasRemoved = lineMarkers.Any(marker => marker.Kind is DiffMarkerKind.Removed or DiffMarkerKind.MovedRemoved);
-        bool hasAdded = lineMarkers.Any(marker => marker.Kind is DiffMarkerKind.Added or DiffMarkerKind.MovedAdded);
-        DiffLineType type = (hasRemoved, hasAdded) switch
-        {
-            (true, true) => DiffLineType.MinusPlus,
-            (true, false) => DiffLineType.MinusLeft,
-            (false, true) => DiffLineType.PlusRight,
-            _ => DiffLineType.Context,
-        };
-
-        DiffLineInfo info = CreateInfo(line, type);
-        if (hasRemoved || !hasAdded)
-        {
-            info.LeftLineNumber = leftLineNumber++;
-        }
-
-        if (hasAdded || !hasRemoved)
-        {
-            info.RightLineNumber = rightLineNumber++;
-        }
-
-        return info;
-    }
-
-    private static DiffLineInfo CreateOrdinaryInfo(
-        DocumentLine line,
-        string lineText,
-        IReadOnlyList<DiffTextMarker> lineMarkers,
-        ref int leftLineNumber,
-        ref int rightLineNumber)
-    {
-        if (lineText.StartsWith("-", StringComparison.Ordinal))
-        {
-            DiffLineInfo removed = CreateInfo(line, DiffLineType.Minus);
-            removed.LeftLineNumber = leftLineNumber++;
-            removed.LineSegment = new SimpleSegment(line.Offset, line.Length);
-            removed.IsMovedLine = lineMarkers.Any(marker => marker.Kind == DiffMarkerKind.MovedRemoved);
-            return removed;
-        }
-
-        if (lineText.StartsWith("+", StringComparison.Ordinal))
-        {
-            DiffLineInfo added = CreateInfo(line, DiffLineType.Plus);
-            added.RightLineNumber = rightLineNumber++;
-            added.LineSegment = new SimpleSegment(line.Offset, line.Length);
-            added.IsMovedLine = lineMarkers.Any(marker => marker.Kind == DiffMarkerKind.MovedAdded);
-            return added;
-        }
-
-        DiffLineInfo context = CreateInfo(line, DiffLineType.Context);
-        context.LeftLineNumber = leftLineNumber++;
-        context.RightLineNumber = rightLineNumber++;
-        return context;
     }
 
     private static DiffLineInfo CreateInfo(DocumentLine line, DiffLineType type)
