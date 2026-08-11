@@ -14,7 +14,6 @@
                            FontSize="{DynamicResource GitExtensionsUiFontSize}"
                            FontStyle="{DynamicResource GitExtensionsUiFontStyle}"
                            FontWeight="{DynamicResource GitExtensionsUiFontWeight}"
-                           Text=""
                            TextWrapping="NoWrap"
                            VerticalAlignment="Top"
                            LinkClicked="rtbRevisionHeader_LinkClicked"

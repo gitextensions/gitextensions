@@ -127,6 +127,7 @@ public sealed partial class FormBrowse : GitModuleForm
         ManageWorkTrees = 49,
         OpenRepo = 45,
         CloseRepository = 15,
+        AddNotes = 8,
 
         // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
         // so refresh joins the same command dispatcher without changing persisted upstream IDs.
@@ -1807,6 +1808,19 @@ public sealed partial class FormBrowse : GitModuleForm
                 outputHistoryPanelHost);
     }
 
+    private void AddNotes()
+    {
+        // Avalonia exposes the current row directly instead of WinForms' GetSelectedRevisionOrDefault helper.
+        GitRevision? revision = RevisionGrid.SelectedRevision;
+        if (revision?.IsArtificial is not false)
+        {
+            return;
+        }
+
+        Module.EditNotes(revision.ObjectId);
+        FillCommitInfo(revision);
+    }
+
     protected override bool ExecuteCommand(int command)
     {
         switch ((Command)command)
@@ -1855,6 +1869,7 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.FocusPrevTab: FocusNextWorkspaceTab(forward: false); break;
             case Command.Refresh: RefreshToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.AddNotes: AddNotes(); break;
             case Command.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.QuickFetch: QuickFetch(); break;
             case Command.PullOrFetch: PullToolStripMenuItemClick(this, EventArgs.Empty); break;
