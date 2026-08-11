@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using GitCommands;
@@ -279,7 +279,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         }
         else
         {
-            DiffFiles.FocusFiles();
+            DiffFiles.Focus();
         }
     }
 
@@ -430,7 +430,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 
     private void BlameFile()
     {
-        GitItemStatus? item = DiffFiles.SelectedItem;
+        GitItemStatus? item = DiffFiles.SelectedItem?.Item;
         if (item is null || !item.IsTracked)
         {
             return;

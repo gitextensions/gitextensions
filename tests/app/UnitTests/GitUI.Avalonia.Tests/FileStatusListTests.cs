@@ -1,9 +1,10 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
@@ -46,6 +47,138 @@ public sealed class FileStatusListTests
         control.GitItemFilteredStatuses.Should().Equal(renamed, documentation, rangeDiff);
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-active");
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-invalid");
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_apply_filename_only_filtering_like_the_original()
+    {
+        TruncatePathMethod original = AppSettings.TruncatePathMethod;
+        try
+        {
+            FileStatusList control = new();
+            GitItemStatus item = new("directory/match.cs") { IsChanged = true, IsTracked = true };
+            control.SetDiffs([item]);
+
+            AppSettings.TruncatePathMethod = TruncatePathMethod.FileNameOnly;
+            control.SetFilter("directory").Should().Be(0);
+            control.SetFilter("match").Should().Be(1);
+
+            AppSettings.TruncatePathMethod = TruncatePathMethod.TrimStart;
+            control.SetFilter("directory").Should().Be(1);
+        }
+        finally
+        {
+            AppSettings.TruncatePathMethod = original;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FileStatusList_should_throttle_selection_changes_and_restore_focus_enter_contract()
+    {
+        FileStatusList control = new() { SelectionMode = SelectionMode.Multiple };
+        GitItemStatus first = new("first.txt") { IsChanged = true, IsTracked = true };
+        GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [first, second]);
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        TextBox before = new();
+        Window window = new()
+        {
+            Width = 320,
+            Height = 200,
+            Content = new StackPanel { Children = { before, control } },
+        };
+        int selectionChanges = 0;
+        List<bool> enterRoutes = [];
+        control.SelectedIndexChanged += (_, _) => selectionChanges++;
+        control.Enter += (_, e) => enterRoutes.Add(e.ByMouse);
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            await Task.Delay(TimeSpan.FromMilliseconds(FileStatusList.SelectedIndexChangeThrottleDuration.TotalMilliseconds * 2));
+            Dispatcher.UIThread.RunJobs();
+            selectionChanges = 0;
+
+            accessor.List.SelectedIndex = 1;
+            accessor.List.SelectedIndex = 0;
+            selectionChanges.Should().Be(0);
+
+            await Task.Delay(TimeSpan.FromMilliseconds(FileStatusList.SelectedIndexChangeThrottleDuration.TotalMilliseconds * 2));
+            Dispatcher.UIThread.RunJobs();
+            selectionChanges.Should().Be(1);
+
+            before.Focus();
+            Dispatcher.UIThread.RunJobs();
+            control.Focus();
+            Dispatcher.UIThread.RunJobs();
+
+            enterRoutes.Should().Equal(false);
+            control.Focused.Should().BeTrue();
+            control.FocusedItem.Should().Be(control.SelectedItem);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_restore_original_selection_contract_and_first_group_scope()
+    {
+        FileStatusList control = new() { GroupByRevision = true, SelectionMode = SelectionMode.Multiple };
+        GitRevision revision = new(ObjectId.Random());
+        GitItemStatus first = new("first.txt") { IsChanged = true, IsTracked = true };
+        GitItemStatus second = new("second.txt") { IsChanged = true, IsTracked = true };
+        control.SetDiffs(
+        [
+            new FileStatusWithDescription(null, revision, "First", [first]),
+            new FileStatusWithDescription(null, revision, "Second", [second]),
+        ],
+        isFileTreeMode: false);
+
+        control.SelectFileOrFolder(RelativePath.From(second.Name), firstGroupOnly: true).Should().BeFalse();
+        control.SelectFileOrFolder(RelativePath.From(second.Name)).Should().BeTrue();
+        control.SelectedItem.Should().NotBeNull();
+        control.SelectedItem!.Item.Should().BeSameAs(second);
+
+        control.SelectedGitItems = [first];
+        control.SelectedGitItems.Should().Equal(first);
+        control.SelectedItem!.Item.Should().BeSameAs(first);
+
+        control.SetSelectionFilter("second").Should().Be(1);
+        control.SelectedGitItems.Should().Equal(second);
+        control.SetSelectionFilter("missing").Should().Be(0);
+        control.SelectedGitItems.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_should_preserve_children_while_delaying_visual_expansion()
+    {
+        FileStatusList control = new() { GroupByRevision = true };
+        GitRevision revision = new(ObjectId.Random());
+        control.SetDiffs(
+        [
+            new FileStatusWithDescription(
+                null,
+                revision,
+                "Files",
+                [new GitItemStatus("one/two/three.txt") { IsChanged = true, IsTracked = true }]),
+        ],
+        isFileTreeMode: false);
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        int actions = 0;
+
+        accessor.RestoreDiffTreeChildrenForTesting(delayExpansion: false, () => actions++);
+        (int expandedDescendants, bool allExpanded) = accessor.GetDiffTreeExpansionForTesting();
+        expandedDescendants.Should().BeGreaterThan(2);
+        allExpanded.Should().BeTrue();
+
+        accessor.RestoreDiffTreeChildrenForTesting(delayExpansion: true, () => actions++);
+        (int delayedDescendants, bool delayedAllExpanded) = accessor.GetDiffTreeExpansionForTesting();
+        delayedDescendants.Should().Be(expandedDescendants);
+        delayedAllExpanded.Should().BeFalse();
+        actions.Should().Be(2);
     }
 
     [AvaloniaTest]
@@ -291,6 +424,8 @@ public sealed class FileStatusListTests
         translation.Received(1).AddTranslationItem(nameof(FileStatusList), "NoFiles", "Text", "No changes");
         translation.Received(1).AddTranslationItem(nameof(FileStatusList), "tsmiStageFile", "Text", "&Stage selected");
         translation.Received(1).AddTranslationItem(nameof(FileStatusList), "_collapseAll", "Text", "C&ollapse all");
+        translation.Received(1).AddTranslationItem(nameof(FileStatusList), "_saveFileFilterAllFiles", "Text", "All files");
+        translation.Received(1).AddTranslationItem(nameof(FileStatusList), "_saveFileFilterCurrentFormat", "Text", "Current format");
 
         string[] emittedKeys = translation.ReceivedCalls()
             .Where(call => call.GetMethodInfo().Name == nameof(ITranslation.AddTranslationItem))

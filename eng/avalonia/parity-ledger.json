@@ -28374,25 +28374,28 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 622,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 21,
+          "note": "The family inventory is fully classified without suppression. Remaining product member debt is the 21 owner-draw/layout/pointer/icon/state members assigned to P8.6c.3; the context-menu source differences are documented Avalonia menu/event representation."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
           ],
           "platforms": [],
-          "findingCount": 1335,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 50,
+          "note": "P8.6c.2c restores reset descriptions/artificial-commit semantics, move retry and error behavior, translated save filters, submodule default behavior, original-named action handlers, and the difftool overload/comment contract. The 50 retained product findings are visual/state work owned by P8.6c.3."
         },
         "visual": {
           "status": "notApplicable",
@@ -28439,25 +28442,27 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 622,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 0,
+          "note": "The WinForms placeholder-node and BeforeExpand implementation is represented by Avalonia's retained data children plus lazy visual containers. That explicit framework representation remains visible in the family inventory."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 1335,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 0,
+          "note": "Focused tests prove descendants stay attached in the data tree while expand/collapse changes only the native visual expansion state, preserving the original delayed-expansion contract without duplicating WinForms placeholder nodes."
         },
         "visual": {
           "status": "notApplicable",
@@ -29058,25 +29063,28 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-10",
-          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2a.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 629,
-          "note": "P8.6c.2a restores original toolbar member and handler names where implemented; 629 family member findings remain for P8.6c.2b/c review and framework-representation justification."
+          "findingCount": 21,
+          "note": "P8.6c.2c classifies the complete family inventory without suppression. Named AXAML controls, MenuItem/Header, native events, and partial placement are documented representation differences; 21 product-facing draw/layout/icon/state members remain P8.6c.3 debt."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-10",
-          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2a.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
           ],
           "platforms": [],
-          "findingCount": 1303,
-          "note": "P8.6c.2a restores git-grep option/mode routing, toolbar-item visibility persistence, and settings opening behavior. The family inventory falls from 1,329 to 1,303 findings; context-menu and core list/tree closure remain P8.6c.2b/c."
+          "findingCount": 50,
+          "note": "P8.6c.2c restores the selection-filter contract and completes the core source review. Remaining real findings concern toolbar/list rendering and interaction states and are assigned to P8.6c.3."
         },
         "visual": {
           "status": "notApplicable",
@@ -29201,78 +29209,81 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-10",
-          "commit": "59a36ff794de95b863a74efc7a290ae79e7d8cf1",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2b.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 641,
-          "note": "P8.6c.2b restores original context-menu members and ordering where Avalonia permits; 641 family member findings remain for P8.6c.2c review and framework-representation justification."
+          "findingCount": 21,
+          "note": "P8.6c.2c restores or tests the core list/tree source contract and classifies every remaining family finding without suppression. Of 648 member findings, 627 are documented Designer/AXAML, native event/menu/data-node, partial-placement, or framework-signature representation differences; 21 owner-draw, scaling, pointer-drag, icon, and submodule-presentation members remain real P8.6c.3 debt."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-10",
-          "commit": "59a36ff794de95b863a74efc7a290ae79e7d8cf1",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2b.json"
+            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
           ],
           "platforms": [],
-          "findingCount": 1273,
-          "note": "P8.6c.2b restores the shared RevisionDiffController state rules, dynamic entries, action handlers, focus-gated keyboard routes, reset/difftool semantics, tree scope, and Visual Studio route. The family inventory falls from 1,303 to 1,273 findings; remaining core source and representation closure stays P8.6c.2c."
+          "findingCount": 50,
+          "note": "P8.6c.2c restores selection/focus/filter/delayed-expansion contracts, two-stage git-grep calculation, loading, settings rebinding, revision descriptions, reset/move behavior, and affected consumer routes. The family inventory falls from 1,273 to 1,227; 1,177 are explicitly justified framework-representation findings, while 50 product-facing owner-draw/layout/pointer/icon/state findings remain assigned to P8.6c.3."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-10",
-          "commit": "59a36ff794de95b863a74efc7a290ae79e7d8cf1",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c2b/diff-100/",
-            "eng/avalonia/parity-evidence/P8.6c/c2b/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6c/c2c/diff-125/",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 8539,
-          "note": "The shared-repository 100% context/reset/difftool matrix joins six light/dark states and retains 8,539 findings, including three explicit custom-theme reference availability findings. Exact popup geometry and rendering remain P8.6c.3."
+          "findingCount": 7098,
+          "note": "The shared-repository native-125% normal/focused/disabled matrix joins all nine light/dark/custom states and retains 7,098 diagnostics. Toolbar spacing, icon and row metrics, tree geometry, and selection rendering remain P8.6c.3."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-10",
-          "commit": "59a36ff794de95b863a74efc7a290ae79e7d8cf1",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c2b/diff-100/",
-            "eng/avalonia/parity-evidence/P8.6c/c2b/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6c/c2c/diff-125/",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 8539,
-          "note": "Light and dark popup states retain the restored context-menu contract. The WinForms custom-theme popup screen grab was explicitly unsupported, and exact resolved-color and rendering parity remains open in P8.6c.3."
+          "findingCount": 7098,
+          "note": "All nine native-125% light/dark/custom core-state pairs are available. Exact resolved colors, focused/unfocused selection treatment, and remaining theme rendering deltas remain open in P8.6c.3."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-10",
-          "commit": "59a36ff794de95b863a74efc7a290ae79e7d8cf1",
+          "verifiedOn": "2026-08-11",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c2b/winforms-100/",
-            "eng/avalonia/parity-evidence/P8.6c/c2b/avalonia-100/",
-            "eng/avalonia/parity-evidence/P8.6c/c2b/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6c/c2c/winforms-125/",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/avalonia-125/",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
           ],
           "platforms": [
             "windows"
           ],
           "findingCount": 0,
-          "note": "A verified common fixture drives context, reset, and difftool popup states; focused tests cover dynamic visibility, action and keyboard routes, selected-subtree behavior, and derived-menu rendering. The complete Commit, Stash, revision Diff, and File tree walk remains P8.6c.3."
+          "note": "A verified common fixture drives normal, focused, and disabled states in all three themes; 79 focused tests cover the restored selection, focus, filtering, expansion, loading, git-grep, context action, and consumer routes. The complete Commit, Stash, revision Diff, and File tree walk remains P8.6c.3."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-11",
-          "commit": "59a36ff794de95b863a74efc7a290ae79e7d8cf1",
+          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c2b/windows/",
-            "eng/avalonia/parity-evidence/P8.6c/c2b/wayland/",
-            "eng/avalonia/parity-evidence/P8.6c/c2b/x11/",
-            "eng/avalonia/parity-evidence/P8.6c/c2b/flatpak/"
+            "eng/avalonia/parity-evidence/P8.6c/c2c/windows/",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/wayland/",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/x11/",
+            "eng/avalonia/parity-evidence/P8.6c/c2c/flatpak/"
           ],
           "platforms": [
             "windows",
@@ -29281,7 +29292,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Build, focused tests, and isolated runtime smokes passed on Windows, native Wayland, X11, and Wayland-only Flatpak with --filesystem=host; exhaustive component review and macOS remain open."
+          "note": "Build, 79 focused tests, and isolated runtime smokes passed on Windows, exclusive Wayland, exclusive X11, and Wayland-only Flatpak with --filesystem=host; exhaustive component review and macOS remain open."
         }
       }
     },

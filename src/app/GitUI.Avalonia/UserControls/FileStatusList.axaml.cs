@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -7,6 +7,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
@@ -27,6 +28,8 @@ namespace GitUI;
 // revision grouping, and repository-hierarchy boundaries used by its consumers.
 public partial class FileStatusList : GitModuleControl
 {
+    public static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
+
     private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);
 
     private static readonly TimeSpan FilterThrottleDuration = TimeSpan.FromMilliseconds(250);
@@ -40,9 +43,10 @@ public partial class FileStatusList : GitModuleControl
     private readonly SortDiffListContextMenuItem _sortByContextMenu;
     private readonly Separator _sortBySeparator = new();
     private readonly DispatcherTimer _filterTimer = new() { Interval = FilterThrottleDuration };
+    private readonly DispatcherTimer _selectedIndexChangeTimer = new() { Interval = SelectedIndexChangeThrottleDuration };
+    private readonly List<string> _filterHistory = [];
     private readonly List<object?> _gitGrepSearchItems = [];
     private IReadOnlyList<object> _allListItems = [];
-    private IReadOnlyList<FileStatusWithDescription> _revisionGroups = [];
     private IReadOnlyList<FileStatusItem> _allTreeItems = [];
     private IReadOnlyList<GitItemStatus> _gitItemFilteredStatuses = [];
     private IReadOnlyList<GitItemStatus> _gitItemStatuses = [];
@@ -50,9 +54,13 @@ public partial class FileStatusList : GitModuleControl
     private IGitUICommands? _boundCommands;
     private bool _isFileTreeMode;
     private bool _isSortSubscriptionActive;
+
+    // Enable menu item to disable AppSettings.ShowDiffForAllParents in some forms
     private bool _enableDisablingShowDiffForAllParents;
     private bool _showDiffGroups;
     private bool _suppressSelectionChanged;
+    private bool _hasKeyboardFocus;
+    private bool _mouseEntered;
     private Regex? _filter;
     private GitItemStatus? _nextItemToSelect;
     private FormFindInCommitFilesGitGrep? _formFindInCommitFilesGitGrep;
@@ -67,6 +75,8 @@ public partial class FileStatusList : GitModuleControl
         _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
         _revisionDiffController = new RevisionDiffController(() => Module, _fullPathResolver);
         InitializeComponent();
+
+        // Trigger initialisation of Search and Filter boxes
         _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
         _sortByContextMenu = new SortDiffListContextMenuItem(DiffListSortService.Instance)
         {
@@ -92,22 +102,25 @@ public partial class FileStatusList : GitModuleControl
         tvDiffFiles.SelectionChanged += (_, _) => DiffTreeSelectionChanged();
         tvDiffFiles.ContainerPrepared += DiffTreeContainerPrepared;
         tvFiles.SelectionChanged += (_, _) => RaiseSelectedIndexChanged();
-        lstFiles.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
+        lstFiles.DoubleTapped += FileStatusListView_DoubleClick;
         tvDiffFiles.DoubleTapped += (_, _) =>
         {
             if (SelectedFileStatusItem is not null)
             {
-                DoubleClick?.Invoke(this, EventArgs.Empty);
+                FileStatusListView_DoubleClick(this, EventArgs.Empty);
             }
         };
-        tvFiles.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
+        tvFiles.DoubleTapped += FileStatusListView_DoubleClick;
         cboFilterComboBox.PropertyChanged += (_, e) =>
         {
             if (e.Property == ComboBox.TextProperty)
             {
-                cboFilterComboBox_TextChanged(this, EventArgs.Empty);
+                FilterComboBox_TextUpdate(this, EventArgs.Empty);
             }
         };
+        cboFilterComboBox.PointerEntered += FilterComboBox_MouseEnter;
+        cboFilterComboBox.SelectionChanged += FilterComboBox_SelectedIndexChanged;
+        cboFilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
         cboFindInCommitFilesGitGrep.PropertyChanged += (_, e) =>
         {
             if (e.Property == ComboBox.TextProperty)
@@ -115,13 +128,18 @@ public partial class FileStatusList : GitModuleControl
                 cboFindInCommitFilesGitGrep_TextUpdate(this, EventArgs.Empty);
             }
         };
+        cboFindInCommitFilesGitGrep.SelectionChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
+        cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
         DeleteFilterButton.Click += DeleteFilterButton_Click;
         DeleteSearchButton.Click += DeleteSearchButton_Click;
         _filterTimer.Tick += FilterTimer_Tick;
-        KeyDown += FileStatusList_KeyDown;
+        _selectedIndexChangeTimer.Tick += SelectedIndexChangeTimer_Tick;
+        KeyDown += FileStatusListView_KeyDown;
+        GotFocus += FileStatusList_Enter;
+        LostFocus += FileStatusList_LostFocus;
+        PointerPressed += FileStatusList_PointerPressed;
         WireToolbar();
         WireContextMenu();
-        UICommandsSourceSet += (_, e) => BindCommands(e.GitUICommandsSource.UICommands);
         AttachedToLogicalTree += (_, _) =>
         {
             if (!_isSortSubscriptionActive)
@@ -141,6 +159,7 @@ public partial class FileStatusList : GitModuleControl
         DetachedFromLogicalTree += (_, _) =>
         {
             _filterTimer.Stop();
+            _selectedIndexChangeTimer.Stop();
             if (_isSortSubscriptionActive)
             {
                 DiffListSortService.Instance.DiffListSortingChanged -= DiffListSortingChanged;
@@ -179,11 +198,89 @@ public partial class FileStatusList : GitModuleControl
         tsmiCopyPaths.TranslateControlItems(translation);
     }
 
-    private void FileStatusList_KeyDown(object? sender, KeyEventArgs e)
+    // Wire up events to respond to Settings changes
+    protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
     {
+        base.OnUICommandsSourceSet(source);
+        source.UICommandsChanged += OnUICommandsChanged;
+        OnUICommandsChanged(source, null);
+        return;
+
+        void OnUICommandsChanged(object? sender, GitUICommandsChangedEventArgs? e)
+        {
+            if (e?.OldCommands is not null)
+            {
+                e.OldCommands.PostSettings -= UICommands_PostSettings;
+            }
+
+            IGitUICommandsSource? commandSource = sender as IGitUICommandsSource;
+            if (commandSource?.UICommands is not null)
+            {
+                BindCommands(commandSource.UICommands);
+                commandSource.UICommands.PostSettings += UICommands_PostSettings;
+                UICommands_PostSettings(commandSource.UICommands, null);
+            }
+        }
+
+        // Show/hide the search box if settings are changed
+        void UICommands_PostSettings(object? sender, GitUIPostActionEventArgs? e)
+        {
+            if (CanUseFindInCommitFilesGitGrep && IsVisible)
+            {
+                Dispatcher.UIThread.Post(() => SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value));
+            }
+        }
+    }
+
+    private void FileStatusListView_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.A)
+        {
+            SelectAll();
+            e.Handled = true;
+            return;
+        }
+
+        if (e.Key == Key.Multiply)
+        {
+            // Avalonia does not produce WinForms' TreeView ding, so this route can be handled after expanding the focused node.
+            object? focusedNode = (_isFileTreeMode ? tvFiles : tvDiffFiles).SelectedItem;
+            if (focusedNode is not null)
+            {
+                SetExpansion(focusedNode, expanded: true);
+            }
+
+            e.Handled = true;
+            return;
+        }
+
         if (ProcessHotkey(KeysMapper.ToKeys(e)))
         {
             e.Handled = true;
+        }
+    }
+
+    private void FileStatusListView_DoubleClick(object? sender, EventArgs e)
+    {
+        if (DoubleClick is null)
+        {
+            if (SelectedItem?.Item is null)
+            {
+                return;
+            }
+
+            if (AppSettings.OpenSubmoduleDiffInSeparateWindow && SelectedItem.Item.IsSubmodule)
+            {
+                this.InvokeAndForget(OpenSubmoduleAsync);
+            }
+            else
+            {
+                UICommands.StartFileHistoryDialog(GetOwner(), SelectedItem.Item.Name, SelectedItem.SecondRevision);
+            }
+        }
+        else
+        {
+            DoubleClick?.Invoke(sender, e);
         }
     }
 
@@ -212,14 +309,19 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public event EventHandler? FilterChanged;
 
+    public delegate void EnterEventHandler(object? sender, EnterEventArgs e);
+
+    // Avalonia Control has no Enter event, so the WinForms new modifier is neither required nor legal here.
+    public event EnterEventHandler? Enter;
+
     /// <summary>
     ///  Gets the selected file status item, or <see langword="null"/>.
     /// </summary>
-    public GitItemStatus? SelectedItem => _isFileTreeMode
-        ? (tvFiles.SelectedItem as FileTreeNode)?.Item?.Item
+    public FileStatusItem? SelectedItem => _isFileTreeMode
+        ? (tvFiles.SelectedItem as FileTreeNode)?.Item
         : _showDiffGroups
-            ? (tvDiffFiles.SelectedItem as DiffTreeNode)?.Item?.Item
-            : GetFileStatusItem(lstFiles.SelectedItem)?.Item ?? lstFiles.SelectedItem as GitItemStatus;
+            ? (tvDiffFiles.SelectedItem as DiffTreeNode)?.Item
+            : GetFileStatusItem(lstFiles.SelectedItem);
 
     /// <summary>
     ///  Gets the selected revision-aware item, or <see langword="null"/>.
@@ -277,14 +379,49 @@ public partial class FileStatusList : GitModuleControl
     /// <summary>
     ///  Gets the selected Git statuses, including worktree lists that do not carry revisions.
     /// </summary>
-    public IReadOnlyList<GitItemStatus> SelectedGitItems => _isFileTreeMode
-        ? [.. tvFiles.SelectedItems?.OfType<FileTreeNode>().Select(node => node.Item?.Item).OfType<GitItemStatus>() ?? []]
-        : _showDiffGroups
-            ? [.. tvDiffFiles.SelectedItems?.OfType<DiffTreeNode>().Select(node => node.Item?.Item).OfType<GitItemStatus>() ?? []]
-            : [.. lstFiles.SelectedItems?.Cast<object>().Select(GetGitItemStatus).OfType<GitItemStatus>() ?? []];
+    public IReadOnlyList<GitItemStatus> SelectedGitItems
+    {
+        get => _isFileTreeMode
+            ? [.. tvFiles.SelectedItems?.OfType<FileTreeNode>().Select(node => node.Item?.Item).OfType<GitItemStatus>() ?? []]
+            : _showDiffGroups
+                ? [.. tvDiffFiles.SelectedItems?.OfType<DiffTreeNode>().Select(node => node.Item?.Item).OfType<GitItemStatus>() ?? []]
+                : [.. lstFiles.SelectedItems?.Cast<object>().Select(GetGitItemStatus).OfType<GitItemStatus>() ?? []];
+        set
+        {
+            if (value is null)
+            {
+                ClearSelected();
+                return;
+            }
+
+            HashSet<GitItemStatus> selected = [.. value];
+            ClearSelected();
+            if (_showDiffGroups)
+            {
+                foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null && selected.Contains(node.Item.Item)))
+                {
+                    tvDiffFiles.SelectedItems?.Add(node);
+                }
+            }
+            else if (_isFileTreeMode)
+            {
+                foreach (FileTreeNode node in tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null && selected.Contains(node.Item.Item)))
+                {
+                    tvFiles.SelectedItems?.Add(node);
+                }
+            }
+            else
+            {
+                foreach (object item in lstFiles.Items.Cast<object>().Where(item => GetGitItemStatus(item) is GitItemStatus status && selected.Contains(status)))
+                {
+                    lstFiles.SelectedItems?.Add(item);
+                }
+            }
+        }
+    }
 
     /// <summary>
-    ///  Gets the selected folder path in file-tree mode, or <see langword="null"/>.
+    ///  Gets the <see cref="RelativePath"/> of a single selected folder node.
     /// </summary>
     public RelativePath? SelectedFolder
         => _isFileTreeMode && tvFiles.SelectedItem is FileTreeNode { IsFolder: true } node
@@ -303,18 +440,23 @@ public partial class FileStatusList : GitModuleControl
                 ? diffNode.Item is not null
                     ? RelativePath.From(diffNode.Item.Item.Name)
                     : diffNode.FolderPath
-            : SelectedItem is GitItemStatus item
-                ? RelativePath.From(item.Name)
+            : SelectedItem is FileStatusItem item
+                ? RelativePath.From(item.Item.Name)
                 : null;
+
+    private string? SelectedItemAbsolutePath => _fullPathResolver.Resolve(SelectedItem?.Item.Name)?.NormalizePath();
 
     /// <summary>
     ///  Gets the displayed file statuses (named like the WinForms property).
     /// </summary>
     public IReadOnlyList<GitItemStatus> GitItemStatuses => _gitItemStatuses;
 
-    /// <summary>
-    ///  Gets all displayed revision-aware items (named like the WinForms property).
-    /// </summary>
+    private IReadOnlyList<FileStatusWithDescription> GitItemStatusesWithDescription { get; set; } = [];
+
+    public Func<ObjectId, string>? DescribeRevision { get; set; }
+
+    // Properties
+
     public IEnumerable<FileStatusItem> AllItems
         => _isFileTreeMode
             ? _allTreeItems
@@ -353,6 +495,8 @@ public partial class FileStatusList : GitModuleControl
     {
         _formFindInCommitFilesGitGrep?.SetShowFindInCommitFilesGitGrep(visible);
         FindInCommitFilesGitGrepPanel.IsVisible = visible;
+
+        // Focus the box if it is becoming shown, but not on init of parent controls (which broke the form's focus management)
         if (visible)
         {
             cboFindInCommitFilesGitGrep.Focus();
@@ -362,6 +506,8 @@ public partial class FileStatusList : GitModuleControl
             cboFindInCommitFilesGitGrep.Text = string.Empty;
             FindInCommitFilesGitGrep();
         }
+
+        // Avalonia adjusts sizes automatically when visibility changes.
     }
 
     public bool SelectFirstItemOnSetItems { get; set; } = true;
@@ -375,7 +521,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public GitItemStatus? SelectedGitItem
     {
-        get => SelectedItem;
+        get => SelectedItem?.Item;
         set
         {
             if (value is null)
@@ -418,6 +564,26 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public bool FilterFilesByNameRegexFocused => cboFilterComboBox.IsKeyboardFocusWithin;
 
+    public bool Focused
+        => (_isFileTreeMode ? (Control)tvFiles : _showDiffGroups ? tvDiffFiles : lstFiles).IsKeyboardFocusWithin;
+
+    public FileStatusItem? FocusedItem
+    {
+        get
+        {
+            Control? focused = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() as Control;
+            object? dataContext = focused?.DataContext
+                                  ?? focused?.GetVisualAncestors().OfType<Control>().Select(control => control.DataContext).FirstOrDefault(data => data is not null);
+            return dataContext switch
+            {
+                FileStatusItem item => item,
+                DiffTreeNode node => node.Item,
+                FileTreeNode node => node.Item,
+                _ => SelectedItem
+            };
+        }
+    }
+
     /// <summary>
     ///  Gets or sets the selection mode of the underlying list.
     /// </summary>
@@ -443,7 +609,7 @@ public partial class FileStatusList : GitModuleControl
     public void SetDiffs(IReadOnlyList<GitItemStatus> items)
     {
         SetFileTreeMode(false);
-        _revisionGroups = [];
+        GitItemStatusesWithDescription = [];
         _showDiffGroups = false;
         _gitItemStatuses = items;
         _allListItems = [.. items.Cast<object>()];
@@ -456,6 +622,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SetDiffs(IReadOnlyList<GitRevision> revisions)
     {
+        FileStatusListLoading();
         _enableDisablingShowDiffForAllParents = true;
         _diffCalculator.SetDiff(revisions, headId: default, allowMultiDiff: false);
         IReadOnlyList<FileStatusWithDescription> groups = _diffCalculator.Calculate(
@@ -468,7 +635,7 @@ public partial class FileStatusList : GitModuleControl
 
     public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId headId, CancellationToken cancellationToken)
     {
-        LoadingFiles.IsVisible = true;
+        FileStatusListLoading();
         UpdateToolbar(revisions);
         bool isFileTreeMode = _isFileTreeMode;
         _enableDisablingShowDiffForAllParents = !isFileTreeMode;
@@ -489,11 +656,28 @@ public partial class FileStatusList : GitModuleControl
                 refreshGrep: false,
                 cancellationToken);
         }, cancellationToken);
+        bool withGitGrep = FindInCommitFilesGitGrepActive;
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            SetDiffs(groups, _isFileTreeMode);
-            LoadingFiles.IsVisible = false;
+            SetDiffs(groups, isFileTreeMode);
         });
+
+        // git grep, fetched as a separate step
+        if (withGitGrep)
+        {
+            groups = await Task.Run(() =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                return _diffCalculator.Calculate(
+                    prevList: groups,
+                    refreshDiff: false,
+                    refreshGrep: true,
+                    cancellationToken);
+            }, cancellationToken);
+            await Dispatcher.UIThread.InvokeAsync(() => SetDiffs(groups, isFileTreeMode));
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(() => LoadingFiles.IsVisible = false);
     }
 
     /// <summary>
@@ -501,6 +685,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SetDiffs(GitRevision? firstRev, GitRevision secondRev, IReadOnlyList<GitItemStatus> items)
     {
+        FileStatusListLoading();
         List<FileStatusEntry> entries = items
             .Select(item => new FileStatusEntry(new FileStatusItem(firstRev, secondRev, item)))
             .ToList();
@@ -508,7 +693,7 @@ public partial class FileStatusList : GitModuleControl
     }
 
     private string? GetDescriptionForRevision(ObjectId objectId)
-        => _diffCalculator.DescribeRevision is not null ? _diffCalculator.DescribeRevision(objectId)
+        => DescribeRevision is not null ? DescribeRevision(objectId)
             : objectId == ObjectId.WorkTreeId ? ResourceManager.TranslatedStrings.Workspace
             : objectId == ObjectId.IndexId ? ResourceManager.TranslatedStrings.Index
             : objectId.ToShortString();
@@ -519,7 +704,7 @@ public partial class FileStatusList : GitModuleControl
     public void SetDiffs(IReadOnlyList<FileStatusWithDescription> groups, bool isFileTreeMode)
     {
         SetFileTreeMode(isFileTreeMode);
-        _revisionGroups = isFileTreeMode ? [] : groups;
+        GitItemStatusesWithDescription = isFileTreeMode ? [] : groups;
         _showDiffGroups = !isFileTreeMode
                           && (groups.Count > 1
                               || (GroupByRevision && !(groups.Count == 1 && groups[0].Statuses.Count == 0)));
@@ -551,8 +736,15 @@ public partial class FileStatusList : GitModuleControl
     }
 
     /// <summary>
-    ///  Shows the worktree and index portions of the current working directory.
+    /// FormStash init for WorkTree and Index.
     /// </summary>
+    /// <param name="headRev">The GitRevision for HEAD.</param>
+    /// <param name="indexRev">The GitRevision for Index.</param>
+    /// <param name="indexDesc">The description for Index.</param>
+    /// <param name="indexItems">The GitItems for Index.</param>
+    /// <param name="workTreeRev">The GitRevision for WorkTree.</param>
+    /// <param name="workTreeDesc">The description for WorkTree.</param>
+    /// <param name="workTreeItems">The GitItems for WorkTree.</param>
     public void SetStashDiffs(
         GitRevision headRev,
         GitRevision indexRev,
@@ -562,6 +754,7 @@ public partial class FileStatusList : GitModuleControl
         string workTreeDesc,
         IReadOnlyList<GitItemStatus> workTreeItems)
     {
+        FileStatusListLoading();
         SetDiffs(
         [
             new FileStatusWithDescription(indexRev, workTreeRev, workTreeDesc, workTreeItems),
@@ -581,7 +774,7 @@ public partial class FileStatusList : GitModuleControl
     public void Clear()
     {
         _allListItems = [];
-        _revisionGroups = [];
+        GitItemStatusesWithDescription = [];
         _allTreeItems = [];
         _gitItemFilteredStatuses = [];
         _gitItemStatuses = [];
@@ -595,8 +788,14 @@ public partial class FileStatusList : GitModuleControl
     /// <summary>
     ///  Focuses the active file list or repository tree.
     /// </summary>
-    public void FocusFiles()
+    // Avalonia's focus overload has parameters, so the parameterless WinForms-shaped method is a distinct member.
+    public void Focus()
     {
+        if (FocusedItem is null)
+        {
+            SelectFirstVisibleItem();
+        }
+
         Control target = _isFileTreeMode ? tvFiles : _showDiffGroups ? tvDiffFiles : lstFiles;
         if (!target.Focus())
         {
@@ -604,9 +803,8 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
-    /// <summary>
-    ///  Clears the current selection (named like the WinForms method).
-    /// </summary>
+    // Public methods
+
     public void ClearSelected()
     {
         lstFiles.Selection.Clear();
@@ -648,13 +846,18 @@ public partial class FileStatusList : GitModuleControl
     }
 
     /// <summary>
-    ///  Selects a file or folder by its repository-relative POSIX path.
+    ///  Selects the tree node matching the passed relative path.
     /// </summary>
-    public bool SelectFileOrFolder(RelativePath relativePath, bool notify = true)
+    /// <param name="relativePath">The relative POSIX path to the item or folder.</param>
+    /// <returns><c>true</c> if a matching tree node was found.</returns>
+    public bool SelectFileOrFolder(RelativePath relativePath, bool firstGroupOnly = false, bool notify = true)
     {
         if (_showDiffGroups)
         {
-            DiffTreeNode? diffNode = tvDiffFiles.Items.Cast<DiffTreeNode>()
+            IEnumerable<DiffTreeNode> roots = firstGroupOnly
+                ? tvDiffFiles.Items.Cast<DiffTreeNode>().Take(1)
+                : tvDiffFiles.Items.Cast<DiffTreeNode>();
+            DiffTreeNode? diffNode = roots
                 .SelectMany(Flatten)
                 .FirstOrDefault(candidate => candidate.Item?.Item.Name == relativePath.Value
                                              || candidate.FolderPath?.Value == relativePath.Value);
@@ -709,6 +912,7 @@ public partial class FileStatusList : GitModuleControl
     {
         if (_showDiffGroups)
         {
+            // Skip collapsed or empty groups
             DiffTreeNode? first = tvDiffFiles.Items.Cast<DiffTreeNode>()
                 .SelectMany(FlattenVisible)
                 .FirstOrDefault(node => node.Item is not null);
@@ -722,6 +926,7 @@ public partial class FileStatusList : GitModuleControl
 
         if (_isFileTreeMode)
         {
+            // Descend
             FileTreeNode? first = tvFiles.Items.Cast<FileTreeNode>()
                 .SelectMany(Flatten)
                 .FirstOrDefault(node => !node.IsFolder);
@@ -825,6 +1030,7 @@ public partial class FileStatusList : GitModuleControl
         btnRefresh.IsVisible = true;
         tsmiRefreshOnFormFocus.IsVisible = canAutoRefresh;
         sepToolbar.IsVisible = canAutoRefresh;
+        DescribeRevision = describeRevision;
         _diffCalculator.DescribeRevision = describeRevision;
         _diffCalculator.GetActualRevision = getActualRevision;
         SetFileTreeMode(isFileTreeMode);
@@ -856,7 +1062,7 @@ public partial class FileStatusList : GitModuleControl
     public void StoreNextItemToSelect()
     {
         GitItemStatus[] visible = [.. GetVisibleFileStatusItems().Select(item => item.Item)];
-        int currentIndex = Array.IndexOf(visible, SelectedItem);
+        int currentIndex = Array.IndexOf(visible, SelectedItem?.Item);
         _nextItemToSelect = currentIndex >= 0 && currentIndex + 1 < visible.Length
             ? visible[currentIndex + 1]
             : currentIndex > 0 ? visible[currentIndex - 1] : null;
@@ -874,11 +1080,20 @@ public partial class FileStatusList : GitModuleControl
 
     public int SetSelectionFilter(string selectionFilter)
     {
-        int count = SetFilter(selectionFilter);
-        SelectAll();
-        return count;
+        GitItemStatus[] selectedItems =
+        [
+            .. _gitItemFilteredStatuses.Where(item => string.IsNullOrEmpty(selectionFilter)
+                || Regex.IsMatch(item.Name, selectionFilter, RegexOptions.IgnoreCase)),
+        ];
+        SelectedGitItems = selectedItems;
+        return selectedItems.Length;
     }
 
+    /// <summary>
+    /// Open the currently selected submodule (no checks done) in a new Browse instance
+    /// If the submodule is a diff, both first and currently selected commits are initially selected.
+    /// </summary>
+    /// <returns>async Task.</returns>
     public async Task OpenSubmoduleAsync()
     {
         FileStatusItem selected = SelectedFileStatusItem
@@ -909,7 +1124,7 @@ public partial class FileStatusList : GitModuleControl
     private void SetRevisionEntries(IReadOnlyList<FileStatusEntry> entries)
     {
         SetFileTreeMode(false);
-        _revisionGroups = [];
+        GitItemStatusesWithDescription = [];
         _showDiffGroups = false;
         _gitItemStatuses = entries.Select(entry => entry.Item.Item).ToList();
         _allListItems = [.. entries.Cast<object>()];
@@ -919,7 +1134,7 @@ public partial class FileStatusList : GitModuleControl
 
     private void SetTreeEntries(IReadOnlyList<FileStatusItem> items)
     {
-        _revisionGroups = [];
+        GitItemStatusesWithDescription = [];
         _showDiffGroups = false;
         _gitItemStatuses = items.Select(item => item.Item).ToList();
         _allListItems = [];
@@ -946,15 +1161,86 @@ public partial class FileStatusList : GitModuleControl
     {
         if (!_suppressSelectionChanged)
         {
-            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+            _selectedIndexChangeTimer.Stop();
+            _selectedIndexChangeTimer.Start();
         }
     }
 
-    private void cboFilterComboBox_TextChanged(object? sender, EventArgs e)
+    private void SelectedIndexChangeTimer_Tick(object? sender, EventArgs e)
     {
-        DeleteFilterButton.IsVisible = IsFilterActive;
+        _selectedIndexChangeTimer.Stop();
+        FileStatusListView_SelectedIndexChanged();
+    }
+
+    private void FileStatusListView_SelectedIndexChanged()
+    {
+        SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void FileStatusList_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        _mouseEntered = !IsKeyboardFocusWithin;
+    }
+
+    private void FileStatusList_Enter(object? sender, EventArgs e)
+    {
+        if (_hasKeyboardFocus)
+        {
+            return;
+        }
+
+        _hasKeyboardFocus = true;
+        Enter?.Invoke(this, new EnterEventArgs(_mouseEntered));
+        _mouseEntered = false;
+    }
+
+    private void FileStatusList_LostFocus(object? sender, EventArgs e)
+    {
+        Dispatcher.UIThread.Post(() => _hasKeyboardFocus = IsKeyboardFocusWithin);
+    }
+
+    private void FilterComboBox_TextUpdate(object? sender, EventArgs e)
+    {
+        // show DeleteFilterButton at once
+        SetDeleteFilterButtonVisibility();
+
+        string filterText = cboFilterComboBox.Text ?? string.Empty;
+        string workingDir = TryGetUICommandsDirect(out IGitUICommands? commands) ? commands.Module.WorkingDir : string.Empty;
+        if (workingDir.Length > 0 && filterText.Length > workingDir.Length)
+        {
+            string posixWorkingDir = PathUtil.ToPosixPath(workingDir);
+            string posixFilterText = PathUtil.ToPosixPath(filterText);
+            if (posixFilterText.StartsWith(posixWorkingDir, StringComparison.InvariantCultureIgnoreCase))
+            {
+                filterText = posixFilterText.SubstringAfter(posixWorkingDir, StringComparison.InvariantCultureIgnoreCase);
+                cboFilterComboBox.Text = filterText;
+            }
+        }
+
+        // Avalonia's editable ComboBox does not auto-select a matching history prefix, so no selection workaround is required.
         _filterTimer.Stop();
         _filterTimer.Start();
+    }
+
+    private void FilterComboBox_MouseEnter(object? sender, EventArgs e)
+    {
+        // Avalonia's ToolTip service retains the current validation text without assigning it again on pointer entry.
+    }
+
+    private void FilterComboBox_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        FilterFiles(cboFilterComboBox.Text ?? string.Empty);
+    }
+
+    private void FilterComboBox_SizeChanged(object? sender, EventArgs e)
+    {
+        // Avalonia redraws resized controls automatically; invalidation preserves the original explicit refresh boundary.
+        cboFilterComboBox.InvalidateVisual();
+    }
+
+    private void SetDeleteFilterButtonVisibility()
+    {
+        DeleteFilterButton.IsVisible = IsFilterActive;
     }
 
     private void DeleteFilterButton_Click(object? sender, EventArgs e)
@@ -965,6 +1251,16 @@ public partial class FileStatusList : GitModuleControl
 
     private void cboFindInCommitFilesGitGrep_TextUpdate(object? sender, EventArgs e)
         => FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text ?? string.Empty, delay: 200);
+
+    private void cboFindInCommitFilesGitGrep_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        FindInCommitFilesGitGrep();
+    }
+
+    private void cboFindInCommitFilesGitGrep_SizeChanged(object? sender, EventArgs e)
+    {
+        cboFindInCommitFilesGitGrep.InvalidateVisual();
+    }
 
     private void FindInCommitFilesGitGrep()
     {
@@ -988,7 +1284,7 @@ public partial class FileStatusList : GitModuleControl
             }
 
             bool isFileTreeMode = _isFileTreeMode;
-            IReadOnlyList<FileStatusWithDescription> previous = _revisionGroups;
+            IReadOnlyList<FileStatusWithDescription> previous = GitItemStatusesWithDescription;
             IReadOnlyList<FileStatusWithDescription> groups = await Task.Run(() =>
             {
                 _diffCalculator.SetGrep(searchArg, fileTreeMode: isFileTreeMode && string.IsNullOrWhiteSpace(searchArg));
@@ -1085,7 +1381,40 @@ public partial class FileStatusList : GitModuleControl
     private void FilterTimer_Tick(object? sender, EventArgs e)
     {
         _filterTimer.Stop();
-        ApplyFilter(selectFirstItem: false);
+        int fileCount = FilterFiles(cboFilterComboBox.Text ?? string.Empty);
+        string filterText = cboFilterComboBox.Text ?? string.Empty;
+        if (fileCount > 0 && filterText.Length > 0 && !cboFilterComboBox.Classes.Contains("file-filter-invalid"))
+        {
+            AddToSelectionFilter(filterText);
+        }
+    }
+
+    private int FilterFiles(string value)
+    {
+        if (!string.Equals(cboFilterComboBox.Text, value, StringComparison.Ordinal))
+        {
+            cboFilterComboBox.Text = value;
+        }
+
+        // Feed back the current list of files
+        return ApplyFilter(selectFirstItem: false);
+    }
+
+    private void AddToSelectionFilter(string filter)
+    {
+        if (_filterHistory.Contains(filter, StringComparer.Ordinal))
+        {
+            return;
+        }
+
+        const int SelectionFilterMaxLength = 10;
+        if (_filterHistory.Count == SelectionFilterMaxLength)
+        {
+            _filterHistory.RemoveAt(SelectionFilterMaxLength - 1);
+        }
+
+        _filterHistory.Insert(0, filter);
+        cboFilterComboBox.ItemsSource = _filterHistory;
     }
 
     private int ApplyFilter(bool selectFirstItem)
@@ -1096,13 +1425,7 @@ public partial class FileStatusList : GitModuleControl
         string filterText = cboFilterComboBox.Text ?? string.Empty;
         try
         {
-            _filter = filterText.Length == 0
-                ? null
-                : new Regex(
-                    filterText,
-                    RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
-                    RegexTimeout);
-            SetFilterState(filterText.Length == 0 ? FilterState.Empty : FilterState.Valid, toolTip: null);
+            StoreFilter(filterText);
         }
         catch (ArgumentException exception)
         {
@@ -1116,16 +1439,16 @@ public partial class FileStatusList : GitModuleControl
             _gitItemFilteredStatuses = [.. visibleItems.Select(item => item.Item)];
             tvFiles.ItemsSource = BuildFileTree(visibleItems);
         }
-        else if (_revisionGroups.Count > 0)
+        else if (GitItemStatusesWithDescription.Count > 0)
         {
             Dictionary<int, bool> expansion = tvDiffFiles.Items
                 .Cast<DiffTreeNode>()
                 .Where(node => node.GroupIndex is not null)
                 .ToDictionary(node => node.GroupIndex!.Value, node => node.IsExpanded);
-            IReadOnlyList<DiffTreeNode> roots = BuildDiffTree(_revisionGroups, expansion);
-            _showDiffGroups = _revisionGroups.Count > 1
+            IReadOnlyList<DiffTreeNode> roots = BuildDiffTree(GitItemStatusesWithDescription, expansion);
+            _showDiffGroups = GitItemStatusesWithDescription.Count > 1
                               || (GroupByRevision
-                                  && !(_revisionGroups.Count == 1 && _revisionGroups[0].Statuses.Count == 0));
+                              && !(GitItemStatusesWithDescription.Count == 1 && GitItemStatusesWithDescription[0].Statuses.Count == 0));
             _gitItemFilteredStatuses =
             [
                 .. roots.SelectMany(Flatten)
@@ -1175,6 +1498,18 @@ public partial class FileStatusList : GitModuleControl
         DataSourceChanged?.Invoke(this, EventArgs.Empty);
         FilterChanged?.Invoke(this, EventArgs.Empty);
         return _gitItemFilteredStatuses.Count;
+    }
+
+    private void StoreFilter(string value)
+    {
+        SetDeleteFilterButtonVisibility();
+        _filter = value.Length == 0
+            ? null
+            : new Regex(
+                value,
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+                RegexTimeout);
+        SetFilterState(value.Length == 0 ? FilterState.Empty : FilterState.Valid, toolTip: null);
     }
 
     private bool SelectFileStatusItem(FileStatusItem item, bool notify)
@@ -1236,10 +1571,17 @@ public partial class FileStatusList : GitModuleControl
         }
 
         string name = item.Name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
+        string? oldName = item.OldName;
+        if (AppSettings.TruncatePathMethod == TruncatePathMethod.FileNameOnly)
+        {
+            name = Path.GetFileName(name);
+            oldName = Path.GetFileName(oldName);
+        }
+
         try
         {
             return _filter.IsMatch(name)
-                   || (item.OldName is string oldName && _filter.IsMatch(oldName));
+                   || (oldName is not null && _filter.IsMatch(oldName));
         }
         catch (RegexMatchTimeoutException exception)
         {
@@ -1258,6 +1600,7 @@ public partial class FileStatusList : GitModuleControl
 
     private void UpdateEmptyState()
     {
+        LoadingFiles.IsVisible = false;
         bool hasItems = _gitItemFilteredStatuses.Count > 0;
         bool hasGroupRows = _showDiffGroups && tvDiffFiles.ItemCount > 0;
         NoFiles.IsVisible = !hasItems && !hasGroupRows;
@@ -1266,9 +1609,21 @@ public partial class FileStatusList : GitModuleControl
         tvFiles.IsVisible = hasItems && _isFileTreeMode;
     }
 
+    private void FileStatusListLoading()
+    {
+        // Show "Files loading" below the filterbox
+
+        NoFiles.IsVisible = false;
+        LoadingFiles.IsVisible = true;
+        ClearSelected();
+        lstFiles.ItemsSource = null;
+        tvDiffFiles.ItemsSource = null;
+        tvFiles.ItemsSource = null;
+    }
+
     private void DiffListSortingChanged(object? sender, EventArgs e)
     {
-        if (_revisionGroups.Count == 0 || _isFileTreeMode)
+        if (GitItemStatusesWithDescription.Count == 0 || _isFileTreeMode)
         {
             return;
         }
@@ -2055,6 +2410,16 @@ public partial class FileStatusList : GitModuleControl
 
         internal static IImage GetItemImageForTesting(GitItemStatus item)
             => FileStatusList.GetItemImage(item);
+
+        // parity-scaffolding: verifies the WinForms delayed-expansion contract against Avalonia's lazy containers.
+        internal void RestoreDiffTreeChildrenForTesting(bool delayExpansion, Action? afterAction = null)
+            => RestoreChildrenOfFolderNodes(control.tvDiffFiles.Items.Cast<DiffTreeNode>(), afterAction, delayExpansion);
+
+        internal (int descendants, bool allExpanded) GetDiffTreeExpansionForTesting()
+        {
+            DiffTreeNode[] nodes = [.. control.tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten)];
+            return (nodes.Length, nodes.All(node => node.IsExpanded));
+        }
 
         internal static IImage GetSubmoduleImageForTesting(GitItemStatus item, GitSubmoduleStatus? status)
             => FileStatusList.GetSubmoduleImage(item, status);
