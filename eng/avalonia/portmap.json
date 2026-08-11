@@ -3911,7 +3911,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/BranchSelector.axaml.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Preserves the original branch-source switch, containment intersection, commit-count update, names, and event boundary; exhaustive visual/state closure remains open."
+    "notes": "Preserves the original two-way local/remote branch-source switch, containment intersection, commit-count update, names, and event boundary. P8.6g.1 restores the original reload when the remote radio changes in either direction and covers both transitions with focused tests; exact structural/visual/theme/exhaustive-state closure remains P8.6g.3."
   },
   "src/app/GitUI/UserControls/BranchSelector.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/BranchSelector.axaml",
@@ -3922,13 +3922,13 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/CaseSensitiveComboBox.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Preserves ordinal exact-case completion selection through the native editable ComboBox and is consumed by FormRemotes."
+    "notes": "Preserves ordinal exact-case completion selection through the native editable ComboBox and is consumed by FormRemotes. Avalonia requires the derived control to select the base ComboBox theme explicitly; P8.6g.1 verifies the main/Main transition through the realized editable template and captures every requested FormRemotes consumer state without a blank render. Exact styling and state closure remain P8.6g.3."
   },
   "src/app/GitUI/UserControls/EnterEventArgs.cs": {
     "twin": "src/app/GitUI/UserControls/EnterEventArgs.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia; FileStatusList consumer closure remains assigned to P8.6c."
+    "notes": "Framework-neutral source linked unchanged into GitUI.Avalonia; its FileStatusList consumer contract was verified in P8.6c."
   },
   "src/app/GitUI/UserControls/FileStatusItemExtensions.cs": {
     "twin": "src/app/GitUI/UserControls/FileStatusItemExtensions.cs",
@@ -3996,12 +3996,13 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/InteractiveGitActionControl.axaml.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Preserves the complete action/conflict state matrix and FormBrowse activation refresh; the bisect detail dialog remains owned by P5.5."
+    "notes": "Preserves the complete action/conflict state matrix and FormBrowse activation refresh. P8.6g.1 verifies every original message and image state; P5.5 supplies the completed More-button FormBisect route. Exact visual/theme/exhaustive-state closure remains P8.6g.3."
   },
   "src/app/GitUI/UserControls/InteractiveGitActionControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/InteractiveGitActionControl.axaml",
     "status": "functional",
-    "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a"
+    "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+    "notes": "Native AXAML preserves the original fields and action-bar composition. P8.6g.1 routes the glyph through the shared 16-pixel icon class so the product theme owns scaling consistently; exact measured geometry and state styling remain P8.6g.3."
   },
   "src/app/GitUI/UserControls/ListViewGroupHitInfo.cs": {
     "status": "windowsOnly",
@@ -4161,12 +4162,13 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsCheckBox.axaml.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Preserves checked/text/tooltip/manual-link properties and the original event names with native Avalonia controls; the native checkbox automation name follows its displayed text."
+    "notes": "Preserves checked/text/tooltip/manual-link properties and the original event names with native Avalonia controls; the native checkbox automation name follows its displayed text. P8.6g.1 verifies those routes and the original information image identity; exact visual/theme/exhaustive-state closure remains P8.6g.3."
   },
   "src/app/GitUI/UserControls/Settings/SettingsCheckBox.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsCheckBox.axaml",
     "status": "functional",
-    "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a"
+    "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+    "notes": "Native AXAML preserves the checkbox, information icon, tooltip, and manual-link fields. P8.6g.1 restores the original default information image and uses the shared 16-pixel icon class; exact measured layout and interaction styling remain P8.6g.3."
   },
   "src/app/GitUI/UserControls/SortDiffListContextMenuItem.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/SortDiffListContextMenuItem.cs",
@@ -4198,13 +4200,13 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/WaitSpinner.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Preserves the 11-dot, 30-fps animation and resolved ControlDarkDark color with native Avalonia rendering."
+    "notes": "Preserves the 11-dot, 30-fps animation and resolved ControlDarkDark color with native Avalonia rendering. P8.6g.1 proves the timer advances only while enabled and stops through the product property boundary; exact rendered geometry/color/state closure remains P8.6g.3."
   },
   "src/app/GitUI/UserControls/WatermarkComboBox.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/WatermarkComboBox.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Maps the original watermark contract to native PlaceholderText without replacing observable Text; existing git-grep and file-filter consumers now use the twin."
+    "notes": "Maps the original watermark contract to native PlaceholderText without replacing observable Text; existing git-grep and file-filter consumers now use the twin. P8.6g.1 verifies the text/placeholder separation and captures every requested FileStatusList consumer state without an unsupported render; exact styling remains P8.6g.3."
   },
   "src/app/GitUI/UserControls/WebBrowserControl.cs": {
     "status": "windowsOnly",
