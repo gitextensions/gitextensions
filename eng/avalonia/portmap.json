@@ -1,4 +1,4 @@
-{
+﻿{
   "//": [
     "Complete classification of GitUI C# sources plus mappings for other port inputs.",
     "Twin status: scaffolded (compiles, layout unfinished) | functional (works, reduced feature set) | parity (feature-complete twin).",
@@ -3314,25 +3314,25 @@
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/AnsiEscapeUtilities.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same ANSI 3/4/8/24-bit decoder and resolved theme-color path; output ranges carry resolved ARGB background and foreground colors into Avalonia renderers."
+    "notes": "Same ANSI 3/4/8/24-bit decoder, original member shape, palette bounds, and resolved theme-color path; output ranges carry resolved ARGB background and foreground colors into Avalonia renderers."
   },
   "src/app/GitUI/Editor/Diff/DifftasticHighlightService.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/DifftasticHighlightService.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same line-number stripping, side-by-side alignment, semantic line classification, ANSI range preservation, and DFT_WIDTH ruler boundary, adapted to AvaloniaEdit segments."
+    "notes": "Same marker accumulation, line-number stripping, side-by-side alignment, semantic line classification, ANSI range preservation, and DFT_WIDTH ruler boundary. Avalonia renderers consume the accumulated markers instead of mutating the AvaloniaEdit TextDocument."
   },
   "src/app/GitUI/Editor/Diff/GrepHighlightService.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/GrepHighlightService.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same git-grep prefix parsing, function/separator handling, line mapping, ANSI highlighting, command configuration, and match navigation."
+    "notes": "Same marker accumulation, git-grep prefix parsing, function/separator handling, line mapping, ANSI highlighting, command configuration, and match navigation. Avalonia renderers consume the accumulated markers instead of mutating the AvaloniaEdit TextDocument."
   },
   "src/app/GitUI/Editor/Diff/HighlightInfo.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/HighlightInfo.cs",
     "status": "functional",
     "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Same offset/length/resolved-color contract plus the mutable marker carrier required by AvaloniaEdit rendering."
+    "notes": "Same offset/length/resolved-color contract plus the mutable marker carrier required by AvaloniaEdit rendering; its inclusive EndOffset preserves the original editor marker's zero-length and range semantics."
   },
   "src/app/GitUI/Editor/Diff/ITextHighlightService.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/Diff/ITextHighlightService.cs",

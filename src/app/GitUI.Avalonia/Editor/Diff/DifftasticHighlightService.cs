@@ -1,6 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using AvaloniaEdit.Document;
 using GitCommands;
 using GitExtensions.Extensibility;
 
@@ -11,6 +12,9 @@ namespace GitUI.Editor.Diff;
 /// </summary>
 public partial class DifftasticHighlightService : DiffHighlightService
 {
+    protected readonly List<TextMarker> _textMarkers = [];
+    private DiffLinesInfo _diffLinesInfo = new();
+
     [GeneratedRegex(@"^(\s*(?<matchStart>(?<lineNo>\d+)|(\.+)) )", RegexOptions.ExplicitCapture)]
     private static partial Regex LineNoRegex { get; }
 
@@ -61,7 +65,7 @@ public partial class DifftasticHighlightService : DiffHighlightService
             if (!matchLeft.Success)
             {
                 // This could also be a side-by-diff with zero context where ... are not printed
-                Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic output, no left line. This could occur for last line and may be OK if another difftool is used. ({LinesInfo.DiffLines.Count}) {lineBuilder}");
+                Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic output, no left line. This could occur for last line and may be OK if another difftool is used. ({_diffLinesInfo.DiffLines.Count}) {lineBuilder}");
                 debugPrinted = true;
                 AddInfo(leftLineNo, rightLineNo, lineType, textMarkers, lineBuilder);
                 continue;
@@ -89,7 +93,8 @@ public partial class DifftasticHighlightService : DiffHighlightService
                 if (textMarkers.Count > 0 && textMarkers[0].Offset < leftLen)
                 {
                     // Use lineno coloring to guess if this is added or removed.
-                    Color c = reverseGitColoring ? textMarkers[0].Color : textMarkers[0].ForeColor ?? textMarkers[0].Color;
+                    // Avalonia framework constraint: default(Color) matches the original marker's Color.Empty foreground.
+                    Color c = reverseGitColoring ? textMarkers[0].Color : textMarkers[0].ForeColor ?? default;
                     if (!IsUnchanged(c))
                     {
                         // Use mostly red/green to detect removed/added.
@@ -142,7 +147,7 @@ public partial class DifftasticHighlightService : DiffHighlightService
             {
                 if (lineType != DiffLineType.PlusRight)
                 {
-                    Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic no right lineno. This is OK if another difftool is used. ({LinesInfo.DiffLines.Count}) {lineBuilder}");
+                    Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic no right lineno. This is OK if another difftool is used. ({_diffLinesInfo.DiffLines.Count}) {lineBuilder}");
                     debugPrinted = true;
                 }
 
@@ -152,7 +157,7 @@ public partial class DifftasticHighlightService : DiffHighlightService
 
             if (lineType == DiffLineType.PlusRight)
             {
-                Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic has PlusRight and right lineno. This is OK if another difftool is used. ({LinesInfo.DiffLines.Count}) {lineBuilder}");
+                Debug.WriteLineIf(debugPrinted, $"Unexpected Difftastic has PlusRight and right lineno. This is OK if another difftool is used. ({_diffLinesInfo.DiffLines.Count}) {lineBuilder}");
                 debugPrinted = true;
             }
 
@@ -195,7 +200,8 @@ public partial class DifftasticHighlightService : DiffHighlightService
 
                     // Use lineno coloring to guess if this is added or removed.
                     // If not unchanged this right lineno is assumed to be added (and is likely green).
-                    Color c = reverseGitColoring ? tm.Color : tm.ForeColor ?? tm.Color;
+                    // Avalonia framework constraint: default(Color) matches the original marker's Color.Empty foreground.
+                    Color c = reverseGitColoring ? tm.Color : tm.ForeColor ?? default;
                     if (!IsUnchanged(c))
                     {
                         DebugHelpers.Assert(lineType != DiffLineType.PlusRight, $"Left status for rightline {rightLineNo} is {lineType}, incorrect leftline parsing?");
@@ -216,7 +222,9 @@ public partial class DifftasticHighlightService : DiffHighlightService
         }
 
         text = sb.ToString();
-        lineNumbersControl.DisplayLineNum(LinesInfo, showLeftColumn: true);
+        LinesInfo = _diffLinesInfo;
+        AddTextMarkers(_textMarkers);
+        lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: true);
 
         return;
 
@@ -261,10 +269,10 @@ public partial class DifftasticHighlightService : DiffHighlightService
 
         void AddInfo(int leftLineNo, int rightLineNo, DiffLineType lineType, List<TextMarker> textMarkers, StringBuilder lineBuilder)
         {
-            LinesInfo.Add(
+            _diffLinesInfo.Add(
                 new()
                 {
-                    LineNumInDiff = LinesInfo.DiffLines.Count + 1,
+                    LineNumInDiff = _diffLinesInfo.DiffLines.Count + 1,
                     LeftLineNumber = leftLineNo,
                     RightLineNumber = rightLineNo,
                     LineType = lineType,
@@ -284,10 +292,15 @@ public partial class DifftasticHighlightService : DiffHighlightService
                 tm.Offset += sb.Length;
             }
 
-            AddTextMarkers(textMarkers);
+            _textMarkers.AddRange(textMarkers);
             sb.Append(lineBuilder);
             sb.Append('\n');
         }
+    }
+
+    // Avalonia framework constraint: renderers consume the marker list instead of mutating TextDocument.
+    public override void AddTextHighlighting(TextDocument document)
+    {
     }
 
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)

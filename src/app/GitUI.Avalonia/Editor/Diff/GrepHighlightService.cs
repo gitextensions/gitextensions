@@ -1,6 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using AvaloniaEdit.Document;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -16,6 +17,7 @@ public partial class GrepHighlightService : DiffHighlightService
     private const string _grepResultKind_Unknown = "";
 
     private readonly List<TextMarker> _textMarkers = [];
+    private DiffLinesInfo _diffLinesInfo = new();
 
     [GeneratedRegex(@"^(?<line>\d+)(?<kind>:|.)(?<text>.*)$", RegexOptions.ExplicitCapture)]
     private static partial Regex GrepLineRegex { get; }
@@ -24,8 +26,14 @@ public partial class GrepHighlightService : DiffHighlightService
         : base(ref text, useGitColoring: false)
     {
         SetText(ref text);
+        LinesInfo = _diffLinesInfo;
         AddTextMarkers(_textMarkers);
-        lineNumbersControl.DisplayLineNum(LinesInfo, showLeftColumn: false);
+        lineNumbersControl.DisplayLineNum(_diffLinesInfo, showLeftColumn: false);
+    }
+
+    // Avalonia framework constraint: renderers consume the marker list instead of mutating TextDocument.
+    public override void AddTextHighlighting(TextDocument document)
+    {
     }
 
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
@@ -42,12 +50,12 @@ public partial class GrepHighlightService : DiffHighlightService
         int increase = next ? 1 : -1;
 
         // If start index is on a match, move to next
-        if (LinesInfo.DiffLines.TryGetValue(rowIndexInText, out DiffLineInfo? lineInfo) && lineInfo.LineType == DiffLineType.Grep)
+        if (_diffLinesInfo.DiffLines.TryGetValue(rowIndexInText, out DiffLineInfo? lineInfo) && lineInfo.LineType == DiffLineType.Grep)
         {
             rowIndexInText += increase;
         }
 
-        while (LinesInfo.DiffLines.TryGetValue(rowIndexInText, out lineInfo) && lineInfo.LineType != DiffLineType.Grep)
+        while (_diffLinesInfo.DiffLines.TryGetValue(rowIndexInText, out lineInfo) && lineInfo.LineType != DiffLineType.Grep)
         {
             rowIndexInText += increase;
         }
@@ -130,12 +138,12 @@ public partial class GrepHighlightService : DiffHighlightService
             skipNextSeparator = kind == _grepResultKind_FunctionHeader;
             if (pendingSeparator && !skipNextSeparator)
             {
-                LinesInfo.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, _grepResultKind_Separator));
+                _diffLinesInfo.Add(GetDiffLineInfo(DiffLineInfo.NotApplicableLineNum, _grepResultKind_Separator));
                 sb.Append('\n');
             }
 
             pendingSeparator = false;
-            LinesInfo.Add(GetDiffLineInfo(lineNo, kind));
+            _diffLinesInfo.Add(GetDiffLineInfo(lineNo, kind));
 
             AnsiEscapeUtilities.ParseEscape(grepText, sb, _textMarkers);
             sb.Append('\n');
@@ -159,7 +167,7 @@ public partial class GrepHighlightService : DiffHighlightService
     private DiffLineInfo GetDiffLineInfo(int lineno, string kind)
         => new()
         {
-            LineNumInDiff = LinesInfo.DiffLines.Count + 1,
+            LineNumInDiff = _diffLinesInfo.DiffLines.Count + 1,
             LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
             RightLineNumber = lineno,
             LineType = lineno == DiffLineInfo.NotApplicableLineNum || kind == _grepResultKind_FunctionHeader
