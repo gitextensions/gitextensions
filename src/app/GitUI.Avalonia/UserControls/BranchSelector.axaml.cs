@@ -147,7 +147,7 @@ public partial class BranchSelector : GitModuleControl
     private void Remotebranch_CheckedChanged(object? sender, EventArgs e)
     {
         Branches.Focus();
-        if (!_isLoading && Remotebranch.IsChecked == true)
+        if (!_isLoading)
         {
             Initialize(IsRemoteBranchChecked, null);
         }

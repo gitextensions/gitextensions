@@ -17,6 +17,9 @@ public class CaseSensitiveComboBox : ComboBox
         LostFocus += OnValidating;
     }
 
+    // Framework constraint: Avalonia derived controls must opt into the base ComboBox theme template.
+    protected override Type StyleKeyOverride => typeof(ComboBox);
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
