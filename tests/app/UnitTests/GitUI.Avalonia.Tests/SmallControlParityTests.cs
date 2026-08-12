@@ -30,6 +30,28 @@ public sealed class SmallControlParityTests
     }
 
     [AvaloniaTest]
+    public void BranchSelector_should_preserve_native_125_percent_geometry_in_dips()
+    {
+        BranchSelector control = new();
+        Window window = new() { Width = 274.4, Height = 54.4, Content = control };
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            control.Bounds.Width.Should().BeApproximately(274.4, 1);
+            control.Bounds.Height.Should().BeApproximately(54.4, 1);
+            control.GetTestAccessor().Branches.Bounds.Width.Should().BeApproximately(171.2, 1);
+            control.GetTestAccessor().Branches.Bounds.Height.Should().BeApproximately(22.4, 1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void BranchSelector_should_reload_the_selected_branch_source_in_both_directions()
     {
         IGitRef localBranch = Substitute.For<IGitRef>();

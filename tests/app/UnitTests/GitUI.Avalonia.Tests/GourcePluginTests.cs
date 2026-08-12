@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Net;
@@ -95,10 +95,10 @@ public sealed class GourcePluginTests
         form.AddTranslationItems(translation);
         form.TranslateItems(translation);
 
-        form.Width.Should().Be(718);
-        form.Height.Should().Be(165);
-        form.FindControl<Grid>("tableLayoutPanel1")!.Height.Should().Be(99);
-        form.FindControl<Button>("button1")!.Width.Should().Be(94);
+        form.Width.Should().Be(574.4);
+        form.Height.Should().Be(132);
+        form.FindControl<Grid>("tableLayoutPanel1")!.Height.Should().Be(79.2);
+        form.FindControl<Button>("button1")!.Width.Should().Be(75.2);
         form.FindControl<TextBox>("Arguments").Should().NotBeNull();
         form.FindControl<TextBox>("GourcePath").Should().NotBeNull();
         form.FindControl<TextBox>("WorkingDir").Should().NotBeNull();
