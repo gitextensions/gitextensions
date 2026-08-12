@@ -10,75 +10,81 @@ public static partial class InputMetadataGenerator
     private static readonly XNamespace XamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
 
     public static string Generate(string winFormsRoot, string avaloniaRoot)
-    {
-        string fullWinFormsRoot = Path.GetFullPath(winFormsRoot);
-        string fullAvaloniaRoot = Path.GetFullPath(avaloniaRoot);
-        if (!Directory.Exists(fullWinFormsRoot) || !Directory.Exists(fullAvaloniaRoot))
-        {
-            throw new InvalidDataException("Both GitUI source roots must exist.");
-        }
+        => Generate([(winFormsRoot, avaloniaRoot)]);
 
+    public static string Generate(IEnumerable<(string WinFormsRoot, string AvaloniaRoot)> sourceRoots)
+    {
         List<ViewMetadata> views = [];
-        foreach (string axamlPath in Directory.EnumerateFiles(fullAvaloniaRoot, "*.axaml", SearchOption.AllDirectories)
-                     .Order(StringComparer.Ordinal))
+        foreach ((string winFormsRoot, string avaloniaRoot) in sourceRoots)
         {
-            string relativePath = Path.GetRelativePath(fullAvaloniaRoot, axamlPath);
-            string designerPath = Path.Combine(
-                fullWinFormsRoot,
-                Path.ChangeExtension(relativePath, ".Designer.cs"));
-            if (!File.Exists(designerPath))
+            string fullWinFormsRoot = Path.GetFullPath(winFormsRoot);
+            string fullAvaloniaRoot = Path.GetFullPath(avaloniaRoot);
+            if (!Directory.Exists(fullWinFormsRoot) || !Directory.Exists(fullAvaloniaRoot))
             {
-                continue;
+                throw new InvalidDataException("Every WinForms/Avalonia source-root pair must exist.");
             }
 
-            XDocument axaml = XDocument.Load(axamlPath);
-            string className = (string?)axaml.Root?.Attribute(XamlNamespace + "Class")
-                ?? throw new InvalidDataException($"AXAML view '{relativePath}' has no x:Class.");
-            HashSet<string> controlNames = axaml.Root!.DescendantsAndSelf()
-                .Select(element => (string?)element.Attribute(XamlNamespace + "Name"))
-                .Where(name => !string.IsNullOrWhiteSpace(name))
-                .ToHashSet(StringComparer.Ordinal)!;
-            Dictionary<string, MutableControlMetadata> controls = controlNames.ToDictionary(
-                name => name,
-                _ => new MutableControlMetadata(),
-                StringComparer.Ordinal);
-
-            foreach (string line in File.ReadLines(designerPath))
+            foreach (string axamlPath in Directory.EnumerateFiles(fullAvaloniaRoot, "*.axaml", SearchOption.AllDirectories)
+                         .Order(StringComparer.Ordinal))
             {
-                Match match = AssignmentRegex().Match(line);
-                if (!match.Success || !controls.TryGetValue(match.Groups["field"].Value, out MutableControlMetadata? metadata))
+                string relativePath = Path.GetRelativePath(fullAvaloniaRoot, axamlPath);
+                string designerPath = Path.Combine(
+                    fullWinFormsRoot,
+                    Path.ChangeExtension(relativePath, ".Designer.cs"));
+                if (!File.Exists(designerPath))
                 {
                     continue;
                 }
 
-                string property = match.Groups["property"].Value;
-                string value = match.Groups["value"].Value.Trim();
-                switch (property)
-                {
-                    case "TabIndex":
-                        metadata.TabIndex = int.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
-                        break;
-                    case "TabStop":
-                        metadata.IsTabStop = bool.Parse(value);
-                        break;
-                    case "AccessibleName":
-                        metadata.AccessibleName = UnescapeString(value);
-                        break;
-                }
-            }
+                XDocument axaml = XDocument.Load(axamlPath);
+                string className = (string?)axaml.Root?.Attribute(XamlNamespace + "Class")
+                    ?? throw new InvalidDataException($"AXAML view '{relativePath}' has no x:Class.");
+                HashSet<string> controlNames = axaml.Root!.DescendantsAndSelf()
+                    .Select(element => (string?)element.Attribute(XamlNamespace + "Name"))
+                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                    .ToHashSet(StringComparer.Ordinal)!;
+                Dictionary<string, MutableControlMetadata> controls = controlNames.ToDictionary(
+                    name => name,
+                    _ => new MutableControlMetadata(),
+                    StringComparer.Ordinal);
 
-            ControlMetadata[] projected = controls
-                .Where(pair => pair.Value.HasValue)
-                .OrderBy(pair => pair.Key, StringComparer.Ordinal)
-                .Select(pair => new ControlMetadata(
-                    pair.Key,
-                    pair.Value.TabIndex,
-                    pair.Value.IsTabStop,
-                    pair.Value.AccessibleName))
-                .ToArray();
-            if (projected.Length > 0)
-            {
-                views.Add(new ViewMetadata(className, projected));
+                foreach (string line in File.ReadLines(designerPath))
+                {
+                    Match match = AssignmentRegex().Match(line);
+                    if (!match.Success || !controls.TryGetValue(match.Groups["field"].Value, out MutableControlMetadata? metadata))
+                    {
+                        continue;
+                    }
+
+                    string property = match.Groups["property"].Value;
+                    string value = match.Groups["value"].Value.Trim();
+                    switch (property)
+                    {
+                        case "TabIndex":
+                            metadata.TabIndex = int.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+                            break;
+                        case "TabStop":
+                            metadata.IsTabStop = bool.Parse(value);
+                            break;
+                        case "AccessibleName":
+                            metadata.AccessibleName = UnescapeString(value);
+                            break;
+                    }
+                }
+
+                ControlMetadata[] projected = controls
+                    .Where(pair => pair.Value.HasValue)
+                    .OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                    .Select(pair => new ControlMetadata(
+                        pair.Key,
+                        pair.Value.TabIndex,
+                        pair.Value.IsTabStop,
+                        pair.Value.AccessibleName))
+                    .ToArray();
+                if (projected.Length > 0)
+                {
+                    views.Add(new ViewMetadata(className, projected));
+                }
             }
         }
 
@@ -87,9 +93,19 @@ public static partial class InputMetadataGenerator
             throw new InvalidDataException("No matching AXAML and WinForms Designer input metadata was found.");
         }
 
+        string[] duplicateClassNames = views
+            .GroupBy(view => view.ClassName, StringComparer.Ordinal)
+            .Where(group => group.Count() > 1)
+            .Select(group => group.Key)
+            .ToArray();
+        if (duplicateClassNames.Length > 0)
+        {
+            throw new InvalidDataException($"Duplicate AXAML class metadata: {string.Join(", ", duplicateClassNames)}.");
+        }
+
         StringBuilder builder = new();
         AppendLine("// <auto-generated />");
-        AppendLine("// Generated by eng/tools/WinFormsInputParityToAvalonia from matching GitUI Designer files.");
+        AppendLine("// Generated by eng/tools/WinFormsInputParityToAvalonia from matching WinForms Designer files.");
         AppendLine();
         AppendLine("namespace GitUI.Compat;");
         AppendLine();

@@ -69,19 +69,7 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
         }
 
         string pathToGource = _gourcePath.ValueOrDefault(Settings);
-
-        if (!string.IsNullOrEmpty(pathToGource) && !File.Exists(pathToGource))
-        {
-            DialogResult result = MessageBoxes.Show(
-                args.OwnerForm,
-                string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-            if (result == DialogResult.Yes)
-            {
-                Settings.SetValue(_gourcePath.Name, _gourcePath.DefaultValue);
-                pathToGource = _gourcePath.DefaultValue;
-            }
-        }
+        pathToGource = ResetMissingConfiguredPath(args.OwnerForm, pathToGource);
 
         // Cross-platform constraint: the upstream archive is Windows-only; Linux and macOS select their native executable.
         if (string.IsNullOrEmpty(pathToGource) && ShouldOfferAutomaticDownload)
@@ -130,6 +118,24 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
     }
 
     #endregion
+
+    private string ResetMissingConfiguredPath(IWin32Window? owner, string pathToGource)
+    {
+        if (!string.IsNullOrEmpty(pathToGource) && !File.Exists(pathToGource))
+        {
+            DialogResult result = MessageBoxes.Show(
+                owner,
+                string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                Settings.SetValue(_gourcePath.Name, _gourcePath.DefaultValue);
+                pathToGource = _gourcePath.DefaultValue;
+            }
+        }
+
+        return pathToGource;
+    }
 
     private static void UnZipFiles(IWin32Window? owner, string zipPathAndFile, string outputFolder, bool deleteZipFile)
     {
@@ -180,10 +186,17 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
     }
 
     private static async Task<int> DownloadFileAsync(IWin32Window? owner, string remoteFilename, string localFilename)
+        => await DownloadFileAsync(owner, remoteFilename, localFilename, _httpClient);
+
+    private static async Task<int> DownloadFileAsync(
+        IWin32Window? owner,
+        string remoteFilename,
+        string localFilename,
+        HttpClient httpClient)
     {
         try
         {
-            using Stream remoteStream = await _httpClient.GetStreamAsync(remoteFilename);
+            using Stream remoteStream = await httpClient.GetStreamAsync(remoteFilename);
             using FileStream localStream = File.Create(localFilename);
             await remoteStream.CopyToAsync(localStream);
 
@@ -198,6 +211,9 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
     }
 
     private static async Task<string> SearchForGourceUrlAsync(IWin32Window? owner)
+        => await SearchForGourceUrlAsync(owner, _httpClient);
+
+    private static async Task<string> SearchForGourceUrlAsync(IWin32Window? owner, HttpClient httpClient)
     {
         // All Gource releases do not have binary releases, use a fallback
         const string latestApiUrl = "https://api.github.com/repos/acaudwell/Gource/releases/latest";
@@ -225,7 +241,7 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
         {
             using HttpRequestMessage request = new(HttpMethod.Get, apiUrl);
             request.Headers.UserAgent.ParseAdd("GitExtensions");
-            using HttpResponseMessage response = await _httpClient.SendAsync(request);
+            using HttpResponseMessage response = await httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode)
             {
                 return string.Empty;
@@ -247,4 +263,40 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
             return string.Empty;
         }
     }
+
+    // parity-scaffolding: Exposes archive/network helpers to deterministic focused tests.
+    internal readonly struct TestAccessor
+    {
+        private readonly GourcePlugin _plugin;
+
+        internal TestAccessor(GourcePlugin plugin)
+        {
+            _plugin = plugin;
+        }
+
+        internal StringSetting GourcePath => _plugin._gourcePath;
+        internal StringSetting GourceArguments => _plugin._gourceArguments;
+        internal string ResetMissingConfiguredPath(IWin32Window? owner, string pathToGource)
+            => _plugin.ResetMissingConfiguredPath(owner, pathToGource);
+
+        internal static Task<int> DownloadFileAsync(
+            IWin32Window? owner,
+            string remoteFilename,
+            string localFilename,
+            HttpClient httpClient)
+            => GourcePlugin.DownloadFileAsync(owner, remoteFilename, localFilename, httpClient);
+
+        internal static Task<string> SearchForGourceUrlAsync(IWin32Window? owner, HttpClient httpClient)
+            => GourcePlugin.SearchForGourceUrlAsync(owner, httpClient);
+
+        internal static void UnZipFiles(
+            IWin32Window? owner,
+            string zipPathAndFile,
+            string outputFolder,
+            bool deleteZipFile)
+            => GourcePlugin.UnZipFiles(owner, zipPathAndFile, outputFolder, deleteZipFile);
+    }
+
+    // parity-scaffolding: Exposes the original settings and path-reset boundary to focused tests.
+    internal TestAccessor GetTestAccessor() => new(this);
 }
