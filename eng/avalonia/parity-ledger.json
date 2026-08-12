@@ -23550,15 +23550,21 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "3473206683e2fa1562b79c069999011fda6cb063",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h2/inventory/UIReporter.json",
+            "eng/avalonia/parity-evidence/P8.6h/h2/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h2/tests/windows/p8.6h2-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h2/tests/linux/p8.6h2-focused-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 31,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 40,
+          "note": "Isolated child-process tests exercise non-terminating report/ignore, fatal report/exit, failed-assembly restart/report, and dubious-ownership trust/help/open/close decisions without publishing, touching real settings, exiting the parent testhost, or starting a replacement process. All current inventory findings are classified framework, native-report-boundary, or marked parity-scaffolding representation; exact structural closure remains P8.6h.3."
         },
         "visual": {
           "status": "notApplicable",
@@ -23579,13 +23585,19 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "3473206683e2fa1562b79c069999011fda6cb063",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6h/h2/tests/windows/p8.6h2-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h2/tests/linux/p8.6h2-focused-linux.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "All decision buttons and close behavior owned by UIReporter are exercised in fresh child testhosts; the fatal route genuinely terminates only its child and the restart route is intercepted before replacement-process creation."
         },
         "platform": {
           "status": "unverified",
