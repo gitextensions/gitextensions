@@ -27,7 +27,19 @@ internal abstract class MenuCommandsBase : ITranslate
     public virtual void TranslateItems(ITranslation translation)
     {
         TranslationUtils.TranslateItemsFromFields(TranslationCategoryName, this, translation);
-        TranslationUtils.TranslateItemsFromList(TranslationCategoryName, translation, GetMenuCommandsForTranslationImpl());
+        MenuCommand[] menuCommands = GetMenuCommandsForTranslation().ToArray();
+        TranslationUtils.TranslateItemsFromList(
+            TranslationCategoryName,
+            translation,
+            menuCommands.Select(menuCommand =>
+            {
+                Validates.NotNull(menuCommand.Name);
+                return (menuCommand.Name, (object)menuCommand);
+            }));
+        foreach (MenuCommand menuCommand in menuCommands)
+        {
+            menuCommand.UpdateMenuItemsText();
+        }
     }
 
     // override and return all commands created by extending class

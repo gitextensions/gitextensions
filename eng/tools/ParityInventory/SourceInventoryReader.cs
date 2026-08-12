@@ -115,6 +115,11 @@ internal static class SourceInventoryReader
         bool isTwin,
         List<MutablePart> parts)
     {
+        bool hasDesignerPart = parts.Any(part =>
+            string.Equals(
+                Path.GetFileName(part.Path),
+                $"{className}.Designer.cs",
+                StringComparison.Ordinal));
         List<TranslationKeyEntry> keys = parts.SelectMany(part => part.TranslationKeys)
             .GroupBy(entry => (entry.Key, entry.Origin))
             .Select(group => group.First() with { InEnglishCatalog = englishKeys.Contains(group.Key.Key) })
@@ -129,7 +134,7 @@ internal static class SourceInventoryReader
                 .Select(part => new SourcePart
                 {
                     Path = part.Path,
-                    ExpectedTwinPath = !isTwin ? GetExpectedTwinPath(part.Path, className) : null
+                    ExpectedTwinPath = !isTwin ? GetExpectedTwinPath(part.Path, className, hasDesignerPart) : null
                 })
                 .ToArray(),
             Members = parts.SelectMany(part => part.Members)
@@ -668,6 +673,11 @@ internal static class SourceInventoryReader
         string className,
         MutablePart part)
     {
+        if (!part.Path.EndsWith(".Designer.cs", StringComparison.Ordinal))
+        {
+            return;
+        }
+
         foreach (AssignmentExpressionSyntax assignment in declaration.DescendantNodes().OfType<AssignmentExpressionSyntax>())
         {
             if (assignment.Left is not MemberAccessExpressionSyntax access
@@ -784,13 +794,13 @@ internal static class SourceInventoryReader
             InEnglishCatalog = false
         };
 
-    private static string GetExpectedTwinPath(string path, string className)
+    private static string GetExpectedTwinPath(string path, string className, bool hasDesignerPart)
     {
         string fileName = Path.GetFileName(path);
         string directory = NormalizePath(Path.GetDirectoryName(path) ?? string.Empty);
         string twinFileName = fileName switch
         {
-            var name when name == $"{className}.cs" => $"{className}.axaml.cs",
+            var name when name == $"{className}.cs" && hasDesignerPart => $"{className}.axaml.cs",
             var name when name == $"{className}.Designer.cs" => $"{className}.axaml",
             _ => fileName
         };
