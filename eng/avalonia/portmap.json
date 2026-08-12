@@ -3818,7 +3818,7 @@
     "twin": "src/app/GitUI.Avalonia/NBugReports/UIReporter.cs",
     "status": "functional",
     "basedOn": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
-    "notes": "Native Avalonia task dialogs preserve error, failed-load, restart, report/ignore, and dubious-ownership flows; active Window ownership, dispatcher restart, and the portal-aware issue launcher replace WinForms handles and BugReportForm."
+    "notes": "Native Avalonia task dialogs preserve error, failed-load, restart, report/ignore, and dubious-ownership flows; active Window ownership, dispatcher restart, and the portal-aware issue launcher replace WinForms handles and BugReportForm. P8.6h.2 exercises all nine decision routes in isolated Windows/Linux child testhosts, including a genuine fatal child exit and intercepted restart, shell, Git, report, and repository actions. The parity-only interception properties are marked for P11 removal; exact structural closure remains P8.6h.3."
   },
   "src/app/GitUI/Properties/Images.Designer.cs": {
     "status": "windowsOnly",
