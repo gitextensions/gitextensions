@@ -682,19 +682,19 @@
     "twin": "src/plugins/Gource/GourcePlugin.NonWindows.cs",
     "status": "functional",
     "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
-    "notes": "Portable-only same-named plugin retains repository validation, missing-path reset, settings, icon, dialog, result persistence, and the original Windows gource.exe ZIP download. Linux and macOS instead select an installed native executable in the same dialog because the upstream archive is Windows-only. A Flatpak cannot execute an arbitrary host Gource binary merely because --filesystem=host makes its path visible, so the confined substitute is an explicit translated unavailable error."
+    "notes": "Portable-only same-named plugin retains repository validation, missing-path reset, settings, icon, dialog, result persistence, and the original Windows gource.exe ZIP download. Linux and macOS instead select an installed native executable in the same dialog because the upstream archive is Windows-only. A Flatpak cannot execute an arbitrary host Gource binary merely because --filesystem=host makes its path visible, so the confined substitute is an explicit translated unavailable error. P8.6g.2 verifies invalid repositories, both missing-path choices, settings persistence, GitHub-release fallback, download success/failure, safe ZIP extraction, and the confined substitute; exact source shape remains P8.6g.3."
   },
   "src/plugins/Gource/GourceStart.cs": {
     "twin": "src/plugins/Gource/GourceStart.axaml.cs",
     "status": "functional",
     "basedOn": "96b00fa263048f9bd70e62f363926d1433f946c3",
-    "notes": "Portable-only same-named dialog retains executable, repository, arguments, avatar generation, detached launch, and documentation actions. PortalPickerGuard replaces WinForms pickers; encoded avatar bytes replace System.Drawing image saves; executable and arguments launch separately without a shell. In Flatpak the host-executable launch boundary reports Gource as explicitly unavailable rather than attempting or silently failing a host launch."
+    "notes": "Portable-only same-named dialog retains executable, repository, arguments, avatar generation, detached launch, and documentation actions. PortalPickerGuard replaces WinForms pickers; encoded avatar bytes replace System.Drawing image saves; executable and arguments launch separately without a shell. In Flatpak the host-executable launch boundary reports Gource as explicitly unavailable rather than attempting or silently failing a host launch. P8.6g.2 verifies picker filters/start locations/cancellation, avatar substitution and invalid-name handling, shell-free process arguments, launch failure, links, persistence, and the confined substitute; exact structure/visual/theme/exhaustive-state closure remains P8.6g.3."
   },
   "src/plugins/Gource/GourceStart.Designer.cs": {
     "twin": "src/plugins/Gource/GourceStart.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Same 718x165 resizable tool window, three-row executable/repository/arguments grid, 94x29 Start action, two documentation links, centered owner placement, original field names, and nine existing plugin XLF keys."
+    "notes": "Same 718x165 resizable tool window, three-row executable/repository/arguments grid, 94x29 Start action, two documentation links, centered owner placement, original field names, and nine existing plugin XLF keys. P8.6g.2 adds its 13 matching Designer controls to the shared generated TabIndex/TabStop/accessibility projection; exact structure/visual/theme/exhaustive-state closure remains P8.6g.3."
   },
   "src/plugins/Statistics/GitImpact/FormImpact.cs": {
     "twin": "src/plugins/Statistics/GitImpact/FormImpact.axaml.cs",
