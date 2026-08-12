@@ -31245,15 +31245,18 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-12",
+          "commit": "d7e5f25166841a7c379c5b1f67dc4b99f03e4b2a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/tests/windows/p8.6h3b1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/build/linux-gate.log"
           ],
-          "platforms": [],
-          "findingCount": 114,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
+          "findingCount": 86,
+          "note": "P8.6h.3b.1 verifies the body/notes/ref tooltip summary, delayed detail loading, notes-column boundary and annotated-tag marker on Windows/Linux. Expanded row body/stash content and the remaining native rendering/source-shape findings are explicitly retained for P8.6h.3b.2; no complete functional or visual axis is claimed."
         },
         "visual": {
           "status": "notApplicable",
@@ -31505,15 +31508,18 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "d7e5f25166841a7c379c5b1f67dc4b99f03e4b2a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory/GitUI.UserControls.RevisionGrid.CopyContextMenuItem.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/tests/windows/p8.6h3b1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/build/linux-gate.log"
           ],
-          "platforms": [],
-          "findingCount": 17,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
+          "findingCount": 3,
+          "note": "The three findings are classified native icon/header escaping and owner-refresh helpers. Focused Windows/Linux tests verify ref filtering, branch/tag grouping, date splitting, multi-selection payloads and clipboard execution; exact popup pixels, exhaustive owner state, native DPI, and macOS remain P8.6h.3b.2/P8.6a/P8.4."
         },
         "visual": {
           "status": "notApplicable",
@@ -33461,15 +33467,18 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "d7e5f25166841a7c379c5b1f67dc4b99f03e4b2a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory/GitUI.UserControls.RevisionGrid.RevisionGridMenuCommands.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/tests/windows/p8.6h3b1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/build/linux-gate.log"
           ],
-          "platforms": [],
-          "findingCount": 18,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
+          "findingCount": 0,
+          "note": "The complete Navigate/View inventory has zero current source findings and its Go-to-commit action is executable. Focused Windows/Linux tests close this source-functional command-model contract; popup pixels, exhaustive owner state, native DPI, and macOS remain P8.6h.3b.2/P8.6a/P8.4."
         },
         "visual": {
           "status": "notApplicable",
@@ -33526,15 +33535,18 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-12",
+          "commit": "d7e5f25166841a7c379c5b1f67dc4b99f03e4b2a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/tests/windows/p8.6h3b1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/build/linux-gate.log"
           ],
-          "platforms": [],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 71,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "P8.6h.3b.1 verifies the annotated-tag label update through the native renderer. The remaining source-shape, geometry, color and state findings are retained for P8.6h.3b.2; no complete functional or visual axis is claimed."
         },
         "visual": {
           "status": "notApplicable",
@@ -33591,15 +33603,18 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "d7e5f25166841a7c379c5b1f67dc4b99f03e4b2a",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory/GitUI.RevisionGridToolTipProvider.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/tests/windows/p8.6h3b1-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b/build/linux-gate.log"
           ],
-          "platforms": [],
-          "findingCount": 34,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
+          "findingCount": 16,
+          "note": "All findings are classified native pointer, attached ToolTip and realized-cell representation differences. Focused Windows/Linux tests verify the setting gate, truncation cache, previous-cell suppression, hide, clear and text contract; exact timing/visual state, native DPI, and macOS remain P8.6h.3b.2/P8.6a/P8.4."
         },
         "visual": {
           "status": "notApplicable",

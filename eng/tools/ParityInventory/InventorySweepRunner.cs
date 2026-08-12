@@ -50,7 +50,11 @@ internal static class InventorySweepRunner
             }
 
             string className = work.TypeName[(work.TypeName.LastIndexOf('.') + 1)..];
-            IReadOnlySet<string> englishKeys = EnglishCatalog.Read(options.TranslationsFile, className);
+            string translationCategory = SourceInventoryReader.DiscoverTranslationCategory(
+                options.OriginalRoot,
+                work.TypeName,
+                work.OriginalFiles) ?? className;
+            IReadOnlySet<string> englishKeys = EnglishCatalog.Read(options.TranslationsFile, translationCategory);
             try
             {
                 SourceInventory original = SourceInventoryReader.ReadFiles(
