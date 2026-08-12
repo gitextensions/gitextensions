@@ -31247,16 +31247,17 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-12",
-          "commit": "d7e5f25166841a7c379c5b1f67dc4b99f03e4b2a",
+          "commit": "904ae106eab110089ae0cd986ec9b11bd24c6700",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory-classification.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b/tests/windows/p8.6h3b1-focused-windows.trx",
-            "eng/avalonia/parity-evidence/P8.6h/h3b/build/linux-gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/inventory/MessageColumnProvider.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/winforms-row-content/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/avalonia-row-content-final/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/build/linux-gate.log"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
-          "findingCount": 86,
-          "note": "P8.6h.3b.1 verifies the body/notes/ref tooltip summary, delayed detail loading, notes-column boundary and annotated-tag marker on Windows/Linux. Expanded row body/stash content and the remaining native rendering/source-shape findings are explicitly retained for P8.6h.3b.2; no complete functional or visual axis is claimed."
+          "findingCount": 84,
+          "note": "P8.6h.3b.1 verifies the tooltip and annotated-tag contract. P8.6h.3b.2a verifies loaded subject/body/notes rows, the body setting and delayed-load boundary, stash/autostash capsules and subject rule, and fixup/squash/amend markers on Windows/Linux. A shared multiline/stash fixture captured light/dark/custom at native 125%; 84 source findings and exact visual/state closure remain P8.6h.3b.2b."
         },
         "visual": {
           "status": "notApplicable",
@@ -33402,15 +33403,17 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-12",
+          "commit": "904ae106eab110089ae0cd986ec9b11bd24c6700",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/avalonia-row-content-final/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/build/linux-gate.log"
           ],
-          "platforms": [],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1085,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "P8.6h.3b.2a verifies that streamed stash revisions appear once even when --all reports refs/stash after the parent insertion batch. Broader RevisionGridControl source and behavior debt remains open; no complete axis is claimed."
         },
         "visual": {
           "status": "unverified",
@@ -33537,16 +33540,17 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-12",
-          "commit": "d7e5f25166841a7c379c5b1f67dc4b99f03e4b2a",
+          "commit": "904ae106eab110089ae0cd986ec9b11bd24c6700",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory/GitUI.UserControls.RevisionGrid.RevisionGridRefRenderer.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b/final/inventory-classification.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b/tests/windows/p8.6h3b1-focused-windows.trx",
-            "eng/avalonia/parity-evidence/P8.6h/h3b/build/linux-gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/inventory/RevisionGridRefRenderer.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/winforms-row-content/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/avalonia-row-content-final/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2a/build/linux-gate.log"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 71,
-          "note": "P8.6h.3b.1 verifies the annotated-tag label update through the native renderer. The remaining source-shape, geometry, color and state findings are retained for P8.6h.3b.2; no complete functional or visual axis is claimed."
+          "note": "P8.6h.3b.1 verifies the annotated-tag label update. P8.6h.3b.2a uses the same mutable native label boundary for stash/autostash capsules and verifies the row-content fixture on Windows/Linux. The 71 source-shape, geometry, color and state findings remain P8.6h.3b.2b; no complete visual axis is claimed."
         },
         "visual": {
           "status": "notApplicable",
