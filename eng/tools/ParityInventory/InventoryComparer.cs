@@ -74,22 +74,38 @@ internal static class InventoryComparer
         SourceInventory twin,
         List<FunctionalFinding> findings)
     {
-        Dictionary<string, int> twinOrder = twin.Members
+        HashSet<string> uniqueOriginalKeys = original.Members
             .GroupBy(MemberKey, StringComparer.Ordinal)
             .Where(group => group.Count() == 1)
-            .ToDictionary(group => group.Key, group => group.Single().Order, StringComparer.Ordinal);
-        foreach (MemberEntry member in original.Members)
+            .Select(group => group.Key)
+            .ToHashSet(StringComparer.Ordinal);
+        HashSet<string> uniqueTwinKeys = twin.Members
+            .GroupBy(MemberKey, StringComparer.Ordinal)
+            .Where(group => group.Count() == 1)
+            .Select(group => group.Key)
+            .ToHashSet(StringComparer.Ordinal);
+        HashSet<string> comparableKeys = uniqueOriginalKeys
+            .Where(uniqueTwinKeys.Contains)
+            .ToHashSet(StringComparer.Ordinal);
+        Dictionary<string, int> originalOrder = original.Members
+            .Where(member => comparableKeys.Contains(MemberKey(member)))
+            .Select((member, order) => (Key: MemberKey(member), Order: order))
+            .ToDictionary(item => item.Key, item => item.Order, StringComparer.Ordinal);
+        Dictionary<string, int> twinOrder = twin.Members
+            .Where(member => comparableKeys.Contains(MemberKey(member)))
+            .Select((member, order) => (Key: MemberKey(member), Order: order))
+            .ToDictionary(item => item.Key, item => item.Order, StringComparer.Ordinal);
+        foreach ((string key, int order) in originalOrder)
         {
-            string key = MemberKey(member);
-            if (twinOrder.TryGetValue(key, out int order) && order != member.Order)
+            if (twinOrder[key] != order)
             {
                 findings.Add(NewFinding(
                     "members",
                     "member.order",
                     $"member/{key}",
-                    $"Member '{key}' appears at order {member.Order} in the original and {order} in the twin.",
-                    member.Order.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                    order.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                    $"Member '{key}' appears at relative order {order} in the original and {twinOrder[key]} in the twin.",
+                    order.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    twinOrder[key].ToString(System.Globalization.CultureInfo.InvariantCulture)));
             }
         }
     }

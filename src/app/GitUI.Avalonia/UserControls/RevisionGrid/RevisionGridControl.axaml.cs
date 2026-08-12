@@ -140,7 +140,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             SelectionChanged?.Invoke(this, EventArgs.Empty);
         };
         _gridView.KeyDown += OnGridViewKeyDown;
-        _gridView.TextInput += (_, e) => _quickSearchProvider.OnTextInput(e);
+        _gridView.TextInput += (_, e) => _quickSearchProvider.OnKeyPress(e);
         _gridView.DoubleTapped += (_, _) =>
             DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(SelectedRevision));
         _gridView.PointerPressed += _gridView_PointerPressed;
@@ -784,7 +784,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             return;
         }
 
-        _quickSearchProvider.OnKeyDown(e);
+        _quickSearchProvider.OnPreviewKeyDown(e);
     }
 
     #region Drag/drop patch files on revision grid
