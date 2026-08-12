@@ -35,10 +35,16 @@ public sealed class InputAccessibilityTests
             "WinFormsInputMetadata.g.cs");
 
         File.ReadAllText(generatedPath).ReplaceLineEndings("\n").Should().Be(InputMetadataGenerator.Generate(
-            Path.Combine(repositoryRoot, "src", "app", "GitUI"),
-            Path.Combine(repositoryRoot, "src", "app", "GitUI.Avalonia")));
-        WinFormsInputMetadata.ByType.Should().HaveCount(141);
-        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1463);
+        [
+            (
+                Path.Combine(repositoryRoot, "src", "app", "GitUI"),
+                Path.Combine(repositoryRoot, "src", "app", "GitUI.Avalonia")),
+            (
+                Path.Combine(repositoryRoot, "src", "plugins", "Gource"),
+                Path.Combine(repositoryRoot, "src", "plugins", "Gource")),
+        ]));
+        WinFormsInputMetadata.ByType.Should().HaveCount(142);
+        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1476);
     }
 
     [AvaloniaTest]
