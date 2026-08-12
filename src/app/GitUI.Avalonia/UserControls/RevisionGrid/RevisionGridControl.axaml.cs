@@ -2443,6 +2443,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         RevisionLoadEventArgs loadEventArgs) : IObserver<IReadOnlyList<GitRevision>>
     {
         private bool _artificialRevisionsAddedToStream;
+        private readonly HashSet<ObjectId> _insertedStashIds = [];
         private Dictionary<ObjectId, GitRevision>? _stashesById;
         private ILookup<ObjectId, GitRevision>? _stashesByParentId;
 
@@ -2540,7 +2541,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
         private IReadOnlyList<GitRevision> AddStashRevisions(IReadOnlyList<GitRevision> revisions)
         {
-            if (_stashesById is not { Count: > 0 } stashesById)
+            if (_stashesById is not { } stashesById
+                || (stashesById.Count == 0 && _insertedStashIds.Count == 0))
             {
                 return revisions;
             }
@@ -2548,9 +2550,16 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             List<GitRevision> revisionsWithStashes = new(revisions.Count + stashesById.Count);
             foreach (GitRevision revision in revisions)
             {
+                if (_insertedStashIds.Contains(revision.ObjectId))
+                {
+                    // The --all stream can report refs/stash after its parent batch already inserted it.
+                    continue;
+                }
+
                 if (stashesById.Remove(revision.ObjectId, out GitRevision? stash))
                 {
                     revision.ReflogSelector = stash.ReflogSelector;
+                    _insertedStashIds.Add(revision.ObjectId);
                 }
                 else if (_stashesByParentId is not null)
                 {
@@ -2559,6 +2568,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                         if (stashesById.Remove(parentStash.ObjectId))
                         {
                             revisionsWithStashes.Add(parentStash);
+                            _insertedStashIds.Add(parentStash.ObjectId);
                         }
                     }
                 }
