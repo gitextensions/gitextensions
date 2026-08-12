@@ -1,4 +1,5 @@
 ﻿using System.Collections.Frozen;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using Avalonia;
@@ -9,6 +10,7 @@ using Avalonia.Media;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Extensions;
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
@@ -20,6 +22,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
 {
     private record struct Settings(
         bool FillRefLabels,
+        bool NotesInSeparateColumn,
+        bool ShowAnnotatedTagsMessages,
+        bool ShowCommitBodyInRevisionGrid,
+        bool ShowGitNotes,
         bool ShowRemoteBranches,
         bool ShowGitStatusForArtificialCommits,
         bool ShowRevisionGridTooltips,
@@ -29,16 +35,24 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     private static readonly Cursor HandCursor = new(StandardCursorType.Hand);
 
+    private readonly StringBuilder _toolTipBuilder = new(200);
+    private readonly ICommitDataManager? _commitDataManager;
     private readonly RevisionGridControl _grid;
+    private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
     private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByLocalBranch;
     private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByRemoteBranch;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
     private Settings _settings;
 
-    public MessageColumnProvider(RevisionGridControl grid)
+    public MessageColumnProvider(
+        RevisionGridControl grid,
+        IGitRevisionSummaryBuilder gitRevisionSummaryBuilder,
+        ICommitDataManager? commitDataManager)
         : base("Message", new GridLength(1, GridUnitType.Star), minimumWidth: 25, resizable: true)
     {
+        _commitDataManager = commitDataManager;
         _grid = grid;
+        _gitRevisionSummaryBuilder = gitRevisionSummaryBuilder;
     }
 
     public void SetAheadBehindDataProvider(IAheadBehindDataProvider? provider)
@@ -52,6 +66,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
         Column.IsVisible = true;
         _settings = new Settings(
             AppSettings.FillRefLabels,
+            AppSettings.ShowGitNotesColumn.Value,
+            AppSettings.ShowAnnotatedTagsMessages,
+            AppSettings.ShowCommitBodyInRevisionGrid,
+            AppSettings.ShowGitNotes,
             AppSettings.ShowRemoteBranches,
             AppSettings.ShowGitStatusForArtificialCommits,
             AppSettings.ShowRevisionGridTooltips.Value,
@@ -127,6 +145,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
                      GetVirtualRef,
                      superprojectRefs?.Select(gitRef => gitRef.CompleteName).ToHashSet(StringComparer.Ordinal)))
         {
+            // see note on using IsDereference in CommitInfo class
+            if (_settings.ShowAnnotatedTagsMessages
+                && label is RevisionGridRefRenderer.RefLabelControl { GitRef: { IsTag: true, IsDereference: true } } tagLabel)
+            {
+                tagLabel.AppendLabel(" [...]");
+            }
+
             panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, label);
         }
 
@@ -137,7 +162,64 @@ internal sealed class MessageColumnProvider : ColumnProvider
         panel.Revision = revision;
         panel.Indicator.Update(revision);
         panel.ClearHighlight();
-        ToolTip.SetTip(panel, _settings.ShowRevisionGridTooltips ? revision.Subject : null);
+        UpdateToolTip(panel, revision);
+    }
+
+    public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    {
+        _toolTipBuilder.Clear();
+
+        if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
+        {
+            // The body is not stored for older commits (to save memory)
+            string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(GetBody(revision))
+                ?? revision.Subject + (revision.HasMultiLineMessage ? TranslatedStrings.BodyNotLoaded : "");
+            _toolTipBuilder.EnsureCapacity(bodySummary.Length + 10);
+            _toolTipBuilder.Append(bodySummary);
+
+            if (revision.Refs.Count != 0)
+            {
+                if (_toolTipBuilder.Length != 0)
+                {
+                    _toolTipBuilder.AppendLine();
+                    _toolTipBuilder.AppendLine();
+                }
+
+                foreach (IGitRef gitRef in SortRefs(revision.Refs))
+                {
+                    if (gitRef.IsBisectGood)
+                    {
+                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsGood);
+                    }
+                    else if (gitRef.IsBisectBad)
+                    {
+                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsBad);
+                    }
+                    else
+                    {
+                        _toolTipBuilder.Append('[').Append(gitRef.Name).Append(']');
+                        if (GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } data)
+                        {
+                            _toolTipBuilder.Append("   ").Append(data.ToDisplay(reverse: gitRef.IsRemote));
+                        }
+
+                        _toolTipBuilder.AppendLine();
+                    }
+                }
+            }
+
+            toolTip = _toolTipBuilder.ToString();
+            return true;
+        }
+
+        if (_settings.ShowGitStatusForArtificialCommits
+            && _grid.GetChangeCount(revision.ObjectId) is ArtificialCommitChangeCount changeCount)
+        {
+            toolTip = _toolTipBuilder.Append(changeCount.GetSummary()).ToString();
+            return true;
+        }
+
+        return base.TryGetToolTip(revision, out toolTip);
     }
 
     private static double GetArtificialLabelWidth(MessageCell panel)
@@ -353,6 +435,69 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return _aheadBehindDataByLocalBranch.TryGetValue(branchName, out AheadBehindData data)
             ? data
             : null;
+    }
+
+    private static IReadOnlyList<IGitRef> SortRefs(IEnumerable<IGitRef> refs)
+    {
+        List<IGitRef> sortedRefs = [.. refs];
+        sortedRefs.Sort(CompareRefs);
+        return sortedRefs;
+
+        static int CompareRefs(IGitRef left, IGitRef right)
+        {
+            int result = GetRank(left).CompareTo(GetRank(right));
+            return result == 0
+                ? string.Compare(left.Name, right.Name, StringComparison.Ordinal)
+                : result;
+        }
+
+        static int GetRank(IGitRef gitRef)
+        {
+            if (gitRef.IsBisect)
+            {
+                return 0;
+            }
+
+            if (gitRef.IsSelected)
+            {
+                return 1;
+            }
+
+            if (gitRef.IsSelectedHeadMergeSource)
+            {
+                return 2;
+            }
+
+            if (gitRef.IsHead)
+            {
+                return 3;
+            }
+
+            if (gitRef.IsRemote)
+            {
+                return 4;
+            }
+
+            return 5;
+        }
+    }
+
+    private string? GetBody(GitRevision revision)
+    {
+        if (revision.Body is null)
+        {
+            if (_commitDataManager is not null
+                && (_settings.ShowCommitBodyInRevisionGrid || _settings.ShowGitNotes || _settings.NotesInSeparateColumn))
+            {
+                _commitDataManager.InitiateDelayedLoadingOfDetails(revision);
+            }
+
+            return null;
+        }
+
+        return _settings.NotesInSeparateColumn
+            ? revision.Body
+            : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
     }
 
     private string? GetRefToolTip(IGitRef? gitRef)
