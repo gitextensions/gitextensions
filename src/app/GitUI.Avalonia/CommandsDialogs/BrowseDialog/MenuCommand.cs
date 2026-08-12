@@ -178,6 +178,15 @@ internal sealed class MenuCommand
         }
     }
 
+    public void UpdateMenuItemsText()
+    {
+        foreach (MenuItem item in _registeredMenuItems)
+        {
+            item.Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(Text ?? string.Empty);
+            ToolTip.SetTip(item, ToolTipText);
+        }
+    }
+
     private static Image? CreateIcon(IImage? image)
         => image is null
             ? null

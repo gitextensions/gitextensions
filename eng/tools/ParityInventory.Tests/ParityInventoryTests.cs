@@ -20,9 +20,18 @@ public sealed class ParityInventoryTests
             namespace Sample;
             public partial class Widget { private void BuildToolbar() { } }
             """);
+        fixture.WriteOriginal("Widget.Designer.cs", """
+            namespace Sample;
+            public partial class Widget { }
+            """);
         fixture.WriteTwin("Widget.axaml.cs", """
             namespace Sample;
             public partial class Widget { }
+            """);
+        fixture.WriteTwin("Widget.axaml", """
+            <UserControl xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         x:Class="Sample.Widget" />
             """);
 
         InventoryReport report = fixture.Run();
@@ -31,6 +40,20 @@ public sealed class ParityInventoryTests
             .ContainSingle(item => item.Code == "partial.missing").Subject;
         finding.OriginalValue.Should().Be("Widget.Toolbar.cs");
         finding.Path.Should().Be("part/Widget.Toolbar.cs");
+    }
+
+    [Test]
+    public void Run_should_expect_same_path_for_nonvisual_primary_source()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public sealed class Widget { private int value; }");
+        fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private int value; }");
+
+        InventoryReport report = fixture.Run();
+
+        report.Findings.Should().BeEmpty();
+        report.Original.Parts.Should().ContainSingle()
+            .Which.ExpectedTwinPath.Should().Be("Widget.cs");
     }
 
     [Test]
@@ -132,6 +155,35 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_compare_relative_order_without_cascading_after_framework_only_member()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private int first;
+                private int second;
+            }
+            """);
+        fixture.WriteTwin("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private int frameworkOnly;
+                private int first;
+                private int second;
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Findings.Should().NotContain(item => item.Code == "member.order");
+        report.Findings.Should().ContainSingle(item =>
+            item.Code == "member.extra" && item.Path == "member/field:frameworkOnly");
+    }
+
+    [Test]
     public void Run_should_extract_csharp_and_axaml_menu_trees()
     {
         using InventoryFixture fixture = new();
@@ -186,6 +238,27 @@ public sealed class ParityInventoryTests
         report.Original.TranslationStrings.Should().ContainSingle(item => item.Name == "_caption");
         report.Original.TranslationKeys.Should().ContainSingle(item =>
             item.Key == "_caption.Text" && item.InEnglishCatalog);
+    }
+
+    [Test]
+    public void Run_should_not_treat_runtime_text_assignment_as_designer_translation_key()
+    {
+        const string code = """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private readonly Label _label = new();
+                private void Update() => _label.Text = "runtime status";
+            }
+            """;
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", code);
+        fixture.WriteTwin("Widget.cs", code);
+
+        InventoryReport report = fixture.Run();
+
+        report.Original.TranslationKeys.Should().BeEmpty();
+        report.Findings.Should().NotContain(item => item.Code == "translation.not-in-english");
     }
 
     [Test]

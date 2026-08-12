@@ -23,7 +23,8 @@ internal static class MenuUtil
     /// </summary>
     public static void SetAsCaptionMenuItem(MenuItem menuItem, ItemsControl menu)
     {
-        // Avalonia's caption class disables hit testing, so no renderer-level background filter is required.
+        // No mouse over effect for disabled menu items whose Tag is "caption".
+        // Avalonia renders the background only for non-caption menu items because the caption class disables hit testing.
         SetAsCaptionMenuItem(menuItem);
     }
 }

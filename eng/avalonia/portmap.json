@@ -2755,13 +2755,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/MenuCommand.cs",
     "status": "functional",
     "basedOn": "3e291d1798f267d8db6359d43e5f38f85f01f8e6",
-    "notes": "The same command, grouping, translation, check, enabled-state, registration and shortcut-refresh contract creates native Avalonia MenuItem and Separator controls. Group headers remain disabled italic captions. WinForms shortcut display strings are converted to Avalonia KeyGesture when representable; an invalid or platform-unrepresentable user string is omitted instead of preventing the menu from opening. Re-verified through the complete FormBrowse Navigate/View families in P4.2."
+    "notes": "The same command, grouping, translation, check, enabled-state, registration and shortcut-refresh contract creates native Avalonia MenuItem and Separator controls. Group headers remain disabled italic captions. WinForms shortcut display strings are converted to Avalonia KeyGesture when representable; an invalid or platform-unrepresentable user string is omitted instead of preventing the menu from opening. Re-verified through the complete FormBrowse Navigate/View families in P4.2. P8.6h.3a propagates translated command text and tooltips to every already-registered native menu item, matching the original ToolStrip model, and verifies the RevisionGrid consumer on Windows/Linux."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/MenuCommandsBase.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/MenuCommandsBase.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Mechanical twin of the original translation enumeration and lifecycle base used by RevisionGridMenuCommands; re-verified through the complete FormBrowse Navigate/View families in P4.2."
+    "notes": "Mechanical twin of the original translation enumeration and lifecycle base used by RevisionGridMenuCommands; re-verified through the complete FormBrowse Navigate/View families in P4.2. P8.6h.3a keeps the source inventory at zero findings while refreshing native registered menu items after model translation."
   },
   "src/app/GitUI/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/CommitDialog/FormCommitTemplateSettings.axaml.cs",
@@ -4065,7 +4065,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Columns/MultilineIndicator.cs",
     "status": "functional",
     "basedOn": "491088f26acece7943f4fe25c273d2050442b899",
-    "notes": "Same-named native Avalonia renderer preserves the three two-pixel dots, four/five/four padding and margins, translucent window-text foreground/background, reserved trailing width, theme response, and DPI scaling through device-independent coordinates."
+    "notes": "Same-named native Avalonia renderer preserves the three two-pixel dots, four/five/four padding and margins, translucent window-text foreground/background, reserved trailing width, theme response, and DPI scaling through device-independent coordinates. P8.6h.3a proves the inventory now analyzes the original struct, removes false analyzer path/order debt, and verifies native visibility and metrics on Windows/Linux; the remaining findings are classified paint-event-to-Control representation differences."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Columns/RefLabelHitInfo.cs": {
     "status": "windowsOnly",
@@ -4111,7 +4111,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/MenuUtil.cs",
     "status": "functional",
     "basedOn": "491088f26acece7943f4fe25c273d2050442b899",
-    "notes": "Same-named native helper marks captions disabled, nonfocusable, non-hit-testable, and italic through the shared menu-caption class; native hit testing replaces the WinForms renderer background filter."
+    "notes": "Same-named native helper marks captions disabled, nonfocusable, non-hit-testable, and italic through the shared menu-caption class; native hit testing replaces the WinForms renderer background filter. P8.6h.3a removes false analyzer path/order debt, preserves the renderer rationale, and verifies the native caption contract on Windows/Linux; the remaining findings are classified ToolStrip-to-Avalonia representation differences."
   },
   "src/app/GitUI/UserControls/RevisionGrid/NavigationHistory.cs": {
     "twin": "src/app/GitUI/UserControls/RevisionGrid/NavigationHistory.cs",
@@ -4129,7 +4129,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/QuickSearchProvider.cs",
     "status": "functional",
     "basedOn": "491088f26acece7943f4fe25c273d2050442b899",
-    "notes": "Same-named native overlay preserves incremental subject/author/ref/hash search, wraparound, backward/forward result commands, backspace, paste, escape, configured timeout, and success/error theming without bitmap scaling."
+    "notes": "Same-named native overlay preserves incremental subject/author/ref/hash search, wraparound, backward/forward result commands, backspace, paste, escape, configured timeout, and success/error theming without bitmap scaling. P8.6h.3a retains the original OnKeyPress/OnPreviewKeyDown identities, removes false analyzer path/order/translation debt, and verifies text, key, clipboard, error-color, wraparound, and timeout routes on Windows/Linux; the remaining findings are classified native control/event/resource substitutions."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionDataGridView.BackgroundUpdater.cs": {
     "status": "windowsOnly",
