@@ -5,11 +5,15 @@
              x:Class="GitUI.UserControls.Settings.SettingsCheckBox"
              d:DesignWidth="104"
              d:DesignHeight="17">
+  <UserControl.Styles>
+    <Style Selector="CheckBox#checkBox /template/ ContentPresenter">
+      <Setter Property="Margin" Value="3,0,8,0" />
+    </Style>
+  </UserControl.Styles>
   <StackPanel x:Name="tableLayoutPanel"
-              Orientation="Horizontal"
-              Spacing="2">
+              Orientation="Horizontal">
     <CheckBox x:Name="checkBox"
-              Margin="0"
+              Margin="0,0,4.8,0"
               Content="Settings text" />
     <Image x:Name="pictureBox"
            Classes="gitextensions-icon-16"

@@ -1576,7 +1576,7 @@ public sealed partial class ParityScreenshotTests
     {
         if (viewType == typeof(BranchSelector))
         {
-            return (325, 54);
+            return (274.4, 54.4);
         }
 
         if (viewType == typeof(InteractiveGitActionControl))
@@ -1586,12 +1586,12 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(GitUI.UserControls.Settings.SettingsCheckBox))
         {
-            return (104, 17);
+            return (200, 20);
         }
 
         if (viewType == typeof(WaitSpinner))
         {
-            return (48, 48);
+            return (38.4, 38.4);
         }
 
         if (viewType == typeof(EmptyRepoControl))
@@ -1621,7 +1621,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(WatermarkComboBox) || viewType == typeof(CaseSensitiveComboBox))
         {
-            return (250, 23);
+            return (200, 22.4);
         }
 
         if (viewType == typeof(SimplePrompt))
@@ -1902,7 +1902,7 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(GourceStart))
         {
-            return (718, 165);
+            return (574.4, 132);
         }
 
         if (typeof(Window).IsAssignableFrom(viewType))

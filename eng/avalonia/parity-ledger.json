@@ -27773,42 +27773,10 @@
           "findingCount": 52,
           "note": "Focused Windows/Linux tests verify both local-to-remote and remote-to-local reloads, containment, selection, and count behavior. All current findings are classified generated Designer/AXAML fields, framework events, comments, and dynamic translation identities; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
-        "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
-        },
-        "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "visual": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 1065, "note": "P8.6g.3a corrected the measured native-125% row, column, margin, and control geometry. Nine valid pairs across light, dark, and custom themes remain diagnostic input; unavailable native DPI and residual renderer/geometry debt remain P8.6g.3b." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 219, "note": "Light, dark, and custom native-125% pairs retain 219 resolved-color diagnostics for P8.6g.3b; none were suppressed." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/windows-focused/p8.6g.3a-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/linux-focused/p8.6g.3a-focused-linux.trx"], "platforms": ["windows", "linux-wayland", "linux-x11"], "findingCount": 90, "note": "Normal, local-selected, and remote-selected paired states plus focused branch behavior tests pass. Exhaustive pointer/focus/disabled/dropdown/consumer states remain P8.6g.3b." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh isolated Windows, native Wayland, X11, and Wayland-only Flatpak smokes passed and screenshots were inspected; Flatpak used --filesystem=host. macOS and final live owner-state closure remain P8.6g.3b/P8.4." }
       }
     },
     {
@@ -27915,42 +27883,10 @@
           "findingCount": 20,
           "note": "Focused Windows/Linux tests verify ordinal exact-case completion through the realized editable template, and the paired capture confirms FormRemotes no longer renders a blank derived control. All current findings are classified framework type/template/member representation; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
-        "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
-        },
-        "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "visual": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 81, "note": "The rendered derived combo is a visual component. P8.6g.3a corrected its native-125% standalone height and captured three real theme pairs; residual diagnostics and unavailable scales remain P8.6g.3b." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 9, "note": "Three native-125% theme pairs retain nine resolved-color diagnostics for P8.6g.3b." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/windows-focused/p8.6g.3a-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/linux-focused/p8.6g.3a-focused-linux.trx"], "platforms": ["windows", "linux-wayland", "linux-x11"], "findingCount": 9, "note": "Normal paired rendering and exact-case completion behavior are covered. Dropdown, focus, hover, disabled, and owner-consumer closure remain P8.6g.3b." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh runtime smokes pass on Windows, Wayland, X11, and confined Wayland Flatpak with --filesystem=host. macOS and final live owner-state closure remain open." }
       }
     },
     {
@@ -29894,42 +29830,10 @@
           "findingCount": 55,
           "note": "Focused Windows/Linux tests verify the complete original action/conflict message and image matrix, including the shared icon class/source and FormBrowse refresh boundary. All current findings are classified generated layout, framework events/members, comments, and dynamic text identities; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
-        "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
-        },
-        "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "visual": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 1278, "note": "P8.6g.3a aligned the native-125% height, container spacing, and action-button geometry. Nine valid theme/state pairs retain classified diagnostics for P8.6g.3b." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 246, "note": "Light, dark, and custom pairs retain 246 resolved-color diagnostics for final closure." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/windows-focused/p8.6g.3a-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/linux-focused/p8.6g.3a-focused-linux.trx"], "platforms": ["windows", "linux-wayland", "linux-x11"], "findingCount": 69, "note": "Normal, continue-disabled, and abort-disabled pairs are captured and the action suite passes. Exhaustive focus/pointer/keyboard/owner states remain P8.6g.3b." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh isolated Windows, Wayland, X11, and confined Wayland Flatpak smokes pass; macOS and final live owner-state closure remain open." }
       }
     },
     {
@@ -33936,42 +33840,10 @@
           "findingCount": 42,
           "note": "Focused Windows/Linux tests verify checked/text/tooltip/manual-link properties and events plus the original information image identity and shared icon class. All current findings are classified generated layout, framework event/member, comment, and dynamic translation representation; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
-        "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
-        },
-        "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "visual": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 860, "note": "P8.6g.3a corrected the checkbox/content/icon spacing measured at native 125%. Twelve valid pairs retain classified diagnostics for P8.6g.3b." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 182, "note": "Light, dark, and custom normal/checked/disabled pairs retain 182 color diagnostics." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/windows-focused/p8.6g.3a-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/linux-focused/p8.6g.3a-focused-linux.trx"], "platforms": ["windows", "linux-wayland", "linux-x11"], "findingCount": 54, "note": "Normal, checked, disabled, and checked-disabled pairs plus property/event tests are covered. Hover/focus/indeterminate/tooltip and owner-state closure remain P8.6g.3b." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh runtime smokes pass on Windows, Wayland, X11, and confined Wayland Flatpak with --filesystem=host. macOS and final live owner-state closure remain open." }
       }
     },
     {
@@ -34338,42 +34210,10 @@
           "findingCount": 29,
           "note": "Focused Windows/Linux tests prove the native timer advances the 11-dot animation only while enabled and stops through the public product boundary. All current findings are classified framework inheritance, rendering, timer, and test-access representation; exact structure and rendered visual/theme/exhaustive-state closure remain P8.6g.3."
         },
-        "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
-        },
-        "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "visual": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 84, "note": "The custom-drawn spinner is visual UI. Three native-125% theme pairs show closely aligned 11-dot geometry while retaining classified pixel/framework diagnostics for P8.6g.3b." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 12, "note": "Three native-125% theme pairs retain 12 color diagnostics." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/windows-focused/p8.6g.3a-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/linux-focused/p8.6g.3a-focused-linux.trx"], "platforms": ["windows", "linux-wayland", "linux-x11"], "findingCount": 6, "note": "Normal frame rendering and enabled timer advancement/stop behavior are covered. Full animation-frame, disabled, owner, and scale closure remain P8.6g.3b." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh runtime smokes pass on Windows, Wayland, X11, and confined Wayland Flatpak; macOS and final live owner-state closure remain open." }
       }
     },
     {
@@ -34409,42 +34249,10 @@
           "findingCount": 34,
           "note": "Focused Windows/Linux tests verify watermark/placeholder behavior without replacing observable text, and the paired capture renders every requested FileStatusList consumer state. All current findings are classified framework property, inheritance, member, and test-access representation; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
-        "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
-        },
-        "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
-        },
-        "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
-        },
-        "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
-        }
+        "visual": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 78, "note": "The rendered derived combo is visual UI. P8.6g.3a corrected its native-125% standalone height and captured three real theme pairs; residual diagnostics and unavailable scales remain P8.6g.3b." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 9, "note": "Three native-125% theme pairs retain nine resolved-color diagnostics." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/windows-focused/p8.6g.3a-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/linux-focused/p8.6g.3a-focused-linux.trx"], "platforms": ["windows", "linux-wayland", "linux-x11"], "findingCount": 6, "note": "Normal paired rendering and watermark behavior are covered. Empty/text/dropdown/focus/hover/disabled owner-state closure remains P8.6g.3b." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh runtime smokes pass on Windows, Wayland, X11, and confined Wayland Flatpak; macOS and final live owner-state closure remain open." }
       }
     },
     {
@@ -38911,10 +38719,10 @@
       "axes": {
         "structural": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "03e95a43b956dc20ab1a5d5b80998c3c32fa4930", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g2/inventory/GourceStart.json", "eng/avalonia/parity-evidence/P8.6g/g2/inventory-classification.json"], "platforms": [], "findingCount": 112, "note": "All 13 matching GourceStart Designer controls now participate in the shared generated TabIndex/TabStop/accessibility projection. Remaining Designer-to-AXAML source-shape findings stay open for P8.6g.3." },
         "functional": { "status": "verified", "verifiedOn": "2026-08-12", "commit": "03e95a43b956dc20ab1a5d5b80998c3c32fa4930", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g2/inventory/GourceStart.json", "eng/avalonia/parity-evidence/P8.6g/g2/inventory-classification.json", "eng/avalonia/parity-evidence/P8.6g/g2/tests/windows/p8.6g2-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g2/tests/linux/p8.6g2-focused-linux.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The generated input boundary now covers the plugin Designer and round-trips byte-identically from both source-root pairs; control identity and action behavior are covered by the focused suite." },
-        "visual": { "status": "gap", "verifiedOn": "2026-08-08", "commit": "8d8229146ed2c5d467d1a40f53e73b5fdd9bd794", "evidence": ["eng/avalonia/parity-evidence/P7.1/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 12519, "note": "Thirty-six real WinForms/Avalonia pairs expose unresolved geometry, layout, font, control, text, image, state, and color differences; P8.6g owns exact closure." },
-        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-08", "commit": "8d8229146ed2c5d467d1a40f53e73b5fdd9bd794", "evidence": ["eng/avalonia/parity-evidence/P7.1/final/diff/findings.json"], "platforms": ["windows"], "findingCount": 2241, "note": "Light, dark, and custom-theme captures at the available 125/150/200 scales expose resolved-color differences; P8.6g owns exact closure." },
-        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "03e95a43b956dc20ab1a5d5b80998c3c32fa4930", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g2/tests/windows/p8.6g2-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g2/tests/linux/p8.6g2-focused-linux.trx", "eng/avalonia/parity-evidence/P7.1/final/diff/findings.json"], "platforms": ["windows", "linux"], "findingCount": 522, "note": "Tab order/accessibility metadata and bounded action states are covered. Exact focus visuals, mnemonics, pointer/keyboard/disabled/link/picker states and the existing paired diagnostics remain P8.6g.3." },
-        "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "03e95a43b956dc20ab1a5d5b80998c3c32fa4930", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g2/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g2/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g2/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g2/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh isolated smokes pass and screenshots were inspected on Windows, native Wayland, X11, and Wayland-only Flatpak with --filesystem=host. Official preview/live dialog walks and macOS remain P8.6g.3/P8.4." }
+        "visual": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 9807, "note": "P8.6g.3a corrected the proven 120-DPI Designer-to-DIP error: the Avalonia client is now 574.4 by 132 DIPs instead of 718 by 165. Thirty-six real pairs across light/dark/custom and native-125% plus WinForms DPI-message 150/200 retain classified renderer, framework, and product debt for P8.6g.3b." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 2205, "note": "Thirty-six light, dark, and custom pairs retain 2,205 resolved-color diagnostics; no color tolerance or suppression was added." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/windows-focused/p8.6g.3a-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/linux-focused/p8.6g.3a-focused-linux.trx"], "platforms": ["windows", "linux-wayland", "linux-x11"], "findingCount": 522, "note": "Normal, executable-focused, arguments-focused, and start-disabled pairs plus the 31-test combined action/control suite are covered. Exact pointer, keyboard, picker, link, resize, persistence, and error-state closure remains P8.6g.3b." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, X11, and Wayland-only Flatpak with --filesystem=host. Official IDE Show Preview, live Gource owner walk, native 96-DPI, and macOS remain P8.6g.3b/P8.6a/P8.4." }
       }
     }
   ]
