@@ -52,11 +52,17 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     public string GourceArguments { get; set; } = "";
 
     private void RunRealCmdDetached(string cmd, string arguments)
+        => RunRealCmdDetached(cmd, arguments, startInfo => Process.Start(startInfo));
+
+    private void RunRealCmdDetached(
+        string cmd,
+        string arguments,
+        Func<ProcessStartInfo, Process?> startProcess)
     {
         try
         {
             // Cross-platform constraint: pass the executable and arguments separately so no shell parses either value.
-            Process.Start(CreateProcessStartInfo(cmd, arguments, WorkingDir.Text ?? string.Empty));
+            startProcess(CreateProcessStartInfo(cmd, arguments, WorkingDir.Text ?? string.Empty));
         }
         catch (Exception e)
         {
@@ -74,10 +80,19 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         };
 
     private void Button1Click(object? sender, EventArgs e)
+        => StartGource(
+            FlatpakEnvironment.IsFlatpak(),
+            startInfo => Process.Start(startInfo),
+            AvatarService.DefaultProvider);
+
+    private void StartGource(
+        bool isFlatpak,
+        Func<ProcessStartInfo, Process?> startProcess,
+        IAvatarProvider avatarProvider)
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
-        if (!IsLaunchAvailable(FlatpakEnvironment.IsFlatpak()))
+        if (!IsLaunchAvailable(isFlatpak))
         {
             // Cross-platform constraint: host executables are visible but not executable in Flatpak.
             MessageBoxes.FailedToRunShell(
@@ -95,13 +110,13 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
 
         GourceArguments = Arguments.Text ?? string.Empty;
         string gourceAvatarsDir = GourceArguments.Contains("$(AVATARS)")
-            ? ThreadHelper.JoinableTaskFactory.Run(LoadAvatarsAsync)
+            ? ThreadHelper.JoinableTaskFactory.Run(() => LoadAvatarsAsync(avatarProvider))
             : "";
         string arguments = GourceArguments.Replace("$(AVATARS)", gourceAvatarsDir);
         PathToGource = GourcePath.Text;
         GitWorkingDir = WorkingDir.Text;
 
-        RunRealCmdDetached(GourcePath.Text, arguments);
+        RunRealCmdDetached(GourcePath.Text, arguments, startProcess);
         Close();
     }
 
@@ -109,6 +124,9 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         => !isFlatpak;
 
     private async Task<string> LoadAvatarsAsync()
+        => await LoadAvatarsAsync(AvatarService.DefaultProvider);
+
+    private async Task<string> LoadAvatarsAsync(IAvatarProvider avatarProvider)
     {
         string gourceAvatarsDir = Path.Join(Path.GetTempPath(), "GitAvatars");
 
@@ -140,7 +158,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         {
             try
             {
-                byte[]? image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
+                byte[]? image = await avatarProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
                 string filename = author.name + ".png";
 
                 if (image is null || filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
@@ -161,30 +179,11 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     private void GourceBrowseClick(object? sender, EventArgs e)
     {
         string? selectedPath = DispatcherPump.Wait(PickGourceAsync);
-        if (!string.IsNullOrEmpty(selectedPath))
-        {
-            GourcePath.Text = selectedPath;
-        }
+        ApplyGourceSelection(selectedPath);
 
         async Task<string?> PickGourceAsync()
         {
-            FilePickerOpenOptions options = new()
-            {
-                AllowMultiple = false,
-                FileTypeFilter =
-                [
-                    new FilePickerFileType("Gource")
-                    {
-                        Patterns = OperatingSystem.IsWindows() ? ["gource.exe"] : ["gource"],
-                    },
-                ],
-            };
-
-            if (!string.IsNullOrWhiteSpace(GourcePath.Text))
-            {
-                options.SuggestedStartLocation = await StorageProvider.TryGetFolderFromPathAsync(
-                    Path.GetDirectoryName(GourcePath.Text) ?? string.Empty);
-            }
+            FilePickerOpenOptions options = await CreateGourcePickerOptionsAsync(StorageProvider);
 
             if (!await PortalPickerGuard.IsAvailableAsync())
             {
@@ -199,18 +198,11 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     private void WorkingDirBrowseClick(object? sender, EventArgs e)
     {
         string? selectedPath = DispatcherPump.Wait(PickWorkingDirectoryAsync);
-        if (!string.IsNullOrEmpty(selectedPath))
-        {
-            WorkingDir.Text = selectedPath;
-        }
+        ApplyWorkingDirectorySelection(selectedPath);
 
         async Task<string?> PickWorkingDirectoryAsync()
         {
-            FolderPickerOpenOptions options = new() { AllowMultiple = false };
-            if (!string.IsNullOrWhiteSpace(WorkingDir.Text))
-            {
-                options.SuggestedStartLocation = await StorageProvider.TryGetFolderFromPathAsync(WorkingDir.Text);
-            }
+            FolderPickerOpenOptions options = await CreateWorkingDirectoryPickerOptionsAsync(StorageProvider);
 
             if (!await PortalPickerGuard.IsAvailableAsync())
             {
@@ -222,6 +214,56 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         }
     }
 
+    private async Task<FilePickerOpenOptions> CreateGourcePickerOptionsAsync(IStorageProvider storageProvider)
+    {
+        FilePickerOpenOptions options = new()
+        {
+            AllowMultiple = false,
+            FileTypeFilter =
+            [
+                new FilePickerFileType("Gource")
+                {
+                    Patterns = OperatingSystem.IsWindows() ? ["gource.exe"] : ["gource"],
+                },
+            ],
+        };
+
+        if (!string.IsNullOrWhiteSpace(GourcePath.Text))
+        {
+            options.SuggestedStartLocation = await storageProvider.TryGetFolderFromPathAsync(
+                Path.GetDirectoryName(GourcePath.Text) ?? string.Empty);
+        }
+
+        return options;
+    }
+
+    private async Task<FolderPickerOpenOptions> CreateWorkingDirectoryPickerOptionsAsync(IStorageProvider storageProvider)
+    {
+        FolderPickerOpenOptions options = new() { AllowMultiple = false };
+        if (!string.IsNullOrWhiteSpace(WorkingDir.Text))
+        {
+            options.SuggestedStartLocation = await storageProvider.TryGetFolderFromPathAsync(WorkingDir.Text);
+        }
+
+        return options;
+    }
+
+    private void ApplyGourceSelection(string? selectedPath)
+    {
+        if (!string.IsNullOrEmpty(selectedPath))
+        {
+            GourcePath.Text = selectedPath;
+        }
+    }
+
+    private void ApplyWorkingDirectorySelection(string? selectedPath)
+    {
+        if (!string.IsNullOrEmpty(selectedPath))
+        {
+            WorkingDir.Text = selectedPath;
+        }
+    }
+
     private void linkLabel1_LinkClicked(object? sender, EventArgs e)
     {
         OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/acaudwell/Gource/");
@@ -230,5 +272,30 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     private void linkLabel2_LinkClicked(object? sender, EventArgs e)
     {
         OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/acaudwell/Gource#readme");
+    }
+
+    // parity-scaffolding: Exposes the original dialog actions to focused functional tests.
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(GourceStart form)
+    {
+        internal Avalonia.Controls.TextBox Arguments => form.Arguments;
+        internal Avalonia.Controls.Button Button1 => form.button1;
+        internal Avalonia.Controls.TextBox GourcePath => form.GourcePath;
+        internal Avalonia.Controls.TextBox WorkingDir => form.WorkingDir;
+        internal Task<FilePickerOpenOptions> CreateGourcePickerOptionsAsync(IStorageProvider storageProvider)
+            => form.CreateGourcePickerOptionsAsync(storageProvider);
+        internal Task<FolderPickerOpenOptions> CreateWorkingDirectoryPickerOptionsAsync(IStorageProvider storageProvider)
+            => form.CreateWorkingDirectoryPickerOptionsAsync(storageProvider);
+        internal void ApplyGourceSelection(string? selectedPath) => form.ApplyGourceSelection(selectedPath);
+        internal void ApplyWorkingDirectorySelection(string? selectedPath) => form.ApplyWorkingDirectorySelection(selectedPath);
+        internal Task<string> LoadAvatarsAsync(IAvatarProvider avatarProvider) => form.LoadAvatarsAsync(avatarProvider);
+        internal void OpenProjectLink() => form.linkLabel1_LinkClicked(null, EventArgs.Empty);
+        internal void OpenCommandLineLink() => form.linkLabel2_LinkClicked(null, EventArgs.Empty);
+        internal void StartGource(
+            bool isFlatpak,
+            Func<ProcessStartInfo, Process?> startProcess,
+            IAvatarProvider avatarProvider)
+            => form.StartGource(isFlatpak, startProcess, avatarProvider);
     }
 }
