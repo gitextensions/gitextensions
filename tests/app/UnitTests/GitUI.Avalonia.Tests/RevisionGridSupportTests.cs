@@ -131,12 +131,16 @@ public sealed class RevisionGridSupportTests
     }
 
     [AvaloniaTest]
-    public void Quick_search_should_select_matching_revisions_wrap_and_show_status()
+    [NonParallelizable]
+    [Category("P8.6h.3a")]
+    public void Quick_search_should_preserve_text_key_clipboard_wrap_error_and_timeout_routes()
     {
         int originalTimeout = AppSettings.RevisionGridQuickSearchTimeout;
+        GitExtensions.Shims.WinForms.IClipboard? originalClipboard = TryGetClipboard();
         try
         {
-            AppSettings.RevisionGridQuickSearchTimeout = 60_000;
+            AppSettings.RevisionGridQuickSearchTimeout = 1;
+            GitExtensions.Shims.WinForms.ShimHost.Clipboard = new RecordingClipboard { Text = "target" };
             ListBox revisions = new()
             {
                 ItemsSource = new[]
@@ -165,7 +169,7 @@ public sealed class RevisionGridSupportTests
                     Text = "target",
                 };
 
-                provider.OnTextInput(input);
+                provider.OnKeyPress(input);
 
                 input.Handled.Should().BeTrue();
                 revisions.SelectedIndex.Should().Be(1);
@@ -177,14 +181,31 @@ public sealed class RevisionGridSupportTests
 
                 provider.NextResult(down: true);
                 revisions.SelectedIndex.Should().Be(2);
+                provider.NextResult(down: false);
+                revisions.SelectedIndex.Should().Be(1);
                 provider.NextResult(down: true);
-                revisions.SelectedIndex.Should().Be(1);
+                revisions.SelectedIndex.Should().Be(2);
 
+                provider.OnPreviewKeyDown(KeyArgs(Avalonia.Input.Key.Back));
+                statusText.Text.Should().EndWith("targe");
+
+                provider.OnPreviewKeyDown(KeyArgs(Avalonia.Input.Key.Escape));
+                status.IsVisible.Should().BeFalse();
+
+                provider.OnPreviewKeyDown(KeyArgs(Avalonia.Input.Key.V, KeyModifiers.Control));
+                statusText.Text.Should().EndWith("target");
+                revisions.SelectedIndex.Should().Be(2);
+
+                provider.OnPreviewKeyDown(KeyArgs(Avalonia.Input.Key.Escape));
                 input.Text = "missing";
-                provider.OnTextInput(input);
+                provider.OnKeyPress(input);
 
-                revisions.SelectedIndex.Should().Be(1);
+                revisions.SelectedIndex.Should().Be(2);
                 statusText.Foreground.Should().BeSameAs(errorBrush);
+
+                Thread.Sleep(20);
+                Dispatcher.UIThread.RunJobs();
+                status.IsVisible.Should().BeFalse();
             }
             finally
             {
@@ -194,7 +215,15 @@ public sealed class RevisionGridSupportTests
         finally
         {
             AppSettings.RevisionGridQuickSearchTimeout = originalTimeout;
+            GitExtensions.Shims.WinForms.ShimHost.Clipboard = originalClipboard ?? new RecordingClipboard();
         }
+
+        static KeyEventArgs KeyArgs(Key key, KeyModifiers modifiers = KeyModifiers.None) => new()
+        {
+            RoutedEvent = InputElement.KeyDownEvent,
+            Key = key,
+            KeyModifiers = modifiers,
+        };
     }
 
     [Test]
@@ -217,6 +246,7 @@ public sealed class RevisionGridSupportTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3a")]
     public void Menu_caption_and_multiline_indicator_should_use_native_noninteractive_controls()
     {
         MenuItem caption = new();
@@ -501,17 +531,17 @@ public sealed class RevisionGridSupportTests
                 KeyModifiers = modifiers,
             });
         }
+    }
 
-        static GitExtensions.Shims.WinForms.IClipboard? TryGetClipboard()
+    private static GitExtensions.Shims.WinForms.IClipboard? TryGetClipboard()
+    {
+        try
         {
-            try
-            {
-                return GitExtensions.Shims.WinForms.ShimHost.Clipboard;
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
+            return GitExtensions.Shims.WinForms.ShimHost.Clipboard;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
         }
     }
 
@@ -545,7 +575,7 @@ public sealed class RevisionGridSupportTests
 
     private sealed class RecordingClipboard : GitExtensions.Shims.WinForms.IClipboard
     {
-        public string Text { get; private set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
 
         public bool ContainsText() => Text.Length > 0;
 
