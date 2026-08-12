@@ -68,6 +68,24 @@ internal sealed class UIReporter : IBugReporter
 
     private static IBugReportLauncher BugReportLauncher { get; set; } = new AvaloniaBugReportLauncher();
 
+    // parity-scaffolding: lets the isolated conformance probe choose a real page action without opening an unattended modal window.
+    private static Func<WinFormsShims.IWin32Window?, TaskDialogPage, TaskDialogButton> TaskDialogPresenter { get; set; } = TaskDialog.ShowDialog;
+
+    // parity-scaffolding: prevents the isolated conformance probe from starting an uncontrolled replacement process.
+    private static Action RestartApplication { get; set; } = RestartGE;
+
+    // parity-scaffolding: executes the restart decision synchronously inside the isolated conformance probe.
+    private static Action<Action> RestartScheduler { get; set; } = action => Dispatcher.UIThread.Post(action);
+
+    // parity-scaffolding: records repository reopen decisions when the probe has no live FormBrowse owner.
+    private static Action<Form?, string?> RepositoryPresenter { get; set; } = ShowGitRepo;
+
+    // parity-scaffolding: prevents the isolated conformance probe from initializing or reading the user's settings-backed environment report.
+    private static Func<string> EnvironmentInformationProvider { get; set; } = UserEnvironmentInformation.GetInformation;
+
+    // parity-scaffolding: lets the isolated conformance probe persist its observation before the fatal child process exits.
+    private static Action<int> ExitApplication { get; set; } = Environment.Exit;
+
     private static TaskDialogPage CreateDubiousOwnershipReport(ExternalOperationException exception)
     {
         string error = exception.InnerException!.Message;
@@ -125,7 +143,7 @@ internal sealed class UIReporter : IBugReporter
                 // ExecutorProvider is set in Program.cs Main method before any error can be reported so it should never be null here.
                 executorProvider!.GetExecutor(workingDir).GitExecutable.Start(command).WaitForExit();
 
-                ShowGitRepo(OwnerForm, workingDir);
+                RepositoryPresenter(OwnerForm, workingDir);
             };
 
             pageSecurity.Buttons.Add(button);
@@ -244,25 +262,25 @@ internal sealed class UIReporter : IBugReporter
         {
             // Use the Avalonia dispatcher to queue the restart on the message loop to avoid deadlocks
             // when the new process initializes the platform theme and broadcasts system events.
-            Dispatcher.UIThread.Post(RestartGE);
-
-            static void RestartGE()
-            {
-                // Skipping the 1st parameter that, starting from .NET, contains the path to application dll (instead of exe)
-                ProcessStartInfo pi = new(Environment.ProcessPath!)
-                {
-                    WorkingDirectory = Environment.CurrentDirectory,
-                    UseShellExecute = false,
-                };
-                foreach (string argument in Environment.GetCommandLineArgs().Skip(1))
-                {
-                    pi.ArgumentList.Add(argument);
-                }
-
-                Process.Start(pi);
-                Environment.Exit(0);
-            }
+            RestartScheduler(RestartApplication);
         }
+    }
+
+    private static void RestartGE()
+    {
+        // Skipping the 1st parameter that, starting from .NET, contains the path to application dll (instead of exe)
+        ProcessStartInfo pi = new(Environment.ProcessPath!)
+        {
+            WorkingDirectory = Environment.CurrentDirectory,
+            UseShellExecute = false,
+        };
+        foreach (string argument in Environment.GetCommandLineArgs().Skip(1))
+        {
+            pi.ArgumentList.Add(argument);
+        }
+
+        Process.Start(pi);
+        Environment.Exit(0);
     }
 
     private static string GetFileName(Exception exception)
@@ -333,17 +351,17 @@ internal sealed class UIReporter : IBugReporter
     {
         ArgumentNullException.ThrowIfNull(exception.InnerException);
 
-        TaskDialogButton button = TaskDialog.ShowDialog(OwnerForm as WinFormsShims.IWin32Window, CreateDubiousOwnershipReport(exception));
+        TaskDialogButton button = TaskDialogPresenter(OwnerForm as WinFormsShims.IWin32Window, CreateDubiousOwnershipReport(exception));
         if (button == TaskDialogButton.Cancel || button == TaskDialogButton.Close)
         {
-            ShowGitRepo(OwnerForm, workingDir: null);
+            RepositoryPresenter(OwnerForm, null);
         }
     }
 
     /// <inheritdoc />
     public void ReportError(Exception exception, string rootError, StringBuilder text, OperationInfo operationInfo)
     {
-        TaskDialog.ShowDialog(OwnerForm as WinFormsShims.IWin32Window, CreateErrorReport(exception, rootError, text, operationInfo));
+        TaskDialogPresenter(OwnerForm as WinFormsShims.IWin32Window, CreateErrorReport(exception, rootError, text, operationInfo));
     }
 
     /// <inheritdoc />
@@ -360,7 +378,7 @@ internal sealed class UIReporter : IBugReporter
         }
 
         IgnoreFailedToLoadAnAssembly = true;
-        TaskDialog.ShowDialog(OwnerForm as WinFormsShims.IWin32Window, CreateFailedToLoadAnAssemblyReport(exception, isTerminating));
+        TaskDialogPresenter(OwnerForm as WinFormsShims.IWin32Window, CreateFailedToLoadAnAssemblyReport(exception, isTerminating));
 
         return true;
 
@@ -384,13 +402,13 @@ internal sealed class UIReporter : IBugReporter
             owner as Window,
             exception,
             exception.GetExceptionInfo().ToString(),
-            UserEnvironmentInformation.GetInformation(),
+            EnvironmentInformationProvider(),
             canIgnore: !isTerminating,
             showIgnore: isExternalOperation,
             focusDetails: isUserExternalOperation);
         if (isTerminating || result == WinFormsShims.DialogResult.Abort)
         {
-            Environment.Exit(-1);
+            ExitApplication(-1);
         }
     }
 
@@ -406,6 +424,42 @@ internal sealed class UIReporter : IBugReporter
         {
             get => UIReporter.BugReportLauncher;
             set => UIReporter.BugReportLauncher = value;
+        }
+
+        internal static Func<WinFormsShims.IWin32Window?, TaskDialogPage, TaskDialogButton> TaskDialogPresenter
+        {
+            get => UIReporter.TaskDialogPresenter;
+            set => UIReporter.TaskDialogPresenter = value;
+        }
+
+        internal static Action RestartApplication
+        {
+            get => UIReporter.RestartApplication;
+            set => UIReporter.RestartApplication = value;
+        }
+
+        internal static Action<Action> RestartScheduler
+        {
+            get => UIReporter.RestartScheduler;
+            set => UIReporter.RestartScheduler = value;
+        }
+
+        internal static Action<Form?, string?> RepositoryPresenter
+        {
+            get => UIReporter.RepositoryPresenter;
+            set => UIReporter.RepositoryPresenter = value;
+        }
+
+        internal static Func<string> EnvironmentInformationProvider
+        {
+            get => UIReporter.EnvironmentInformationProvider;
+            set => UIReporter.EnvironmentInformationProvider = value;
+        }
+
+        internal static Action<int> ExitApplication
+        {
+            get => UIReporter.ExitApplication;
+            set => UIReporter.ExitApplication = value;
         }
     }
 }
