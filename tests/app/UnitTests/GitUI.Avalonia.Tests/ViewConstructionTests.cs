@@ -247,6 +247,7 @@ public sealed class ViewConstructionTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3a")]
     public void RevisionGrid_should_use_the_shared_menu_command_translation_keys()
     {
         RevisionGridControl revisionGrid = new();
@@ -257,6 +258,12 @@ public sealed class ViewConstructionTests
                 "Text",
                 Arg.Any<Func<string?>>())
             .Returns("Go to translated &revision");
+        translation.TranslateItem(
+                "RevisionGrid",
+                "GotoCurrentRevision",
+                "ToolTipText",
+                Arg.Any<Func<string?>>())
+            .Returns("Translated revision tooltip");
 
         revisionGrid.AddTranslationItems(translation);
         revisionGrid.TranslateItems(translation);
@@ -276,6 +283,7 @@ public sealed class ViewConstructionTests
         MenuItem translatedItem = navigate.Items.OfType<MenuItem>()
             .Single(menuItem => menuItem.Tag as string == "GotoCurrentRevision");
         translatedItem.Header.Should().Be("Go to translated _revision");
+        ToolTip.GetTip(translatedItem).Should().Be("Translated revision tooltip");
     }
 
     [AvaloniaTest]

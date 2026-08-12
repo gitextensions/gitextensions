@@ -1516,15 +1516,18 @@
           "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
         },
         "functional": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "93f95a6ac922761f3a63a65a42083adc1ef79ed1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory/UserControls_RevisionGrid_Columns_MultilineIndicator.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/windows/p8.6h3a-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/linux/p8.6h3a-focused-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This mapping is outside the class-oriented P0.4 inventory."
+          "platforms": ["windows", "linux-wayland"],
+          "findingCount": 7,
+          "note": "Focused Windows/Linux tests close the bounded support-type functional contract. All current findings are classified native control, event, rendering, or resource representation differences; exact structure, visual/color capture, exhaustive owner-state review, native DPI, and macOS remain P8.6h.3b/P8.6a/P8.4."
         },
         "visual": {
           "status": "notApplicable",
@@ -3531,15 +3534,18 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "93f95a6ac922761f3a63a65a42083adc1ef79ed1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory/MenuCommand.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/windows/revision-grid-family-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/linux/revision-grid-family-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 29,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux-wayland"],
+          "findingCount": 11,
+          "note": "Translated command text and tooltips now propagate to every registered native menu item, matching the original ToolStrip contract. All current findings are classified native menu/icon/shortcut representation differences; exact structure, visual/state capture, native DPI, and macOS remain P8.6h.3b/P8.6a/P8.4."
         },
         "visual": {
           "status": "notApplicable",
@@ -3596,15 +3602,18 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "93f95a6ac922761f3a63a65a42083adc1ef79ed1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory/MenuCommandsBase.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/windows/revision-grid-family-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/linux/revision-grid-family-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 7,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux-wayland"],
+          "findingCount": 0,
+          "note": "The translation enumeration and lifecycle base has zero current inventory findings and refreshes registered native items after model translation; exact consumer visual/state and platform closure remain P8.6h.3b/P8.6a/P8.4."
         },
         "visual": {
           "status": "notApplicable",
@@ -32861,15 +32870,18 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "93f95a6ac922761f3a63a65a42083adc1ef79ed1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory/UserControls_RevisionGrid_MenuUtil.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/windows/p8.6h3a-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/linux/p8.6h3a-focused-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 8,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux-wayland"],
+          "findingCount": 7,
+          "note": "Focused Windows/Linux tests close the bounded support-type functional contract. All current findings are classified native control, event, rendering, or resource representation differences; exact structure, visual/color capture, exhaustive owner-state review, native DPI, and macOS remain P8.6h.3b/P8.6a/P8.4."
         },
         "visual": {
           "status": "notApplicable",
@@ -33056,15 +33068,18 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "verified",
+          "verifiedOn": "2026-08-12",
+          "commit": "93f95a6ac922761f3a63a65a42083adc1ef79ed1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory/QuickSearchProvider.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/windows/p8.6h3a-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3a/tests/linux/p8.6h3a-focused-linux.trx"
           ],
-          "platforms": [],
-          "findingCount": 35,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux-wayland"],
+          "findingCount": 12,
+          "note": "Focused Windows/Linux tests close the bounded support-type functional contract. All current findings are classified native control, event, rendering, or resource representation differences; exact structure, visual/color capture, exhaustive owner-state review, native DPI, and macOS remain P8.6h.3b/P8.6a/P8.4."
         },
         "visual": {
           "status": "notApplicable",

@@ -61,7 +61,30 @@ internal sealed class QuickSearchProvider
         overlay.Children.Add(_labelHost);
     }
 
-    public void OnKeyDown(KeyEventArgs e)
+    public void OnKeyPress(TextInputEventArgs e)
+    {
+        // Avalonia reports Ctrl+A to Ctrl+Z as modified keys instead of character codes.
+        if (string.IsNullOrEmpty(e.Text) || e.Text.Any(char.IsControl))
+        {
+            HideQuickSearchString();
+            e.Handled = false;
+            return;
+        }
+
+        int curIndex = _gridView.SelectedIndex;
+        curIndex = curIndex >= 0 ? curIndex : 0;
+
+        RestartQuickSearchTimer();
+
+        // The code below is meant to fix the weird key values when pressing keys e.g. ".".
+        _quickSearchString = string.Concat(_quickSearchString, e.Text.ToLower());
+        FindNextMatch(curIndex, _quickSearchString, false);
+        _lastQuickSearchString = _quickSearchString;
+        e.Handled = true;
+        ShowQuickSearchString();
+    }
+
+    public void OnPreviewKeyDown(KeyEventArgs e)
     {
         int curIndex = _gridView.SelectedIndex;
         curIndex = curIndex >= 0 ? curIndex : 0;
@@ -104,26 +127,6 @@ internal sealed class QuickSearchProvider
             e.Handled = true;
             ShowQuickSearchString();
         }
-    }
-
-    public void OnTextInput(TextInputEventArgs e)
-    {
-        if (string.IsNullOrEmpty(e.Text) || e.Text.Any(char.IsControl))
-        {
-            HideQuickSearchString();
-            e.Handled = false;
-            return;
-        }
-
-        int curIndex = _gridView.SelectedIndex;
-        curIndex = curIndex >= 0 ? curIndex : 0;
-
-        RestartQuickSearchTimer();
-        _quickSearchString = string.Concat(_quickSearchString, e.Text.ToLower());
-        FindNextMatch(curIndex, _quickSearchString, false);
-        _lastQuickSearchString = _quickSearchString;
-        e.Handled = true;
-        ShowQuickSearchString();
     }
 
     public void NextResult(bool down)
