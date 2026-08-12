@@ -16,6 +16,7 @@ using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using IHotkeySettingsLoader = ResourceManager.IHotkeySettingsLoader;
 
 namespace GitExtensionsTests;
 
@@ -411,9 +412,10 @@ public sealed class RevisionGridSupportTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.1")]
     public void Revision_grid_should_preserve_selection_and_scroll_anchor_while_streaming_rows()
     {
-        RevisionGridControl control = new();
+        RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
         RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
         GitRevision[] initial = [.. Enumerable.Range(1, 80).Select(Revision)];
         accessor.SetRevisions(initial);
@@ -451,9 +453,10 @@ public sealed class RevisionGridSupportTests
 
     [AvaloniaTest]
     [NonParallelizable]
+    [Category("P8.6h.1")]
     public void Revision_grid_should_preserve_home_end_copy_and_patch_drop_routes()
     {
-        RevisionGridControl control = new();
+        RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
         RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
         GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
         accessor.SetRevisions(revisions);
@@ -514,6 +517,16 @@ public sealed class RevisionGridSupportTests
 
     private static ObjectId Id(char value)
         => ObjectId.Parse(new string(value, 40));
+
+    private static IGitUICommandsSource CreateUICommandsSource()
+    {
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(Substitute.For<IGitModule>());
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(Substitute.For<IHotkeySettingsLoader>());
+        source.UICommands.Returns(commands);
+        return source;
+    }
 
     private static GitRevision Revision(char id, string subject, bool multiline = false)
         => new(Id(id))
