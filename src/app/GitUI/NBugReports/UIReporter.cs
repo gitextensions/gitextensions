@@ -148,7 +148,6 @@ internal sealed class UIReporter : IBugReporter
             Icon = operationInfo.Icon,
             Caption = TranslatedStrings.Error,
             Heading = rootError,
-            AllowCancel = true,
             SizeToContent = true
         };
 
@@ -181,10 +180,6 @@ internal sealed class UIReporter : IBugReporter
         {
             AddIgnoreButton();
         }
-
-        // AllowCancel requires a standard cancel button so that pressing Escape or the X button
-        // does not crash in TaskDialogPage.GetBoundButtonByID (IndexOutOfRangeException on IDCANCEL).
-        page.Buttons.Add(TaskDialogButton.Cancel);
 
         page.Text = text.ToString().Trim();
 
