@@ -241,6 +241,48 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_use_the_original_translation_category_override()
+    {
+        const string code = """
+            namespace Sample;
+            public partial class Widget
+            {
+                private readonly TranslationString _caption = new("Caption");
+                protected override string TranslationCategoryName => "SharedCategory";
+            }
+            """;
+        using InventoryFixture fixture = new();
+        fixture.WriteMatching(code);
+        fixture.WriteEnglishCategory("SharedCategory", "_caption.Text");
+
+        InventoryReport report = fixture.Run();
+
+        report.Twin.TranslationKeys.Should().ContainSingle(item =>
+            item.Key == "_caption.Text" && item.InEnglishCatalog);
+        report.Findings.Should().NotContain(item => item.Code == "translation.not-in-english");
+    }
+
+    [Test]
+    public void Run_should_not_report_a_shared_upstream_catalog_omission_as_port_debt()
+    {
+        const string code = """
+            namespace Sample;
+            public partial class Widget
+            {
+                private readonly TranslationString _caption = new("Caption");
+            }
+            """;
+        using InventoryFixture fixture = new();
+        fixture.WriteMatching(code);
+
+        InventoryReport report = fixture.Run();
+
+        report.Twin.TranslationKeys.Should().ContainSingle(item =>
+            item.Key == "_caption.Text" && !item.InEnglishCatalog);
+        report.Findings.Should().NotContain(item => item.Code == "translation.not-in-english");
+    }
+
+    [Test]
     public void Run_should_not_treat_runtime_text_assignment_as_designer_translation_key()
     {
         const string code = """
@@ -310,13 +352,16 @@ internal sealed class InventoryFixture : IDisposable
         Write(TwinRoot, relativePath, content);
 
     public void WriteEnglish(params string[] keys)
+        => WriteEnglishCategory("Widget", keys);
+
+    public void WriteEnglishCategory(string category, params string[] keys)
     {
         string units = string.Join(
             Environment.NewLine,
             keys.Select(key => $"<trans-unit id=\"{key}\"><source>{key}</source></trans-unit>"));
         File.WriteAllText(
             Path.Combine(_root, "English.xlf"),
-            $"<xliff><file original=\"Widget\"><body>{units}</body></file></xliff>");
+            $"<xliff><file original=\"{category}\"><body>{units}</body></file></xliff>");
     }
 
     public InventoryReport Run() =>

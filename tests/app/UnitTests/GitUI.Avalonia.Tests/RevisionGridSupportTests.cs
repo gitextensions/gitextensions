@@ -344,6 +344,7 @@ public sealed class RevisionGridSupportTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3b.1")]
     public void Revision_grid_menu_commands_should_preserve_the_original_navigate_and_view_inventory()
     {
         RevisionGridControl control = new();
@@ -400,9 +401,12 @@ public sealed class RevisionGridSupportTests
             "TopoOrder",
             "Settings_persistenceToolStripMenuItem",
             "SaveAsDefault");
+        control.MenuCommands.NavigateMenuCommands.Single(command => command.Name == "GotoCommit")
+            .ExecuteAction.Should().NotBeNull();
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3b.1")]
     public void Copy_context_menu_should_rebuild_the_original_branch_tag_and_revision_groups()
     {
         GitRevision revision = Revision('1', "subject");
@@ -426,6 +430,52 @@ public sealed class RevisionGridSupportTests
     }
 
     [AvaloniaTest]
+    [NonParallelizable]
+    [Category("P8.6h.3b.1")]
+    public void Copy_context_menu_should_filter_refs_split_dates_and_copy_multi_revision_payloads()
+    {
+        GitRevision first = Revision('a', "first");
+        first.AuthorEmail = "first@example.com";
+        first.AuthorUnixTime = 1_700_000_000;
+        first.CommitUnixTime = 1_700_000_100;
+        first.Refs =
+        [
+            new GitRef(null!, first.ObjectId, "refs/heads/visible"),
+            new GitRef(null!, first.ObjectId, "refs/heads/hidden"),
+        ];
+        GitRevision second = Revision('b', "second");
+        second.AuthorEmail = "second@example.com";
+        second.AuthorUnixTime = 1_700_001_000;
+        second.CommitUnixTime = 1_700_001_100;
+        CopyContextMenuItem item = new();
+        item.SetFilterRefsFunc(refs => refs.Where(name => name != "hidden"));
+        item.SetRevisionFunc(() => [first, second]);
+        RecordingClipboard clipboard = new();
+        GitExtensions.Shims.WinForms.IClipboard? originalClipboard = TryGetClipboard();
+        GitExtensions.Shims.WinForms.ShimHost.Clipboard = clipboard;
+        try
+        {
+            item.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+
+            string[] headers = [.. item.Items.OfType<MenuItem>().Select(menuItem => menuItem.Header?.ToString() ?? string.Empty)];
+            headers.Should().Contain("_1:   visible");
+            headers.Should().NotContain(header => header.Contains("hidden", StringComparison.Ordinal));
+            headers.Count(header => header.Contains("date", StringComparison.OrdinalIgnoreCase)).Should().Be(2);
+            MenuItem commitIds = item.Items.OfType<MenuItem>()
+                .Single(menuItem => menuItem.Header?.ToString()?.Contains("Commit hash", StringComparison.Ordinal) == true);
+
+            commitIds.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            clipboard.Text.Should().Be(first.Guid + "\n" + second.Guid);
+        }
+        finally
+        {
+            GitExtensions.Shims.WinForms.ShimHost.Clipboard = originalClipboard ?? new RecordingClipboard();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.1")]
     public void Revision_grid_tooltip_provider_should_be_installed_with_the_original_setting()
     {
         RevisionGridControl control = new();
@@ -439,6 +489,93 @@ public sealed class RevisionGridSupportTests
         provider.SetTruncation(columnIndex: 1, rowIndex: 2, truncated: true);
         provider.Clear();
         provider.Hide().Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.1")]
+    public void Revision_grid_message_tooltip_should_include_body_notes_and_refs_like_the_original()
+    {
+        bool originalTooltips = AppSettings.ShowRevisionGridTooltips.Value;
+        bool originalNotesColumn = AppSettings.ShowGitNotesColumn.Value;
+        try
+        {
+            AppSettings.ShowRevisionGridTooltips.Value = true;
+            AppSettings.ShowGitNotesColumn.Value = false;
+            RevisionGridControl control = new();
+            MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+                .Single(column => column.Name == "Message");
+            GitRevision revision = Revision('a', "subject", multiline: true);
+            revision.Body = "subject\n\nbody detail";
+            revision.Notes = "review note";
+            revision.Refs = [new GitRef(null!, revision.ObjectId, "refs/heads/branch1")];
+
+            provider.TryGetToolTip(revision, out string? toolTip).Should().BeTrue();
+
+            toolTip.Should().Contain("body detail");
+            toolTip.Should().Contain("Notes:");
+            toolTip.Should().Contain("review note");
+            toolTip.Should().Contain("[branch1]");
+        }
+        finally
+        {
+            AppSettings.ShowRevisionGridTooltips.Value = originalTooltips;
+            AppSettings.ShowGitNotesColumn.Value = originalNotesColumn;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.1")]
+    public void Revision_grid_message_tooltip_should_request_missing_body_like_the_original()
+    {
+        bool originalCommitBody = AppSettings.ShowCommitBodyInRevisionGrid;
+        try
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = true;
+            RevisionGridControl control = new();
+            ICommitDataManager commitDataManager = Substitute.For<ICommitDataManager>();
+            MessageColumnProvider provider = new(control, new GitRevisionSummaryBuilder(), commitDataManager);
+            provider.ApplySettings();
+            GitRevision revision = Revision('a', "subject", multiline: true);
+
+            provider.TryGetToolTip(revision, out string? toolTip).Should().BeTrue();
+
+            toolTip.Should().Be("subject" + TranslatedStrings.BodyNotLoaded);
+            commitDataManager.Received(1).InitiateDelayedLoadingOfDetails(revision);
+        }
+        finally
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = originalCommitBody;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.1")]
+    public void Revision_grid_message_column_should_mark_annotated_tag_messages_like_the_original()
+    {
+        bool originalAnnotatedTags = AppSettings.ShowAnnotatedTagsMessages;
+        bool originalShowTags = AppSettings.ShowTags;
+        try
+        {
+            AppSettings.ShowAnnotatedTagsMessages = true;
+            AppSettings.ShowTags = true;
+            RevisionGridControl control = new();
+            MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+                .Single(column => column.Name == "Message");
+            GitRevision revision = Revision('a', "subject");
+            revision.Refs = [new GitRef(null!, revision.ObjectId, "refs/tags/v1.0^{}")];
+            Control cell = provider.CreateCell();
+
+            provider.UpdateCell(cell, revision);
+
+            cell.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>()
+                .Should().ContainSingle()
+                .Which.Label.Should().Be("v1.0 [...]");
+        }
+        finally
+        {
+            AppSettings.ShowAnnotatedTagsMessages = originalAnnotatedTags;
+            AppSettings.ShowTags = originalShowTags;
+        }
     }
 
     [AvaloniaTest]

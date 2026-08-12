@@ -399,6 +399,12 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             throw new AvaloniaCaptureStateUnsupportedException("The headless menu did not open.");
         }
 
+        if (!menuItem.IsEffectivelyVisible || menuItem.Bounds.Width <= 0 || menuItem.Bounds.Height <= 0)
+        {
+            throw new AvaloniaCaptureStateUnsupportedException(
+                "The requested menu item was not realized in the opened menu, so its popup surface cannot be captured honestly.");
+        }
+
         TrackExternalTopLevels(menuItem);
         _restoreActions.Add(() => menuItem.IsSubMenuOpen = previous);
 

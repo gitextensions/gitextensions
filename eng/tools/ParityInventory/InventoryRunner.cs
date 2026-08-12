@@ -9,7 +9,10 @@ internal static class InventoryRunner
     public static InventoryReport Run(InventoryOptions options)
     {
         string className = options.TypeName[(options.TypeName.LastIndexOf('.') + 1)..];
-        IReadOnlySet<string> englishKeys = EnglishCatalog.Read(options.TranslationsFile, className);
+        string translationCategory = SourceInventoryReader.DiscoverTranslationCategory(
+            options.OriginalRoot,
+            options.TypeName) ?? className;
+        IReadOnlySet<string> englishKeys = EnglishCatalog.Read(options.TranslationsFile, translationCategory);
         SourceInventory original = SourceInventoryReader.Read(
             options.OriginalRoot,
             options.TypeName,
