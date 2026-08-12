@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -22,6 +22,7 @@ namespace GitExtensionsTests;
 public sealed class ContentColorGoldenImageTests
 {
     [AvaloniaTest]
+    [Category("P8.6h.1")]
     public void Diff_should_render_add_remove_context_and_inline_highlights()
     {
         FileViewer viewer = new();
@@ -59,6 +60,7 @@ public sealed class ContentColorGoldenImageTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.1")]
     public void Blame_margin_should_render_age_buckets_and_author_runs()
     {
         DrawingColor recent = DrawingColor.FromArgb(0, 68, 27).AdaptBackColor();
