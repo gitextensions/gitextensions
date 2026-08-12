@@ -94,14 +94,21 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private SuperProjectInfo? _superprojectCurrentCheckout;
 
     public RevisionGridControl()
+        : this(commitDataManager: null)
+    {
+    }
+
+    public RevisionGridControl(ICommitDataManager? commitDataManager)
     {
         InitializeComponent();
 
         _buildServerWatcher = new BuildServerWatcher(this, this, () => Module);
+        commitDataManager ??= new CommitDataManager(() => Module);
+        commitDataManager.RevisionDetailsLoaded += (_, _) => Dispatcher.UIThread.Post(RefreshRealizedRows);
         GitRevisionSummaryBuilder gitRevisionSummaryBuilder = new();
         _revisionGraphColumnProvider = new RevisionGraphColumnProvider(_revisionGraph, this, gitRevisionSummaryBuilder);
         AddColumn(_revisionGraphColumnProvider);
-        _messageColumnProvider = new MessageColumnProvider(this);
+        _messageColumnProvider = new MessageColumnProvider(this, gitRevisionSummaryBuilder, commitDataManager);
         AddColumn(_messageColumnProvider);
         AddColumn(new NotesColumnProvider());
         AddColumn(new AvatarColumnProvider(this, AvatarService.DefaultProvider, AvatarService.CacheCleaner));

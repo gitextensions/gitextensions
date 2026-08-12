@@ -108,6 +108,46 @@ internal static class SourceInventoryReader
             .ToArray();
     }
 
+    public static string? DiscoverTranslationCategory(
+        string root,
+        string typeName,
+        IEnumerable<string>? files = null)
+    {
+        string fullRoot = Path.GetFullPath(root);
+        IEnumerable<string> sourceFiles = files ?? Directory.EnumerateFiles(
+            fullRoot,
+            "*.cs",
+            SearchOption.AllDirectories);
+        string className = typeName[(typeName.LastIndexOf('.') + 1)..];
+        foreach (string file in sourceFiles.Select(Path.GetFullPath).Distinct(StringComparer.Ordinal)
+                     .OrderBy(path => path, StringComparer.Ordinal))
+        {
+            SyntaxTree tree = CSharpSyntaxTree.ParseText(
+                File.ReadAllText(file),
+                new CSharpParseOptions(LanguageVersion.Preview));
+            TypeDeclarationSyntax? declaration = tree.GetCompilationUnitRoot().DescendantNodes()
+                .OfType<TypeDeclarationSyntax>()
+                .FirstOrDefault(candidate =>
+                    IsSupportedTypeDeclaration(candidate)
+                    && string.Equals(candidate.Identifier.ValueText, className, StringComparison.Ordinal)
+                    && string.Equals(GetTypeName(candidate), typeName, StringComparison.Ordinal));
+            PropertyDeclarationSyntax? property = declaration?.Members
+                .OfType<PropertyDeclarationSyntax>()
+                .FirstOrDefault(candidate => candidate.Identifier.ValueText == "TranslationCategoryName");
+            ExpressionSyntax? expression = property?.ExpressionBody?.Expression
+                ?? property?.AccessorList?.Accessors
+                    .FirstOrDefault(accessor => accessor.Keyword.IsKind(SyntaxKind.GetKeyword))
+                    ?.ExpressionBody?.Expression;
+            if (expression is LiteralExpressionSyntax literal
+                && literal.IsKind(SyntaxKind.StringLiteralExpression))
+            {
+                return literal.Token.ValueText;
+            }
+        }
+
+        return null;
+    }
+
     private static SourceInventory CreateInventory(
         string root,
         string className,
