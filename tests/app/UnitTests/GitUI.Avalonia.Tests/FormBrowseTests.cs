@@ -366,6 +366,10 @@ public sealed class FormBrowseTests
             await WaitUntilAsync(() => revisionGrid.SelectedRevision?.ObjectId == olderStash.ObjectId);
             repoObjectsTree.SelectedRevisionObjectId.Should().Be(olderStash.ObjectId);
             revisionGrid.SelectedRevision!.ReflogSelector.Should().Be("refs/stash@{1}");
+            revisionGrid.GetTestAccessor().Revisions.Items
+                .Cast<GitRevision>()
+                .Select(revision => revision.ObjectId)
+                .Should().OnlyHaveUniqueItems();
         }
         finally
         {
