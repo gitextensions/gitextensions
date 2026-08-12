@@ -694,7 +694,7 @@
     "twin": "src/plugins/Gource/GourceStart.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Same 718x165 resizable tool window, three-row executable/repository/arguments grid, 94x29 Start action, two documentation links, centered owner placement, original field names, and nine existing plugin XLF keys. P8.6g.2 adds its 13 matching Designer controls to the shared generated TabIndex/TabStop/accessibility projection; exact structure/visual/theme/exhaustive-state closure remains P8.6g.3."
+    "notes": "The original Designer is authored at 120 DPI, so its 718x165 client and child metrics are normalized to 574.4x132 Avalonia DIPs while retaining the resizable tool window, three-row executable/repository/arguments grid, Start action, two documentation links, centered owner placement, original field names, and nine existing plugin XLF keys. P8.6g.2 adds its 13 matching Designer controls to the shared generated TabIndex/TabStop/accessibility projection; P8.6g.3a verifies the normalized available-platform geometry and leaves native-DPI, exact theme/state, official-preview, manual, and macOS closure to P8.6g.3b."
   },
   "src/plugins/Statistics/GitImpact/FormImpact.cs": {
     "twin": "src/plugins/Statistics/GitImpact/FormImpact.axaml.cs",
@@ -3916,13 +3916,14 @@
   "src/app/GitUI/UserControls/BranchSelector.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/BranchSelector.axaml",
     "status": "functional",
-    "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a"
+    "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
+    "notes": "Native Avalonia grid preserves the original named fields and autosizing contract. P8.6g.3a aligns the standalone geometry to the truthful native-125% WinForms measurement (274.4x54.4 DIPs with a 171.2x22.4 branch editor); exhaustive translations, native DPI, theme/state, manual, and macOS closure remain P8.6g.3b."
   },
   "src/app/GitUI/UserControls/CaseSensitiveComboBox.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/CaseSensitiveComboBox.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Preserves ordinal exact-case completion selection through the native editable ComboBox and is consumed by FormRemotes. Avalonia requires the derived control to select the base ComboBox theme explicitly; P8.6g.1 verifies the main/Main transition through the realized editable template and captures every requested FormRemotes consumer state without a blank render. Exact styling and state closure remain P8.6g.3."
+    "notes": "Preserves ordinal exact-case completion selection through the native editable ComboBox and is consumed by FormRemotes. Avalonia requires the derived control to select the base ComboBox theme explicitly; P8.6g.1 verifies the main/Main transition through the realized editable template and captures every requested FormRemotes consumer state without a blank render. P8.6g.3a aligns its standalone native-125% height and capture width; exhaustive styling, state, native-DPI, manual, and macOS closure remain P8.6g.3b."
   },
   "src/app/GitUI/UserControls/EnterEventArgs.cs": {
     "twin": "src/app/GitUI/UserControls/EnterEventArgs.cs",
@@ -4002,7 +4003,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/InteractiveGitActionControl.axaml",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Native AXAML preserves the original fields and action-bar composition. P8.6g.1 routes the glyph through the shared 16-pixel icon class so the product theme owns scaling consistently; exact measured geometry and state styling remain P8.6g.3."
+    "notes": "Native AXAML preserves the original fields and action-bar composition. P8.6g.1 routes the glyph through the shared 16-pixel icon class so the product theme owns scaling consistently; P8.6g.3a aligns the 33.6-DIP bar and 75.2x23.2 action metrics to the native-125% reference. Exact theme/state, native-DPI, manual, and macOS closure remain P8.6g.3b."
   },
   "src/app/GitUI/UserControls/ListViewGroupHitInfo.cs": {
     "status": "windowsOnly",
@@ -4168,7 +4169,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsCheckBox.axaml",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Native AXAML preserves the checkbox, information icon, tooltip, and manual-link fields. P8.6g.1 restores the original default information image and uses the shared 16-pixel icon class; exact measured layout and interaction styling remain P8.6g.3."
+    "notes": "Native AXAML preserves the checkbox, information icon, tooltip, and manual-link fields. P8.6g.1 restores the original default information image and uses the shared 16-pixel icon class; P8.6g.3a restores the measured native-125% text-to-icon spacing without fixing translated content width. Exact theme/state, native-DPI, manual, and macOS closure remain P8.6g.3b."
   },
   "src/app/GitUI/UserControls/SortDiffListContextMenuItem.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/SortDiffListContextMenuItem.cs",
@@ -4206,7 +4207,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/WatermarkComboBox.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Maps the original watermark contract to native PlaceholderText without replacing observable Text; existing git-grep and file-filter consumers now use the twin. P8.6g.1 verifies the text/placeholder separation and captures every requested FileStatusList consumer state without an unsupported render; exact styling remains P8.6g.3."
+    "notes": "Maps the original watermark contract to native PlaceholderText without replacing observable Text; existing git-grep and file-filter consumers now use the twin. P8.6g.1 verifies the text/placeholder separation and captures every requested FileStatusList consumer state without an unsupported render; P8.6g.3a aligns its standalone native-125% height and capture width. Exact theme/state, native-DPI, manual, and macOS closure remain P8.6g.3b."
   },
   "src/app/GitUI/UserControls/WebBrowserControl.cs": {
     "status": "windowsOnly",

@@ -432,23 +432,16 @@ public sealed partial class ParityScreenshotTests
     {
         Control view = CreateView(context, descriptor.ViewType);
         Control captureHost = view;
-        if (descriptor.ViewType == typeof(WatermarkComboBox))
+        bool cropToComponent = false;
+        (double width, double height) = GetCaptureSize(captureHost.GetType());
+        if (descriptor.ViewType == typeof(WatermarkComboBox)
+            || descriptor.ViewType == typeof(CaseSensitiveComboBox))
         {
-            captureHost = CreateView(context, typeof(FileStatusList));
-            (view as IDisposable)?.Dispose();
-            view = FindNamedControl(captureHost, "cboFilterComboBox")
-                ?? throw new InvalidDataException("The FileStatusList capture host did not create cboFilterComboBox.");
-        }
-        else if (descriptor.ViewType == typeof(CaseSensitiveComboBox))
-        {
-            captureHost = CreateView(context, typeof(FormRemotes));
-            (view as IDisposable)?.Dispose();
-            view = FindNamedControl(captureHost, "Url")
-                ?? throw new InvalidDataException("The FormRemotes capture host did not create Url.");
+            // parity-scaffolding: Code-only WinForms ComboBoxes receive this standalone capture size directly.
+            view.Width = width;
+            view.Height = height;
         }
 
-        bool cropToComponent = !ReferenceEquals(view, captureHost);
-        (double width, double height) = GetCaptureSize(captureHost.GetType());
         double renderScale = scalePercent / 100d;
         if (descriptor.ViewType == typeof(EditNetSpell)
             || descriptor.ViewType == typeof(FileStatusList)

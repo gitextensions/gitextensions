@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
@@ -14,6 +14,8 @@ public class CaseSensitiveComboBox : ComboBox
     public CaseSensitiveComboBox()
     {
         IsEditable = true;
+        Height = 22.4;
+        MinHeight = 0;
         LostFocus += OnValidating;
     }
 
