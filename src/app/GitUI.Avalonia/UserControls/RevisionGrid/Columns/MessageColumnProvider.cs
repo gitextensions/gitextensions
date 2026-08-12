@@ -6,12 +6,15 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Extensions;
 using GitExtensions.Extensibility.Git;
+using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -90,7 +93,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
             ClipToBounds = true,
         };
         panel.Classes.Add("revision-message-cell");
-        panel.Subject.Classes.Add("revision-subject");
         return panel;
     }
 
@@ -98,6 +100,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
     {
         MessageCell panel = (MessageCell)control;
         panel.ContentPanel.Children.RemoveRange(0, panel.ContentPanel.Children.Count - 1);
+        panel.FixupAndSquashMarker.IsVisible = false;
+        panel.Body.Text = string.Empty;
 
         if (revision.IsArtificial)
         {
@@ -155,10 +159,34 @@ internal sealed class MessageColumnProvider : ColumnProvider
             panel.ContentPanel.Children.Insert(panel.ContentPanel.Children.Count - 1, label);
         }
 
-        panel.Subject.Text = revision.Subject;
+        if (revision.IsStash || revision.IsAutostash)
+        {
+            string stashLabel = revision.IsAutostash
+                ? revision.Subject
+                : (revision.ReflogSelector
+                    ?? throw new InvalidOperationException($"{nameof(revision.ReflogSelector)} must not be null"))[5..];
+            panel.ContentPanel.Children.Insert(
+                panel.ContentPanel.Children.Count - 1,
+                RevisionGridRefRenderer.CreateSpecialLabel(stashLabel, RefLabelIcon.Stash, dashed: false));
+        }
+
+        string[] lines = revision.IsAutostash ? [] : GetCommitMessageLines(revision);
+        string commitTitle = lines.FirstOrDefault() ?? string.Empty;
+
+        // Draw markers for fixup! and squash! commits
+        panel.FixupAndSquashMarker.IsVisible = !revision.IsAutostash
+            && (commitTitle.StartsWith(CommitKind.Fixup.GetPrefix(), StringComparison.Ordinal)
+                || commitTitle.StartsWith(CommitKind.Squash.GetPrefix(), StringComparison.Ordinal)
+                || commitTitle.StartsWith(CommitKind.Amend.GetPrefix(), StringComparison.Ordinal));
+        panel.Subject.Text = revision.IsAutostash ? string.Empty : commitTitle;
+
+        panel.Body.Text = !revision.IsAutostash && lines.Length > 1 && _settings.ShowCommitBodyInRevisionGrid
+            ? string.Concat(lines.Skip(1).Select(line => " " + line))
+            : string.Empty;
         panel.Subject.FontWeight = _grid.IsCurrentCheckout(revision)
             ? FontWeight.Bold
             : FontWeight.Normal;
+        panel.Body.FontWeight = panel.Subject.FontWeight;
         panel.Revision = revision;
         panel.Indicator.Update(revision);
         panel.ClearHighlight();
@@ -500,6 +528,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
             : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
     }
 
+    private string[] GetCommitMessageLines(GitRevision revision)
+        => GetBody(revision)?.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries) ?? [revision.Subject];
+
     private string? GetRefToolTip(IGitRef? gitRef)
     {
         if (gitRef is null)
@@ -609,7 +640,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
         public MessageCell(MessageColumnProvider provider)
         {
             _provider = provider;
-            ContentPanel.Children.Add(Subject);
+            FixupAndSquashMarker.Classes.Add("revision-message-marker");
+            Subject.Classes.Add("revision-subject");
+            Subject.Margin = default;
+            Body.Classes.Add("revision-body");
+            Body[!TextBlock.ForegroundProperty] = new DynamicResourceExtension("GitExtensionsKnownColorGrayTextBrush");
+            MessagePanel.Children.Add(FixupAndSquashMarker);
+            MessagePanel.Children.Add(Subject);
+            MessagePanel.Children.Add(Body);
+            ContentPanel.Children.Add(MessagePanel);
             SetDock(Indicator, Dock.Right);
             Children.Add(Indicator);
             Children.Add(ContentPanel);
@@ -624,7 +663,21 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         public StackPanel ContentPanel { get; } = new() { Orientation = Orientation.Horizontal };
 
+        public StackPanel MessagePanel { get; } = new() { Orientation = Orientation.Horizontal };
+
+        public Image FixupAndSquashMarker { get; } = new()
+        {
+            Source = Images.FixupAndSquashMessageMarker,
+            Width = 16,
+            Height = 16,
+            Margin = new Thickness(0, 0, 4, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            IsVisible = false,
+        };
+
         public TextBlock Subject { get; } = CreateTextBlock();
+
+        public TextBlock Body { get; } = CreateTextBlock();
 
         public MultilineIndicator Indicator { get; } = new();
 

@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Extensions;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.Properties;
@@ -576,6 +577,182 @@ public sealed class RevisionGridSupportTests
             AppSettings.ShowAnnotatedTagsMessages = originalAnnotatedTags;
             AppSettings.ShowTags = originalShowTags;
         }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2a")]
+    public void Revision_grid_message_column_should_render_loaded_commit_body_like_the_original()
+    {
+        bool originalCommitBody = AppSettings.ShowCommitBodyInRevisionGrid;
+        bool originalNotesColumn = AppSettings.ShowGitNotesColumn.Value;
+        try
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = true;
+            AppSettings.ShowGitNotesColumn.Value = false;
+            RevisionGridControl control = new();
+            MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+                .Single(column => column.Name == "Message");
+            GitRevision revision = Revision('a', "subject", multiline: true);
+            revision.Body = "subject\n\nbody line one\nbody line two";
+            revision.Notes = "review note";
+            Control cell = provider.CreateCell();
+
+            provider.UpdateCell(cell, revision);
+
+            cell.GetVisualDescendants().OfType<TextBlock>()
+                .Single(textBlock => textBlock.Classes.Contains("revision-subject"))
+                .Text.Should().Be("subject");
+            cell.GetVisualDescendants().OfType<TextBlock>()
+                .Single(textBlock => textBlock.Classes.Contains("revision-body"))
+                .Text.Should().Be(string.Concat(
+                    UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes)
+                        .Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries)
+                        .Skip(1)
+                        .Select(line => " " + line)));
+        }
+        finally
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = originalCommitBody;
+            AppSettings.ShowGitNotesColumn.Value = originalNotesColumn;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2a")]
+    public void Revision_grid_message_column_should_hide_commit_body_when_setting_is_disabled()
+    {
+        bool originalCommitBody = AppSettings.ShowCommitBodyInRevisionGrid;
+        try
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = false;
+            RevisionGridControl control = new();
+            MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+                .Single(column => column.Name == "Message");
+            GitRevision revision = Revision('a', "subject", multiline: true);
+            revision.Body = "subject\n\nbody detail";
+            Control cell = provider.CreateCell();
+
+            provider.UpdateCell(cell, revision);
+
+            cell.GetVisualDescendants().OfType<TextBlock>()
+                .Single(textBlock => textBlock.Classes.Contains("revision-subject"))
+                .Text.Should().Be("subject");
+            cell.GetVisualDescendants().OfType<TextBlock>()
+                .Single(textBlock => textBlock.Classes.Contains("revision-body"))
+                .Text.Should().BeEmpty();
+        }
+        finally
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = originalCommitBody;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2a")]
+    public void Revision_grid_message_column_should_request_missing_body_like_the_original()
+    {
+        bool originalCommitBody = AppSettings.ShowCommitBodyInRevisionGrid;
+        bool originalTooltips = AppSettings.ShowRevisionGridTooltips.Value;
+        try
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = true;
+            AppSettings.ShowRevisionGridTooltips.Value = false;
+            RevisionGridControl control = new();
+            ICommitDataManager commitDataManager = Substitute.For<ICommitDataManager>();
+            MessageColumnProvider provider = new(control, new GitRevisionSummaryBuilder(), commitDataManager);
+            provider.ApplySettings();
+            GitRevision revision = Revision('a', "subject", multiline: true);
+
+            provider.UpdateCell(provider.CreateCell(), revision);
+
+            commitDataManager.Received(1).InitiateDelayedLoadingOfDetails(revision);
+        }
+        finally
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = originalCommitBody;
+            AppSettings.ShowRevisionGridTooltips.Value = originalTooltips;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2a")]
+    public void Revision_grid_message_column_should_render_stash_and_autostash_labels_like_the_original()
+    {
+        RevisionGridControl control = new();
+        MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+            .Single(column => column.Name == "Message");
+        Control cell = provider.CreateCell();
+        GitRevision stash = Revision('a', "On main: saved work");
+        stash.ReflogSelector = "refs/stash@{3}";
+
+        provider.UpdateCell(cell, stash);
+
+        cell.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>()
+            .Where(label => label.GitRef is null && label.Label == "stash@{3}")
+            .Should().ContainSingle();
+        cell.GetVisualDescendants().OfType<TextBlock>()
+            .Single(textBlock => textBlock.Classes.Contains("revision-subject"))
+            .Text.Should().Be("On main: saved work");
+
+        GitRevision autostash = Revision('b', "autostash");
+        autostash.IsAutostash = true;
+        provider.UpdateCell(cell, autostash);
+
+        cell.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>()
+            .Where(label => label.GitRef is null && label.Label == "autostash")
+            .Should().ContainSingle();
+        cell.GetVisualDescendants().OfType<TextBlock>()
+            .Single(textBlock => textBlock.Classes.Contains("revision-subject"))
+            .Text.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2a")]
+    public void Revision_grid_message_column_should_not_request_commit_details_for_autostash()
+    {
+        bool originalCommitBody = AppSettings.ShowCommitBodyInRevisionGrid;
+        bool originalTooltips = AppSettings.ShowRevisionGridTooltips.Value;
+        try
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = true;
+            AppSettings.ShowRevisionGridTooltips.Value = false;
+            RevisionGridControl control = new();
+            ICommitDataManager commitDataManager = Substitute.For<ICommitDataManager>();
+            MessageColumnProvider provider = new(control, new GitRevisionSummaryBuilder(), commitDataManager);
+            provider.ApplySettings();
+            GitRevision revision = Revision('a', "autostash", multiline: true);
+            revision.IsAutostash = true;
+
+            provider.UpdateCell(provider.CreateCell(), revision);
+
+            commitDataManager.DidNotReceive().InitiateDelayedLoadingOfDetails(revision);
+        }
+        finally
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = originalCommitBody;
+            AppSettings.ShowRevisionGridTooltips.Value = originalTooltips;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2a")]
+    public void Revision_grid_message_column_should_render_fixup_squash_and_amend_markers_like_the_original()
+    {
+        RevisionGridControl control = new();
+        MessageColumnProvider provider = (MessageColumnProvider)control.ColumnProviders
+            .Single(column => column.Name == "Message");
+        Control cell = provider.CreateCell();
+        Image marker = cell.GetVisualDescendants().OfType<Image>()
+            .Single(image => image.Classes.Contains("revision-message-marker"));
+
+        foreach (string prefix in new[] { "fixup!", "squash!", "amend!" })
+        {
+            provider.UpdateCell(cell, Revision('a', $"{prefix} target"));
+            marker.IsVisible.Should().BeTrue(prefix);
+        }
+
+        provider.UpdateCell(cell, Revision('b', "ordinary commit"));
+        marker.IsVisible.Should().BeFalse();
     }
 
     [AvaloniaTest]

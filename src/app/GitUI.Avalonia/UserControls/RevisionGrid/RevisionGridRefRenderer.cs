@@ -335,7 +335,7 @@ internal static class RevisionGridRefRenderer
 
         public IGitRef? GitRef { get; }
 
-        public string Label { get; }
+        public string Label { get; private set; }
 
         public void AppendLabel(string suffix)
         {
