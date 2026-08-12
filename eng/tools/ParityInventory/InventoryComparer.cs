@@ -22,7 +22,11 @@ internal static class InventoryComparer
         InventoryComparison commentComparison = CommentInventoryComparer.Compare(original, twin);
         findings.AddRange(commentComparison.Findings);
 
-        foreach (TranslationKeyEntry entry in twin.TranslationKeys.Where(item => !item.InEnglishCatalog))
+        HashSet<string> originalTranslationKeys = original.TranslationKeys
+            .Select(item => item.Key)
+            .ToHashSet(StringComparer.Ordinal);
+        foreach (TranslationKeyEntry entry in twin.TranslationKeys.Where(item =>
+                     !item.InEnglishCatalog && !originalTranslationKeys.Contains(item.Key)))
         {
             findings.Add(NewFinding(
                 "translations",

@@ -337,6 +337,13 @@ internal static class RevisionGridRefRenderer
 
         public string Label { get; }
 
+        public void AppendLabel(string suffix)
+        {
+            Label += suffix;
+            InvalidateMeasure();
+            InvalidateVisual();
+        }
+
         public RefLabelIcon Icon { get; }
 
         public RefLabelShape Shape { get; }
