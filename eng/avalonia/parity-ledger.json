@@ -33423,11 +33423,11 @@
           "verifiedOn": "2026-08-13",
           "commit": "2cae9c6ee41441bbe11e73223867127e635b0a8b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b/final/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2a/final/diff/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 5534,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs with the original text-gray setting explicitly enabled are joined. Per-state WinForms workers remove cross-state contamination, and schema normalization removes false container-selection diagnostics. The Avalonia context-menu image records its actual headless scroll viewport while the tree retains every logical menu item; the remaining 5,534 diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
+          "findingCount": 5306,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs with the original text-gray setting explicitly enabled are joined. Per-state WinForms workers remove cross-state contamination; canonical WinForms-shaped mnemonic, textless-control, separator, and popup roles eliminate schema-only text and control-kind diagnostics. The Avalonia context-menu image records its actual headless scroll viewport while the tree retains every logical menu item; the remaining 5,306 diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
