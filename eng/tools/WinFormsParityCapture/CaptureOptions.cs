@@ -33,6 +33,8 @@ internal sealed record CaptureOptions
 
     public string? WorkerResultPath { get; init; }
 
+    public string? StateId { get; init; }
+
     public IReadOnlySet<string> Components { get; init; } = new HashSet<string>(StringComparer.Ordinal);
 
     public IReadOnlySet<string> Themes { get; init; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -90,6 +92,7 @@ internal sealed record CaptureOptions
             Monitor = ParseMonitor(GetValue("--monitor")),
             DpiMode = GetValue("--dpi-mode"),
             WorkerResultPath = GetValue("--worker-result"),
+            StateId = GetValue("--state"),
             Components = ParseSet(GetValue("--components"), StringComparer.Ordinal),
             Themes = ParseSet(GetValue("--themes"), StringComparer.OrdinalIgnoreCase),
             Scales = ParseIntSet(GetValue("--scales")),
