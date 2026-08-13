@@ -967,9 +967,21 @@
   </Style>
 
   <Style Selector="MenuItem">
-    <Setter Property="MinHeight" Value="22" />
+    <Setter Property="MinHeight" Value="20.5" />
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+  </Style>
+  <Style Selector="ContextMenu Separator">
+    <Setter Property="Height" Value="4.5" />
+    <Setter Property="Margin" Value="2,0" />
+  </Style>
+  <Style Selector="MenuFlyoutPresenter Separator">
+    <Setter Property="Height" Value="4.5" />
+    <Setter Property="Margin" Value="2,0" />
   </Style>
   <Style Selector="Button">
     <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
@@ -1032,6 +1044,10 @@
     <Setter Property="Opacity" Value="0.7" />
   </Style>
   <Style Selector="ContextMenu">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
     <!-- ContextMenu owns a private 4px scroller inset in Fluent; setting only the shared
          resource does not affect this presenter variant. -->
     <Setter Property="MinHeight" Value="0" />
@@ -1044,6 +1060,10 @@
     <Setter Property="Margin" Value="0" />
   </Style>
   <Style Selector="MenuFlyoutPresenter">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
     <Setter Property="MinHeight" Value="0" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
