@@ -768,8 +768,11 @@ public sealed class VisualParityTests
 
     [AvaloniaTest]
     [Category("P8.6h.3b.2b")]
+    [Category("P8.6h.3b.2b.2a")]
     public void Revision_grid_should_use_the_original_background_and_active_inactive_selection_colors()
     {
+        bool originalDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
+        AppSettings.RevisionGraphDrawNonRelativesTextGray = false;
         AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);
         RevisionGridControl control = new() { UICommandsSource = CreateRevisionGridCommandsSource() };
         ListBox revisions = control.FindControl<ListBox>("_gridView")
@@ -790,6 +793,7 @@ public sealed class VisualParityTests
             ListBoxItem item = revisions.ContainerFromIndex(0) as ListBoxItem
                 ?? throw new InvalidOperationException("The revision row was not realized.");
             item.Focus();
+            control.RefreshRealizedRows();
             Dispatcher.UIThread.RunJobs();
             ContentPresenter presenter = item.GetVisualDescendants()
                 .OfType<ContentPresenter>()
@@ -800,6 +804,9 @@ public sealed class VisualParityTests
             TextBlock subject = row.GetVisualDescendants()
                 .OfType<TextBlock>()
                 .Single(control => control.Classes.Contains("revision-subject"));
+            TextBlock body = row.GetVisualDescendants()
+                .OfType<TextBlock>()
+                .Single(control => control.Classes.Contains("revision-body"));
             bool isDark = ThemeModule.Settings.Theme.SystemColorMode == WinFormsShims.SystemColorMode.Dark;
             System.Drawing.Color panelColor = AvaloniaThemeResources.ResolveAppColor(
                 ThemeModule.Settings,
@@ -816,7 +823,20 @@ public sealed class VisualParityTests
             GetColor(subject.Foreground).Should().Be(ToMediaColor(isDark
                 ? AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.ControlText)
                 : AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.HighlightText)));
+            GetColor(body.Foreground).Should().Be(isDark
+                ? Color.Parse("#AAAA96")
+                : Color.Parse("#BCBCBC"));
             row.Background.Should().BeNull();
+
+            AppSettings.RevisionGraphDrawNonRelativesTextGray = true;
+            control.RefreshRealizedRows();
+            Dispatcher.UIThread.RunJobs();
+            GetColor(subject.Foreground).Should().Be(isDark
+                ? Color.Parse("#EBEBD7")
+                : Color.Parse("#BCBCBC"));
+            GetColor(body.Foreground).Should().Be(isDark
+                ? Color.Parse("#AAAA96")
+                : Color.Parse("#A1A1A1"));
 
             focusTarget.Focus();
             Dispatcher.UIThread.RunJobs();
@@ -826,6 +846,7 @@ public sealed class VisualParityTests
         finally
         {
             window.Close();
+            AppSettings.RevisionGraphDrawNonRelativesTextGray = originalDrawNonRelativesTextGray;
         }
     }
 
@@ -1174,6 +1195,30 @@ public sealed class VisualParityTests
             .Should().Be(ToMediaColor(panel.MakeDarkerBy(isDark ? -0.018 : 0.025)));
         GetResourceBrushColor(application, "GitExtensionsRevisionAuthoredBrush", themeVariant)
             .Should().Be(ToMediaColor(AvaloniaThemeResources.ResolveAppColor(settings, AppColor.AuthoredHighlight)));
+        GetResourceBrushColor(application, "GitExtensionsRevisionSelectedSubjectBrush", themeVariant)
+            .Should().Be(ToMediaColor(isDark
+                ? AvaloniaThemeResources.ResolveSystemColor(settings, System.Drawing.KnownColor.ControlText)
+                : AvaloniaThemeResources.ResolveSystemColor(settings, System.Drawing.KnownColor.HighlightText)));
+        GetResourceBrushColor(application, "GitExtensionsRevisionNonRelativeSubjectBrush", themeVariant)
+            .Should().Be(ToMediaColor(isDark
+                ? System.Drawing.Color.FromArgb(192, 192, 192)
+                : AvaloniaThemeResources.ResolveSystemColor(settings, System.Drawing.KnownColor.GrayText)));
+        GetResourceBrushColor(application, "GitExtensionsRevisionNonRelativeSelectedSubjectBrush", themeVariant)
+            .Should().Be(ToMediaColor(isDark
+                ? System.Drawing.Color.FromArgb(235, 235, 215)
+                : System.Drawing.Color.FromArgb(188, 188, 188)));
+        GetResourceBrushColor(application, "GitExtensionsRevisionSelectedBodyBrush", themeVariant)
+            .Should().Be(ToMediaColor(isDark
+                ? System.Drawing.Color.FromArgb(170, 170, 150)
+                : System.Drawing.Color.FromArgb(188, 188, 188)));
+        GetResourceBrushColor(application, "GitExtensionsRevisionNonRelativeBodyBrush", themeVariant)
+            .Should().Be(ToMediaColor(isDark
+                ? System.Drawing.Color.FromArgb(130, 130, 130)
+                : System.Drawing.Color.FromArgb(152, 152, 152)));
+        GetResourceBrushColor(application, "GitExtensionsRevisionNonRelativeSelectedBodyBrush", themeVariant)
+            .Should().Be(ToMediaColor(isDark
+                ? System.Drawing.Color.FromArgb(170, 170, 150)
+                : System.Drawing.Color.FromArgb(161, 161, 161)));
         GetResourceBrushColor(application, "GitExtensionsDiffRemovedDimBrush", themeVariant)
             .Should().Be(ToMediaColor(removed.DimColor().DimColor()));
         GetResourceBrushColor(application, "GitExtensionsDiffAddedDimBrush", themeVariant)
