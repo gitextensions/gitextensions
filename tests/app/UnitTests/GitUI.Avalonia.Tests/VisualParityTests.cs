@@ -231,7 +231,7 @@ public sealed class VisualParityTests
                 form.commandsToolStripMenuItem.IsSubMenuOpen = true;
                 Dispatcher.UIThread.RunJobs();
                 visibleMenuItems.Select(item => item.Bounds).Should().Equal(closedMenuItemBounds);
-                form.commitToolStripMenuItem.Bounds.Height.Should().Be(22);
+                form.commitToolStripMenuItem.Bounds.Height.Should().Be(21);
                 ItemsPresenter menuItemsPresenter = form.commitToolStripMenuItem
                     .GetVisualAncestors()
                     .OfType<ItemsPresenter>()
@@ -384,6 +384,10 @@ public sealed class VisualParityTests
             contextMenu.Open(target);
             Dispatcher.UIThread.RunJobs();
             AssertSingleItemPopupFits(contextItem);
+            contextItem.FontFamily.Should().Be(GetResource<FontFamily>(Application.Current!, "GitExtensionsUiFontFamily"));
+            contextItem.FontSize.Should().Be(GetResource<double>(Application.Current!, "GitExtensionsUiFontSize"));
+            contextItem.FontStyle.Should().Be(GetResource<FontStyle>(Application.Current!, "GitExtensionsUiFontStyle"));
+            contextItem.FontWeight.Should().Be(GetResource<FontWeight>(Application.Current!, "GitExtensionsUiFontWeight"));
             contextMenu.GetVisualDescendants()
                 .OfType<ItemsPresenter>()
                 .Single(presenter => presenter.Name == "PART_ItemsPresenter")
@@ -392,6 +396,21 @@ public sealed class VisualParityTests
             Dispatcher.UIThread.RunJobs();
             AssertSingleItemPopupFits(nestedContextItem);
             contextMenu.Close();
+
+            Separator contextSeparator = new();
+            ContextMenu separatorMenu = new()
+            {
+                Items =
+                {
+                    new MenuItem { Header = "First command" },
+                    contextSeparator,
+                    new MenuItem { Header = "Second command" },
+                },
+            };
+            separatorMenu.Open(target);
+            Dispatcher.UIThread.RunJobs();
+            contextSeparator.Height.Should().Be(4.5);
+            separatorMenu.Close();
 
             MenuItem flyoutItem = new() { Header = "Flyout command" };
             MenuFlyout flyout = new() { Items = { flyoutItem } };
@@ -1033,7 +1052,7 @@ public sealed class VisualParityTests
         double topInset = itemPosition.Y;
         double bottomInset = popupSurface.Bounds.Height - itemPosition.Y - item.Bounds.Height;
 
-        item.Bounds.Height.Should().Be(22);
+        item.Bounds.Height.Should().Be(21);
         topInset.Should().BeLessThanOrEqualTo(1);
         bottomInset.Should().BeLessThanOrEqualTo(1);
     }
