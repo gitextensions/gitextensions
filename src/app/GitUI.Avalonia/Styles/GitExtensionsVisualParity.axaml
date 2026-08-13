@@ -133,6 +133,8 @@
                            Color="#F9F9F9" />
           <SolidColorBrush x:Key="GitExtensionsRevisionAuthoredBrush"
                            Color="#FFFFC8" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionSelectedSubjectBrush"
+                           Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#FFFFFF" />
@@ -219,6 +221,8 @@
                            Color="#373737" />
           <SolidColorBrush x:Key="GitExtensionsRevisionAuthoredBrush"
                            Color="#665E00" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionSelectedSubjectBrush"
+                           Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
