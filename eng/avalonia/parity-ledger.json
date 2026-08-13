@@ -33421,13 +33421,13 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "2cae9c6ee41441bbe11e73223867127e635b0a8b",
+          "commit": "7103475e3e84dd10f08c93d5660bb8e08610babf",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2a/final/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/final/diff/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 5306,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs with the original text-gray setting explicitly enabled are joined. Per-state WinForms workers remove cross-state contamination; canonical WinForms-shaped mnemonic, textless-control, separator, and popup roles eliminate schema-only text and control-kind diagnostics. The Avalonia context-menu image records its actual headless scroll viewport while the tree retains every logical menu item; the remaining 5,306 diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
+          "findingCount": 4705,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined. Shared popup items now use the configured UI font and measured ToolStrip row/separator heights, removing 360 item-font and 204 height diagnostics; the 12 remaining font findings belong to Avalonia Headless's private OverlayPopupHost root rather than product menu items. The Avalonia context-menu image records its actual headless scroll viewport while the tree retains every logical menu item; the remaining 4,705 diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
@@ -33454,12 +33454,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
+          "commit": "7103475e3e84dd10f08c93d5660bb8e08610babf",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/runtime/linux/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/runtime/linux/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
