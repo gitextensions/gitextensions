@@ -131,7 +131,7 @@ internal sealed class AvaloniaControlTreeReader
         {
             ListBoxItem listItem => listItem.IsSelected,
             TreeViewItem treeItem => treeItem.IsSelected,
-            SelectingItemsControl selectingItems => selectingItems.SelectedItem is not null,
+            MenuItem menuItem => menuItem.IsSelected,
             _ => null
         };
 
@@ -255,11 +255,12 @@ internal sealed class AvaloniaControlTreeReader
             TranslationSource = fieldName,
             TabIndex = KeyboardNavigation.GetTabIndex(control),
             TabStop = control.Focusable,
-            Enabled = control.IsEnabled,
-            Visible = control.IsVisible,
+            Enabled = control is Separator ? false : control.IsEnabled,
+            Visible = IsMenuItemVisible(control),
             Focused = control.IsFocused,
             ReadOnly = GetNullableBoolProperty(control, "IsReadOnly"),
             CheckState = control is ToggleButton toggle
+                         && (control is CheckBox || control is RadioButton || control is MenuItem)
                 ? toggle.IsChecked switch
                 {
                     true => "Checked",
@@ -273,6 +274,11 @@ internal sealed class AvaloniaControlTreeReader
             Children = children
         };
     }
+
+    private static bool IsMenuItemVisible(Control control) =>
+        control.IsVisible
+        && (control is not MenuItem
+            || control.GetLogicalAncestors().OfType<MenuItem>().All(parent => parent.IsSubMenuOpen));
 
     private IReadOnlyList<string> GetFieldNames(object value) =>
         _fieldNames.TryGetValue(value, out List<string>? names)

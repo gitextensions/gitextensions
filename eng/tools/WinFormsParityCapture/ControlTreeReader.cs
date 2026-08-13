@@ -505,6 +505,7 @@ internal sealed class ControlTreeReader
 
     private CaptureNode ReadToolStripItem(ToolStripItem item, string parentId, int ordinal)
     {
+        bool isSeparator = item is ToolStripSeparator;
         IReadOnlyList<string> names = GetFieldNames(item);
         string segment = names.FirstOrDefault()
             ?? (!string.IsNullOrEmpty(item.Name) ? item.Name : $"$unnamed[{ordinal}]:{item.GetType().Name}");
@@ -542,13 +543,19 @@ internal sealed class ControlTreeReader
             TranslationSource = names.FirstOrDefault(),
             TabIndex = null,
             TabStop = null,
-            Enabled = item.Enabled,
+            Enabled = isSeparator ? false : item.Enabled,
             Visible = item.Visible,
-            Focused = item.Selected,
+            Focused = isSeparator ? false : item.Selected,
             ReadOnly = null,
-            CheckState = item is ToolStripMenuItem menuItem ? menuItem.CheckState.ToString() : null,
-            Selected = item.Selected,
-            Expanded = item is ToolStripDropDownItem { DropDown.Visible: true },
+            CheckState = item is ToolStripMenuItem menuItem && (menuItem.CheckOnClick || menuItem.Checked)
+                ? menuItem.CheckState.ToString()
+                : null,
+            Selected = isSeparator ? null : item.Selected,
+            Expanded = item is ToolStripDropDownItem { DropDown.Visible: true }
+                ? true
+                : item is ToolStripDropDownItem
+                    ? false
+                    : null,
             Columns = [],
             Children = children
         };

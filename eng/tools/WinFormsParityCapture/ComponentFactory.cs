@@ -235,11 +235,94 @@ internal static class ComponentFactory
         }
     }
 
+    // parity-scaffolding: Async revision loading can settle on a stash or artificial row at
+    // different times in isolated workers; every paired state must start from repository HEAD.
+    public static void PrepareCaptureState(Control control, IGitUICommands commands)
+    {
+        if (control is not RevisionGridControl revisionGrid)
+        {
+            return;
+        }
+
+        DataGridView grid = (DataGridView?)FindFieldValue(revisionGrid, "_gridView")
+            ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its real DataGridView.");
+        System.Reflection.PropertyInfo loadCompleteProperty = grid.GetType().GetProperty(
+            "IsDataLoadComplete",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its load-complete state.");
+        DateTime loadDeadline = DateTime.UtcNow.AddSeconds(10);
+        while (!(bool)loadCompleteProperty.GetValue(grid)! && DateTime.UtcNow < loadDeadline)
+        {
+            Application.DoEvents();
+            Thread.Sleep(25);
+        }
+
+        if (!(bool)loadCompleteProperty.GetValue(grid)!)
+        {
+            throw new CaptureStateUnsupportedException("The original revision grid did not complete repository loading before capture.");
+        }
+
+        if (revisionGrid.FindForm() is Form form)
+        {
+            form.Activate();
+        }
+
+        System.Reflection.MethodInfo getRevision = typeof(RevisionGridControl).GetMethod(
+            "GetRevision",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic,
+            binder: null,
+            types: [typeof(int)],
+            modifiers: null)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its row lookup.");
+        ObjectId head = commands.Module.RevParse("HEAD");
+        DateTime selectionDeadline = DateTime.UtcNow.AddSeconds(30);
+        bool selectedHead = false;
+        while (!selectedHead && DateTime.UtcNow < selectionDeadline)
+        {
+            int selectedIndex = Enumerable.Range(0, grid.RowCount)
+                .FirstOrDefault(index => GetRevision(index)?.ObjectId == head, -1);
+            if (selectedIndex < 0)
+            {
+                Application.DoEvents();
+                Thread.Sleep(25);
+                continue;
+            }
+
+            grid.Focus();
+            grid.ClearSelection();
+            grid.Rows[selectedIndex].Selected = true;
+            grid.CurrentCell = grid.Rows[selectedIndex].Cells[Math.Min(1, grid.ColumnCount - 1)];
+            Application.DoEvents();
+            System.Reflection.FieldInfo latestRowField = typeof(RevisionGridControl).GetField(
+                "_latestSelectedRowIndex",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its selected-row state.");
+            latestRowField.SetValue(revisionGrid, selectedIndex);
+            selectedHead = GetRevision(selectedIndex)?.ObjectId == head
+                           && grid.Rows[selectedIndex].Selected;
+        }
+
+        if (!selectedHead)
+        {
+            throw new CaptureStateUnsupportedException("The original revision grid did not retain repository HEAD selection before capture.");
+        }
+
+        GitRevision? GetRevision(int index)
+            => (GitRevision?)getRevision.Invoke(revisionGrid, [index]);
+    }
+
     // parity-scaffolding: Cancel the original grid's asynchronous refresh before WinForms disposal joins it.
     public static void CleanupBeforeDispose(Control control)
     {
-        if (control is FormFormatPatch
-            && FindFieldValue(control, "RevisionGrid") is RevisionGridControl revisionGrid)
+        RevisionGridControl? revisionGrid = control as RevisionGridControl;
+        if (revisionGrid is null
+            && control is FormFormatPatch
+            && FindFieldValue(control, "RevisionGrid") is RevisionGridControl nestedRevisionGrid)
+        {
+            revisionGrid = nestedRevisionGrid;
+        }
+
+        if (revisionGrid is not null)
         {
             InvokeNonPublic(revisionGrid, "CancelBackgroundTasks");
         }

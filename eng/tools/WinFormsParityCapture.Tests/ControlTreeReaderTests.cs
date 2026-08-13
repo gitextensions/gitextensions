@@ -75,6 +75,21 @@ public sealed class ControlTreeReaderTests
             .Should().Be(Color.FromArgb(80, 80, 60));
     }
 
+    [Test]
+    public void ReadPopup_should_emit_noninteractive_separator_state()
+    {
+        using ContextMenuStrip menu = new();
+        menu.Items.Add(new ToolStripSeparator { Name = "separator" });
+        ControlTreeReader reader = new(menu, dpi: 96);
+
+        CaptureNode separator = reader.ReadPopup(menu, ordinal: 0).Root.Children.Single();
+
+        separator.Enabled.Should().BeFalse();
+        separator.Focused.Should().BeFalse();
+        separator.Selected.Should().BeNull();
+        separator.Expanded.Should().BeNull();
+    }
+
     private static CaptureNode FindNode(CaptureNode root, string fieldName)
     {
         if (root.FieldName == fieldName)
