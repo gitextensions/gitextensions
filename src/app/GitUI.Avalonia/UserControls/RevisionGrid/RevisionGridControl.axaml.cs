@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
@@ -137,6 +138,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         {
             _parentChildNavigationHistory.RevisionsSelectionChanged();
             HighlightRevisionsByAuthor();
+            RefreshRealizedRows();
             UpdateContextMenuItems();
             GitRevision[] selectedRevisions = [.. _gridView.SelectedItems?.OfType<GitRevision>().Take(2) ?? []];
             if (selectedRevisions.Length == 1)
@@ -146,6 +148,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
             SelectionChanged?.Invoke(this, EventArgs.Empty);
         };
+        _gridView.GotFocus += (_, _) => RefreshRealizedRows();
+        _gridView.LostFocus += (_, _) => RefreshRealizedRows();
         _gridView.KeyDown += OnGridViewKeyDown;
         _gridView.TextInput += (_, e) => _quickSearchProvider.OnKeyPress(e);
         _gridView.DoubleTapped += (_, _) =>
@@ -2676,6 +2680,32 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                 AppSettings.RevisionGraphDrawAlternateBackColor
                     && rowIndex >= 0
                     && rowIndex % 2 == 0);
+            bool isSelected = container?.IsSelected == true;
+            bool isSelectedAndFocused = isSelected && _owner._gridView.IsKeyboardFocusWithin;
+            bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray
+                && rowIndex >= 0
+                && !_owner._revisionGraph.IsRowRelative(rowIndex);
+            foreach (TextBlock textBlock in this.GetVisualDescendants().OfType<TextBlock>()
+                         .Where(textBlock => textBlock.Classes.Contains("revision-subject")
+                             || textBlock.Classes.Contains("revision-body")))
+            {
+                string resourceKey = textBlock.Classes.Contains("revision-subject")
+                    ? isNonRelativeGray
+                        ? isSelectedAndFocused
+                            ? "GitExtensionsRevisionNonRelativeSelectedSubjectBrush"
+                            : "GitExtensionsRevisionNonRelativeSubjectBrush"
+                        : isSelectedAndFocused
+                            ? "GitExtensionsRevisionSelectedSubjectBrush"
+                            : "GitExtensionsKnownColorControlTextBrush"
+                    : isNonRelativeGray
+                        ? isSelected
+                            ? "GitExtensionsRevisionNonRelativeSelectedBodyBrush"
+                            : "GitExtensionsRevisionNonRelativeBodyBrush"
+                        : isSelected
+                            ? "GitExtensionsRevisionSelectedBodyBrush"
+                            : "GitExtensionsKnownColorGrayTextBrush";
+                textBlock[!TextBlock.ForegroundProperty] = new DynamicResourceExtension(resourceKey);
+            }
         }
     }
 
