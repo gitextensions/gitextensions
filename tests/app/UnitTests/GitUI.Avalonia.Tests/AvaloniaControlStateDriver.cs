@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -336,6 +337,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             Control owner = EnumerateLogicalControls(_root)
                 .FirstOrDefault(control => ReferenceEquals(control.ContextMenu, contextMenu))
                 ?? throw new AvaloniaCaptureStateUnsupportedException("The ContextMenu is not attached to a control in the captured view.");
+            PrepareLongOverlayOwner(contextMenu);
             contextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
             TrackExternalTopLevels(contextMenu);
@@ -345,6 +347,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         if (target is Control { ContextMenu: { } attachedContextMenu })
         {
+            PrepareLongOverlayOwner(attachedContextMenu);
             attachedContextMenu.Open((Control)target);
             Dispatcher.UIThread.RunJobs();
             TrackExternalTopLevels(attachedContextMenu);
@@ -465,6 +468,40 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
             return false;
         }
+    }
+
+    // parity-scaffolding: The headless backend must use its real OverlayPopupHost, but unlike a
+    // desktop screen it constrains that host to the standalone owner. Give long product menus a
+    // screen-sized viewport while retaining the component's measured size for the paired crop.
+    private void PrepareLongOverlayOwner(ContextMenu contextMenu)
+    {
+        if (contextMenu.Items.Count < 20 || _topLevel is not Window captureWindow)
+        {
+            return;
+        }
+
+        double originalWindowHeight = captureWindow.Height;
+        double originalMenuMaxHeight = contextMenu.MaxHeight;
+        double originalWidth = _root.Width;
+        double originalHeight = _root.Height;
+        HorizontalAlignment originalHorizontalAlignment = _root.HorizontalAlignment;
+        VerticalAlignment originalVerticalAlignment = _root.VerticalAlignment;
+        _root.Width = _root.Bounds.Width;
+        _root.Height = _root.Bounds.Height;
+        _root.HorizontalAlignment = HorizontalAlignment.Left;
+        _root.VerticalAlignment = VerticalAlignment.Top;
+        captureWindow.Height = Math.Max(originalWindowHeight, 900);
+        contextMenu.MaxHeight = 900;
+        Dispatcher.UIThread.RunJobs();
+        _restoreActions.Add(() =>
+        {
+            captureWindow.Height = originalWindowHeight;
+            contextMenu.MaxHeight = originalMenuMaxHeight;
+            _root.Width = originalWidth;
+            _root.Height = originalHeight;
+            _root.HorizontalAlignment = originalHorizontalAlignment;
+            _root.VerticalAlignment = originalVerticalAlignment;
+        });
     }
 
     private static FlyoutBase? GetFlyout(Control control)
