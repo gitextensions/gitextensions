@@ -33421,22 +33421,22 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
+          "commit": "2cae9c6ee41441bbe11e73223867127e635b0a8b",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b/final/diff/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 5803,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs with the original text-gray setting explicitly enabled are joined. The 5,803 diagnostics retain 33 menu enabled/visible differences newly exposed by that setting; native 100/150/200 DPI, official preview and exhaustive live states remain open."
+          "findingCount": 5534,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs with the original text-gray setting explicitly enabled are joined. Per-state WinForms workers remove cross-state contamination, and schema normalization removes false container-selection diagnostics. The Avalonia context-menu image records its actual headless scroll viewport while the tree retains every logical menu item; the remaining 5,534 diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
           "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/tests/windows/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b/final/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b/tests/windows/focused-final.log"
           ],
           "platforms": ["windows"],
           "findingCount": 1408,

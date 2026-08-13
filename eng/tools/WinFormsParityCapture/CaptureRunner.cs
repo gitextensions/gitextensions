@@ -84,35 +84,39 @@ internal static class CaptureRunner
                             continue;
                         }
 
-                        string workerResultPath = Path.Combine(
-                            isolationRoot,
-                            $"worker-{Sanitize(component.TypeName)}-{Sanitize(theme.Id)}-{scale}.json");
-                        List<string> workerArguments =
-                        [
-                            "--worker",
-                            "--plan", isolatedPlanPath,
-                            "--repository", repositoryPath,
-                            "--output", Path.GetFullPath(outputPath),
-                            "--component", component.TypeName,
-                            "--theme", theme.Id,
-                            "--scale", scale.ToString(CultureInfo.InvariantCulture),
-                            "--monitor", hostMonitor.Value.ToString(),
-                            "--dpi-mode", dpiMode.Value.ToString(),
-                            "--worker-result", workerResultPath
-                        ];
-
-                        int exitCode = await RunWorkerAsync(runtimeRoot, workerArguments);
-                        if (!File.Exists(workerResultPath))
+                        foreach (CaptureStatePlan state in component.States)
                         {
-                            throw new InvalidOperationException(
-                                $"Capture worker failed for {component.TypeName}, {theme.Id}, {scale}% with exit code {exitCode}.");
-                        }
+                            string stateWorkerResultPath = Path.Combine(
+                                isolationRoot,
+                                $"worker-{Sanitize(component.TypeName)}-{Sanitize(theme.Id)}-{scale}-{Sanitize(state.Id)}.json");
+                            List<string> workerArguments =
+                            [
+                                "--worker",
+                                "--plan", isolatedPlanPath,
+                                "--repository", repositoryPath,
+                                "--output", Path.GetFullPath(outputPath),
+                                "--component", component.TypeName,
+                                "--theme", theme.Id,
+                                "--scale", scale.ToString(CultureInfo.InvariantCulture),
+                                "--state", state.Id,
+                                "--monitor", hostMonitor.Value.ToString(),
+                                "--dpi-mode", dpiMode.Value.ToString(),
+                                "--worker-result", stateWorkerResultPath
+                            ];
 
-                        CaptureWorkerResult? workerResult = JsonSerializer.Deserialize<CaptureWorkerResult>(
-                            File.ReadAllText(workerResultPath),
-                            ManifestJsonOptions);
-                        entries.AddRange(workerResult?.Captures
-                            ?? throw new InvalidDataException($"Worker result '{workerResultPath}' is empty."));
+                            int exitCode = await RunWorkerAsync(runtimeRoot, workerArguments);
+                            if (!File.Exists(stateWorkerResultPath))
+                            {
+                                throw new InvalidOperationException(
+                                    $"Capture worker failed for {component.TypeName}, {theme.Id}, {scale}%, {state.Id} with exit code {exitCode}.");
+                            }
+
+                            CaptureWorkerResult? workerResult = JsonSerializer.Deserialize<CaptureWorkerResult>(
+                                File.ReadAllText(stateWorkerResultPath),
+                                ManifestJsonOptions);
+                            entries.AddRange(workerResult?.Captures
+                                ?? throw new InvalidDataException($"Worker result '{stateWorkerResultPath}' is empty."));
+                        }
                     }
                 }
             }
@@ -148,6 +152,7 @@ internal static class CaptureRunner
         CaptureMonitor monitor = options.Monitor ?? throw new ArgumentException("--monitor is required.");
         CaptureDpiMode dpiMode = Enum.Parse<CaptureDpiMode>(RequireValue(options.DpiMode, "--dpi-mode"));
         string workerResultPath = RequireValue(options.WorkerResultPath, "--worker-result");
+        string stateId = RequireValue(options.StateId, "--state");
 
         CapturePlan plan = CapturePlan.Load(planPath);
         CaptureComponentPlan component = plan.Components.Single(item => item.TypeName == componentType);
@@ -158,60 +163,28 @@ internal static class CaptureRunner
         Directory.CreateDirectory(outputPath);
 
         List<CaptureManifestEntry> entries = [];
+        CaptureStatePlan state = component.States.Single(item => item.Id == stateId);
         try
         {
             using WinFormsBootstrap bootstrap = WinFormsBootstrap.Create(repositoryPath, profile, theme, isolationRoot);
             using Control root = ComponentFactory.Create(component, bootstrap.Commands);
-            try
-            {
-                PrepareControl(root, bootstrap.Commands, component, monitor, scale, dpiMode);
-                PumpUntilReady(root);
-            }
-            catch (CaptureStateUnsupportedException exception)
-            {
-                entries.AddRange(component.States.Select(state => Unsupported(
-                    componentType,
-                    theme.Id,
-                    scale,
-                    state.Id,
-                    exception.Message)));
-            }
-
-            if (entries.Count == 0)
-            {
-                int actualDpi = root.DeviceDpi;
-                if (actualDpi != scale * 96 / 100)
-                {
-                    entries.AddRange(component.States.Select(state => Unsupported(
-                        componentType,
-                        theme.Id,
-                        scale,
-                        state.Id,
-                        $"The WinForms DPI-change path reported {actualDpi} DPI instead of {scale * 96 / 100} DPI.")));
-                }
-                else
-                {
-                    foreach (CaptureStatePlan state in component.States)
-                    {
-                        entries.Add(CaptureState(bootstrap, root, componentType, theme, scale, dpiMode, state, outputPath));
-                    }
-                }
-            }
-
+            PrepareControl(root, bootstrap.Commands, component, monitor, scale, dpiMode);
+            PumpUntilReady(root);
+            int actualDpi = root.DeviceDpi;
+            entries.Add(actualDpi != scale * 96 / 100
+                ? Unsupported(componentType, theme.Id, scale, state.Id, $"The WinForms DPI-change path reported {actualDpi} DPI instead of {scale * 96 / 100} DPI.")
+                : CaptureState(bootstrap, root, componentType, theme, scale, dpiMode, state, outputPath));
             Application.DoEvents();
             bootstrap.ThrowIfThreadException();
             ComponentFactory.CleanupBeforeDispose(root);
         }
+        catch (CaptureStateUnsupportedException exception)
+        {
+            entries.Add(Unsupported(componentType, theme.Id, scale, state.Id, exception.Message));
+        }
         catch (Exception exception)
         {
-            entries.Clear();
-            entries.AddRange(component.States.Select(state => Failed(
-                componentType,
-                theme.Id,
-                scale,
-                state.Id,
-                dpiMode,
-                exception)));
+            entries.Add(Failed(componentType, theme.Id, scale, state.Id, dpiMode, exception));
         }
 
         CaptureWorkerResult result = new() { Captures = entries };
@@ -343,6 +316,7 @@ internal static class CaptureRunner
         try
         {
             bootstrap.ThrowIfThreadException();
+            ComponentFactory.PrepareCaptureState(root, bootstrap.Commands);
             using ControlStateDriver driver = ControlStateDriver.Apply(root, state);
             bootstrap.ThrowIfThreadException();
             using CaptureImageResult image = ImageCapture.Capture(root, driver.Popups);

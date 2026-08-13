@@ -96,6 +96,29 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(P02Category)]
+    public void Avalonia_tree_reader_should_emit_framework_neutral_selection_and_separator_state()
+    {
+        Window window = new() { Width = 320, Height = 160 };
+        ListBox list = new() { ItemsSource = new[] { "Selected" }, SelectedIndex = 0 };
+        Separator separator = new();
+        window.Content = new StackPanel { Children = { list, separator } };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureSurface surface = new AvaloniaControlTreeReader(window, renderScale: 1)
+            .ReadPrimary(window, new PixelSize(320, 160));
+        CaptureNode listNode = Flatten(surface.Root).Single(node => node.Type == typeof(ListBox).FullName);
+        CaptureNode separatorNode = Flatten(surface.Root).Single(node => node.Type == typeof(Separator).FullName);
+
+        listNode.Selected.Should().BeNull("selection belongs to realized items, as it does in the WinForms grid tree");
+        separatorNode.Enabled.Should().BeFalse();
+        separatorNode.Selected.Should().BeNull();
+        separatorNode.CheckState.Should().BeNull();
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
     public void Avalonia_state_driver_should_apply_supported_states_and_reject_wrong_targets()
     {
         foreach (CaptureStateKind kind in new[]
@@ -164,6 +187,31 @@ public sealed partial class ParityScreenshotTests
 
         menuWindow.Close();
 
+        Window longMenuWindow = new() { Width = 240, Height = 100 };
+        Button longMenuOwner = new() { Name = "btnLongMenu", Content = "Long menu" };
+        longMenuOwner.ContextMenu = new ContextMenu
+        {
+            ItemsSource = Enumerable.Range(1, 25).Select(index => new MenuItem { Header = $"Item {index}" }).ToArray()
+        };
+        longMenuWindow.Content = longMenuOwner;
+        longMenuWindow.Show();
+        Dispatcher.UIThread.RunJobs();
+        using (AvaloniaControlStateDriver longMenuDriver = AvaloniaControlStateDriver.Apply(
+                   longMenuWindow,
+                   new CaptureStatePlan
+                   {
+                       Id = "long-menu.open",
+                       Kind = CaptureStateKind.MenuOpen,
+                       TargetField = "btnLongMenu"
+                   }))
+        {
+            longMenuWindow.Height.Should().Be(900);
+            longMenuDriver.PopupSurfaceRoots.Should().ContainSingle()
+                .Which.Bounds.Height.Should().BeGreaterThan(100);
+        }
+
+        longMenuWindow.Close();
+
         Window flyoutWindow = new() { Width = 240, Height = 100 };
         Button flyoutButton = new()
         {
@@ -193,6 +241,8 @@ public sealed partial class ParityScreenshotTests
         flyoutWindow.Close();
 
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        string originalDictionary = AppSettings.Dictionary;
+        AppSettings.Dictionary = "None";
         EditNetSpell hostedEditor = new() { Name = "editHosted" };
         Window hostedEditorWindow = new() { Width = 240, Height = 100, Content = hostedEditor };
         hostedEditorWindow.Show();
@@ -220,6 +270,7 @@ public sealed partial class ParityScreenshotTests
         }
 
         hostedEditorWindow.Close();
+        AppSettings.Dictionary = originalDictionary;
 
         Button secondTabButton = new() { Name = "btnSecondTab", Content = "Second" };
         TabItem firstTab = new() { Header = "First", Content = "First content" };
@@ -518,7 +569,9 @@ public sealed partial class ParityScreenshotTests
             using WriteableBitmap primaryFrame = CaptureRenderedFrame(window);
             PixelRect primarySurfaceBounds = cropToComponent
                 ? GetScreenBounds(view, window, renderScale)
-                : GetScreenBounds(window, primaryFrame.PixelSize);
+                : ReferenceEquals(view, window)
+                    ? GetScreenBounds(window, primaryFrame.PixelSize)
+                    : GetScreenBounds(view, window, renderScale);
             List<WriteableBitmap> externalFrames = [];
             List<CapturedTopLevelFrame> capturedFrames =
             [
@@ -541,17 +594,30 @@ public sealed partial class ParityScreenshotTests
                         GetScreenBounds(externalTopLevel, externalFrame.PixelSize)));
                 }
 
-                PixelRect imageBounds = cropToComponent && capturedFrames.Count == 1
-                    ? primarySurfaceBounds
-                    : UnionBounds(capturedFrames.Select(frame => frame.ScreenBounds));
+                PixelRect[] popupSurfaceBounds = driver.PopupSurfaceRoots
+                    .Select(popupRoot => GetScreenBounds(
+                        popupRoot,
+                        TopLevel.GetTopLevel(popupRoot) ?? window,
+                        renderScale))
+                    .ToArray();
+                PixelRect imageBounds = popupSurfaceBounds.Length > 0
+                    ? UnionBounds([primarySurfaceBounds, .. popupSurfaceBounds])
+                    : cropToComponent && capturedFrames.Count == 1
+                        ? primarySurfaceBounds
+                        : UnionBounds(capturedFrames.Select(frame => frame.ScreenBounds));
                 CaptureMethod captureMethod = capturedFrames.Count == 1
                     ? CaptureMethod.HeadlessSkia
                     : CaptureMethod.HeadlessSkiaComposite;
                 using RenderTargetBitmap? composite = capturedFrames.Count == 1
                     ? null
                     : ComposeTopLevels(capturedFrames, imageBounds, renderScale);
-                using WriteableBitmap? componentCrop = cropToComponent && capturedFrames.Count == 1
+                using WriteableBitmap? componentCrop = cropToComponent
+                                                         && capturedFrames.Count == 1
+                                                         && popupSurfaceBounds.Length == 0
                     ? CropToComponent(primaryFrame, view, window, imageBounds.Size, renderScale)
+                    : null;
+                using WriteableBitmap? overlayCrop = popupSurfaceBounds.Length > 0 && capturedFrames.Count == 1
+                    ? CropToScreenBounds(primaryFrame, window, imageBounds)
                     : null;
                 if (componentCrop is not null)
                 {
@@ -564,6 +630,8 @@ public sealed partial class ParityScreenshotTests
                     ? composite
                     : componentCrop is not null
                         ? componentCrop
+                        : overlayCrop is not null
+                            ? overlayCrop
                         : primaryFrame;
 
                 string relativeDirectory = Path.Combine(
@@ -799,6 +867,49 @@ public sealed partial class ParityScreenshotTests
         using ILockedFramebuffer targetFramebuffer = crop.Lock();
         byte[] row = new byte[targetSize.Width * 4];
         for (int y = 0; y < targetSize.Height; y++)
+        {
+            Marshal.Copy(
+                IntPtr.Add(sourceFramebuffer.Address, ((sourceY + y) * sourceFramebuffer.RowBytes) + (sourceX * 4)),
+                row,
+                0,
+                row.Length);
+            Marshal.Copy(row, 0, IntPtr.Add(targetFramebuffer.Address, y * targetFramebuffer.RowBytes), row.Length);
+        }
+
+        return crop;
+    }
+
+    private static WriteableBitmap CropToScreenBounds(
+        WriteableBitmap source,
+        TopLevel topLevel,
+        PixelRect targetBounds)
+    {
+        PixelPoint sourceOrigin = topLevel.PointToScreen(default);
+        int sourceX = targetBounds.X - sourceOrigin.X;
+        int sourceY = targetBounds.Y - sourceOrigin.Y;
+        if (sourceX < 0
+            || sourceY < 0
+            || sourceX + targetBounds.Width > source.PixelSize.Width
+            || sourceY + targetBounds.Height > source.PixelSize.Height)
+        {
+            throw new AvaloniaCaptureStateUnsupportedException("The real overlay popup exceeds the enlarged capture viewport.");
+        }
+
+        using WriteableBitmap normalizedSource = new(
+            source.PixelSize,
+            source.Dpi,
+            PixelFormat.Bgra8888,
+            AlphaFormat.Unpremul);
+        using (ILockedFramebuffer normalizedFramebuffer = normalizedSource.Lock())
+        {
+            source.CopyPixels(normalizedFramebuffer);
+        }
+
+        WriteableBitmap crop = new(targetBounds.Size, source.Dpi, PixelFormat.Bgra8888, AlphaFormat.Unpremul);
+        using ILockedFramebuffer sourceFramebuffer = normalizedSource.Lock();
+        using ILockedFramebuffer targetFramebuffer = crop.Lock();
+        byte[] row = new byte[targetBounds.Width * 4];
+        for (int y = 0; y < targetBounds.Height; y++)
         {
             Marshal.Copy(
                 IntPtr.Add(sourceFramebuffer.Address, ((sourceY + y) * sourceFramebuffer.RowBytes) + (sourceX * 4)),
