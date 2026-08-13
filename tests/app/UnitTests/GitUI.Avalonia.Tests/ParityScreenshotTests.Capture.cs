@@ -12,6 +12,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Settings;
@@ -112,8 +113,42 @@ public sealed partial class ParityScreenshotTests
 
         listNode.Selected.Should().BeNull("selection belongs to realized items, as it does in the WinForms grid tree");
         separatorNode.Enabled.Should().BeFalse();
+        separatorNode.ControlKind.Should().Be("menuItem");
         separatorNode.Selected.Should().BeNull();
         separatorNode.CheckState.Should().BeNull();
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    public void Avalonia_tree_reader_should_emit_WinForms_shaped_mnemonic_text()
+    {
+        Window window = new() { Width = 320, Height = 160 };
+        MenuItem command = new() { Name = "command", Header = "_Commit & __literal" };
+        ContextMenu menu = new() { ItemsSource = new[] { command } };
+        Button owner = new() { Name = "owner", Content = "_Open & __literal", ContextMenu = menu };
+        window.Content = owner;
+        window.Show();
+        menu.Open(owner);
+        Dispatcher.UIThread.RunJobs();
+
+        AvaloniaControlTreeReader reader = new(window, renderScale: 1);
+        CaptureSurface primary = reader.ReadPrimary(window, new PixelSize(320, 160));
+        Control popupRoot = menu.GetLogicalDescendants().OfType<Control>().First();
+        CaptureSurface popup = reader.ReadSurface(popupRoot, "popup:0", new PixelRect(0, 0, 320, 160));
+
+        Flatten(primary.Root).Single(node => node.FieldName == "owner").Text.Should().Be("&Open && _literal");
+        Flatten(popup.Root).Single(node => node.FieldName == "command").Text.Should().Be("&Commit && _literal");
+        primary.Root.Text.Should().BeEmpty("WinForms records controls without a text property as empty text");
+        Control overlayHost = window.GetVisualDescendants().OfType<Control>()
+            .Single(control => control.GetType().Name == "OverlayPopupHost");
+        CaptureSurface overlaySurface = reader.ReadSurface(
+                overlayHost,
+                "popup:host",
+                new PixelRect(0, 0, 320, 160));
+        overlaySurface.Root.Text.Should().BeNull("the Avalonia overlay host maps to WinForms' textless ContextMenuStrip surface");
+        overlaySurface.Root.ControlKind.Should().Be("popup");
+        menu.Close();
         window.Close();
     }
 
