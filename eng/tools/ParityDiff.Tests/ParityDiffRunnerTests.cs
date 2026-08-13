@@ -55,6 +55,39 @@ public sealed class ParityDiffRunnerTests
     }
 
     [Test]
+    public void Run_should_join_framework_specific_columns_by_index()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = ChangeTarget(
+            fixture.CreateDocument("light"),
+            node => node with
+            {
+                Columns =
+                [
+                    CreateColumn(fieldName: "_maximizedColumn", headerText: "Message", widthDip: 100),
+                ]
+            });
+        CaptureDocument candidate = ChangeTarget(
+            reference,
+            node => node with
+            {
+                Columns =
+                [
+                    CreateColumn(fieldName: null, headerText: "Message", widthDip: 120),
+                ]
+            });
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityDiffResult result = fixture.Run();
+
+        result.Captures.Should().ContainSingle().Which.Findings.Select(finding => finding.Code)
+            .Should().BeEquivalentTo("column.fieldName", "column.widthDip");
+        result.Captures.Single().Findings.Select(finding => finding.Code)
+            .Should().NotContain("column.missing", "column.extra");
+    }
+
+    [Test]
     public void Run_should_localize_a_dark_theme_only_color_perturbation()
     {
         using ParityDiffFixture fixture = new();
@@ -244,4 +277,36 @@ public sealed class ParityDiffRunnerTests
             ]
         };
     }
+
+    private static CaptureColumn CreateColumn(string? fieldName, string headerText, decimal widthDip)
+        => new()
+        {
+            FieldName = fieldName,
+            Name = null,
+            Type = "Tests.Column",
+            Index = 0,
+            DisplayIndex = 0,
+            WidthPx = (int)widthDip,
+            WidthDip = widthDip,
+            Visible = true,
+            Resizable = true,
+            SortMode = "NotSortable",
+            Alignment = "NotSet",
+            HeaderText = headerText,
+            HeaderAlignment = "NotSet",
+            Colors = new CaptureColors
+            {
+                Foreground = null,
+                Background = null,
+                Border = null,
+                SelectionForeground = null,
+                SelectionBackground = null,
+                InactiveSelectionForeground = null,
+                InactiveSelectionBackground = null,
+                DisabledForeground = null,
+                DisabledBackground = null,
+                GridLine = null,
+                Additional = new Dictionary<string, string>()
+            }
+        };
 }

@@ -34,6 +34,11 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
         bool showIcon = AppSettings.ShowBuildStatusIconColumn;
         bool showText = AppSettings.ShowBuildStatusTextColumn;
         Column.IsVisible = showIcon || showText;
+        if (!Column.IsAvailable || !Column.IsVisible)
+        {
+            return;
+        }
+
         Column.Resizable = showText;
         if (showIcon && !showText)
         {
