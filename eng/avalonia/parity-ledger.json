@@ -31246,18 +31246,18 @@
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-12",
-          "commit": "904ae106eab110089ae0cd986ec9b11bd24c6700",
+          "verifiedOn": "2026-08-13",
+          "commit": "5005a089a4913070da271327dda503a3b471f131",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/inventory/MessageColumnProvider.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/winforms-row-content/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/avalonia-row-content-final/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/build/linux-gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/inventory/MessageColumnProvider.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/build/linux-gate.log"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 84,
-          "note": "P8.6h.3b.1 verifies the tooltip and annotated-tag contract. P8.6h.3b.2a verifies loaded subject/body/notes rows, the body setting and delayed-load boundary, stash/autostash capsules and subject rule, and fixup/squash/amend markers on Windows/Linux. A shared multiline/stash fixture captured light/dark/custom at native 125%; 84 source findings and exact visual/state closure remain P8.6h.3b.2b."
+          "note": "P8.6h.3b.2b.1 adds exact panel, active/inactive selection and selected-subject colors and captures the real copy submenu in light/dark/custom at native 125%. The selected-body color, 84 source findings and broader exact renderer/state closure remain P8.6h.3b.2b.2; no complete axis is claimed."
         },
         "visual": {
           "status": "notApplicable",
@@ -31541,13 +31541,16 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-13",
+          "commit": "5005a089a4913070da271327dda503a3b471f131",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/avalonia/manifest.json"
+          ],
+          "platforms": ["windows"],
+          "findingCount": 95,
+          "note": "The actual product copy submenu is captured from a selected HEAD revision in light/dark/custom through the real Avalonia MenuItem lifecycle. Exhaustive owner focus, pointer, keyboard and action states remain open."
         },
         "platform": {
           "status": "unverified",
@@ -33404,34 +33407,39 @@
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-12",
-          "commit": "904ae106eab110089ae0cd986ec9b11bd24c6700",
+          "verifiedOn": "2026-08-13",
+          "commit": "5005a089a4913070da271327dda503a3b471f131",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/avalonia-row-content-final/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/build/linux-gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/build/linux-gate.log"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1085,
-          "note": "P8.6h.3b.2a verifies that streamed stash revisions appear once even when --all reports refs/stash after the parent insertion batch. Broader RevisionGridControl source and behavior debt remains open; no complete axis is claimed."
+          "note": "P8.6h.3b.2b.1 applies the original refs/stash exclusion, deterministic HEAD capture selection, exact panel/selection colors, and a truthful owner-hosted path for the actual copy submenu. Broader RevisionGridControl source, renderer and exhaustive behavior debt remains open; no complete axis is claimed."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-13",
+          "commit": "5005a089a4913070da271327dda503a3b471f131",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/diff/findings.json"
+          ],
+          "platforms": ["windows"],
+          "findingCount": 5770,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined. Remaining diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-13",
+          "commit": "5005a089a4913070da271327dda503a3b471f131",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/avalonia/manifest.json"
+          ],
+          "platforms": ["windows"],
+          "findingCount": 1408,
+          "note": "The original panel and active/inactive selected-subject color boundaries are implemented and measured across light/dark/custom. Selected-body and remaining exact color diagnostics plus exhaustive configurable-color states stay open."
         },
         "behavioralState": {
           "status": "unverified",

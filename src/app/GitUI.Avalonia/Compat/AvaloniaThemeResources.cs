@@ -214,6 +214,7 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsSelectionForegroundBrush", windowText);
         SetBrush(resources, "GitExtensionsRevisionAlternatingRowBrush", alternatingRow);
         SetBrush(resources, "GitExtensionsRevisionAuthoredBrush", ResolveAppColor(settings, AppColor.AuthoredHighlight));
+        SetBrush(resources, "GitExtensionsRevisionSelectedSubjectBrush", isDark ? controlText : highlightText);
 
         SetBrush(resources, "GitExtensionsValidFilterBackgroundBrush", ResolveFilterBackground(isDark, isValid: true));
         SetBrush(resources, "GitExtensionsInvalidFilterBackgroundBrush", ResolveFilterBackground(isDark, isValid: false));
