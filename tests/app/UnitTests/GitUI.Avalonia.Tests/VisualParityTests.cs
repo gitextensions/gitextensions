@@ -767,6 +767,69 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3b.2b")]
+    public void Revision_grid_should_use_the_original_background_and_active_inactive_selection_colors()
+    {
+        AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);
+        RevisionGridControl control = new() { UICommandsSource = CreateRevisionGridCommandsSource() };
+        ListBox revisions = control.FindControl<ListBox>("_gridView")
+            ?? throw new InvalidOperationException("The revision list was not created.");
+        revisions.ItemsSource = new[] { new GitRevision(ObjectId.Random()) { Subject = "selected revision" } };
+        Button focusTarget = new() { Content = "focus target" };
+        DockPanel host = new();
+        DockPanel.SetDock(focusTarget, Dock.Bottom);
+        host.Children.Add(focusTarget);
+        host.Children.Add(control);
+        Window window = new() { Width = 700, Height = 180, Content = host };
+        window.Show();
+        try
+        {
+            revisions.SelectedIndex = 0;
+            Dispatcher.UIThread.RunJobs();
+
+            ListBoxItem item = revisions.ContainerFromIndex(0) as ListBoxItem
+                ?? throw new InvalidOperationException("The revision row was not realized.");
+            item.Focus();
+            Dispatcher.UIThread.RunJobs();
+            ContentPresenter presenter = item.GetVisualDescendants()
+                .OfType<ContentPresenter>()
+                .Single(control => control.Name == "PART_ContentPresenter");
+            Grid row = item.GetVisualDescendants()
+                .OfType<Grid>()
+                .Single(control => control.Classes.Contains("revision-row"));
+            TextBlock subject = row.GetVisualDescendants()
+                .OfType<TextBlock>()
+                .Single(control => control.Classes.Contains("revision-subject"));
+            bool isDark = ThemeModule.Settings.Theme.SystemColorMode == WinFormsShims.SystemColorMode.Dark;
+            System.Drawing.Color panelColor = AvaloniaThemeResources.ResolveAppColor(
+                ThemeModule.Settings,
+                AppColor.PanelBackground);
+            System.Drawing.Color highlightColor = AvaloniaThemeResources.ResolveSystemColor(
+                ThemeModule.Settings,
+                System.Drawing.KnownColor.Highlight);
+            System.Drawing.Color inactiveSelectionColor = AvaloniaThemeResources.ResolveAppColor(
+                ThemeModule.Settings,
+                AppColor.InactiveSelectionHighlight);
+
+            GetColor(revisions.Background).Should().Be(ToMediaColor(panelColor));
+            GetColor(presenter.Background).Should().Be(ToMediaColor(highlightColor));
+            GetColor(subject.Foreground).Should().Be(ToMediaColor(isDark
+                ? AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.ControlText)
+                : AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.HighlightText)));
+            row.Background.Should().BeNull();
+
+            focusTarget.Focus();
+            Dispatcher.UIThread.RunJobs();
+
+            GetColor(presenter.Background).Should().Be(ToMediaColor(inactiveSelectionColor));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void Application_theme_should_follow_built_in_Git_Extensions_settings()
     {
         Application application = Application.Current
@@ -1042,6 +1105,17 @@ public sealed class VisualParityTests
     {
         application.TryGetResource(key, theme: null, out object? resource).Should().BeTrue();
         return resource.Should().BeOfType<T>().Subject;
+    }
+
+    private static IGitUICommandsSource CreateRevisionGridCommandsSource()
+    {
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(Substitute.For<IGitModule>());
+        commands.GetService(typeof(ResourceManager.IHotkeySettingsLoader))
+            .Returns(Substitute.For<ResourceManager.IHotkeySettingsLoader>());
+        source.UICommands.Returns(commands);
+        return source;
     }
 
     private static Color GetResourceBrushColor(Application application, string key, ThemeVariant themeVariant)

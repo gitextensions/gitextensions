@@ -11,7 +11,11 @@
       <ContentControl x:Name="revisionPage"
                       HorizontalContentAlignment="Stretch"
                       VerticalContentAlignment="Stretch">
-      <ListBox x:Name="_gridView" SelectionMode="Multiple">
+      <ListBox x:Name="_gridView"
+               Classes="revision-grid"
+               SelectionMode="Multiple"
+               Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
+               Foreground="{DynamicResource GitExtensionsControlForegroundBrush}">
       <ListBox.ContextMenu>
         <ContextMenu x:Name="mainContextMenu">
           <MenuItem x:Name="markRevisionAsBadToolStripMenuItem" Header="Mark revision as bad">
@@ -146,6 +150,26 @@
         <Style Selector="ListBoxItem">
           <Setter Property="Padding" Value="0" />
           <Setter Property="MinHeight" Value="0" />
+        </Style>
+        <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+          <Setter Property="Foreground" Value="{DynamicResource GitExtensionsRevisionSelectedSubjectBrush}" />
+        </Style>
+        <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+        </Style>
+        <Style Selector="ListBox:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
+          <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
+        </Style>
+        <Style Selector="ListBoxItem:selected Grid.revision-row">
+          <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="TextBlock.revision-body">
+          <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
+        </Style>
+        <Style Selector="Grid.revision-row">
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
         </Style>
       </ListBox.Styles>
       </ListBox>

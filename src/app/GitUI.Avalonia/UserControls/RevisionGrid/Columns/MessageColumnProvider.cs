@@ -644,7 +644,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Subject.Classes.Add("revision-subject");
             Subject.Margin = default;
             Body.Classes.Add("revision-body");
-            Body[!TextBlock.ForegroundProperty] = new DynamicResourceExtension("GitExtensionsKnownColorGrayTextBrush");
             MessagePanel.Children.Add(FixupAndSquashMarker);
             MessagePanel.Children.Add(Subject);
             MessagePanel.Children.Add(Body);
