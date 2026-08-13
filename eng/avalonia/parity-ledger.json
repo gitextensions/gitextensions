@@ -33408,39 +33408,40 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
+          "commit": "2d07425cbf7ce4bd5308aa09de409e9ea9ef85e9",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/build/linux-gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/accepted/inventory/GitUI.RevisionGridControl.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
-          "findingCount": 1085,
-          "note": "P8.6h.3b.2b.2a applies the original independent non-relative-text setting and complete relative/non-relative selected/unselected subject/body color matrix through dynamic theme resources, refreshing realized rows on selection/focus changes. Broader RevisionGridControl source, menu and exhaustive behavior debt remains open; no complete axis is claimed."
+          "findingCount": 1081,
+          "note": "P8.6h.3b.2b.2b.2b.2b.3 restores the original maximized-column and last-visible-resizable-column identities and resize boundary in the native provider model, preserves the blank graph header, and keeps unavailable build-status width/resizability stable. Broader RevisionGridControl source, renderer, menu and exhaustive behavior debt remains open; no complete axis is claimed."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "35be9a3c04fb8ca064a799e96d733e926794467f",
+          "commit": "2d07425cbf7ce4bd5308aa09de409e9ea9ef85e9",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b2/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 4284,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined. Shared popup items now remove Avalonia's touch-oriented horizontal padding while retaining the original one-pixel vertical item inset, and separators render the resolved control-border color as a centered one-pixel rule over the resolved menu background. This closes 421 diagnostics versus the fresh predecessor report; the remaining 4,284 diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
+          "findingCount": 4268,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined. The native provider column model now appears in the shared capture schema; field/header/visibility/resizability differences close, and avatar/build widths track the original model. The 45 remaining column-width findings are the live graph/fill measurements and must be closed with renderer/layout work. The aggregate report has 4,268 findings; native 100/150/200 DPI, official preview and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
           "commit": "35be9a3c04fb8ca064a799e96d733e926794467f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b2/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b2/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b2/tests/windows/focused-final.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 1339,
-          "note": "The complete original relative/non-relative selected/unselected subject/body foreground matrix remains implemented through the same text-gray setting. Popup separators now resolve the shared control-border foreground and menu background across light/dark/custom, closing 69 color diagnostics in the paired matrix. Remaining exact color diagnostics and exhaustive configurable-color states stay open."
+          "findingCount": 1348,
+          "note": "The original relative/non-relative selected/unselected subject/body foreground matrix remains implemented. Native RevisionGrid columns now emit resolved inactive-selection and disabled colors through the shared schema. Remaining exact color diagnostics and exhaustive configurable-color states stay open."
         },
         "behavioralState": {
           "status": "unverified",
@@ -33454,12 +33455,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "7103475e3e84dd10f08c93d5660bb8e08610babf",
+          "commit": "2d07425cbf7ce4bd5308aa09de409e9ea9ef85e9",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b3/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,

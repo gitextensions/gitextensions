@@ -21,7 +21,12 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         RevisionGraph revisionGraph,
         RevisionGridControl grid,
         IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
-        : base("Graph", new GridLength(CalculateGraphColumnWidth(visibleLaneCount: 0)), GraphRenderer.LaneWidth, resizable: false)
+        : base(
+            "Graph",
+            new GridLength(CalculateGraphColumnWidth(visibleLaneCount: 0)),
+            GraphRenderer.LaneWidth,
+            resizable: false,
+            headerText: string.Empty)
     {
         _revisionGraph = revisionGraph;
         _grid = grid;

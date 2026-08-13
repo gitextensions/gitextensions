@@ -6,6 +6,7 @@ using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.Avatars;
 using GitUI.UserControls;
@@ -53,6 +54,57 @@ public sealed class RevisionGridColumnProviderTests
         control.ColumnProviders.Select(provider => provider.Index).Should().Equal(Enumerable.Range(0, 8));
         control.ColumnProviders[3].Column.IsAvailable.Should().BeTrue();
         control.ColumnProviders[7].Column.IsAvailable.Should().BeFalse();
+        control.ColumnProviders[3].Column.Width.Should().Be(new GridLength(24));
+        control.ColumnProviders[6].Column.Resizable.Should().BeFalse();
+        control.ColumnProviders[7].Column.Width.Should().Be(new GridLength(150));
+        control.ColumnProviders[7].Column.Resizable.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.3")]
+    public void Capture_reader_should_emit_the_native_revision_grid_column_model()
+    {
+        RevisionGridControl control = new();
+        Window window = new() { Width = 900, Height = 160, Content = control };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            CaptureNode grid = Flatten(
+                    new AvaloniaControlTreeReader(control, renderScale: 1.25)
+                        .ReadPrimary(control, new Avalonia.PixelSize(900, 160)).Root)
+                .Single(node => node.FieldName == "_gridView");
+
+            grid.Columns.Select(column => column.HeaderText).Should().Equal(
+                string.Empty,
+                "Message",
+                "Notes",
+                "Avatar",
+                "Author Name",
+                "Date",
+                "Commit ID",
+                "Build Status");
+            grid.Columns.Select(column => column.Index).Should().Equal(Enumerable.Range(0, 8));
+            grid.Columns.Select(column => column.FieldName).Should().Equal(
+                null,
+                "_maximizedColumn",
+                null,
+                null,
+                null,
+                null,
+                "_lastVisibleResizableColumn",
+                null);
+            grid.Columns.Should().OnlyContain(column => column.SortMode == "NotSortable");
+            grid.Columns.Should().OnlyContain(column => column.Alignment == "NotSet");
+            grid.Columns.Should().OnlyContain(column => column.HeaderAlignment == "NotSet");
+            grid.Columns.Select(column => column.Colors.InactiveSelectionBackground).Should().NotContainNulls();
+            grid.Columns.Select(column => column.Colors.DisabledForeground).Should().NotContainNulls();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -95,7 +147,7 @@ public sealed class RevisionGridColumnProviderTests
                     new GridLength(22),
                     new GridLength(1, GridUnitType.Star),
                     new GridLength(50),
-                    new GridLength(32),
+                    new GridLength(24),
                     new GridLength(0),
                     new GridLength(130),
                     new GridLength(60),
@@ -290,6 +342,18 @@ public sealed class RevisionGridColumnProviderTests
             CommitUnixTime = 1_700_003_600,
             Notes = "First note\nSecond note",
         };
+
+    private static IEnumerable<CaptureNode> Flatten(CaptureNode node)
+    {
+        yield return node;
+        foreach (CaptureNode child in node.Children)
+        {
+            foreach (CaptureNode descendant in Flatten(child))
+            {
+                yield return descendant;
+            }
+        }
+    }
 
     private static IGitRef CreateRef(
         IGitModule module,

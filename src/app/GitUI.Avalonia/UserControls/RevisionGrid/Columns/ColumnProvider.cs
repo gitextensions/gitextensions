@@ -12,10 +12,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 /// </summary>
 internal abstract class ColumnProvider
 {
-    protected ColumnProvider(string name, GridLength width, double minimumWidth, bool resizable)
+    protected ColumnProvider(
+        string name,
+        GridLength width,
+        double minimumWidth,
+        bool resizable,
+        string? headerText = null)
     {
         Name = name;
-        Column = new RevisionGridColumn(name, width, minimumWidth, resizable);
+        Column = new RevisionGridColumn(headerText ?? name, width, minimumWidth, resizable);
     }
 
     public double ColumnLeftMargin { get; } = 6;

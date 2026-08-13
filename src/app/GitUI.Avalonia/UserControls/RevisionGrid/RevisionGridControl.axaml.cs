@@ -82,6 +82,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private readonly BuildServerWatcher _buildServerWatcher;
     private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
     private readonly MessageColumnProvider _messageColumnProvider;
+    private readonly RevisionGridColumn? _maximizedColumn;
+    private RevisionGridColumn? _lastVisibleResizableColumn;
     private ObjectId? _headId;
     private ObjectId _pendingSelectedObjectId;
     private bool _headHighlighted;
@@ -117,6 +119,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         AddColumn(new DateColumnProvider());
         AddColumn(new CommitIdColumnProvider());
         AddColumn(_buildServerWatcher.ColumnProvider);
+        _maximizedColumn = _columnProviders
+            .Select(provider => provider.Column)
+            .FirstOrDefault(column => column.Resizable && column.Width.IsStar);
         ApplyColumnSettings();
 
         _toolTipProvider = new RevisionGridToolTipProvider(this);
@@ -510,10 +515,21 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     internal void ApplyColumnSettings()
     {
+        // restore its resizable state
+        _lastVisibleResizableColumn?.Resizable = true;
+
+        // columns could change their Resizable state, e.g. the BuildStatusColumnProvider
         foreach (ColumnProvider columnProvider in _columnProviders)
         {
             columnProvider.ApplySettings();
         }
+
+        // suppress the manual resizing of the last visible column because it will be resized when the maximized column is resized
+        //// LINQ because the original DataGridView GetLastColumn API has no Avalonia equivalent.
+        _lastVisibleResizableColumn = _columnProviders
+            .Select(provider => provider.Column)
+            .Last(column => column.IsVisible && column.IsAvailable && column.Resizable);
+        _lastVisibleResizableColumn.Resizable = false;
 
         foreach (RevisionRowControl row in _gridView.GetVisualDescendants().OfType<RevisionRowControl>())
         {

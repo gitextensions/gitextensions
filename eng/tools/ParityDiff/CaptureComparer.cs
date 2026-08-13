@@ -86,12 +86,16 @@ internal static class CaptureComparer
         DiffTolerance tolerance,
         ICollection<ParityFinding> findings)
     {
-        Dictionary<string, CaptureColumn> candidateColumns = candidate.ToDictionary(GetColumnKey, StringComparer.Ordinal);
+        List<CaptureColumn> candidateColumns = [.. candidate];
         foreach (CaptureColumn referenceColumn in reference)
         {
             string key = GetColumnKey(referenceColumn);
             string columnPath = $"{path}/column[{key}]";
-            if (!candidateColumns.Remove(key, out CaptureColumn? candidateColumn))
+            CaptureColumn? candidateColumn = candidateColumns.FirstOrDefault(
+                column => GetColumnKey(column).Equals(key, StringComparison.Ordinal));
+            candidateColumn ??= candidateColumns.FirstOrDefault(
+                column => column.Index == referenceColumn.Index);
+            if (candidateColumn is null)
             {
                 findings.Add(CreateFinding(
                     ControlCategory,
@@ -103,6 +107,8 @@ internal static class CaptureComparer
                 continue;
             }
 
+            candidateColumns.Remove(candidateColumn);
+            CompareValue(referenceColumn.FieldName, candidateColumn.FieldName, ControlCategory, "column.fieldName", columnPath, findings);
             CompareDecimal(
                 referenceColumn.WidthDip,
                 candidateColumn.WidthDip,
@@ -121,8 +127,9 @@ internal static class CaptureComparer
             CompareColors(referenceColumn.Colors, candidateColumn.Colors, columnPath, findings);
         }
 
-        foreach ((string key, CaptureColumn _) in candidateColumns.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+        foreach (CaptureColumn column in candidateColumns.OrderBy(GetColumnKey, StringComparer.Ordinal))
         {
+            string key = GetColumnKey(column);
             findings.Add(CreateFinding(
                 ControlCategory,
                 "column.extra",
