@@ -93,8 +93,10 @@ internal sealed class AvaloniaControlTreeReader
             ListBox => "list",
             Menu => "menu",
             MenuItem => "menuItem",
+            Separator => "menuItem",
             TabControl => "tabs",
             GridSplitter => "split",
+            _ when control.GetType().Name == "OverlayPopupHost" => "popup",
             _ when control.GetType().Name.Contains("DataGrid", StringComparison.Ordinal) => "dataGrid",
             _ => "control"
         };
@@ -116,10 +118,29 @@ internal sealed class AvaloniaControlTreeReader
 
     private static string? GetText(Control control)
     {
+        if (control.GetType().Name == "OverlayPopupHost")
+        {
+            return null;
+        }
+
         object? value = GetPropertyValue(control, "Text")
             ?? GetPropertyValue(control, "Content")
             ?? GetPropertyValue(control, "Header");
-        return value as string;
+        return value is not string text
+            ? string.Empty
+            : control is MenuItem or Button or Label
+                ? ToWinFormsMnemonics(text)
+                : text;
+    }
+
+    private static string ToWinFormsMnemonics(string text)
+    {
+        const string escapedUnderscore = "\u0001";
+        return text
+            .Replace("&", "&&", StringComparison.Ordinal)
+            .Replace("__", escapedUnderscore, StringComparison.Ordinal)
+            .Replace('_', '&')
+            .Replace(escapedUnderscore, "_", StringComparison.Ordinal);
     }
 
     private static string? GetAlignment(Control control) =>
