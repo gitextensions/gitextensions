@@ -33421,26 +33421,26 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "7103475e3e84dd10f08c93d5660bb8e08610babf",
+          "commit": "35be9a3c04fb8ca064a799e96d733e926794467f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b1/final/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b2/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 4705,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined. Shared popup items now use the configured UI font and measured ToolStrip row/separator heights, removing 360 item-font and 204 height diagnostics; the 12 remaining font findings belong to Avalonia Headless's private OverlayPopupHost root rather than product menu items. The Avalonia context-menu image records its actual headless scroll viewport while the tree retains every logical menu item; the remaining 4,705 diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
+          "findingCount": 4284,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined. Shared popup items now remove Avalonia's touch-oriented horizontal padding while retaining the original one-pixel vertical item inset, and separators render the resolved control-border color as a centered one-pixel rule over the resolved menu background. This closes 421 diagnostics versus the fresh predecessor report; the remaining 4,284 diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
+          "commit": "35be9a3c04fb8ca064a799e96d733e926794467f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b/final/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b/final/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b/tests/windows/focused-final.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b2/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b2/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b2/tests/windows/focused-final.log"
           ],
           "platforms": ["windows"],
-          "findingCount": 1408,
-          "note": "The complete original relative/non-relative selected/unselected subject/body foreground matrix is implemented through the same text-gray setting and measured across light/dark/custom. Remaining exact color diagnostics and exhaustive configurable-color states stay open."
+          "findingCount": 1339,
+          "note": "The complete original relative/non-relative selected/unselected subject/body foreground matrix remains implemented through the same text-gray setting. Popup separators now resolve the shared control-border foreground and menu background across light/dark/custom, closing 69 color diagnostics in the paired matrix. Remaining exact color diagnostics and exhaustive configurable-color states stay open."
         },
         "behavioralState": {
           "status": "unverified",

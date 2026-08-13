@@ -968,6 +968,7 @@
 
   <Style Selector="MenuItem">
     <Setter Property="MinHeight" Value="20.5" />
+    <Setter Property="Padding" Value="0,1" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
@@ -977,11 +978,33 @@
   </Style>
   <Style Selector="ContextMenu Separator">
     <Setter Property="Height" Value="4.5" />
-    <Setter Property="Margin" Value="2,0" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}">
+          <Border Height="1"
+                  VerticalAlignment="Center"
+                  Background="{TemplateBinding Foreground}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
   </Style>
   <Style Selector="MenuFlyoutPresenter Separator">
     <Setter Property="Height" Value="4.5" />
-    <Setter Property="Margin" Value="2,0" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}">
+          <Border Height="1"
+                  VerticalAlignment="Center"
+                  Background="{TemplateBinding Foreground}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
   </Style>
   <Style Selector="Button">
     <Setter Property="FocusAdorner" Value="{StaticResource GitExtensionsFocusAdorner}" />
