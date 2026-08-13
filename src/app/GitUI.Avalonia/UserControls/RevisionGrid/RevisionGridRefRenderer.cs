@@ -22,11 +22,24 @@ namespace GitUI.UserControls.RevisionGrid;
 /// </summary>
 internal static class RevisionGridRefRenderer
 {
-    private const double CornerDiameter = 5;
     private const double MarginRight = 5;
-    private const double PaddingLeftRight = 4;
-    private const double PaddingTopBottom = 2;
     private const double RowHeight = 24;
+    private static readonly double[] _dashPattern = [4, 4];
+    private static readonly Point[] _arrowPoints = new Point[4];
+    private static readonly DashStyle DashedLine = new(_dashPattern, 0);
+
+    private static double PaddingTopBottom => 2;
+
+    // Pixel radius for the rounded corners of ref label capsules.
+    private static double RefLabelCornerRadius => 5;
+
+    // Pixel width of the highlight frame drawn around a hovered ref label,
+    // and the left-side offset used when drawing the nestled remote label.
+    private static double RefLabelHighlightWidth => 1;
+
+    private static double PointWidth(double height) => height / 2;
+
+    private static double PaddingLeftRight(string name) => string.IsNullOrEmpty(name) ? 1 : 4;
 
     /// <summary>
     ///  Creates the ordered controls for a revision's refs, nesting a local branch with its
@@ -299,12 +312,188 @@ internal static class RevisionGridRefRenderer
     }
 
     /// <summary>
+    ///  Creates a closed path for a capsule whose left edge is a concave '>' notch
+    ///  that exactly fits the convex point tip of a preceding capsule.
+    /// </summary>
+    private static StreamGeometry CreateNotchLeftRoundRectPath(Rect bounds, double radius, double pointWidth)
+    {
+        double left = bounds.Left;
+        double top = bounds.Top;
+        double right = bounds.Right;
+        double bottom = bounds.Bottom;
+        double midY = bounds.Center.Y;
+
+        // The notch corners are at the leftmost pixels; the notch tip is indented by pointWidth.
+        return CreatePath(path =>
+        {
+            path.BeginFigure(new Point(left, top), isFilled: true);
+            path.LineTo(new Point(left + pointWidth, midY)); // top notch corner → indented tip
+            path.LineTo(new Point(left, bottom)); // indented tip → bottom notch corner
+            path.LineTo(new Point(right - radius, bottom));
+            path.QuadraticBezierTo(new Point(right, bottom), new Point(right, bottom - radius)); // bottom-right arc
+            path.LineTo(new Point(right, top + radius));
+            path.QuadraticBezierTo(new Point(right, top), new Point(right - radius, top)); // top-right arc
+        });
+    }
+
+    /// <summary>
+    ///  Creates a closed path for a capsule whose right edge is a concave '&lt;' notch
+    ///  that exactly fits the convex point tip of a following capsule.
+    /// </summary>
+    private static StreamGeometry CreateNotchRightRoundRectPath(Rect bounds, double radius, double pointWidth)
+    {
+        double left = bounds.Left;
+        double top = bounds.Top;
+        double right = bounds.Right;
+        double bottom = bounds.Bottom;
+        double midY = bounds.Center.Y;
+
+        // The notch corners are at the rightmost pixels; the notch tip is indented by pointWidth.
+        return CreatePath(path =>
+        {
+            path.BeginFigure(new Point(left + radius, top), isFilled: true); // top-left arc
+            path.LineTo(new Point(right, top));
+            path.LineTo(new Point(right - pointWidth, midY)); // top notch corner → indented tip
+            path.LineTo(new Point(right, bottom)); // indented tip → bottom notch corner
+            AddBottomAndLeft(path, left, bottom, top, radius); // bottom-left arc
+        });
+    }
+
+    /// <summary>
+    ///  Creates a closed path for a capsule whose left edge is a convex '&lt;' point
+    ///  that protrudes leftward, so it visually connects to a nestled preceding label.
+    /// </summary>
+    private static StreamGeometry CreatePointLeftRoundRectPath(Rect bounds, double radius, double pointWidth)
+    {
+        double left = bounds.Left;
+        double top = bounds.Top;
+        double right = bounds.Right;
+        double bottom = bounds.Bottom;
+        double midY = bounds.Center.Y;
+
+        // The point tip is at the leftmost pixel; the top/bottom corners step back by pointWidth.
+        return CreatePath(path =>
+        {
+            path.BeginFigure(new Point(left, midY), isFilled: true); // tip → top-left corner
+            path.LineTo(new Point(left + pointWidth, top));
+            path.LineTo(new Point(right - radius, top));
+            AddRight(path, right, top, bottom, radius); // top-right arc, bottom-right arc
+            path.LineTo(new Point(left + pointWidth, bottom)); // bottom-left corner → tip
+        });
+    }
+
+    /// <summary>
+    ///  Creates a closed path for a capsule whose right edge is a convex '&gt;' point
+    ///  instead of a rounded cap, so it visually connects to a nestled following label.
+    /// </summary>
+    private static StreamGeometry CreatePointRightRoundRectPath(Rect bounds, double radius, double pointWidth)
+    {
+        double left = bounds.Left;
+        double top = bounds.Top;
+        double right = bounds.Right;
+        double bottom = bounds.Bottom;
+        double midY = bounds.Center.Y;
+
+        // The point tip is at the rightmost pixel; the top/bottom corners step back by pointWidth.
+        return CreatePath(path =>
+        {
+            path.BeginFigure(new Point(left + radius, top), isFilled: true); // top-left arc
+            path.LineTo(new Point(right - pointWidth, top));
+            path.LineTo(new Point(right, midY)); // top-right corner → tip
+            path.LineTo(new Point(right - pointWidth, bottom)); // tip → bottom-right corner
+            AddBottomAndLeft(path, left, bottom, top, radius); // bottom-left arc
+        });
+    }
+
+    private static StreamGeometry CreateRoundRectPath(Rect bounds, double radius)
+        => CreatePath(path =>
+        {
+            path.BeginFigure(new Point(bounds.Left + radius, bounds.Top), isFilled: true);
+            path.LineTo(new Point(bounds.Right - radius, bounds.Top));
+            AddRight(path, bounds.Right, bounds.Top, bounds.Bottom, radius);
+            AddBottomAndLeft(path, bounds.Left, bounds.Bottom, bounds.Top, radius);
+        });
+
+    private static StreamGeometry CreatePath(Action<StreamGeometryContext> draw)
+    {
+        StreamGeometry geometry = new();
+        using StreamGeometryContext path = geometry.Open();
+        draw(path);
+        path.EndFigure(isClosed: true);
+        return geometry;
+    }
+
+    private static void AddRight(
+        StreamGeometryContext path,
+        double right,
+        double top,
+        double bottom,
+        double radius)
+    {
+        path.QuadraticBezierTo(
+            new Point(right, top),
+            new Point(right, top + radius));
+        path.LineTo(new Point(right, bottom - radius));
+        path.QuadraticBezierTo(
+            new Point(right, bottom),
+            new Point(right - radius, bottom));
+    }
+
+    private static void AddBottomAndLeft(
+        StreamGeometryContext path,
+        double left,
+        double bottom,
+        double top,
+        double radius)
+    {
+        path.LineTo(new Point(left + radius, bottom));
+        path.QuadraticBezierTo(
+            new Point(left, bottom),
+            new Point(left, bottom - radius));
+        path.LineTo(new Point(left, top + radius));
+        path.QuadraticBezierTo(
+            new Point(left, top),
+            new Point(left + radius, top));
+    }
+
+    private static void DrawArrow(
+        DrawingContext context,
+        IBrush brush,
+        Rect bounds,
+        double xOffset,
+        bool filled)
+    {
+        double x = bounds.X + xOffset + 4;
+        double y = bounds.Y + 3;
+        double height = bounds.Height - 6;
+        double width = height / 2;
+        _arrowPoints[0] = new Point(x, y);
+        _arrowPoints[1] = new Point(x + width, y + (height / 2));
+        _arrowPoints[2] = new Point(x, y + height);
+        _arrowPoints[3] = new Point(x, y);
+        StreamGeometry arrow = new();
+        using (StreamGeometryContext path = arrow.Open())
+        {
+            path.BeginFigure(_arrowPoints[0], isFilled: filled);
+            path.LineTo(_arrowPoints[1]);
+            path.LineTo(_arrowPoints[2]);
+            path.EndFigure(isClosed: true);
+        }
+
+        context.DrawGeometry(filled ? brush : null, filled ? null : new Pen(brush, 1), arrow);
+    }
+
+    private static RefLabelIcon GetEffectiveIcon(RefLabelIcon icon)
+        => icon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource
+            ? icon
+            : RefLabelIcon.None;
+
+    /// <summary>
     ///  One custom-drawn ref label. Keeping the WinForms shape vocabulary here avoids
     ///  encoding mutually dependent point/notch geometry in generic Border styles.
     /// </summary>
     internal sealed class RefLabelControl : TemplatedControl
     {
-        private static readonly DashStyle DashedLine = new([4, 4], 0);
         private readonly string _brushResourceKey;
         private readonly IBrush? _refBrush;
         private double _backgroundHeight;
@@ -369,7 +558,7 @@ internal static class RevisionGridRefRenderer
             }
         }
 
-        public double PointWidth => _backgroundHeight / 2;
+        public double PointWidth => RevisionGridRefRenderer.PointWidth(_backgroundHeight);
 
         public IBrush RefBrush => _refBrush ?? GetResourceBrush(_brushResourceKey, Brushes.Gray);
 
@@ -402,7 +591,7 @@ internal static class RevisionGridRefRenderer
 
             _labelWidth = Math.Ceiling(_formattedText.Width)
                 + iconWidth
-                + (PaddingLeftRight * 2)
+                + (PaddingLeftRight(Label) * 2)
                 + extraWidth
                 - 1;
 
@@ -444,13 +633,13 @@ internal static class RevisionGridRefRenderer
                 : IsRowSelected || this.FindAncestorOfType<ListBoxItem>()?.IsSelected == true
                     ? CapsuleBackgroundBrush
                     : null;
-            Pen outline = new(OutlineBrush, 1, IsDashed ? DashedLine : null);
+            Pen outline = new(OutlineBrush, RefLabelHighlightWidth, IsDashed ? DashedLine : null);
             context.DrawGeometry(background, outline, geometry);
             if (IsHighlighted)
             {
                 context.DrawGeometry(
                     null,
-                    new Pen(refBrush, 1, IsDashed ? DashedLine : null),
+                    new Pen(refBrush, RefLabelHighlightWidth, IsDashed ? DashedLine : null),
                     geometry);
             }
 
@@ -459,13 +648,13 @@ internal static class RevisionGridRefRenderer
                 : 0;
             if (effectiveIcon != RefLabelIcon.None)
             {
-                DrawHeadIndicator(context, refBrush, capsuleBounds, iconXOffset, effectiveIcon == RefLabelIcon.Head);
+                DrawArrow(context, refBrush, capsuleBounds, iconXOffset, effectiveIcon == RefLabelIcon.Head);
             }
 
             double iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : RowHeight / 2;
             double textX = iconXOffset
                 + iconWidth
-                + PaddingLeftRight
+                + PaddingLeftRight(Label)
                 - (Shape == RefLabelShape.PointLeft ? PointWidth / 2 : 0);
             FormattedText formattedText = CreateFormattedText(
                 Fill
@@ -473,11 +662,6 @@ internal static class RevisionGridRefRenderer
                     : TextBrush);
             context.DrawText(formattedText, new Point(textX, capsuleBounds.Y + PaddingTopBottom - 1));
         }
-
-        private static RefLabelIcon GetEffectiveIcon(RefLabelIcon icon)
-            => icon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource
-                ? icon
-                : RefLabelIcon.None;
 
         public bool Contains(Point point)
         {
@@ -522,128 +706,16 @@ internal static class RevisionGridRefRenderer
             RefLabelShape labelShape,
             double pointWidth)
         {
-            double left = bounds.Left;
-            double top = bounds.Top;
-            double right = bounds.Right;
-            double bottom = bounds.Bottom;
-            double middle = bounds.Center.Y;
-            double radius = CornerDiameter / 2;
-            StreamGeometry geometry = new();
-
-            using (StreamGeometryContext path = geometry.Open())
+            double radius = RefLabelCornerRadius / 2;
+            return labelShape switch
             {
-                switch (labelShape)
-                {
-                    case RefLabelShape.NotchLeft:
-                        path.BeginFigure(new Point(left, top), isFilled: true);
-                        path.LineTo(new Point(left + pointWidth, middle));
-                        path.LineTo(new Point(left, bottom));
-                        path.LineTo(new Point(right - radius, bottom));
-                        path.QuadraticBezierTo(
-                            new Point(right, bottom),
-                            new Point(right, bottom - radius));
-                        path.LineTo(new Point(right, top + radius));
-                        path.QuadraticBezierTo(
-                            new Point(right, top),
-                            new Point(right - radius, top));
-                        break;
-
-                    case RefLabelShape.NotchRight:
-                        path.BeginFigure(new Point(left + radius, top), isFilled: true);
-                        path.LineTo(new Point(right, top));
-                        path.LineTo(new Point(right - pointWidth, middle));
-                        path.LineTo(new Point(right, bottom));
-                        AddBottomAndLeft(path, left, bottom, top, radius);
-                        break;
-
-                    case RefLabelShape.PointLeft:
-                        path.BeginFigure(new Point(left, middle), isFilled: true);
-                        path.LineTo(new Point(left + pointWidth, top));
-                        path.LineTo(new Point(right - radius, top));
-                        AddRight(path, right, top, bottom, radius);
-                        path.LineTo(new Point(left + pointWidth, bottom));
-                        break;
-
-                    case RefLabelShape.PointRight:
-                        path.BeginFigure(new Point(left + radius, top), isFilled: true);
-                        path.LineTo(new Point(right - pointWidth, top));
-                        path.LineTo(new Point(right, middle));
-                        path.LineTo(new Point(right - pointWidth, bottom));
-                        AddBottomAndLeft(path, left, bottom, top, radius);
-                        break;
-
-                    case RefLabelShape.Rect:
-                        path.BeginFigure(new Point(left + radius, top), isFilled: true);
-                        path.LineTo(new Point(right - radius, top));
-                        AddRight(path, right, top, bottom, radius);
-                        AddBottomAndLeft(path, left, bottom, top, radius);
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(labelShape), labelShape, null);
-                }
-
-                path.EndFigure(isClosed: true);
-            }
-
-            return geometry;
-        }
-
-        private static void AddRight(
-            StreamGeometryContext path,
-            double right,
-            double top,
-            double bottom,
-            double radius)
-        {
-            path.QuadraticBezierTo(
-                new Point(right, top),
-                new Point(right, top + radius));
-            path.LineTo(new Point(right, bottom - radius));
-            path.QuadraticBezierTo(
-                new Point(right, bottom),
-                new Point(right - radius, bottom));
-        }
-
-        private static void AddBottomAndLeft(
-            StreamGeometryContext path,
-            double left,
-            double bottom,
-            double top,
-            double radius)
-        {
-            path.LineTo(new Point(left + radius, bottom));
-            path.QuadraticBezierTo(
-                new Point(left, bottom),
-                new Point(left, bottom - radius));
-            path.LineTo(new Point(left, top + radius));
-            path.QuadraticBezierTo(
-                new Point(left, top),
-                new Point(left + radius, top));
-        }
-
-        private static void DrawHeadIndicator(
-            DrawingContext context,
-            IBrush brush,
-            Rect bounds,
-            double xOffset,
-            bool filled)
-        {
-            double x = bounds.X + xOffset + 4;
-            double y = bounds.Y + 3;
-            double height = bounds.Height - 6;
-            double width = height / 2;
-            StreamGeometry arrow = new();
-
-            using (StreamGeometryContext path = arrow.Open())
-            {
-                path.BeginFigure(new Point(x, y), isFilled: filled);
-                path.LineTo(new Point(x + width, y + (height / 2)));
-                path.LineTo(new Point(x, y + height));
-                path.EndFigure(isClosed: true);
-            }
-
-            context.DrawGeometry(filled ? brush : null, filled ? null : new Pen(brush, 1), arrow);
+                RefLabelShape.NotchLeft => CreateNotchLeftRoundRectPath(bounds, radius, pointWidth),
+                RefLabelShape.NotchRight => CreateNotchRightRoundRectPath(bounds, radius, pointWidth),
+                RefLabelShape.PointLeft => CreatePointLeftRoundRectPath(bounds, radius, pointWidth),
+                RefLabelShape.PointRight => CreatePointRightRoundRectPath(bounds, radius, pointWidth),
+                RefLabelShape.Rect => CreateRoundRectPath(bounds, radius),
+                _ => throw new ArgumentOutOfRangeException(nameof(labelShape), labelShape, null),
+            };
         }
     }
 }
