@@ -364,6 +364,7 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.2")]
     public void Desktop_menus_should_not_reserve_touch_padding_or_empty_rows()
     {
         Button target = new() { Content = "Open" };
@@ -388,6 +389,7 @@ public sealed class VisualParityTests
             contextItem.FontSize.Should().Be(GetResource<double>(Application.Current!, "GitExtensionsUiFontSize"));
             contextItem.FontStyle.Should().Be(GetResource<FontStyle>(Application.Current!, "GitExtensionsUiFontStyle"));
             contextItem.FontWeight.Should().Be(GetResource<FontWeight>(Application.Current!, "GitExtensionsUiFontWeight"));
+            contextItem.Padding.Should().Be(new Thickness(0, 1));
             contextMenu.GetVisualDescendants()
                 .OfType<ItemsPresenter>()
                 .Single(presenter => presenter.Name == "PART_ItemsPresenter")
@@ -410,6 +412,9 @@ public sealed class VisualParityTests
             separatorMenu.Open(target);
             Dispatcher.UIThread.RunJobs();
             contextSeparator.Height.Should().Be(4.5);
+            contextSeparator.Margin.Should().Be(new Thickness(0));
+            contextSeparator.Foreground.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBorderBrush"));
+            contextSeparator.Background.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBackgroundBrush"));
             separatorMenu.Close();
 
             MenuItem flyoutItem = new() { Header = "Flyout command" };
@@ -424,6 +429,24 @@ public sealed class VisualParityTests
                 .Single();
             flyoutPresenter.MinHeight.Should().Be(0);
             flyout.Hide();
+
+            Separator flyoutSeparator = new();
+            MenuFlyout separatorFlyout = new()
+            {
+                Items =
+                {
+                    new MenuItem { Header = "First flyout command" },
+                    flyoutSeparator,
+                    new MenuItem { Header = "Second flyout command" },
+                },
+            };
+            separatorFlyout.ShowAt(target);
+            Dispatcher.UIThread.RunJobs();
+            flyoutSeparator.Height.Should().Be(4.5);
+            flyoutSeparator.Margin.Should().Be(new Thickness(0));
+            flyoutSeparator.Foreground.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBorderBrush"));
+            flyoutSeparator.Background.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBackgroundBrush"));
+            separatorFlyout.Hide();
         }
         finally
         {
@@ -1145,6 +1168,12 @@ public sealed class VisualParityTests
     {
         application.TryGetResource(key, theme: null, out object? resource).Should().BeTrue();
         return resource.Should().BeOfType<T>().Subject;
+    }
+
+    private static T GetThemeResource<T>(Application application, string key)
+    {
+        application.TryGetResource(key, application.ActualThemeVariant, out object? resource).Should().BeTrue();
+        return resource.Should().BeAssignableTo<T>().Subject;
     }
 
     private static IGitUICommandsSource CreateRevisionGridCommandsSource()
