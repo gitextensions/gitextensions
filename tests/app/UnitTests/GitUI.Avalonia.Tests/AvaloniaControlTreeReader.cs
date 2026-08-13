@@ -7,6 +7,8 @@ using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using GitExtensions.ParityCapture;
+using GitUI;
+using GitUI.UserControls.RevisionGrid.Columns;
 
 namespace GitExtensionsTests;
 
@@ -473,12 +475,24 @@ internal sealed class AvaloniaControlTreeReader
 
     private IReadOnlyList<CaptureColumn> ReadColumns(Control control)
     {
-        if (GetPropertyValue(control, "Columns") is not IEnumerable columns)
+        if (GetPropertyValue(control, "Columns") is IEnumerable columns)
         {
-            return [];
+            return ReadFrameworkColumns(columns);
         }
 
-        return columns.Cast<object>()
+        // parity-scaffolding: RevisionGrid uses native recycled ListBox rows, so expose its real
+        // provider layout through the same grid-column schema that represents DataGridView.
+        if (_root is RevisionGridControl revisionGrid
+            && control is ListBox { Name: "_gridView" })
+        {
+            return ReadRevisionGridColumns(revisionGrid);
+        }
+
+        return [];
+    }
+
+    private IReadOnlyList<CaptureColumn> ReadFrameworkColumns(IEnumerable columns)
+        => columns.Cast<object>()
             .Select((column, index) =>
             {
                 double widthDip = GetPropertyValue(column, "ActualWidth") as double?
@@ -503,7 +517,58 @@ internal sealed class AvaloniaControlTreeReader
                 };
             })
             .ToArray();
+
+    private IReadOnlyList<CaptureColumn> ReadRevisionGridColumns(RevisionGridControl revisionGrid)
+    {
+        Grid? realizedRow = revisionGrid.GetLogicalDescendants()
+            .OfType<Grid>()
+            .FirstOrDefault(row => row.Classes.Contains("revision-row"));
+        CaptureColors colors = ReadRevisionGridColumnColors();
+
+        return revisionGrid.ColumnProviders
+            .Select(provider =>
+            {
+                RevisionGridColumn column = provider.Column;
+                bool visible = column.IsVisible && column.IsAvailable;
+                double widthDip = column.Width.IsStar && realizedRow is not null
+                    ? realizedRow.ColumnDefinitions[provider.Index].ActualWidth
+                    : column.Width.Value;
+                return new CaptureColumn
+                {
+                    FieldName = GetFieldNames(column).FirstOrDefault(),
+                    Name = null,
+                    Type = column.GetType().FullName ?? column.GetType().Name,
+                    Index = provider.Index,
+                    DisplayIndex = provider.Index,
+                    WidthPx = ToPixel(widthDip),
+                    WidthDip = ToDecimal(widthDip),
+                    Visible = visible,
+                    Resizable = column.Resizable,
+                    SortMode = "NotSortable",
+                    Alignment = "NotSet",
+                    HeaderText = column.HeaderText,
+                    HeaderAlignment = "NotSet",
+                    Colors = colors
+                };
+            })
+            .ToArray();
     }
+
+    private CaptureColors ReadRevisionGridColumnColors()
+    {
+        string? inactiveSelectionBackground = ResolveResourceArgb("GitExtensionsSystemInactiveSelectionBackgroundBrush");
+        string? disabledForeground = ResolveResourceArgb("GitExtensionsDisabledForegroundBrush");
+        return EmptyColors() with
+        {
+            InactiveSelectionBackground = inactiveSelectionBackground,
+            DisabledForeground = disabledForeground
+        };
+    }
+
+    private string? ResolveResourceArgb(string key)
+        => _root.TryFindResource(key, _root.ActualThemeVariant, out object? resource)
+            ? BrushToArgb(resource)
+            : null;
 
     private decimal ToDecimal(double value) => decimal.Round((decimal)value, 4);
 
