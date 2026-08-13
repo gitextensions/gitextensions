@@ -135,6 +135,16 @@
                            Color="#FFFFC8" />
           <SolidColorBrush x:Key="GitExtensionsRevisionSelectedSubjectBrush"
                            Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSubjectBrush"
+                           Color="#6D6D6D" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSelectedSubjectBrush"
+                           Color="#BCBCBC" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionSelectedBodyBrush"
+                           Color="#BCBCBC" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeBodyBrush"
+                           Color="#989898" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSelectedBodyBrush"
+                           Color="#A1A1A1" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#FFFFFF" />
@@ -223,6 +233,16 @@
                            Color="#665E00" />
           <SolidColorBrush x:Key="GitExtensionsRevisionSelectedSubjectBrush"
                            Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSubjectBrush"
+                           Color="#C0C0C0" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSelectedSubjectBrush"
+                           Color="#EBEBD7" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionSelectedBodyBrush"
+                           Color="#AAAA96" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeBodyBrush"
+                           Color="#828282" />
+          <SolidColorBrush x:Key="GitExtensionsRevisionNonRelativeSelectedBodyBrush"
+                           Color="#AAAA96" />
           <SolidColorBrush x:Key="GitExtensionsWindowTextBrush"
                            Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
