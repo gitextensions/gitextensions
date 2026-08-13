@@ -2020,7 +2020,10 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                     ?.IsSelectedHeadMergeSource = true;
             }
 
-            _refsByObjectId = loadedRefs
+            // Exclude the 'stash' ref, it is specially handled when stashes are shown
+            _refsByObjectId = (AppSettings.ShowStashes
+                    ? loadedRefs.Where(gitRef => gitRef.CompleteName != GitRefName.RefsStashPrefix)
+                    : loadedRefs)
                 .Where(gitRef => !gitRef.ObjectId.IsZero)
                 .ToLookup(gitRef => gitRef.ObjectId);
             observer.InitializeStashes(stashes.Value);

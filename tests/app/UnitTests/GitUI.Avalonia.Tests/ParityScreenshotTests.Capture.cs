@@ -485,6 +485,12 @@ public sealed partial class ParityScreenshotTests
             await WaitForAsyncViewsAsync(captureHost);
             // parity-scaffolding: Async loaders may replace seeded text; the capture plan remains authoritative.
             ApplyTextValues(view, component);
+            if (view is RevisionGridControl revisionGrid)
+            {
+                // parity-scaffolding: Both capture frameworks must drive menus and row states from HEAD, not an async-loader-dependent row.
+                revisionGrid.SetSelectedRevision(context.HeadRevision.ObjectId).Should().BeTrue();
+            }
+
             Dispatcher.UIThread.RunJobs();
             if (view is FileStatusList fileStatusList)
             {
@@ -583,7 +589,10 @@ public sealed partial class ParityScreenshotTests
                 surfaces.AddRange(driver.PopupSurfaceRoots.Select((popupRoot, index) => reader.ReadSurface(
                     popupRoot,
                     $"popup:{capturedFrames.Count - 1 + index}",
-                    GetScreenBounds(popupRoot, window, renderScale))));
+                    GetScreenBounds(
+                        popupRoot,
+                        TopLevel.GetTopLevel(popupRoot) ?? window,
+                        renderScale))));
                 CaptureDocument document = CreateDocument(
                     view,
                     surfaces,
