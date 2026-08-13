@@ -31235,29 +31235,29 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-13",
+          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/MessageColumnProvider.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 69,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 84,
+          "note": "P8.6h.3b.2b.2a classifies all 84 findings as the explicit native Avalonia virtualized-cell representation of the original DataGridView/GDI painting boundary. They remain structural gaps rather than being suppressed or misreported as product behavior gaps."
         },
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "5005a089a4913070da271327dda503a3b471f131",
+          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/inventory/MessageColumnProvider.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/build/linux-gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/MessageColumnProvider.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/diff/findings.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 84,
-          "note": "P8.6h.3b.2b.1 adds exact panel, active/inactive selection and selected-subject colors and captures the real copy submenu in light/dark/custom at native 125%. The selected-body color, 84 source findings and broader exact renderer/state closure remain P8.6h.3b.2b.2; no complete axis is claimed."
+          "note": "P8.6h.3b.2b.2a adds the exact WinForms relative/non-relative, selected/unselected subject/body foreground matrix, keyed by RevisionGraphDrawNonRelativesTextGray and refreshed across focus/selection changes. The 84 source findings remain structural native-renderer differences and the broader exact menu/live-state closure remains P8.6h.3b.2b.2b; no complete axis is claimed."
         },
         "visual": {
           "status": "notApplicable",
@@ -33408,38 +33408,39 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "5005a089a4913070da271327dda503a3b471f131",
+          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/build/linux-gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/build/linux-gate.log"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1085,
-          "note": "P8.6h.3b.2b.1 applies the original refs/stash exclusion, deterministic HEAD capture selection, exact panel/selection colors, and a truthful owner-hosted path for the actual copy submenu. Broader RevisionGridControl source, renderer and exhaustive behavior debt remains open; no complete axis is claimed."
+          "note": "P8.6h.3b.2b.2a applies the original independent non-relative-text setting and complete relative/non-relative selected/unselected subject/body color matrix through dynamic theme resources, refreshing realized rows on selection/focus changes. Broader RevisionGridControl source, menu and exhaustive behavior debt remains open; no complete axis is claimed."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "5005a089a4913070da271327dda503a3b471f131",
+          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/diff/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 5770,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined. Remaining diagnostics, native 100/150/200 DPI, official preview and exhaustive live states remain open."
+          "findingCount": 5803,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs with the original text-gray setting explicitly enabled are joined. The 5,803 diagnostics retain 33 menu enabled/visible differences newly exposed by that setting; native 100/150/200 DPI, official preview and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-13",
-          "commit": "5005a089a4913070da271327dda503a3b471f131",
+          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b/capture/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/tests/windows/focused.trx"
           ],
           "platforms": ["windows"],
           "findingCount": 1408,
-          "note": "The original panel and active/inactive selected-subject color boundaries are implemented and measured across light/dark/custom. Selected-body and remaining exact color diagnostics plus exhaustive configurable-color states stay open."
+          "note": "The complete original relative/non-relative selected/unselected subject/body foreground matrix is implemented through the same text-gray setting and measured across light/dark/custom. Remaining exact color diagnostics and exhaustive configurable-color states stay open."
         },
         "behavioralState": {
           "status": "unverified",
@@ -33451,13 +33452,18 @@
           "note": "the complete interaction state matrix has not been exercised"
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-13",
+          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/runtime/linux/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/runtime/linux/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/runtime/flatpak/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host. Native DPI beyond 125%, exhaustive component states and macOS remain open."
         }
       }
     },
@@ -33536,29 +33542,29 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-13",
+          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/RevisionGridRefRenderer.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 34,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 68,
+          "note": "P8.6h.3b.2b.2a restores the renderer helper names, class placement, comments, fields and ordering where the framework permits. The remaining 68 findings are retained and classified native StreamGeometry/FormattedText/TemplatedControl versus GDI/DataGridView representation gaps."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-12",
-          "commit": "904ae106eab110089ae0cd986ec9b11bd24c6700",
+          "verifiedOn": "2026-08-13",
+          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/inventory/RevisionGridRefRenderer.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/winforms-row-content/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/capture/avalonia-row-content-final/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2a/build/linux-gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/RevisionGridRefRenderer.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/diff/findings.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
-          "findingCount": 71,
-          "note": "P8.6h.3b.1 verifies the annotated-tag label update. P8.6h.3b.2a uses the same mutable native label boundary for stash/autostash capsules and verifies the row-content fixture on Windows/Linux. The 71 source-shape, geometry, color and state findings remain P8.6h.3b.2b; no complete visual axis is claimed."
+          "findingCount": 68,
+          "note": "P8.6h.3b.2b.2a restores the original shape-helper vocabulary, empty-label padding, dash/arrow state and highlight-width boundary without changing the golden rendering. The 68 classified framework-representation findings and broader exact visual/state closure remain P8.6h.3b.2b.2b; no complete axis is claimed."
         },
         "visual": {
           "status": "notApplicable",

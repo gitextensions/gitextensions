@@ -164,6 +164,28 @@ internal static class AvaloniaThemeResources
         }
 
         DrawingColor alternatingRow = panel.MakeDarkerBy(isDark ? -0.018 : 0.025);
+
+        // subject/body colors are hardcoded to be correct relative each other,
+        // subject color should be emphasied compared to body, selected vs unselected etc.
+
+        // relativeNonSelectedSubject: SystemColors.ControlText
+        DrawingColor revisionNonRelativeSubject = isDark
+            ? DrawingColor.FromArgb(192, 192, 192) // de-emphasised light grey on dark background
+            : grayText;
+        DrawingColor revisionNonRelativeSelectedSubject = isDark
+            ? DrawingColor.FromArgb(235, 235, 215) // near-white with warm tint on blue selection
+            : DrawingColor.FromArgb(188, 188, 188);
+
+        // relativeNonSelectedBody: SystemColors.GrayText
+        DrawingColor revisionSelectedBody = isDark
+            ? DrawingColor.FromArgb(170, 170, 150) // warm mid-grey on blue selection
+            : DrawingColor.FromArgb(188, 188, 188); // same as _nonRelativeSelectedSubjectColor
+        DrawingColor revisionNonRelativeBody = isDark
+            ? DrawingColor.FromArgb(130, 130, 130) // darker grey than subject, further de-emphasised
+            : DrawingColor.FromArgb(152, 152, 152);
+        DrawingColor revisionNonRelativeSelectedBody = isDark
+            ? DrawingColor.FromArgb(170, 170, 150) // same as relativeSelectedBody — consistent on selection
+            : DrawingColor.FromArgb(161, 161, 161);
         DrawingColor blameHighlight = isDark
             ? editor.MakeDarkerBy(-0.06)
             : ResolveSystemColor(settings, KnownColor.ControlLight);
@@ -215,6 +237,11 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsRevisionAlternatingRowBrush", alternatingRow);
         SetBrush(resources, "GitExtensionsRevisionAuthoredBrush", ResolveAppColor(settings, AppColor.AuthoredHighlight));
         SetBrush(resources, "GitExtensionsRevisionSelectedSubjectBrush", isDark ? controlText : highlightText);
+        SetBrush(resources, "GitExtensionsRevisionNonRelativeSubjectBrush", revisionNonRelativeSubject);
+        SetBrush(resources, "GitExtensionsRevisionNonRelativeSelectedSubjectBrush", revisionNonRelativeSelectedSubject);
+        SetBrush(resources, "GitExtensionsRevisionSelectedBodyBrush", revisionSelectedBody);
+        SetBrush(resources, "GitExtensionsRevisionNonRelativeBodyBrush", revisionNonRelativeBody);
+        SetBrush(resources, "GitExtensionsRevisionNonRelativeSelectedBodyBrush", revisionNonRelativeSelectedBody);
 
         SetBrush(resources, "GitExtensionsValidFilterBackgroundBrush", ResolveFilterBackground(isDark, isValid: true));
         SetBrush(resources, "GitExtensionsInvalidFilterBackgroundBrush", ResolveFilterBackground(isDark, isValid: false));
