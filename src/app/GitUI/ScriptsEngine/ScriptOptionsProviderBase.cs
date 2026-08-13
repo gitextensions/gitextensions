@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 
 namespace GitUI.ScriptsEngine;
 
@@ -14,13 +15,27 @@ internal class ScriptOptionsProviderBase : IScriptOptionsProvider
     {
         Type interfaceType = typeof(IScriptOptionsProvider);
         _options = [.. AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(assembly => assembly.GetTypes())
+            .SelectMany(GetTypes)
             .Where(type => type != interfaceType && interfaceType.IsAssignableFrom(type))
             .SelectMany(implementingType =>
                 {
                     PropertyInfo? property = implementingType.GetProperty(nameof(ImplementedOptions), BindingFlags.Static | BindingFlags.NonPublic);
                     return (string[])property!.GetValue(obj: null)!;
                 })];
+
+        static Type[] GetTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (Exception ex)
+            {
+                // Ignore outdated plugins, which may reference assemblies that are no longer available.
+                Trace.WriteLine(ex);
+                return [];
+            }
+        }
     }
 
     /// <summary>
