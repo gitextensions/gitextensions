@@ -387,8 +387,52 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
                 .First(control => ReferenceEquals(control.ContextMenu, owningContextMenu));
             owningContextMenu.Open(owner);
             Dispatcher.UIThread.RunJobs();
-            TrackExternalTopLevels(owningContextMenu);
             _restoreActions.Add(owningContextMenu.Close);
+        }
+
+        if (owningContextMenu is not null
+            && (!menuItem.IsEffectivelyVisible || menuItem.Bounds.Width <= 0 || menuItem.Bounds.Height <= 0))
+        {
+            // parity-scaffolding: Headless OverlayPopupHost clips long menus to the tiny standalone owner;
+            // reparent the actual product item into a compact Menu on a taller real owner viewport.
+            if (_topLevel is not Window captureWindow)
+            {
+                throw new AvaloniaCaptureStateUnsupportedException(
+                    "The requested menu item needs a taller owner-hosted viewport, but the capture top level is not a Window.");
+            }
+
+            double originalHeight = captureWindow.Height;
+            int originalIndex = owningContextMenu.Items.IndexOf(menuItem);
+            owningContextMenu.Close();
+            owningContextMenu.Items.RemoveAt(originalIndex);
+            captureWindow.Height = Math.Max(originalHeight, 700);
+            object? originalContent = captureWindow.Content;
+            if (originalContent is not Control originalControl)
+            {
+                throw new AvaloniaCaptureStateUnsupportedException(
+                    "The requested menu item needs a real owner-hosted menu, but the capture window content is not a Control.");
+            }
+
+            Menu captureMenu = new() { ItemsSource = new[] { menuItem } };
+            DockPanel.SetDock(captureMenu, Dock.Top);
+            DockPanel captureHost = new();
+            captureHost.Children.Add(captureMenu);
+            captureWindow.Content = null;
+            Dispatcher.UIThread.RunJobs();
+            captureHost.Children.Add(originalControl);
+            captureWindow.Content = captureHost;
+            Dispatcher.UIThread.RunJobs();
+            captureWindow.CaptureRenderedFrame();
+            Dispatcher.UIThread.RunJobs();
+            _restoreActions.Add(() =>
+            {
+                menuItem.IsSubMenuOpen = false;
+                captureMenu.ItemsSource = null;
+                captureHost.Children.Remove(originalControl);
+                captureWindow.Content = originalContent;
+                owningContextMenu.Items.Insert(originalIndex, menuItem);
+                captureWindow.Height = originalHeight;
+            });
         }
 
         bool previous = menuItem.IsSubMenuOpen;
