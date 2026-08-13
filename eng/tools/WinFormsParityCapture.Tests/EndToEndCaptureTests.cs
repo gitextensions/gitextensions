@@ -42,6 +42,19 @@ public sealed class EndToEndCaptureTests
     }
 
     [Test]
+    public void Parse_should_preserve_the_isolated_worker_state()
+    {
+        CaptureOptions options = CaptureOptions.Parse(
+        [
+            "--worker",
+            "--state", "context-menu.open"
+        ]);
+
+        options.Command.Should().Be(CaptureCommand.Worker);
+        options.StateId.Should().Be("context-menu.open");
+    }
+
+    [Test]
     [Apartment(ApartmentState.MTA)]
     public void Bootstrap_should_reject_a_non_sta_thread()
     {
