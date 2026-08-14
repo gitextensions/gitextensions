@@ -100,6 +100,13 @@ public sealed class RevisionGridColumnProviderTests
             grid.Columns.Should().OnlyContain(column => column.HeaderAlignment == "NotSet");
             grid.Columns.Select(column => column.Colors.InactiveSelectionBackground).Should().NotContainNulls();
             grid.Columns.Select(column => column.Colors.DisabledForeground).Should().NotContainNulls();
+            grid.ControlKind.Should().Be("dataGrid");
+            grid.ReadOnly.Should().BeTrue();
+            grid.Children.Should().BeEmpty("recycled Avalonia rows are renderer details rather than semantic child controls");
+            grid.Colors.SelectionBackground.Should().NotBeNull();
+            grid.Colors.InactiveSelectionBackground.Should().NotBeNull();
+            grid.Colors.DisabledForeground.Should().NotBeNull();
+            grid.Colors.GridLine.Should().NotBeNull();
         }
         finally
         {
