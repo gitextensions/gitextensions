@@ -250,17 +250,10 @@ internal static class ComponentFactory
             "IsDataLoadComplete",
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)
             ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its load-complete state.");
-        DateTime loadDeadline = DateTime.UtcNow.AddSeconds(10);
-        while (!(bool)loadCompleteProperty.GetValue(grid)! && DateTime.UtcNow < loadDeadline)
-        {
-            Application.DoEvents();
-            Thread.Sleep(25);
-        }
-
-        if (!(bool)loadCompleteProperty.GetValue(grid)!)
-        {
-            throw new CaptureStateUnsupportedException("The original revision grid did not complete repository loading before capture.");
-        }
+        System.Reflection.FieldInfo refreshingField = typeof(RevisionGridControl).GetField(
+            "_isRefreshingRevisions",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its refresh state.");
 
         if (revisionGrid.FindForm() is Form form)
         {
@@ -274,46 +267,162 @@ internal static class ComponentFactory
             types: [typeof(int)],
             modifiers: null)
             ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its row lookup.");
+        System.Reflection.FieldInfo latestRowField = typeof(RevisionGridControl).GetField(
+            "_latestSelectedRowIndex",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its selected-row state.");
         ObjectId head = commands.Module.RevParse("HEAD");
-        DateTime selectionDeadline = DateTime.UtcNow.AddSeconds(30);
-        bool selectedHead = false;
-        while (!selectedHead && DateTime.UtcNow < selectionDeadline)
-        {
-            int selectedIndex = Enumerable.Range(0, grid.RowCount)
-                .FirstOrDefault(index => GetRevision(index)?.ObjectId == head, -1);
-            if (selectedIndex < 0)
-            {
-                Application.DoEvents();
-                Thread.Sleep(25);
-                continue;
-            }
-
-            grid.Focus();
-            grid.ClearSelection();
-            grid.Rows[selectedIndex].Selected = true;
-            grid.CurrentCell = grid.Rows[selectedIndex].Cells[Math.Min(1, grid.ColumnCount - 1)];
-            Application.DoEvents();
-            System.Reflection.FieldInfo latestRowField = typeof(RevisionGridControl).GetField(
-                "_latestSelectedRowIndex",
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its selected-row state.");
-            latestRowField.SetValue(revisionGrid, selectedIndex);
-            selectedHead = GetRevision(selectedIndex)?.ObjectId == head
-                           && grid.Rows[selectedIndex].Selected;
-        }
-
-        if (!selectedHead)
-        {
-            throw new CaptureStateUnsupportedException("The original revision grid did not retain repository HEAD selection before capture.");
-        }
+        WaitForStableHeadSelection();
 
         // parity-scaffolding: Data loading and visible-row graph rendering settle independently;
         // capture only after the product's background renderer publishes its measured width.
         WaitForRevisionGridRender(revisionGrid, grid);
+        WaitForStableHeadSelection();
 
         GitRevision? GetRevision(int index)
             => (GitRevision?)getRevision.Invoke(revisionGrid, [index]);
+
+        void WaitForStableHeadSelection()
+        {
+            DateTime selectionDeadline = DateTime.UtcNow.AddSeconds(30);
+            int stableObservationCount = 0;
+            while (stableObservationCount < 10 && DateTime.UtcNow < selectionDeadline)
+            {
+                Application.DoEvents();
+                bool isRefreshing = (bool)refreshingField.GetValue(revisionGrid)!;
+                bool isDataLoadComplete = (bool)loadCompleteProperty.GetValue(grid)!;
+                int selectedIndex = Enumerable.Range(0, grid.RowCount)
+                    .FirstOrDefault(index => GetRevision(index)?.ObjectId == head, -1);
+                if (selectedIndex >= 0 && !isRefreshing && isDataLoadComplete)
+                {
+                    if (!grid.Rows[selectedIndex].Selected || grid.CurrentCell?.RowIndex != selectedIndex)
+                    {
+                        grid.Focus();
+                        grid.ClearSelection();
+                        grid.Rows[selectedIndex].Selected = true;
+                        grid.CurrentCell = grid.Rows[selectedIndex].Cells[Math.Min(1, grid.ColumnCount - 1)];
+                    }
+
+                    latestRowField.SetValue(revisionGrid, selectedIndex);
+                    Application.DoEvents();
+                    stableObservationCount = IsRevisionGridSelectionReady(
+                        (bool)refreshingField.GetValue(revisionGrid)!,
+                        (bool)loadCompleteProperty.GetValue(grid)!,
+                        GetRevision(selectedIndex)?.ObjectId == head,
+                        grid.Rows[selectedIndex].Selected,
+                        (int)latestRowField.GetValue(revisionGrid)! == selectedIndex)
+                        ? stableObservationCount + 1
+                        : 0;
+                }
+                else
+                {
+                    stableObservationCount = 0;
+                }
+
+                Thread.Sleep(25);
+            }
+
+            if (stableObservationCount < 10)
+            {
+                throw new CaptureStateUnsupportedException(
+                    "The original revision grid did not retain a stable repository HEAD selection before capture.");
+            }
+        }
     }
+
+    internal static bool IsRevisionGridSelectionReady(
+        bool isRefreshing,
+        bool isDataLoadComplete,
+        bool selectedRevisionIsHead,
+        bool selectedRowIsSelected,
+        bool latestRowMatches)
+        => !isRefreshing
+            && isDataLoadComplete
+            && selectedRevisionIsHead
+            && selectedRowIsSelected
+            && latestRowMatches;
+
+    // parity-scaffolding: Never accept a menu capture if the original's asynchronous grid
+    // replaced HEAD after preparation or if the real opening handlers did not finish.
+    public static void VerifyCaptureState(Control control, IGitUICommands commands, CaptureStatePlan state)
+    {
+        if (control is not RevisionGridControl revisionGrid)
+        {
+            return;
+        }
+
+        System.Reflection.PropertyInfo latestRevisionProperty = typeof(RevisionGridControl).GetProperty(
+            "LatestSelectedRevision",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its latest selected revision.");
+        GitRevision? latestRevision = (GitRevision?)latestRevisionProperty.GetValue(revisionGrid);
+        if (latestRevision?.ObjectId != commands.Module.RevParse("HEAD"))
+        {
+            throw new CaptureStateNotReadyException("The original revision grid replaced repository HEAD before capture.");
+        }
+
+        if (state.TargetField == "mainContextMenu")
+        {
+            ToolStripMenuItem rebase = RequireMenuItem("rebaseOnToolStripMenuItem");
+            ToolStripMenuItem applyStash = RequireMenuItem("applyStashToolStripMenuItem");
+            ToolStripMenuItem popStash = RequireMenuItem("popStashToolStripMenuItem");
+            ToolStripMenuItem dropStash = RequireMenuItem("dropStashToolStripMenuItem");
+            ToolStripMenuItem resetChanges = RequireMenuItem("resetChangesToolStripMenuItem");
+            ToolStripMenuItem commit = RequireMenuItem("commitToolStripMenuItem");
+            if (!IsRevisionGridHeadContextMenuReady(
+                    rebase.Visible,
+                    rebase.Enabled,
+                    applyStash.Visible,
+                    popStash.Visible,
+                    dropStash.Visible,
+                    resetChanges.Visible,
+                    commit.Visible))
+            {
+                throw new CaptureStateNotReadyException(
+                    "The original revision-grid context menu did not finish applying its repository HEAD state "
+                    + $"(rebase={rebase.Visible}/{rebase.Enabled}, applyStash={applyStash.Visible}, "
+                    + $"popStash={popStash.Visible}, dropStash={dropStash.Visible}, "
+                    + $"resetChanges={resetChanges.Visible}, commit={commit.Visible}).");
+            }
+        }
+        else if (state.TargetField == "copyToClipboardToolStripMenuItem")
+        {
+            ToolStripMenuItem copy = RequireMenuItem("copyToClipboardToolStripMenuItem");
+            string messageLabel = ResourceManager.TranslatedStrings.GetMessage(1);
+            bool hasMessage = copy.DropDownItems.Cast<ToolStripItem>()
+                .Any(item => (item.Text ?? string.Empty).Replace("&", string.Empty, StringComparison.Ordinal)
+                    .StartsWith(messageLabel, StringComparison.OrdinalIgnoreCase));
+            if (!hasMessage)
+            {
+                string itemText = string.Join(", ", copy.DropDownItems.Cast<ToolStripItem>()
+                    .Select(item => item.Text ?? "<null>"));
+                throw new CaptureStateNotReadyException(
+                    "The original revision-grid copy menu did not finish loading the selected commit message "
+                    + $"(items: {itemText}).");
+            }
+        }
+
+        ToolStripMenuItem RequireMenuItem(string fieldName)
+            => (ToolStripMenuItem?)FindFieldValue(revisionGrid, fieldName)
+               ?? throw new CaptureStateUnsupportedException(
+                   $"The original revision grid did not expose menu item '{fieldName}'.");
+    }
+
+    internal static bool IsRevisionGridHeadContextMenuReady(
+        bool rebaseVisible,
+        bool rebaseEnabled,
+        bool applyStashVisible,
+        bool popStashVisible,
+        bool dropStashVisible,
+        bool resetChangesVisible,
+        bool commitVisible)
+        => rebaseVisible
+            && rebaseEnabled
+            && !applyStashVisible
+            && !popStashVisible
+            && !dropStashVisible
+            && !resetChangesVisible
+            && !commitVisible;
 
     private static void WaitForRevisionGridRender(RevisionGridControl revisionGrid, DataGridView grid)
     {
