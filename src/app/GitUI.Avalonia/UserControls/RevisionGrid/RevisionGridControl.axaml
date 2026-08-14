@@ -7,6 +7,21 @@
              Foreground="{DynamicResource GitExtensionsControlForegroundBrush}"
              Design.Width="682"
              Design.Height="235">
+  <UserControl.Resources>
+    <!-- Avalonia uses a symmetric Fluent popup border and no desktop scroller inset;
+         the original ToolStrip menus use one trailing border pixel and a two-pixel top inset. -->
+    <Thickness x:Key="MenuFlyoutPresenterBorderThemeThickness">0,0.8,0.8,1.6</Thickness>
+    <Thickness x:Key="MenuFlyoutScrollerMargin">0,0.8,0,0</Thickness>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="Separator.revision-grid-context-separator">
+      <Setter Property="Width" Value="252.8" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="RenderTransform">
+        <TranslateTransform X="0.8" />
+      </Setter>
+    </Style>
+  </UserControl.Styles>
   <DockPanel>
     <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" IsVisible="False" />
     <Grid x:Name="pnlRevisionGrid">
@@ -32,9 +47,9 @@
           <MenuItem x:Name="stopBisectToolStripMenuItem" Header="Stop bisect">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BisectStop}" /></MenuItem.Icon>
           </MenuItem>
-          <Separator x:Name="sepBisect" />
+          <Separator x:Name="sepBisect" Classes="revision-grid-context-separator" />
           <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" />
-          <Separator x:Name="sepCopy" />
+          <Separator x:Name="sepCopy" Classes="revision-grid-context-separator" />
           <MenuItem x:Name="applyStashToolStripMenuItem" Header="Appl_y stash">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
           </MenuItem>
@@ -44,7 +59,7 @@
           <MenuItem x:Name="dropStashToolStripMenuItem" Header="_Drop stash...">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
           </MenuItem>
-          <Separator x:Name="sepStash" />
+          <Separator x:Name="sepStash" Classes="revision-grid-context-separator" />
           <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch...">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
           </MenuItem>
@@ -64,7 +79,7 @@
           <MenuItem x:Name="resetCurrentBranchToHereToolStripMenuItem" Header="Reset c_urrent branch to here...">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ResetCurrentBranchToHere}" /></MenuItem.Icon>
           </MenuItem>
-          <Separator x:Name="sepBranch" />
+          <Separator x:Name="sepBranch" Classes="revision-grid-context-separator" />
           <MenuItem x:Name="resetChangesToolStripMenuItem" Header="_Reset changes">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
           </MenuItem>
@@ -83,14 +98,14 @@
           <MenuItem x:Name="deleteBranchToolStripMenuItem" Header="_Delete branch...">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchDelete}" /></MenuItem.Icon>
           </MenuItem>
-          <Separator x:Name="sepBranchModification" />
+          <Separator x:Name="sepBranchModification" Classes="revision-grid-context-separator" />
           <MenuItem x:Name="createTagToolStripMenuItem" Header="Create new ta_g here..." InputGesture="Ctrl+T">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.TagCreate}" /></MenuItem.Icon>
           </MenuItem>
           <MenuItem x:Name="deleteTagToolStripMenuItem" Header="_Delete tag...">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.TagDelete}" /></MenuItem.Icon>
           </MenuItem>
-          <Separator x:Name="sepCommit" />
+          <Separator x:Name="sepCommit" Classes="revision-grid-context-separator" />
           <MenuItem x:Name="checkoutRevisionToolStripMenuItem" Header="Checkout _this commit...">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Checkout}" /></MenuItem.Icon>
           </MenuItem>
@@ -112,7 +127,7 @@
             <MenuItem x:Name="amendCommitToolStripMenuItem" Header="Create an _amend commit..." />
             <MenuItem x:Name="getHelpOnHowToUseTheseFeaturesToolStripMenuItem" Header="Get _help on how to use these features" />
           </MenuItem>
-          <Separator x:Name="sepCompare" />
+          <Separator x:Name="sepCompare" Classes="revision-grid-context-separator" />
           <MenuItem x:Name="compareToolStripMenuItem" Header="Com_pare">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Diff}" /></MenuItem.Icon>
             <MenuItem x:Name="openCommitsWithDiffToolMenuItem" Header="Open selected commits with _difftool" />
@@ -124,7 +139,7 @@
             <MenuItem x:Name="compareToWorkingDirectoryMenuItem" Header="Compare to _working directory" />
             <MenuItem x:Name="compareSelectedCommitsMenuItem" Header="Compare _selected commits" />
           </MenuItem>
-          <Separator x:Name="sepNavigate" />
+          <Separator x:Name="sepNavigate" Classes="revision-grid-context-separator" />
           <MenuItem x:Name="navigateToolStripMenuItem" Header="_Navigate">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GotoCommit}" /></MenuItem.Icon>
           </MenuItem>
