@@ -162,6 +162,10 @@
           <Setter Property="Background" Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
           <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
         </Style>
+        <Style Selector="ListBox.context-menu-open ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+          <Setter Property="Foreground" Value="{DynamicResource GitExtensionsRevisionSelectedSubjectBrush}" />
+        </Style>
         <Style Selector="ListBoxItem:selected Grid.revision-row">
           <Setter Property="Background" Value="Transparent" />
         </Style>
