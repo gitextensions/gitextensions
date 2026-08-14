@@ -197,7 +197,7 @@ public sealed class UIReporterTests
 
         page.Icon.Should().Be(TaskDialogIcon.Error);
         page.Heading.Should().Be(RootError);
-        page.AllowCancel.Should().BeTrue();
+        page.AllowCancel.Should().BeFalse();
         page.Buttons.Should().HaveCount(2);
     }
 
