@@ -31516,9 +31516,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/inventory/GitUI.UserControls.RevisionGrid.CopyContextMenuItem.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/inventory/GitUI.UserControls.RevisionGrid.CopyContextMenuItem.json"
           ],
           "platforms": [],
           "findingCount": 4,
@@ -31527,62 +31527,64 @@
         "functional": {
           "status": "verified",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/inventory/GitUI.UserControls.RevisionGrid.CopyContextMenuItem.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/inventory/GitUI.UserControls.RevisionGrid.CopyContextMenuItem.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 4,
-          "note": "The four findings are classified native style/icon/header and owner-refresh helpers. Focused Windows/Linux tests verify ref filtering, branch/tag grouping, date splitting, multi-selection payloads, clipboard execution, and a fully measured first popup row."
+          "note": "The four findings are classified native style/icon/header and owner-refresh helpers. Focused Windows/Linux tests verify ref filtering, branch/tag grouping, date splitting, multi-selection payloads, clipboard execution, and the exact measured dynamic-item padding and separator insets."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/remaining-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 4159,
-          "note": "The real copy row now receives the base MenuItem theme and renders at the measured 20.8-DIP native-125% height in all three captured themes. Aggregate popup diagnostics, native 100/150/200%, and macOS remain open."
+          "findingCount": 207,
+          "note": "The real copy popup now matches every named WinForms row, separator, width, height and client metric at native 125% in light, dark and custom captures. Aggregate framework-property, absolute-placement and image diagnostics, native 100/150/200%, exhaustive live states, and macOS remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 1345,
-          "note": "The copy row resolves through the shared popup theme in light, dark and custom captures. Aggregate exact-color diagnostics and exhaustive hover/pressed/disabled submenu colors remain open."
+          "findingCount": 0,
+          "note": "The copy popup resolves through the shared popup theme in light, dark and custom captures with zero color findings. Exhaustive hover, pressed, focused and disabled submenu colors remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 81,
-          "note": "The actual product copy submenu is captured from selected HEAD in light/dark/custom through the real Avalonia MenuItem lifecycle, including the closed and opened owner states. Exhaustive pointer, keyboard, descendant-hover and action states remain open."
+          "findingCount": 0,
+          "note": "The actual product copy submenu is captured from selected HEAD in light/dark/custom through the real Avalonia MenuItem lifecycle, including the closed and opened owner states, with zero state findings. Exhaustive pointer, keyboard, descendant-hover and action states remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
@@ -33435,39 +33437,39 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/inventory/GitUI.RevisionGridControl.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/inventory/GitUI.RevisionGridControl.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1082,
-          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture reader exposes the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. The Rebase-on parent now remains visible for every regular revision and opening it applies the original enabled-state calculation to all three actions. The reference harness proves every compared popup was opened after repository HEAD selection and the original menu handlers settled. The broader exhaustive behavior audit remains open."
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture reader exposes the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Semantic popup roots now retain supplied screen bounds while logical children report positions in the emitted semantic parent, including skipped Fluent presenter wrappers. The Rebase-on parent remains visible for every regular revision and opening it applies the original enabled-state calculation to all three actions. The reference harness proves every compared popup was opened after repository HEAD selection and the original menu handlers settled. The broader exhaustive behavior audit remains open."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/remaining-classification.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/preview/previewability.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/preview/RevisionGridControl.png"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/remaining-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/preview/previewability.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/preview/RevisionGridControl.png"
           ],
           "platforms": ["windows"],
-          "findingCount": 450,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs use the identical external repository and join with 450 aggregate diagnostics. The correct visible Rebase row exposes nine geometry measurements that were previously hidden while closing all 12 Rebase/separator state findings, for a net reduction of three. Layout, color, font, text, control-identity, column, and state findings are zero. The remaining 399 geometry and 51 image findings are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
+          "findingCount": 207,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs use the identical external repository and join with 207 aggregate diagnostics, down 243 from the prior report. Every named popup row, separator, width, height and client metric is exact. Layout, color, font, text, control-identity, column, and state findings remain zero. The remaining 120 implicit framework margins, 24 padding representations, 12 absolute popup placements and 51 image findings are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
@@ -33476,12 +33478,12 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/remaining-classification.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/remaining-classification.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
@@ -33490,12 +33492,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
+          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b8/accepted/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
