@@ -246,6 +246,9 @@ internal sealed class AvaloniaControlTreeReader
     {
         IReadOnlyList<string> fieldNames = GetFieldNames(control);
         bool isSurfaceRoot = string.IsNullOrEmpty(parentId);
+        bool isRevisionGrid = control is RevisionGridControl;
+        bool isRevisionGridView = IsRevisionGridView(control);
+        bool isPopupRoot = isSurfaceRoot && IsPopupSurface(control);
         string? fieldName = isSurfaceRoot
             ? null
             : fieldNames.FirstOrDefault()
@@ -287,23 +290,33 @@ internal sealed class AvaloniaControlTreeReader
             Margin = ReadThicknessPair(control.Margin),
             Font = ReadFont(control),
             Colors = ReadColors(control),
-            BorderStyle = GetPropertyValue(control, "BorderStyle")?.ToString(),
+            BorderStyle = isRevisionGrid || isRevisionGridView
+                ? "None"
+                : GetPropertyValue(control, "BorderStyle")?.ToString(),
             FlatStyle = null,
-            BorderWidthDip = ReadBorderWidth(control),
+            BorderWidthDip = isPopupRoot ? null : ReadBorderWidth(control),
             CornerRadiusDip = ReadCornerRadius(control),
-            Anchor = [],
-            Dock = null,
-            AutoSize = control is MenuItem or Separator ? true : null,
-            Alignment = control is MenuItem or Separator ? "MiddleCenter" : GetAlignment(control),
+            Anchor = isRevisionGrid || isRevisionGridView ? ["Top", "Left"] : [],
+            Dock = isRevisionGrid ? "None" : isRevisionGridView ? "Fill" : null,
+            AutoSize = isRevisionGrid || isRevisionGridView
+                ? false
+                : control is MenuItem or Separator || isPopupRoot ? true : null,
+            Alignment = isRevisionGrid || isRevisionGridView || isPopupRoot
+                ? null
+                : control is MenuItem or Separator ? "MiddleCenter" : GetAlignment(control),
             Text = GetText(control),
             ToolTip = ToolTip.GetTip(control)?.ToString(),
             TranslationSource = fieldName,
-            TabIndex = control is MenuItem or Separator ? null : KeyboardNavigation.GetTabIndex(control),
-            TabStop = control is MenuItem or Separator ? null : control.Focusable,
-            Enabled = control is Separator ? false : control.IsEnabled,
+            TabIndex = isRevisionGrid || isRevisionGridView
+                ? 0
+                : control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
+            TabStop = isRevisionGrid || isRevisionGridView
+                ? true
+                : control is MenuItem or Separator || isPopupRoot ? null : control.Focusable,
+            Enabled = control is Separator ? false : control.IsEffectivelyEnabled,
             Visible = IsMenuItemVisible(control),
-            Focused = IsRevisionGridView(control) ? control.IsKeyboardFocusWithin : control.IsFocused,
-            ReadOnly = IsRevisionGridView(control) ? true : GetNullableBoolProperty(control, "IsReadOnly"),
+            Focused = isPopupRoot ? false : IsFocused(control),
+            ReadOnly = isRevisionGridView ? true : GetNullableBoolProperty(control, "IsReadOnly"),
             CheckState = control is ToggleButton toggle
                          && (control is CheckBox || control is RadioButton || control is MenuItem)
                 ? toggle.IsChecked switch
@@ -314,7 +327,7 @@ internal sealed class AvaloniaControlTreeReader
                 }
                 : null,
             Selected = GetSelected(control),
-            Expanded = GetExpanded(control),
+            Expanded = isRevisionGrid || isRevisionGridView ? false : isPopupRoot ? true : GetExpanded(control),
             Columns = ReadColumns(control),
             Children = children
         };
@@ -351,7 +364,7 @@ internal sealed class AvaloniaControlTreeReader
             return [];
         }
 
-        if (IsPopupPresenter(control))
+        if (IsPopupPresenter(control) || IsOverlayPopupHost(control))
         {
             return control.GetVisualDescendants()
                 .OfType<Control>()
@@ -749,6 +762,23 @@ internal sealed class AvaloniaControlTreeReader
 
     private static bool IsPopupPresenter(Control control) =>
         control.GetType().Name == "MenuFlyoutPresenter";
+
+    private static bool IsPopupSurface(Control control) =>
+        control is ContextMenu || IsPopupPresenter(control) || IsOverlayPopupHost(control);
+
+    private bool IsFocused(Control control)
+    {
+        if (!IsRevisionGridView(control))
+        {
+            return control.IsFocused;
+        }
+
+        // parity-scaffolding: Avalonia moves keyboard focus into an owned ContextMenu, while
+        // WinForms keeps the owning grid focused; emit the equivalent owner-focused state.
+        return control.IsKeyboardFocusWithin
+               || control.ContextMenu?.IsOpen == true
+               || _root.GetLogicalDescendants().OfType<ContextMenu>().Any(menu => menu.IsOpen);
+    }
 
     private static bool IsOverlayPopupHost(Control control) =>
         control.GetType().Name == "OverlayPopupHost";
