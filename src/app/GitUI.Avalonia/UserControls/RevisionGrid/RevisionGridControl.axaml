@@ -3,6 +3,8 @@
              xmlns:properties="using:GitUI.Properties"
              xmlns:revisionGrid="using:GitUI.UserControls.RevisionGrid"
              x:Class="GitUI.RevisionGridControl"
+             Background="{DynamicResource GitExtensionsControlBackgroundBrush}"
+             Foreground="{DynamicResource GitExtensionsControlForegroundBrush}"
              Design.Width="682"
              Design.Height="235">
   <DockPanel>
@@ -14,10 +16,10 @@
       <ListBox x:Name="_gridView"
                Classes="revision-grid"
                SelectionMode="Multiple"
-               Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
+               Background="{DynamicResource GitExtensionsControlBackgroundBrush}"
                Foreground="{DynamicResource GitExtensionsControlForegroundBrush}">
       <ListBox.ContextMenu>
-        <ContextMenu x:Name="mainContextMenu">
+        <ContextMenu x:Name="mainContextMenu" Width="256">
           <MenuItem x:Name="markRevisionAsBadToolStripMenuItem" Header="Mark revision as bad">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BisectBad}" /></MenuItem.Icon>
           </MenuItem>
@@ -173,7 +175,7 @@
           <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
         </Style>
         <Style Selector="Grid.revision-row">
-          <Setter Property="Background" Value="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
+          <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
         </Style>
       </ListBox.Styles>
       </ListBox>

@@ -138,7 +138,7 @@ public sealed partial class ParityScreenshotTests
         CaptureSurface popup = reader.ReadSurface(popupRoot, "popup:0", new PixelRect(0, 0, 320, 160));
 
         Flatten(primary.Root).Single(node => node.FieldName == "owner").Text.Should().Be("&Open && _literal");
-        Flatten(popup.Root).Single(node => node.FieldName == "command").Text.Should().Be("&Commit && _literal");
+        Flatten(popup.Root).Single(node => node.Name == "command").Text.Should().Be("&Commit && _literal");
         primary.Root.Text.Should().BeEmpty("WinForms records controls without a text property as empty text");
         Control overlayHost = window.GetVisualDescendants().OfType<Control>()
             .Single(control => control.GetType().Name == "OverlayPopupHost");
@@ -146,8 +146,58 @@ public sealed partial class ParityScreenshotTests
                 overlayHost,
                 "popup:host",
                 new PixelRect(0, 0, 320, 160));
-        overlaySurface.Root.Text.Should().BeNull("the Avalonia overlay host maps to WinForms' textless ContextMenuStrip surface");
+        overlaySurface.Root.Text.Should().BeNull("the semantic ContextMenu maps to WinForms' textless ContextMenuStrip surface");
+        overlaySurface.Root.Type.Should().Be(typeof(ContextMenu).FullName);
         overlaySurface.Root.ControlKind.Should().Be("popup");
+        menu.Close();
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    public void Avalonia_tree_reader_should_emit_semantic_menu_items_without_template_artifacts()
+    {
+        Window window = new() { Width = 320, Height = 160 };
+        MenuItem child = new() { Name = "dynamicCommand", Header = "_Child" };
+        MenuItem command = new() { Name = "mnuCommand", Header = "_Command", ItemsSource = new[] { child } };
+        ContextMenu menu = new() { Name = "menu", ItemsSource = new[] { command } };
+        Button owner = new() { Name = "owner", Content = "Owner", ContextMenu = menu };
+        window.Content = owner;
+        window.Show();
+        menu.Open(owner);
+        Dispatcher.UIThread.RunJobs();
+
+        Control overlayHost = window.GetVisualDescendants().OfType<Control>()
+            .Single(control => control.GetType().Name == "OverlayPopupHost");
+        CaptureSurface surface = new AvaloniaControlTreeReader(window, renderScale: 1)
+            .ReadSurface(overlayHost, "popup:0", new PixelRect(0, 0, 320, 160));
+        CaptureNode[] nodes = Flatten(surface.Root).ToArray();
+
+        surface.Root.Type.Should().Be(typeof(ContextMenu).FullName);
+        nodes.Should().ContainSingle(node => node.Name == "mnuCommand");
+        nodes.Should().ContainSingle(node => node.Name == "dynamicCommand" && node.FieldName == null);
+        nodes.Should().NotContain(node => node.Type != null && node.Type.Contains("AccessText", StringComparison.Ordinal));
+        CaptureNode commandNode = nodes.Single(node => node.Name == "mnuCommand");
+        commandNode.AutoSize.Should().BeTrue();
+        commandNode.Alignment.Should().Be("MiddleCenter");
+        commandNode.TabIndex.Should().BeNull();
+        commandNode.TabStop.Should().BeNull();
+        commandNode.BorderWidthDip.Should().BeNull();
+        commandNode.CornerRadiusDip.Should().BeNull();
+        commandNode.Colors.SelectionBackground.Should().NotBeNull();
+        commandNode.Colors.DisabledForeground.Should().NotBeNull();
+        command.IsSubMenuOpen = true;
+        Dispatcher.UIThread.RunJobs();
+        CaptureSurface submenuSurface = window.GetVisualDescendants().OfType<Control>()
+            .Where(control => control.GetType().Name == "OverlayPopupHost")
+            .Select(control => new AvaloniaControlTreeReader(window, renderScale: 1)
+                .ReadSurface(control, "popup:submenu", new PixelRect(0, 0, 320, 160)))
+            .Single(surface => surface.Root.Type.Contains("OverlayPopupHost", StringComparison.Ordinal));
+        submenuSurface.Root.Font!.Family.Should().Be(command.FontFamily.Name);
+        submenuSurface.Root.Font.SizePoints.Should().Be(9);
+        submenuSurface.Root.Colors.Background.Should().NotBeNull();
+        submenuSurface.Root.Colors.DisabledForeground.Should().NotBeNull();
+        command.IsSubMenuOpen = false;
         menu.Close();
         window.Close();
     }
