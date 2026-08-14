@@ -61,6 +61,7 @@ public static class UserScriptContextMenuExtensions
             {
                 hostMenuItem.Items.Add(item);
                 hostMenuItem.IsEnabled = true;
+                hostMenuItem.IsVisible = true;
             }
 
             itemsAdded = true;
@@ -81,6 +82,7 @@ public static class UserScriptContextMenuExtensions
     {
         hostMenuItem.Items.Clear();
         hostMenuItem.IsEnabled = false;
+        hostMenuItem.IsVisible = false;
 
         List<MenuItem> ownItems = [.. contextMenu.Items
             .OfType<MenuItem>()

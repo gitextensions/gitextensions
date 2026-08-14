@@ -307,9 +307,67 @@ internal static class ComponentFactory
             throw new CaptureStateUnsupportedException("The original revision grid did not retain repository HEAD selection before capture.");
         }
 
+        // parity-scaffolding: Data loading and visible-row graph rendering settle independently;
+        // capture only after the product's background renderer publishes its measured width.
+        WaitForRevisionGridRender(revisionGrid, grid);
+
         GitRevision? GetRevision(int index)
             => (GitRevision?)getRevision.Invoke(revisionGrid, [index]);
     }
+
+    private static void WaitForRevisionGridRender(RevisionGridControl revisionGrid, DataGridView grid)
+    {
+        System.Reflection.PropertyInfo updatingVisibleRowsProperty = grid.GetType().GetProperty(
+            "UpdatingVisibleRows",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its visible-row update state.");
+        System.Reflection.FieldInfo graphProviderField = typeof(RevisionGridControl).GetField(
+            "_revisionGraphColumnProvider",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its graph renderer.");
+        object graphProvider = graphProviderField.GetValue(revisionGrid)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid graph renderer was unavailable.");
+        System.Reflection.FieldInfo renderedWidthField = graphProvider.GetType().GetField(
+            "_columnWidth",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid graph renderer did not expose its measured width.");
+
+        grid.Refresh();
+        DateTime renderDeadline = DateTime.UtcNow.AddSeconds(30);
+        int stableObservationCount = 0;
+        int renderedWidth = 0;
+        while (stableObservationCount < 3 && DateTime.UtcNow < renderDeadline)
+        {
+            Application.DoEvents();
+            renderedWidth = (int)renderedWidthField.GetValue(graphProvider)!;
+            bool updatingVisibleRows = (bool)updatingVisibleRowsProperty.GetValue(grid)!;
+            bool rendered = IsRevisionGridRenderReady(
+                grid.Columns[0].Visible,
+                updatingVisibleRows,
+                renderedWidth,
+                grid.Columns[0].Width);
+            stableObservationCount = rendered
+                ? stableObservationCount + 1
+                : 0;
+            Thread.Sleep(25);
+        }
+
+        if (stableObservationCount < 3)
+        {
+            throw new CaptureStateUnsupportedException(
+                $"The original revision grid did not complete visible-row graph rendering before capture "
+                + $"(updating={updatingVisibleRowsProperty.GetValue(grid)}, renderedWidth={renderedWidth}, "
+                + $"columnWidth={grid.Columns[0].Width}).");
+        }
+    }
+
+    internal static bool IsRevisionGridRenderReady(
+        bool graphVisible,
+        bool updatingVisibleRows,
+        int renderedWidth,
+        int columnWidth)
+        => !updatingVisibleRows
+            && (!graphVisible || (renderedWidth > 0 && columnWidth == renderedWidth));
 
     // parity-scaffolding: Cancel the original grid's asynchronous refresh before WinForms disposal joins it.
     public static void CleanupBeforeDispose(Control control)

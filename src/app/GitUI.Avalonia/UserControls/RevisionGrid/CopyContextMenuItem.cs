@@ -16,6 +16,9 @@ public sealed class CopyContextMenuItem : MenuItem
     private Func<IReadOnlyList<GitRevision>>? _revisionFunc;
     private uint _itemNumber;
 
+    // Avalonia requires derived controls to opt into the base MenuItem theme.
+    protected override Type StyleKeyOverride => typeof(MenuItem);
+
     public CopyContextMenuItem()
     {
         Icon = CreateIcon(Images.CopyToClipboard);

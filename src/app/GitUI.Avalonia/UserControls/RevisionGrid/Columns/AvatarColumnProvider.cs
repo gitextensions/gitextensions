@@ -17,7 +17,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         RevisionGridControl revisionGridView,
         IAvatarProvider avatarProvider,
         IAvatarCacheCleaner avatarCacheCleaner)
-        : base("Avatar", new GridLength(24), minimumWidth: 24, resizable: false)
+        : base("Avatar", new GridLength(25.6), minimumWidth: 25.6, resizable: false)
     {
         _avatarProvider = avatarProvider;
         _ = new CacheRefreshSubscription(
