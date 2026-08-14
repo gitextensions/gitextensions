@@ -523,6 +523,7 @@ internal static class CaptureComparer
         {
             CompareRectangle(reference.BoundsDip, candidate.BoundsDip, $"{path}/boundsDip", tolerance.GeometryDip, findings);
             CompareSize(reference.ClientSizeDip, candidate.ClientSizeDip, $"{path}/clientSizeDip", tolerance.GeometryDip, findings);
+            CompareDecimal(reference.ItemHeightDip, candidate.ItemHeightDip, tolerance.GeometryDip, GeometryCategory, "geometry.itemHeightDip", path, findings);
             CompareThickness(reference.Padding.Dip, candidate.Padding.Dip, $"{path}/paddingDip", tolerance.GeometryDip, findings);
             CompareThickness(reference.Margin.Dip, candidate.Margin.Dip, $"{path}/marginDip", tolerance.GeometryDip, findings);
         }

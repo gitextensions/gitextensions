@@ -388,16 +388,26 @@ internal static class ComponentFactory
         else if (state.TargetField == "copyToClipboardToolStripMenuItem")
         {
             ToolStripMenuItem copy = RequireMenuItem("copyToClipboardToolStripMenuItem");
-            string messageLabel = ResourceManager.TranslatedStrings.GetMessage(1);
-            bool hasMessage = copy.DropDownItems.Cast<ToolStripItem>()
-                .Any(item => (item.Text ?? string.Empty).Replace("&", string.Empty, StringComparison.Ordinal)
-                    .StartsWith(messageLabel, StringComparison.OrdinalIgnoreCase));
-            if (!hasMessage)
+            string[] requiredLabels =
+            [
+                ResourceManager.TranslatedStrings.GetCommitHash(1),
+                ResourceManager.TranslatedStrings.GetMessage(1),
+                ResourceManager.TranslatedStrings.GetAuthor(1)
+            ];
+            string[] dateLabels =
+            [
+                ResourceManager.TranslatedStrings.Date,
+                ResourceManager.TranslatedStrings.GetAuthorDate(1),
+                ResourceManager.TranslatedStrings.GetCommitDate(1)
+            ];
+            string[] itemTexts = copy.DropDownItems.Cast<ToolStripItem>()
+                .Select(item => item.Text ?? string.Empty)
+                .ToArray();
+            if (!IsRevisionGridCopyMenuReady(itemTexts, requiredLabels, dateLabels))
             {
-                string itemText = string.Join(", ", copy.DropDownItems.Cast<ToolStripItem>()
-                    .Select(item => item.Text ?? "<null>"));
+                string itemText = string.Join(", ", itemTexts);
                 throw new CaptureStateNotReadyException(
-                    "The original revision-grid copy menu did not finish loading the selected commit message "
+                    "The original revision-grid copy menu did not finish loading the selected commit metadata "
                     + $"(items: {itemText}).");
             }
         }
@@ -424,6 +434,19 @@ internal static class ComponentFactory
             && !resetChangesVisible
             && !commitVisible;
 
+    internal static bool IsRevisionGridCopyMenuReady(
+        IReadOnlyList<string> itemTexts,
+        IReadOnlyList<string> requiredLabels,
+        IReadOnlyList<string> dateLabels)
+    {
+        string[] normalized = itemTexts
+            .Select(text => text.Replace("&", string.Empty, StringComparison.Ordinal))
+            .ToArray();
+        return requiredLabels.All(label => normalized.Any(
+                   text => text.StartsWith(label, StringComparison.OrdinalIgnoreCase)))
+            && normalized.Any(text => dateLabels.Any(label => text.StartsWith(label, StringComparison.OrdinalIgnoreCase)));
+    }
+
     private static void WaitForRevisionGridRender(RevisionGridControl revisionGrid, DataGridView grid)
     {
         System.Reflection.PropertyInfo updatingVisibleRowsProperty = grid.GetType().GetProperty(
@@ -448,6 +471,12 @@ internal static class ComponentFactory
         while (stableObservationCount < 3 && DateTime.UtcNow < renderDeadline)
         {
             Application.DoEvents();
+            if (grid.Columns[0].Visible && renderedWidth == 0)
+            {
+                grid.InvalidateColumn(0);
+                grid.Update();
+            }
+
             renderedWidth = (int)renderedWidthField.GetValue(graphProvider)!;
             bool updatingVisibleRows = (bool)updatingVisibleRowsProperty.GetValue(grid)!;
             bool rendered = IsRevisionGridRenderReady(

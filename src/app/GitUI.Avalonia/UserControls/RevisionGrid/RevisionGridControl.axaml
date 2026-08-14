@@ -162,8 +162,8 @@
         </ContextMenu>
       </ListBox.ContextMenu>
       <ListBox.Styles>
-        <!-- Rows must be exactly RowHeight tall: the graph renderer draws each row's lane
-             segment assuming adjacent rows abut, so any container padding breaks the lines. -->
+        <!-- Rows use the original font- and DPI-derived height: the graph renderer draws each
+             row's lane segment assuming adjacent rows abut, so container padding stays zero. -->
         <Style Selector="ListBoxItem">
           <Setter Property="Padding" Value="0" />
           <Setter Property="MinHeight" Value="0" />

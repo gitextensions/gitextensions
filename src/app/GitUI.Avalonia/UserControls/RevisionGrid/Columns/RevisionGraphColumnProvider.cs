@@ -81,8 +81,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         }
     }
 
-    internal bool DrawGraph(DrawingContext context, GitRevision revision)
-        => _grid.DrawGraphCell(context, revision, RevisionGraphDrawStyle);
+    internal bool DrawGraph(DrawingContext context, GitRevision revision, double rowHeight)
+        => _grid.DrawGraphCell(context, revision, RevisionGraphDrawStyle, rowHeight);
 
     internal string? GetLaneToolTip(GitRevision revision, double x)
     {
@@ -128,7 +128,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         {
             if (_revision is not null)
             {
-                _provider.DrawGraph(context, _revision);
+                _provider.DrawGraph(context, _revision, Bounds.Height);
             }
         }
 

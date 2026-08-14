@@ -289,7 +289,17 @@ internal sealed class ControlStateDriver : IDisposable
         {
             Point screenLocation = root.PointToScreen(
                 new Point(Math.Max(1, root.ClientSize.Width / 2), Math.Max(1, root.ClientSize.Height / 2)));
-            contextMenu.Show(screenLocation);
+            try
+            {
+                contextMenu.Show(screenLocation);
+            }
+            catch (ArgumentNullException ex) when (ex.ParamName == "revision")
+            {
+                contextMenu.Close();
+                throw new CaptureStateNotReadyException(
+                    $"The original revision-grid context menu observed a replaced selection while opening ({ex.Message}).");
+            }
+
             return contextMenu;
         }
     }

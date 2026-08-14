@@ -316,6 +316,9 @@ internal sealed class AvaloniaControlTreeReader
             },
             ClientSizePx = new CaptureSize { Width = ToPixel(bounds.Width), Height = ToPixel(bounds.Height) },
             ClientSizeDip = new CaptureSizeF { Width = ToDecimal(bounds.Width), Height = ToDecimal(bounds.Height) },
+            ItemHeightDip = isRevisionGridView
+                ? ReadRevisionGridItemHeight(control)
+                : null,
             Padding = ReadThicknessPair(GetPropertyValue(control, "Padding")),
             Margin = ReadThicknessPair(control.Margin),
             Font = ReadFont(control),
@@ -375,6 +378,12 @@ internal sealed class AvaloniaControlTreeReader
         // wrappers. Report their position in the emitted semantic parent, like ToolStripItem.Bounds.
         return new Rect(origin, control.Bounds.Size);
     }
+
+    private decimal? ReadRevisionGridItemHeight(Control control)
+        => control.GetVisualDescendants()
+            .OfType<ListBoxItem>()
+            .Select(item => (decimal?)ToDecimal(item.Bounds.Height))
+            .FirstOrDefault();
 
     private IReadOnlyList<string> GetFieldNames(object value) =>
         _fieldNames.TryGetValue(value, out List<string>? names)
