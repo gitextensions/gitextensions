@@ -32,8 +32,17 @@ internal sealed class AvaloniaControlTreeReader
             "primary",
             new PixelRect(0, 0, imageSize.Width, imageSize.Height));
 
-    public CaptureSurface ReadSurface(Control root, string role, PixelRect screenBounds) =>
-        new()
+    public CaptureSurface ReadSurface(Control root, string role, PixelRect screenBounds)
+    {
+        Control semanticRoot = GetSemanticSurfaceRoot(root);
+        Rect? rootBoundsOverride = IsPopupSurface(semanticRoot)
+            ? new Rect(
+                screenBounds.X / _renderScale,
+                screenBounds.Y / _renderScale,
+                screenBounds.Width / _renderScale,
+                screenBounds.Height / _renderScale)
+            : null;
+        return new CaptureSurface
         {
             Role = role,
             ScreenBoundsPx = new CaptureRectangle
@@ -44,11 +53,14 @@ internal sealed class AvaloniaControlTreeReader
                 Height = screenBounds.Height
             },
             Root = ReadControl(
-                GetSemanticSurfaceRoot(root),
+                semanticRoot,
                 parentId: string.Empty,
                 ordinal: 0,
-                ancestorSubmenusOpen: true)
+                ancestorSubmenusOpen: true,
+                semanticParent: null,
+                boundsOverride: rootBoundsOverride)
         };
+    }
 
     private Control GetSemanticSurfaceRoot(Control root)
     {
@@ -246,7 +258,13 @@ internal sealed class AvaloniaControlTreeReader
         }
     }
 
-    private CaptureNode ReadControl(Control control, string parentId, int ordinal, bool ancestorSubmenusOpen)
+    private CaptureNode ReadControl(
+        Control control,
+        string parentId,
+        int ordinal,
+        bool ancestorSubmenusOpen,
+        Control? semanticParent,
+        Rect? boundsOverride)
     {
         IReadOnlyList<string> fieldNames = GetFieldNames(control);
         bool isSurfaceRoot = string.IsNullOrEmpty(parentId);
@@ -261,11 +279,17 @@ internal sealed class AvaloniaControlTreeReader
             ? $"$root:{control.GetType().Name}"
             : fieldName ?? $"$unnamed[{ordinal}]:{control.GetType().Name}";
         string id = string.IsNullOrEmpty(parentId) ? segment : $"{parentId}/{segment}";
-        Rect bounds = control.Bounds;
+        Rect bounds = boundsOverride ?? GetSemanticBounds(control, semanticParent);
         bool childSubmenusOpen = ancestorSubmenusOpen
             && (control is not MenuItem menuItem || menuItem.IsSubMenuOpen);
         IReadOnlyList<CaptureNode> children = GetCaptureChildren(control)
-            .Select((child, childOrdinal) => ReadControl(child, id, childOrdinal, childSubmenusOpen))
+            .Select((child, childOrdinal) => ReadControl(
+                child,
+                id,
+                childOrdinal,
+                childSubmenusOpen,
+                control,
+                boundsOverride: null))
             .ToArray();
 
         return new CaptureNode
@@ -337,6 +361,19 @@ internal sealed class AvaloniaControlTreeReader
             Columns = ReadColumns(control),
             Children = children
         };
+    }
+
+    private static Rect GetSemanticBounds(Control control, Control? semanticParent)
+    {
+        if (semanticParent is null
+            || control.TranslatePoint(default, semanticParent) is not Point origin)
+        {
+            return control.Bounds;
+        }
+
+        // parity-scaffolding: Logical menu children are rendered below Fluent presenter
+        // wrappers. Report their position in the emitted semantic parent, like ToolStripItem.Bounds.
+        return new Rect(origin, control.Bounds.Size);
     }
 
     private IReadOnlyList<string> GetFieldNames(object value) =>
