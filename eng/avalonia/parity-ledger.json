@@ -33437,39 +33437,39 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
+          "commit": "3abb0be71f4a5e7e9ab293607f6a01fd35ffd30f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/inventory/GitUI.RevisionGridControl.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/inventory/GitUI.RevisionGridControl.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
-          "findingCount": 1082,
-          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture reader exposes the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Semantic popup roots now retain supplied screen bounds while logical children report positions in the emitted semantic parent, including skipped Fluent presenter wrappers. The Rebase-on parent remains visible for every regular revision and opening it applies the original enabled-state calculation to all three actions. The reference harness proves every compared popup was opened after repository HEAD selection and the original menu handlers settled. The broader exhaustive behavior audit remains open."
+          "findingCount": 1084,
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture reader exposes the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Semantic popup roots now retain supplied screen bounds while logical children report positions in the emitted semantic parent, including skipped Fluent presenter wrappers. The Rebase-on parent remains visible for every regular revision and opening it applies the original enabled-state calculation to all three actions. Row measurement now follows the original GDI+ line-spacing, one-eighth-em padding, physical-pixel truncation and DPI-scaled nine-pixel spacing from the resolved UI font. The reference harness proves every compared popup was opened after repository HEAD selection and the original menu handlers settled. The broader exhaustive behavior audit remains open."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
+          "commit": "3abb0be71f4a5e7e9ab293607f6a01fd35ffd30f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/remaining-classification.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/preview/previewability.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/preview/RevisionGridControl.png"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/remaining-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/preview/previewability.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/preview/RevisionGridControl-preview.png"
           ],
           "platforms": ["windows"],
           "findingCount": 207,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs use the identical external repository and join with 207 aggregate diagnostics, down 243 from the prior report. Every named popup row, separator, width, height and client metric is exact. Layout, color, font, text, control-identity, column, and state findings remain zero. The remaining 120 implicit framework margins, 24 padding representations, 12 absolute popup placements and 51 image findings are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs use the identical external repository and join with 207 aggregate diagnostics. The shared tree now proves the WinForms and Avalonia row item heights both resolve to 25.6 DIP, while average matrix SSIM improves from 0.2237 to 0.4475. Every named popup row, separator, width, height and client metric is exact. Layout, color, font, text, control-identity, column, and state findings remain zero. The remaining 120 implicit framework margins, 24 padding representations, 12 absolute popup placements and 51 image findings are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
+          "commit": "3abb0be71f4a5e7e9ab293607f6a01fd35ffd30f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
@@ -33478,12 +33478,12 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
+          "commit": "3abb0be71f4a5e7e9ab293607f6a01fd35ffd30f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/remaining-classification.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/remaining-classification.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
@@ -33492,12 +33492,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "e86abf9b169a917d8fa2a58d31649ff45e2067e2",
+          "commit": "3abb0be71f4a5e7e9ab293607f6a01fd35ffd30f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b9/accepted/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,

@@ -154,6 +154,8 @@ public sealed record CaptureNode
 
     public required CaptureSizeF ClientSizeDip { get; init; }
 
+    public decimal? ItemHeightDip { get; init; }
+
     public required CaptureThicknessPair Padding { get; init; }
 
     public required CaptureThicknessPair Margin { get; init; }

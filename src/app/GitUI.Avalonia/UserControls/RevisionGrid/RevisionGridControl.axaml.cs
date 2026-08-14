@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml.MarkupExtensions;
@@ -53,7 +54,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 {
     public static readonly string HotkeySettingsName = "RevisionGrid";
 
-    private const int RowHeight = 24;
+    private const int RowSpacing = 9;
     private const string ObjectIdPrefix = "????";
     private readonly CancellationTokenSequence _refreshSequence = new();
 
@@ -2439,7 +2440,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     internal bool DrawGraphCell(
         DrawingContext context,
         GitRevision revision,
-        RevisionGraphDrawStyle drawStyle)
+        RevisionGraphDrawStyle drawStyle,
+        double rowHeight)
     {
         if (_headId is not ObjectId headId
             || !_revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex))
@@ -2453,7 +2455,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                 _revisionGraph.Config,
                 context,
                 rowIndex,
-                RowHeight,
+                Math.Max(1, (int)Math.Round(rowHeight)),
                 _revisionGraph.GetSegmentsForRow,
                 drawStyle,
                 headId);
@@ -2471,6 +2473,41 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     // parity-scaffolding: exposes deterministic grid state to capture and behavior tests.
     internal TestAccessor GetTestAccessor() => new(this);
+
+    internal static double GetRowHeight(TemplatedControl control)
+    {
+        Typeface typeface = new(control.FontFamily, control.FontStyle, control.FontWeight);
+        if (!FontManager.Current.TryGetGlyphTypeface(typeface, out GlyphTypeface? glyphTypeface)
+            || glyphTypeface is null)
+        {
+            throw new InvalidOperationException($"The revision-grid font '{control.FontFamily}' could not be resolved.");
+        }
+
+        double renderScale = TopLevel.GetTopLevel(control)?.RenderScaling ?? 1;
+        FontMetrics metrics = glyphTypeface.Metrics;
+        return CalculateRowHeight(control.FontSize, metrics.LineSpacing, metrics.DesignEmHeight, renderScale);
+    }
+
+    internal static double CalculateRowHeight(
+        double fontSizeDip,
+        double lineSpacing,
+        double designEmHeight,
+        double renderScale)
+    {
+        if (fontSizeDip <= 0 || lineSpacing <= 0 || designEmHeight <= 0 || renderScale <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(fontSizeDip));
+        }
+
+        // Avalonia exposes the font metrics directly. GDI+ MeasureString adds one eighth
+        // of an em to the font line spacing, then the original truncates that physical-pixel
+        // height and adds DpiUtil.Scale(9).
+        const double measureStringPaddingEm = 0.125;
+        double measuredTextHeightDip = fontSizeDip * ((lineSpacing / designEmHeight) + measureStringPaddingEm);
+        int measuredTextHeightPx = (int)(measuredTextHeightDip * renderScale);
+        int spacingPx = (int)Math.Round(RowSpacing * renderScale);
+        return (measuredTextHeightPx + spacingPx) / renderScale;
+    }
 
     internal readonly struct TestAccessor(RevisionGridControl control)
     {
@@ -2645,7 +2682,6 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         public RevisionRowControl(RevisionGridControl owner)
         {
             _owner = owner;
-            Height = RowHeight;
             Classes.Add("revision-row");
             AttachedToVisualTree += (_, _) => UpdateColorClasses();
 
@@ -2665,6 +2701,12 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             }
 
             ApplyColumnLayout();
+        }
+
+        protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
+        {
+            Avalonia.Size measured = base.MeasureOverride(availableSize);
+            return new Avalonia.Size(measured.Width, GetRowHeight(_owner));
         }
 
         protected override void OnDataContextChanged(EventArgs e)
