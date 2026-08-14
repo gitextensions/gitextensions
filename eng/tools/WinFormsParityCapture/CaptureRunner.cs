@@ -316,8 +316,7 @@ internal static class CaptureRunner
         try
         {
             bootstrap.ThrowIfThreadException();
-            ComponentFactory.PrepareCaptureState(root, bootstrap.Commands);
-            using ControlStateDriver driver = ControlStateDriver.Apply(root, state);
+            using ControlStateDriver driver = ApplyVerifiedCaptureState(root, bootstrap.Commands, state);
             bootstrap.ThrowIfThreadException();
             using CaptureImageResult image = ImageCapture.Capture(root, driver.Popups);
             string relativeDirectory = Path.Combine(Sanitize(componentType), Sanitize(theme.Id), scale.ToString(CultureInfo.InvariantCulture));
@@ -408,6 +407,39 @@ internal static class CaptureRunner
                 TreeFile = null
             };
         }
+    }
+
+    // parity-scaffolding: The original revision grid can publish a new selection between
+    // preparation and popup opening; retry only that detected race, never an unsupported state.
+    private static ControlStateDriver ApplyVerifiedCaptureState(
+        Control root,
+        IGitUICommands commands,
+        CaptureStatePlan state)
+    {
+        const int maximumAttempts = 3;
+        CaptureStateNotReadyException? lastException = null;
+        for (int attempt = 1; attempt <= maximumAttempts; attempt++)
+        {
+            ComponentFactory.PrepareCaptureState(root, commands);
+            ControlStateDriver driver = ControlStateDriver.Apply(root, state);
+            try
+            {
+                ComponentFactory.VerifyCaptureState(root, commands, state);
+                return driver;
+            }
+            catch (CaptureStateNotReadyException ex)
+            {
+                driver.Dispose();
+                lastException = ex;
+            }
+            catch
+            {
+                driver.Dispose();
+                throw;
+            }
+        }
+
+        throw lastException!;
     }
 
     private static void CopyRuntime(string sourceRoot, string destinationRoot)

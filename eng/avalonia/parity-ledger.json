@@ -33438,36 +33438,36 @@
           "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/inventory/GitUI.RevisionGridControl.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1081,
-          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture reader now exposes the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. The broader exhaustive behavior audit remains open."
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture reader exposes the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. The reference harness now proves every compared popup was opened after repository HEAD selection and the original menu handlers settled. The broader exhaustive behavior audit remains open."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
           "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/remaining-classification.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/remaining-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/avalonia/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/preview/previewability.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/preview/RevisionGridControl.isolated.png"
           ],
           "platforms": ["windows"],
-          "findingCount": 492,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs use the identical external repository and join with 492 aggregate diagnostics, 810 fewer than the predecessor. The capture model now records WinForms-equivalent grid/popup layout and inherited state semantics, includes the real copy-popup item tree, and measures geometry only while controls are rendered. Layout, color, font, text, control-identity, and column findings are zero. The remaining geometry/state/image findings, including copy-message readiness, are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
+          "findingCount": 453,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs use the identical external repository and join with 453 aggregate diagnostics, 39 fewer than the predecessor. The reference harness rejects or retries selection and popup-readiness races, eliminating stale custom-theme menu state and the missing copy-message item. Layout, color, font, text, control-identity, and column findings are zero. The remaining 390 geometry, 51 image, and 12 genuine Rebase/separator state findings are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
           "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
@@ -33478,14 +33478,14 @@
           "verifiedOn": "2026-08-14",
           "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/remaining-classification.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b7/accepted/remaining-classification.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 51,
-          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus and copy-menu selection states across light/dark/custom. The report retains 51 classified menu visibility/enabled diagnostics and the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
+          "findingCount": 12,
+          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus and copy-menu selection states across light/dark/custom. Stable reference selection and popup-readiness checks close 39 stale-reference diagnostics, including the missing copy-message item. The report retains 12 genuine cross-theme Rebase/separator visibility/enabled diagnostics and the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
         },
         "platform": {
           "status": "partial",
