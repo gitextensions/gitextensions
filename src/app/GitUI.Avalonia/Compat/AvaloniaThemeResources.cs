@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -129,6 +129,8 @@ internal static class AvaloniaThemeResources
         DrawingColor controlText = ResolveSystemColor(settings, KnownColor.ControlText);
         DrawingColor controlDark = ResolveSystemColor(settings, KnownColor.ControlDark);
         DrawingColor controlLight = ResolveSystemColor(settings, KnownColor.ControlLight);
+        DrawingColor menu = ResolveSystemColor(settings, KnownColor.Menu);
+        DrawingColor menuText = ResolveSystemColor(settings, KnownColor.MenuText);
         DrawingColor commitEditorBackground = isDark ? controlLight : window;
         DrawingColor highlight = ResolveSystemColor(settings, KnownColor.Highlight);
         DrawingColor highlightText = ResolveSystemColor(settings, KnownColor.HighlightText);
@@ -213,6 +215,8 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsControlBorderBrush", controlDark);
         SetBrush(resources, "GitExtensionsControlPointerOverBackgroundBrush", controlLight);
         SetBrush(resources, "GitExtensionsControlPressedBackgroundBrush", controlDark);
+        SetBrush(resources, "GitExtensionsMenuBackgroundBrush", menu);
+        SetBrush(resources, "GitExtensionsMenuForegroundBrush", menuText);
         SetBrush(resources, "GitExtensionsDisabledForegroundBrush", grayText);
         SetBrush(resources, "GitExtensionsHighlightBackgroundBrush", highlight);
         SetBrush(resources, "GitExtensionsHighlightForegroundBrush", highlightText);

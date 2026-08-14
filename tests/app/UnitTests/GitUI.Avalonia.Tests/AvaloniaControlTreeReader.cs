@@ -6,6 +6,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.UserControls.RevisionGrid.Columns;
@@ -42,8 +43,22 @@ internal sealed class AvaloniaControlTreeReader
                 Width = screenBounds.Width,
                 Height = screenBounds.Height
             },
-            Root = ReadControl(root, parentId: string.Empty, ordinal: 0)
+            Root = ReadControl(GetSemanticSurfaceRoot(root), parentId: string.Empty, ordinal: 0)
         };
+
+    private Control GetSemanticSurfaceRoot(Control root)
+    {
+        if (root.GetType().Name != "OverlayPopupHost")
+        {
+            return root;
+        }
+
+        // parity-scaffolding: Avalonia's in-frame popup host is rendering infrastructure;
+        // emit the product ContextMenu as the same semantic surface root as ContextMenuStrip.
+        return root.GetLogicalDescendants().OfType<ContextMenu>().SingleOrDefault()
+               ?? root.GetVisualDescendants().OfType<Control>().FirstOrDefault(IsPopupPresenter)
+               ?? root;
+    }
 
     private static string? BrushToArgb(object? value)
     {
@@ -92,7 +107,10 @@ internal sealed class AvaloniaControlTreeReader
             TextBox => "text",
             ComboBox => "comboBox",
             TreeView => "tree",
+            ListBox { Name: "_gridView" } when control.GetLogicalAncestors().OfType<RevisionGridControl>().Any() => "dataGrid",
             ListBox => "list",
+            ContextMenu => "popup",
+            _ when IsPopupPresenter(control) => "popup",
             Menu => "menu",
             MenuItem => "menuItem",
             Separator => "menuItem",
@@ -120,7 +138,7 @@ internal sealed class AvaloniaControlTreeReader
 
     private static string? GetText(Control control)
     {
-        if (control.GetType().Name == "OverlayPopupHost")
+        if (IsOverlayPopupHost(control) || control is ContextMenu || IsPopupPresenter(control))
         {
             return null;
         }
@@ -212,7 +230,10 @@ internal sealed class AvaloniaControlTreeReader
     private static IEnumerable<Control> EnumerateLogicalControls(Control root)
     {
         yield return root;
-        foreach (Control child in GetCaptureChildren(root))
+        foreach (Control child in root.GetLogicalChildren()
+                     .OfType<Control>()
+                     .Where(child => child.TemplatedParent is null
+                                     && child.GetType().Name != "TopLevelHost"))
         {
             foreach (Control descendant in EnumerateLogicalControls(child))
             {
@@ -224,11 +245,12 @@ internal sealed class AvaloniaControlTreeReader
     private CaptureNode ReadControl(Control control, string parentId, int ordinal)
     {
         IReadOnlyList<string> fieldNames = GetFieldNames(control);
-        string? fieldName = ReferenceEquals(control, _root)
+        bool isSurfaceRoot = string.IsNullOrEmpty(parentId);
+        string? fieldName = isSurfaceRoot
             ? null
             : fieldNames.FirstOrDefault()
-              ?? (string.IsNullOrEmpty(control.Name) ? null : control.Name);
-        string segment = ReferenceEquals(control, _root)
+              ?? (control is MenuItem or Separator || string.IsNullOrEmpty(control.Name) ? null : control.Name);
+        string segment = isSurfaceRoot
             ? $"$root:{control.GetType().Name}"
             : fieldName ?? $"$unnamed[{ordinal}]:{control.GetType().Name}";
         string id = string.IsNullOrEmpty(parentId) ? segment : $"{parentId}/{segment}";
@@ -271,17 +293,17 @@ internal sealed class AvaloniaControlTreeReader
             CornerRadiusDip = ReadCornerRadius(control),
             Anchor = [],
             Dock = null,
-            AutoSize = null,
-            Alignment = GetAlignment(control),
+            AutoSize = control is MenuItem or Separator ? true : null,
+            Alignment = control is MenuItem or Separator ? "MiddleCenter" : GetAlignment(control),
             Text = GetText(control),
             ToolTip = ToolTip.GetTip(control)?.ToString(),
             TranslationSource = fieldName,
-            TabIndex = KeyboardNavigation.GetTabIndex(control),
-            TabStop = control.Focusable,
+            TabIndex = control is MenuItem or Separator ? null : KeyboardNavigation.GetTabIndex(control),
+            TabStop = control is MenuItem or Separator ? null : control.Focusable,
             Enabled = control is Separator ? false : control.IsEnabled,
             Visible = IsMenuItemVisible(control),
-            Focused = control.IsFocused,
-            ReadOnly = GetNullableBoolProperty(control, "IsReadOnly"),
+            Focused = IsRevisionGridView(control) ? control.IsKeyboardFocusWithin : control.IsFocused,
+            ReadOnly = IsRevisionGridView(control) ? true : GetNullableBoolProperty(control, "IsReadOnly"),
             CheckState = control is ToggleButton toggle
                          && (control is CheckBox || control is RadioButton || control is MenuItem)
                 ? toggle.IsChecked switch
@@ -310,6 +332,38 @@ internal sealed class AvaloniaControlTreeReader
 
     private static IEnumerable<Control> GetCaptureChildren(Control control)
     {
+        if (control is RevisionGridControl)
+        {
+            // parity-scaffolding: The Avalonia twin uses layout/recycling controls around its
+            // native ListBox; the WinForms tree exposes only the semantic grid at this level.
+            return control.GetLogicalDescendants().OfType<ListBox>().Where(IsRevisionGridView).Take(1);
+        }
+
+        if (control is MenuItem menuItem)
+        {
+            // parity-scaffolding: Items are the semantic ToolStripDropDownItems; AccessText,
+            // icon presenters, and other template children are renderer implementation details.
+            return menuItem.Items.OfType<Control>();
+        }
+
+        if (control is Separator)
+        {
+            return [];
+        }
+
+        if (IsPopupPresenter(control))
+        {
+            return control.GetVisualDescendants()
+                .OfType<Control>()
+                .Where(child => child is MenuItem or Separator)
+                .Where(child => !child.GetVisualAncestors().TakeWhile(ancestor => !ReferenceEquals(ancestor, control)).OfType<MenuItem>().Any());
+        }
+
+        if (IsRevisionGridView(control))
+        {
+            return [];
+        }
+
         if (control is Button or TextBox or ComboBox)
         {
             return [];
@@ -347,6 +401,100 @@ internal sealed class AvaloniaControlTreeReader
             AddSemantic("semantic.app.reset.soft.background", "GitExtensionsResetSoftBackgroundBrush");
             AddSemantic("semantic.app.reset.mixed.background", "GitExtensionsResetMixedBackgroundBrush");
             AddSemantic("semantic.app.reset.hard.background", "GitExtensionsResetHardBackgroundBrush");
+        }
+
+        if (control is MenuItem or Separator)
+        {
+            string? foreground = control is Separator
+                ? BrushToArgb(GetPropertyValue(control, "Foreground"))
+                : ResolveResourceArgb("GitExtensionsControlForegroundBrush")
+                  ?? BrushToArgb(GetPropertyValue(control, "Foreground"));
+            string? background = ResolveResourceArgb("GitExtensionsControlBackgroundBrush")
+                                 ?? BrushToArgb(GetPropertyValue(control, "Background"));
+            return new CaptureColors
+            {
+                Foreground = foreground,
+                Background = background,
+                Border = BrushToArgb(GetPropertyValue(control, "BorderBrush")),
+                SelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush")
+                                      ?? ResolveResourceArgb("GitExtensionsHighlightForegroundBrush"),
+                SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush")
+                                      ?? ResolveResourceArgb("GitExtensionsHighlightBackgroundBrush"),
+                InactiveSelectionForeground = ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
+                                              ?? ResolveResourceArgb("GitExtensionsWindowTextBrush"),
+                InactiveSelectionBackground = ResolveResourceArgb("GitExtensionsMenuBackgroundBrush")
+                                              ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush"),
+                DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                                     ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+                DisabledBackground = background,
+                GridLine = null,
+                Additional = additional
+            };
+        }
+
+        if (IsRevisionGridView(control))
+        {
+            string? background = BrushToArgb(GetPropertyValue(control, "Background"));
+            return new CaptureColors
+            {
+                Foreground = BrushToArgb(GetPropertyValue(control, "Foreground")),
+                Background = background,
+                Border = background,
+                SelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush")
+                                      ?? ResolveResourceArgb("GitExtensionsHighlightForegroundBrush"),
+                SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorGradientActiveCaptionBrush")
+                                      ?? ResolveResourceArgb("GitExtensionsHighlightBackgroundBrush"),
+                InactiveSelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush")
+                                              ?? ResolveResourceArgb("GitExtensionsHighlightForegroundBrush"),
+                InactiveSelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorInactiveCaptionBrush")
+                                              ?? ResolveResourceArgb("GitExtensionsSystemInactiveSelectionBackgroundBrush"),
+                DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                                     ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+                DisabledBackground = background,
+                GridLine = ResolveResourceArgb("GitExtensionsKnownColorWindowBrush")
+                           ?? ResolveResourceArgb("GitExtensionsWindowBackgroundBrush"),
+                Additional = additional
+            };
+        }
+
+        if (control is ContextMenu || IsPopupPresenter(control) || IsOverlayPopupHost(control))
+        {
+            string? background = BrushToArgb(GetPropertyValue(control, "Background"))
+                                 ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
+            return new CaptureColors
+            {
+                Foreground = BrushToArgb(GetPropertyValue(control, "Foreground"))
+                             ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
+                Background = background,
+                Border = null,
+                SelectionForeground = null,
+                SelectionBackground = null,
+                InactiveSelectionForeground = null,
+                InactiveSelectionBackground = null,
+                DisabledForeground = ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+                DisabledBackground = background,
+                GridLine = null,
+                Additional = additional
+            };
+        }
+
+        if (ReferenceEquals(control, _root) && control is RevisionGridControl)
+        {
+            string? background = BrushToArgb(GetPropertyValue(control, "Background"));
+            return new CaptureColors
+            {
+                Foreground = BrushToArgb(GetPropertyValue(control, "Foreground")),
+                Background = background,
+                Border = null,
+                SelectionForeground = null,
+                SelectionBackground = null,
+                InactiveSelectionForeground = null,
+                InactiveSelectionBackground = null,
+                DisabledForeground = ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+                DisabledBackground = background,
+                GridLine = null,
+                Additional = additional
+            };
         }
 
         return new CaptureColors
@@ -390,6 +538,25 @@ internal sealed class AvaloniaControlTreeReader
 
     private CaptureFont? ReadFont(Control control)
     {
+        if (IsOverlayPopupHost(control)
+            && _root.TryFindResource("GitExtensionsUiFontFamily", _root.ActualThemeVariant, out object? familyResource)
+            && familyResource is FontFamily menuFamily
+            && _root.TryFindResource("GitExtensionsUiFontSize", _root.ActualThemeVariant, out object? sizeResource)
+            && sizeResource is double menuSizeDip)
+        {
+            // parity-scaffolding: The private host inherits Fluent's application font, while
+            // the menu it visibly renders uses Git Extensions' resolved UI font and size.
+            return new CaptureFont
+            {
+                Family = menuFamily.Name,
+                EmSize = ToDecimal(menuSizeDip),
+                Unit = "Dip",
+                SizePoints = ToDecimal(menuSizeDip * 72 / 96),
+                SizeDip = ToDecimal(menuSizeDip),
+                Style = ["Regular"]
+            };
+        }
+
         if (GetPropertyValue(control, "FontFamily") is not FontFamily family
             || GetPropertyValue(control, "FontSize") is not double sizeDip)
         {
@@ -454,12 +621,18 @@ internal sealed class AvaloniaControlTreeReader
             return null;
         }
 
-        return ToDecimal(Math.Max(Math.Max(thickness.Left, thickness.Top), Math.Max(thickness.Right, thickness.Bottom)));
+        double width = Math.Max(Math.Max(thickness.Left, thickness.Top), Math.Max(thickness.Right, thickness.Bottom));
+        return width == 0 ? null : ToDecimal(width);
     }
 
     private CaptureCornerRadius? ReadCornerRadius(Control control)
     {
         if (GetPropertyValue(control, "CornerRadius") is not CornerRadius radius)
+        {
+            return null;
+        }
+
+        if (radius.TopLeft == 0 && radius.TopRight == 0 && radius.BottomRight == 0 && radius.BottomLeft == 0)
         {
             return null;
         }
@@ -569,6 +742,16 @@ internal sealed class AvaloniaControlTreeReader
         => _root.TryFindResource(key, _root.ActualThemeVariant, out object? resource)
             ? BrushToArgb(resource)
             : null;
+
+    private static bool IsRevisionGridView(Control control) =>
+        control is ListBox { Name: "_gridView" }
+        && control.GetLogicalAncestors().OfType<RevisionGridControl>().Any();
+
+    private static bool IsPopupPresenter(Control control) =>
+        control.GetType().Name == "MenuFlyoutPresenter";
+
+    private static bool IsOverlayPopupHost(Control control) =>
+        control.GetType().Name == "OverlayPopupHost";
 
     private decimal ToDecimal(double value) => decimal.Round((decimal)value, 4);
 

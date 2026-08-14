@@ -33423,80 +33423,83 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-14",
+          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b/final/inventory-classification.json"
           ],
           "platforms": [],
-          "findingCount": 485,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 152,
+          "note": "All 152 current MessageColumnProvider and RevisionGridRefRenderer source findings are individually classified as retained framework-representation gaps: the product behavior is native Avalonia, but the GDI/DataGridView painter members and comments cannot be copied without reintroducing the prohibited Windows boundary. This does not claim structural parity."
         },
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/inventory/GitUI.RevisionGridControl.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1081,
-          "note": "The grid now publishes the final scored RevisionGraph order instead of observable arrival order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The fresh inventory retains 1,081 source-shape findings; broader renderer/menu and exhaustive behavior debt remains open."
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture reader now exposes the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. The broader exhaustive behavior audit remains open."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/remaining-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/preview/previewability.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/preview/RevisionGridControl.isolated.png"
           ],
           "platforms": ["windows"],
-          "findingCount": 4159,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined with 4,159 aggregate diagnostics, 109 fewer than the predecessor. The reference now waits for the real graph renderer; final row order, graph/fill/avatar widths, copy-row layout, disabled delete entry, and active selection behind the context menu match, leaving zero column findings. The official VS Code preview renders RevisionGridControl. Native 100/150/200 DPI and exhaustive live states remain open."
+          "findingCount": 1302,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined with 1,302 aggregate diagnostics, 2,857 fewer than the predecessor. Exact control/menu colors, measured popup width, and semantic tree normalization leave zero color, font, text, control-identity, and column findings. Windows and Linux design-mode construction pass; the prior official Show Preview screenshot remains valid, but the official pane was not reopened because isolated VS Code command routing attempted to reuse an unrelated window and automation stopped before sending shortcuts. All remaining geometry/layout/state/image findings are classified retained debt; native 100/150/200 DPI and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 1345,
-          "note": "The light/dark/custom matrix now retains the active highlight and selected-subject colors while the context menu owns focus. The report retains 1,345 exact color diagnostics; exhaustive configurable-color and live theme states remain open."
+          "findingCount": 0,
+          "note": "The light/dark/custom matrix resolves the grid, selection, disabled, inactive, menu and separator roles to the same ARGB values, with zero color diagnostics. Exhaustive configurable-color and live theme states remain open, so this axis stays partial."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/remaining-classification.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 81,
-          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, disabled, context-menu and copy-menu selection states across light/dark/custom. The report retains 81 state diagnostics and the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
+          "findingCount": 63,
+          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, disabled, context-menu and copy-menu selection states across light/dark/custom. The report retains 63 classified state diagnostics and the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
-          "commit": "bfdba49141593d905eb007a6a7d04d659cd1cb0f",
+          "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host. Native DPI beyond 125%, exhaustive component states and macOS remain open."
+          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. Native DPI beyond 125%, exhaustive component states and macOS remain open."
         }
       }
     },
