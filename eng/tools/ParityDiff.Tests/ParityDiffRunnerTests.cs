@@ -55,6 +55,27 @@ public sealed class ParityDiffRunnerTests
     }
 
     [Test]
+    public void Run_should_compare_resolved_item_height_as_geometry()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = ChangeTarget(
+            fixture.CreateDocument("light"),
+            node => node with { ItemHeightDip = 25.6m });
+        CaptureDocument candidate = ChangeTarget(
+            reference,
+            node => node with { ItemHeightDip = 24m });
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityFinding finding = fixture.Run().Captures.Should().ContainSingle()
+            .Which.Findings.Should().ContainSingle().Subject;
+
+        finding.Code.Should().Be("geometry.itemHeightDip");
+        finding.Delta.Should().Be("1.6");
+        finding.Tolerance.Should().Be("0.5");
+    }
+
+    [Test]
     public void Run_should_not_compare_geometry_until_both_controls_are_visible()
     {
         using ParityDiffFixture fixture = new();

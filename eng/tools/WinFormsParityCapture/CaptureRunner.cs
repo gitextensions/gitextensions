@@ -421,20 +421,21 @@ internal static class CaptureRunner
         for (int attempt = 1; attempt <= maximumAttempts; attempt++)
         {
             ComponentFactory.PrepareCaptureState(root, commands);
-            ControlStateDriver driver = ControlStateDriver.Apply(root, state);
+            ControlStateDriver? driver = null;
             try
             {
+                driver = ControlStateDriver.Apply(root, state);
                 ComponentFactory.VerifyCaptureState(root, commands, state);
                 return driver;
             }
             catch (CaptureStateNotReadyException ex)
             {
-                driver.Dispose();
+                driver?.Dispose();
                 lastException = ex;
             }
             catch
             {
-                driver.Dispose();
+                driver?.Dispose();
                 throw;
             }
         }

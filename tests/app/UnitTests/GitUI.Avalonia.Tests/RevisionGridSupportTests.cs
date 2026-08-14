@@ -30,6 +30,24 @@ public sealed class RevisionGridSupportTests
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
     }
 
+    [TestCase(1d, 26d)]
+    [TestCase(1.25d, 25.6d)]
+    [TestCase(1.5d, 26.666666666666668d)]
+    [TestCase(2d, 26d)]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void Revision_grid_row_height_should_preserve_original_GDI_pixel_rounding(
+        double renderScale,
+        double expectedHeightDip)
+    {
+        double actual = RevisionGridControl.CalculateRowHeight(
+            fontSizeDip: 12,
+            lineSpacing: 2724,
+            designEmHeight: 2048,
+            renderScale);
+
+        actual.Should().BeApproximately(expectedHeightDip, 0.0001);
+    }
+
     [AvaloniaTest]
     public void Empty_repository_control_should_preserve_actions_and_bare_repository_state()
     {

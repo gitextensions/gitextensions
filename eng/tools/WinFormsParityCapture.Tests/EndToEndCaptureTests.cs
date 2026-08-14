@@ -191,6 +191,26 @@ public sealed class EndToEndCaptureTests
             commitVisible).Should().Be(expected);
     }
 
+    [Test]
+    public void Revision_grid_capture_should_require_complete_copy_metadata()
+    {
+        string[] complete = ["&Message: subject", "&Author: User", "&Date: today"];
+        string[] missingDate = ["&Message: subject", "&Author: User"];
+
+        ComponentFactory.IsRevisionGridCopyMenuReady(
+            complete,
+            requiredLabels: ["Message", "Author"],
+            dateLabels: ["Date", "Author date", "Commit date"]).Should().BeTrue();
+        ComponentFactory.IsRevisionGridCopyMenuReady(
+            missingDate,
+            requiredLabels: ["Message", "Author"],
+            dateLabels: ["Date", "Author date", "Commit date"]).Should().BeFalse();
+        ComponentFactory.IsRevisionGridCopyMenuReady(
+            ["&Message: subject", "&Date: today"],
+            requiredLabels: ["Message", "Author"],
+            dateLabels: ["Date", "Author date", "Commit date"]).Should().BeFalse();
+    }
+
     private sealed class CancelingContextMenuForm : Form
     {
         private readonly ContextMenuStrip _menuMain = new() { Name = "menuMain" };
