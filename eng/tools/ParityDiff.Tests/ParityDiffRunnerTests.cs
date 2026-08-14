@@ -55,6 +55,29 @@ public sealed class ParityDiffRunnerTests
     }
 
     [Test]
+    public void Run_should_not_compare_geometry_until_both_controls_are_visible()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = ChangeTarget(
+            fixture.CreateDocument("light"),
+            node => node with { Visible = false });
+        CaptureDocument candidate = ChangeTarget(
+            reference,
+            node => node with
+            {
+                BoundsDip = node.BoundsDip with { Width = node.BoundsDip.Width + 20 },
+                ClientSizeDip = node.ClientSizeDip with { Width = node.ClientSizeDip.Width + 20 }
+            });
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityDiffResult result = fixture.Run();
+
+        result.Captures.Should().ContainSingle().Which.Findings.Should().BeEmpty(
+            "hidden controls have no rendered geometry to compare until an opened state realizes them");
+    }
+
+    [Test]
     public void Run_should_join_framework_specific_columns_by_index()
     {
         using ParityDiffFixture fixture = new();
