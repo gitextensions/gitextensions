@@ -186,6 +186,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         applyStashToolStripMenuItem.Click += ApplyStashToolStripMenuItemClick;
         popStashToolStripMenuItem.Click += PopStashToolStripMenuItemClick;
         dropStashToolStripMenuItem.Click += DropStashToolStripMenuItemClick;
+        rebaseOnToolStripMenuItem.SubmenuOpened += RebaseOnToolStripMenuItem_DropDownOpening;
         rebaseToolStripMenuItem.Click += RebaseToolStripMenuItemClick;
         rebaseInteractivelyToolStripMenuItem.Click += RebaseInteractivelyToolStripMenuItemClick;
         rebaseWithAdvOptionsToolStripMenuItem.Click += RebaseWithAdvOptionsToolStripMenuItemClick;
@@ -920,7 +921,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         SetVisible(checkoutBranchToolStripMenuItem, checkoutBranchToolStripMenuItem.Items.Count > 0);
         SetVisible(tsmiPushBranch, tsmiPushBranch.Items.Count > 0);
         SetVisible(mergeBranchToolStripMenuItem, mergeBranchToolStripMenuItem.Items.Count > 0);
-        SetVisible(rebaseOnToolStripMenuItem, regularRevision && _rebaseOnTopOf is not null);
+        SetVisible(rebaseOnToolStripMenuItem, regularRevision);
         SetVisible(resetCurrentBranchToHereToolStripMenuItem, regularRevision);
         SetVisible(tsmiSelectInLeftPanel, regularRevision && SelectInLeftPanel is not null && tsmiSelectInLeftPanel.Tag is string);
         SetVisible(resetChangesToolStripMenuItem, revision is { IsArtificial: true } && hasCommands && !isBareRepository);
@@ -1402,6 +1403,17 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
         UICommands.StashDrop(GetOwner(), stashName);
         ReloadCurrentView();
+    }
+
+    private void RebaseOnToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
+        rebaseToolStripMenuItem.IsEnabled
+            = rebaseInteractivelyToolStripMenuItem.IsEnabled
+            = _rebaseOnTopOf is not null && selectedRevisions.Count == 1;
+        rebaseWithAdvOptionsToolStripMenuItem.IsEnabled = _rebaseOnTopOf is not null
+            && (selectedRevisions.Count == 1
+                || (selectedRevisions.Count == 2 && selectedRevisions.All(r => !r.IsArtificial)));
     }
 
     private void RebaseToolStripMenuItemClick(object? sender, EventArgs e)

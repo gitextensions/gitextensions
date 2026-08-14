@@ -215,6 +215,44 @@ public sealed partial class ParityScreenshotTests
     [AvaloniaTest]
     [Category(P02Category)]
     [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void Avalonia_tree_reader_should_emit_closed_submenu_separator_as_not_visible()
+    {
+        Window window = new() { Width = 320, Height = 160 };
+        Separator separator = new() { Name = "sepChild" };
+        MenuItem parent = new()
+        {
+            Name = "mnuParent",
+            Header = "Parent",
+            ItemsSource = new Control[]
+            {
+                new MenuItem { Name = "mnuChild", Header = "Child" },
+                separator
+            }
+        };
+        ContextMenu menu = new() { ItemsSource = new[] { parent } };
+        Button owner = new() { Content = "Owner", ContextMenu = menu };
+        window.Content = owner;
+        window.Show();
+        menu.Open(owner);
+        Dispatcher.UIThread.RunJobs();
+
+        Control overlayHost = window.GetVisualDescendants().OfType<Control>()
+            .Single(control => control.GetType().Name == "OverlayPopupHost");
+        CaptureNode[] nodes = Flatten(new AvaloniaControlTreeReader(window, renderScale: 1)
+                .ReadSurface(overlayHost, "popup:0", new PixelRect(0, 0, 320, 160))
+                .Root)
+            .ToArray();
+
+        nodes.Single(node => node.Name == "mnuParent").Visible.Should().BeTrue();
+        nodes.Single(node => node.Name == "mnuChild").Visible.Should().BeFalse();
+        nodes.Single(node => node.Name == "sepChild").Visible.Should().BeFalse();
+        menu.Close();
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
     public void Avalonia_tree_reader_should_emit_revision_grid_layout_and_effective_state_semantics()
     {
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
