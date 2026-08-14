@@ -346,6 +346,40 @@ public sealed partial class ParityScreenshotTests
         unsupportedWindow.Close();
     }
 
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.4")]
+    public void Avalonia_state_driver_should_preserve_selection_when_focus_is_already_within_the_target()
+    {
+        Window window = new() { Width = 240, Height = 120 };
+        ListBox target = new()
+        {
+            Name = "target",
+            ItemsSource = new[] { "first", "selected", "last" },
+            SelectedIndex = 1
+        };
+        window.Content = target;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        Control selectedContainer = target.ContainerFromIndex(1)
+            ?? throw new InvalidOperationException("The selected item container was not materialized.");
+        selectedContainer.Focus();
+        Dispatcher.UIThread.RunJobs();
+
+        using (AvaloniaControlStateDriver.Apply(
+                   window,
+                   new CaptureStatePlan
+                   {
+                       Id = "focused",
+                       Kind = CaptureStateKind.Focus,
+                       TargetField = "target"
+                   }))
+        {
+            target.SelectedIndex.Should().Be(1);
+        }
+
+        window.Close();
+    }
+
     [Test]
     [Category(P02Category)]
     public void Avalonia_unsupported_manifest_entries_should_not_claim_capture_artifacts()
@@ -573,7 +607,18 @@ public sealed partial class ParityScreenshotTests
             ApplyTextValues(view, component);
             if (view is RevisionGridControl revisionGrid)
             {
-                // parity-scaffolding: Both capture frameworks must drive menus and row states from HEAD, not an async-loader-dependent row.
+                using (AvaloniaControlStateDriver.Apply(
+                           view,
+                           new CaptureStatePlan
+                           {
+                               Id = "revision-grid.initial-focus",
+                               Kind = CaptureStateKind.Focus,
+                               TargetField = "_gridView",
+                           }))
+                {
+                }
+
+                // parity-scaffolding: Both capture frameworks must drive menus and row states from HEAD, not the row used to establish focus.
                 revisionGrid.SetSelectedRevision(context.HeadRevision.ObjectId).Should().BeTrue();
             }
 

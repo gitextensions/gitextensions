@@ -381,6 +381,59 @@ public sealed class FormBrowseTests
 
     [AvaloniaTest]
     [NonParallelizable]
+    [Category("P8.6h.3b.2b.2b.2b.4")]
+    public async Task Revision_grid_should_publish_the_final_graph_order_with_stash_and_artificial_rows()
+    {
+        bool originalShowStashes = AppSettings.ShowStashes;
+        bool originalShowArtificial = AppSettings.RevisionGraphShowArtificialCommits;
+        FormBrowse? form = null;
+        try
+        {
+            AppSettings.ShowStashes = true;
+            AppSettings.RevisionGraphShowArtificialCommits = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
+            ObjectId head = module.GetCurrentCheckout();
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "stashed");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("stash") { "push", "-m", "row order".Quote() });
+            ObjectId stash = module.RevParse("refs/stash");
+            ObjectId stashIndex = module.RevParse("refs/stash^2");
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "working");
+
+            form = new FormBrowse(new GitUICommands(_serviceContainer, module));
+            form.Show();
+            RevisionGridControl revisionGrid = form.RevisionGrid;
+            TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+            await WaitUntilAsync(() => loadingStatus.Text == "6 revisions");
+
+            revisionGrid.GetTestAccessor().Revisions.Items
+                .Cast<GitRevision>()
+                .Select(revision => revision.ObjectId)
+                .Should().Equal(stash, ObjectId.WorkTreeId, ObjectId.IndexId, stashIndex, head, module.RevParse("HEAD~1"));
+
+            revisionGrid.SetSelectedRevision(head).Should().BeTrue();
+            ContextMenu contextMenu = revisionGrid.FindControl<ContextMenu>("mainContextMenu")
+                ?? throw new InvalidOperationException("Revision context menu was not created.");
+            MenuItem deleteBranch = revisionGrid.FindControl<MenuItem>("deleteBranchToolStripMenuItem")
+                ?? throw new InvalidOperationException("Delete-branch menu item was not created.");
+            contextMenu.Open(revisionGrid.GetTestAccessor().Revisions);
+            Dispatcher.UIThread.RunJobs();
+            deleteBranch.IsVisible.Should().BeTrue();
+            deleteBranch.IsEnabled.Should().BeFalse();
+            deleteBranch.Bounds.Height.Should().BeGreaterThan(0);
+            contextMenu.Close();
+        }
+        finally
+        {
+            form?.Close();
+            AppSettings.ShowStashes = originalShowStashes;
+            AppSettings.RevisionGraphShowArtificialCommits = originalShowArtificial;
+        }
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
     public async Task FormBrowse_should_expose_loaded_worktrees_in_the_left_panel_and_toolbar()
     {
         bool originalShowWorktrees = AppSettings.RepoObjectsTreeShowWorktrees;
@@ -1787,6 +1840,7 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.4")]
     public async Task RevisionGrid_context_menu_should_route_the_selected_revision()
     {
         GitModule module = CreateRepositoryWithInitialCommit();
@@ -1861,6 +1915,10 @@ public sealed class FormBrowseTests
                     ?? throw new InvalidOperationException("Revision context menu did not open in a top level.");
                 WriteableBitmap? contextMenuFrame = contextMenuRoot.CaptureRenderedFrame();
                 contextMenuFrame.Should().NotBeNull($"the opened context menu should render in {themeName}");
+                copy.Bounds.Height.Should().BeGreaterThan(0);
+                deleteBranch.IsVisible.Should().BeTrue();
+                deleteBranch.IsEnabled.Should().BeTrue();
+                deleteBranch.Bounds.Height.Should().BeGreaterThan(0);
                 view.IsSubMenuOpen = true;
                 Dispatcher.UIThread.RunJobs();
                 WriteableBitmap? viewMenuFrame = contextMenuRoot.CaptureRenderedFrame();

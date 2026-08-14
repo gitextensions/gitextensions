@@ -142,6 +142,7 @@ public sealed class ScriptsEngineTests
     }
 
     [AvaloniaTest]
+    [NUnit.Framework.Category("P8.6h.3b.2b.2b.2b.4")]
     public void User_script_context_menu_should_keep_direct_and_nested_scripts_separate()
     {
         ScriptInfo nested = new() { Name = "Nested", HotkeyCommandIdentifier = 9001 };
@@ -169,6 +170,11 @@ public sealed class ScriptsEngineTests
         directItem.InputGesture.Should().BeEquivalentTo(new KeyGesture(Key.D, KeyModifiers.Control));
         directItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
         invoked.Should().Equal(9002);
+
+        menu.RemoveUserScripts(host);
+        host.IsVisible.Should().BeFalse();
+        host.IsEnabled.Should().BeFalse();
+        menu.Items.Should().Equal(host, tail);
 
         bool Invoke(int id)
         {

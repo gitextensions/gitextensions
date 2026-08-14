@@ -884,6 +884,18 @@ public sealed class VisualParityTests
             Dispatcher.UIThread.RunJobs();
 
             GetColor(presenter.Background).Should().Be(ToMediaColor(inactiveSelectionColor));
+
+            ContextMenu contextMenu = control.FindControl<ContextMenu>("mainContextMenu")
+                ?? throw new InvalidOperationException("The revision context menu was not created.");
+            contextMenu.Open(revisions);
+            Dispatcher.UIThread.RunJobs();
+            revisions.Classes.Should().Contain("context-menu-open");
+            GetColor(presenter.Background).Should().Be(ToMediaColor(highlightColor));
+
+            contextMenu.Close();
+            Dispatcher.UIThread.RunJobs();
+            revisions.Classes.Should().NotContain("context-menu-open");
+            GetColor(presenter.Background).Should().Be(ToMediaColor(inactiveSelectionColor));
         }
         finally
         {

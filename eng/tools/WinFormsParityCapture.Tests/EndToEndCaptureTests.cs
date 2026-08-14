@@ -125,6 +125,25 @@ public sealed class EndToEndCaptureTests
             .WithMessage("*declined to open*");
     }
 
+    [TestCase(true, false, 0, 100, false, TestName = "Visible graph has not rendered")]
+    [TestCase(true, true, 48, 48, false, TestName = "Visible rows are still updating")]
+    [TestCase(true, false, 48, 100, false, TestName = "Rendered graph width has not been published")]
+    [TestCase(true, false, 48, 48, true, TestName = "Rendered graph width is stable")]
+    [TestCase(false, false, 0, 100, true, TestName = "Hidden graph requires no render")]
+    public void Revision_grid_capture_should_require_the_product_graph_render(
+        bool graphVisible,
+        bool updatingVisibleRows,
+        int renderedWidth,
+        int columnWidth,
+        bool expected)
+    {
+        ComponentFactory.IsRevisionGridRenderReady(
+            graphVisible,
+            updatingVisibleRows,
+            renderedWidth,
+            columnWidth).Should().Be(expected);
+    }
+
     private sealed class CancelingContextMenuForm : Form
     {
         private readonly ContextMenuStrip _menuMain = new() { Name = "menuMain" };
