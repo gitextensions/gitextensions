@@ -157,6 +157,7 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(P02Category)]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
     public void Avalonia_tree_reader_should_emit_semantic_menu_items_without_template_artifacts()
     {
         Window window = new() { Width = 320, Height = 160 };
@@ -172,9 +173,11 @@ public sealed partial class ParityScreenshotTests
         Control overlayHost = window.GetVisualDescendants().OfType<Control>()
             .Single(control => control.GetType().Name == "OverlayPopupHost");
         CaptureSurface surface = new AvaloniaControlTreeReader(window, renderScale: 1)
-            .ReadSurface(overlayHost, "popup:0", new PixelRect(0, 0, 320, 160));
+            .ReadSurface(overlayHost, "popup:0", new PixelRect(17, 23, 320, 160));
         CaptureNode[] nodes = Flatten(surface.Root).ToArray();
 
+        surface.Root.BoundsPx.Should().Be(new CaptureRectangle { X = 17, Y = 23, Width = 320, Height = 160 });
+        surface.Root.BoundsDip.Should().Be(new CaptureRectangleF { X = 17, Y = 23, Width = 320, Height = 160 });
         surface.Root.Type.Should().Be(typeof(ContextMenu).FullName);
         surface.Root.AutoSize.Should().BeTrue();
         surface.Root.Alignment.Should().BeNull();

@@ -408,6 +408,7 @@ public sealed class RevisionGridSupportTests
 
     [AvaloniaTest]
     [Category("P8.6h.3b.1")]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
     public void Copy_context_menu_should_rebuild_the_original_branch_tag_and_revision_groups()
     {
         GitRevision revision = Revision('1', "subject");
@@ -428,6 +429,10 @@ public sealed class RevisionGridSupportTests
         item.Items[3].Should().BeOfType<MenuItem>().Which.Header.Should().Be(TranslatedStrings.Tags);
         item.Items[4].Should().BeOfType<MenuItem>().Which.Header.Should().Be("_2:   tag1");
         item.Items[6].Should().BeOfType<MenuItem>().Which.Header!.ToString().Should().StartWith("_Commit hash");
+        item.Items.OfType<MenuItem>().Should().OnlyContain(
+            menuItem => menuItem.Padding == new Avalonia.Thickness(4, 1, 17.6, 1));
+        item.Items.OfType<Separator>().Should().OnlyContain(
+            separator => separator.Margin == new Avalonia.Thickness(1.6, 0, 0.8, 0));
     }
 
     [AvaloniaTest]
