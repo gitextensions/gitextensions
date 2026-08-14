@@ -43,7 +43,11 @@ internal sealed class AvaloniaControlTreeReader
                 Width = screenBounds.Width,
                 Height = screenBounds.Height
             },
-            Root = ReadControl(GetSemanticSurfaceRoot(root), parentId: string.Empty, ordinal: 0)
+            Root = ReadControl(
+                GetSemanticSurfaceRoot(root),
+                parentId: string.Empty,
+                ordinal: 0,
+                ancestorSubmenusOpen: true)
         };
 
     private Control GetSemanticSurfaceRoot(Control root)
@@ -242,7 +246,7 @@ internal sealed class AvaloniaControlTreeReader
         }
     }
 
-    private CaptureNode ReadControl(Control control, string parentId, int ordinal)
+    private CaptureNode ReadControl(Control control, string parentId, int ordinal, bool ancestorSubmenusOpen)
     {
         IReadOnlyList<string> fieldNames = GetFieldNames(control);
         bool isSurfaceRoot = string.IsNullOrEmpty(parentId);
@@ -258,8 +262,10 @@ internal sealed class AvaloniaControlTreeReader
             : fieldName ?? $"$unnamed[{ordinal}]:{control.GetType().Name}";
         string id = string.IsNullOrEmpty(parentId) ? segment : $"{parentId}/{segment}";
         Rect bounds = control.Bounds;
+        bool childSubmenusOpen = ancestorSubmenusOpen
+            && (control is not MenuItem menuItem || menuItem.IsSubMenuOpen);
         IReadOnlyList<CaptureNode> children = GetCaptureChildren(control)
-            .Select((child, childOrdinal) => ReadControl(child, id, childOrdinal))
+            .Select((child, childOrdinal) => ReadControl(child, id, childOrdinal, childSubmenusOpen))
             .ToArray();
 
         return new CaptureNode
@@ -314,7 +320,7 @@ internal sealed class AvaloniaControlTreeReader
                 ? true
                 : control is MenuItem or Separator || isPopupRoot ? null : control.Focusable,
             Enabled = control is Separator ? false : control.IsEffectivelyEnabled,
-            Visible = IsMenuItemVisible(control),
+            Visible = control.IsVisible && ancestorSubmenusOpen,
             Focused = isPopupRoot ? false : IsFocused(control),
             ReadOnly = isRevisionGridView ? true : GetNullableBoolProperty(control, "IsReadOnly"),
             CheckState = control is ToggleButton toggle
@@ -332,11 +338,6 @@ internal sealed class AvaloniaControlTreeReader
             Children = children
         };
     }
-
-    private static bool IsMenuItemVisible(Control control) =>
-        control.IsVisible
-        && (control is not MenuItem
-            || control.GetLogicalAncestors().OfType<MenuItem>().All(parent => parent.IsSubMenuOpen));
 
     private IReadOnlyList<string> GetFieldNames(object value) =>
         _fieldNames.TryGetValue(value, out List<string>? names)

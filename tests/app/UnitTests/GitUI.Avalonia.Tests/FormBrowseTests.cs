@@ -1840,6 +1840,46 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public async Task RevisionGrid_rebase_menu_should_match_current_branch_state()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+        form.Show();
+        RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
+            ?? throw new InvalidOperationException("Revision grid was not created.");
+        TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")
+            ?? throw new InvalidOperationException("Revision loading status was not created.");
+        await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && revisionGrid.SelectedRevision is not null);
+
+        ContextMenu contextMenu = revisionGrid.FindControl<ContextMenu>("mainContextMenu")
+            ?? throw new InvalidOperationException("Revision context menu was not created.");
+        ListBox revisions = revisionGrid.FindControl<ListBox>("_gridView")
+            ?? throw new InvalidOperationException("Revision list was not created.");
+        MenuItem rebaseOn = revisionGrid.FindControl<MenuItem>("rebaseOnToolStripMenuItem")
+            ?? throw new InvalidOperationException("Rebase-on menu item was not created.");
+        MenuItem rebase = revisionGrid.FindControl<MenuItem>("rebaseToolStripMenuItem")
+            ?? throw new InvalidOperationException("Rebase menu item was not created.");
+        MenuItem rebaseInteractively = revisionGrid.FindControl<MenuItem>("rebaseInteractivelyToolStripMenuItem")
+            ?? throw new InvalidOperationException("Interactive-rebase menu item was not created.");
+        MenuItem rebaseWithAdvancedOptions = revisionGrid.FindControl<MenuItem>("rebaseWithAdvOptionsToolStripMenuItem")
+            ?? throw new InvalidOperationException("Advanced-rebase menu item was not created.");
+
+        contextMenu.Open(revisions);
+        Dispatcher.UIThread.RunJobs();
+        rebaseOn.IsVisible.Should().BeTrue("WinForms keeps the Rebase on parent available for a regular revision");
+        rebaseOn.IsEnabled.Should().BeTrue();
+
+        rebaseOn.IsSubMenuOpen = true;
+        Dispatcher.UIThread.RunJobs();
+        rebase.IsEnabled.Should().BeFalse("the selected HEAD has no other branch to rebase onto");
+        rebaseInteractively.IsEnabled.Should().BeFalse();
+        rebaseWithAdvancedOptions.IsEnabled.Should().BeFalse();
+        rebaseOn.IsSubMenuOpen = false;
+        contextMenu.Close();
+    }
+
+    [AvaloniaTest]
     [Category("P8.6h.3b.2b.2b.2b.4")]
     public async Task RevisionGrid_context_menu_should_route_the_selected_revision()
     {
