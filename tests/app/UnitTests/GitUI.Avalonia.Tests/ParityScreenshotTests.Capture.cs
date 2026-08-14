@@ -298,6 +298,8 @@ public sealed partial class ParityScreenshotTests
             gridNode.TabStop.Should().BeTrue();
             gridNode.Focused.Should().BeTrue();
             gridNode.Expanded.Should().BeFalse();
+            decimal resolvedRowHeight = decimal.Round((decimal)RevisionGridControl.GetRowHeight(revisionGrid), 4);
+            gridNode.ItemHeightDip.Should().Be(resolvedRowHeight);
 
             ContextMenu contextMenu = new() { ItemsSource = new[] { new MenuItem { Header = "Command" } } };
             gridView.ContextMenu = contextMenu;

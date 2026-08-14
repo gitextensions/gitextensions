@@ -61,6 +61,8 @@ public sealed class CaptureDocumentTests
             .GetProperty("enum").EnumerateArray().Select(value => value.GetString()).Should()
             .Equal("drawToBitmap", "printWindow", "screenGrab", "headlessSkia");
         definitions.GetProperty("image").GetProperty("properties").TryGetProperty("file", out _).Should().BeFalse();
+        definitions.GetProperty("node").GetProperty("properties").GetProperty("itemHeightDip")
+            .GetProperty("$ref").GetString().Should().Be("#/$defs/nullableNumber");
     }
 
     private static CaptureDocument CreateDocument(string foreground) =>
