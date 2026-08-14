@@ -458,6 +458,9 @@ internal sealed class ControlTreeReader
             },
             ClientSizePx = new CaptureSize { Width = clientSize.Width, Height = clientSize.Height },
             ClientSizeDip = new CaptureSizeF { Width = ToDip(clientSize.Width), Height = ToDip(clientSize.Height) },
+            ItemHeightDip = control is DataGridView grid
+                ? ToDip(grid.Rows.Count > 0 ? grid.Rows[0].Height : grid.RowTemplate.Height)
+                : null,
             Padding = CreateThickness(control.Padding),
             Margin = CreateThickness(control.Margin),
             Font = ReadFont(control.Font),

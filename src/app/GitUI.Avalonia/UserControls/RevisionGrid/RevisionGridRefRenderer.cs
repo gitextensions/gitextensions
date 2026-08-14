@@ -23,7 +23,6 @@ namespace GitUI.UserControls.RevisionGrid;
 internal static class RevisionGridRefRenderer
 {
     private const double MarginRight = 5;
-    private const double RowHeight = 24;
     private static readonly double[] _dashPattern = [4, 4];
     private static readonly Point[] _arrowPoints = new Point[4];
     private static readonly DashStyle DashedLine = new(_dashPattern, 0);
@@ -580,8 +579,9 @@ internal static class RevisionGridRefRenderer
         {
             _formattedText = CreateFormattedText(Brushes.Black);
             _backgroundHeight = Math.Ceiling(_formattedText.Height) + (PaddingTopBottom * 2) - 1;
+            double rowHeight = RevisionGridControl.GetRowHeight(this);
             RefLabelIcon effectiveIcon = GetEffectiveIcon(Icon);
-            double iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : RowHeight / 2;
+            double iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : rowHeight / 2;
             double extraWidth = Shape switch
             {
                 RefLabelShape.NotchLeft or RefLabelShape.NotchRight => PointWidth,
@@ -595,7 +595,7 @@ internal static class RevisionGridRefRenderer
                 + extraWidth
                 - 1;
 
-            return new Size(_labelWidth + MarginRight, RowHeight);
+            return new Size(_labelWidth + MarginRight, rowHeight);
         }
 
         public override void Render(DrawingContext context)
@@ -651,7 +651,7 @@ internal static class RevisionGridRefRenderer
                 DrawArrow(context, refBrush, capsuleBounds, iconXOffset, effectiveIcon == RefLabelIcon.Head);
             }
 
-            double iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : RowHeight / 2;
+            double iconWidth = effectiveIcon == RefLabelIcon.None ? 0 : Bounds.Height / 2;
             double textX = iconXOffset
                 + iconWidth
                 + PaddingLeftRight(Label)

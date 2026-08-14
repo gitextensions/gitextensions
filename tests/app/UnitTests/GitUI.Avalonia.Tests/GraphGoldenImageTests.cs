@@ -24,7 +24,7 @@ namespace GitExtensionsTests;
 public sealed class GraphGoldenImageTests
 {
     // Mirrors the row metrics of RevisionGridControl.
-    private const int RowHeight = 24;
+    private const int RowHeight = 26;
     private const int GraphColumnWidth = 160;
 
     // Per-channel difference below this is ignored (anti-aliasing variance between

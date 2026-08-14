@@ -39,6 +39,23 @@ public sealed class ControlTreeReaderTests
     }
 
     [Test]
+    public void ReadPrimary_should_record_resolved_data_grid_item_height()
+    {
+        using Form form = new();
+        using DataGridView grid = new() { RowTemplate = { Height = 32 } };
+        grid.Columns.Add("subject", "Subject");
+        grid.Rows.Add("Revision");
+        form.Controls.Add(grid);
+        form.CreateControl();
+        grid.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 120);
+
+        CaptureNode gridNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        gridNode.ItemHeightDip.Should().Be(25.6m);
+    }
+
+    [Test]
     [Category("P1_7")]
     public void ReadPrimary_should_emit_framework_neutral_resolved_color_roles()
     {
