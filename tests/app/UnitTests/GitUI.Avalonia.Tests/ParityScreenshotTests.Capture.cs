@@ -16,6 +16,7 @@ using Avalonia.VisualTree;
 using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
@@ -25,6 +26,7 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
 using GitUI.SpellChecker;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using WinFormsFont = GitExtensions.Shims.WinForms.Font;
 
@@ -174,6 +176,13 @@ public sealed partial class ParityScreenshotTests
         CaptureNode[] nodes = Flatten(surface.Root).ToArray();
 
         surface.Root.Type.Should().Be(typeof(ContextMenu).FullName);
+        surface.Root.AutoSize.Should().BeTrue();
+        surface.Root.Alignment.Should().BeNull();
+        surface.Root.TabIndex.Should().BeNull();
+        surface.Root.TabStop.Should().BeNull();
+        surface.Root.Focused.Should().BeFalse();
+        surface.Root.Expanded.Should().BeTrue();
+        surface.Root.BorderWidthDip.Should().BeNull();
         nodes.Should().ContainSingle(node => node.Name == "mnuCommand");
         nodes.Should().ContainSingle(node => node.Name == "dynamicCommand" && node.FieldName == null);
         nodes.Should().NotContain(node => node.Type != null && node.Type.Contains("AccessText", StringComparison.Ordinal));
@@ -197,8 +206,75 @@ public sealed partial class ParityScreenshotTests
         submenuSurface.Root.Font.SizePoints.Should().Be(9);
         submenuSurface.Root.Colors.Background.Should().NotBeNull();
         submenuSurface.Root.Colors.DisabledForeground.Should().NotBeNull();
+        Flatten(submenuSurface.Root).Should().ContainSingle(node => node.Name == "dynamicCommand");
         command.IsSubMenuOpen = false;
         menu.Close();
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void Avalonia_tree_reader_should_emit_revision_grid_layout_and_effective_state_semantics()
+    {
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        RevisionGridControl revisionGrid = new();
+        revisionGrid.FindControl<ListBox>("_gridView")!.ItemsSource =
+            new[] { new GitRevision(ObjectId.Random()) { Subject = "Captured revision" } };
+        Window window = new() { Width = 682, Height = 235, Content = revisionGrid };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        ListBox gridView = revisionGrid.FindControl<ListBox>("_gridView")
+            ?? throw new InvalidOperationException("The revision grid list was not created.");
+        using (AvaloniaControlStateDriver.Apply(
+                   revisionGrid,
+                   new CaptureStatePlan
+                   {
+                       Id = "revision-grid.focus",
+                       Kind = CaptureStateKind.Focus,
+                       TargetField = "_gridView"
+                   }))
+        {
+            CaptureSurface enabledSurface = new AvaloniaControlTreeReader(revisionGrid, renderScale: 1)
+                .ReadPrimary(revisionGrid, new PixelSize(682, 235));
+            CaptureNode rootNode = enabledSurface.Root;
+            CaptureNode gridNode = rootNode.Children.Single(node => node.FieldName == "_gridView");
+
+            rootNode.BorderStyle.Should().Be("None");
+            rootNode.Anchor.Should().Equal("Top", "Left");
+            rootNode.Dock.Should().Be("None");
+            rootNode.AutoSize.Should().BeFalse();
+            rootNode.Alignment.Should().BeNull();
+            rootNode.TabIndex.Should().Be(0);
+            rootNode.TabStop.Should().BeTrue();
+            rootNode.Expanded.Should().BeFalse();
+            gridNode.BorderStyle.Should().Be("None");
+            gridNode.Anchor.Should().Equal("Top", "Left");
+            gridNode.Dock.Should().Be("Fill");
+            gridNode.AutoSize.Should().BeFalse();
+            gridNode.Alignment.Should().BeNull();
+            gridNode.TabIndex.Should().Be(0);
+            gridNode.TabStop.Should().BeTrue();
+            gridNode.Focused.Should().BeTrue();
+            gridNode.Expanded.Should().BeFalse();
+
+            ContextMenu contextMenu = new() { ItemsSource = new[] { new MenuItem { Header = "Command" } } };
+            gridView.ContextMenu = contextMenu;
+            contextMenu.Open(gridView);
+            Dispatcher.UIThread.RunJobs();
+            CaptureNode popupOwnerNode = new AvaloniaControlTreeReader(revisionGrid, renderScale: 1)
+                .ReadPrimary(revisionGrid, new PixelSize(682, 235))
+                .Root.Children.Single(node => node.FieldName == "_gridView");
+            popupOwnerNode.Focused.Should().BeTrue("an owned menu retains WinForms-equivalent grid focus");
+            contextMenu.Close();
+        }
+
+        revisionGrid.IsEnabled = false;
+        Dispatcher.UIThread.RunJobs();
+        CaptureNode disabledGridNode = new AvaloniaControlTreeReader(revisionGrid, renderScale: 1)
+            .ReadPrimary(revisionGrid, new PixelSize(682, 235))
+            .Root.Children.Single(node => node.FieldName == "_gridView");
+        disabledGridNode.Enabled.Should().BeFalse("child state must include inherited Avalonia disablement");
         window.Close();
     }
 

@@ -33438,7 +33438,7 @@
           "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/inventory/GitUI.RevisionGridControl.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1081,
@@ -33449,25 +33449,25 @@
           "verifiedOn": "2026-08-14",
           "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/remaining-classification.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/remaining-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/avalonia/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/preview/previewability.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b4/accepted/preview/RevisionGridControl.isolated.png"
           ],
           "platforms": ["windows"],
-          "findingCount": 1302,
-          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs are joined with 1,302 aggregate diagnostics, 2,857 fewer than the predecessor. Exact control/menu colors, measured popup width, and semantic tree normalization leave zero color, font, text, control-identity, and column findings. Windows and Linux design-mode construction pass; the prior official Show Preview screenshot remains valid, but the official pane was not reopened because isolated VS Code command routing attempted to reuse an unrelated window and automation stopped before sending shortcuts. All remaining geometry/layout/state/image findings are classified retained debt; native 100/150/200 DPI and exhaustive live states remain open."
+          "findingCount": 492,
+          "note": "Fifteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu pairs use the identical external repository and join with 492 aggregate diagnostics, 810 fewer than the predecessor. The capture model now records WinForms-equivalent grid/popup layout and inherited state semantics, includes the real copy-popup item tree, and measures geometry only while controls are rendered. Layout, color, font, text, control-identity, and column findings are zero. The remaining geometry/state/image findings, including copy-message readiness, are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-14",
           "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
@@ -33478,14 +33478,14 @@
           "verifiedOn": "2026-08-14",
           "commit": "329cd87993ada07ebda62b8132585683a9ab37ad",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b5/accepted/remaining-classification.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b6/accepted/remaining-classification.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 63,
-          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, disabled, context-menu and copy-menu selection states across light/dark/custom. The report retains 63 classified state diagnostics and the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
+          "findingCount": 51,
+          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus and copy-menu selection states across light/dark/custom. The report retains 51 classified menu visibility/enabled diagnostics and the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
         },
         "platform": {
           "status": "partial",
