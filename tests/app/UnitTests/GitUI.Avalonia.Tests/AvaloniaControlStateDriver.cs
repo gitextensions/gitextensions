@@ -225,6 +225,11 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         ActivateContainingTabs(control);
 
+        if (IsFocusWithin(control))
+        {
+            return;
+        }
+
         MethodInfo? hostedFocusMethod = control.GetType().GetMethod(
             nameof(InputElement.Focus),
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly,

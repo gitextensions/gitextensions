@@ -147,7 +147,7 @@ public sealed class RevisionGridColumnProviderTests
                     new GridLength(22),
                     new GridLength(1, GridUnitType.Star),
                     new GridLength(50),
-                    new GridLength(24),
+                    new GridLength(25.6),
                     new GridLength(0),
                     new GridLength(130),
                     new GridLength(60),

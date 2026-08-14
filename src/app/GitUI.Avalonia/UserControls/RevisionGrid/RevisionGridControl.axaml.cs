@@ -167,7 +167,21 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         DragDrop.AddDragOverHandler(_gridView, OnGridViewDragEnter);
         DragDrop.AddDropHandler(_gridView, OnGridViewDragDrop);
         _gridView.LayoutUpdated += (_, _) => UpdateVisibleGraphColumnWidth();
-        mainContextMenu.Opening += (_, _) => UpdateContextMenuItems();
+        mainContextMenu.Opening += (_, _) =>
+        {
+            UpdateContextMenuItems();
+            mainContextMenu.InvalidateMeasure();
+        };
+        mainContextMenu.Opened += (_, _) =>
+        {
+            _gridView.Classes.Set("context-menu-open", true);
+            RefreshRealizedRows();
+        };
+        mainContextMenu.Closed += (_, _) =>
+        {
+            _gridView.Classes.Set("context-menu-open", false);
+            RefreshRealizedRows();
+        };
         copyToClipboardToolStripMenuItem.SetRevisionFunc(GetSelectedRevisions);
         applyStashToolStripMenuItem.Click += ApplyStashToolStripMenuItemClick;
         popStashToolStripMenuItem.Click += PopStashToolStripMenuItemClick;
@@ -914,7 +928,11 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         SetVisible(createNewBranchToolStripMenuItem, regularRevision);
         SetVisible(resetAnotherBranchToHereToolStripMenuItem, regularRevision);
         SetVisible(renameBranchToolStripMenuItem, renameBranchToolStripMenuItem.Items.Count > 0);
-        SetVisible(deleteBranchToolStripMenuItem, deleteBranchToolStripMenuItem.Items.Count > 0);
+        bool isHeadOfCurrentBranch = regularRevision
+            && revision!.Refs.Any(gitRef =>
+                gitRef.CompleteName == GitRefName.RefsHeadsPrefix + commands!.Module.GetSelectedBranch());
+        deleteBranchToolStripMenuItem.IsVisible = deleteBranchToolStripMenuItem.Items.Count > 0 || isHeadOfCurrentBranch;
+        deleteBranchToolStripMenuItem.IsEnabled = deleteBranchToolStripMenuItem.Items.Count > 0 && !isBareRepository;
         SetVisible(createTagToolStripMenuItem, revision is { IsArtificial: false } && hasCommands);
         SetVisible(deleteTagToolStripMenuItem, deleteTagToolStripMenuItem.Items.Count > 0);
         SetVisible(checkoutRevisionToolStripMenuItem, regularRevision);
@@ -2249,20 +2267,23 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         SelectPendingRevision();
     }
 
-    private void OnLoadingCompleted(CancellationToken cancellationToken, IReadOnlyList<GitRevision> artificialRevisions)
+    private void OnLoadingCompleted(CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
         {
             return;
         }
 
-        if (artificialRevisions.Count > 0)
+        // Avalonia's observable stream preserves arrival order, while the original grid exposes
+        // RevisionGraph's final scored order after artificial revisions have been inserted.
+        GitRevision[] orderedRevisions = Enumerable.Range(0, _revisionGraph.Count)
+            .Select(index => _revisionGraph.GetNodeForRow(index)?.GitRevision)
+            .OfType<GitRevision>()
+            .ToArray();
+        if (!_revisions.SequenceEqual(orderedRevisions))
         {
-            GitRevision? headRevision = _headId is ObjectId headId
-                ? _revisions.FirstOrDefault(revision => revision.ObjectId == headId)
-                : null;
-            int insertIndex = headRevision is null ? -1 : _revisions.IndexOf(headRevision);
-            _revisions.InsertRange(insertIndex < 0 ? 0 : insertIndex, artificialRevisions);
+            _revisions.Clear();
+            _revisions.AddRange(orderedRevisions);
         }
 
         if (_revisions.Count == 0 && !_filterInfo.HasFilter)
@@ -2512,7 +2533,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
             Dispatcher.UIThread.Post(() =>
             {
-                owner.OnLoadingCompleted(cancellationToken, artificialRevisions);
+                owner.OnLoadingCompleted(cancellationToken);
                 if (!cancellationToken.IsCancellationRequested)
                 {
                     owner.RevisionsLoaded?.Invoke(owner, loadEventArgs);
@@ -2697,7 +2718,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                     && rowIndex >= 0
                     && rowIndex % 2 == 0);
             bool isSelected = container?.IsSelected == true;
-            bool isSelectedAndFocused = isSelected && _owner._gridView.IsKeyboardFocusWithin;
+            bool isSelectedAndFocused = isSelected
+                && (_owner._gridView.IsKeyboardFocusWithin
+                    || _owner._gridView.Classes.Contains("context-menu-open"));
             bool isNonRelativeGray = AppSettings.RevisionGraphDrawNonRelativesTextGray
                 && rowIndex >= 0
                 && !_owner._revisionGraph.IsRowRelative(rowIndex);
