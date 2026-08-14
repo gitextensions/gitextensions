@@ -519,10 +519,14 @@ internal static class CaptureComparer
         ICollection<ParityFinding> findings)
     {
         CompareValue(reference.ControlKind, candidate.ControlKind, ControlCategory, "control.kind", path, findings);
-        CompareRectangle(reference.BoundsDip, candidate.BoundsDip, $"{path}/boundsDip", tolerance.GeometryDip, findings);
-        CompareSize(reference.ClientSizeDip, candidate.ClientSizeDip, $"{path}/clientSizeDip", tolerance.GeometryDip, findings);
-        CompareThickness(reference.Padding.Dip, candidate.Padding.Dip, $"{path}/paddingDip", tolerance.GeometryDip, findings);
-        CompareThickness(reference.Margin.Dip, candidate.Margin.Dip, $"{path}/marginDip", tolerance.GeometryDip, findings);
+        if (reference.Visible != false && candidate.Visible != false)
+        {
+            CompareRectangle(reference.BoundsDip, candidate.BoundsDip, $"{path}/boundsDip", tolerance.GeometryDip, findings);
+            CompareSize(reference.ClientSizeDip, candidate.ClientSizeDip, $"{path}/clientSizeDip", tolerance.GeometryDip, findings);
+            CompareThickness(reference.Padding.Dip, candidate.Padding.Dip, $"{path}/paddingDip", tolerance.GeometryDip, findings);
+            CompareThickness(reference.Margin.Dip, candidate.Margin.Dip, $"{path}/marginDip", tolerance.GeometryDip, findings);
+        }
+
         CompareFont(reference.Font, candidate.Font, path, tolerance, findings);
         CompareColors(reference.Colors, candidate.Colors, path, findings);
         CompareValue(reference.BorderStyle, candidate.BorderStyle, LayoutCategory, "border.style", path, findings);
