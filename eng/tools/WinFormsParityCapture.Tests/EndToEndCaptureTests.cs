@@ -144,6 +144,53 @@ public sealed class EndToEndCaptureTests
             columnWidth).Should().Be(expected);
     }
 
+    [TestCase(false, true, true, true, true, true, TestName = "Stable HEAD selection is ready")]
+    [TestCase(true, true, true, true, true, false, TestName = "Refresh still running")]
+    [TestCase(false, false, true, true, true, false, TestName = "Data load incomplete")]
+    [TestCase(false, true, false, true, true, false, TestName = "Selected revision is not HEAD")]
+    [TestCase(false, true, true, false, true, false, TestName = "HEAD row is not selected")]
+    [TestCase(false, true, true, true, false, false, TestName = "Latest row points elsewhere")]
+    public void Revision_grid_capture_should_require_a_stable_HEAD_selection(
+        bool isRefreshing,
+        bool isDataLoadComplete,
+        bool selectedRevisionIsHead,
+        bool selectedRowIsSelected,
+        bool latestRowMatches,
+        bool expected)
+    {
+        ComponentFactory.IsRevisionGridSelectionReady(
+            isRefreshing,
+            isDataLoadComplete,
+            selectedRevisionIsHead,
+            selectedRowIsSelected,
+            latestRowMatches).Should().Be(expected);
+    }
+
+    [TestCase(true, true, false, false, false, false, false, true, TestName = "Settled HEAD menu is ready")]
+    [TestCase(false, true, false, false, false, false, false, false, TestName = "Rebase is hidden")]
+    [TestCase(true, false, false, false, false, false, false, false, TestName = "Rebase is disabled")]
+    [TestCase(true, true, true, false, false, false, false, false, TestName = "Stash action is stale")]
+    [TestCase(true, true, false, false, false, true, false, false, TestName = "Artificial action is stale")]
+    public void Revision_grid_capture_should_require_the_opened_HEAD_menu_state(
+        bool rebaseVisible,
+        bool rebaseEnabled,
+        bool applyStashVisible,
+        bool popStashVisible,
+        bool dropStashVisible,
+        bool resetChangesVisible,
+        bool commitVisible,
+        bool expected)
+    {
+        ComponentFactory.IsRevisionGridHeadContextMenuReady(
+            rebaseVisible,
+            rebaseEnabled,
+            applyStashVisible,
+            popStashVisible,
+            dropStashVisible,
+            resetChangesVisible,
+            commitVisible).Should().Be(expected);
+    }
+
     private sealed class CancelingContextMenuForm : Form
     {
         private readonly ContextMenuStrip _menuMain = new() { Name = "menuMain" };

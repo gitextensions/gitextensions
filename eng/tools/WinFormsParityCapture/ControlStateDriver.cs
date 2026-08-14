@@ -380,4 +380,6 @@ internal sealed class ControlStateDriver : IDisposable
     }
 }
 
-internal sealed class CaptureStateUnsupportedException(string message) : Exception(message);
+internal class CaptureStateUnsupportedException(string message) : Exception(message);
+
+internal sealed class CaptureStateNotReadyException(string message) : CaptureStateUnsupportedException(message);
