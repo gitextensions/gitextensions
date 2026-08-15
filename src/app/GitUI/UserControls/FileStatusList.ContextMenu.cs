@@ -2,6 +2,7 @@
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extended;
+using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -75,6 +76,9 @@ partial class FileStatusList
     private readonly CancellationTokenSequence _interactiveAddResetChunkSequence = new();
     private readonly RememberFileContextMenuController _rememberFileContextMenuController = RememberFileContextMenuController.Default;
 
+    private readonly TranslationString _aiCaption = new("AI prompt");
+    private readonly TranslationString _aiNoChanges = new("No changes found for the selected files.");
+    private readonly TranslationString _aiPromptCopied = new("AI prompt with {0} chars copied to clipboard.");
     private readonly TranslationString _deleteSelectedFilesCaption = new("Delete");
     private readonly TranslationString _deleteSelectedFiles = new("Are you sure you want to delete the selected file(s)?");
     private readonly TranslationString _deleteFailed = new("Delete file failed");
@@ -217,6 +221,60 @@ partial class FileStatusList
     private void CherryPickChanges_Click(object sender, EventArgs e)
     {
         _cherryPickChanges?.Invoke();
+    }
+
+    private void CopyAiPromptToClipboard_Click(object sender, EventArgs e)
+    {
+        ThreadHelper.FileAndForget(CopyAiPromptToClipboardAsync);
+        return;
+
+        async Task CopyAiPromptToClipboardAsync()
+        {
+            StringBuilder prompt = new();
+            prompt.Append(DetailedSettings.AiDiffPromptPrefix.ValueOrDefault(Module.GetEffectiveSettings()));
+            int lengthBeforeDiffs = prompt.Length;
+
+            // Group by revision pair so each unique context is one git diff call.
+            IEnumerable<IGrouping<(string? First, string Second), FileStatusItem>> groups
+                = SelectedItems.GroupBy(item => (item.FirstRevision?.Guid, item.SecondRevision.Guid));
+            RevisionDiffProvider diffProvider = new();
+            foreach (IGrouping<(string? First, string Second), FileStatusItem> group in groups)
+            {
+                // CombinedDiff artificial commits cannot be diffed explicitly.
+                if (group.Key.First == GitRevision.CombinedDiffGuid || group.Key.Second == GitRevision.CombinedDiffGuid)
+                {
+                    continue;
+                }
+
+                ArgumentString revArgs = diffProvider.Get(group.Key.First, group.Key.Second);
+                GitArgumentBuilder args = new("diff")
+                {
+                    "--no-ext-diff",
+                    "--no-color",
+                    revArgs,
+                    "--"
+                };
+
+                foreach (FileStatusItem item in group)
+                {
+                    args.Add(item.Item.Name.QuoteNE());
+                }
+
+                prompt.Append(await Module.GitExecutable.GetOutputAsync(args));
+            }
+
+            await this.SwitchToMainThreadAsync();
+
+            if (prompt.Length == lengthBeforeDiffs)
+            {
+                MessageBoxes.Show(this, _aiNoChanges.Text, _aiCaption.Text, MessageBoxButtons.OK);
+                return;
+            }
+
+            prompt.Append(DetailedSettings.AiDiffPromptSuffix.ValueOrDefault(Module.GetEffectiveSettings()));
+            Clipboard.SetText(prompt.ToString());
+            MessageBoxes.Show(this, string.Format(_aiPromptCopied.Text, prompt.Length), _aiCaption.Text, MessageBoxButtons.OK);
+        }
     }
 
     private void CommitSubmoduleChanges_Click(object sender, EventArgs e)
@@ -1300,6 +1358,8 @@ partial class FileStatusList
 
         tsmiSkipWorktree.ToolTipText = _skipWorktreeToolTip.Text;
         tsmiAssumeUnchanged.ToolTipText = _assumeUnchangedToolTip.Text;
+
+        tsmiCopyAiPromptToClipboard.Enabled = selectionInfo.SelectedGitItemCount > 0;
     }
 
     private void UpdateSubmodule_Click(object sender, EventArgs e)
