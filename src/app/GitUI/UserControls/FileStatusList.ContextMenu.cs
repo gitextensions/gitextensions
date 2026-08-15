@@ -225,18 +225,19 @@ partial class FileStatusList
 
     private void CopyAiPromptToClipboard_Click(object sender, EventArgs e)
     {
+        List<FileStatusItem> selectedItems = [.. SelectedItems];
         ThreadHelper.FileAndForget(CopyAiPromptToClipboardAsync);
         return;
 
         async Task CopyAiPromptToClipboardAsync()
         {
             StringBuilder prompt = new();
-            prompt.Append(DetailedSettings.AiDiffPromptPrefix.ValueOrDefault(Module.GetEffectiveSettings()));
+            prompt.AppendLine(DetailedSettings.AiDiffPromptPrefix.ValueOrDefault(Module.GetEffectiveSettings()));
             int lengthBeforeDiffs = prompt.Length;
 
             // Group by revision pair so each unique context is one git diff call.
             IEnumerable<IGrouping<(string? First, string Second), FileStatusItem>> groups
-                = SelectedItems.GroupBy(item => (item.FirstRevision?.Guid, item.SecondRevision.Guid));
+                = selectedItems.GroupBy(item => (item.FirstRevision?.Guid, item.SecondRevision.Guid));
             RevisionDiffProvider diffProvider = new();
             foreach (IGrouping<(string? First, string Second), FileStatusItem> group in groups)
             {
@@ -246,21 +247,72 @@ partial class FileStatusList
                     continue;
                 }
 
-                ArgumentString revArgs = diffProvider.Get(group.Key.First, group.Key.Second);
-                GitArgumentBuilder args = new("diff")
+                // Untracked files are read directly from the filesystem and formatted as a
+                // synthetic unified diff so no git process is needed per file.
+                List<FileStatusItem> untrackedItems = [.. group.Where(item => !item.Item.IsTracked)];
+                foreach (FileStatusItem item in untrackedItems)
                 {
-                    "--no-ext-diff",
-                    "--no-color",
-                    revArgs,
-                    "--"
-                };
+                    string fullPath = Path.Combine(Module.WorkingDir, item.Item.Name);
+                    if (!File.Exists(fullPath))
+                    {
+                        continue;
+                    }
 
-                foreach (FileStatusItem item in group)
-                {
-                    args.Add(item.Item.Name.QuoteNE());
+                    string[] lines = await File.ReadAllLinesAsync(fullPath);
+                    prompt.AppendLine($"--- /dev/null");
+                    prompt.AppendLine($"+++ b/{item.Item.Name}");
+                    prompt.AppendLine($"@@ -0,0 +1,{lines.Length} @@");
+                    foreach (string line in lines)
+                    {
+                        prompt.Append('+').AppendLine(line);
+                    }
                 }
 
-                prompt.Append(await Module.GitExecutable.GetOutputAsync(args));
+                List<FileStatusItem> trackedItems = [.. group.Where(item => item.Item.IsTracked)];
+                if (trackedItems.Count == 0)
+                {
+                    continue;
+                }
+
+                // For an initial commit (no parent), use diff-tree --root to avoid
+                // RevisionDiffProvider interpreting null as the worktree and generating -R.
+                string output;
+                if (group.Key.First is null && !group.First().SecondRevision.IsArtificial)
+                {
+                    GitArgumentBuilder args = new("diff-tree")
+                    {
+                        "--root",
+                        "-p",
+                        "--no-color",
+                        group.Key.Second,
+                        "--"
+                    };
+                    foreach (FileStatusItem item in trackedItems)
+                    {
+                        args.Add(item.Item.Name.QuoteNE());
+                    }
+
+                    output = await Module.GitExecutable.GetOutputAsync(args);
+                }
+                else
+                {
+                    ArgumentString revArgs = diffProvider.Get(group.Key.First, group.Key.Second);
+                    GitArgumentBuilder args = new("diff")
+                    {
+                        "--no-ext-diff",
+                        "--no-color",
+                        revArgs,
+                        "--"
+                    };
+                    foreach (FileStatusItem item in trackedItems)
+                    {
+                        args.Add(item.Item.Name.QuoteNE());
+                    }
+
+                    output = await Module.GitExecutable.GetOutputAsync(args);
+                }
+
+                prompt.Append(output);
             }
 
             await this.SwitchToMainThreadAsync();
