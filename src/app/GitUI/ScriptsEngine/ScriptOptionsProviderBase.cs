@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace GitUI.ScriptsEngine;
 
@@ -7,9 +8,12 @@ namespace GitUI.ScriptsEngine;
 ///  Basic implementation of <see cref="IScriptOptionsProvider"/>.
 ///  It replaces all script options of all implementations of <see cref="IScriptOptionsProvider"/> with an empty string.
 /// </summary>
-internal class ScriptOptionsProviderBase : IScriptOptionsProvider
+internal partial class ScriptOptionsProviderBase : IScriptOptionsProvider
 {
     private static readonly string[] _options;
+
+    [GeneratedRegex(@"^(System|Microsoft|netstandard|Accessibility|Ben\.Demystifier|BenjaminAbt\.StrongOf|ExCSS|Git\.Hub|ICSharpCode\.TextEditor|ResourceManager|SmartFormat|TestableIO|Testably|PresentationCore|UIAutomationTypes|WindowsBase|ZString)[.,]", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+    private static partial Regex _excludedAssemblies { get; }
 
     static ScriptOptionsProviderBase()
     {
@@ -27,6 +31,11 @@ internal class ScriptOptionsProviderBase : IScriptOptionsProvider
         {
             try
             {
+                if (assembly.FullName is not string name || _excludedAssemblies.IsMatch(name))
+                {
+                    return [];
+                }
+
                 return assembly.GetTypes();
             }
             catch (Exception ex)
