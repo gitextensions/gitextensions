@@ -12,7 +12,7 @@ public static class MergeConflictHandler
     {
         if (commands.Module.InTheMiddleOfConflictedMerge())
         {
-            if (AppSettings.DontConfirmResolveConflicts || MessageBoxes.ConfirmResolveMergeConflicts(owner))
+            if (MessageBoxes.ConfirmResolveMergeConflicts(owner))
             {
                 SolveMergeConflicts(commands, owner, offerCommit);
             }

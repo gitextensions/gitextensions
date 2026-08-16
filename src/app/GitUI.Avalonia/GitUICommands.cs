@@ -1778,14 +1778,8 @@ public sealed class GitUICommands : IGitUICommands
                 return false;
             }
 
-            if (form.OpenWorktree)
-            {
-                GitModule newModule = new(this.GetRequiredService<IGitExecutorProvider>(), form.WorktreeDirectory);
-                if (newModule.IsValidGitWorkingDir() && FindFormBrowse(owner) is FormBrowse browse)
-                {
-                    browse.SetWorkingDir(Path.GetFullPath(form.WorktreeDirectory));
-                }
-            }
+            // Offer to switch to the freshly created worktree, mirroring the clone flow.
+            WorktreeSwitch(owner, form.WorktreeDirectory);
 
             return true;
         });
@@ -1830,21 +1824,9 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool WorktreeSwitch(IWin32Window? owner, string worktreePath)
     {
-        if (!AppSettings.DontConfirmSwitchWorktree)
+        if (!MessageBoxes.ConfirmSuppressible(owner, string.Format(TranslatedStrings.SwitchWorktreeConfirmation, worktreePath), TranslatedStrings.SwitchWorktreeCaption, AppSettings.DontConfirmSwitchWorktree))
         {
-            TaskDialogButton result = TaskDialog.ShowDialog(owner!, new TaskDialogPage
-            {
-                Text = string.Format(TranslatedStrings.SwitchWorktreeConfirmation, worktreePath),
-                Caption = TranslatedStrings.SwitchWorktreeCaption,
-                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
-                Icon = TaskDialogIcon.Information,
-                SizeToContent = true,
-            });
-
-            if (result != TaskDialogButton.Yes)
-            {
-                return false;
-            }
+            return false;
         }
 
         if (!Directory.Exists(worktreePath))

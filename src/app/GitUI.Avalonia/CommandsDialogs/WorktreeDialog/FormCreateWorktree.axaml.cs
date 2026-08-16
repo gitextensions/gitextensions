@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -16,12 +17,12 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
 {
     private readonly CancellationTokenSequence _branchesLoadSequence = new();
     private readonly char[] _invalidCharsInPath = Path.GetInvalidFileNameChars();
+    private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
+    private readonly IGitBranchNameNormaliser _branchNameNormaliser = null!;
 
     private readonly string? _initialDirectoryPath;
 
     public string WorktreeDirectory => txtWorktreeDirectory.Text ?? string.Empty;
-    public bool OpenWorktree => chkOpenWorktree.IsChecked == true;
-
     public IReadOnlyList<IGitRef>? ExistingBranches { get; set; }
 
     public FormCreateWorktree()
@@ -35,6 +36,7 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         : base(commands, enablePositionRestore: false)
     {
         _initialDirectoryPath = path;
+        _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
         InitializeComponent();
         WireControls();
         AcceptButton = btnCreateWorktree;
@@ -53,6 +55,7 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         rbCheckoutExistingBranch.IsCheckedChanged += UpdateWorktreePathAndValidateWorktreeOptions;
         rbCreateNewBranch.IsCheckedChanged += UpdateWorktreePathAndValidateWorktreeOptions;
         txtNewBranchName.TextChanged += UpdateWorktreePathAndValidateWorktreeOptions;
+        txtNewBranchName.LostFocus += txtNewBranchName_Leave;
         txtWorktreeDirectory.TextChanged += txtWorktreeDirectory_TextChanged;
     }
 
@@ -133,8 +136,33 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         CreateWorktree();
     }
 
+    private void txtNewBranchName_Leave(object? sender, EventArgs e)
+    {
+        NormaliseNewBranchName();
+    }
+
+    private void NormaliseNewBranchName()
+    {
+        string branchName = txtNewBranchName.Text ?? string.Empty;
+        if (!AppSettings.AutoNormaliseBranchName || !branchName.Any(PathUtil.IsValidPathChar))
+        {
+            return;
+        }
+
+        int caretPosition = txtNewBranchName.CaretIndex;
+        txtNewBranchName.Text = _branchNameNormaliser.Normalise(branchName, _gitBranchNameOptions);
+        txtNewBranchName.CaretIndex = caretPosition;
+    }
+
     private void CreateWorktree()
     {
+        // The branch name may not have lost focus yet (e.g. when triggered via the accept button),
+        // so normalise it here to avoid passing an invalid name (e.g. containing spaces) to git.
+        if (rbCreateNewBranch.IsChecked == true)
+        {
+            NormaliseNewBranchName();
+        }
+
         string relativePath = Path.GetRelativePath(Module.WorkingDir, WorktreeDirectory).ToPosixPath().Quote();
         string? newBranchOption = rbCreateNewBranch.IsChecked == true
             ? $"-b {txtNewBranchName.Text}"
@@ -251,7 +279,6 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
     internal readonly struct TestAccessor(FormCreateWorktree form)
     {
         public Button Create => form.btnCreateWorktree;
-        public CheckBox Open => form.chkOpenWorktree;
         public ComboBox Branches => form.cbxBranches;
         public RadioButton CheckoutExisting => form.rbCheckoutExistingBranch;
         public RadioButton CreateNew => form.rbCreateNewBranch;

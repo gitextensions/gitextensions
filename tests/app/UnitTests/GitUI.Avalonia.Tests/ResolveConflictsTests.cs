@@ -162,11 +162,11 @@ public sealed class ResolveConflictsTests
         (IGitUICommands commands, IGitModule module) = CreateCommands();
         module.InTheMiddleOfConflictedMerge().Returns(true);
 
-        bool original = AppSettings.DontConfirmResolveConflicts;
+        bool original = AppSettings.DontConfirmResolveConflicts.Value;
         try
         {
             // Answer the "solve conflicts now?" question without showing it.
-            AppSettings.DontConfirmResolveConflicts = true;
+            AppSettings.DontConfirmResolveConflicts.Value = true;
 
             bool result = MergeConflictHandler.HandleMergeConflicts(commands, owner: null, offerCommit: false, offerUpdateSubmodules: false);
 
@@ -175,7 +175,7 @@ public sealed class ResolveConflictsTests
         }
         finally
         {
-            AppSettings.DontConfirmResolveConflicts = original;
+            AppSettings.DontConfirmResolveConflicts.Value = original;
         }
     }
 
@@ -186,10 +186,10 @@ public sealed class ResolveConflictsTests
         module.InTheMiddleOfConflictedMerge().Returns(true);
         module.InTheMiddleOfPatch().Returns(true);
 
-        bool original = AppSettings.DontConfirmResolveConflicts;
+        bool original = AppSettings.DontConfirmResolveConflicts.Value;
         try
         {
-            AppSettings.DontConfirmResolveConflicts = true;
+            AppSettings.DontConfirmResolveConflicts.Value = true;
 
             bool result = MergeConflictHandler.HandleMergeConflicts(commands, owner: null, offerCommit: false, offerUpdateSubmodules: false);
 
@@ -200,7 +200,7 @@ public sealed class ResolveConflictsTests
         }
         finally
         {
-            AppSettings.DontConfirmResolveConflicts = original;
+            AppSettings.DontConfirmResolveConflicts.Value = original;
         }
     }
 
