@@ -49,16 +49,20 @@ jobs:
             const body = issue.body || '';
             const vcruntimeTitle = /^\[NBug\]\s+Unable to load DLL\s+['"][^'"]*vcruntime[^'"]*['"]/i;
             const vcruntimeException = /System\.DllNotFoundException:\s+Unable to load DLL\s+['"][^'"]*vcruntime/i;
+            const typeInitializerTitle = /^\[NBug\]\s+The type initializer for\s+/i;
+            const runtimeAssemblyException = /System\.IO\.FileNotFoundException:\s+Could not load file or assembly\s+['"](?:System\.|Microsoft\.|DirectWriteForwarder(?:,|['"]))/i;
             const versionMatch = body.match(/^- Git Extensions (\d+)\./im);
             const isLegacyVersion = versionMatch !== null && Number(versionMatch[1]) < 7;
-            const matched = vcruntimeTitle.test(title) && vcruntimeException.test(body) && isLegacyVersion;
+            const isVCRuntimeError = vcruntimeTitle.test(title) && vcruntimeException.test(body);
+            const isRuntimeAssemblyError = typeInitializerTitle.test(title) && runtimeAssemblyException.test(body);
+            const matched = isLegacyVersion && (isVCRuntimeError || isRuntimeAssemblyError);
 
             core.setOutput('matched', matched.toString());
             if (!matched) {
               return;
             }
 
-            const marker = '<!-- known-windows-update-vcruntime -->';
+            const marker = '<!-- known-windows-update-runtime -->';
             const comments = await github.paginate(github.rest.issues.listComments, {
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -72,9 +76,9 @@ jobs:
                 repo: context.repo.repo,
                 issue_number: issue.number,
                 body: `${marker}
-            Thanks for reporting this. This VC runtime loading failure is a transient result of Windows, .NET, or Visual C++ servicing replacing a runtime DLL while Git Extensions is running.
+            Thanks for reporting this. This runtime loading failure is a transient result of Windows, .NET, or Visual C++ servicing replacing runtime files while Git Extensions is running.
 
-            Restart Git Extensions. If Windows is waiting for a restart, restart Windows too. Current Git Extensions releases suppress the misleading crash-report prompt for this condition, so please also [upgrade to the latest release](https://github.com/gitextensions/gitextensions/releases/latest).
+            Restart Git Extensions. If Windows is waiting for a restart, restart Windows too. Current Git Extensions releases suppress many of these misleading crash-report prompts, so please also [upgrade to the latest release](https://github.com/gitextensions/gitextensions/releases/latest).
 
             If the error continues after restarting Windows and upgrading Git Extensions, please open a new bug report and mention that those steps did not resolve it. This issue has been automatically closed because it matches the known Windows update error.`,
               });
@@ -105,7 +109,7 @@ jobs:
               state_reason: 'not_planned',
             });
 
-            core.info(`Closed issue #${issue.number} as a known Windows update VC runtime error.`);
+            core.info(`Closed issue #${issue.number} as a known Windows update runtime error.`);
 
   predict-issue-label:
     # Do not automatically run the workflow on forks outside the 'gitextensions' org
