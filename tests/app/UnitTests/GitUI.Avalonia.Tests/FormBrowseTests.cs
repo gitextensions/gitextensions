@@ -124,6 +124,28 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    public async Task FormBrowse_should_focus_the_revision_list_after_loading_and_when_commanded()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        using FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+
+        form.Show();
+        TextBlock loadingStatus = form.RevisionGrid.FindControl<TextBlock>("lblLoadingStatus")!;
+        await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
+        ListBox revisions = form.RevisionGrid.GetTestAccessor().Revisions;
+        object? focused = TopLevel.GetTopLevel(revisions)?.FocusManager?.GetFocusedElement();
+        revisions.IsKeyboardFocusWithin.Should().BeTrue($"the focused element was {focused}");
+
+        ComboBox revisionFilter = form.ToolStripFilters.GetTestAccessor().RevisionFilter;
+        form.ToolStripFilters.SetFocus();
+        revisionFilter.IsKeyboardFocusWithin.Should().BeTrue();
+
+        form.ExecuteCommand(FormBrowse.Command.FocusRevisionGrid).Should().BeTrue();
+        revisions.IsKeyboardFocusWithin.Should().BeTrue();
+        revisionFilter.IsKeyboardFocusWithin.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
     public void QuickFetch_should_stop_when_the_before_fetch_script_cancels()
     {
         TestScriptEventRecorder scriptEvents = TestScriptEventRecorder.Install(_serviceContainer);

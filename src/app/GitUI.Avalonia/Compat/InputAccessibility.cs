@@ -6,6 +6,8 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitExtensions.Extensibility.Translations;
 
 namespace GitUI.Compat;
@@ -20,6 +22,24 @@ internal static class InputAccessibility
 {
     private static readonly object InitializedMarker = new();
     private static readonly ConditionalWeakTable<Control, object> InitializedHosts = new();
+
+    static InputAccessibility()
+    {
+        TemplatedControl.TemplateAppliedEvent.AddClassHandler<MenuItem>((menuItem, _) =>
+        {
+            // Avalonia follows the platform keyboard-cue setting; desktop Git Extensions menus
+            // keep mnemonic underlines visible so their keyboard routes remain discoverable.
+            Dispatcher.UIThread.Post(() => ShowMenuAccessKeys(menuItem), DispatcherPriority.Loaded);
+        });
+    }
+
+    private static void ShowMenuAccessKeys(MenuItem menuItem)
+    {
+        foreach (AccessText accessText in menuItem.GetVisualDescendants().OfType<AccessText>())
+        {
+            accessText.ShowAccessKey = true;
+        }
+    }
 
     internal static void Apply(Control host)
     {
