@@ -1053,7 +1053,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
     private sealed class VirtualRef(string name, string completeName, string remote, string mergeWith, IGitModule module) : IGitRef
     {
         public string Name => name;
-        public ObjectId ObjectId => throw new NotSupportedException();
+        public ObjectId ObjectId => default;
         public string? Guid => null;
         public IGitModule Module => module;
         public string CompleteName => completeName;
