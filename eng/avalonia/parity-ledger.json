@@ -2559,15 +2559,17 @@
           "note": "The P0.4 source inventory found structural/member differences."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-16",
+          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/inventory/FormBrowseMenus.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/tests/windows/tranche-focused.log",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/tests/linux/gate.log"
           ],
-          "platforms": [],
-          "findingCount": 96,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows"],
+          "findingCount": 81,
+          "note": "The complete cloned Navigate/View inventories preserve RevisionGrid-owned names, icons, separators, shortcuts, checks, enabled state, visibility, group headings, nested actions, and the measured shared-column/separator metrics. The fresh source inventory retains 81 findings, so this axis stays partial."
         },
         "visual": {
           "status": "notApplicable",
@@ -33447,12 +33449,12 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "611e049c94cf4ca42d84b3ece4b440c80c7d760c",
+          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/inventory/GitUI.RevisionGridControl.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/tests/windows/focused.log",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/tests/linux/gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/inventory/RevisionGridControl.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/tests/windows/tranche-focused.log",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/tests/linux/gate.log"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1084,
@@ -33461,27 +33463,27 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "611e049c94cf4ca42d84b3ece4b440c80c7d760c",
+          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/remaining-classification.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/remaining-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/avalonia/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/preview/previewability.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/preview/RevisionGridControl-preview.png"
           ],
           "platforms": ["windows"],
-          "findingCount": 595,
-          "note": "Eighteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu/View-submenu pairs use the identical external repository and join with 595 diagnostics. The complete View menu adds three measured states and exposes 400 net new geometry/image diagnostics; it visibly proves checkbox glyph presence but does not claim those pixels match. Every pre-existing named popup row, separator, width, height and client metric remains exact. Layout, color, font, text, control-identity, column, state, and control findings are zero. The 538 geometry and 57 image findings are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
+          "findingCount": 292,
+          "note": "Eighteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu/View-submenu pairs use the identical external repository and join with 292 diagnostics. The View submenu now matches ToolStrip's 426.4-DIP popup, 425.6-DIP shared row width, and centered 423.2-DIP separators, closing 300 geometry and three image-dimension findings. Layout, color, font, text, control-identity, state, and control findings are zero; four custom-theme column-width diagnostics remain geometry debt. The 238 geometry and 54 image findings are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "611e049c94cf4ca42d84b3ece4b440c80c7d760c",
+          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
@@ -33490,12 +33492,12 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "611e049c94cf4ca42d84b3ece4b440c80c7d760c",
+          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/remaining-classification.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/remaining-classification.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
@@ -33504,12 +33506,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "611e049c94cf4ca42d84b3ece4b440c80c7d760c",
+          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
