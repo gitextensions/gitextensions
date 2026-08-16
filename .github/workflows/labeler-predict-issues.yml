@@ -84,22 +84,12 @@ jobs:
               });
             }
 
-            await github.rest.issues.addLabels({
+            await github.rest.issues.setLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issue.number,
               labels: ['status: workaround available'],
             });
-
-            const needsReviewLabel = ':eyeglasses: status: needs review';
-            if (issue.labels.some(label => (typeof label === 'string' ? label : label.name) === needsReviewLabel)) {
-              await github.rest.issues.removeLabel({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue.number,
-                name: needsReviewLabel,
-              });
-            }
 
             await github.rest.issues.update({
               owner: context.repo.owner,
