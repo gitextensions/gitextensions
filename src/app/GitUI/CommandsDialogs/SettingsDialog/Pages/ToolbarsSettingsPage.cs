@@ -3,23 +3,104 @@ using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 using GitUI.UserControls;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 {
-    // Built-in toolbar names.
+    // Built-in toolbar names. Not translated: they identify a toolbar in the saved layout.
     private const string StandardToolbarName = ToolbarNames.Standard;
     private const string FiltersToolbarName = ToolbarNames.Filters;
     private const string ScriptsToolbarName = ToolbarNames.Scripts;
 
-    // The default action category and the display-name markers used for synthetic wrapper rows.
-    private const string AllActionsCategory = "All Actions";
+    // Not translated either: it is the stem of the name a generated toolbar is saved under.
     private const string CustomToolbarDisplayPrefix = "Custom ";
-    private const string SeparatorDisplayName = "--- separator ---";
-    private const string ExpandingSpacerDisplayName = "--- expanding spacer ---";
-    private const string LabelDisplayNamePrefix = "--- label:";
-    private const string LabelDisplayNameSuffix = " ---";
+
+    private readonly TranslationString _toolbarComboTooltip = new("Select which toolbar to customize");
+    private readonly TranslationString _toolbarVisibleTooltip = new("Show or hide the selected toolbar in the main window");
+    private readonly TranslationString _addToolbarTooltip = new("Add a new custom toolbar\nHold SHIFT while clicking to specify a custom name instead of 'Custom XX'");
+    private readonly TranslationString _removeToolbarTooltip = new("Delete the selected custom toolbar (built-in toolbars cannot be deleted)");
+    private readonly TranslationString _categoryComboTooltip = new("Filter available actions by category");
+    private readonly TranslationString _filterAvailableTooltip = new("Type to search and filter available actions");
+    private readonly TranslationString _clearAvailableFilterTooltip = new("Clear the search filter for available actions");
+    private readonly TranslationString _filterCurrentTooltip = new("Type to search and filter current toolbar actions");
+    private readonly TranslationString _clearCurrentFilterTooltip = new("Clear the search filter for current toolbar actions");
+    private readonly TranslationString _availableListTooltip = new("Available actions that can be added to the toolbar\nDouble-click an action to add it");
+    private readonly TranslationString _currentListTooltip = new("Actions currently in the selected toolbar\nDouble-click an action to remove it");
+    private readonly TranslationString _addAllTooltip = new("Add all available actions to the current toolbar");
+    private readonly TranslationString _addTooltip = new("Add the selected action to the current toolbar (→)");
+    private readonly TranslationString _removeTooltip = new("Remove the selected action from the current toolbar (←)");
+    private readonly TranslationString _moveUpTooltip = new("Move the selected action up in the toolbar order (↑)");
+    private readonly TranslationString _moveDownTooltip = new("Move the selected action down in the toolbar order (↓)");
+    private readonly TranslationString _clearCurrentTooltip = new("Remove all actions from the current toolbar");
+    private readonly TranslationString _undoTooltip = new("Undo the last toolbar customization");
+    private readonly TranslationString _showIconTextTooltip = new("Show text label next to the selected icon only");
+    private readonly TranslationString _showAllIconTextTooltip = new("Show text labels next to all icons in this toolbar\nDisables per-icon text toggle");
+    private readonly TranslationString _toolbarLayoutTooltip = new("Open the toolbar layout configuration window\nAllows you to arrange toolbars in rows and adjust their visual positions");
+    private readonly TranslationString _locateToolbarTooltip = new("Highlight the selected toolbar in the main window\nUseful for finding where a toolbar is located");
+
+    private readonly TranslationString _clearToolbarQuestion = new("Remove all items from the current toolbar?");
+    private readonly TranslationString _clearToolbarCaption = new("Clear Toolbar");
+    private readonly TranslationString _tooManyToolbarsFormat = new("You cannot have more than {0} toolbars.");
+    private readonly TranslationString _tooManyToolbarsCaption = new("Too many toolbars");
+    private readonly TranslationString _emptyToolbarName = new("Toolbar name cannot be empty.");
+    private readonly TranslationString _invalidNameCaption = new("Invalid Name");
+    private readonly TranslationString _duplicateNameFormat = new("A toolbar named '{0}' already exists.");
+    private readonly TranslationString _duplicateNameCaption = new("Duplicate Name");
+    private readonly TranslationString _duplicateInternalNameFormat = new("The toolbar name '{0}' conflicts with an existing toolbar's internal name.\nPlease choose a different name.");
+    private readonly TranslationString _duplicateInternalNameCaption = new("Duplicate Internal Name");
+    private readonly TranslationString _deleteToolbarFormat = new("Delete toolbar '{0}'?");
+    private readonly TranslationString _deleteToolbarCaption = new("Delete Toolbar");
+    private readonly TranslationString _toolbarNotFound = new("Could not find the selected toolbar.");
+    private readonly TranslationString _locateToolbarCaption = new("Locate Toolbar");
+
+    private readonly TranslationString _newToolbarDialogCaption = new("New Toolbar");
+    private readonly TranslationString _newToolbarPrompt = new("Enter toolbar name:");
+    private readonly TranslationString _addLabelDialogCaption = new("Add Label");
+    private readonly TranslationString _addLabelPrompt = new("Enter label text:");
+    private readonly TranslationString _ok = new("OK");
+    private readonly TranslationString _cancel = new("Cancel");
+
+    // Category names offered by comboBoxCategory. Each is matched back against the selection, so
+    // both sides read the same translated text.
+    private static readonly TranslationString _allActionsCategory = new("All Actions");
+    private static readonly TranslationString _startCategory = new("Start");
+    private static readonly TranslationString _repositoryCategory = new("Repository");
+    private static readonly TranslationString _navigateCategory = new("Navigate");
+    private static readonly TranslationString _viewCategory = new("View");
+    private static readonly TranslationString _commandsCategory = new("Commands");
+    private static readonly TranslationString _gitHubCategory = new("GitHub");
+    private static readonly TranslationString _pluginsCategory = new("Plugins");
+    private static readonly TranslationString _toolsCategory = new("Tools");
+    private static readonly TranslationString _helpCategory = new("Help");
+    private static readonly TranslationString _rightClickMenuCategory = new("Right click menu");
+    private static readonly TranslationString _defaultStandardCategory = new("Default Standard toolbar");
+    private static readonly TranslationString _defaultFiltersCategory = new("Default Filters toolbar");
+
+    // Rows standing for an item that has no action of its own. Static so the nested
+    // ToolStripItemWrapper, which renders them, can reach them.
+    private static readonly TranslationString _separatorDisplayName = new("--- separator ---");
+    private static readonly TranslationString _expandingSpacerDisplayName = new("--- expanding spacer ---");
+    private static readonly TranslationString _customLabelDisplayName = new("--- custom label ---");
+    private static readonly TranslationString _labelDisplayNamePrefix = new("--- label:");
+    private static readonly TranslationString _labelDisplayNameSuffix = new(" ---");
+
+    private static string SeparatorDisplayName => _separatorDisplayName.Text;
+    private static string ExpandingSpacerDisplayName => _expandingSpacerDisplayName.Text;
+    private static string LabelDisplayNamePrefix => _labelDisplayNamePrefix.Text;
+    private static string LabelDisplayNameSuffix => _labelDisplayNameSuffix.Text;
+
+    private static string FormatLabelDisplayName(string labelText)
+        => $"{LabelDisplayNamePrefix}{labelText}{LabelDisplayNameSuffix}";
+
+    private static bool IsLabelDisplayName(string displayName)
+        => displayName.StartsWith(LabelDisplayNamePrefix, StringComparison.Ordinal)
+        && displayName.EndsWith(LabelDisplayNameSuffix, StringComparison.Ordinal)
+        && displayName.Length >= LabelDisplayNamePrefix.Length + LabelDisplayNameSuffix.Length;
+
+    private static string ParseLabelDisplayName(string displayName)
+        => displayName[LabelDisplayNamePrefix.Length..^LabelDisplayNameSuffix.Length];
 
     private readonly Dictionary<string, List<ToolStripItemWrapper>> _toolbarItems = new();
     private readonly Dictionary<string, ToolStrip> _dynamicToolbars = new();
@@ -29,7 +110,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     private string _currentToolbarName = StandardToolbarName;
     private FormBrowse? _formBrowse;
 
-    // Items excluded from AllActionsCategory because they are non-functional on a toolbar,
+    // Items excluded from the "All Actions" category because they are non-functional on a toolbar,
     // dashboard-only, or exact duplicates of another item already present.
     private static readonly HashSet<string> _excludedFromAllActions = new()
     {
@@ -63,19 +144,19 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         // Initialize category combo box
         comboBoxCategory.Items.AddRange(new object[]
         {
-            AllActionsCategory,
-            "Start",
-            "Repository",
-            "Navigate",
-            "View",
-            "Commands",
-            "GitHub",
-            "Plugins",
-            "Tools",
-            "Help",
-            "Right click menu",
-            "Default Standard toolbar",
-            "Default Filters toolbar"
+            _allActionsCategory.Text,
+            _startCategory.Text,
+            _repositoryCategory.Text,
+            _navigateCategory.Text,
+            _viewCategory.Text,
+            _commandsCategory.Text,
+            _gitHubCategory.Text,
+            _pluginsCategory.Text,
+            _toolsCategory.Text,
+            _helpCategory.Text,
+            _rightClickMenuCategory.Text,
+            _defaultStandardCategory.Text,
+            _defaultFiltersCategory.Text
         });
         comboBoxCategory.SelectedIndex = 0;
 
@@ -201,36 +282,28 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
     private void InitializeToolTips()
     {
-        ToolTip.SetToolTip(comboBoxToolbar, "Select which toolbar to customize");
-        ToolTip.SetToolTip(checkBoxToolbarVisible, "Show or hide the selected toolbar in the main window");
-        ToolTip.SetToolTip(buttonAddToolbar,
-            "Add a new custom toolbar\n" +
-            "Hold SHIFT while clicking to specify a custom name instead of 'Custom XX'");
-        ToolTip.SetToolTip(buttonRemoveToolbar, "Delete the selected custom toolbar (built-in toolbars cannot be deleted)");
-        ToolTip.SetToolTip(comboBoxCategory, "Filter available actions by category");
-        ToolTip.SetToolTip(textBoxFilterAvailable, "Type to search and filter available actions");
-        ToolTip.SetToolTip(buttonClearAvailableFilter, "Clear the search filter for available actions");
-        ToolTip.SetToolTip(textBoxFilterCurrent, "Type to search and filter current toolbar actions");
-        ToolTip.SetToolTip(buttonClearCurrentFilter, "Clear the search filter for current toolbar actions");
-        ToolTip.SetToolTip(listBoxAvailable, "Available actions that can be added to the toolbar\nDouble-click an action to add it");
-        ToolTip.SetToolTip(listBoxCurrent, "Actions currently in the selected toolbar\nDouble-click an action to remove it");
-        ToolTip.SetToolTip(buttonAddAll, "Add all available actions to the current toolbar");
-        ToolTip.SetToolTip(buttonAdd, "Add the selected action to the current toolbar (→)");
-        ToolTip.SetToolTip(buttonRemove, "Remove the selected action from the current toolbar (←)");
-        ToolTip.SetToolTip(buttonMoveUp, "Move the selected action up in the toolbar order (↑)");
-        ToolTip.SetToolTip(buttonMoveDown, "Move the selected action down in the toolbar order (↓)");
-        ToolTip.SetToolTip(buttonClearCurrent, "Remove all actions from the current toolbar");
-        ToolTip.SetToolTip(buttonUndo, "Undo the last toolbar customization");
-        ToolTip.SetToolTip(buttonShowIconText,
-            "Show text label next to the selected icon only");
-        ToolTip.SetToolTip(buttonShowAllIconText,
-            "Show text labels next to all icons in this toolbar\nDisables per-icon text toggle");
-        ToolTip.SetToolTip(buttonToolbarLayout,
-            "Open the toolbar layout configuration window\n" +
-            "Allows you to arrange toolbars in rows and adjust their visual positions");
-        ToolTip.SetToolTip(buttonLocateToolbar,
-            "Highlight the selected toolbar in the main window\n" +
-            "Useful for finding where a toolbar is located");
+        ToolTip.SetToolTip(comboBoxToolbar, _toolbarComboTooltip.Text);
+        ToolTip.SetToolTip(checkBoxToolbarVisible, _toolbarVisibleTooltip.Text);
+        ToolTip.SetToolTip(buttonAddToolbar, _addToolbarTooltip.Text);
+        ToolTip.SetToolTip(buttonRemoveToolbar, _removeToolbarTooltip.Text);
+        ToolTip.SetToolTip(comboBoxCategory, _categoryComboTooltip.Text);
+        ToolTip.SetToolTip(textBoxFilterAvailable, _filterAvailableTooltip.Text);
+        ToolTip.SetToolTip(buttonClearAvailableFilter, _clearAvailableFilterTooltip.Text);
+        ToolTip.SetToolTip(textBoxFilterCurrent, _filterCurrentTooltip.Text);
+        ToolTip.SetToolTip(buttonClearCurrentFilter, _clearCurrentFilterTooltip.Text);
+        ToolTip.SetToolTip(listBoxAvailable, _availableListTooltip.Text);
+        ToolTip.SetToolTip(listBoxCurrent, _currentListTooltip.Text);
+        ToolTip.SetToolTip(buttonAddAll, _addAllTooltip.Text);
+        ToolTip.SetToolTip(buttonAdd, _addTooltip.Text);
+        ToolTip.SetToolTip(buttonRemove, _removeTooltip.Text);
+        ToolTip.SetToolTip(buttonMoveUp, _moveUpTooltip.Text);
+        ToolTip.SetToolTip(buttonMoveDown, _moveDownTooltip.Text);
+        ToolTip.SetToolTip(buttonClearCurrent, _clearCurrentTooltip.Text);
+        ToolTip.SetToolTip(buttonUndo, _undoTooltip.Text);
+        ToolTip.SetToolTip(buttonShowIconText, _showIconTextTooltip.Text);
+        ToolTip.SetToolTip(buttonShowAllIconText, _showAllIconTextTooltip.Text);
+        ToolTip.SetToolTip(buttonToolbarLayout, _toolbarLayoutTooltip.Text);
+        ToolTip.SetToolTip(buttonLocateToolbar, _locateToolbarTooltip.Text);
     }
 
     private void ListBox_SelectedIndexChanged(object? sender, EventArgs e)
@@ -374,7 +447,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
             if (isEditable && !string.IsNullOrWhiteSpace(label.Text))
             {
-                return new ToolStripItemWrapper(null, $"--- label:{label.Text} ---");
+                return new ToolStripItemWrapper(null, FormatLabelDisplayName(label.Text));
             }
 
             return null;
@@ -410,7 +483,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 }
                 else if (isEditable && !string.IsNullOrWhiteSpace(label.Text))
                 {
-                    wrappers.Add(new ToolStripItemWrapper(null, $"--- label:{label.Text} ---"));
+                    wrappers.Add(new ToolStripItemWrapper(null, FormatLabelDisplayName(label.Text)));
                 }
 
                 // Static text labels (e.g. "Branches:", "Filter:") are intentionally skipped.
@@ -430,14 +503,14 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         int allBranchesIdx = items.FindIndex(w => w.Item?.Name == "tssbtnShowBranches");
         if (allBranchesIdx >= 0)
         {
-            items.Insert(allBranchesIdx + 1, new ToolStripItemWrapper(null, "--- label:Branches: ---"));
+            items.Insert(allBranchesIdx + 1, new ToolStripItemWrapper(null, FormatLabelDisplayName("Branches:")));
         }
 
         // Insert "[Label] Filter:" before the revision filter textbox (tstxtRevisionFilter)
         int revFilterIdx = items.FindIndex(w => w.Item?.Name == "tstxtRevisionFilter");
         if (revFilterIdx >= 0)
         {
-            items.Insert(revFilterIdx, new ToolStripItemWrapper(null, "--- label:Filter: ---"));
+            items.Insert(revFilterIdx, new ToolStripItemWrapper(null, FormatLabelDisplayName("Filter:")));
         }
     }
 
@@ -522,8 +595,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     private void ButtonClearCurrent_Click(object? sender, EventArgs e)
     {
         DialogResult result = MessageBoxes.Show(
-            "Remove all items from the current toolbar?",
-            "Clear Toolbar",
+            _clearToolbarQuestion.Text,
+            _clearToolbarCaption.Text,
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Question);
 
@@ -550,8 +623,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         if (comboBoxToolbar.Items.Count >= ToolbarLayoutValidator.MaxToolbars)
         {
             MessageBoxes.Show(
-                $"You cannot have more than {ToolbarLayoutValidator.MaxToolbars} toolbars.",
-                "Too many toolbars",
+                string.Format(_tooManyToolbarsFormat.Text, ToolbarLayoutValidator.MaxToolbars),
+                _tooManyToolbarsCaption.Text,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);
             return;
@@ -576,8 +649,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             if (string.IsNullOrWhiteSpace(customName))
             {
                 MessageBoxes.Show(
-                    "Toolbar name cannot be empty.",
-                    "Invalid Name",
+                    _emptyToolbarName.Text,
+                    _invalidNameCaption.Text,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
                 return;
@@ -586,8 +659,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             if (comboBoxToolbar.Items.Cast<string>().Any(name => name.Equals(customName, StringComparison.OrdinalIgnoreCase)))
             {
                 MessageBoxes.Show(
-                    $"A toolbar named '{customName}' already exists.",
-                    "Duplicate Name",
+                    string.Format(_duplicateNameFormat.Text, customName),
+                    _duplicateNameCaption.Text,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
                 return;
@@ -611,8 +684,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         {
             comboBoxToolbar.Items.Remove(newToolbarName);
             MessageBoxes.Show(
-                $"The toolbar name '{newToolbarName}' conflicts with an existing toolbar's internal name.\nPlease choose a different name.",
-                "Duplicate Internal Name",
+                string.Format(_duplicateInternalNameFormat.Text, newToolbarName),
+                _duplicateInternalNameCaption.Text,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);
             return;
@@ -670,7 +743,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     {
         using Form inputForm = new()
         {
-            Text = "New Toolbar",
+            Text = _newToolbarDialogCaption.Text,
             Width = 350,
             Height = 175,
             FormBorderStyle = FormBorderStyle.FixedDialog,
@@ -681,7 +754,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         Label label = new()
         {
-            Text = "Enter toolbar name:",
+            Text = _newToolbarPrompt.Text,
             Left = 15,
             Top = 20,
             Width = 300
@@ -700,7 +773,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         Button confirmButton = new()
         {
-            Text = "OK",
+            Text = _ok.Text,
             DialogResult = DialogResult.OK,
             Left = 155,
             Top = 80,
@@ -709,7 +782,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         Button cancelButton = new()
         {
-            Text = "Cancel",
+            Text = _cancel.Text,
             DialogResult = DialogResult.Cancel,
             Left = 240,
             Top = 80,
@@ -739,7 +812,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     {
         using Form inputForm = new()
         {
-            Text = "Add Label",
+            Text = _addLabelDialogCaption.Text,
             Width = 350,
             Height = 175,
             FormBorderStyle = FormBorderStyle.FixedDialog,
@@ -750,7 +823,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         Label label = new()
         {
-            Text = "Enter label text:",
+            Text = _addLabelPrompt.Text,
             Left = 15,
             Top = 20,
             Width = 300
@@ -769,7 +842,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         Button confirmButton = new()
         {
-            Text = "OK",
+            Text = _ok.Text,
             DialogResult = DialogResult.OK,
             Left = 155,
             Top = 80,
@@ -778,7 +851,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         Button cancelButton = new()
         {
-            Text = "Cancel",
+            Text = _cancel.Text,
             DialogResult = DialogResult.Cancel,
             Left = 240,
             Top = 80,
@@ -800,8 +873,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         if (_currentToolbarName.StartsWith(CustomToolbarDisplayPrefix))
         {
             DialogResult result = MessageBoxes.Show(
-                $"Delete toolbar '{_currentToolbarName}'?",
-                "Delete Toolbar",
+                string.Format(_deleteToolbarFormat.Text, _currentToolbarName),
+                _deleteToolbarCaption.Text,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
@@ -997,19 +1070,19 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         ToolStripItemWrapper? itemToAdd = null;
 
-        if (wrapper.DisplayName is SeparatorDisplayName or ExpandingSpacerDisplayName)
+        if (wrapper.DisplayName == SeparatorDisplayName || wrapper.DisplayName == ExpandingSpacerDisplayName)
         {
             itemToAdd = new ToolStripItemWrapper(null, wrapper.DisplayName);
         }
-        else if (wrapper.DisplayName == "--- custom label ---")
+        else if (wrapper.DisplayName == _customLabelDisplayName.Text)
         {
             string? labelText = ShowLabelTextDialog();
             if (!string.IsNullOrWhiteSpace(labelText))
             {
-                itemToAdd = new ToolStripItemWrapper(null, $"--- label:{labelText} ---");
+                itemToAdd = new ToolStripItemWrapper(null, FormatLabelDisplayName(labelText));
             }
         }
-        else if (wrapper.DisplayName.StartsWith(LabelDisplayNamePrefix) && wrapper.DisplayName.EndsWith(LabelDisplayNameSuffix))
+        else if (IsLabelDisplayName(wrapper.DisplayName))
         {
             itemToAdd = new ToolStripItemWrapper(null, wrapper.DisplayName);
         }
@@ -1666,7 +1739,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             return (spacer, ToolbarItemNames.Spacer(order));
         }
 
-        if (wrapper.DisplayName.StartsWith(LabelDisplayNamePrefix) && wrapper.DisplayName.EndsWith(LabelDisplayNameSuffix))
+        if (IsLabelDisplayName(wrapper.DisplayName))
         {
             string labelText = wrapper.DisplayName.Substring(10, wrapper.DisplayName.Length - 14);
             ToolStripLabel label = new()
@@ -1928,7 +2001,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     private void UpdateButtonAddAllEnabled()
     {
         string? selectedCategory = comboBoxCategory.SelectedItem?.ToString();
-        if (selectedCategory == AllActionsCategory)
+        if (selectedCategory == _allActionsCategory.Text)
         {
             buttonAddAll.Enabled = false;
             return;
@@ -1964,19 +2037,19 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         HashSet<string> addedItemNames = new();
         HashSet<string> noFilter = new();
 
-        if (selectedCategory == AllActionsCategory)
+        if (selectedCategory == _allActionsCategory.Text)
         {
             PopulateAllActionsCategory(mainMenu, noFilter, addedItemNames);
         }
-        else if (selectedCategory == "Default Standard toolbar")
+        else if (selectedCategory == _defaultStandardCategory.Text)
         {
             AddItemsFromSnapshot(_defaultStandardItems, noFilter, addedItemNames);
         }
-        else if (selectedCategory == "Default Filters toolbar")
+        else if (selectedCategory == _defaultFiltersCategory.Text)
         {
             AddItemsFromSnapshot(_defaultFiltersItems, noFilter, addedItemNames);
         }
-        else if (selectedCategory == "Right click menu")
+        else if (selectedCategory == _rightClickMenuCategory.Text)
         {
             ContextMenuStrip? revisionContextMenu = _formBrowse.RevisionGridControl?.MainContextMenu;
             if (revisionContextMenu != null)
@@ -1997,7 +2070,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     {
         listBoxAvailable.Items.Add(new ToolStripItemWrapper(null, SeparatorDisplayName));
         listBoxAvailable.Items.Add(new ToolStripItemWrapper(null, ExpandingSpacerDisplayName));
-        listBoxAvailable.Items.Add(new ToolStripItemWrapper(null, "--- custom label ---"));
+        listBoxAvailable.Items.Add(new ToolStripItemWrapper(null, _customLabelDisplayName.Text));
 
         foreach (ToolStripMenuItem menuItem in mainMenu.Items.OfType<ToolStripMenuItem>())
         {
@@ -2025,15 +2098,15 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         // Map category label → control Name (robust to UI translations).
         string? menuControlName = selectedCategory switch
         {
-            "Start" => "fileToolStripMenuItem",
-            "Repository" => "repositoryToolStripMenuItem",
-            "Navigate" => "navigateToolStripMenuItem",
-            "View" => "viewToolStripMenuItem",
-            "Commands" => "commandsToolStripMenuItem",
-            "GitHub" => "_repositoryHostsToolStripMenuItem",
-            "Plugins" => "pluginsToolStripMenuItem",
-            "Tools" => "toolsToolStripMenuItem",
-            "Help" => "helpToolStripMenuItem",
+            _ when selectedCategory == _startCategory.Text => "fileToolStripMenuItem",
+            _ when selectedCategory == _repositoryCategory.Text => "repositoryToolStripMenuItem",
+            _ when selectedCategory == _navigateCategory.Text => "navigateToolStripMenuItem",
+            _ when selectedCategory == _viewCategory.Text => "viewToolStripMenuItem",
+            _ when selectedCategory == _commandsCategory.Text => "commandsToolStripMenuItem",
+            _ when selectedCategory == _gitHubCategory.Text => "_repositoryHostsToolStripMenuItem",
+            _ when selectedCategory == _pluginsCategory.Text => "pluginsToolStripMenuItem",
+            _ when selectedCategory == _toolsCategory.Text => "toolsToolStripMenuItem",
+            _ when selectedCategory == _helpCategory.Text => "helpToolStripMenuItem",
             _ => null
         };
 
@@ -2111,7 +2184,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             return;
         }
 
-        if (wrapper.DisplayName.StartsWith(LabelDisplayNamePrefix) && wrapper.DisplayName.EndsWith(LabelDisplayNameSuffix))
+        if (IsLabelDisplayName(wrapper.DisplayName))
         {
             if (pendingSeparator)
             {
@@ -2139,7 +2212,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         }
     }
 
-    // Populates listBoxAvailable for the "Right click menu" category.
+    // Populates listBoxAvailable for the right-click menu category.
     // Mirrors the real context menu structure: groups separated by separators,
     // sub-menu children prefixed with "ParentMenu > child".
     private void AddRightClickMenuItems(ContextMenuStrip contextMenu, HashSet<string> addedItemNames)
@@ -2327,7 +2400,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             return;
         }
 
-        if (listBoxAvailable.Items[^1] is ToolStripItemWrapper { DisplayName: SeparatorDisplayName })
+        if (listBoxAvailable.Items[^1] is ToolStripItemWrapper lastWrapper && lastWrapper.DisplayName == SeparatorDisplayName)
         {
             return;
         }
@@ -2386,7 +2459,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             return;
         }
 
-        if (selectedCategory == AllActionsCategory && _excludedFromAllActions.Contains(subMenuItem.Name ?? string.Empty))
+        if (selectedCategory == _allActionsCategory.Text && _excludedFromAllActions.Contains(subMenuItem.Name ?? string.Empty))
         {
             return;
         }
@@ -2496,8 +2569,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             return;
         }
 
-        bool isEditableLabel = wrapper.DisplayName.StartsWith(LabelDisplayNamePrefix) && wrapper.DisplayName.EndsWith(LabelDisplayNameSuffix);
-        bool isEditableLabelAction = wrapper.DisplayName == "--- custom label ---";
+        bool isEditableLabel = IsLabelDisplayName(wrapper.DisplayName);
+        bool isEditableLabelAction = wrapper.DisplayName == _customLabelDisplayName.Text;
         bool isSeparatorItem = wrapper.DisplayName == SeparatorDisplayName || wrapper.DisplayName == ExpandingSpacerDisplayName;
 
         Image? icon = null;
@@ -2588,8 +2661,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         if (toolbar == null)
         {
             MessageBoxes.Show(
-                "Could not find the selected toolbar.",
-                "Locate Toolbar",
+                _toolbarNotFound.Text,
+                _locateToolbarCaption.Text,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);
             return;
