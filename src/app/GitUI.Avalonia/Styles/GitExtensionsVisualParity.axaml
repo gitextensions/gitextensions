@@ -890,14 +890,6 @@
     <Setter Property="Foreground"
             Value="{DynamicResource GitExtensionsInactiveSelectionForegroundBrush}" />
   </Style>
-  <Style Selector="Grid.revision-row.revision-alternate">
-    <Setter Property="Background"
-            Value="{DynamicResource GitExtensionsRevisionAlternatingRowBrush}" />
-  </Style>
-  <Style Selector="Grid.revision-row.revision-authored">
-    <Setter Property="Background"
-            Value="{DynamicResource GitExtensionsRevisionAuthoredBrush}" />
-  </Style>
   <!-- Fluent deliberately omits the dotted hierarchy drawn by WinForms NativeTreeView.
        Keep Fluent's selection states and template part names, but share one desktop tree
        template across repository, settings, diff-group, and full File tree surfaces. -->

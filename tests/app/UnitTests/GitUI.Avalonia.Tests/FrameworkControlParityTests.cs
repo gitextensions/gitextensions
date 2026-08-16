@@ -192,9 +192,11 @@ public sealed class FrameworkControlParityTests
                 .Where(pair => pair.Key.StartsWith("semantic.", StringComparison.Ordinal))
                 .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
 
-            roles.Should().HaveCount(18);
+            roles.Should().HaveCount(20);
             roles.Keys.Should().Contain(
                 "semantic.app.panel.background",
+                "semantic.app.revision.alternating.background",
+                "semantic.app.revision.authored.background",
                 "semantic.app.selection.background",
                 "semantic.system.control.background",
                 "semantic.system.highlight.background",
