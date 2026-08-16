@@ -863,6 +863,51 @@ public sealed class RevisionGridSupportTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.1")]
+    public void Revision_grid_should_preserve_pointer_focus_when_streamed_rows_receive_their_final_order()
+    {
+        RevisionGridControl control = new() { UICommandsSource = CreateUICommandsSource() };
+        RevisionGridControl.TestAccessor accessor = control.GetTestAccessor();
+        GitRevision[] revisions = [Revision(1), Revision(2), Revision(3)];
+        accessor.SetRevisions(revisions);
+        TextBox otherControl = new();
+        Grid host = new()
+        {
+            RowDefinitions = new RowDefinitions("*,Auto"),
+            Children = { control, otherControl },
+        };
+        Grid.SetRow(otherControl, 1);
+        Window window = new() { Width = 900, Height = 160, Content = host };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            accessor.Revisions.SelectedItem = revisions[1];
+            ListBoxItem selectedRow = accessor.Revisions.ContainerFromIndex(1) as ListBoxItem
+                ?? throw new InvalidOperationException("The selected revision row was not realized.");
+            selectedRow.Focus(NavigationMethod.Pointer).Should().BeTrue();
+            accessor.Revisions.IsKeyboardFocusWithin.Should().BeTrue();
+
+            accessor.SetRevisions([revisions[2], revisions[1], revisions[0]]);
+            Dispatcher.UIThread.RunJobs();
+
+            accessor.Revisions.SelectedItem.Should().BeSameAs(revisions[1]);
+            accessor.Revisions.IsKeyboardFocusWithin.Should().BeTrue();
+
+            otherControl.Focus(NavigationMethod.Pointer).Should().BeTrue();
+            accessor.SetRevisions(revisions);
+            Dispatcher.UIThread.RunJobs();
+
+            accessor.Revisions.SelectedItem.Should().BeSameAs(revisions[1]);
+            otherControl.IsKeyboardFocusWithin.Should().BeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [NonParallelizable]
     [Category("P8.6h.1")]
     public void Revision_grid_should_preserve_home_end_copy_and_patch_drop_routes()

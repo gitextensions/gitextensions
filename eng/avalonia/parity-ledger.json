@@ -33499,18 +33499,18 @@
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-16",
-          "commit": "1a7bb5c077ca36b4cfecd818e99d5a7bd93ead9a",
+          "verifiedOn": "2026-08-17",
+          "commit": "0fac5499e67d0f0b57bac03a83d279f51b0e7c82",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/inventory/RevisionGridControl.json",
+            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/inventory/RevisionGridControl.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b15/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b15/accepted/tests/windows/tranche-focused-final.log",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b15/accepted/tests/linux/gate.log",
+            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/windows/revision-grid-support.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/linux/focused.trx",
             "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
-          "findingCount": 1087,
-          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload now carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. The fresh scoped inventory records 1087 structural/functional source-shape findings, including the deliberate Avalonia focus-lifecycle members, and the broader exhaustive behavior audit remains open."
+          "findingCount": 1088,
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. Final-order replacement now retains the primary and multi-selection by revision identity, scrolls the primary row into view, and restores focus only when the grid owned it before Avalonia reset the collection. The fresh scoped inventory records 1088 structural/functional source-shape findings, including the deliberate Avalonia focus-lifecycle member, and the broader exhaustive behavior audit remains open."
         },
         "visual": {
           "status": "partial",
@@ -33541,33 +33541,35 @@
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-16",
-          "commit": "1a7bb5c077ca36b4cfecd818e99d5a7bd93ead9a",
+          "verifiedOn": "2026-08-17",
+          "commit": "0fac5499e67d0f0b57bac03a83d279f51b0e7c82",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/winforms-retry/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/avalonia/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/diff-accepted/findings.json",
+            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/windows/revision-grid-support.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/linux/focused.trx",
             "eng/avalonia/parity-evidence/P0.6/wayland/window.png",
             "eng/avalonia/parity-evidence/P0.6/x11/window.png",
             "eng/avalonia/parity-evidence/P0.6/flatpak/window.png"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, and complete View-menu checked states across light/dark/custom. A reviewer-feedback test additionally verifies initial list focus after asynchronous loading, explicit filter focus, and command-driven focus restoration; inspected Linux runtime captures show the initial list selection/focus. The report has zero state/control findings; the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
+          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, and complete View-menu checked states across light/dark/custom. Reviewer-feedback tests verify initial list focus after asynchronous loading, explicit filter focus, command-driven focus restoration, and that a pointer-focused selected commit remains selected, visible, and focused when streamed rows receive their final order. The focus is not restored when another surface owned it before completion. The report has zero state/control findings; the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-16",
-          "commit": "1a7bb5c077ca36b4cfecd818e99d5a7bd93ead9a",
+          "verifiedOn": "2026-08-17",
+          "commit": "0fac5499e67d0f0b57bac03a83d279f51b0e7c82",
           "evidence": [
-            "eng/avalonia/parity-evidence/PR-feedback/focus-mnemonics/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/runtime/windows/smoke.json",
             "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
             "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
             "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. The three Linux captures visibly retain initial revision-list focus after loading. Native DPI beyond 125%, exhaustive component states, and macOS remain open."
+          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. Focused final-order selection/focus tests pass on Windows and native-ext4 Linux. The three Linux captures visibly retain initial revision-list focus after loading. Native DPI beyond 125%, exhaustive component states, and macOS remain open."
         }
       }
     },

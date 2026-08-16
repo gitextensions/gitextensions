@@ -2288,8 +2288,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             .ToArray();
         if (!_revisions.SequenceEqual(orderedRevisions))
         {
-            _revisions.Clear();
-            _revisions.AddRange(orderedRevisions);
+            ApplyFinalRevisionOrder(orderedRevisions);
         }
 
         if (_revisions.Count == 0 && !_filterInfo.HasFilter)
@@ -2314,6 +2313,44 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         {
             _gridView.SelectedIndex = 0;
         }
+    }
+
+    private void ApplyFinalRevisionOrder(IReadOnlyList<GitRevision> orderedRevisions)
+    {
+        bool restoreFocus = _gridView.IsKeyboardFocusWithin;
+        GitRevision? selectedRevision = SelectedRevision;
+        GitRevision[] selectedRevisions = [.. _gridView.SelectedItems?.OfType<GitRevision>() ?? []];
+        HashSet<GitRevision> finalRevisions = new(orderedRevisions, ReferenceEqualityComparer.Instance);
+        GitRevision? restoredPrimarySelection = selectedRevision is not null && finalRevisions.Contains(selectedRevision)
+            ? selectedRevision
+            : null;
+
+        // Avalonia resets selection and focus when its items collection is replaced; the WinForms grid retains both.
+        _revisions.Clear();
+        _revisions.AddRange(orderedRevisions);
+
+        if (restoredPrimarySelection is not null)
+        {
+            _gridView.SelectedItem = restoredPrimarySelection;
+        }
+
+        if (_gridView.SelectedItems is { } selectedItems)
+        {
+            foreach (GitRevision revision in selectedRevisions.Where(finalRevisions.Contains))
+            {
+                if (!selectedItems.Contains(revision))
+                {
+                    selectedItems.Add(revision);
+                }
+            }
+        }
+
+        if (restoredPrimarySelection is not null)
+        {
+            _gridView.ScrollIntoView(restoredPrimarySelection);
+        }
+
+        _focusGridWhenShown |= restoreFocus;
     }
 
     private IReadOnlyList<GitRevision> CreateArtificialRevisions(CancellationToken cancellationToken)
@@ -2535,9 +2572,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
         public void SetRevisions(IEnumerable<GitRevision> revisions)
         {
-            control._revisions.Clear();
-            control._revisions.AddRange(revisions);
+            control.ApplyFinalRevisionOrder([.. revisions]);
             control.SetPage(control._gridView);
+            control.FocusRevisionGridWhenShown();
         }
 
         public void AppendRevisions(IEnumerable<GitRevision> revisions)
