@@ -125,15 +125,17 @@ public sealed class EndToEndCaptureTests
             .WithMessage("*declined to open*");
     }
 
-    [TestCase(true, false, 0, 100, false, TestName = "Visible graph has not rendered")]
-    [TestCase(true, true, 48, 48, false, TestName = "Visible rows are still updating")]
-    [TestCase(true, false, 48, 100, false, TestName = "Rendered graph width has not been published")]
-    [TestCase(true, false, 48, 48, true, TestName = "Rendered graph width is stable")]
-    [TestCase(false, false, 0, 100, true, TestName = "Hidden graph requires no render")]
+    [TestCase(true, false, 0, 48, 100, false, TestName = "Visible graph has not rendered")]
+    [TestCase(true, true, 48, 48, 48, false, TestName = "Visible rows are still updating")]
+    [TestCase(true, false, 48, 48, 100, false, TestName = "Rendered graph width has not been published")]
+    [TestCase(true, false, 28, 48, 28, false, TestName = "Rendered graph width predates the complete visible range")]
+    [TestCase(true, false, 48, 48, 48, true, TestName = "Rendered graph width is stable")]
+    [TestCase(false, false, 0, 48, 100, true, TestName = "Hidden graph requires no render")]
     public void Revision_grid_capture_should_require_the_product_graph_render(
         bool graphVisible,
         bool updatingVisibleRows,
         int renderedWidth,
+        int expectedWidth,
         int columnWidth,
         bool expected)
     {
@@ -141,7 +143,30 @@ public sealed class EndToEndCaptureTests
             graphVisible,
             updatingVisibleRows,
             renderedWidth,
+            expectedWidth,
             columnWidth).Should().Be(expected);
+    }
+
+    [TestCase(true, false, 28, 48, false, true, TestName = "Late graph data requests one product refresh")]
+    [TestCase(true, false, 0, 48, false, true, TestName = "An initially missing graph render requests one product refresh")]
+    [TestCase(true, false, 28, 48, true, false, TestName = "The same graph mismatch is not refreshed repeatedly")]
+    [TestCase(true, true, 28, 48, false, false, TestName = "An active row update is not interrupted")]
+    [TestCase(true, false, 48, 48, false, false, TestName = "A current graph render needs no refresh")]
+    [TestCase(false, false, 28, 48, false, false, TestName = "A hidden graph needs no refresh")]
+    public void Revision_grid_capture_should_refresh_a_late_graph_width_once(
+        bool graphVisible,
+        bool updatingVisibleRows,
+        int renderedWidth,
+        int expectedWidth,
+        bool mismatchAlreadyRefreshed,
+        bool expected)
+    {
+        ComponentFactory.ShouldRefreshRevisionGridRender(
+            graphVisible,
+            updatingVisibleRows,
+            renderedWidth,
+            expectedWidth,
+            mismatchAlreadyRefreshed).Should().Be(expected);
     }
 
     [TestCase(false, true, true, true, true, true, TestName = "Stable HEAD selection is ready")]
