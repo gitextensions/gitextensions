@@ -140,9 +140,15 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
     {
         foreach (object? item in sourceParent.Items)
         {
-            if (item is Separator)
+            if (item is Separator sourceSeparator)
             {
-                targetParent.Items.Add(new Separator());
+                // Avalonia clones the reusable RevisionGrid menu, so its measured ToolStrip metrics must follow the clone.
+                targetParent.Items.Add(new Separator
+                {
+                    Width = sourceSeparator.Width,
+                    MinWidth = sourceSeparator.MinWidth,
+                    HorizontalAlignment = sourceSeparator.HorizontalAlignment,
+                });
                 continue;
             }
 
@@ -164,6 +170,9 @@ internal sealed class FormBrowseMenus : ITranslate, IDisposable
                 IsVisible = source.IsVisible,
                 Focusable = source.Focusable,
                 IsHitTestVisible = source.IsHitTestVisible,
+                Width = source.Width,
+                MinWidth = source.MinWidth,
+                HorizontalAlignment = source.HorizontalAlignment,
             };
             foreach (string className in source.Classes.Where(className => !className.StartsWith(':')))
             {
