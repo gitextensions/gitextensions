@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
@@ -2391,10 +2392,25 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, MenuItem targetItem)
     {
+        bool isViewMenu = targetItem.Name == nameof(viewToolStripMenuItem);
         targetItem.Items.Clear();
         foreach (MenuCommand menuCommand in menuCommands)
         {
             Control item = MenuCommand.CreateToolStripItem(menuCommand);
+            if (isViewMenu)
+            {
+                // Avalonia derives a narrower shared submenu column than ToolStripDropDownMenu for the same text and shortcuts.
+                if (item is Separator separator)
+                {
+                    separator.Width = 423.2;
+                    separator.HorizontalAlignment = HorizontalAlignment.Center;
+                }
+                else
+                {
+                    item.MinWidth = 425.6;
+                }
+            }
+
             targetItem.Items.Add(item);
             if (item is MenuItem menuItem)
             {

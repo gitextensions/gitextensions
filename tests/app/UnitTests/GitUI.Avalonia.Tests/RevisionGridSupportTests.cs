@@ -445,6 +445,17 @@ public sealed class RevisionGridSupportTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void View_menu_should_use_the_measured_ToolStrip_shared_width()
+    {
+        RevisionGridControl control = new();
+
+        control.ViewMenuItem.Items.OfType<MenuItem>().Should().OnlyContain(item => item.MinWidth == 425.6);
+        control.ViewMenuItem.Items.OfType<Separator>().Should().OnlyContain(
+            separator => separator.Width == 423.2 && separator.HorizontalAlignment == Avalonia.Layout.HorizontalAlignment.Center);
+    }
+
+    [AvaloniaTest]
     [Category("P8.6h.3b.1")]
     [Category("P8.6h.3b.2b.2b.2b.5")]
     public void Copy_context_menu_should_rebuild_the_original_branch_tag_and_revision_groups()
