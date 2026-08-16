@@ -9,9 +9,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 {
     // Built-in toolbar names.
-    private const string StandardToolbarName = "Standard";
-    private const string FiltersToolbarName = "Filters";
-    private const string ScriptsToolbarName = "Scripts";
+    private const string StandardToolbarName = ToolbarNames.Standard;
+    private const string FiltersToolbarName = ToolbarNames.Filters;
+    private const string ScriptsToolbarName = ToolbarNames.Scripts;
 
     // The default action category and the display-name markers used for synthetic wrapper rows.
     private const string AllActionsCategory = "All Actions";
@@ -545,6 +545,18 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             return;
         }
 
+        // Stay within what a saved layout accepts, so the dialog cannot build a set of toolbars
+        // that could not be persisted.
+        if (comboBoxToolbar.Items.Count >= ToolbarLayoutValidator.MaxToolbars)
+        {
+            MessageBoxes.Show(
+                $"You cannot have more than {ToolbarLayoutValidator.MaxToolbars} toolbars.",
+                "Too many toolbars",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return;
+        }
+
         int nextNumber = 1;
         while (comboBoxToolbar.Items.Cast<string>().Any(name => name == $"Custom {nextNumber:D2}"))
         {
@@ -645,7 +657,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
         config.SetCustomToolbarMetadata(
             name: newToolbarName,
-            row: maxRow + 1,
+            row: Math.Min(maxRow + 1, ToolbarLayoutValidator.MaxRow),
             orderInRow: 0,
             visible: true,
             iconSize: 16);
@@ -680,7 +692,10 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             Text = defaultName,
             Left = 15,
             Top = 45,
-            Width = 300
+            Width = 300,
+
+            // Keep the name within what a saved layout accepts.
+            MaxLength = ToolbarLayoutValidator.MaxToolbarNameLength
         };
 
         Button confirmButton = new()

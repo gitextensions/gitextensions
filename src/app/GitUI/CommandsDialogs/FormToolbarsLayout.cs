@@ -1,4 +1,5 @@
-﻿using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
+﻿using System.Collections.Immutable;
+using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 
 namespace GitUI.CommandsDialogs;
 
@@ -17,7 +18,8 @@ public partial class FormToolbarsLayout : Form
     private const int ToolbarItemHeight = 36;
     private const int ToolbarItemMargin = 6;
 
-    private static readonly int[] IconSizeOptions = [16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72];
+    // The sizes a saved layout is validated against, so the dialog cannot offer an unsupported one.
+    private static readonly ImmutableArray<int> IconSizeOptions = ToolbarLayoutValidator.IconSizes;
 
     [System.Diagnostics.Conditional("DEBUG")]
     private static void LogToolbar(string message)
@@ -221,7 +223,8 @@ public partial class FormToolbarsLayout : Form
                 _iconSizeCombo.Items.Add($"Icon size: {size}");
             }
 
-            int selectedIndex = Array.IndexOf(IconSizeOptions, item.IconSize);
+            // A live ToolStrip can report a DPI-scaled size that is not offered as-is.
+            int selectedIndex = IconSizeOptions.IndexOf(ToolbarLayoutValidator.NormalizeIconSize(item.IconSize));
             _iconSizeCombo.SelectedIndex = selectedIndex >= 0 ? selectedIndex : 0;
             _iconSizeCombo.SelectedIndexChanged += (s, e) =>
             {
@@ -993,6 +996,13 @@ public partial class FormToolbarsLayout : Form
 
     private void ButtonAddRow_Click(object? sender, EventArgs e)
     {
+        // Stay within the range a saved layout accepts, so the dialog cannot build a placement
+        // that could not be persisted.
+        if (_rowPanels.Count > ToolbarLayoutValidator.MaxRow)
+        {
+            return;
+        }
+
         int newRowIndex = _rowPanels.Count;
 
         // Add a new empty row

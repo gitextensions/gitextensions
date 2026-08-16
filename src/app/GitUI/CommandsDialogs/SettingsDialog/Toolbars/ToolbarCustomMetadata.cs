@@ -27,7 +27,8 @@ internal class ToolbarCustomMetadata
     [DataMember]
     public int OrderInRow { get; set; }
 
-    // Icon size in pixels for this toolbar (16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96)
+    // Icon size in pixels for this toolbar. Normalized to a supported size on load
+    // (see ToolbarLayoutValidator.IconSizes).
     [DataMember]
     public int IconSize { get; set; } = 16;
 
