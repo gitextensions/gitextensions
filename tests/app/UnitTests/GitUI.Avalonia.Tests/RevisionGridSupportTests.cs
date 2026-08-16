@@ -10,6 +10,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Extensions;
 using GitExtensions.Extensibility.Git;
 using GitUI;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -422,6 +423,25 @@ public sealed class RevisionGridSupportTests
             "SaveAsDefault");
         control.MenuCommands.NavigateMenuCommands.Single(command => command.Name == "GotoCommit")
             .ExecuteAction.Should().NotBeNull();
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void Checked_menu_commands_should_create_native_checkbox_menu_items()
+    {
+        MenuCommand command = new()
+        {
+            Name = "checkedToolStripMenuItem",
+            Text = "Checked",
+            IsCheckedFunc = () => true,
+        };
+
+        MenuItem item = MenuCommand.CreateToolStripItem(command).Should().BeOfType<MenuItem>().Subject;
+        command.RegisterMenuItem(item);
+        command.SetCheckForRegisteredMenuItems();
+
+        item.ToggleType.Should().Be(MenuItemToggleType.CheckBox);
+        item.IsChecked.Should().BeTrue();
     }
 
     [AvaloniaTest]

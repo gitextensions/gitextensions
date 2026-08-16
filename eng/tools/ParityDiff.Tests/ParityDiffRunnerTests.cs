@@ -264,6 +264,25 @@ public sealed class ParityDiffRunnerTests
 
     [Test]
     [Category("P8_6h")]
+    public void Run_should_compare_unnamed_semantic_child_state()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = AddAnonymousMenuItem(fixture.CreateDocument("light"), selected: false);
+        CaptureDocument candidate = AddAnonymousMenuItem(fixture.CreateDocument("light"), selected: true);
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityDiffResult result = fixture.Run();
+
+        ParityFinding finding = result.Captures.Should().ContainSingle().Which.Findings
+            .Should().ContainSingle(item => item.Code == "state.selected").Subject;
+        finding.Path.Should().Be("surface[primary]/root/anonymous[menuItem:0]");
+        finding.ReferenceValue.Should().Be("False");
+        finding.CandidateValue.Should().Be("True");
+    }
+
+    [Test]
+    [Category("P8_6h")]
     public void Run_should_compare_popup_surface_pixels_independently_of_aggregate_canvas_placement()
     {
         using ParityDiffFixture fixture = new();
@@ -385,6 +404,33 @@ public sealed class ParityDiffRunnerTests
                     Role = "popup:0",
                     ScreenBoundsPx = popupScreenBounds,
                     Root = popupRoot
+                }
+            ]
+        };
+    }
+
+    private static CaptureDocument AddAnonymousMenuItem(CaptureDocument document, bool selected)
+    {
+        CaptureSurface surface = document.Surfaces.Single();
+        CaptureNode template = surface.Root.Children.Single();
+        CaptureNode anonymous = template with
+        {
+            Id = "root/$unnamed[0]:MenuItem",
+            FieldName = null,
+            FieldAliases = [],
+            Name = null,
+            Type = "Tests.MenuItem",
+            ControlKind = "menuItem",
+            Text = "Dynamic item",
+            Selected = selected
+        };
+        return document with
+        {
+            Surfaces =
+            [
+                surface with
+                {
+                    Root = surface.Root with { Children = [.. surface.Root.Children, anonymous] }
                 }
             ]
         };
