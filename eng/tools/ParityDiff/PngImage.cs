@@ -62,6 +62,26 @@ internal sealed record PngImage(int Width, int Height, byte[] Rgba)
         }
     }
 
+    public PngImage Crop(int x, int y, int width, int height)
+    {
+        if (x < 0 || y < 0 || width <= 0 || height <= 0 || x + width > Width || y + height > Height)
+        {
+            throw new InvalidDataException(
+                $"The requested image crop ({x},{y},{width},{height}) is outside {Width}x{Height}.");
+        }
+
+        byte[] cropped = new byte[checked(width * height * 4)];
+        int sourceStride = Width * 4;
+        int targetStride = width * 4;
+        for (int row = 0; row < height; row++)
+        {
+            Rgba.AsSpan(((y + row) * sourceStride) + (x * 4), targetStride)
+                .CopyTo(cropped.AsSpan(row * targetStride, targetStride));
+        }
+
+        return new PngImage(width, height, cropped);
+    }
+
     private static PngImage Decode(
         string path,
         int width,
