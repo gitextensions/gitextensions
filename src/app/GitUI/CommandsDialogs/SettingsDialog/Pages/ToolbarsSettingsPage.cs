@@ -1457,6 +1457,16 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             int order = 0;
             foreach (ResolvedToolbarItem resolved in resolvedItems)
             {
+                // An item with no name of its own - a user script button, which LoadUserMenu
+                // rebuilds from the scripts settings on every repository load - has nothing to be
+                // stored under and nothing to be resolved by. It stays on the toolbar through the
+                // plan above; only the persisted layout leaves it out.
+                if (!ToolbarItemNames.IsValid(resolved.ConfigName))
+                {
+                    order++;
+                    continue;
+                }
+
                 config.Items.Add(new ToolbarItemConfig
                 {
                     ItemName = resolved.ConfigName,
