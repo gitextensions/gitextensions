@@ -204,9 +204,22 @@ partial class FormBrowse
             int order = 0;
             foreach (ToolStripItem item in toolStrip.Items)
             {
+                string itemName = GetItemSerializationName(item, order);
+
+                // A user script button is created without a Name (LoadUserMenu identifies it by its
+                // Tag), so it has nothing to be stored under and nothing to be resolved by. It is
+                // rebuilt from the scripts settings on every repository load anyway, after this
+                // layout has been applied. Persisting it under an empty name would only leave the
+                // layout carrying an item no loader could place.
+                if (!ToolbarItemNames.IsValid(itemName))
+                {
+                    order++;
+                    continue;
+                }
+
                 config.Items.Add(new ToolbarItemConfig
                 {
-                    ItemName = GetItemSerializationName(item, order),
+                    ItemName = itemName,
                     ToolbarName = toolbarName,
                     Order = order,
                     ShowText = GetItemShowText(item)
