@@ -313,11 +313,14 @@ public sealed class CloneAndInitTests
 
     private (IGitUICommands Commands, IGitModule Module) CreateCommands()
     {
-        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        IGitExecutorProvider gitExecutorProvider = _serviceContainer.GetRequiredService<IGitExecutorProvider>();
+        GitModule module = new(gitExecutorProvider, _workingDirectory);
 
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
         commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+        commands.WithWorkingDirectory(Arg.Any<string>()).Returns(call =>
+            new GitUICommands(_serviceContainer, new GitModule(gitExecutorProvider, call.Arg<string>())));
         return (commands, module);
     }
 

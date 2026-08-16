@@ -33,7 +33,7 @@ public sealed class DeleteBranchTests
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
-        _originalDontConfirmDeleteUnmergedBranch = AppSettings.DontConfirmDeleteUnmergedBranch;
+        _originalDontConfirmDeleteUnmergedBranch = AppSettings.DontConfirmDeleteUnmergedBranch.Value;
         _messageBoxes = new StubMessageBoxHost();
         WinFormsShims.ShimHost.MessageBoxHost = _messageBoxes;
     }
@@ -41,7 +41,7 @@ public sealed class DeleteBranchTests
     [TearDown]
     public void TearDown()
     {
-        AppSettings.DontConfirmDeleteUnmergedBranch = _originalDontConfirmDeleteUnmergedBranch;
+        AppSettings.DontConfirmDeleteUnmergedBranch.Value = _originalDontConfirmDeleteUnmergedBranch;
     }
 
     [AvaloniaTest]
@@ -71,12 +71,12 @@ public sealed class DeleteBranchTests
             nameof(FormDeleteBranch),
             "_branchUsedByWorktreeQuestion",
             "Text",
-            "The following branches are checked out in worktrees and cannot be deleted directly:\n\n{0}\n\nDo you want to delete the worktrees and branches together?");
+            "The following branches are checked out in worktrees and cannot be deleted directly:\r\n\r\n{0}\r\n\r\nDo you want to delete the worktrees and branches together?");
         translation.Received(1).AddTranslationItem(
             nameof(FormDeleteBranch),
             "_cannotDeleteBranchInMainWorktree",
             "Text",
-            "The branch “{0}” cannot be deleted because it is checked out in the main worktree at:\n{1}");
+            "The branch “{0}” cannot be deleted because it is checked out in the main worktree at:\r\n{1}");
         translation.Received(1).AddTranslationItem(
             nameof(FormDeleteBranch),
             "_cannotDeleteCurrentBranchMessage",
@@ -105,7 +105,7 @@ public sealed class DeleteBranchTests
     [AvaloniaTest]
     public void FormDeleteBranch_should_render_all_fields_at_its_minimum_size()
     {
-        AppSettings.DontConfirmDeleteUnmergedBranch = true;
+        AppSettings.DontConfirmDeleteUnmergedBranch.Value = true;
         (IGitUICommands commands, _) = CreateCommands("main", "feature");
         FormDeleteBranch form = new(commands, ["feature"])
         {
@@ -136,7 +136,7 @@ public sealed class DeleteBranchTests
     [AvaloniaTest]
     public void Delete_click_should_build_forced_branch_command()
     {
-        AppSettings.DontConfirmDeleteUnmergedBranch = true;
+        AppSettings.DontConfirmDeleteUnmergedBranch.Value = true;
         (IGitUICommands commands, _) = CreateCommands("main", "feature");
         IGitCommand? executedCommand = null;
         commands.StartCommandLineProcessDialog(
@@ -160,7 +160,7 @@ public sealed class DeleteBranchTests
     [AvaloniaTest]
     public void Delete_click_should_reject_the_current_branch()
     {
-        AppSettings.DontConfirmDeleteUnmergedBranch = true;
+        AppSettings.DontConfirmDeleteUnmergedBranch.Value = true;
         (IGitUICommands commands, _) = CreateCommands("main", "main");
 
         FormDeleteBranch form = new(commands, ["main"]);
@@ -188,7 +188,7 @@ public sealed class DeleteBranchTests
     [AvaloniaTest]
     public void Delete_click_should_delete_a_branch_in_a_real_repository()
     {
-        AppSettings.DontConfirmDeleteUnmergedBranch = true;
+        AppSettings.DontConfirmDeleteUnmergedBranch.Value = true;
         string workingDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.DeleteBranch-{Guid.NewGuid():N}");
         Directory.CreateDirectory(workingDirectory);
         try

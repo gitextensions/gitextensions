@@ -1816,42 +1816,42 @@ public sealed class SettingsDialogTests
     [AvaloniaTest]
     public void Confirmations_settings_should_preserve_direct_inverted_and_nullable_mappings()
     {
-        bool originalAmend = AppSettings.DontConfirmAmend;
-        bool originalUndo = AppSettings.DontConfirmUndoLastCommit;
+        bool originalAmend = AppSettings.DontConfirmAmend.Value;
+        bool originalUndo = AppSettings.DontConfirmUndoLastCommit.Value;
         bool originalCommitIfNoBranch = AppSettings.DontConfirmCommitIfNoBranch;
-        bool originalRebase = AppSettings.DontConfirmRebase;
-        bool originalFetchAndPrune = AppSettings.DontConfirmFetchAndPruneAll;
-        bool originalPushNewBranch = AppSettings.DontConfirmPushNewBranch;
+        bool originalRebase = AppSettings.DontConfirmRebase.Value;
+        bool originalFetchAndPrune = AppSettings.DontConfirmFetchAndPruneAll.Value;
+        bool originalPushNewBranch = AppSettings.DontConfirmPushNewBranch.Value;
         bool originalAddTrackingRef = AppSettings.DontConfirmAddTrackingRef;
-        bool originalDeleteUnmerged = AppSettings.DontConfirmDeleteUnmergedBranch;
+        bool originalDeleteUnmerged = AppSettings.DontConfirmDeleteUnmergedBranch.Value;
         bool originalBranchCheckout = AppSettings.ConfirmBranchCheckout.Value;
         bool? originalAutoPopAfterPull = AppSettings.AutoPopStashAfterPull;
         bool? originalAutoPopAfterCheckout = AppSettings.AutoPopStashAfterCheckoutBranch;
         bool originalStashDrop = AppSettings.DontConfirmStashDrop;
-        bool originalResolveConflicts = AppSettings.DontConfirmResolveConflicts;
-        bool originalCommitAfterConflicts = AppSettings.DontConfirmCommitAfterConflictsResolved;
-        bool originalSecondAbort = AppSettings.DontConfirmSecondAbortConfirmation;
+        bool originalResolveConflicts = AppSettings.DontConfirmResolveConflicts.Value;
+        bool originalCommitAfterConflicts = AppSettings.DontConfirmCommitAfterConflictsResolved.Value;
+        bool originalSecondAbort = AppSettings.DontConfirmSecondAbortConfirmation.Value;
         bool? originalUpdateSubmodules = AppSettings.DontConfirmUpdateSubmodulesOnCheckout;
-        bool originalSwitchWorktree = AppSettings.DontConfirmSwitchWorktree;
+        bool originalSwitchWorktree = AppSettings.DontConfirmSwitchWorktree.Value;
         try
         {
-            AppSettings.DontConfirmAmend = false;
-            AppSettings.DontConfirmUndoLastCommit = true;
+            AppSettings.DontConfirmAmend.Value = false;
+            AppSettings.DontConfirmUndoLastCommit.Value = true;
             AppSettings.DontConfirmCommitIfNoBranch = false;
-            AppSettings.DontConfirmRebase = true;
-            AppSettings.DontConfirmFetchAndPruneAll = false;
-            AppSettings.DontConfirmPushNewBranch = true;
+            AppSettings.DontConfirmRebase.Value = true;
+            AppSettings.DontConfirmFetchAndPruneAll.Value = false;
+            AppSettings.DontConfirmPushNewBranch.Value = true;
             AppSettings.DontConfirmAddTrackingRef = false;
-            AppSettings.DontConfirmDeleteUnmergedBranch = true;
+            AppSettings.DontConfirmDeleteUnmergedBranch.Value = true;
             AppSettings.ConfirmBranchCheckout.Value = true;
             AppSettings.AutoPopStashAfterPull = null;
             AppSettings.AutoPopStashAfterCheckoutBranch = true;
             AppSettings.DontConfirmStashDrop = false;
-            AppSettings.DontConfirmResolveConflicts = true;
-            AppSettings.DontConfirmCommitAfterConflictsResolved = false;
-            AppSettings.DontConfirmSecondAbortConfirmation = true;
+            AppSettings.DontConfirmResolveConflicts.Value = true;
+            AppSettings.DontConfirmCommitAfterConflictsResolved.Value = false;
+            AppSettings.DontConfirmSecondAbortConfirmation.Value = true;
             AppSettings.DontConfirmUpdateSubmodulesOnCheckout = null;
-            AppSettings.DontConfirmSwitchWorktree = false;
+            AppSettings.DontConfirmSwitchWorktree.Value = false;
 
             ConfirmationsSettingsPage page = new();
             page.LoadSettings();
@@ -1894,43 +1894,43 @@ public sealed class SettingsDialogTests
             accessor.SwitchWorktree.IsChecked = false;
             page.SaveSettings();
 
-            AppSettings.DontConfirmAmend.Should().BeTrue();
-            AppSettings.DontConfirmUndoLastCommit.Should().BeTrue();
+            AppSettings.DontConfirmAmend.Value.Should().BeTrue();
+            AppSettings.DontConfirmUndoLastCommit.Value.Should().BeTrue();
             AppSettings.DontConfirmCommitIfNoBranch.Should().BeTrue();
-            AppSettings.DontConfirmRebase.Should().BeFalse();
-            AppSettings.DontConfirmFetchAndPruneAll.Should().BeTrue();
-            AppSettings.DontConfirmPushNewBranch.Should().BeFalse();
+            AppSettings.DontConfirmRebase.Value.Should().BeFalse();
+            AppSettings.DontConfirmFetchAndPruneAll.Value.Should().BeTrue();
+            AppSettings.DontConfirmPushNewBranch.Value.Should().BeFalse();
             AppSettings.DontConfirmAddTrackingRef.Should().BeTrue();
-            AppSettings.DontConfirmDeleteUnmergedBranch.Should().BeFalse();
+            AppSettings.DontConfirmDeleteUnmergedBranch.Value.Should().BeFalse();
             AppSettings.ConfirmBranchCheckout.Value.Should().BeFalse();
             AppSettings.AutoPopStashAfterPull.Should().BeFalse();
             AppSettings.AutoPopStashAfterCheckoutBranch.Should().BeNull();
             AppSettings.DontConfirmStashDrop.Should().BeTrue();
-            AppSettings.DontConfirmResolveConflicts.Should().BeFalse();
-            AppSettings.DontConfirmCommitAfterConflictsResolved.Should().BeTrue();
-            AppSettings.DontConfirmSecondAbortConfirmation.Should().BeFalse();
+            AppSettings.DontConfirmResolveConflicts.Value.Should().BeFalse();
+            AppSettings.DontConfirmCommitAfterConflictsResolved.Value.Should().BeTrue();
+            AppSettings.DontConfirmSecondAbortConfirmation.Value.Should().BeFalse();
             AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Should().BeTrue();
-            AppSettings.DontConfirmSwitchWorktree.Should().BeTrue();
+            AppSettings.DontConfirmSwitchWorktree.Value.Should().BeTrue();
         }
         finally
         {
-            AppSettings.DontConfirmAmend = originalAmend;
-            AppSettings.DontConfirmUndoLastCommit = originalUndo;
+            AppSettings.DontConfirmAmend.Value = originalAmend;
+            AppSettings.DontConfirmUndoLastCommit.Value = originalUndo;
             AppSettings.DontConfirmCommitIfNoBranch = originalCommitIfNoBranch;
-            AppSettings.DontConfirmRebase = originalRebase;
-            AppSettings.DontConfirmFetchAndPruneAll = originalFetchAndPrune;
-            AppSettings.DontConfirmPushNewBranch = originalPushNewBranch;
+            AppSettings.DontConfirmRebase.Value = originalRebase;
+            AppSettings.DontConfirmFetchAndPruneAll.Value = originalFetchAndPrune;
+            AppSettings.DontConfirmPushNewBranch.Value = originalPushNewBranch;
             AppSettings.DontConfirmAddTrackingRef = originalAddTrackingRef;
-            AppSettings.DontConfirmDeleteUnmergedBranch = originalDeleteUnmerged;
+            AppSettings.DontConfirmDeleteUnmergedBranch.Value = originalDeleteUnmerged;
             AppSettings.ConfirmBranchCheckout.Value = originalBranchCheckout;
             AppSettings.AutoPopStashAfterPull = originalAutoPopAfterPull;
             AppSettings.AutoPopStashAfterCheckoutBranch = originalAutoPopAfterCheckout;
             AppSettings.DontConfirmStashDrop = originalStashDrop;
-            AppSettings.DontConfirmResolveConflicts = originalResolveConflicts;
-            AppSettings.DontConfirmCommitAfterConflictsResolved = originalCommitAfterConflicts;
-            AppSettings.DontConfirmSecondAbortConfirmation = originalSecondAbort;
+            AppSettings.DontConfirmResolveConflicts.Value = originalResolveConflicts;
+            AppSettings.DontConfirmCommitAfterConflictsResolved.Value = originalCommitAfterConflicts;
+            AppSettings.DontConfirmSecondAbortConfirmation.Value = originalSecondAbort;
             AppSettings.DontConfirmUpdateSubmodulesOnCheckout = originalUpdateSubmodules;
-            AppSettings.DontConfirmSwitchWorktree = originalSwitchWorktree;
+            AppSettings.DontConfirmSwitchWorktree.Value = originalSwitchWorktree;
         }
     }
 

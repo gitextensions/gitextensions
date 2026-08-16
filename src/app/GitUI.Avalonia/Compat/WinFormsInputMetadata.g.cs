@@ -1558,7 +1558,6 @@ internal static class WinFormsInputMetadata
                 new("btnBrowseWorktreeDir", 3, null, null),
                 new("btnCreateWorktree", 0, null, null),
                 new("cbxBranches", 1, null, null),
-                new("chkOpenWorktree", 4, null, null),
                 new("gbxWhatToCheckout", 0, false, null),
                 new("lblNewWorktreeFolder", 1, null, null),
                 new("rbCheckoutExistingBranch", 0, true, null),

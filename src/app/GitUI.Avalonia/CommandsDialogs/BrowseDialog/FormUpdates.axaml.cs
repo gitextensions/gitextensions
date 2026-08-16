@@ -268,8 +268,10 @@ public sealed partial class FormUpdates : GitExtensionsDialog
         string versionText3 = requiredNetRuntimeVersion.ToString(fieldCount: 1);
         linkRequiredDotNetRuntime.Text = string.Format(format, versionText1, versionText2, versionText3);
 
+        // The aka.ms/dotnet-core-applaunch URL expects the architecture and RID in lowercase (e.g. x64, arm64).
+        string arch = RuntimeInformation.OSArchitecture.ToString().ToLowerInvariant();
         _netRuntimeDownloadUrl =
-            $"https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch={RuntimeInformation.OSArchitecture}&rid=win-{RuntimeInformation.OSArchitecture}&apphost_version={versionText2}&gui=true";
+            $"https://aka.ms/dotnet-core-applaunch?missing_runtime=true&arch={arch}&rid=win-{arch}&apphost_version={versionText2}&gui=true";
         linkRequiredDotNetRuntime.IsVisible = true;
     }
 

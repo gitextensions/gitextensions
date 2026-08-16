@@ -177,7 +177,12 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
         ThreadHelper.FileAndForget(async () =>
         {
-            ArgumentString command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.WorkingDir, Module.GetPathForGitExecution, ForceReset.IsChecked == true, dryRun: true);
+            ArgumentString command = new GitExtUtils.GitArgumentBuilder("merge-base")
+            {
+                "--is-ancestor",
+                gitRefToReset.CompleteName.QuoteNE(),
+                _revision.ObjectId,
+            };
             ExecutionResult executionResult = await Module.GitExecutable.ExecuteAsync(command, throwOnErrorExit: false, cancellationToken: cancellationToken);
 
             await this.SwitchToMainThreadAsync(cancellationToken);

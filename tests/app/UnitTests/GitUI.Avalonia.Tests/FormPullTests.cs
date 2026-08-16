@@ -14,6 +14,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
@@ -52,8 +53,8 @@ public sealed class FormPullTests
         _autoStash = AppSettings.AutoStash;
         _autoPopStashAfterPull = AppSettings.AutoPopStashAfterPull;
         _closeProcessDialog = AppSettings.CloseProcessDialog;
-        _dontConfirmFetchAndPruneAll = AppSettings.DontConfirmFetchAndPruneAll;
-        _dontConfirmResolveConflicts = AppSettings.DontConfirmResolveConflicts;
+        _dontConfirmFetchAndPruneAll = AppSettings.DontConfirmFetchAndPruneAll.Value;
+        _dontConfirmResolveConflicts = AppSettings.DontConfirmResolveConflicts.Value;
         _dontConfirmUpdateSubmodulesOnCheckout = AppSettings.DontConfirmUpdateSubmodulesOnCheckout;
         _formPullAction = AppSettings.FormPullAction;
         _updateSubmodulesOnCheckout = AppSettings.UpdateSubmodulesOnCheckout;
@@ -87,8 +88,8 @@ public sealed class FormPullTests
         AppSettings.AutoStash = _autoStash;
         AppSettings.AutoPopStashAfterPull = _autoPopStashAfterPull;
         AppSettings.CloseProcessDialog = _closeProcessDialog;
-        AppSettings.DontConfirmFetchAndPruneAll = _dontConfirmFetchAndPruneAll;
-        AppSettings.DontConfirmResolveConflicts = _dontConfirmResolveConflicts;
+        AppSettings.DontConfirmFetchAndPruneAll.Value = _dontConfirmFetchAndPruneAll;
+        AppSettings.DontConfirmResolveConflicts.Value = _dontConfirmResolveConflicts;
         AppSettings.DontConfirmUpdateSubmodulesOnCheckout = _dontConfirmUpdateSubmodulesOnCheckout;
         AppSettings.FormPullAction = _formPullAction;
         AppSettings.UpdateSubmodulesOnCheckout = _updateSubmodulesOnCheckout;
@@ -403,7 +404,13 @@ public sealed class FormPullTests
     [AvaloniaTest]
     public void FormPull_should_offer_conflict_recovery_after_a_failed_merge()
     {
-        AppSettings.DontConfirmResolveConflicts = false;
+        AppSettings.DontConfirmResolveConflicts.Value = false;
+        bool confirmationPresented = false;
+        GitUI.MessageBoxes.TestAccessor.TaskDialogPresenter = (_, _) =>
+        {
+            confirmationPresented = true;
+            return TaskDialogButton.No;
+        };
         GitModule module = CreateRepositoryWithNewRemoteCommit(out _);
         File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "local line\n");
         module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" });
@@ -429,10 +436,11 @@ public sealed class FormPullTests
                 Environment.NewLine,
                 process.GetOutputString());
             accessor.CheckMergeConflictsOnError(form).Should().BeTrue();
-            _messageBoxes.Messages.Should().NotBeEmpty("the failed pull should offer the shared conflict-resolution flow");
+            confirmationPresented.Should().BeTrue("the failed pull should offer the shared conflict-resolution flow");
         }
         finally
         {
+            GitUI.MessageBoxes.TestAccessor.TaskDialogPresenter = TaskDialog.ShowDialog;
             form.Close();
         }
     }
