@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using GitCommands;
-using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
+using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 using GitUI.UserControls;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -633,7 +633,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
     private static void AssignNewToolbarToNewRow(string newToolbarName)
     {
-        ToolbarLayoutConfig config = AppSettings.ToolbarLayout ?? new ToolbarLayoutConfig();
+        ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
 
         int maxRow = config.ToolbarsVisibility is { Count: > 0 }
             ? config.ToolbarsVisibility.Max(t => t.Row)
@@ -650,7 +650,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             visible: true,
             iconSize: 16);
 
-        AppSettings.ToolbarLayout = config;
+        ToolbarLayoutStore.Save(config);
         AppSettings.SettingsContainer.Save();
     }
 
@@ -806,9 +806,9 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 comboBoxToolbar.SelectedIndex = 0;
 
                 // Persist the deletion so the removed toolbar is not recreated on next startup.
-                ToolbarLayoutConfig config = AppSettings.ToolbarLayout ?? new ToolbarLayoutConfig();
+                ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
                 config.RemoveCustomToolbarMetadata(_currentToolbarName);
-                AppSettings.ToolbarLayout = config;
+                ToolbarLayoutStore.Save(config);
                 AppSettings.SettingsContainer.Save();
 
                 _formBrowse?.ReorganizeToolbars();
@@ -1398,7 +1398,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         SaveCurrentToolbarLayout();
 
         List<string> allToolbarNames = comboBoxToolbar.Items.Cast<string>().ToList();
-        ToolbarLayoutConfig? existingConfig = AppSettings.ToolbarLayout;
+        ToolbarLayoutConfig? existingConfig = ToolbarLayoutStore.Load();
 
         // Phase 1 — pure computation: resolve every toolbar's final item list and build the
         // serialization config. No ToolStrip is mutated yet, so any exception here is safe.
@@ -1410,7 +1410,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         EnsureOrphanCustomToolstripsJoinedToPanel(allToolbarNames);
         ApplyResolvedItemsToToolStrips(plan);
 
-        AppSettings.ToolbarLayout = config;
+        ToolbarLayoutStore.Save(config);
         AppSettings.SettingsContainer.Save();
         _formBrowse?.ReorganizeToolbarsCore();
     }
@@ -1466,8 +1466,8 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 // (same priority as BuildToolbarLayoutInfo). This prevents the two lists from
                 // drifting apart when existingConfig has them out of sync.
                 int toolbarIndex = GetToolbarIndex(toolbarName);
-                ToolbarMetadata? visMeta = existingConfig?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == toolbarName);
-                CustomToolbarMetadata? customMeta = existingConfig?.CustomToolbars?.FirstOrDefault(c => c.Name == toolbarName);
+                ToolbarBuiltInMetadata? visMeta = existingConfig?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == toolbarName);
+                ToolbarCustomMetadata? customMeta = existingConfig?.CustomToolbars?.FirstOrDefault(c => c.Name == toolbarName);
 
                 config.SetCustomToolbarMetadata(
                     name: toolbarName,
@@ -1480,7 +1480,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             }
             else
             {
-                ToolbarMetadata? existingMeta = existingConfig?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == toolbarName);
+                ToolbarBuiltInMetadata? existingMeta = existingConfig?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == toolbarName);
                 int defaultOrderInRow = toolbarName switch
                 {
                     StandardToolbarName => 0,
@@ -1488,7 +1488,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                     ScriptsToolbarName => 2,
                     _ => GetToolbarIndex(toolbarName)
                 };
-                config.ToolbarsVisibility.Add(new ToolbarMetadata
+                config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata
                 {
                     Name = toolbarName,
                     Visible = visible,

@@ -2,11 +2,11 @@
 using System.Text;
 using System.Xml;
 
-namespace GitCommands.Utils;
+namespace GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 
 // XML serializer for toolbar configuration data.
 // Uses DataContractSerializer for compatibility with [DataContract] attributes.
-public static class XmlToolbarSerializer
+internal static class ToolbarXmlSerializer
 {
     /// <typeparam name="T">Type of object to serialize (must have [DataContract] attribute)</typeparam>
     /// <param name="obj">Object to serialize</param>
@@ -39,7 +39,7 @@ public static class XmlToolbarSerializer
 
     /// <typeparam name="T">Type of object to deserialize (must have [DataContract] attribute)</typeparam>
     /// <param name="xml">XML string to deserialize</param>
-    /// <returns>Deserialized object or null if deserialization fails</returns>
+    /// <returns>Deserialized object, or <see langword="null"/> if the setting is absent or unreadable</returns>
     public static T? Deserialize<T>(string xml) where T : class
     {
         if (string.IsNullOrWhiteSpace(xml))
@@ -55,20 +55,8 @@ public static class XmlToolbarSerializer
         }
         catch (Exception)
         {
-            // If deserialization fails, try to deserialize from JSON for backward compatibility
-            return TryDeserializeFromJson<T>(xml);
-        }
-    }
-
-    // Tries to deserialize from JSON format for backward compatibility with existing settings.
-    private static T? TryDeserializeFromJson<T>(string data) where T : class
-    {
-        try
-        {
-            return JsonSerializer.Deserialize<T>(data);
-        }
-        catch (Exception)
-        {
+            // A malformed or foreign setting must not prevent the application from starting;
+            // the caller falls back to a default (empty) configuration.
             return null;
         }
     }

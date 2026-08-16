@@ -1,4 +1,4 @@
-﻿using GitCommands.Settings;
+﻿using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 
 namespace GitUI.CommandsDialogs;
 
@@ -313,7 +313,7 @@ public partial class FormToolbarsLayout : Form
     {
         _layoutItems.Clear();
 
-        ToolbarLayoutConfig? config = GitCommands.AppSettings.ToolbarLayout;
+        ToolbarLayoutConfig? config = ToolbarLayoutStore.Load();
 
         // Build a map of actual visual positions from the TopToolStripPanel.
         // ToolStrip.Location.Y inside a ToolStripPanel corresponds to the row index
@@ -412,7 +412,7 @@ public partial class FormToolbarsLayout : Form
             return;
         }
 
-        foreach (CustomToolbarMetadata customMeta in config.CustomToolbars)
+        foreach (ToolbarCustomMetadata customMeta in config.CustomToolbars)
         {
             ToolStrip? actualToolStrip = _dynamicToolbars.Values.FirstOrDefault(ts => ts.Text == customMeta.Name);
             bool visible = actualToolStrip?.Visible ?? customMeta.Visible;
@@ -1333,7 +1333,7 @@ public partial class FormToolbarsLayout : Form
     private void ApplyLayout()
     {
         // Get current config
-        ToolbarLayoutConfig config = GitCommands.AppSettings.ToolbarLayout ?? new ToolbarLayoutConfig();
+        ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
 
         // Update visibility metadata with row/order. Custom toolbars are written to both
         // ToolbarsVisibility and CustomToolbars via SetCustomToolbarMetadata to keep them
@@ -1342,7 +1342,7 @@ public partial class FormToolbarsLayout : Form
         {
             if (item.IsBuiltIn)
             {
-                ToolbarMetadata? existing = config.ToolbarsVisibility.FirstOrDefault(t => t.Name == item.Name);
+                ToolbarBuiltInMetadata? existing = config.ToolbarsVisibility.FirstOrDefault(t => t.Name == item.Name);
                 if (existing != null)
                 {
                     existing.Row = item.Row;
@@ -1352,7 +1352,7 @@ public partial class FormToolbarsLayout : Form
                 }
                 else
                 {
-                    config.ToolbarsVisibility.Add(new ToolbarMetadata
+                    config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata
                     {
                         Name = item.Name,
                         Visible = item.IsVisible,
@@ -1374,7 +1374,7 @@ public partial class FormToolbarsLayout : Form
         }
 
         // Save config
-        GitCommands.AppSettings.ToolbarLayout = config;
+        ToolbarLayoutStore.Save(config);
         GitCommands.AppSettings.ToolbarSyncIconTextWithSize = checkBoxSyncIconText.Checked;
 
         // Persist to disk immediately

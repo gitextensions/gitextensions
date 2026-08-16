@@ -1,9 +1,9 @@
 ﻿using GitCommands;
-using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs;
@@ -251,12 +251,12 @@ public class FormBrowseMenus : ITranslate
             // Persist the new visibility so that ReorganizeToolbars reads an up-to-date config
             // and the state is preserved across restarts. Unchecking only hides the toolbar; it must
             // not delete it.
-            ToolbarLayoutConfig? config = AppSettings.ToolbarLayout;
+            ToolbarLayoutConfig? config = ToolbarLayoutStore.Load();
             if (config != null)
             {
                 bool changed = false;
 
-                ToolbarMetadata? meta = config.ToolbarsVisibility?.FirstOrDefault(t => t.Name == senderToolStrip.Text);
+                ToolbarBuiltInMetadata? meta = config.ToolbarsVisibility?.FirstOrDefault(t => t.Name == senderToolStrip.Text);
                 if (meta != null)
                 {
                     meta.Visible = senderToolStrip.Visible;
@@ -265,7 +265,7 @@ public class FormBrowseMenus : ITranslate
 
                 // Keep the parallel CustomToolbars list in sync: custom toolbars are recreated from
                 // their CustomToolbars metadata at startup, so its Visible flag must match.
-                CustomToolbarMetadata? customMeta = config.CustomToolbars?.FirstOrDefault(c => c.Name == senderToolStrip.Text);
+                ToolbarCustomMetadata? customMeta = config.CustomToolbars?.FirstOrDefault(c => c.Name == senderToolStrip.Text);
                 if (customMeta != null)
                 {
                     customMeta.Visible = senderToolStrip.Visible;
@@ -274,7 +274,7 @@ public class FormBrowseMenus : ITranslate
 
                 if (changed)
                 {
-                    AppSettings.ToolbarLayout = config;
+                    ToolbarLayoutStore.Save(config);
                     AppSettings.SettingsContainer.Save();
                 }
             }
