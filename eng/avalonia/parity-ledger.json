@@ -244,13 +244,15 @@
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-09",
-          "commit": "4031f51333e0dc84af6eb432ac72d1f922133c36",
+          "verifiedOn": "2026-08-16",
+          "commit": "60ad7477b30d377f03df5d9a64f2e1e99cedb451",
           "evidence": [
             "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json",
             "eng/avalonia/parity-evidence/P7.3/tests/windows/plugin-discovery-tests.trx",
             "eng/avalonia/parity-evidence/P7.3/tests/linux/plugin-discovery-tests.trx",
-            "eng/avalonia/parity-evidence/P0.6/flatpak/plugin-discovery.txt"
+            "eng/avalonia/parity-evidence/P0.6/flatpak/plugin-discovery.txt",
+            "eng/avalonia/parity-evidence/PR-feedback/macos-assembly-resolver/tests/windows/focused.log",
+            "eng/avalonia/parity-evidence/PR-feedback/macos-assembly-resolver/tests/linux/gate.log"
           ],
           "platforms": [
             "windows",
@@ -258,7 +260,7 @@
             "flatpak"
           ],
           "findingCount": 62,
-          "note": "P7.3 verifies isolated UserPlugins.Avalonia path selection, Flatpak XDG_DATA_HOME resolution, and bundled-only fallback when the directory is unavailable. The earlier entry-point member/event/menu/hotkey/settings/translation inventory findings remain open."
+          "note": "P7.3 verifies isolated UserPlugins.Avalonia path selection, Flatpak XDG_DATA_HOME resolution, and bundled-only fallback when the directory is unavailable. The reviewer-feedback regression verifies that shared MEF dependency probing uses managed assembly metadata, ignores invalid DLLs and culture-specific satellite requests, and therefore cannot recurse through FileVersionInfo localization. The earlier entry-point member/event/menu/hotkey/settings/translation inventory findings remain open."
         },
         "visual": {
           "status": "notApplicable",
@@ -280,12 +282,14 @@
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-09",
-          "commit": "4031f51333e0dc84af6eb432ac72d1f922133c36",
+          "verifiedOn": "2026-08-16",
+          "commit": "60ad7477b30d377f03df5d9a64f2e1e99cedb451",
           "evidence": [
             "eng/avalonia/parity-evidence/P7.3/tests/windows/plugin-discovery-tests.trx",
             "eng/avalonia/parity-evidence/P7.3/tests/linux/plugin-discovery-tests.trx",
-            "eng/avalonia/parity-evidence/P0.6/flatpak/plugin-discovery.txt"
+            "eng/avalonia/parity-evidence/P0.6/flatpak/plugin-discovery.txt",
+            "eng/avalonia/parity-evidence/PR-feedback/macos-assembly-resolver/tests/windows/focused.log",
+            "eng/avalonia/parity-evidence/PR-feedback/macos-assembly-resolver/tests/linux/gate.log"
           ],
           "platforms": [
             "windows",
@@ -293,12 +297,12 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Normal and inaccessible user-plugin directory states are verified, including no fallback to the WinForms directory; the complete application interaction matrix remains open."
+          "note": "Normal and inaccessible user-plugin directory states are verified, including no fallback to the WinForms directory. Managed dependency probing also verifies renamed managed assemblies, invalid native DLLs, and culture-specific satellite misses without localized file-version recursion; the complete application interaction matrix remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-09",
-          "commit": "f02d491c91b6ee99e5bfd5b8cd88035dd12f162b",
+          "verifiedOn": "2026-08-16",
+          "commit": "60ad7477b30d377f03df5d9a64f2e1e99cedb451",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.1/runtime/windows/smoke.json",
             "eng/avalonia/parity-evidence/P8.1/runtime/wayland/smoke.json",
@@ -306,7 +310,11 @@
             "eng/avalonia/parity-evidence/P8.1/runtime/flatpak/smoke.json",
             "eng/avalonia/parity-evidence/P8.1/protocols/manifest.json",
             "eng/avalonia/parity-evidence/P8.1/fractional/manifest.json",
-            "eng/avalonia/parity-evidence/P8.2/portal/manifest.json"
+            "eng/avalonia/parity-evidence/P8.2/portal/manifest.json",
+            "eng/avalonia/parity-evidence/PR-feedback/macos-assembly-resolver/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -315,7 +323,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak startup pass. P8.1 additionally verifies native Wayland modal ownership, edge tooltip/context-menu placement, external plain and HTML clipboard reads, drag/drop, real 1.25/1.5 output scales, a mixed-scale output move, and compositor-owned global placement. P8.2 verifies XDG FileChooser/OpenURI portal transport with the backend present and explicit no-fallback behavior when absent. Flatpak verifies the real XDG plugin path and inaccessible-path fallback. The confined portal action walk, macOS, and exhaustive component-level state walks remain open."
+          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak startup pass. The reviewer-feedback resolver correction also reaches real startup on all four available targets after shared MEF initialization; its inspected frames contain no error dialog, and the Flatpak run records --filesystem=host. P8.1 additionally verifies native Wayland modal ownership, edge tooltip/context-menu placement, external plain and HTML clipboard reads, drag/drop, real 1.25/1.5 output scales, a mixed-scale output move, and compositor-owned global placement. P8.2 verifies XDG FileChooser/OpenURI portal transport with the backend present and explicit no-fallback behavior when absent. Flatpak verifies the real XDG plugin path and inaccessible-path fallback. The confined portal action walk, native macOS resolver confirmation, and exhaustive component-level state walks remain open."
         }
       }
     },
