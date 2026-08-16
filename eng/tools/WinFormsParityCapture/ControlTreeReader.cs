@@ -427,6 +427,11 @@ internal sealed class ControlTreeReader
         int childOrdinal = 0;
         foreach (Control child in control.Controls)
         {
+            if (control is DataGridView && IsGeneratedDataGridViewChild(child))
+            {
+                continue;
+            }
+
             children.Add(ReadControl(child, id, childOrdinal++));
         }
 
@@ -490,6 +495,11 @@ internal sealed class ControlTreeReader
         };
     }
 
+    // parity-scaffolding: DataGridView owns framework scrollbars and an editing placeholder;
+    // the Avalonia reader likewise excludes generated ListBox template visuals from the semantic tree.
+    private static bool IsGeneratedDataGridViewChild(Control child) =>
+        string.IsNullOrEmpty(child.Name) && child is HScrollBar or VScrollBar or Label;
+
     private CaptureFont ReadFont(Font font)
     {
         float sizePoints = font.Unit == GraphicsUnit.Point
@@ -550,7 +560,7 @@ internal sealed class ControlTreeReader
             Visible = item.Visible,
             Focused = isSeparator ? false : item.Selected,
             ReadOnly = null,
-            CheckState = item is ToolStripMenuItem menuItem && (menuItem.CheckOnClick || menuItem.Checked)
+            CheckState = item is ToolStripMenuItem menuItem
                 ? menuItem.CheckState.ToString()
                 : null,
             Selected = isSeparator ? null : item.Selected,
