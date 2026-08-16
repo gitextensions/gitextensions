@@ -209,6 +209,33 @@ public sealed class FrameworkControlParityTests
         }
     }
 
+    [AvaloniaTest]
+    [Category("P8_6h")]
+    public void Capture_reader_should_keep_absolute_screen_bounds_and_emit_owner_relative_popup_bounds()
+    {
+        ContextMenu popup = new();
+        Window window = Show(ThemeVariant.Light, new TextBlock { Text = "owner" });
+        try
+        {
+            CaptureSurface surface = new AvaloniaControlTreeReader(
+                window,
+                renderScale: 1.25,
+                primaryScreenOrigin: new PixelPoint(100, 50))
+                .ReadSurface(popup, "popup:0", new PixelRect(140, 80, 100, 50));
+
+            surface.ScreenBoundsPx.X.Should().Be(140);
+            surface.ScreenBoundsPx.Y.Should().Be(80);
+            surface.Root.BoundsPx.X.Should().Be(40);
+            surface.Root.BoundsPx.Y.Should().Be(30);
+            surface.Root.BoundsDip.X.Should().Be(32);
+            surface.Root.BoundsDip.Y.Should().Be(24);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [Test]
     public void TaskDialog_model_should_preserve_command_descriptions_and_expanders()
     {
