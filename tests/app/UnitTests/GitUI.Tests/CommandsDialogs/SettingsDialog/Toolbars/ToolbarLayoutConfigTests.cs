@@ -60,17 +60,42 @@ public class ToolbarLayoutConfigTests
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
-    [TestCase(-1, 0)]
-    [TestCase(int.MaxValue, 65_536)]
-    public void SetCustomToolbarMetadata_should_clamp_the_index(int index, int expected)
+    [TestCase(-1)]
+    [TestCase(int.MinValue)]
+    [TestCase(65_537)]
+    [TestCase(int.MaxValue)]
+    public void SetCustomToolbarMetadata_should_reject_an_out_of_range_index(int index)
     {
-        // Callers derive the index from a user-supplied toolbar name, and it only sorts the
-        // toolbars, so an extreme value must not bring the dialog down.
         ToolbarLayoutConfig config = new();
 
-        config.SetCustomToolbarMetadata("Custom 01", row: 0, orderInRow: 0, visible: true, iconSize: 16, index: index);
+        ((Action)(() => config.SetCustomToolbarMetadata("Custom 01", row: 0, orderInRow: 0, visible: true, iconSize: 16, index: index)))
+            .Should().Throw<ArgumentOutOfRangeException>();
+    }
 
-        config.CustomToolbars[0].Index.Should().Be(expected);
+    [Test]
+    public void SetCustomToolbarMetadata_should_take_the_next_free_index_when_given_none()
+    {
+        // Counting the toolbars instead would hand out an index another one already holds as soon
+        // as the indices are no longer an unbroken run - which one add/remove cycle is enough to do.
+        ToolbarLayoutConfig config = new();
+        config.SetCustomToolbarMetadata("Custom 01", row: 0, orderInRow: 0, visible: true, iconSize: 16, index: 3);
+        config.SetCustomToolbarMetadata("Custom 02", row: 0, orderInRow: 1, visible: true, iconSize: 16, index: 7);
+        config.RemoveCustomToolbarMetadata("Custom 01");
+
+        config.SetCustomToolbarMetadata("Custom 03", row: 0, orderInRow: 2, visible: true, iconSize: 16);
+
+        config.CustomToolbars.Should().ContainSingle(c => c.Name == "Custom 03" && c.Index == 8);
+        config.CustomToolbars.Select(c => c.Index).Should().OnlyHaveUniqueItems();
+    }
+
+    [Test]
+    public void SetCustomToolbarMetadata_should_start_custom_indices_after_the_built_in_toolbars()
+    {
+        ToolbarLayoutConfig config = new();
+
+        config.SetCustomToolbarMetadata("Custom 01", row: 0, orderInRow: 0, visible: true, iconSize: 16);
+
+        config.CustomToolbars[0].Index.Should().Be(3);
     }
 
     [TestCase(0, 16)]

@@ -1482,8 +1482,14 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
 
     private void ComputeToolbarsVisibilityConfig(List<string> allToolbarNames, ToolbarLayoutConfig? existingConfig, ToolbarLayoutConfig config)
     {
-        foreach (string toolbarName in allToolbarNames)
+        // A toolbar's index is its position in comboBoxToolbar, which holds the three built-in
+        // toolbars followed by the custom ones. Deriving it from the position rather than from the
+        // name is what makes it unique: a name only yields a number when it happens to be spelled
+        // "Custom NN", so any other name had to fall back on the position anyway - and the two
+        // schemes then handed the same number to two different toolbars.
+        for (int position = 0; position < allToolbarNames.Count; position++)
         {
+            string toolbarName = allToolbarNames[position];
             ToolStrip? toolStrip = GetToolStripByName(toolbarName);
             bool visible = toolStrip?.Visible ?? true;
             bool allIconsShowText = toolStrip != null && AllRealItemsShowText(toolStrip);
@@ -1494,35 +1500,30 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 // one call, using ToolbarsVisibility as the authoritative source for Row/OrderInRow
                 // (same priority as BuildToolbarLayoutInfo). This prevents the two lists from
                 // drifting apart when existingConfig has them out of sync.
-                int toolbarIndex = GetToolbarIndex(toolbarName);
                 ToolbarBuiltInMetadata? visMeta = existingConfig?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == toolbarName);
                 ToolbarCustomMetadata? customMeta = existingConfig?.CustomToolbars?.FirstOrDefault(c => c.Name == toolbarName);
 
                 config.SetCustomToolbarMetadata(
                     name: toolbarName,
                     row: visMeta?.Row ?? customMeta?.Row ?? 0,
-                    orderInRow: visMeta?.OrderInRow ?? customMeta?.OrderInRow ?? toolbarIndex,
+                    orderInRow: visMeta?.OrderInRow ?? customMeta?.OrderInRow ?? position,
                     visible: visible,
                     iconSize: visMeta?.IconSize ?? customMeta?.IconSize ?? 16,
-                    index: toolbarIndex,
+                    index: position,
                     allIconsShowText: allIconsShowText);
             }
             else
             {
                 ToolbarBuiltInMetadata? existingMeta = existingConfig?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == toolbarName);
-                int defaultOrderInRow = toolbarName switch
-                {
-                    StandardToolbarName => 0,
-                    FiltersToolbarName => 1,
-                    ScriptsToolbarName => 2,
-                    _ => GetToolbarIndex(toolbarName)
-                };
                 config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata
                 {
                     Name = toolbarName,
                     Visible = visible,
                     Row = existingMeta?.Row ?? 0,
-                    OrderInRow = existingMeta?.OrderInRow ?? defaultOrderInRow,
+
+                    // The combo box lists Standard, Filters and Scripts in that order, so the
+                    // position already gives each built-in toolbar its default place in the row.
+                    OrderInRow = existingMeta?.OrderInRow ?? position,
                     IconSize = existingMeta?.IconSize ?? 16,
                     AllIconsShowText = allIconsShowText
                 });
@@ -1782,33 +1783,6 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             menuItem,
             ToolStripItemDisplayStyle.ImageAndText,
             _originalItems);
-
-    private int GetToolbarIndex(string name)
-    {
-        if (name == StandardToolbarName)
-        {
-            return 0;
-        }
-
-        if (name == FiltersToolbarName)
-        {
-            return 1;
-        }
-
-        if (name == ScriptsToolbarName)
-        {
-            return 2;
-        }
-
-        if (name.StartsWith(CustomToolbarDisplayPrefix) && int.TryParse(name.Substring(7), out int number))
-        {
-            return 2 + number; // Custom 01 → 3, Custom 02 → 4, etc.
-        }
-
-        // Non-numeric names: fall back to the position in comboBoxToolbar.
-        int pos = comboBoxToolbar.Items.IndexOf(name);
-        return pos >= 0 ? pos : comboBoxToolbar.Items.Count;
-    }
 
     private sealed class ToolStripItemWrapper
     {

@@ -29,13 +29,12 @@ internal class ToolbarLayoutConfig
     /// <param name="visible">Whether the toolbar is visible.</param>
     /// <param name="iconSize">Icon size in pixels; snapped to the nearest supported size.</param>
     /// <param name="index">
-    /// Sort key ordering the custom toolbars (3+ for custom toolbars), clamped to the supported
-    /// range. When <see langword="null"/> the next available index is computed automatically from
-    /// the current <see cref="CustomToolbars"/> count.
+    /// Sort key ordering the custom toolbars, unique across <see cref="CustomToolbars"/>. When
+    /// <see langword="null"/> the next free index is taken, which is one past the highest in use.
     /// </param>
     /// <param name="allIconsShowText">Whether all icons show their text label.</param>
     /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or blank.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="row"/> or <paramref name="orderInRow"/> is negative or beyond the supported range.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="row"/>, <paramref name="orderInRow"/> or <paramref name="index"/> is negative or beyond the supported range.</exception>
     public void SetCustomToolbarMetadata(
         string name,
         int row,
@@ -53,11 +52,15 @@ internal class ToolbarLayoutConfig
         ArgumentOutOfRangeException.ThrowIfNegative(orderInRow);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(orderInRow, ToolbarLayoutValidator.MaxOrderInRow);
 
-        // Unlike the positions above, these two are normalized rather than rejected: an icon size
-        // read from a live DPI-scaled ToolStrip is a legitimate in-between value, and an index is
-        // only a sort key that callers derive from a user-supplied toolbar name.
+        if (index is not null)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(index.Value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(index.Value, ToolbarLayoutValidator.MaxIndex);
+        }
+
+        // Unlike the positions above, an icon size is normalized rather than rejected: one read
+        // from a live DPI-scaled ToolStrip is a legitimate in-between value.
         iconSize = ToolbarLayoutValidator.NormalizeIconSize(iconSize);
-        index = index is null ? null : Math.Clamp(index.Value, 0, ToolbarLayoutValidator.MaxIndex);
 
         // --- ToolbarsVisibility ---
         ToolbarBuiltInMetadata? visMeta = ToolbarsVisibility.FirstOrDefault(t => t.Name == name);
@@ -97,7 +100,12 @@ internal class ToolbarLayoutConfig
             CustomToolbars.Add(new ToolbarCustomMetadata
             {
                 Name = name,
-                Index = index ?? (3 + CustomToolbars.Count),
+
+                // One past the highest index in use, rather than one past the count: the two agree
+                // only while the indices form an unbroken run, and adding then removing a toolbar
+                // is enough to break that - after which counting would hand out an index another
+                // toolbar already holds.
+                Index = index ?? NextFreeIndex(),
                 Row = row,
                 OrderInRow = orderInRow,
                 Visible = visible,
@@ -106,6 +114,12 @@ internal class ToolbarLayoutConfig
             });
         }
     }
+
+    // The three built-in toolbars occupy 0-2, so a custom one starts at 3.
+    private int NextFreeIndex()
+        => CustomToolbars.Count == 0
+            ? 3
+            : Math.Max(3, CustomToolbars.Max(c => c.Index) + 1);
 
     // Removes all metadata for a custom toolbar from both <see cref="ToolbarsVisibility"/>
     // and <see cref="CustomToolbars"/> in one call.

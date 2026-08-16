@@ -26,8 +26,8 @@ internal static class ToolbarLayoutValidator
     public const int MaxRow = 32;
     public const int MaxOrderInRow = 256;
 
-    // Index only orders the custom toolbars, and the settings page derives it from the digits in
-    // a user-supplied name ("Custom 9999" yields 10001), so it is clamped rather than checked.
+    // Index is a position among the toolbars, so MaxToolbars would do; the looser bound leaves
+    // room for a layout whose indices are sparse without making it any less unique.
     public const int MaxIndex = 65_536;
 
     public const int MaxToolbars = 64;
@@ -90,24 +90,26 @@ internal static class ToolbarLayoutValidator
             meta.IconSize = NormalizeIconSize(meta.IconSize);
         }
 
-        // Index only orders the custom toolbars on load, so it is normalized rather than enforced:
-        // two of them sharing a value is harmless (OrderBy is stable) and does happen, since the
-        // settings page derives the index from the name for "Custom NN" but from the combo box
-        // position otherwise. The name remains the key that must be unique.
+        // Index orders the custom toolbars on load, so two of them claiming the same value leaves
+        // it undecided which comes first. Every writer derives it from a position - in the settings
+        // page's toolbar list, or one past the highest already in use - so a duplicate can only
+        // come from outside this application.
         HashSet<string> customNames = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<int> customIndices = [];
         foreach (ToolbarCustomMetadata? meta in config.CustomToolbars)
         {
             if (meta is null
                 || !IsValidToolbarName(meta.Name)
                 || !IsInRange(meta.Row, MaxRow)
                 || !IsInRange(meta.OrderInRow, MaxOrderInRow)
-                || !customNames.Add(meta.Name))
+                || !IsInRange(meta.Index, MaxIndex)
+                || !customNames.Add(meta.Name)
+                || !customIndices.Add(meta.Index))
             {
                 return false;
             }
 
             meta.IconSize = NormalizeIconSize(meta.IconSize);
-            meta.Index = Math.Clamp(meta.Index, 0, MaxIndex);
         }
 
         // A custom toolbar must not shadow a built-in one: both would then claim the same key.
