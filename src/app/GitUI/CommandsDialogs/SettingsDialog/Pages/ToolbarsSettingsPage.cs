@@ -760,7 +760,11 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
         {
             Left = 15,
             Top = 45,
-            Width = 300
+            Width = 300,
+
+            // Keep the text within what a saved layout accepts, so the label survives the round
+            // trip through the settings file rather than being truncated behind the user's back.
+            MaxLength = ToolbarItemNames.MaxLabelTextLength
         };
 
         Button confirmButton = new()
@@ -1633,7 +1637,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
     {
         if (wrapper.DisplayName == SeparatorDisplayName)
         {
-            return (new ToolStripSeparator(), $"_SEPARATOR_{order}");
+            return (new ToolStripSeparator(), ToolbarItemNames.Separator(order));
         }
 
         if (wrapper.DisplayName == ExpandingSpacerDisplayName)
@@ -1643,12 +1647,12 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
             // View > Toolbars submenu would show the raw Name until the next restart.
             ToolStripLabel spacer = new()
             {
-                Name = $"_SPACER_{order}",
+                Name = ToolbarItemNames.Spacer(order),
                 AutoSize = true,
                 Text = "     ",
                 DisplayStyle = ToolStripItemDisplayStyle.Text
             };
-            return (spacer, $"_SPACER_{order}");
+            return (spacer, ToolbarItemNames.Spacer(order));
         }
 
         if (wrapper.DisplayName.StartsWith(LabelDisplayNamePrefix) && wrapper.DisplayName.EndsWith(LabelDisplayNameSuffix))
@@ -1661,7 +1665,7 @@ public partial class ToolbarsSettingsPage : SettingsPageWithHeader
                 DisplayStyle = ToolStripItemDisplayStyle.Text,
                 AutoSize = true
             };
-            return (label, $"_LABEL_{Uri.EscapeDataString(labelText)}_{order}");
+            return (label, ToolbarItemNames.Label(labelText, order));
         }
 
         return (null, null);
