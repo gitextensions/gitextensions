@@ -53,6 +53,26 @@ public sealed class ControlTreeReaderTests
         CaptureNode gridNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
 
         gridNode.ItemHeightDip.Should().Be(25.6m);
+        gridNode.Children.Should().BeEmpty(
+            "generated DataGridView scrollbars and placeholders are not semantic product controls");
+    }
+
+    [Test]
+    [Category("P8_6h")]
+    public void ReadPrimary_should_preserve_named_data_grid_child_controls()
+    {
+        using Form form = new();
+        using DataGridView grid = new();
+        using Label status = new() { Name = "status", Text = "Loading" };
+        grid.Controls.Add(status);
+        form.Controls.Add(grid);
+        form.CreateControl();
+        grid.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode gridNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        gridNode.Children.Should().ContainSingle(node => node.Name == "status" && node.Text == "Loading");
     }
 
     [Test]
@@ -105,6 +125,20 @@ public sealed class ControlTreeReaderTests
         separator.Focused.Should().BeFalse();
         separator.Selected.Should().BeNull();
         separator.Expanded.Should().BeNull();
+    }
+
+    [Test]
+    [Category("P8_6h")]
+    public void ReadPopup_should_emit_checked_and_unchecked_menu_state()
+    {
+        using ContextMenuStrip menu = new();
+        menu.Items.Add(new ToolStripMenuItem("Checked") { Checked = true });
+        menu.Items.Add(new ToolStripMenuItem("Unchecked"));
+        ControlTreeReader reader = new(menu, dpi: 96);
+
+        CaptureNode[] items = reader.ReadPopup(menu, ordinal: 0).Root.Children.ToArray();
+
+        items.Select(item => item.CheckState).Should().Equal("Checked", "Unchecked");
     }
 
     [Test]
