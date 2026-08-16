@@ -1,12 +1,38 @@
 ﻿using System.Collections.Immutable;
 using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
 
 // Form for configuring toolbars layout with a visual 2D grid.
 // Allows users to drag and drop toolbars to reposition them across rows.
-public partial class FormToolbarsLayout : Form
+public partial class FormToolbarsLayout : GitExtensionsForm
 {
+    private readonly TranslationString _addRowTooltip = new("Add a new empty row at the bottom");
+    private readonly TranslationString _removeRowTooltip = new("Remove the last empty row");
+    private readonly TranslationString _resetTooltip = new("Reset layout to default (built-in toolbars on row 1; each custom toolbar on its own row and disabled)");
+    private readonly TranslationString _locateTooltip = new("Highlight the selected toolbar in the main window (or all toolbars if none selected)");
+    private readonly TranslationString _okTooltip = new("Apply changes and close");
+    private readonly TranslationString _cancelTooltip = new("Cancel and close without saving");
+    private readonly TranslationString _applyTooltip = new("Apply changes without closing");
+    private readonly TranslationString _gridTooltip = new("Drag toolbars to reposition them");
+    private readonly TranslationString _syncIconTextTooltip = new("When checked, icon text font size scales with the icon size (baseline: 16 px icons = default font size)");
+
+    // Static so the nested ToolbarItemPanel, which owns the dropdown, can reach it.
+    private static readonly TranslationString _iconSizeFormat = new("Icon size: {0}");
+
+    private readonly TranslationString _resetLayoutQuestion = new("Reset toolbars to their default layout?\n\nThe built-in toolbars (Standard, Filters, Scripts) will be placed on row 1 in that order. Each custom toolbar will be moved to its own row and disabled.");
+    private readonly TranslationString _resetLayoutCaption = new("Reset Layout");
+
+    private readonly TranslationString _toolbarPanelNotFound = new("Could not find the toolbar panel.");
+    private readonly TranslationString _noVisibleToolbars = new("No visible toolbars found.");
+    private readonly TranslationString _locateToolbarsCaption = new("Locate Toolbars");
+    private readonly TranslationString _toolbarNotVisibleFormat = new("The selected toolbar '{0}' is not visible in the main window.");
+    private readonly TranslationString _locateToolbarCaption = new("Locate Toolbar");
+
+    private readonly TranslationString _unsavedChangesQuestion = new("You have unsaved toolbar layout changes.\n\nApply them before closing?");
+    private readonly TranslationString _unsavedChangesCaption = new("Unsaved Changes");
+
     private readonly FormBrowse _formBrowse;
     private readonly Dictionary<string, ToolStrip> _dynamicToolbars;
     private readonly List<ToolbarLayoutItem> _layoutItems = new();
@@ -61,7 +87,7 @@ public partial class FormToolbarsLayout : Form
         BuildVisualGrid();
 
         checkBoxSyncIconText.Checked = GitCommands.AppSettings.ToolbarSyncIconTextWithSize;
-        toolTip.SetToolTip(checkBoxSyncIconText, "When checked, icon text font size scales with the icon size (baseline: 16 px icons = default font size)");
+        toolTip.SetToolTip(checkBoxSyncIconText, _syncIconTextTooltip.Text);
 
         // Force the toolbar grid and the OK/Cancel/Apply panel to keep stable margins
         // regardless of how the user resizes the form. Designer Anchor settings are supposed
@@ -73,6 +99,8 @@ public partial class FormToolbarsLayout : Form
         // Baseline the snapshot once everything is loaded and the checkbox reflects the
         // saved AppSettings value, so HasUnsavedChanges() compares against the persisted state.
         _appliedSnapshot = CaptureSnapshot();
+
+        InitializeComplete();
     }
 
     private void SyncRightAnchoredControls()
@@ -220,7 +248,7 @@ public partial class FormToolbarsLayout : Form
             };
             foreach (int size in IconSizeOptions)
             {
-                _iconSizeCombo.Items.Add($"Icon size: {size}");
+                _iconSizeCombo.Items.Add(string.Format(_iconSizeFormat.Text, size));
             }
 
             // A live ToolStrip can report a DPI-scaled size that is not offered as-is.
@@ -302,14 +330,14 @@ public partial class FormToolbarsLayout : Form
 
     private void InitializeToolTips()
     {
-        toolTip.SetToolTip(buttonAddRow, "Add a new empty row at the bottom");
-        toolTip.SetToolTip(buttonRemoveRow, "Remove the last empty row");
-        toolTip.SetToolTip(buttonReset, "Reset layout to default (built-in toolbars on row 1; each custom toolbar on its own row and disabled)");
-        toolTip.SetToolTip(buttonLocate, "Highlight the selected toolbar in the main window (or all toolbars if none selected)");
-        toolTip.SetToolTip(buttonOK, "Apply changes and close");
-        toolTip.SetToolTip(buttonCancel, "Cancel and close without saving");
-        toolTip.SetToolTip(buttonApply, "Apply changes without closing");
-        toolTip.SetToolTip(panelToolbarGrid, "Drag toolbars to reposition them");
+        toolTip.SetToolTip(buttonAddRow, _addRowTooltip.Text);
+        toolTip.SetToolTip(buttonRemoveRow, _removeRowTooltip.Text);
+        toolTip.SetToolTip(buttonReset, _resetTooltip.Text);
+        toolTip.SetToolTip(buttonLocate, _locateTooltip.Text);
+        toolTip.SetToolTip(buttonOK, _okTooltip.Text);
+        toolTip.SetToolTip(buttonCancel, _cancelTooltip.Text);
+        toolTip.SetToolTip(buttonApply, _applyTooltip.Text);
+        toolTip.SetToolTip(panelToolbarGrid, _gridTooltip.Text);
     }
 
     private void LoadCurrentLayout()
@@ -1049,9 +1077,8 @@ public partial class FormToolbarsLayout : Form
     private void ButtonReset_Click(object? sender, EventArgs e)
     {
         DialogResult result = MessageBoxes.Show(
-            "Reset toolbars to their default layout?\n\nThe built-in toolbars (Standard, Filters, Scripts) will be placed on row 1 in that order. "
-            + "Each custom toolbar will be moved to its own row and disabled.",
-            "Reset Layout",
+            _resetLayoutQuestion.Text,
+            _resetLayoutCaption.Text,
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Question);
 
@@ -1104,8 +1131,8 @@ public partial class FormToolbarsLayout : Form
         if (toolPanelContainer is not ToolStripContainer)
         {
             MessageBoxes.Show(
-                "Could not find the toolbar panel.",
-                "Locate Toolbars",
+                _toolbarPanelNotFound.Text,
+                _locateToolbarsCaption.Text,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);
             return;
@@ -1122,8 +1149,8 @@ public partial class FormToolbarsLayout : Form
             else
             {
                 MessageBoxes.Show(
-                    $"The selected toolbar '{_selectedItem.LayoutItem.DisplayName}' is not visible in the main window.",
-                    "Locate Toolbar",
+                    string.Format(_toolbarNotVisibleFormat.Text, _selectedItem.LayoutItem.DisplayName),
+                    _locateToolbarCaption.Text,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
@@ -1160,8 +1187,8 @@ public partial class FormToolbarsLayout : Form
         if (allToolStrips.Count == 0)
         {
             MessageBoxes.Show(
-                "No visible toolbars found.",
-                "Locate Toolbars",
+                _noVisibleToolbars.Text,
+                _locateToolbarsCaption.Text,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
             return;
@@ -1451,8 +1478,8 @@ public partial class FormToolbarsLayout : Form
             && HasUnsavedChanges())
         {
             DialogResult answer = MessageBoxes.Show(
-                "You have unsaved toolbar layout changes.\n\nApply them before closing?",
-                "Unsaved Changes",
+                _unsavedChangesQuestion.Text,
+                _unsavedChangesCaption.Text,
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 

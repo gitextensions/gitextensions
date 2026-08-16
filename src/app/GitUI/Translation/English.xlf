@@ -7721,6 +7721,130 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormToolbarsLayout" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Toolbars Layout</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_addRowTooltip.Text">
+        <source>Add a new empty row at the bottom</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_applyTooltip.Text">
+        <source>Apply changes without closing</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cancelTooltip.Text">
+        <source>Cancel and close without saving</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gridTooltip.Text">
+        <source>Drag toolbars to reposition them</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_iconSizeFormat.Text">
+        <source>Icon size: {0}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_locateToolbarCaption.Text">
+        <source>Locate Toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_locateToolbarsCaption.Text">
+        <source>Locate Toolbars</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_locateTooltip.Text">
+        <source>Highlight the selected toolbar in the main window (or all toolbars if none selected)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_noVisibleToolbars.Text">
+        <source>No visible toolbars found.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_okTooltip.Text">
+        <source>Apply changes and close</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_removeRowTooltip.Text">
+        <source>Remove the last empty row</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetLayoutCaption.Text">
+        <source>Reset Layout</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetLayoutQuestion.Text">
+        <source>Reset toolbars to their default layout?
+
+The built-in toolbars (Standard, Filters, Scripts) will be placed on row 1 in that order. Each custom toolbar will be moved to its own row and disabled.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetTooltip.Text">
+        <source>Reset layout to default (built-in toolbars on row 1; each custom toolbar on its own row and disabled)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_syncIconTextTooltip.Text">
+        <source>When checked, icon text font size scales with the icon size (baseline: 16 px icons = default font size)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toolbarNotVisibleFormat.Text">
+        <source>The selected toolbar '{0}' is not visible in the main window.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toolbarPanelNotFound.Text">
+        <source>Could not find the toolbar panel.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_unsavedChangesCaption.Text">
+        <source>Unsaved Changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_unsavedChangesQuestion.Text">
+        <source>You have unsaved toolbar layout changes.
+
+Apply them before closing?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonAddRow.Text">
+        <source>+ Add Row</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonApply.Text">
+        <source>Apply</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonCancel.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonLocate.Text">
+        <source>Locate</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonOK.Text">
+        <source>OK</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonRemoveRow.Text">
+        <source>- Remove Empty Row</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonReset.Text">
+        <source>Reset</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="checkBoxSyncIconText.Text">
+        <source>Sync icon text with icon size (increases icon text proportionally to icon size)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelInstructions.Text">
+        <source>Drag toolbars to reposition them. Drop between rows to create a new row.</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormUpdates" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -10146,6 +10270,249 @@ When OpenSSH is used, command line dialogs are shown!
     <body>
       <trans-unit id="$this.Text">
         <source>Toolbars</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_addAllTooltip.Text">
+        <source>Add all available actions to the current toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_addLabelDialogCaption.Text">
+        <source>Add Label</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_addLabelPrompt.Text">
+        <source>Enter label text:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_addToolbarTooltip.Text">
+        <source>Add a new custom toolbar
+Hold SHIFT while clicking to specify a custom name instead of 'Custom XX'</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_addTooltip.Text">
+        <source>Add the selected action to the current toolbar (→)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_allActionsCategory.Text">
+        <source>All Actions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_availableListTooltip.Text">
+        <source>Available actions that can be added to the toolbar
+Double-click an action to add it</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cancel.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_categoryComboTooltip.Text">
+        <source>Filter available actions by category</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_clearAvailableFilterTooltip.Text">
+        <source>Clear the search filter for available actions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_clearCurrentFilterTooltip.Text">
+        <source>Clear the search filter for current toolbar actions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_clearCurrentTooltip.Text">
+        <source>Remove all actions from the current toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_clearToolbarCaption.Text">
+        <source>Clear Toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_clearToolbarQuestion.Text">
+        <source>Remove all items from the current toolbar?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commandsCategory.Text">
+        <source>Commands</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_currentListTooltip.Text">
+        <source>Actions currently in the selected toolbar
+Double-click an action to remove it</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_customLabelDisplayName.Text">
+        <source>--- custom label ---</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_defaultFiltersCategory.Text">
+        <source>Default Filters toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_defaultStandardCategory.Text">
+        <source>Default Standard toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteToolbarCaption.Text">
+        <source>Delete Toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteToolbarFormat.Text">
+        <source>Delete toolbar '{0}'?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_duplicateInternalNameCaption.Text">
+        <source>Duplicate Internal Name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_duplicateInternalNameFormat.Text">
+        <source>The toolbar name '{0}' conflicts with an existing toolbar's internal name.
+Please choose a different name.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_duplicateNameCaption.Text">
+        <source>Duplicate Name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_duplicateNameFormat.Text">
+        <source>A toolbar named '{0}' already exists.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_emptyToolbarName.Text">
+        <source>Toolbar name cannot be empty.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_expandingSpacerDisplayName.Text">
+        <source>--- expanding spacer ---</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_filterAvailableTooltip.Text">
+        <source>Type to search and filter available actions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_filterCurrentTooltip.Text">
+        <source>Type to search and filter current toolbar actions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitHubCategory.Text">
+        <source>GitHub</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_helpCategory.Text">
+        <source>Help</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_invalidNameCaption.Text">
+        <source>Invalid Name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_labelDisplayNamePrefix.Text">
+        <source>--- label:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_locateToolbarCaption.Text">
+        <source>Locate Toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_locateToolbarTooltip.Text">
+        <source>Highlight the selected toolbar in the main window
+Useful for finding where a toolbar is located</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_moveDownTooltip.Text">
+        <source>Move the selected action down in the toolbar order (↓)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_moveUpTooltip.Text">
+        <source>Move the selected action up in the toolbar order (↑)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_navigateCategory.Text">
+        <source>Navigate</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_newToolbarDialogCaption.Text">
+        <source>New Toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_newToolbarPrompt.Text">
+        <source>Enter toolbar name:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_ok.Text">
+        <source>OK</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pluginsCategory.Text">
+        <source>Plugins</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_removeToolbarTooltip.Text">
+        <source>Delete the selected custom toolbar (built-in toolbars cannot be deleted)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_removeTooltip.Text">
+        <source>Remove the selected action from the current toolbar (←)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_repositoryCategory.Text">
+        <source>Repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_rightClickMenuCategory.Text">
+        <source>Right click menu</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_separatorDisplayName.Text">
+        <source>--- separator ---</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showAllIconTextTooltip.Text">
+        <source>Show text labels next to all icons in this toolbar
+Disables per-icon text toggle</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showIconTextTooltip.Text">
+        <source>Show text label next to the selected icon only</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_startCategory.Text">
+        <source>Start</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_tooManyToolbarsCaption.Text">
+        <source>Too many toolbars</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_tooManyToolbarsFormat.Text">
+        <source>You cannot have more than {0} toolbars.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toolbarComboTooltip.Text">
+        <source>Select which toolbar to customize</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toolbarLayoutTooltip.Text">
+        <source>Open the toolbar layout configuration window
+Allows you to arrange toolbars in rows and adjust their visual positions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toolbarNotFound.Text">
+        <source>Could not find the selected toolbar.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toolbarVisibleTooltip.Text">
+        <source>Show or hide the selected toolbar in the main window</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toolsCategory.Text">
+        <source>Tools</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_undoTooltip.Text">
+        <source>Undo the last toolbar customization</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_viewCategory.Text">
+        <source>View</source>
         <target />
       </trans-unit>
       <trans-unit id="buttonLocateToolbar.Text">
