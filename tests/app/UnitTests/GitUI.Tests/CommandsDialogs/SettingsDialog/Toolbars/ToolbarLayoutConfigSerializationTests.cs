@@ -1,9 +1,17 @@
+﻿using System.Text;
 using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 
 namespace GitUITests.CommandsDialogs.SettingsDialog.Toolbars;
 
 public class ToolbarLayoutConfigSerializationTests
 {
+    private static string SerializeSample()
+        => ToolbarXmlSerializer.Serialize(new ToolbarLayoutConfig
+        {
+            Items = { new ToolbarItemConfig { ItemName = "toolStripButtonPush", ToolbarName = "Standard", Order = 1 } },
+            ToolbarsVisibility = { new ToolbarBuiltInMetadata { Name = "Standard", Row = 2, OrderInRow = 1, IconSize = 32 } }
+        });
+
     [Test]
     public void Serialize_then_deserialize_should_round_trip()
     {
@@ -29,7 +37,7 @@ public class ToolbarLayoutConfigSerializationTests
         // A stray U+FEFF would be persisted into the settings file and break the next read.
         string xml = ToolbarXmlSerializer.Serialize(new ToolbarLayoutConfig());
 
-        xml.Should().NotStartWith("﻿");
+        xml.Should().NotStartWith("\uFEFF");
     }
 
     [TestCase("")]
@@ -38,6 +46,55 @@ public class ToolbarLayoutConfigSerializationTests
     [TestCase("<Unrelated />")]
     public void Deserialize_should_return_null_for_absent_or_unreadable_settings(string xml)
     {
+        ToolbarXmlSerializer.Deserialize<ToolbarLayoutConfig>(xml).Should().BeNull();
+    }
+
+    [Test]
+    public void Deserialize_should_reject_an_oversized_setting_before_parsing_it()
+    {
+        string xml = new('x', (256 * 1024) + 1);
+
+        ToolbarXmlSerializer.Deserialize<ToolbarLayoutConfig>(xml).Should().BeNull();
+    }
+
+    [Test]
+    public void Deserialize_should_reject_deeply_nested_xml()
+    {
+        StringBuilder xml = new();
+        for (int i = 0; i < 200; i++)
+        {
+            xml.Append("<nested>");
+        }
+
+        for (int i = 0; i < 200; i++)
+        {
+            xml.Append("</nested>");
+        }
+
+        ToolbarXmlSerializer.Deserialize<ToolbarLayoutConfig>(xml.ToString()).Should().BeNull();
+    }
+
+    [Test]
+    public void Deserialize_should_reject_a_document_type_definition()
+    {
+        // "Billion laughs": entity expansion must not even be attempted.
+        string xml = """
+            <!DOCTYPE lolz [
+              <!ENTITY lol "lol">
+              <!ENTITY lol2 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">
+              <!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;">
+            ]>
+            <ToolbarLayoutConfig>&lol3;</ToolbarLayoutConfig>
+            """;
+
+        ToolbarXmlSerializer.Deserialize<ToolbarLayoutConfig>(xml).Should().BeNull();
+    }
+
+    [Test]
+    public void Deserialize_should_reject_an_integer_that_does_not_fit_its_member()
+    {
+        string xml = SerializeSample().Replace("<Row>2</Row>", "<Row>99999999999999999999</Row>");
+
         ToolbarXmlSerializer.Deserialize<ToolbarLayoutConfig>(xml).Should().BeNull();
     }
 }
