@@ -2775,20 +2775,33 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                 return;
             }
 
-            Classes.Set(
-                "revision-authored",
-                AppSettings.HighlightAuthoredRevisions
-                    && !revision.IsArtificial
-                    && _owner._authorHighlighting.IsHighlighted(revision));
+            bool isAuthored = AppSettings.HighlightAuthoredRevisions
+                && !revision.IsArtificial
+                && _owner._authorHighlighting.IsHighlighted(revision);
+            Classes.Set("revision-authored", isAuthored);
 
             ListBoxItem? container = this.FindAncestorOfType<ListBoxItem>();
             int rowIndex = container is null ? -1 : _owner._gridView.IndexFromContainer(container);
-            Classes.Set(
-                "revision-alternate",
-                AppSettings.RevisionGraphDrawAlternateBackColor
-                    && rowIndex >= 0
-                    && rowIndex % 2 == 0);
+            bool isAlternate = AppSettings.RevisionGraphDrawAlternateBackColor
+                && rowIndex >= 0
+                && rowIndex % 2 == 0;
+            Classes.Set("revision-alternate", isAlternate);
             bool isSelected = container?.IsSelected == true;
+            if (isSelected)
+            {
+                Background = Brushes.Transparent;
+            }
+            else
+            {
+                // Avalonia template styles cannot reach recycled rows, so preserve the original color precedence here.
+                string backgroundResourceKey = isAuthored
+                    ? "GitExtensionsRevisionAuthoredBrush"
+                    : isAlternate
+                        ? "GitExtensionsRevisionAlternatingRowBrush"
+                        : "GitExtensionsPanelBackgroundBrush";
+                this[!BackgroundProperty] = new DynamicResourceExtension(backgroundResourceKey);
+            }
+
             bool isSelectedAndFocused = isSelected
                 && (_owner._gridView.IsKeyboardFocusWithin
                     || _owner._gridView.Classes.Contains("context-menu-open"));

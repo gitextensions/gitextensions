@@ -868,7 +868,7 @@ public sealed class VisualParityTests
             GetColor(body.Foreground).Should().Be(isDark
                 ? Color.Parse("#AAAA96")
                 : Color.Parse("#BCBCBC"));
-            row.Background.Should().BeNull();
+            GetColor(row.Background).Should().Be(Colors.Transparent);
 
             AppSettings.RevisionGraphDrawNonRelativesTextGray = true;
             control.RefreshRealizedRows();
@@ -901,6 +901,72 @@ public sealed class VisualParityTests
         {
             window.Close();
             AppSettings.RevisionGraphDrawNonRelativesTextGray = originalDrawNonRelativesTextGray;
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void Revision_grid_should_paint_panel_alternating_and_authored_row_backgrounds()
+    {
+        bool originalAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
+        bool originalHighlightAuthored = AppSettings.HighlightAuthoredRevisions;
+        try
+        {
+            AppSettings.RevisionGraphDrawAlternateBackColor = true;
+            AppSettings.HighlightAuthoredRevisions = true;
+            AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);
+            RevisionGridControl control = new() { UICommandsSource = CreateRevisionGridCommandsSource() };
+            GitRevision[] revisions =
+            [
+                new GitRevision(ObjectId.Random()) { AuthorEmail = "author@example.com", Subject = "authored" },
+                new GitRevision(ObjectId.Random()) { AuthorEmail = "author@example.com", Subject = "selected" },
+                new GitRevision(ObjectId.Random()) { AuthorEmail = "other@example.com", Subject = "alternating" },
+                new GitRevision(ObjectId.Random()) { AuthorEmail = "other@example.com", Subject = "panel" },
+            ];
+            control.GetTestAccessor().SetRevisions(revisions);
+            ListBox gridView = control.GetTestAccessor().Revisions;
+            Window window = new() { Width = 700, Height = 180, Content = control };
+            window.Show();
+            try
+            {
+                gridView.SelectedIndex = 1;
+                Dispatcher.UIThread.RunJobs();
+                control.RefreshRealizedRows();
+                Dispatcher.UIThread.RunJobs();
+
+                Dictionary<string, Grid> rows = gridView.GetVisualDescendants()
+                    .OfType<Grid>()
+                    .Where(row => row.Classes.Contains("revision-row"))
+                    .ToDictionary(row => ((GitRevision)row.DataContext!).Subject, StringComparer.Ordinal);
+                bool isDark = ThemeModule.Settings.Theme.SystemColorMode == WinFormsShims.SystemColorMode.Dark;
+                System.Drawing.Color panel = AvaloniaThemeResources.ResolveAppColor(
+                    ThemeModule.Settings,
+                    AppColor.PanelBackground);
+                System.Drawing.Color authored = AvaloniaThemeResources.ResolveAppColor(
+                    ThemeModule.Settings,
+                    AppColor.AuthoredHighlight);
+                System.Drawing.Color alternating = panel.MakeDarkerBy(isDark ? -0.018 : 0.025);
+
+                rows["authored"].Classes.Should().Contain("revision-authored");
+                rows["alternating"].Classes.Should().Contain("revision-alternate");
+                gridView.Background.Should().NotBeNull("the revision surface paints AppColor.PanelBackground");
+                rows["authored"].Background.Should().NotBeNull("authored rows paint AppColor.AuthoredHighlight");
+                rows["alternating"].Background.Should().NotBeNull("alternating rows paint the derived panel color");
+                rows["panel"].Background.Should().NotBeNull("ordinary rows paint AppColor.PanelBackground");
+                GetColor(gridView.Background).Should().Be(ToMediaColor(panel));
+                GetColor(rows["authored"].Background).Should().Be(ToMediaColor(authored));
+                GetColor(rows["alternating"].Background).Should().Be(ToMediaColor(alternating));
+                GetColor(rows["panel"].Background).Should().Be(ToMediaColor(panel));
+            }
+            finally
+            {
+                window.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.RevisionGraphDrawAlternateBackColor = originalAlternateBackColor;
+            AppSettings.HighlightAuthoredRevisions = originalHighlightAuthored;
         }
     }
 

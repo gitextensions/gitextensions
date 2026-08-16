@@ -448,6 +448,8 @@ internal sealed class AvaloniaControlTreeReader
         if (ReferenceEquals(control, _root))
         {
             AddSemantic("semantic.app.panel.background", "GitExtensionsPanelBackgroundBrush");
+            AddSemantic("semantic.app.revision.alternating.background", "GitExtensionsRevisionAlternatingRowBrush");
+            AddSemantic("semantic.app.revision.authored.background", "GitExtensionsRevisionAuthoredBrush");
             AddSemantic("semantic.app.selection.background", "GitExtensionsSelectionBackgroundBrush");
             AddSemantic("semantic.system.control.background", "GitExtensionsControlBackgroundBrush");
             AddSemantic("semantic.system.control.foreground", "GitExtensionsControlForegroundBrush");
