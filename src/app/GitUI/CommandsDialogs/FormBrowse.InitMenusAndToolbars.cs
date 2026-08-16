@@ -18,9 +18,9 @@ partial class FormBrowse
     internal static readonly string FetchPullToolbarShortcutsPrefix = "pull_shortcut_";
 
     // Stable identifiers for the three built-in toolbars, used as settings keys and layout names.
-    private const string StandardToolbarName = "Standard";
-    private const string FiltersToolbarName = "Filters";
-    private const string ScriptsToolbarName = "Scripts";
+    private const string StandardToolbarName = ToolbarNames.Standard;
+    private const string FiltersToolbarName = ToolbarNames.Filters;
+    private const string ScriptsToolbarName = ToolbarNames.Scripts;
 
     // Control-name prefix shared by all dynamically created custom toolbars.
     private const string CustomToolbarNamePrefix = "ToolStripCustom";
