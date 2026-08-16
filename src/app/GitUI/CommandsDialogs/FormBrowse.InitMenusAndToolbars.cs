@@ -1,9 +1,9 @@
 ﻿using GitCommands;
-using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
+using GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 using GitUI.Properties;
 using GitUI.Shells;
 using GitUI.UserControls;
@@ -190,7 +190,7 @@ partial class FormBrowse
     // toolbars that are absent from it. Visibility/position metadata is preserved as-is.
     private void PersistCurrentToolbarItemsLayout()
     {
-        ToolbarLayoutConfig config = AppSettings.ToolbarLayout ?? new ToolbarLayoutConfig();
+        ToolbarLayoutConfig config = ToolbarLayoutStore.Load();
         config.Items = [];
 
         foreach (ToolStrip toolStrip in GetAllLayoutToolStrips())
@@ -215,7 +215,7 @@ partial class FormBrowse
             }
         }
 
-        AppSettings.ToolbarLayout = config;
+        ToolbarLayoutStore.Save(config);
         AppSettings.SettingsContainer.Save();
     }
 
@@ -350,7 +350,7 @@ partial class FormBrowse
 
     private void LoadDynamicToolbarsFromConfig()
     {
-        ToolbarLayoutConfig? config = AppSettings.ToolbarLayout;
+        ToolbarLayoutConfig? config = ToolbarLayoutStore.Load();
 
         LogToolbar($"[LoadDynamicToolbarsFromConfig] Config is null: {config is null}");
 
@@ -362,7 +362,7 @@ partial class FormBrowse
 
         LogToolbar($"[LoadDynamicToolbarsFromConfig] Loading {config.CustomToolbars.Count} custom toolbars");
 
-        foreach (CustomToolbarMetadata metadata in config.CustomToolbars.OrderBy(m => m.Index))
+        foreach (ToolbarCustomMetadata metadata in config.CustomToolbars.OrderBy(m => m.Index))
         {
             string controlName = $"{CustomToolbarNamePrefix}{new string(metadata.Name.Where(c => char.IsLetterOrDigit(c)).ToArray())}";
 
@@ -410,12 +410,12 @@ partial class FormBrowse
         // around ToolStripPanel.Join not honoring the requested position when an earlier
         // toolbar grows wider than the next toolbar's Location.X.
 
-        ToolbarLayoutConfig? config = AppSettings.ToolbarLayout;
+        ToolbarLayoutConfig? config = ToolbarLayoutStore.Load();
 
         // With no saved layout there is nothing to apply: re-joining the built-in toolbars with a
         // cumulative-X strategy would discard the designer's single-row placement and can push a
         // toolbar onto a second row. Leave the original layout untouched for a default install.
-        // Note: AppSettings.ToolbarLayout never returns null (it yields an empty config), so test
+        // Note: ToolbarLayoutStore.Load() never returns null (it yields an empty config), so test
         // for emptiness rather than null.
         if (!HasSavedToolbarLayout(config))
         {
@@ -430,7 +430,7 @@ partial class FormBrowse
 
     private void ApplySavedToolbarLayout()
     {
-        ToolbarLayoutConfig? config = AppSettings.ToolbarLayout;
+        ToolbarLayoutConfig? config = ToolbarLayoutStore.Load();
 
         LogToolbar($"[ApplySavedToolbarLayout] Config is null: {config is null}");
 
@@ -467,7 +467,7 @@ partial class FormBrowse
     {
         LogToolbar($"[ApplySavedToolbarLayout] Restoring visibility for {config.ToolbarsVisibility!.Count} toolbars");
 
-        foreach (ToolbarMetadata metadata in config.ToolbarsVisibility)
+        foreach (ToolbarBuiltInMetadata metadata in config.ToolbarsVisibility)
         {
             ToolStrip? toolbar = metadata.Name switch
             {
@@ -501,7 +501,7 @@ partial class FormBrowse
     {
         LogToolbar($"[ApplySavedToolbarLayout] Processing {config.CustomToolbars!.Count} custom toolbars");
 
-        foreach (CustomToolbarMetadata metadata in config.CustomToolbars)
+        foreach (ToolbarCustomMetadata metadata in config.CustomToolbars)
         {
             ToolStrip? customToolStrip = toolPanel.TopToolStripPanel.Controls
                 .Cast<Control>()
@@ -1153,7 +1153,7 @@ partial class FormBrowse
 
     private void ApplyToolbarFontScaling()
     {
-        ToolbarLayoutConfig? config = AppSettings.ToolbarLayout;
+        ToolbarLayoutConfig? config = ToolbarLayoutStore.Load();
         bool syncText = AppSettings.ToolbarSyncIconTextWithSize;
 
         (string Name, ToolStrip Strip)[] builtIn =
@@ -1170,7 +1170,7 @@ partial class FormBrowse
                 continue;
             }
 
-            ToolbarMetadata? meta = config?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == name);
+            ToolbarBuiltInMetadata? meta = config?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == name);
             int iconSize = meta?.IconSize ?? 16;
             ApplyToolbarIconSize(ts, iconSize, syncText);
         }
@@ -1179,7 +1179,7 @@ partial class FormBrowse
             .OfType<ToolStrip>()
             .Where(ts => ts.Name.StartsWith(CustomToolbarNamePrefix) && !ts.IsDisposed && !string.IsNullOrEmpty(ts.Text)))
         {
-            CustomToolbarMetadata? customMeta = config?.CustomToolbars?.FirstOrDefault(c => c.Name == customTs.Text);
+            ToolbarCustomMetadata? customMeta = config?.CustomToolbars?.FirstOrDefault(c => c.Name == customTs.Text);
             int iconSize = customMeta?.IconSize ?? 16;
             ApplyToolbarIconSize(customTs, iconSize, syncText);
         }
@@ -1187,7 +1187,7 @@ partial class FormBrowse
 
     // Builds the (toolbar, row, orderInRow) list from the saved config.
     // Custom toolbars are discovered by enumerating the live panel's controls.
-    // True only when the user actually saved a toolbar customization. AppSettings.ToolbarLayout
+    // True only when the user actually saved a toolbar customization. ToolbarLayoutStore.Load()
     // returns an empty (non-null) config for a default install, which must be treated as "no layout".
     private static bool HasSavedToolbarLayout(ToolbarLayoutConfig? config)
         => config is not null
@@ -1201,7 +1201,7 @@ partial class FormBrowse
         if (config?.ToolbarsVisibility != null)
         {
             LogToolbar($"[{logPrefix}] ToolbarsVisibility count: {config.ToolbarsVisibility.Count}");
-            foreach (ToolbarMetadata meta in config.ToolbarsVisibility)
+            foreach (ToolbarBuiltInMetadata meta in config.ToolbarsVisibility)
             {
                 LogToolbar($"[{logPrefix}] Toolbar '{meta.Name}': Row={meta.Row}, OrderInRow={meta.OrderInRow}, Visible={meta.Visible}");
             }
@@ -1226,7 +1226,7 @@ partial class FormBrowse
             int row = 0;
             int orderInRow = GetDefaultOrderInRow(name);
 
-            ToolbarMetadata? metadata = config?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == name);
+            ToolbarBuiltInMetadata? metadata = config?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == name);
             if (metadata != null)
             {
                 row = metadata.Row;
@@ -1235,7 +1235,7 @@ partial class FormBrowse
             }
             else
             {
-                CustomToolbarMetadata? customMeta = config?.CustomToolbars?.FirstOrDefault(c => c.Name == name);
+                ToolbarCustomMetadata? customMeta = config?.CustomToolbars?.FirstOrDefault(c => c.Name == name);
                 if (customMeta != null)
                 {
                     row = customMeta.Row;
@@ -1418,7 +1418,7 @@ partial class FormBrowse
 
     internal void ReorganizeToolbarsCore()
     {
-        ToolbarLayoutConfig? config = AppSettings.ToolbarLayout;
+        ToolbarLayoutConfig? config = ToolbarLayoutStore.Load();
 
         HashSet<ToolStrip> customToolStrips = toolPanel.TopToolStripPanel.Controls
             .OfType<ToolStrip>()
@@ -1428,7 +1428,7 @@ partial class FormBrowse
         // Nothing to reorganize for a default install: with no saved layout and no custom toolbars,
         // re-joining the built-in toolbars would discard the designer's single-row placement and can
         // push a toolbar onto a second row, shrinking the content area. Keep the original layout.
-        // Note: AppSettings.ToolbarLayout never returns null (it yields an empty config), so test
+        // Note: ToolbarLayoutStore.Load() never returns null (it yields an empty config), so test
         // for emptiness rather than null.
         if (!HasSavedToolbarLayout(config) && customToolStrips.Count == 0)
         {

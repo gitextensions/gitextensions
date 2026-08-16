@@ -2361,37 +2361,14 @@ public static partial class AppSettings
         public readonly void ResetDocumentationBaseUrl() => AppSettings._documentationBaseUrl = null;
     }
 
-    [Conditional("DEBUG")]
-    private static void LogToolbarLayout(string message) => Debug.WriteLine(message);
-
-    // Gets or sets the toolbar layout configuration (stored as XML)
-    public static ToolbarLayoutConfig ToolbarLayout
+    // Gets or sets the raw XML representation of the toolbar layout configuration.
+    // The strongly-typed configuration model (and the code that serializes/deserializes it)
+    // lives in GitUI (see GitUI.CommandsDialogs.SettingsDialog.Toolbars), since toolbar
+    // customization is only meaningful to that project.
+    public static string ToolbarLayoutXml
     {
-        get
-        {
-            string xml = SettingsContainer.GetString(ToolbarSettingsPath.PathFor("Layout"), string.Empty);
-            LogToolbarLayout($"[AppSettings.ToolbarLayout.get] XML length: {xml?.Length ?? 0}");
-
-            if (string.IsNullOrWhiteSpace(xml))
-            {
-                LogToolbarLayout("[AppSettings.ToolbarLayout.get] XML is empty, returning new config");
-                return new ToolbarLayoutConfig();
-            }
-
-            // XmlToolbarSerializer handles backward compatibility with JSON format
-            var config = Utils.XmlToolbarSerializer.Deserialize<ToolbarLayoutConfig>(xml);
-            LogToolbarLayout($"[AppSettings.ToolbarLayout.get] Deserialized config: {(config != null ? $"ToolbarsVisibility={config.ToolbarsVisibility?.Count ?? 0}" : "NULL")}");
-
-            return config ?? new ToolbarLayoutConfig();
-        }
-        set
-        {
-            string xml = Utils.XmlToolbarSerializer.Serialize(value);
-            LogToolbarLayout($"[AppSettings.ToolbarLayout.set] Serialized XML length: {xml?.Length ?? 0}");
-            LogToolbarLayout($"[AppSettings.ToolbarLayout.set] ToolbarsVisibility count: {value?.ToolbarsVisibility?.Count ?? 0}");
-
-            SettingsContainer.SetString(ToolbarSettingsPath.PathFor("Layout"), xml);
-        }
+        get => SettingsContainer.GetString(ToolbarSettingsPath.PathFor("Layout"), string.Empty);
+        set => SettingsContainer.SetString(ToolbarSettingsPath.PathFor("Layout"), value);
     }
 
     // When true, toolbar icon text font size scales proportionally with the icon size.
