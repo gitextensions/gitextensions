@@ -301,8 +301,7 @@ public sealed partial class FormPush : GitModuleForm
             && _selectedRemote is not null
             && remoteBranch != _remotesManager.GetDefaultPushRemote(_selectedRemote, localBranch)
             && !IsBranchKnownToRemote(_selectedRemote.Name, remoteBranch)
-            && !AppSettings.DontConfirmPushNewBranch
-            && MessageBoxes.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, WinFormsShims.MessageBoxButtons.YesNo, WinFormsShims.MessageBoxIcon.Question) == WinFormsShims.DialogResult.No)
+            && !MessageBoxes.ConfirmSuppressible(owner ?? this, _branchNewForRemote.Text, _pushCaption.Text, AppSettings.DontConfirmPushNewBranch))
         {
             return false;
         }

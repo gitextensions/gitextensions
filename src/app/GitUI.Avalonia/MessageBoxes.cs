@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Config;
+using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI.Compat;
@@ -54,6 +55,9 @@ public class MessageBoxes : Translate
 
     private static MessageBoxes Instance => field ??= new();
 
+    // parity-scaffolding: lets headless confirmation tests choose a real page action without opening an unattended modal window.
+    private static Func<WinFormsShims.IWin32Window?, TaskDialogPage, TaskDialogButton> TaskDialogPresenter { get; set; } = TaskDialog.ShowDialog;
+
     public static void RevisionFilteredInGrid(WinFormsShims.IWin32Window? owner, ObjectId objectId)
         => ShowError(owner, string.Format(Instance._cannotFindRevisionFilter.Text, objectId.ToShortString()), Instance._cannotFindRevisionCaption.Text);
 
@@ -101,7 +105,67 @@ public class MessageBoxes : Translate
         => Confirm(owner, Instance._middleOfPatchApply.Text, Instance._middleOfPatchApplyCaption.Text);
 
     public static bool ConfirmResolveMergeConflicts(WinFormsShims.IWin32Window? owner)
-        => Confirm(owner, Instance._unresolvedMergeConflicts.Text, Instance._unresolvedMergeConflictsCaption.Text);
+        => ConfirmSuppressible(owner, Instance._unresolvedMergeConflicts.Text, Instance._unresolvedMergeConflictsCaption.Text, AppSettings.DontConfirmResolveConflicts);
+
+    /// <summary>
+    ///  Shows a suppressible Yes/No confirmation with a "Don't show again" verification checkbox.
+    /// </summary>
+    /// <remarks>
+    ///  <para>
+    ///   Returns <see langword="true"/> immediately without prompting when <paramref name="dontConfirm"/> is already set,
+    ///   so the suppress guard lives here rather than being duplicated at every call site.
+    ///   When the user ticks the checkbox, <paramref name="dontConfirm"/> is persisted.
+    ///  </para>
+    /// </remarks>
+    /// <param name="owner">The window that owns and is blocked by the confirmation.</param>
+    /// <param name="text">The message body.</param>
+    /// <param name="caption">The dialog caption.</param>
+    /// <param name="dontConfirm">The setting that suppresses this confirmation.</param>
+    /// <param name="heading">An optional heading shown above the message body.</param>
+    /// <param name="icon">The icon to display; defaults to <see cref="TaskDialogIcon.Information"/>.</param>
+    /// <param name="footnote">An optional footnote shown at the bottom of the dialog.</param>
+    /// <param name="defaultNo">When <see langword="true"/>, the "No" button is the default.</param>
+    /// <returns><see langword="true"/> when the user confirms (or the confirmation is suppressed); otherwise <see langword="false"/>.</returns>
+    public static bool ConfirmSuppressible(WinFormsShims.IWin32Window? owner, string text, string caption, ISetting<bool> dontConfirm, string? heading = null, TaskDialogIcon? icon = null, string? footnote = null, bool defaultNo = false)
+    {
+        if (dontConfirm.Value)
+        {
+            return true;
+        }
+
+        TaskDialogPage page = new()
+        {
+            Text = text,
+            Heading = heading,
+            Caption = caption,
+            Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+            Icon = icon ?? TaskDialogIcon.Information,
+            Verification = new TaskDialogVerificationCheckBox
+            {
+                Text = TranslatedStrings.DontShowAgain
+            },
+            SizeToContent = true
+        };
+
+        if (footnote is not null)
+        {
+            page.Footnote = footnote;
+        }
+
+        if (defaultNo)
+        {
+            page.DefaultButton = TaskDialogButton.No;
+        }
+
+        bool confirmed = TaskDialogPresenter(owner, page) == TaskDialogButton.Yes;
+
+        if (page.Verification.Checked)
+        {
+            dontConfirm.Value = true;
+        }
+
+        return confirmed;
+    }
 
     public static bool ConfirmBranchCheckout(WinFormsShims.IWin32Window? owner, string branchName)
         => !AppSettings.ConfirmBranchCheckout.Value
@@ -175,4 +239,13 @@ public class MessageBoxes : Translate
         string caption,
         WinFormsShims.MessageBoxButtons buttons)
         => GitExtensions.Extensibility.MessageBoxes.Show(text, caption, buttons);
+
+    internal static class TestAccessor
+    {
+        internal static Func<WinFormsShims.IWin32Window?, TaskDialogPage, TaskDialogButton> TaskDialogPresenter
+        {
+            get => MessageBoxes.TaskDialogPresenter;
+            set => MessageBoxes.TaskDialogPresenter = value;
+        }
+    }
 }

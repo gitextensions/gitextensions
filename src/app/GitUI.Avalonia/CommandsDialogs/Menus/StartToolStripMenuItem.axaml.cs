@@ -42,7 +42,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
     internal MenuItem OpenRepositoryMenuItem => openToolStripMenuItem;
     internal MenuItem FavouriteRepositoriesMenuItem => tsmiFavouriteRepositories;
 
-    public override void OnInitialized()
+    protected override void OnInitialized()
     {
         base.OnInitialized();
 

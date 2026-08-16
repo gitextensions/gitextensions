@@ -1191,11 +1191,11 @@ public sealed class FormBrowseTests
     [NonParallelizable]
     public async Task FormBrowse_undo_last_commit_should_preserve_changes_in_the_index()
     {
-        bool originalDontConfirm = AppSettings.DontConfirmUndoLastCommit;
+        bool originalDontConfirm = AppSettings.DontConfirmUndoLastCommit.Value;
         FormBrowse? form = null;
         try
         {
-            AppSettings.DontConfirmUndoLastCommit = true;
+            AppSettings.DontConfirmUndoLastCommit.Value = true;
             GitModule module = CreateRepositoryWithInitialCommit();
             ObjectId initialCommit = module.GetCurrentCheckout();
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second");
@@ -1218,7 +1218,7 @@ public sealed class FormBrowseTests
         finally
         {
             form?.Close();
-            AppSettings.DontConfirmUndoLastCommit = originalDontConfirm;
+            AppSettings.DontConfirmUndoLastCommit.Value = originalDontConfirm;
         }
     }
 
@@ -2044,16 +2044,16 @@ public sealed class FormBrowseTests
                 form,
                 Arg.Is<GitRevision>(revision => revision.ObjectId == selectedObjectId));
 
-            bool originalDontConfirmRebase = AppSettings.DontConfirmRebase;
+            bool originalDontConfirmRebase = AppSettings.DontConfirmRebase.Value;
             try
             {
-                AppSettings.DontConfirmRebase = true;
+                AppSettings.DontConfirmRebase.Value = true;
                 rebase.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
                 commands.Received(1).StartRebase(form, "feature");
             }
             finally
             {
-                AppSettings.DontConfirmRebase = originalDontConfirmRebase;
+                AppSettings.DontConfirmRebase.Value = originalDontConfirmRebase;
             }
         }
         finally

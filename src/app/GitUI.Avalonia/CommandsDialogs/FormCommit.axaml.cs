@@ -1027,8 +1027,8 @@ public sealed partial class FormCommit : GitModuleForm
         bool allowEmpty = createAmendCommit;
         bool pushForced = PushForced;
 
-        if (createAmendCommit && !AppSettings.DontConfirmAmend
-            && MessageBoxes.Show(this, _amendCommit.Text, _amendCommitCaption.Text, WinFormsShims.MessageBoxButtons.YesNo, WinFormsShims.MessageBoxIcon.Warning) != WinFormsShims.DialogResult.Yes)
+        if (createAmendCommit
+            && !MessageBoxes.ConfirmSuppressible(this, _amendCommit.Text, _amendCommitCaption.Text, AppSettings.DontConfirmAmend, icon: TaskDialogIcon.Warning))
         {
             return;
         }
@@ -1663,8 +1663,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void ResetSoftClick(object? sender, EventArgs e)
     {
-        if (!AppSettings.DontConfirmAmend
-            && MessageBoxes.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, WinFormsShims.MessageBoxButtons.YesNo, WinFormsShims.MessageBoxIcon.Warning) != WinFormsShims.DialogResult.Yes)
+        if (!MessageBoxes.ConfirmSuppressible(this, _amendResetSoft.Text, _amendCommitCaption.Text, AppSettings.DontConfirmAmend, icon: TaskDialogIcon.Warning))
         {
             return;
         }

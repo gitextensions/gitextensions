@@ -48,7 +48,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
         base.OnRuntimeLoad(e);
 
         Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads).ToList();
-        if (AppSettings.DontConfirmDeleteUnmergedBranch)
+        if (AppSettings.DontConfirmDeleteUnmergedBranch.Value)
         {
             // No need to fill _mergedBranches.
             _currentBranch = Module.GetSelectedBranch();
@@ -102,7 +102,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             return;
         }
 
-        if (!AppSettings.DontConfirmDeleteUnmergedBranch)
+        if (!AppSettings.DontConfirmDeleteUnmergedBranch.Value)
         {
             HashSet<string> mergedBranches = _mergedBranches
                 ?? throw new InvalidOperationException($"{nameof(FormDeleteBranch)} was not loaded.");
@@ -111,24 +111,10 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             bool hasUnmergedBranches = _currentBranch is null
                 || DetachedHeadParser.IsDetachedHead(_currentBranch)
                 || selectedBranches.Any(branch => !mergedBranches.Contains(branch.Name));
-            if (hasUnmergedBranches)
+            if (hasUnmergedBranches
+                && !MessageBoxes.ConfirmSuppressible(this, _deleteBranchQuestion.Text, _deleteBranchConfirmTitle.Text, AppSettings.DontConfirmDeleteUnmergedBranch, icon: TaskDialogIcon.Warning, footnote: _useReflogHint.Text, defaultNo: true))
             {
-                TaskDialogPage page = new()
-                {
-                    Text = _deleteBranchQuestion.Text,
-                    Caption = _deleteBranchConfirmTitle.Text,
-                    Icon = TaskDialogIcon.Warning,
-                    DefaultButton = TaskDialogButton.No,
-                    Footnote = _useReflogHint.Text,
-                    SizeToContent = true,
-                };
-                page.Buttons.Add(TaskDialogButton.Yes);
-                page.Buttons.Add(TaskDialogButton.No);
-
-                if (TaskDialog.ShowDialog(this, page) != TaskDialogButton.Yes)
-                {
-                    return;
-                }
+                return;
             }
         }
 

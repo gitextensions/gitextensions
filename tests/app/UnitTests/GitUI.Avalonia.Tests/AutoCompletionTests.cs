@@ -45,6 +45,7 @@ public sealed class AutoCompletionTests
 
         word.Matches("commit").Should().BeTrue();
         word.Matches("CMMP").Should().BeTrue();
+        word.Matches("cmmp").Should().BeTrue();
         word.Matches("CMMX").Should().BeFalse();
         word.Should().Be(new AutoCompleteWord("CommitMessageMetadataProvider"));
     }
