@@ -362,7 +362,7 @@ public class FormBrowseMenus : ITranslate
 
         // Expanding spacers are ToolStripLabels named "_SPACER_<n>" whose Text is placeholder
         // whitespace, so give them a friendly label instead of falling back to the raw Name.
-        if (item.Name is not null && item.Name.StartsWith("_SPACER_", StringComparison.Ordinal))
+        if (item.Name is not null && ToolbarItemNames.IsSpacer(item.Name))
         {
             return "--- expanding spacer ---";
         }

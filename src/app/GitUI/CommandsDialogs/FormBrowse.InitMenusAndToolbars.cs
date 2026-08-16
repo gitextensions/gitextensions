@@ -240,22 +240,21 @@ partial class FormBrowse
     {
         if (item is ToolStripSeparator)
         {
-            return !string.IsNullOrWhiteSpace(item.Name) ? item.Name! : $"_SEPARATOR_{order}";
+            return !string.IsNullOrWhiteSpace(item.Name) ? item.Name! : ToolbarItemNames.Separator(order);
         }
 
         // Spacers and labels rebuilt from config already carry their placeholder name.
         if (!string.IsNullOrEmpty(item.Name)
-            && (item.Name.StartsWith("_SPACER_", StringComparison.Ordinal)
-                || item.Name.StartsWith("_LABEL_", StringComparison.Ordinal)))
+            && (ToolbarItemNames.IsSpacer(item.Name) || ToolbarItemNames.IsLabel(item.Name)))
         {
             return item.Name;
         }
 
-        // Editable label created at runtime (Name "editableLabel_N"): serialize with the
-        // "_LABEL_{encodedText}_{order}" scheme the loader expects.
+        // Editable label created at runtime (Name "editableLabel_N"): serialize under the label
+        // placeholder scheme the loader expects.
         if (item is ToolStripLabel label)
         {
-            return $"_LABEL_{Uri.EscapeDataString(label.Text ?? string.Empty)}_{order}";
+            return ToolbarItemNames.Label(label.Text, order);
         }
 
         // Clones carry their source item in Tag; serialize under the canonical original name.
@@ -602,13 +601,13 @@ partial class FormBrowse
 
     private ToolStripItem? CreateItemForCustomConfig(string itemName)
     {
-        if (itemName.StartsWith("_SEPARATOR_"))
+        if (ToolbarItemNames.IsSeparator(itemName))
         {
             LogToolbar($"[ApplyLayoutToToolStrip] Created separator");
             return new ToolStripSeparator { Overflow = ToolStripItemOverflow.Never, Visible = true };
         }
 
-        if (itemName.StartsWith("_SPACER_"))
+        if (ToolbarItemNames.IsSpacer(itemName))
         {
             LogToolbar($"[ApplyLayoutToToolStrip] Created spacer");
             return new ToolStripLabel
@@ -622,7 +621,7 @@ partial class FormBrowse
             };
         }
 
-        if (itemName.StartsWith("_LABEL_"))
+        if (ToolbarItemNames.IsLabel(itemName))
         {
             ToolStripLabel label = CreateLabelItem(itemName);
             LogToolbar($"[ApplyLayoutToToolStrip] Created editable label: {label.Text}");
@@ -702,7 +701,7 @@ partial class FormBrowse
         {
             ToolStripItem? namedItem = ResolveBuiltInItem(byName, itemConfig.ItemName);
 
-            if (namedItem != null && !itemConfig.ItemName.StartsWith('_'))
+            if (namedItem != null && !ToolbarItemNames.IsPlaceholder(itemConfig.ItemName))
             {
                 AddResolvedBuiltInItem(toolStrip, ref namedItem, itemConfig, allIconsShowText, placedItemNames);
             }
@@ -727,7 +726,7 @@ partial class FormBrowse
             return item;
         }
 
-        if (!itemName.StartsWith('_'))
+        if (!ToolbarItemNames.IsPlaceholder(itemName))
         {
             return FindItemInAllToolbars(itemName);
         }
@@ -766,7 +765,7 @@ partial class FormBrowse
 
     private static void AddSpecialBuiltInItem(ToolStrip toolStrip, string itemName, Queue<ToolStripSeparator> separatorPool)
     {
-        if (itemName.StartsWith("_SEPARATOR_"))
+        if (ToolbarItemNames.IsSeparator(itemName))
         {
             // Legacy placeholder — reuse a pooled separator or create a new one.
             ToolStripSeparator sep = separatorPool.Count > 0
@@ -775,7 +774,7 @@ partial class FormBrowse
             toolStrip.Items.Add(sep);
             LogToolbar($"[ApplyLayoutToToolStrip] Added separator for {itemName}");
         }
-        else if (itemName.StartsWith("_SPACER_"))
+        else if (ToolbarItemNames.IsSpacer(itemName))
         {
             ToolStripLabel spacer = new()
             {
@@ -788,7 +787,7 @@ partial class FormBrowse
             toolStrip.Items.Add(spacer);
             LogToolbar($"[ApplyLayoutToToolStrip] Added spacer for {itemName}");
         }
-        else if (itemName.StartsWith("_LABEL_"))
+        else if (ToolbarItemNames.IsLabel(itemName))
         {
             ToolStripLabel label = CreateLabelItem(itemName);
             toolStrip.Items.Add(label);
@@ -802,12 +801,9 @@ partial class FormBrowse
 
     private static ToolStripLabel CreateLabelItem(string itemName)
     {
-        // _LABEL_{encodedText}_{order}
-        string encoded = itemName.Substring(7);
-        int lastUnderscore = encoded.LastIndexOf('_');
-        string labelText = lastUnderscore > 0
-            ? Uri.UnescapeDataString(encoded.Substring(0, lastUnderscore))
-            : Uri.UnescapeDataString(encoded);
+        // A restored layout has been through ToolbarLayoutValidator, which drops any label name
+        // this cannot take apart, so the fallback only covers a caller outside that path.
+        string labelText = ToolbarItemNames.TryParseLabel(itemName, out string? text) ? text : string.Empty;
 
         return new ToolStripLabel
         {

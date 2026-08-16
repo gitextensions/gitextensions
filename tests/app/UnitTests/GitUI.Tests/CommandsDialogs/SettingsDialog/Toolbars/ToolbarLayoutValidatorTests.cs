@@ -189,6 +189,77 @@ public class ToolbarLayoutValidatorTests
         ToolbarLayoutValidator.TryNormalize(config).Should().BeFalse();
     }
 
+    [TestCase(null, TestName = "null item name")]
+    [TestCase("", TestName = "empty item name")]
+    [TestCase("   ", TestName = "blank item name")]
+    [TestCase("_LABEL_abc", TestName = "label without an order suffix")]
+    [TestCase("_LABEL_a b_0", TestName = "label whose text was not escaped")]
+    [TestCase("_SEPARATOR_x", TestName = "separator without an index")]
+    [TestCase("no name at all", TestName = "not a control name")]
+    public void TryNormalize_should_drop_an_item_whose_name_could_not_have_been_written(string? itemName)
+    {
+        // Such an item names nothing the loader could resolve, so it is unreachable rather than
+        // ambiguous: dropping it keeps the rest of the user's layout.
+        ToolbarLayoutConfig config = ValidConfig();
+        config.Items.Add(new ToolbarItemConfig { ItemName = itemName!, ToolbarName = "Custom 01" });
+
+        ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
+        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush");
+    }
+
+    [Test]
+    public void TryNormalize_should_drop_a_label_whose_text_hides_control_characters()
+    {
+        // Percent-escaping hides them from the name itself, so only the decoded text reveals them.
+        ToolbarLayoutConfig config = ValidConfig();
+        config.Items.Add(new ToolbarItemConfig
+        {
+            ItemName = $"{ToolbarItemNames.LabelPrefix}{Uri.EscapeDataString($"a{(char)1}b")}_0",
+            ToolbarName = "Custom 01"
+        });
+
+        ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
+        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush");
+    }
+
+    [Test]
+    public void TryNormalize_should_drop_a_label_whose_text_is_unbounded()
+    {
+        // A label this long would make its toolbar unusable, and the dialog cannot produce one.
+        ToolbarLayoutConfig config = ValidConfig();
+        config.Items.Add(new ToolbarItemConfig
+        {
+            ItemName = $"{ToolbarItemNames.LabelPrefix}{new string('a', 2000)}_0",
+            ToolbarName = "Custom 01"
+        });
+
+        ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
+        config.Items.Should().ContainSingle(i => i.ItemName == "toolStripButtonPush");
+    }
+
+    [Test]
+    public void TryNormalize_should_keep_an_unknown_but_well_formed_item_id()
+    {
+        // An action that no longer exists, or one contributed by a plugin that is not loaded right
+        // now, is skipped by the loader and must not cost the user the item's toolbar.
+        ToolbarLayoutConfig config = ValidConfig();
+        config.Items.Add(new ToolbarItemConfig { ItemName = "someRemovedToolStripMenuItem", ToolbarName = "Custom 01" });
+
+        ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
+        config.Items.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void TryNormalize_should_keep_an_item_named_with_a_leading_underscore()
+    {
+        // Several real menu items are named that way; they are not placeholders.
+        ToolbarLayoutConfig config = ValidConfig();
+        config.Items.Add(new ToolbarItemConfig { ItemName = "_viewPullRequestsToolStripMenuItem", ToolbarName = "Custom 01" });
+
+        ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
+        config.Items.Should().HaveCount(2);
+    }
+
     [TestCase(0, 16)]
     [TestCase(int.MinValue, 16)]
     [TestCase(30, 28)]

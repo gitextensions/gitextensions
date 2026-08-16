@@ -16,8 +16,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Toolbars;
 // layout satisfying every invariant below or the default one. What is merely recoverable is
 // normalized instead, because discarding a user's entire layout over it would be out of
 // proportion: an icon size is cosmetic and WinForms DPI-scales a live ToolStrip.ImageScalingSize
-// before it is saved, so it is snapped to the nearest supported size; an item whose toolbar no
-// longer exists is unreachable either way, so it is dropped.
+// before it is saved, so it is snapped to the nearest supported size; an item that names nothing
+// resolvable, or whose toolbar no longer exists, is unreachable either way, so it is dropped.
 internal static class ToolbarLayoutValidator
 {
     public const int MinIconSize = 16;
@@ -38,11 +38,6 @@ internal static class ToolbarLayoutValidator
     public const int MaxItems = 16_384;
 
     private const int MaxOrder = 4096;
-
-    // An item name embeds the URI-escaped text of an editable label, which costs up to nine
-    // characters per accented one, so it needs far more headroom than a toolbar name
-    // (see FormBrowse.GetItemSerializationName). The cap is only there to stop absurd strings.
-    private const int MaxItemNameLength = 4096;
 
     // The supported icon sizes, and the ones the layout dialog offers.
     public static readonly ImmutableArray<int> IconSizes = [16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72];
@@ -127,7 +122,6 @@ internal static class ToolbarLayoutValidator
         foreach (ToolbarItemConfig? item in config.Items)
         {
             if (item is null
-                || !IsValidName(item.ItemName, MaxItemNameLength)
                 || !IsValidToolbarName(item.ToolbarName)
                 || !IsInRange(item.Order, MaxOrder))
             {
@@ -135,20 +129,26 @@ internal static class ToolbarLayoutValidator
             }
         }
 
-        // An item whose toolbar is gone is unreachable rather than ambiguous, and a stale one is
-        // easy to end up with, so drop it instead of discarding the entire layout with it. Callers
-        // still only ever see items that belong to a toolbar that exists.
-        config.Items.RemoveAll(item => !knownToolbars.Contains(item.ToolbarName));
+        // An item is dropped rather than taken as a reason to discard the layout around it, in the
+        // two cases where it is merely unreachable instead of ambiguous, both of which are easy to
+        // end up with:
+        //
+        // - its toolbar is gone, so nothing could place it;
+        // - its name is not one this application could have written, so nothing could resolve it.
+        //   The loader already skips a name it cannot resolve; checking the name here is what keeps
+        //   a malformed one - an unbounded label, a label whose text hides control characters
+        //   behind percent-escapes - from reaching the ToolStrip in the first place.
+        //
+        // Callers therefore only ever see items that name something and sit on a toolbar that exists.
+        config.Items.RemoveAll(item => !ToolbarItemNames.IsValid(item.ItemName)
+                                    || !knownToolbars.Contains(item.ToolbarName));
 
         return true;
     }
 
     private static bool IsValidToolbarName([NotNullWhen(true)] string? name)
-        => IsValidName(name, MaxToolbarNameLength);
-
-    private static bool IsValidName([NotNullWhen(true)] string? name, int maxLength)
         => !string.IsNullOrWhiteSpace(name)
-        && name.Length <= maxLength
+        && name.Length <= MaxToolbarNameLength
         && !name.Any(char.IsControl);
 
     private static bool IsInRange(int value, int max)
