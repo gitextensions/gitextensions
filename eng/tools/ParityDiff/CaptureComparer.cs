@@ -244,6 +244,7 @@ internal static class CaptureComparer
 
             CompareNode(referenceSurface.Root, candidateSurface.Root, $"{path}/root", tolerance, findings);
             CompareFieldNodes(referenceSurface.Root, candidateSurface.Root, path, tolerance, findings);
+            CompareAnonymousChildren(referenceSurface.Root, candidateSurface.Root, $"{path}/root", tolerance, findings);
             CompareFocusOrder(referenceSurface.Root, candidateSurface.Root, path, findings);
         }
 
@@ -503,6 +504,80 @@ internal static class CaptureComparer
 
         return CompareImagePair(reference, candidate, tolerance, "$image", findings);
     }
+
+    private static void CompareAnonymousChildren(
+        CaptureNode referenceParent,
+        CaptureNode candidateParent,
+        string parentPath,
+        DiffTolerance tolerance,
+        ICollection<ParityFinding> findings)
+    {
+        CaptureNode[] referenceAnonymous = referenceParent.Children
+            .Where(node => node.FieldName is null)
+            .ToArray();
+        CaptureNode[] candidateAnonymous = candidateParent.Children
+            .Where(node => node.FieldName is null)
+            .ToArray();
+        int anonymousCount = Math.Max(referenceAnonymous.Length, candidateAnonymous.Length);
+        for (int index = 0; index < anonymousCount; index++)
+        {
+            CaptureNode? referenceNode = index < referenceAnonymous.Length ? referenceAnonymous[index] : null;
+            CaptureNode? candidateNode = index < candidateAnonymous.Length ? candidateAnonymous[index] : null;
+            string kind = referenceNode?.ControlKind ?? candidateNode?.ControlKind ?? "control";
+            string path = $"{parentPath}/anonymous[{kind}:{index}]";
+            if (referenceNode is null || candidateNode is null)
+            {
+                findings.Add(CreateFinding(
+                    ControlCategory,
+                    referenceNode is null ? "control.anonymousExtra" : "control.anonymousMissing",
+                    path,
+                    referenceNode is null
+                        ? "The candidate contains an unnamed semantic child absent from the reference."
+                        : "The reference unnamed semantic child is missing from the candidate.",
+                    referenceNode is null ? null : DescribeNode(referenceNode),
+                    candidateNode is null ? null : DescribeNode(candidateNode)));
+                continue;
+            }
+
+            CompareNode(referenceNode, candidateNode, path, tolerance, findings);
+            CompareAnonymousChildren(referenceNode, candidateNode, path, tolerance, findings);
+        }
+
+        Dictionary<string, CaptureNode> candidateNamed = candidateParent.Children
+            .Where(node => node.FieldName is not null)
+            .GroupBy(node => node.FieldName!, StringComparer.Ordinal)
+            .Where(group => group.Count() == 1)
+            .ToDictionary(group => group.Key, group => group.Single(), StringComparer.Ordinal);
+        foreach (CaptureNode referenceNode in referenceParent.Children.Where(node => node.FieldName is not null))
+        {
+            CaptureNode? candidateNode = null;
+            if (!candidateNamed.TryGetValue(referenceNode.FieldName!, out candidateNode))
+            {
+                CaptureNode[] aliasMatches = candidateParent.Children
+                    .Where(node => node.FieldName is not null
+                                   && (node.FieldAliases.Contains(referenceNode.FieldName!, StringComparer.Ordinal)
+                                       || referenceNode.FieldAliases.Contains(node.FieldName!, StringComparer.Ordinal)))
+                    .Take(2)
+                    .ToArray();
+                candidateNode = aliasMatches.Length == 1 ? aliasMatches[0] : null;
+            }
+
+            if (candidateNode is not null)
+            {
+                CompareAnonymousChildren(
+                    referenceNode,
+                    candidateNode,
+                    $"{parentPath}/control[{referenceNode.FieldName}]",
+                    tolerance,
+                    findings);
+            }
+        }
+    }
+
+    private static string DescribeNode(CaptureNode node) =>
+        string.IsNullOrEmpty(node.Text)
+            ? node.ControlKind
+            : $"{node.ControlKind}: {node.Text}";
 
     private static PixelMetrics CompareImagePair(
         PngImage reference,

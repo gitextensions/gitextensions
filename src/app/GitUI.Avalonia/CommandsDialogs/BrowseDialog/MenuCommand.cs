@@ -59,6 +59,9 @@ internal sealed class MenuCommand
             Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(menuCommand.Text ?? string.Empty),
             Icon = CreateIcon(menuCommand.Image),
             InputGesture = ParseShortcut(menuCommand.ShortcutKeyDisplayString),
+
+            // Avalonia requires the toggle role explicitly; ToolStripMenuItem renders Checked without one.
+            ToggleType = menuCommand.IsCheckedFunc is null ? MenuItemToggleType.None : MenuItemToggleType.CheckBox,
         };
         ToolTip.SetTip(toolStripMenuItem, menuCommand.ToolTipText);
 

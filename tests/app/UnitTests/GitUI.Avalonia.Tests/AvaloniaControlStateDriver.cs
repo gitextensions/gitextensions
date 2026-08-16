@@ -443,6 +443,10 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             });
         }
 
+        // parity-scaffolding: A headless overlay can open underneath the last synthetic pointer
+        // position and select a dynamic child that the equivalent WinForms ShowDropDown leaves idle.
+        _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
         bool previous = menuItem.IsSubMenuOpen;
         menuItem.IsSubMenuOpen = true;
         Dispatcher.UIThread.RunJobs();
@@ -456,6 +460,9 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             throw new AvaloniaCaptureStateUnsupportedException(
                 "The requested menu item was not realized in the opened menu, so its popup surface cannot be captured honestly.");
         }
+
+        _topLevel.MouseMove(new Point(-1, -1), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
 
         TrackExternalTopLevels(menuItem);
         _restoreActions.Add(() => menuItem.IsSubMenuOpen = previous);
