@@ -1,9 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
+using GitUI.UserControls.RevisionGrid;
 
 namespace WinFormsParityCapture;
 
@@ -101,14 +102,19 @@ internal sealed class ControlTreeReader
         string? selectionBackground = null;
         string? gridLine = null;
         string? border = null;
+        Color resolvedBackground = control.BackColor;
         SortedDictionary<string, string> additional = new(StringComparer.Ordinal);
 
         if (control is DataGridView grid)
         {
+            bool isRevisionGrid = grid is RevisionDataGridView;
+            resolvedBackground = isRevisionGrid
+                ? AppColor.PanelBackground.GetThemeColor()
+                : grid.BackgroundColor;
             selectionForeground = ColorToArgb(grid.DefaultCellStyle.SelectionForeColor);
             selectionBackground = ColorToArgb(grid.DefaultCellStyle.SelectionBackColor);
             gridLine = ColorToArgb(grid.GridColor);
-            border = ColorToArgb(grid.RowHeadersDefaultCellStyle.BackColor);
+            border = ColorToArgb(isRevisionGrid ? resolvedBackground : grid.RowHeadersDefaultCellStyle.BackColor);
         }
         else if (control is ListView or TreeView or ListBox)
         {
@@ -129,14 +135,14 @@ internal sealed class ControlTreeReader
         return new CaptureColors
         {
             Foreground = ColorToArgb(control.ForeColor),
-            Background = ColorToArgb(control.BackColor),
+            Background = ColorToArgb(resolvedBackground),
             Border = border,
             SelectionForeground = selectionForeground,
             SelectionBackground = selectionBackground,
             InactiveSelectionForeground = selectionForeground,
             InactiveSelectionBackground = selectionBackground is null ? null : ColorToArgb(SystemColors.InactiveCaption),
             DisabledForeground = ColorToArgb(SystemColors.GrayText),
-            DisabledBackground = ColorToArgb(control.BackColor),
+            DisabledBackground = ColorToArgb(resolvedBackground),
             GridLine = gridLine,
             Additional = additional
         };
@@ -145,6 +151,11 @@ internal sealed class ControlTreeReader
     private static void AddSemanticColorRoles(IDictionary<string, string> colors)
     {
         AddApp("semantic.app.panel.background", AppColor.PanelBackground);
+        AddColor(
+            "semantic.app.revision.alternating.background",
+            ResolveAppColor(AppColor.PanelBackground).MakeDarkerBy(
+                ThemeModule.Settings.Theme.SystemColorMode == SystemColorMode.Dark ? -0.018 : 0.025));
+        AddApp("semantic.app.revision.authored.background", AppColor.AuthoredHighlight);
         AddApp("semantic.app.selection.background", AppColor.Selection);
         AddSystem("semantic.system.control.background", KnownColor.Control);
         AddSystem("semantic.system.control.foreground", KnownColor.ControlText);
@@ -165,8 +176,13 @@ internal sealed class ControlTreeReader
 
         void AddApp(string role, AppColor name)
         {
+            AddColor(role, ResolveAppColor(name));
+        }
+
+        Color ResolveAppColor(AppColor name)
+        {
             Color color = ThemeModule.Settings.Theme.GetColor(name);
-            AddColor(role, color.IsEmpty ? ThemeModule.Settings.InvariantTheme.GetColor(name) : color);
+            return color.IsEmpty ? ThemeModule.Settings.InvariantTheme.GetColor(name) : color;
         }
 
         void AddSystem(string role, KnownColor name)
