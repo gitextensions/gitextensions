@@ -8,7 +8,7 @@
 /// </summary>
 internal interface IPushLabelItem
 {
-    bool ShowLabel { get; set; }
-
     string? LabelText { get; set; }
+
+    bool ShowLabel { get; set; }
 }
