@@ -1,7 +1,11 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Input;
+using Avalonia.Layout;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using GitUI.Compat;
+
 using Keys = GitExtensions.Shims.WinForms.Keys;
 
 namespace GitUI.CommandsDialogs.BrowseDialog;
@@ -63,6 +67,11 @@ internal sealed class MenuCommand
             // Avalonia requires the toggle role explicitly; ToolStripMenuItem renders Checked without one.
             ToggleType = menuCommand.IsCheckedFunc is null ? MenuItemToggleType.None : MenuItemToggleType.CheckBox,
         };
+        if (menuCommand.IsCheckedFunc is not null)
+        {
+            toolStripMenuItem.Classes.Add("gitextensions-menu-command-toggle");
+        }
+
         ToolTip.SetTip(toolStripMenuItem, menuCommand.ToolTipText);
 
         toolStripMenuItem.Click += (obj, sender) =>
@@ -159,6 +168,9 @@ internal sealed class MenuCommand
             foreach (MenuItem item in _registeredMenuItems)
             {
                 item.IsChecked = isChecked;
+
+                // Avalonia reserves separate toggle and image columns; ToolStrip uses one shared image/check gutter.
+                item.Icon = isChecked ? CreateCheckIcon() : CreateIcon(Image);
             }
         }
 
@@ -200,6 +212,53 @@ internal sealed class MenuCommand
                 Stretch = Stretch.Uniform,
                 Source = image,
             };
+
+    private static Control CreateCheckIcon()
+    {
+        Border background = new()
+        {
+            Width = 18.4,
+            Height = 18.4,
+            BorderThickness = new Avalonia.Thickness(0.8),
+            IsHitTestVisible = false,
+        };
+        background[!Border.BackgroundProperty] = new DynamicResourceExtension("GitExtensionsMenuCheckBackgroundBrush");
+        background[!Border.BorderBrushProperty] = new DynamicResourceExtension("GitExtensionsHighlightBackgroundBrush");
+
+        Line shortStroke = CreateStroke(new Avalonia.Point(0.5, 5), new Avalonia.Point(4.5, 9));
+        Line longStroke = CreateStroke(new Avalonia.Point(4.5, 9), new Avalonia.Point(11.5, 1));
+        Canvas check = new()
+        {
+            Width = 12,
+            Height = 10,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            IsHitTestVisible = false,
+            Children = { shortStroke, longStroke },
+        };
+
+        return new Grid
+        {
+            Width = 18.4,
+            Height = 18.4,
+            IsHitTestVisible = false,
+            Children = { background, check },
+        };
+
+        static Line CreateStroke(Avalonia.Point startPoint, Avalonia.Point endPoint)
+        {
+            Line stroke = new()
+            {
+                StartPoint = startPoint,
+                EndPoint = endPoint,
+                StrokeThickness = 1.2,
+                StrokeLineCap = PenLineCap.Square,
+                IsHitTestVisible = false,
+            };
+            stroke[!Shape.StrokeProperty] = new DynamicResourceExtension("GitExtensionsMenuCheckForegroundBrush");
+            return stroke;
+        }
+    }
 
     private static KeyGesture? ParseShortcut(string? shortcut)
     {
