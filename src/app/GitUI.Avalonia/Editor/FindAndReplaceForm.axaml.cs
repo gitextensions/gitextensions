@@ -506,6 +506,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         public TextBox TxtReplaceWith => _control.txtReplaceWith;
         public CheckBox ChkMatchCase => _control.chkMatchCase;
         public CheckBox ChkMatchWholeWord => _control.chkMatchWholeWord;
+        public GetNextFileFnc? FileLoader => _control._fileLoader;
         public string? Title => _control.Text;
         public bool HasScanRegionRenderer => _control._search.HasScanRegionRenderer;
 

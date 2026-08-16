@@ -8,6 +8,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.Editor;
+using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
@@ -19,6 +20,70 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class FileViewerSearchTests
 {
+    [AvaloniaTest]
+    public void FileViewer_should_create_the_find_window_only_when_requested()
+    {
+        FileViewer viewer = new();
+        FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+
+        accessor.IsFindAndReplaceFormCreated.Should().BeFalse();
+
+        FindAndReplaceForm first = accessor.FindAndReplaceForm;
+
+        accessor.IsFindAndReplaceFormCreated.Should().BeTrue();
+        first.Close();
+        Dispatcher.UIThread.RunJobs();
+        accessor.IsFindAndReplaceFormCreated.Should().BeFalse();
+
+        FindAndReplaceForm second = accessor.FindAndReplaceForm;
+        second.Should().NotBeSameAs(first);
+        second.Close();
+    }
+
+    [AvaloniaTest]
+    public void SetFileLoader_should_not_create_the_find_window_and_should_forward_it_on_first_use()
+    {
+        FileViewer viewer = new();
+        GetNextFileFnc fileLoader = (bool seekBackward, bool loop, out FileStatusItem? item, out Task load) =>
+        {
+            item = null;
+            load = Task.CompletedTask;
+            return false;
+        };
+
+        viewer.SetFileLoader(fileLoader);
+
+        FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+        accessor.IsFindAndReplaceFormCreated.Should().BeFalse();
+        FindAndReplaceForm form = accessor.FindAndReplaceForm;
+        form.GetTestAccessor().FileLoader.Should().BeSameAs(fileLoader);
+        form.Close();
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_close_the_find_window_when_detached()
+    {
+        FileViewer viewer = new();
+        Window owner = new() { Content = viewer };
+        owner.Show();
+        try
+        {
+            viewer.Find(replace: false);
+            FindAndReplaceForm form = viewer.GetTestAccessor().FindAndReplaceForm;
+            form.IsVisible.Should().BeTrue();
+
+            owner.Content = null;
+            Dispatcher.UIThread.RunJobs();
+
+            viewer.GetTestAccessor().IsFindAndReplaceFormCreated.Should().BeFalse();
+            form.IsVisible.Should().BeFalse();
+        }
+        finally
+        {
+            owner.Close();
+        }
+    }
+
     [Test]
     public void TextEditorSearcher_should_find_case_sensitive_and_whole_word_matches()
     {
