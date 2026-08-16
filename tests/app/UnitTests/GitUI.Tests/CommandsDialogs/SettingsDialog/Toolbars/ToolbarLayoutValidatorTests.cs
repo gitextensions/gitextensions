@@ -105,18 +105,16 @@ public class ToolbarLayoutValidatorTests
         ToolbarLayoutValidator.TryNormalize(config).Should().BeFalse();
     }
 
-    [TestCase(-1, 0)]
-    [TestCase(int.MinValue, 0)]
-    [TestCase(int.MaxValue, 65_536)]
-    public void TryNormalize_should_clamp_an_out_of_range_index(int index, int expected)
+    [TestCase(-1)]
+    [TestCase(int.MinValue)]
+    [TestCase(65_537)]
+    [TestCase(int.MaxValue)]
+    public void TryNormalize_should_reject_an_out_of_range_index(int index)
     {
-        // The settings page turns the digits of a user-supplied name into an index, so a large
-        // value is reachable; it only sorts the toolbars, so clamping is enough.
         ToolbarLayoutConfig config = ValidConfig();
         config.CustomToolbars[0].Index = index;
 
-        ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
-        config.CustomToolbars[0].Index.Should().Be(expected);
+        ToolbarLayoutValidator.TryNormalize(config).Should().BeFalse();
     }
 
     [Test]
@@ -129,13 +127,22 @@ public class ToolbarLayoutValidatorTests
     }
 
     [Test]
-    public void TryNormalize_should_accept_duplicate_custom_indices()
+    public void TryNormalize_should_reject_duplicate_custom_indices()
     {
-        // The settings page derives the index from the name for "Custom NN" but from the combo
-        // box position otherwise, so the two schemes legitimately collide. The index only orders
-        // the toolbars on load, so a tie is harmless and must not discard the whole layout.
+        // The index decides the order the custom toolbars are rebuilt in, so a tie leaves it
+        // undecided which of the two comes first.
         ToolbarLayoutConfig config = ValidConfig();
         config.CustomToolbars.Add(new ToolbarCustomMetadata { Name = "Custom 02", Index = 3 });
+        config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata { Name = "Custom 02" });
+
+        ToolbarLayoutValidator.TryNormalize(config).Should().BeFalse();
+    }
+
+    [Test]
+    public void TryNormalize_should_accept_distinct_custom_indices()
+    {
+        ToolbarLayoutConfig config = ValidConfig();
+        config.CustomToolbars.Add(new ToolbarCustomMetadata { Name = "Custom 02", Index = 4 });
         config.ToolbarsVisibility.Add(new ToolbarBuiltInMetadata { Name = "Custom 02" });
 
         ToolbarLayoutValidator.TryNormalize(config).Should().BeTrue();
