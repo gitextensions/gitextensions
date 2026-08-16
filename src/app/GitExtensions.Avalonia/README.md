@@ -144,6 +144,20 @@ Windows Forms application additionally requires the submodules
 dotnet run --project src/app/GitExtensions.Avalonia -- browse /path/to/repository
 ```
 
+Some distribution-built .NET SDKs report a distribution-specific runtime identifier. For
+example, Arch Linux packages can report `arch-x64`, while native NuGet assets use the portable
+Linux identifiers. If restore, build, or launch reports a missing runtime/native asset, select
+the matching portable RID explicitly:
+
+```console
+dotnet build src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj -r linux-x64
+dotnet run --project src/app/GitExtensions.Avalonia -r linux-x64 -- browse /path/to/repository
+```
+
+Use `linux-arm64` on ARM64. An ordinary Microsoft-provided SDK already reports a portable RID,
+so the shorter commands above remain the default. The Flatpak build selects its release RID
+explicitly as part of publishing.
+
 The command-line arguments follow the Windows Forms application: the first argument is the
 command (for example `browse`), the second is the repository path. Without arguments the
 application starts without an opened repository. The standalone `--` separates `dotnet run`
