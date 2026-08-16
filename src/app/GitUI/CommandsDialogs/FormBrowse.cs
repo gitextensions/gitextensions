@@ -3040,33 +3040,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        bool confirmed;
-        if (AppSettings.DontConfirmUndoLastCommit)
-        {
-            confirmed = true;
-        }
-        else
-        {
-            TaskDialogPage page = new()
-            {
-                Text = _undoLastCommitText.Text,
-                Caption = _undoLastCommitCaption.Text,
-                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
-                Icon = TaskDialogIcon.Warning,
-                Verification = new TaskDialogVerificationCheckBox
-                {
-                    Text = TranslatedStrings.DontShowAgain
-                },
-                SizeToContent = true
-            };
-
-            confirmed = TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes;
-
-            if (page.Verification.Checked)
-            {
-                AppSettings.DontConfirmUndoLastCommit = true;
-            }
-        }
+        bool confirmed = MessageBoxes.ConfirmSuppressible(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, AppSettings.DontConfirmUndoLastCommit, icon: TaskDialogIcon.Warning);
 
         if (confirmed)
         {

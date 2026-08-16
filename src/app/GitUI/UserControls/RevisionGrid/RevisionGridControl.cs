@@ -116,7 +116,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private readonly TranslationString _rebaseBranch = new("Rebase branch.");
     private readonly TranslationString _rebaseBranchInteractive = new("Rebase branch interactively.");
     private readonly TranslationString _areYouSureRebase = new("Are you sure you want to rebase? This action will rewrite commit history.");
-    private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
     private readonly TranslationString _noMergeBaseCommit = new("There is no common ancestor for the selected commits.");
     private readonly TranslationString _invalidDiffContainsFilter = new("Filter text '{0}' not valid for \"Diff contains\" filter.");
 
@@ -2515,34 +2514,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        if (AppSettings.DontConfirmRebase)
-        {
-            UICommands.StartRebase(ParentForm, _rebaseOnTopOf);
-            return;
-        }
-
-        TaskDialogPage page = new()
-        {
-            Text = _areYouSureRebase.Text,
-            Caption = _rebaseConfirmTitle.Text,
-            Heading = _rebaseBranch.Text,
-            Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
-            Icon = TaskDialogIcon.Information,
-            Verification = new TaskDialogVerificationCheckBox
-            {
-                Text = _dontShowAgain.Text
-            },
-            SizeToContent = true
-        };
-
-        TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
-
-        if (page.Verification.Checked)
-        {
-            AppSettings.DontConfirmRebase = true;
-        }
-
-        if (result == TaskDialogButton.Yes)
+        if (MessageBoxes.ConfirmSuppressible(this, _areYouSureRebase.Text, _rebaseConfirmTitle.Text, AppSettings.DontConfirmRebase, heading: _rebaseBranch.Text))
         {
             UICommands.StartRebase(ParentForm, _rebaseOnTopOf);
         }
@@ -2555,34 +2527,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        if (AppSettings.DontConfirmRebase)
-        {
-            UICommands.StartInteractiveRebase(ParentForm, _rebaseOnTopOf);
-            return;
-        }
-
-        TaskDialogPage page = new()
-        {
-            Text = _areYouSureRebase.Text,
-            Caption = _rebaseConfirmTitle.Text,
-            Heading = _rebaseBranchInteractive.Text,
-            Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
-            Icon = TaskDialogIcon.Information,
-            Verification = new TaskDialogVerificationCheckBox
-            {
-                Text = _dontShowAgain.Text
-            },
-            SizeToContent = true
-        };
-
-        TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
-
-        if (page.Verification.Checked)
-        {
-            AppSettings.DontConfirmRebase = true;
-        }
-
-        if (result == TaskDialogButton.Yes)
+        if (MessageBoxes.ConfirmSuppressible(this, _areYouSureRebase.Text, _rebaseConfirmTitle.Text, AppSettings.DontConfirmRebase, heading: _rebaseBranchInteractive.Text))
         {
             UICommands.StartInteractiveRebase(ParentForm, _rebaseOnTopOf);
         }

@@ -296,32 +296,9 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool WorktreeSwitch(IWin32Window? owner, string worktreePath)
     {
-        if (!AppSettings.DontConfirmSwitchWorktree)
+        if (!MessageBoxes.ConfirmSuppressible(owner, string.Format(TranslatedStrings.SwitchWorktreeConfirmation, worktreePath), TranslatedStrings.SwitchWorktreeCaption, AppSettings.DontConfirmSwitchWorktree))
         {
-            TaskDialogPage page = new()
-            {
-                Text = string.Format(TranslatedStrings.SwitchWorktreeConfirmation, worktreePath),
-                Caption = TranslatedStrings.SwitchWorktreeCaption,
-                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
-                Icon = TaskDialogIcon.Information,
-                Verification = new TaskDialogVerificationCheckBox
-                {
-                    Text = TranslatedStrings.DontShowAgain
-                },
-                SizeToContent = true
-            };
-
-            TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page);
-
-            if (page.Verification.Checked)
-            {
-                AppSettings.DontConfirmSwitchWorktree = true;
-            }
-
-            if (result != TaskDialogButton.Yes)
-            {
-                return false;
-            }
+            return false;
         }
 
         if (!Directory.Exists(worktreePath))
