@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -161,7 +162,13 @@ public sealed partial class ParityScreenshotTests
     public void Avalonia_tree_reader_should_emit_semantic_menu_items_without_template_artifacts()
     {
         Window window = new() { Width = 320, Height = 160 };
-        MenuItem child = new() { Name = "dynamicCommand", Header = "_Child" };
+        MenuItem child = new()
+        {
+            Name = "dynamicCommand",
+            Header = "_Child",
+            ToggleType = MenuItemToggleType.CheckBox,
+            IsChecked = true,
+        };
         MenuItem command = new() { Name = "mnuCommand", Header = "_Command", ItemsSource = new[] { child } };
         ContextMenu menu = new() { Name = "menu", ItemsSource = new[] { command } };
         Button owner = new() { Name = "owner", Content = "Owner", ContextMenu = menu };
@@ -188,6 +195,8 @@ public sealed partial class ParityScreenshotTests
         surface.Root.BorderWidthDip.Should().BeNull();
         nodes.Should().ContainSingle(node => node.Name == "mnuCommand");
         nodes.Should().ContainSingle(node => node.Name == "dynamicCommand" && node.FieldName == null);
+        nodes.Single(node => node.Name == "mnuCommand").CheckState.Should().Be("Unchecked");
+        nodes.Single(node => node.Name == "dynamicCommand").CheckState.Should().Be("Checked");
         nodes.Should().NotContain(node => node.Type != null && node.Type.Contains("AccessText", StringComparison.Ordinal));
         CaptureNode commandNode = nodes.Single(node => node.Name == "mnuCommand");
         commandNode.AutoSize.Should().BeTrue();
@@ -365,11 +374,12 @@ public sealed partial class ParityScreenshotTests
         }
 
         Window menuWindow = new() { Width = 240, Height = 100 };
+        MenuItem childMenu = new() { Header = "Child" };
         MenuItem parentMenu = new()
         {
             Name = "mnuParent",
             Header = "Parent",
-            ItemsSource = new[] { new MenuItem { Header = "Child" } }
+            ItemsSource = new[] { childMenu }
         };
         menuWindow.Content = new Menu { ItemsSource = new[] { parentMenu } };
         menuWindow.Show();
@@ -387,6 +397,8 @@ public sealed partial class ParityScreenshotTests
                 "headless Skia renders the real overlay popup host into the owning frame");
             menuDriver.RequiresExternalSurfaceCapture.Should().BeFalse(
                 "an overlay popup host is not a separate top-level capture");
+            childMenu.IsPointerOver.Should().BeFalse();
+            childMenu.IsSelected.Should().BeFalse();
         }
 
         menuWindow.Close();
@@ -753,6 +765,18 @@ public sealed partial class ParityScreenshotTests
         window.Height = height;
         window.SizeToContent = SizeToContent.Manual;
         window.RequestedThemeVariant = Application.Current?.RequestedThemeVariant;
+        if (descriptor.ViewType == typeof(RevisionGridControl)
+            && state.Kind == CaptureStateKind.MenuOpen
+            && state.TargetField == "viewToolStripMenuItem")
+        {
+            // parity-scaffolding: Size the headless screen before Show; its overlay cannot grow
+            // after realization, while the real desktop submenu is taller than the component.
+            view.Width = width;
+            view.Height = height;
+            view.HorizontalAlignment = HorizontalAlignment.Left;
+            view.VerticalAlignment = VerticalAlignment.Top;
+            window.Height = 900;
+        }
 
         try
         {

@@ -352,15 +352,17 @@ internal sealed class AvaloniaControlTreeReader
             Visible = control.IsVisible && ancestorSubmenusOpen,
             Focused = isPopupRoot ? false : IsFocused(control),
             ReadOnly = isRevisionGridView ? true : GetNullableBoolProperty(control, "IsReadOnly"),
-            CheckState = control is ToggleButton toggle
-                         && (control is CheckBox || control is RadioButton || control is MenuItem)
-                ? toggle.IsChecked switch
+            CheckState = control switch
+            {
+                MenuItem checkedMenuItem => checkedMenuItem.IsChecked ? "Checked" : "Unchecked",
+                ToggleButton toggle when control is CheckBox or RadioButton => toggle.IsChecked switch
                 {
                     true => "Checked",
                     false => "Unchecked",
                     null => "Indeterminate"
-                }
-                : null,
+                },
+                _ => null
+            },
             Selected = GetSelected(control),
             Expanded = isRevisionGrid || isRevisionGridView ? false : isPopupRoot ? true : GetExpanded(control),
             Columns = ReadColumns(control),
