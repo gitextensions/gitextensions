@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -643,6 +643,7 @@ internal static class CaptureRunner
 
     private static async Task<int> RunWorkerAsync(string runtimeRoot, IReadOnlyList<string> arguments)
     {
+        TimeSpan workerTimeout = TimeSpan.FromMinutes(2);
         ProcessStartInfo startInfo = new(Path.Combine(runtimeRoot, "GitExtensions.exe"));
 
         foreach (string argument in arguments)
@@ -655,7 +656,26 @@ internal static class CaptureRunner
         startInfo.Environment["GITEXTENSIONS_DEBUG_FAIL_FAST"] = "1";
         using Process process = Process.Start(startInfo)
             ?? throw new InvalidOperationException("The capture worker could not be started.");
-        await process.WaitForExitAsync();
+        using CancellationTokenSource timeoutSource = new(workerTimeout);
+        try
+        {
+            await process.WaitForExitAsync(timeoutSource.Token);
+        }
+        catch (OperationCanceledException) when (timeoutSource.IsCancellationRequested)
+        {
+            try
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            catch (InvalidOperationException)
+            {
+                // The worker exited between the timeout and the termination request.
+            }
+
+            await process.WaitForExitAsync();
+            throw new TimeoutException($"The isolated capture worker exceeded {workerTimeout.TotalSeconds} seconds and was terminated.");
+        }
+
         return process.ExitCode;
     }
 

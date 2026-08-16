@@ -463,11 +463,21 @@ internal static class ComponentFactory
             "_columnWidth",
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
             ?? throw new CaptureStateUnsupportedException("The original revision grid graph renderer did not expose its measured width.");
+        System.Reflection.FieldInfo visibleRowRangeField = grid.GetType().GetField(
+            "_visibleRowRange",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its visible-row range.");
+        System.Reflection.MethodInfo calculateWidthMethod = graphProvider.GetType().GetMethod(
+            "CalculateGraphColumnWidth",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new CaptureStateUnsupportedException("The original revision grid graph renderer did not expose its width calculation.");
 
         grid.Refresh();
         DateTime renderDeadline = DateTime.UtcNow.AddSeconds(30);
         int stableObservationCount = 0;
         int renderedWidth = 0;
+        int expectedWidth = 0;
+        (int Rendered, int Expected)? refreshedMismatch = null;
         while (stableObservationCount < 3 && DateTime.UtcNow < renderDeadline)
         {
             Application.DoEvents();
@@ -478,11 +488,27 @@ internal static class ComponentFactory
             }
 
             renderedWidth = (int)renderedWidthField.GetValue(graphProvider)!;
+            object visibleRowRange = visibleRowRangeField.GetValue(grid)!;
+            expectedWidth = (int)calculateWidthMethod.Invoke(graphProvider, [visibleRowRange])!;
             bool updatingVisibleRows = (bool)updatingVisibleRowsProperty.GetValue(grid)!;
+            if (ShouldRefreshRevisionGridRender(
+                    grid.Columns[0].Visible,
+                    updatingVisibleRows,
+                    renderedWidth,
+                    expectedWidth,
+                    refreshedMismatch == (renderedWidth, expectedWidth)))
+            {
+                // parity-scaffolding: A late graph-data update can change the width required by the
+                // unchanged visible range; use the product's public refresh boundary to render it.
+                refreshedMismatch = (renderedWidth, expectedWidth);
+                grid.Refresh();
+            }
+
             bool rendered = IsRevisionGridRenderReady(
                 grid.Columns[0].Visible,
                 updatingVisibleRows,
                 renderedWidth,
+                expectedWidth,
                 grid.Columns[0].Width);
             stableObservationCount = rendered
                 ? stableObservationCount + 1
@@ -495,7 +521,7 @@ internal static class ComponentFactory
             throw new CaptureStateUnsupportedException(
                 $"The original revision grid did not complete visible-row graph rendering before capture "
                 + $"(updating={updatingVisibleRowsProperty.GetValue(grid)}, renderedWidth={renderedWidth}, "
-                + $"columnWidth={grid.Columns[0].Width}).");
+                + $"expectedWidth={expectedWidth}, columnWidth={grid.Columns[0].Width}).");
         }
     }
 
@@ -503,9 +529,22 @@ internal static class ComponentFactory
         bool graphVisible,
         bool updatingVisibleRows,
         int renderedWidth,
+        int expectedWidth,
         int columnWidth)
         => !updatingVisibleRows
-            && (!graphVisible || (renderedWidth > 0 && columnWidth == renderedWidth));
+            && (!graphVisible || (renderedWidth > 0 && renderedWidth == expectedWidth && columnWidth == renderedWidth));
+
+    internal static bool ShouldRefreshRevisionGridRender(
+        bool graphVisible,
+        bool updatingVisibleRows,
+        int renderedWidth,
+        int expectedWidth,
+        bool mismatchAlreadyRefreshed)
+        => graphVisible
+            && !updatingVisibleRows
+            && expectedWidth > 0
+            && renderedWidth != expectedWidth
+            && !mismatchAlreadyRefreshed;
 
     // parity-scaffolding: Cancel the original grid's asynchronous refresh before WinForms disposal joins it.
     public static void CleanupBeforeDispose(Control control)
