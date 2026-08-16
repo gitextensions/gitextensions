@@ -136,6 +136,43 @@ public sealed class InputAccessibilityTests
     }
 
     [AvaloniaTest]
+    public void Menu_mnemonics_should_always_show_access_key_underlines()
+    {
+        MenuItem topItem = new() { Header = "_Repository" };
+        Menu menu = new() { ItemsSource = new[] { topItem } };
+        Border contextOwner = new() { ContextMenu = new ContextMenu() };
+        MenuItem contextItem = new() { Header = "_Open" };
+        contextOwner.ContextMenu.ItemsSource = new[] { contextItem };
+        StackPanel content = new();
+        content.Children.Add(menu);
+        content.Children.Add(contextOwner);
+        Window window = new() { Width = 240, Height = 140, Content = content };
+        InputAccessibility.Apply(window);
+
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            topItem.GetVisualDescendants()
+                .OfType<AccessText>()
+                .Single()
+                .ShowAccessKey.Should().BeTrue();
+
+            contextOwner.ContextMenu.Open(contextOwner);
+            Dispatcher.UIThread.RunJobs();
+            contextItem.GetVisualDescendants()
+                .OfType<AccessText>()
+                .Single()
+                .ShowAccessKey.Should().BeTrue();
+        }
+        finally
+        {
+            contextOwner.ContextMenu.Close();
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [TestCase(Key.Apps, RawInputModifiers.None)]
     [TestCase(Key.F10, RawInputModifiers.Shift)]
     public void Context_menu_keys_should_open_the_focused_controls_menu(Key key, RawInputModifiers modifiers)

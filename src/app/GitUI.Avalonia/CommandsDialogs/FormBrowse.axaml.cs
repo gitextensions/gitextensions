@@ -1824,7 +1824,7 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.GitBash: userShell_Click(this, EventArgs.Empty); break;
             case Command.GitGui: Module.RunGui(); break;
             case Command.GitGitK: Module.RunGitK(); break;
-            case Command.FocusRevisionGrid: RevisionGrid.Focus(); break;
+            case Command.FocusRevisionGrid: RevisionGrid.FocusRevisionGrid(); break;
             case Command.FocusCommitInfo:
                 if (AppSettings.CommitInfoPosition == CommitInfoPosition.BelowList)
                 {
