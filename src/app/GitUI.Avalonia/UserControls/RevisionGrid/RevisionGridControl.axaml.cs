@@ -88,6 +88,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private ObjectId? _headId;
     private ObjectId _pendingSelectedObjectId;
     private bool _headHighlighted;
+    private bool _focusGridWhenShown;
     private string _lastPathFilter = string.Empty;
     private string _lastRevisionFilter = "--all";
     private IGitModule? _lastModule;
@@ -156,6 +157,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         };
         _gridView.GotFocus += (_, _) => RefreshRealizedRows();
         _gridView.LostFocus += (_, _) => RefreshRealizedRows();
+        _gridView.AttachedToVisualTree += (_, _) =>
+            Dispatcher.UIThread.Post(FocusRevisionGridWhenShown, DispatcherPriority.Loaded);
         _gridView.KeyDown += OnGridViewKeyDown;
         _gridView.TextInput += (_, e) => _quickSearchProvider.OnKeyPress(e);
         _gridView.DoubleTapped += (_, _) =>
@@ -264,6 +267,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     internal bool ShowBuildServerInfo { get; set; }
 
     internal bool HasRevisionSource => _lastModule is not null;
+
+    internal void FocusRevisionGrid()
+    {
+        // Avalonia's UserControl does not delegate focus to its inner list like the WinForms control.
+        _focusGridWhenShown = !ReferenceEquals(revisionPage.Content, _gridView)
+            || !_gridView.Focus(NavigationMethod.Tab);
+    }
 
     internal IndexWatcher IndexWatcher => _indexWatcher.Value;
 
@@ -2012,6 +2022,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         _pendingSelectedObjectId = selectedObjectId;
         _headHighlighted = false;
         lblLoadingStatus.Text = "Loading…";
+        _focusGridWhenShown = true;
         SetPage(new LoadingControl());
 
         Lazy<IReadOnlyList<IGitRef>> refs = new(() => module.GetRefs(RefsFilter.NoFilter));
@@ -2257,6 +2268,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         // Avalonia observes the range notification, so append in place to preserve selection
         // and the virtualized list's scroll anchor while the reader streams new rows.
         SetPage(_gridView);
+        FocusRevisionGridWhenShown();
         lblLoadingStatus.Text = $"{_revisions.Count} revisions…";
         SelectPendingRevision();
     }
@@ -2287,6 +2299,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         else
         {
             SetPage(_gridView);
+            FocusRevisionGridWhenShown();
 
             // The graph rows straightened after the final CacheTo become visible only when the
             // realized row controls render again, so refresh the realized rows once at the end.
@@ -2407,6 +2420,14 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     /// <param name="content">The content to show.</param>
     private void SetPage(Control content)
         => revisionPage.Content = content;
+
+    private void FocusRevisionGridWhenShown()
+    {
+        if (_focusGridWhenShown)
+        {
+            FocusRevisionGrid();
+        }
+    }
 
     private void UpdateVisibleGraphColumnWidth()
     {
