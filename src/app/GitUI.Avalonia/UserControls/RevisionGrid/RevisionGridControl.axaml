@@ -31,7 +31,7 @@
       <ListBox x:Name="_gridView"
                Classes="revision-grid"
                SelectionMode="Multiple"
-               Background="{DynamicResource GitExtensionsControlBackgroundBrush}"
+               Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
                Foreground="{DynamicResource GitExtensionsControlForegroundBrush}">
       <ListBox.ContextMenu>
         <ContextMenu x:Name="mainContextMenu" Width="256">
@@ -183,14 +183,8 @@
           <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
           <Setter Property="Foreground" Value="{DynamicResource GitExtensionsRevisionSelectedSubjectBrush}" />
         </Style>
-        <Style Selector="ListBoxItem:selected Grid.revision-row">
-          <Setter Property="Background" Value="Transparent" />
-        </Style>
         <Style Selector="TextBlock.revision-body">
           <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorGrayTextBrush}" />
-        </Style>
-        <Style Selector="Grid.revision-row">
-          <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
         </Style>
       </ListBox.Styles>
       </ListBox>
