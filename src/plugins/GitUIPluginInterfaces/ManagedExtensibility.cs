@@ -10,6 +10,9 @@ public static class ManagedExtensibility
     private static ComposableCatalog? _aggregateCatalog;
     private static Lazy<ExportProvider>? _exportProvider;
 
+    [ThreadStatic]
+    private static bool _isResolvingAssembly;
+
     /// <summary>
     /// Gets a root path where user installed plugins are located.
     /// </summary>
@@ -153,6 +156,11 @@ public static class ManagedExtensibility
     /// </summary>
     private static Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
     {
+        if (_isResolvingAssembly)
+        {
+            return null;
+        }
+
         try
         {
             if (args.RequestingAssembly is null)
@@ -166,18 +174,43 @@ public static class ManagedExtensibility
                 return null;
             }
 
-            string? dll = Directory.GetFiles(fullName)
-                .FirstOrDefault(f =>
-                {
-                    string? fileDescription = FileVersionInfo.GetVersionInfo(f).FileDescription;
-
-                    return fileDescription is not null && args.Name.StartsWith(fileDescription);
-                });
+            _isResolvingAssembly = true;
+            string? dll = FindAssemblyPath(fullName, new AssemblyName(args.Name));
             return dll is null ? null : Assembly.LoadFile(dll);
         }
         catch
         {
             return null;
         }
+        finally
+        {
+            _isResolvingAssembly = false;
+        }
+    }
+
+    private static string? FindAssemblyPath(string directory, AssemblyName requestedAssembly)
+    {
+        if (!string.IsNullOrEmpty(requestedAssembly.CultureName))
+        {
+            return null;
+        }
+
+        foreach (string file in Directory.EnumerateFiles(directory, "*.dll").Order(StringComparer.OrdinalIgnoreCase))
+        {
+            try
+            {
+                AssemblyName candidateAssembly = AssemblyName.GetAssemblyName(file);
+                if (string.Equals(candidateAssembly.Name, requestedAssembly.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return file;
+                }
+            }
+            catch
+            {
+                // Ignore native or invalid DLLs while probing the requesting plugin's directory.
+            }
+        }
+
+        return null;
     }
 }
