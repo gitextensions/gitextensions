@@ -20,7 +20,7 @@
 
     <Border x:Name="MainPanel" Classes="gitextensions-dialog-main" Padding="12">
       <Grid x:Name="tlpnlMain"
-            RowDefinitions="Auto,Auto,Auto"
+            RowDefinitions="Auto,Auto"
             RowSpacing="8">
         <HeaderedContentControl x:Name="gbxWhatToCheckout"
                                 Classes="gitextensions-group-box"
@@ -63,11 +63,6 @@
                                         Grid.Column="2"
                                         MinWidth="110" />
         </Grid>
-
-        <CheckBox x:Name="chkOpenWorktree"
-                  Grid.Row="2"
-                  IsChecked="True"
-                  Content="_Open the new worktree after the creation" />
       </Grid>
     </Border>
   </DockPanel>

@@ -202,12 +202,7 @@ public sealed partial class FormPull : GitExtensionsDialog
         if (pullAction == GitPullAction.FetchPruneAll)
         {
             string messageBoxTitle = string.Format(_pruneFromCaption.Text, string.IsNullOrEmpty(remote) ? AllRemotes : remote);
-            bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
-                || MessageBoxes.Show(
-                    owner,
-                    _pullFetchPruneAllConfirmation.Text,
-                    messageBoxTitle,
-                    WinFormsShims.MessageBoxButtons.YesNo) == WinFormsShims.DialogResult.Yes;
+            bool isActionConfirmed = MessageBoxes.ConfirmSuppressible(owner ?? this, _pullFetchPruneAllConfirmation.Text, messageBoxTitle, AppSettings.DontConfirmFetchAndPruneAll);
             if (!isActionConfirmed)
             {
                 return WinFormsShims.DialogResult.Cancel;

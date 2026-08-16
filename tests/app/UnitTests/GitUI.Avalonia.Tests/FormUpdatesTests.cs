@@ -14,6 +14,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.CommandsDialogs.Menus;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
@@ -49,6 +50,10 @@ public sealed class FormUpdatesTests
         accessor.UpdateNow.IsVisible.Should().Be(
             FormUpdates.TestAccessor.CanInstall(OperatingSystem.IsWindows(), AppSettings.IsPortable()));
         accessor.RequiredNetRuntime.IsVisible.Should().Be(OperatingSystem.IsWindows());
+        if (OperatingSystem.IsWindows())
+        {
+            accessor.NetRuntimeDownloadUrl.Should().MatchRegex("[?&]arch=[a-z0-9]+&rid=win-[a-z0-9]+(?:&|$)");
+        }
     }
 
     [AvaloniaTest]
@@ -108,8 +113,9 @@ public sealed class FormUpdatesTests
                 updateService.Received(1).SearchForUpdatesAndShow(form, alwaysShow: false);
                 AppSettings.LastUpdateCheck.Should().BeAfter(DateTime.Now.AddDays(-1));
 
-                MenuItem manualCheck = form.FindControl<MenuItem>("checkForUpdatesToolStripMenuItem")
-                    ?? throw new InvalidOperationException("The update-check menu item was not created.");
+                HelpToolStripMenuItem helpMenu = form.FindControl<HelpToolStripMenuItem>("helpToolStripMenuItem")
+                    ?? throw new InvalidOperationException("The Help menu was not created.");
+                MenuItem manualCheck = helpMenu.GetTestAccessor().CheckUpdatesMenuItem;
                 manualCheck.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
                 updateService.Received(1).SearchForUpdatesAndShow(form, alwaysShow: true);
             }

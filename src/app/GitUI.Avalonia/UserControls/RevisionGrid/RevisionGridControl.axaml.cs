@@ -71,7 +71,6 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     private readonly List<ColumnProvider> _columnProviders = [];
     private readonly Avalonia.Collections.AvaloniaList<GitRevision> _revisions = [];
     private readonly TranslationString _areYouSureRebase = new("Are you sure you want to rebase? This action will rewrite commit history.");
-    private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
     private readonly TranslationString _rebaseBranch = new("Rebase branch.");
     private readonly TranslationString _rebaseBranchInteractive = new("Rebase branch interactively.");
     private readonly TranslationString _rebaseConfirmTitle = new("Rebase Confirmation");
@@ -1435,28 +1434,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             return;
         }
 
-        if (!AppSettings.DontConfirmRebase)
+        if (!MessageBoxes.ConfirmSuppressible(GetOwner(), _areYouSureRebase.Text, _rebaseConfirmTitle.Text, AppSettings.DontConfirmRebase, heading: interactive ? _rebaseBranchInteractive.Text : _rebaseBranch.Text))
         {
-            TaskDialogPage page = new()
-            {
-                Text = _areYouSureRebase.Text,
-                Caption = _rebaseConfirmTitle.Text,
-                Heading = interactive ? _rebaseBranchInteractive.Text : _rebaseBranch.Text,
-                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
-                Icon = TaskDialogIcon.Information,
-                Verification = new TaskDialogVerificationCheckBox { Text = _dontShowAgain.Text },
-                SizeToContent = true,
-            };
-            TaskDialogButton result = TaskDialog.ShowDialog(GetOwner(), page);
-            if (page.Verification.Checked)
-            {
-                AppSettings.DontConfirmRebase = true;
-            }
-
-            if (result != TaskDialogButton.Yes)
-            {
-                return;
-            }
+            return;
         }
 
         if (interactive)

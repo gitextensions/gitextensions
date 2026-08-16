@@ -10,6 +10,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
+using Microsoft;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -270,14 +271,20 @@ public sealed partial class FormClone : GitExtensionsDialog
             }
 
             string from = GetFromText();
+
+            // Use a commands instance rooted at the destination so that path conversion and
+            // git-executable selection (Windows vs WSL) match the destination directory, not the
+            // currently open module which may live on a different subsystem.
+            IGitUICommands destUICommands = UICommands.WithWorkingDirectory(dirTo);
+
             ArgumentString cloneCmd = Commands.Clone(from,
                 dirTo,
-                UICommands.Module.GetPathForGitExecution,
+                destUICommands.Module.GetPathForGitExecution,
                 CentralRepository.IsChecked == true,
                 cbIntializeAllSubmodules.IsChecked == true,
                 branch, depth, isSingleBranch);
 
-            bool success = FormRemoteProcess.ShowDialog(this, UICommands, cloneCmd);
+            bool success = FormRemoteProcess.ShowDialog(this, destUICommands, cloneCmd);
             if (!success || Module.InTheMiddleOfPatch())
             {
                 return;
@@ -402,8 +409,9 @@ public sealed partial class FormClone : GitExtensionsDialog
 
     private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>> branchList)
     {
+        Validates.NotNull(branchList.Result);
         string text = GetBranchText();
-        List<string> names = [.. _defaultBranchItems, .. branchList.Result!.Select(o => o.LocalName!)];
+        List<string> names = [.. _defaultBranchItems, .. branchList.Result.Select(branch => branch.LocalName)];
         _NO_TRANSLATE_Branches.ItemsSource = names;
         if (names.Any(a => a == text))
         {
