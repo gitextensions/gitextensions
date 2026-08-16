@@ -30,9 +30,87 @@ env:
   EXCLUDED_AUTHORS: ""
 
 jobs:
+  triage-known-windows-update-error:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.repository_owner == 'gitextensions' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    outputs:
+      matched: ${{ steps.triage.outputs.matched }}
+    steps:
+      - name: "Triage known Windows update error"
+        id: triage
+        if: ${{ github.event_name == 'issues' }}
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title || '';
+            const body = issue.body || '';
+            const vcruntimeTitle = /^\[NBug\]\s+Unable to load DLL\s+['"][^'"]*vcruntime[^'"]*['"]/i;
+            const vcruntimeException = /System\.DllNotFoundException:\s+Unable to load DLL\s+['"][^'"]*vcruntime/i;
+            const versionMatch = body.match(/^- Git Extensions (\d+)\./im);
+            const isLegacyVersion = versionMatch !== null && Number(versionMatch[1]) < 7;
+            const matched = vcruntimeTitle.test(title) && vcruntimeException.test(body) && isLegacyVersion;
+
+            core.setOutput('matched', matched.toString());
+            if (!matched) {
+              return;
+            }
+
+            const marker = '<!-- known-windows-update-vcruntime -->';
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              per_page: 100,
+            });
+
+            if (!comments.some(comment => comment.body?.includes(marker))) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `${marker}
+            Thanks for reporting this. This VC runtime loading failure is a transient result of Windows, .NET, or Visual C++ servicing replacing a runtime DLL while Git Extensions is running.
+
+            Restart Git Extensions. If Windows is waiting for a restart, restart Windows too. Current Git Extensions releases suppress the misleading crash-report prompt for this condition, so please also [upgrade to the latest release](https://github.com/gitextensions/gitextensions/releases/latest).
+
+            If the error continues after restarting Windows and upgrading Git Extensions, please open a new bug report and mention that those steps did not resolve it. This issue has been automatically closed because it matches the known Windows update error.`,
+              });
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: ['status: workaround available'],
+            });
+
+            const needsReviewLabel = ':eyeglasses: status: needs review';
+            if (issue.labels.some(label => (typeof label === 'string' ? label : label.name) === needsReviewLabel)) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                name: needsReviewLabel,
+              });
+            }
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              state: 'closed',
+              state_reason: 'not_planned',
+            });
+
+            core.info(`Closed issue #${issue.number} as a known Windows update VC runtime error.`);
+
   predict-issue-label:
     # Do not automatically run the workflow on forks outside the 'gitextensions' org
-    if: ${{ github.event_name == 'workflow_dispatch' || github.repository_owner == 'gitextensions' }}
+    if: ${{ (github.event_name == 'workflow_dispatch' || github.repository_owner == 'gitextensions') && needs.triage-known-windows-update-error.outputs.matched != 'true' }}
+    needs: triage-known-windows-update-error
     runs-on: ubuntu-latest
     permissions:
       issues: write
