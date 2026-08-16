@@ -29,12 +29,12 @@ internal sealed class ControlTreeReader
             Root = ReadControl(root, parentId: string.Empty, ordinal: 0)
         };
 
-    public CaptureSurface ReadPopup(ToolStripDropDown popup, int ordinal) =>
+    public CaptureSurface ReadPopup(ToolStripDropDown popup, int ordinal, Point? primaryScreenOrigin = null) =>
         new()
         {
             Role = $"popup:{ordinal}",
             ScreenBoundsPx = ToRectangle(popup.Bounds),
-            Root = ReadToolStripItemCollection(popup, $"popup:{ordinal}")
+            Root = ReadToolStripItemCollection(popup, $"popup:{ordinal}", primaryScreenOrigin ?? Point.Empty)
         };
 
     private static string? ColorToArgb(Color color) =>
@@ -564,9 +564,14 @@ internal sealed class ControlTreeReader
         };
     }
 
-    private CaptureNode ReadToolStripItemCollection(ToolStrip popup, string id)
+    private CaptureNode ReadToolStripItemCollection(ToolStrip popup, string id, Point primaryScreenOrigin)
     {
         Rectangle bounds = popup.Bounds;
+        Rectangle semanticBounds = new(
+            bounds.X - primaryScreenOrigin.X,
+            bounds.Y - primaryScreenOrigin.Y,
+            bounds.Width,
+            bounds.Height);
         return new CaptureNode
         {
             Id = id,
@@ -575,8 +580,8 @@ internal sealed class ControlTreeReader
             Name = popup.Name,
             Type = popup.GetType().FullName ?? popup.GetType().Name,
             ControlKind = "popup",
-            BoundsPx = ToRectangle(bounds),
-            BoundsDip = new CaptureRectangleF { X = ToDip(bounds.X), Y = ToDip(bounds.Y), Width = ToDip(bounds.Width), Height = ToDip(bounds.Height) },
+            BoundsPx = ToRectangle(semanticBounds),
+            BoundsDip = new CaptureRectangleF { X = ToDip(semanticBounds.X), Y = ToDip(semanticBounds.Y), Width = ToDip(bounds.Width), Height = ToDip(bounds.Height) },
             ClientSizePx = new CaptureSize { Width = bounds.Width, Height = bounds.Height },
             ClientSizeDip = new CaptureSizeF { Width = ToDip(bounds.Width), Height = ToDip(bounds.Height) },
             Padding = CreateThickness(popup.Padding),

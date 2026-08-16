@@ -263,6 +263,39 @@ public sealed class ParityDiffRunnerTests
     }
 
     [Test]
+    [Category("P8_6h")]
+    public void Run_should_compare_popup_surface_pixels_independently_of_aggregate_canvas_placement()
+    {
+        using ParityDiffFixture fixture = new();
+        CaptureDocument reference = AddPopupSurface(
+            fixture.CreateDocument("light"),
+            imageWidth: 3,
+            imageHeight: 2,
+            primaryScreenBounds: new CaptureRectangle { X = 10, Y = 20, Width = 2, Height = 2 },
+            popupScreenBounds: new CaptureRectangle { X = 12, Y = 20, Width = 1, Height = 1 });
+        CaptureDocument candidate = AddPopupSurface(
+            fixture.CreateDocument("light"),
+            imageWidth: 2,
+            imageHeight: 2,
+            primaryScreenBounds: new CaptureRectangle { X = 0, Y = 0, Width = 2, Height = 2 },
+            popupScreenBounds: new CaptureRectangle { X = 1, Y = 0, Width = 1, Height = 1 });
+        fixture.WriteCaptureSet("reference", [reference]);
+        fixture.WriteCaptureSet("candidate", [candidate]);
+
+        ParityDiffResult result = fixture.Run();
+
+        CaptureComparison comparison = result.Captures.Should().ContainSingle().Subject;
+        comparison.Findings.Should().BeEmpty();
+        PixelMetrics pixels = comparison.Pixels
+            ?? throw new InvalidOperationException("A compared capture must include pixel metrics.");
+        pixels.ReferenceWidth.Should().Be(1);
+        pixels.ReferenceHeight.Should().Be(1);
+        pixels.CandidateWidth.Should().Be(1);
+        pixels.CandidateHeight.Should().Be(1);
+        pixels.Ssim.Should().Be(1);
+    }
+
+    [Test]
     public void Run_should_preserve_explicit_unsupported_state_notes()
     {
         using ParityDiffFixture fixture = new();
@@ -317,6 +350,41 @@ public sealed class ParityDiffRunnerTests
                             .Select(index => target with { Id = $"{target.Id}/{index}" })
                             .ToArray()
                     }
+                }
+            ]
+        };
+    }
+
+    private static CaptureDocument AddPopupSurface(
+        CaptureDocument document,
+        int imageWidth,
+        int imageHeight,
+        CaptureRectangle primaryScreenBounds,
+        CaptureRectangle popupScreenBounds)
+    {
+        CaptureSurface primary = document.Surfaces.Single() with { ScreenBoundsPx = primaryScreenBounds };
+        CaptureNode popupRoot = primary.Root with
+        {
+            Id = "popup:0",
+            ControlKind = "popup",
+            BoundsPx = new CaptureRectangle { X = 2, Y = 0, Width = 1, Height = 1 },
+            BoundsDip = new CaptureRectangleF { X = 2, Y = 0, Width = 1, Height = 1 },
+            ClientSizePx = new CaptureSize { Width = 1, Height = 1 },
+            ClientSizeDip = new CaptureSizeF { Width = 1, Height = 1 },
+            Children = []
+        };
+        return document with
+        {
+            Capture = document.Capture with { State = "context-menu" },
+            Image = document.Image with { WidthPx = imageWidth, HeightPx = imageHeight },
+            Surfaces =
+            [
+                primary,
+                new CaptureSurface
+                {
+                    Role = "popup:0",
+                    ScreenBoundsPx = popupScreenBounds,
+                    Root = popupRoot
                 }
             ]
         };

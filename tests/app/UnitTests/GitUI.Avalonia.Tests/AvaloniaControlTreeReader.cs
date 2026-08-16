@@ -16,13 +16,15 @@ namespace GitExtensionsTests;
 internal sealed class AvaloniaControlTreeReader
 {
     private readonly Dictionary<object, List<string>> _fieldNames = new(ReferenceEqualityComparer.Instance);
+    private readonly PixelPoint _primaryScreenOrigin;
     private readonly double _renderScale;
     private readonly Control _root;
 
-    public AvaloniaControlTreeReader(Control root, double renderScale)
+    public AvaloniaControlTreeReader(Control root, double renderScale, PixelPoint? primaryScreenOrigin = null)
     {
         _root = root;
         _renderScale = renderScale;
+        _primaryScreenOrigin = primaryScreenOrigin ?? default;
         IndexFields(root);
     }
 
@@ -37,8 +39,8 @@ internal sealed class AvaloniaControlTreeReader
         Control semanticRoot = GetSemanticSurfaceRoot(root);
         Rect? rootBoundsOverride = IsPopupSurface(semanticRoot)
             ? new Rect(
-                screenBounds.X / _renderScale,
-                screenBounds.Y / _renderScale,
+                (screenBounds.X - _primaryScreenOrigin.X) / _renderScale,
+                (screenBounds.Y - _primaryScreenOrigin.Y) / _renderScale,
                 screenBounds.Width / _renderScale,
                 screenBounds.Height / _renderScale)
             : null;

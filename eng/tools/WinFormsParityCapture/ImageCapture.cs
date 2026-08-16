@@ -61,7 +61,7 @@ internal static class ImageCapture
                     Bitmap hostedControl = hostBitmap.Clone(crop, PixelFormat.Format32bppArgb);
                     if (HasRenderedContent(hostedControl))
                     {
-                        return new CaptureImageResult(hostedControl, CaptureMethod.PrintWindow, screenBounds);
+                        return new CaptureImageResult(hostedControl, CaptureMethod.PrintWindow, screenBounds, screenBounds);
                     }
 
                     hostedControl.Dispose();
@@ -82,7 +82,7 @@ internal static class ImageCapture
 
         if (HasRenderedContent(drawToBitmap))
         {
-            return new CaptureImageResult(drawToBitmap, CaptureMethod.DrawToBitmap, screenBounds);
+            return new CaptureImageResult(drawToBitmap, CaptureMethod.DrawToBitmap, screenBounds, screenBounds);
         }
 
         drawToBitmap.Dispose();
@@ -92,7 +92,7 @@ internal static class ImageCapture
 
     private static CaptureImageResult CaptureScreen(Control root, IReadOnlyList<ToolStripDropDown> popups)
     {
-        Rectangle primaryBounds = NativeMethods.GetWindowRectangle(root.FindForm()?.Handle ?? root.Handle);
+        Rectangle primaryBounds = GetPrimaryScreenBounds(root);
         Rectangle bounds = primaryBounds;
         foreach (ToolStripDropDown popup in popups)
         {
@@ -116,7 +116,7 @@ internal static class ImageCapture
         using Graphics graphics = Graphics.FromImage(bitmap);
         graphics.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size, CopyPixelOperation.SourceCopy);
         EnsureRenderedContent(bitmap, "screen capture");
-        return new CaptureImageResult(bitmap, CaptureMethod.ScreenGrab, bounds);
+        return new CaptureImageResult(bitmap, CaptureMethod.ScreenGrab, bounds, primaryBounds);
     }
 
     private static CaptureImageResult CaptureWindow(Form form)
@@ -147,8 +147,13 @@ internal static class ImageCapture
         }
 
         EnsureRenderedContent(bitmap, "PrintWindow(PW_RENDERFULLCONTENT)");
-        return new CaptureImageResult(bitmap, CaptureMethod.PrintWindow, bounds);
+        return new CaptureImageResult(bitmap, CaptureMethod.PrintWindow, bounds, bounds);
     }
+
+    internal static Rectangle GetPrimaryScreenBounds(Control root) =>
+        root is Form form
+            ? NativeMethods.GetWindowRectangle(form.Handle)
+            : root.RectangleToScreen(root.ClientRectangle);
 
     private static void EnsureRenderedContent(Bitmap bitmap, string method)
     {
@@ -181,7 +186,11 @@ internal static class ImageCapture
     }
 }
 
-internal sealed record CaptureImageResult(Bitmap Bitmap, CaptureMethod Method, Rectangle ScreenBounds) : IDisposable
+internal sealed record CaptureImageResult(
+    Bitmap Bitmap,
+    CaptureMethod Method,
+    Rectangle ScreenBounds,
+    Rectangle PrimaryScreenBounds) : IDisposable
 {
     public void Dispose()
     {
