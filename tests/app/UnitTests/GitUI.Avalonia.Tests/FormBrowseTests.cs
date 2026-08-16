@@ -902,6 +902,7 @@ public sealed class FormBrowseTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
     public void FormBrowse_view_menu_should_share_revision_grid_command_state_and_routing()
     {
         IGitModule module = Substitute.For<IGitModule>();
@@ -922,6 +923,10 @@ public sealed class FormBrowseTests
             MenuItem view = GetMainMenuItem(form, "viewToolStripMenuItem");
             MenuItem mainRemote = GetTaggedMenuItem(view, "ShowRemoteBranches");
             MenuItem contextRemote = GetTaggedMenuItem(form.RevisionGrid.ViewMenuItem, "ShowRemoteBranches");
+
+            view.Items.OfType<MenuItem>().Should().OnlyContain(item => item.MinWidth == 425.6);
+            view.Items.OfType<Separator>().Should().OnlyContain(
+                separator => separator.Width == 423.2 && separator.HorizontalAlignment == Avalonia.Layout.HorizontalAlignment.Center);
 
             view.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
             mainRemote.IsChecked.Should().BeFalse();
