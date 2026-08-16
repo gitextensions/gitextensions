@@ -226,10 +226,10 @@ public sealed class FormPushTests
     public void StartPushDialog_should_push_the_current_branch_to_a_local_bare_remote()
     {
         bool closeProcessDialog = AppSettings.CloseProcessDialog;
-        bool dontConfirmNewBranch = AppSettings.DontConfirmPushNewBranch;
+        bool dontConfirmNewBranch = AppSettings.DontConfirmPushNewBranch.Value;
         bool dontConfirmTracking = AppSettings.DontConfirmAddTrackingRef;
         AppSettings.CloseProcessDialog = true;
-        AppSettings.DontConfirmPushNewBranch = true;
+        AppSettings.DontConfirmPushNewBranch.Value = true;
         AppSettings.DontConfirmAddTrackingRef = true;
         try
         {
@@ -260,7 +260,7 @@ public sealed class FormPushTests
         finally
         {
             AppSettings.CloseProcessDialog = closeProcessDialog;
-            AppSettings.DontConfirmPushNewBranch = dontConfirmNewBranch;
+            AppSettings.DontConfirmPushNewBranch.Value = dontConfirmNewBranch;
             AppSettings.DontConfirmAddTrackingRef = dontConfirmTracking;
         }
     }
@@ -336,13 +336,13 @@ public sealed class FormPushTests
         bool closeProcessDialog = AppSettings.CloseProcessDialog;
         GitPullAction? autoPull = AppSettings.AutoPullOnPushRejectedAction;
         GitPullAction defaultPull = AppSettings.DefaultPullAction;
-        bool dontConfirmNewBranch = AppSettings.DontConfirmPushNewBranch;
+        bool dontConfirmNewBranch = AppSettings.DontConfirmPushNewBranch.Value;
         bool dontConfirmTracking = AppSettings.DontConfirmAddTrackingRef;
         string updaterDirectory = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.PushUpdater-{Guid.NewGuid():N}");
         AppSettings.CloseProcessDialog = true;
         AppSettings.AutoPullOnPushRejectedAction = GitPullAction.Merge;
         AppSettings.DefaultPullAction = GitPullAction.Merge;
-        AppSettings.DontConfirmPushNewBranch = true;
+        AppSettings.DontConfirmPushNewBranch.Value = true;
         AppSettings.DontConfirmAddTrackingRef = true;
         try
         {
@@ -389,7 +389,7 @@ public sealed class FormPushTests
             AppSettings.CloseProcessDialog = closeProcessDialog;
             AppSettings.AutoPullOnPushRejectedAction = autoPull;
             AppSettings.DefaultPullAction = defaultPull;
-            AppSettings.DontConfirmPushNewBranch = dontConfirmNewBranch;
+            AppSettings.DontConfirmPushNewBranch.Value = dontConfirmNewBranch;
             AppSettings.DontConfirmAddTrackingRef = dontConfirmTracking;
             if (Directory.Exists(updaterDirectory))
             {

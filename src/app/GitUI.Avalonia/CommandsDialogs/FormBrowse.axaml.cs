@@ -1571,13 +1571,9 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void undoLastCommitToolStripMenuItem_Click(object? sender, EventArgs e)
     {
-        if (!AppSettings.DontConfirmUndoLastCommit
-            && MessageBoxes.Show(
-                this,
-                _undoLastCommitText.Text,
-                _undoLastCommitCaption.Text,
-                WinFormsShims.MessageBoxButtons.YesNo,
-                WinFormsShims.MessageBoxIcon.Warning) != WinFormsShims.DialogResult.Yes)
+        bool confirmed = MessageBoxes.ConfirmSuppressible(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, AppSettings.DontConfirmUndoLastCommit, icon: TaskDialogIcon.Warning);
+
+        if (!confirmed)
         {
             return;
         }

@@ -1,7 +1,9 @@
 ﻿using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -30,6 +32,7 @@ public sealed class WorktreeDialogTests
         IGitModule module = Substitute.For<IGitModule>();
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
+        commands.GetService(typeof(IGitBranchNameNormaliser)).Returns(Substitute.For<IGitBranchNameNormaliser>());
         FormCreateWorktree form = new(commands, mainPath);
         FormCreateWorktree.TestAccessor accessor = form.GetTestAccessor();
         IGitRef feature = CreateBranch("feature");
@@ -45,6 +48,35 @@ public sealed class WorktreeDialogTests
 
         accessor.WorktreeDirectory.Text.Should().Be($"{mainPath}_topic_test");
         accessor.Create.IsEnabled.Should().BeFalse("an existing branch cannot be recreated");
+    }
+
+    [AvaloniaTest]
+    public void FormCreateWorktree_should_normalise_a_new_branch_before_creation()
+    {
+        bool originalAutoNormalise = AppSettings.AutoNormaliseBranchName;
+        try
+        {
+            AppSettings.AutoNormaliseBranchName = true;
+            string mainPath = Path.Combine(Path.GetTempPath(), $"gitextensions-worktree-{Guid.NewGuid():N}");
+            IGitModule module = Substitute.For<IGitModule>();
+            IGitBranchNameNormaliser normaliser = Substitute.For<IGitBranchNameNormaliser>();
+            normaliser.Normalise("feature branch", Arg.Any<GitBranchNameOptions>()).Returns("feature-branch");
+            IGitUICommands commands = Substitute.For<IGitUICommands>();
+            commands.Module.Returns(module);
+            commands.GetService(typeof(IGitBranchNameNormaliser)).Returns(normaliser);
+            FormCreateWorktree form = new(commands, mainPath);
+            FormCreateWorktree.TestAccessor accessor = form.GetTestAccessor();
+
+            accessor.SelectNewBranch("feature branch");
+            accessor.NewBranchName.RaiseEvent(new FocusChangedEventArgs(InputElement.LostFocusEvent));
+
+            accessor.NewBranchName.Text.Should().Be("feature-branch");
+            normaliser.Received(1).Normalise("feature branch", Arg.Any<GitBranchNameOptions>());
+        }
+        finally
+        {
+            AppSettings.AutoNormaliseBranchName = originalAutoNormalise;
+        }
     }
 
     [AvaloniaTest]
@@ -85,11 +117,10 @@ public sealed class WorktreeDialogTests
 
         translation.Received(1).AddTranslationItem(nameof(FormCreateWorktree), "$this", "Text", "Create a new worktree");
         translation.Received(1).AddTranslationItem(nameof(FormCreateWorktree), "btnCreateWorktree", "Text", "&Create the new worktree");
-        translation.Received(1).AddTranslationItem(nameof(FormCreateWorktree), "chkOpenWorktree", "Text", "&Open the new worktree after the creation");
         translation.Received(1).AddTranslationItem(nameof(FormCreateWorktree), "gbxWhatToCheckout", "Text", "What to checkout:");
         translation.Received(1).AddTranslationItem(nameof(FormCreateWorktree), "lblNewWorktreeFolder", "Text", "New worktree &directory:");
         translation.Received(1).AddTranslationItem(nameof(FormCreateWorktree), "rbCheckoutExistingBranch", "Text", "Checkout an &existing branch:");
-        translation.Received(1).AddTranslationItem(nameof(FormCreateWorktree), "rbCreateNewBranch", "Text", "Create a &new branch:\n(from current commit)");
+        translation.Received(1).AddTranslationItem(nameof(FormCreateWorktree), "rbCreateNewBranch", "Text", "Create a &new branch:\r\n(from current commit)");
     }
 
     [AvaloniaTest]
@@ -168,10 +199,10 @@ public sealed class WorktreeDialogTests
     {
         string worktreePath = Path.Combine(Path.GetTempPath(), $"gitextensions-switch-{Guid.NewGuid():N}");
         Directory.CreateDirectory(worktreePath);
-        bool oldConfirmation = AppSettings.DontConfirmSwitchWorktree;
+        bool oldConfirmation = AppSettings.DontConfirmSwitchWorktree.Value;
         try
         {
-            AppSettings.DontConfirmSwitchWorktree = true;
+            AppSettings.DontConfirmSwitchWorktree.Value = true;
             GitUICommands commands = new(Substitute.For<IServiceProvider>(), Substitute.For<IGitModule>());
 
             commands.WorktreeSwitch(owner: null, worktreePath).Should().BeTrue();
@@ -179,7 +210,7 @@ public sealed class WorktreeDialogTests
         }
         finally
         {
-            AppSettings.DontConfirmSwitchWorktree = oldConfirmation;
+            AppSettings.DontConfirmSwitchWorktree.Value = oldConfirmation;
             Directory.Delete(worktreePath);
         }
     }

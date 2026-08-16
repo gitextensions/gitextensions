@@ -171,7 +171,7 @@
   "src/app/GitUI/CommandsDialogs/FormBrowse.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
-    "basedOn": "dfdee1b2ae92d832a2ea7420eb4c11aa2cd14420",
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
     "notes": "Functional repository shell with the implemented Repository/Commands/Tools menus and upstream-shaped ToolStripMain/ToolStripFilters chrome. The Repository menu restores the current functional WinForms contributions in their original groups: refresh, file explorer with its executable and displayed Ctrl+Shift+O gesture, remotes, submodule management/update/sync, worktrees, all four maintenance commands, and repository settings. Git ignore/info-exclude/attributes/mailmap/sparse editors remain absent with their unported dialogs. The same FormBrowse instance switches between the Dashboard and repository panes when the working directory becomes invalid or valid; Dashboard selections and Open/Close commands use that boundary rather than creating a second shell. The first loaded repository host owns the same-named top-level menu; fork/clone remains available outside a repository, while view/create pull request and add-upstream resolve the provider relevant to the current repository and preserve the original errors and command boundaries. The compact 25px toolbar has refresh/left-panel/lower-workspace layout controls, worktree manager/switcher, the same-named searchable favourite/recent working-directory split selector, current-branch selector, persisted pull split actions, push/commit/stash actions, file explorer, terminal, configured user scripts, and the live Settings host; it wraps rather than hiding commands at narrow widths. The working-directory selector routes open/close and Ctrl-new-instance actions through the original command IDs, records the valid recent working directory once, and opens the native recent-repository settings twin. One same-named GitStatusMonitor status result drives the configurable Commit state/count and artificial-revision counters, while the existing ahead/behind provider drives the same-named Push button's arrow/count text with repository/branch stale-result rejection. The worktree split contribution appears only when more than one worktree exists and reuses the original create/prune/manage and current/deleted-row behavior. The original CommitInfoTabControl boundary hosts selection-driven Commit and Diff, lazily loaded File tree and GPG, a lazy portable plain-text shell, shared Output history, and the selection-driven Build Report contribution when build-server data exists; Output follows the original tab-versus-toggleable-panel settings. ShowSplitViewLayout and below/left/right CommitInfoPosition settings are shared with WinForms, and in-session splitter sizes survive toggling/position changes. The shared submodule-status provider now refreshes the left-panel hierarchy and is canceled with repository changes/shutdown. Portable plugins load and register through the original lifecycle, including unregister/re-register on repository changes; the Browse menu lists them alphabetically, materializes their embedded portable PNGs, executes them through the original GitUIEventArgs boundary, and routes its settings command to the Plugins root. Browse hotkeys dispatch the implemented commands and workspace focus/navigation with upstream IDs, including OpenRepo Ctrl+O, CloseRepository Ctrl+W, and ManageWorkTrees ID 49; configured user-script hotkeys retain the original Scripts category and command IDs, the original QuickFetch ID 11 runs before/after fetch event scripts, Ctrl+D6 and Ctrl+D9 focus Console and Output, while F5 uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Top-level menu access keys are resolved before configured script hotkeys so Alt+S opens Start instead of a conflicting user script. The selected Diff/File tree supplies selected paths and caret position through the original script-options provider boundary. The revision grid receives the shared ahead/behind provider and quick filter state; its path filter supplies the same followed-file fallback to both RevisionDiffControl instances. The upstream BrowseArguments constructor now applies revision/path filters, requested selection, and file-history left-panel mode before the initial asynchronous load. Repository reload, refs/history, worktrees, submodules, GPG, build-server polling, and plugin discovery work use owned lifetime boundaries, so queued notifications and unfinished providers cannot outlive shutdown. P4.2 restores the same-named Start, Tools, and Help menu owners, including dynamic recent/favourite repositories, available actions, shortcuts, translations, separators, icons, state refresh, and settings-change handling. P5.8 retains ownership of the unavailable PuTTY, command-log, changelog, donate, and about surfaces. Main panes preserve invisible 6px splitter drag targets, adjacent 1px borders, 6px content padding, and the 260px repository-tree distance. The headless-Skia harness captures the complete shell in light/dark at 100%/125%/150%/200% scaling. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. P4.1 restores the original InitMenusAndToolbars, InitRevisionGrid, InitCommitDetails, and UpdateTargets partial-file boundaries and routes selection refresh through the original target mask; left-panel, dashboard, and exact state-matrix parity remain later work."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/DashboardControl/Dashboard.cs": {
@@ -249,8 +249,8 @@
   "src/app/GitUI/CommandsDialogs/ToolStripPushButton.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/ToolStripPushButton.cs",
     "status": "functional",
-    "basedOn": "1184be2fb734595d69ccdfd71cdb91507092a45b",
-    "notes": "Same-named native toolbar button preserves icon-only fallback, ahead/behind arrow and count text, warning icon, translated tooltip, configured shortcut suffix, and stable width while an update is pending."
+    "basedOn": "a2154c42fdf6ec4567e773547d2acc1961739f7a",
+    "notes": "Same-named native toolbar button preserves icon-only fallback, ahead/behind arrow and count text, warning icon, translated tooltip, configured shortcut suffix, and stable width while an update is pending. Its native image path already resets the previous icon before rendering the next state, matching the upstream stale-image fix."
   },
   "src/app/GitUI/UserControls/RepoStateVisualiser.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RepoStateVisualiser.cs",
@@ -261,8 +261,8 @@
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormUpdates.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormUpdates.axaml.cs",
     "status": "functional",
-    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Preserves the same-named release check, translated result/runtime links, manual and automatic display modes, and Windows MSI update path. The legacy GitHub tree API is replaced by the raw configdata feed. Linux/macOS deliberately open the generic releases page and never execute the Windows-only MSI; Windows portable builds retain the same links-only behavior. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization."
+    "basedOn": "5de7c5a37b167d958e49edb5199fa5dd8897a87b",
+    "notes": "Preserves the same-named release check, translated result/runtime links, manual and automatic display modes, lowercase runtime-download architecture/RID query values, and Windows MSI update path. The legacy GitHub tree API is replaced by the raw configdata feed. Linux/macOS deliberately open the generic releases page and never execute the Windows-only MSI; Windows portable builds retain the same links-only behavior. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormUpdates.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormUpdates.axaml",
@@ -309,8 +309,8 @@
   "src/app/GitUI/CommandsDialogs/WorktreeDialog/FormCreateWorktree.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/WorktreeDialog/FormCreateWorktree.axaml.cs",
     "status": "functional",
-    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Same-named create-worktree dialog with asynchronously applied local branches, existing/new branch modes, path suggestion and validation, portable folder picking, the original worktree.useRelativePaths command configuration, and optional in-window navigation after creation."
+    "basedOn": "6c302d839d1ab9dbdc8ca8c741160342bd507d01",
+    "notes": "Same-named create-worktree dialog with asynchronously applied local branches, existing/new branch modes, upstream branch-name normalization on focus loss, path suggestion and validation, portable folder picking, and the original worktree.useRelativePaths command configuration. The removed Open worktree checkbox is likewise absent; GitUICommands now always offers the upstream post-create switch confirmation."
   },
   "src/app/GitUI/CommandsDialogs/WorktreeDialog/FormManageWorktree.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/WorktreeDialog/FormManageWorktree.axaml.cs",
@@ -951,7 +951,7 @@
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ConfirmationsSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ConfirmationsSettingsPage.axaml.cs",
     "status": "functional",
-    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
     "notes": "Retains every direct, inverted, and nullable confirmation mapping for commits, branches, stashes, conflict resolution, submodules, and worktrees."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ConfirmationsSettingsPage.Designer.cs": {
@@ -1293,7 +1293,7 @@
   "src/app/GitUI/CommandsDialogs/FormResolveConflicts.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResolveConflicts.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
     "notes": "Ported at the post-97cfa7b44 shape (FormBusyScope keeps the UI thread free while the merge tool runs). The conflicted-files grid is a multi-select ListBox showing file names (the hidden Author column had no data source upstream); SortableBindingList header-sort is dropped, while the shared go-to-manual control is functional. Solve-conflict choices (keep local/remote/base, apply-to-all) use the Compat TaskDialog surrogate. SaveFileDialog becomes the Avalonia storage provider; \"open with\"/\"show in folder\" fall back to the default application/folder outside Windows. Context-menu Ctrl+1..3 shortcuts are dispatched in OnKeyDown. The shared CustomDiffMergeToolProvider populates the original customMergetool menu and launches the selected native tool for every selected conflict. Submodule conflicts use the real same-named FormMergeSubmodule workflow. The file-history item is live since 3.8."
   },
   "src/app/GitUI/CommandsDialogs/FormMergeSubmodule.cs": {
@@ -1311,8 +1311,8 @@
   "src/app/GitUI/CommandsDialogs/MergeConflictHandler.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/MergeConflictHandler.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Verbatim; middle-of-rebase and middle-of-patch follow-ups reach the functional same-named FormRebase and FormApplyPatch controllers."
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
+    "notes": "Middle-of-rebase and middle-of-patch follow-ups reach the functional same-named FormRebase and FormApplyPatch controllers. Resolve-conflicts confirmation uses the shared suppressible-confirmation boundary, matching the current original."
   },
   "src/app/GitUI/FormBusyScope.cs": {
     "twin": "src/app/GitUI.Avalonia/FormBusyScope.cs",
@@ -1395,8 +1395,8 @@
   "src/app/GitUI/CommandsDialogs/FormDeleteBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteBranch.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Local branch selection and forced deletion preserve the upstream current-branch, unmerged-branch, main/linked/stale-worktree safety flow. The Compat TaskDialog supplies the explicit default button and reflog footnote used by the confirmations."
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
+    "notes": "Local branch selection and forced deletion preserve the upstream current-branch, unmerged-branch, main/linked/stale-worktree safety flow. The shared suppressible-confirmation boundary persists Don't show again, and the Compat TaskDialog supplies the explicit default button and reflog footnote used by the confirmation."
   },
   "src/app/GitUI/CommandsDialogs/FormInit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormInit.axaml.cs",
@@ -1407,8 +1407,8 @@
   "src/app/GitUI/CommandsDialogs/FormClone.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormClone.axaml.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "URL/destination/subdirectory with live location info, clipboard URL suggestion, current-remote prefill, remote branch listing on dropdown (default remote-HEAD / no-checkout items) with the original busy cursor and direct native Git/OpenSSH error reporting, shallow-clone and submodule options, repository type, open-after-clone question, and history updates; clone execution uses FormRemoteProcess with OpenSSH. StartCloneDialog is live. The PuTTY pieces (Load SSH key and registry/key-agent recovery) remain intentionally omitted, and the ShowInTaskbar test is replaced by the dialog invocation itself; history combos hold path strings rather than Repository objects. Native Labels target the same-named inputs and preserve the original access keys."
+    "basedOn": "c20bb8464f45ba4ca311bbbd24788740cab6579c",
+    "notes": "URL/destination/subdirectory with live location info, clipboard URL suggestion, current-remote prefill, remote branch listing on dropdown (default remote-HEAD / no-checkout items) through destination-rooted UI commands so Windows/WSL Git selection matches upstream, with the original busy cursor, result validation, and direct native Git/OpenSSH error reporting. Shallow-clone and submodule options, repository type, open-after-clone question, and history updates are preserved; clone execution uses FormRemoteProcess with OpenSSH. StartCloneDialog is live. The PuTTY pieces (Load SSH key and registry/key-agent recovery) remain intentionally omitted, and the ShowInTaskbar test is replaced by the dialog invocation itself; history combos hold path strings rather than Repository objects. Native Labels target the same-named inputs and preserve the original access keys."
   },
   "src/app/GitUI/CommandsDialogs/FormRemotes.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRemotes.axaml.cs",
@@ -1461,8 +1461,8 @@
   "src/app/GitUI/SpellChecker/EditNetSpell.cs": {
     "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml.cs",
     "status": "functional",
-    "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
-    "notes": "Same-named multiline commit-message editor with the original text, selection, caret, line, watermark, enabled-state, point-font, colored-range, and empty-line insertion boundaries. NetSpell dictionary selection resolves through AppSettings with the deployed portable dictionary fallback; debounced checking, theme-adapted red misspelling waves, exact 120-alpha adapted ill-formed-line marks, correction/add/ignore/remove context actions, vertical-tab-normalizing keyboard and context-menu paste, Shift+Enter newline insertion, and editing commands are functional. The original provider aggregation, debounce, Ctrl+Space activation, prefix/camel-hump filtering, keyboard navigation, acceptance, cancellation, setting toggle, tooltip, and caret-positioned native autocomplete list are functional. A deterministic real-repository audit covers changed names, symbols, rename metadata, and cancellation. A dedicated semantic editor-background resource resolves through WinForms' Window/ControlLight theme boundary. In design mode command discovery stops before walking a command-less parent form. P8.6f.2 owns FormCommit validation/auto-wrap use of these boundaries; P8.6f.3 owns exact visual/theme/state/platform closure."
+    "basedOn": "42a1769df056cf97e702b4f43880099ee289743e",
+    "notes": "Same-named multiline commit-message editor with the original text, selection, caret, line, watermark, enabled-state, point-font, colored-range, and empty-line insertion boundaries. NetSpell dictionary selection resolves through AppSettings with the deployed portable dictionary fallback; debounced checking, theme-adapted red misspelling waves, exact 120-alpha adapted ill-formed-line marks, correction/add/ignore/remove context actions, vertical-tab-normalizing keyboard and context-menu paste, Shift+Enter newline insertion, and editing commands are functional. The original provider aggregation, debounce, Ctrl+Space activation, prefix/camel-hump filtering, keyboard navigation, acceptance, cancellation (including the upstream token passed into provider aggregation), setting toggle, tooltip, and caret-positioned native autocomplete list are functional. A deterministic real-repository audit covers changed names, symbols, rename metadata, and cancellation. A dedicated semantic editor-background resource resolves through WinForms' Window/ControlLight theme boundary. In design mode command discovery stops before walking a command-less parent form. P8.6f.2 owns FormCommit validation/auto-wrap use of these boundaries; P8.6f.3 owns exact visual/theme/state/platform closure."
   },
   "src/app/GitUI/SpellChecker/EditNetSpell.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/SpellChecker/EditNetSpell.axaml",
@@ -1636,19 +1636,19 @@
   "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
     "status": "functional",
-    "basedOn": "090464d5f5c350497427ad5b4717651df9c4f4d2",
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
     "notes": "P8.6f.2 closes the classified product-functional contract: staged/unstaged multi-selection and context actions, revision-aware FileViewer preview with external-difftool and top/bottom owner routes, selected-line stage/unstage/reset with reload blocking, normal/amend/empty commits, push-only handling for a clean repository, fixup/squash/amend autosquash messages, soft reset, commit-message persistence/history/templates/conventional prefixes plus validation auto-wrap/indent/color settings and commit font, custom author/sign-off/no-verify/GPG/reset-author arguments, merge-conflict and detached-HEAD recovery, commit-and-push including force-with-lease after amend, staged stash and submodule-summary actions, optional superproject staging, selection-filter debounce/history/invalid-regex behavior, the original 18 hotkeys, provider refresh, original-named toolbar/options/status controls and owner routes, and the original close/refresh/error/artificial-commit settings. The same-named EditNetSpell editor supplies deployed dictionaries, spell/line marks, correction context actions, and changed-file/symbol plus commit-metadata autocomplete providers. Git hook bypass is functional through No verify, while before/after commit event scripts retain their original placement around successful commits. The remaining analyzer findings are fully classified framework/source-shape representations; P8.6f.3 owns exact structural, visual, theme, exhaustive-state, preview, and manual closure. Template-settings editing remains owned by the settings host."
   },
   "src/app/GitUI/CommandsDialogs/FormPush.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPush.axaml.cs",
     "status": "functional",
-    "basedOn": "1184be2fb734595d69ccdfd71cdb91507092a45b",
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
     "notes": "Portable push workflows are functional through FormRemoteProcess: configured remote or URL/native-path destinations with history and folder browsing; editable single-branch, all-branch, tag/all-tag, and multi-branch push/force/delete modes; new-branch and tracking-reference prompts; remote management; force-with-lease/force safety; recursive-submodule options; push-on-show and commit-and-push; rejected-push recovery through pull-merge/rebase or force-with-lease retry; before/after push event scripts; and create-pull-request continuation. After a successful push the continuation prefers a relevant portable repository host and retains the original Azure DevOps browser fallback when no host applies. PuTTY/Pageant controls are intentionally omitted in favor of OpenSSH."
   },
   "src/app/GitUI/CommandsDialogs/FormPull.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPull.axaml.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
     "notes": "Portable pull/fetch workflows are functional through FormRemoteProcess: configured remote, all-remotes, and URL/native-path sources with history and folder browsing; remote management and branch selection; merge, rebase, and fetch-only actions; auto-stash/pop; reachable/no/all-tag, prune/prune-tags, and unshallow options; fetch-and-prune confirmation; submodule initialization/update follow-up; stale-ref, merge-conflict, and rebase-conflict recovery; and the original before/after fetch and pull event ordering. PuTTY/Pageant controls are intentionally omitted in favor of OpenSSH."
   },
   "src/app/GitUI/UserControls/FilterToolBar.cs": {
@@ -1702,7 +1702,7 @@
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
-    "basedOn": "01f060776d87d14c1b464832670ca49a3f32f5ab",
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
       "notes": "Read-only graph/ref labels plus WinForms-shaped single/multi-selection, preselection, double-click notification and the shared IRevisionGridFilter contract. Default reloads use the unchanged FilterInfo argument builder, so branch/current/reflog, message/committer/author/diff, first-parent and path filters match WinForms and persist through AppSettings; explicit caller-supplied revision filters remain supported. Stored stash revisions retain their reflog selectors, older stashes are inserted before their base commit, and the shared RevisionsLoading/RevisionsLoaded payload feeds the left panel from the same lazy refs/stash reads. ShowUncommittedChangesIfPossible defaults on like WinForms and injects the same Working directory/Commit index revisions into the graph stream immediately before HEAD, allowing the shared graph to resolve both artificial edges; filtered-out HEAD and empty repositories retain the original completion-time fallback insertion. The shared artificial-commit setting and bare-repository exclusion remain authoritative, and one live parsed status is split into the staged/worktree change counters. File-history rename following expands one path through git log --follow and preserves FilePathByObjectId/GetRevisionFileName, including exact-only rename/copy settings and merge commits. The context menu now preserves the original top-level item inventory and order, routes its implemented copy, stash, checkout, push, merge, rebase, bisect, reset, commit, branch/tag, advanced commit, difftool, help, pull-request and script actions through real Avalonia workflows, and keeps actions whose same-named dialogs are still absent visible but disabled. RevisionContextMenu lets specialized hosts such as File History compose that menu. The exact RevisionGridMenuCommands inventory builds the Navigate and View menus, updates checks and shortcuts, and retains all persisted command IDs; the realized row cells feed the same-named truncation tooltip provider. P3.1 wires the unchanged navigation histories, parent/child reversal, quick-search typing/paste/result commands, and the lazy unchanged index watcher into the native list. Recycled rows use the same fixed ordered ColumnProvider boundary (matching the original grid's disabled column reordering); settings control graph, notes, author, date and object-ID visibility, while visible lanes determine graph width. Alternating and authored row backgrounds now use the original even-row condition and exact MakeDarkerBy/AppColor inputs. Refs mark the checked-out branch/tracking remote. Selection drives shared author highlighting; related refs and superproject data are functional. P3.4 keeps one observable ItemsSource while streaming, preserving multi-selection and the virtualized scroll anchor; adds native Home/End, copy, quick-search, XButton navigation, and patch-file drag/drop routes; and restores the original _gridView field identity. Owner-managed superproject loading returns through its JoinableTaskFactory for cancellation-safe shutdown. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. P8.6h.3b.1 wires the original delayed commit-detail manager into realized-row refresh so message tooltips can load old bodies without bypassing the product boundary. P8.6h.3b.2a prevents a stash inserted beside its parent from being emitted again when a later --all batch reports refs/stash. P8.6h.3b.2b.1 excludes refs/stash through the original ShowStashes boundary, drives paired captures from HEAD, applies the exact panel, active/inactive selection and selected-subject colors, and captures the real product copy submenu through a compact owner-hosted menu when the long headless context menu clips it. P8.6h.3b.2b.2b.1 isolates each WinForms state in its own process and captures the actual Avalonia overlay popup viewport plus complete logical tree, removing cross-state/theme contamination and false container-selection diagnostics. P8.6h.3b.2b.2b.2a canonicalizes Avalonia mnemonic, textless-control, separator, and overlay-host tree values to the shared WinForms-shaped schema without changing product rendering. P8.6h.3b.2b.2b.2b.1 applies the configured UI font to desktop popup items and restores measured ToolStrip row and separator heights across shared context-menu and menu-flyout presentation. P8.6h.3b.2b.2b.2b.2 removes Avalonia's desktop-menu horizontal touch padding while retaining the WinForms one-pixel vertical inset, and renders resolved theme-aware separator rules over the menu background. P8.6h.3b.2b.2b.2b.2b.3 restores the original maximized-column and last-visible-resizable-column identities in the native column model, preserves the blank graph header, and retains unavailable build-status width/resizability plus the measured avatar width. The Avalonia capture reader now emits those native provider columns into the shared schema, and ParityDiff joins framework-specific column types by stable index while reporting field and metric deltas. P8.6h.3b.2b.2b.2b.4 publishes rows in the final scored RevisionGraph order, keeps the selected row active while its context menu owns interaction, retains the disabled current-branch delete entry, and lets newly visible menu items participate in the first popup measure. A renderer-ready WinForms capture closes every live graph/fill/avatar column finding, and the official preview renders the touched view. P8.6h.3b.2b.2b.2b.5 maps the grid and popup to the original resolved control/menu colors, uses the measured popup width, and emits semantic DataGridView/MenuItem trees without Avalonia template artifacts; the paired matrix now has zero color, font, text, control-identity, and column findings. The next measured pass records WinForms-equivalent Dock/Anchor/tab/focus/effective-enabled semantics, includes the real copy-popup item tree, requires one shared repository on both sides, and excludes geometry only while a control is not rendered; the honest 15-pair report falls to 492 diagnostics with zero layout findings. A capture-tool-only follow-up now waits for stable repository-HEAD selection, verifies the original context/copy popup state after its real opening handlers, and retries only detected readiness races. The corrected 15-pair report has 453 diagnostics: 390 geometry, 51 image, and 12 genuine cross-theme Rebase/separator state differences. A shipping follow-up restores the original Rebase-on parent visibility for regular revisions and the original submenu-opening enabled-state calculation; the shared capture reader reports all descendants of closed submenus, including separators, as hidden. The fresh 15-pair report has zero state findings and 450 diagnostics: 399 geometry and 51 image. A measured popup follow-up restores the ToolStrip trailing border/top inset, exact top-level separator metrics, copy-submenu whitespace, and semantic popup-relative bounds. Every named popup row, separator, width, height and client metric now matches; the 15-pair report falls to 207 diagnostics (156 geometry and 51 image). A measured-row follow-up derives the native item height from the resolved font metrics and render scale through the original GDI+ line-spacing, one-eighth-em padding, physical-pixel truncation and DPI-scaled nine-pixel spacing; both 125% capture trees report 25.6 DIP and average matrix SSIM improves from 0.2237 to 0.4475 without suppressing the 51 open image findings. The complete View submenu now applies the captured ToolStrip shared width to its native rows and centers separators at the captured inset; its three-theme matrix closes 300 geometry findings and three image-dimension findings without suppressing the remaining pixel debt. The reference capture now waits until the rendered graph width equals the calculation for the current visible row range and uses the product refresh boundary once when late graph data changes that width, closing four stale custom-theme column diagnostics. The View submenu uses ToolStrip's single image/check gutter and measured resolved menu/check colors; its three-theme average SSIM improves from 0.229985 to 0.481435. The live revision surface and every recycled ordinary, alternating and authored row now resolve the same AppColor.PanelBackground, derived MakeDarkerBy value and AppColor.AuthoredHighlight as the owner-painted WinForms grid, while selection retains precedence. Remaining framework-property representations, absolute popup placement, image diagnostics, classified renderer/source differences, native DPI, macOS, and the exhaustive grid state audit remain open."
   },
   "src/app/GitUI/UserControls/RevisionGrid/ArtificialCommitChangeCount.cs": {
@@ -1921,8 +1921,8 @@
   "src/app/GitUI/Editor/FileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
     "status": "functional",
-    "basedOn": "60d785048eded3d0dedaff3349294727404d712c",
-    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range/fixed/difftastic/grep views, old/new line-number mapping, resolved ANSI foreground/background ranges, semantic line and inline coloring, and the same-named FileViewerInternal composition boundary. Commit and rebase files select their original Git-specific highlighting strategies. Revision-aware Git diff and configured Difftastic loading, original appearance/text/continuous-scroll/settings actions, Escape/double-click/context/scroll events, search/navigation, selected-line patching, text/binary/image/large-file loading, syntax/nonprinting/whitespace/encoding settings, and external-difftool F3 behavior are functional. P8.6d.2c classifies the remaining source findings as framework representation and composition differences; P8.6d.3 retains exact visual/state/platform closure."
+    "basedOn": "42a1769df056cf97e702b4f43880099ee289743e",
+    "notes": "Read-only AvaloniaEdit viewer with parsed normal/combined/word/range/fixed/difftastic/grep views, old/new line-number mapping, resolved ANSI foreground/background ranges, semantic line and inline coloring, and the same-named FileViewerInternal composition boundary. Commit and rebase files select their original Git-specific highlighting strategies. Revision-aware Git diff and configured Difftastic loading retain cancellation through the current token and OperationCanceledException path, matching the upstream cancellation fix; original appearance/text/continuous-scroll/settings actions, Escape/double-click/context/scroll events, search/navigation, selected-line patching, text/binary/image/large-file loading, syntax/nonprinting/whitespace/encoding settings, and external-difftool F3 behavior are functional. P8.6d.2c classifies the remaining source findings as framework representation and composition differences; P8.6d.3 retains exact visual/state/platform closure."
   },
   "src/app/GitUI/Editor/FileViewer.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml",
@@ -2132,8 +2132,8 @@
   "src/app/GitUI/UserControls/PatchGrid.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/PatchGrid.axaml.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Interactive and apply-style rebase state parsing, translated HeaderText keys, applying/applied/skipped status, current-row selection, and virtualized multi-column display are functional. Header separators use the shared light/dark section-border brush. Row double-click opens normal commits in FormCommitDiff and mail/apply patches in FormViewPatch."
+    "basedOn": "eec755969efe2be9b19960d4dd394260b38f4dca",
+    "notes": "Interactive and apply-style rebase state parsing, translated HeaderText keys, applying/applied/skipped status, current-row selection, and virtualized multi-column display are functional. Header separators use the shared light/dark section-border brush. Row double-click opens normal commits in FormCommitDiff and mail/apply patches in FormViewPatch. The Avalonia twin has no counterpart to the removed false WinForms assertion, so no source change was required."
   },
   "src/app/GitUI/UserControls/CommitDiff.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/CommitDiff.axaml.cs",
@@ -2420,7 +2420,7 @@
   "src/app/GitUI/GitUICommands.cs": {
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
-    "basedOn": "a7557b981a569ede1a53153e14e053da42873bf9",
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
     "notes": "Process commands preserve upstream IGitCommand.AccessesRemote routing to FormRemoteProcess while local commands use FormProcess. StartBatchFileProcessDialog runs private temporary cmd.exe scripts on Windows or /bin/sh scripts on Linux/macOS through that same process dialog and always deletes the temporary file. Normal/amend/fixup/squash commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, apply-patch, add-files, rename-branch, file-history, resolve-conflicts, submodule management/update/synchronization, worktree create/delete/switch, revision-range difftool, ordinary/plugin Settings hosts, repository-host fork/clone, pull-request viewer and creation, add-upstream followed by its immediate fetch, plugin commit-template registration, and portable same-executable repository-browser launch members are real. Add-upstream work owned by FormBrowse runs under that window's joinable task collection and cancellation lifetime; other callers retain the original global fire-and-forget boundary. RunCommand retains the upstream verbs and argument parsing for every command whose Avalonia surface is functional; unknown and still-unported verbs report explicitly instead of opening Browse."
   },
   "src/app/GitUI/RevisionDiffInfoProvider.cs": {
@@ -2432,14 +2432,14 @@
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
     "status": "functional",
-    "basedOn": "e22db3a97532a6ce00f9629f8c011a8b1990342c",
-    "notes": "Registers the plain-text command and embedded-shell emulation, shared Output history provider/recorder with trace forwarding, reduced hotkey settings loader, cross-platform external-terminal launcher, and the same-named Dashboard repository-list controller; Linux honors the desktop default through xdg-terminal-exec before named fallbacks."
+    "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
+    "notes": "Registers the plain-text command and embedded-shell emulation, shared Output history provider/recorder with trace forwarding, reduced hotkey settings loader, cross-platform external-terminal launcher, and the same-named Dashboard repository-list controller; Linux honors the desktop default through xdg-terminal-exec before named fallbacks. Upstream's Windows ShellProvider registration is deliberately replaced by the existing portable ITerminalLauncher boundary."
   },
   "src/app/GitUI/MessageBoxes.cs": {
     "twin": "src/app/GitUI.Avalonia/MessageBoxes.cs",
     "status": "functional",
-    "basedOn": "57d3739f1eb87b5b3fed33138b51ec0ee5a173f6",
-    "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated helpers in use: revision-not-found/filter messages, missing submodule/Git Extensions directories, FailedToRunShell, Confirm, ConfirmResolveMergeConflicts, MiddleOfRebase, MiddleOfPatchApply, ConfirmUpdateSubmodules (task dialog), and the Visual Studio retry prompt. Other domain-specific helpers join with their consumers."
+    "basedOn": "0e25814d0eeff397076e1788457d5b47997e66a7",
+    "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated helpers in use: revision-not-found/filter messages, missing submodule/Git Extensions directories, FailedToRunShell, Confirm, ConfirmSuppressible with the original setting persistence, ConfirmResolveMergeConflicts, MiddleOfRebase, MiddleOfPatchApply, ConfirmUpdateSubmodules (task dialog), and the Visual Studio retry prompt. A marked parity-scaffolding presenter keeps suppressible confirmations deterministic in headless tests and is removed in P11. Other domain-specific helpers join with their consumers."
   },
   "src/app/GitUI/HelperDialogs/FormChooseCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormChooseCommit.axaml.cs",
@@ -2600,8 +2600,8 @@
   "src/app/GitUI/AutoCompletion/AutoCompleteWord.cs": {
     "twin": "src/app/GitUI/AutoCompletion/AutoCompleteWord.cs",
     "status": "functional",
-    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Framework-neutral autocomplete word and camel-hump matcher linked unchanged into GitUI.Avalonia; prefix and camel-hump behavior is exercised on Windows and Linux."
+    "basedOn": "5d6fd56e342291f3a748daf14485ddb1f34713e8",
+    "notes": "Framework-neutral autocomplete word and lowercase camel-hump matcher linked unchanged into GitUI.Avalonia; prefix and camel-hump behavior is exercised on Windows and Linux."
   },
   "src/app/GitUI/AutoCompletion/CommitAutoCompleteProvider.cs": {
     "twin": "src/app/GitUI/AutoCompletion/CommitAutoCompleteProvider.cs",
@@ -2676,7 +2676,7 @@
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseUtil.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseUtil.cs",
     "status": "functional",
-    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
+    "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
     "notes": "Framework-neutral file and directory shell-action helper linked unchanged into GitUI.Avalonia. The native FileStatusList consumes the shared existence and reveal boundaries."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseMenus.cs": {
@@ -3079,13 +3079,13 @@
   "src/app/GitUI/CommandsDialogs/Menus/ToolsToolStripMenuItem.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/ToolsToolStripMenuItem.axaml.cs",
     "status": "functional",
-    "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Preserves Git GUI/GitK/settings actions, shortcut refresh, bare-repository state, settings-change notification, and shell-launch error handling. Git bash uses the native cross-platform terminal service. PuTTY/Pageant and Git command-log entries remain explicitly absent until their platform/native surfaces are supplied in P5.8."
+    "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
+    "notes": "Preserves Git GUI/GitK/settings actions, shortcut refresh, bare-repository state, settings-change notification, and shell-launch error handling. Git bash uses the native cross-platform ITerminalLauncher substitute for upstream's Windows ShellProvider dependency. PuTTY/Pageant and Git command-log entries remain explicitly absent until their platform/native surfaces are supplied in P5.8."
   },
   "src/app/GitUI/CommandsDialogs/Menus/ToolsToolStripMenuItem.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/Menus/ToolsToolStripMenuItem.axaml",
     "status": "functional",
-    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
     "notes": "Native AXAML preserves names, icons, order, separator, mnemonics, and translation identities for every currently actionable Tools entry; unavailable platform/dialog entries are absent rather than inert."
   },
   "src/app/GitUI/CommandsDialogs/Menus/ToolStripMenuItemEx.cs": {
@@ -3181,8 +3181,8 @@
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.axaml.cs",
     "status": "functional",
-    "basedOn": "2061dd857c3893c1a2657331da6e2bc01f9c1e86",
-    "notes": "Preserves browse, tab, output-history, shell selection, unavailable-shell error, and hotkey-tooltip behavior. The portable shell list substitutes platform discovery at the UI boundary."
+    "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
+    "notes": "Preserves browse, tab, output-history, shell selection, unavailable-shell error, and hotkey-tooltip behavior. The portable ShellOption list and ITerminalLauncher substitute for upstream's Windows ShellProvider at the UI boundary."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.axaml",
@@ -3442,8 +3442,8 @@
   "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetAnotherBranch.axaml.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Reset-another-branch dialog. Preserves the local-branches-without-current ordering (tracking remotes first), the editable branch combo with default-remote preselection, the commit summary, the checkout-after-reset setting, the force-reset option, and the asynchronous cancellable dry-run push validation that enables OK and tints invalid input. UpdateRef runs through FormProcess, then optional StartCheckoutBranch. Deviations: the WinForms editable ComboBox maps to an editable Avalonia ComboBox whose items are branch-name strings; the invalid LightCoral background maps to the shared semantic invalid-input brush; the Application.Idle drop-down open maps to a posted action; the KeyUp caret dance is unnecessary in Avalonia. Opened from the revision-grid Reset-another-branch context command."
+    "basedOn": "e3206275aecf12813ec08a702bec1d52e969b6b2",
+    "notes": "Reset-another-branch dialog. Preserves the local-branches-without-current ordering (tracking remotes first), the editable branch combo with default-remote preselection, the commit summary, the checkout-after-reset setting, the force-reset option, and the asynchronous cancellable merge-base ancestor validation that enables OK and tints invalid input. UpdateRef runs through FormProcess, then optional StartCheckoutBranch. Deviations: the WinForms editable ComboBox maps to an editable Avalonia ComboBox whose items are branch-name strings; the invalid LightCoral background maps to the shared semantic invalid-input brush; the Application.Idle drop-down open maps to a posted action; the KeyUp caret dance is unnecessary in Avalonia. Opened from the revision-grid Reset-another-branch context command."
   },
   "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetAnotherBranch.axaml",
@@ -3817,8 +3817,8 @@
   "src/app/GitUI/NBugReports/UIReporter.cs": {
     "twin": "src/app/GitUI.Avalonia/NBugReports/UIReporter.cs",
     "status": "functional",
-    "basedOn": "7c1606ec4c733be7dfeddf56f9829ac6deb9a426",
-    "notes": "Native Avalonia task dialogs preserve error, failed-load, restart, report/ignore, and dubious-ownership flows; active Window ownership, dispatcher restart, and the portal-aware issue launcher replace WinForms handles and BugReportForm. P8.6h.2 exercises all nine decision routes in isolated Windows/Linux child testhosts, including a genuine fatal child exit and intercepted restart, shell, Git, report, and repository actions. The parity-only interception properties are marked for P11 removal; exact structural closure remains P8.6h.3."
+    "basedOn": "b1711482681ea92f7f38c0ec6e4d4764a606509d",
+    "notes": "Native Avalonia task dialogs preserve error, failed-load, restart, report/ignore, and dubious-ownership flows; active Window ownership, dispatcher restart, and the portal-aware issue launcher replace WinForms handles and BugReportForm. Error reporting matches upstream's non-cancellable task-dialog page. P8.6h.2 exercises all nine decision routes in isolated Windows/Linux child testhosts, including a genuine fatal child exit and intercepted restart, shell, Git, report, and repository actions. The parity-only interception properties are marked for P11 removal; exact structural closure remains P8.6h.3."
   },
   "src/app/GitUI/Properties/Images.Designer.cs": {
     "status": "windowsOnly",

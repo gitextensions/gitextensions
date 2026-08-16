@@ -731,7 +731,7 @@ public partial class EditNetSpell : GitModuleControl
 
         if (!_autoCompleteListTask.IsValueFactoryCompleted)
         {
-            _autoCompleteListTask.GetValueAsync().Forget();
+            _autoCompleteListTask.GetValueAsync(_autoCompleteCancellationTokenSource.Token).Forget();
 
             if (calledByUser)
             {
