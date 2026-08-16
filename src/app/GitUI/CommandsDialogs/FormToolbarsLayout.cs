@@ -122,18 +122,6 @@ public partial class FormToolbarsLayout : GitExtensionsForm
         }
     }
 
-    // Represents a toolbar in the layout grid
-    private sealed class ToolbarLayoutItem
-    {
-        public string Name { get; set; } = string.Empty;
-        public string DisplayName { get; set; } = string.Empty;
-        public int Row { get; set; }
-        public int OrderInRow { get; set; }
-        public bool IsBuiltIn { get; set; }
-        public bool IsVisible { get; set; } = true;
-        public int IconSize { get; set; } = 16;
-    }
-
     // Visual panel representing a row of toolbars
     private sealed class RowPanel : Panel
     {
@@ -381,11 +369,7 @@ public partial class FormToolbarsLayout : GitExtensionsForm
         LoadConfiguredCustomToolbars(config, allStripsInPanel, VisualRow, VisualOrderInRow);
         LoadUnconfiguredCustomToolbars(allStripsInPanel, VisualRow, VisualOrderInRow);
 
-        _layoutItems.Sort((a, b) =>
-        {
-            int rowCompare = a.Row.CompareTo(b.Row);
-            return rowCompare != 0 ? rowCompare : a.OrderInRow.CompareTo(b.OrderInRow);
-        });
+        ToolbarGridArrangement.SortByPosition(_layoutItems);
     }
 
     private void LoadBuiltInToolbars(
@@ -409,7 +393,7 @@ public partial class FormToolbarsLayout : GitExtensionsForm
                 : (config?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == name)?.Row ?? 0);
             int orderInRow = useVisualPosition
                 ? visualOrderInRow(toolStrip)
-                : (config?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == name)?.OrderInRow ?? GetDefaultOrder(name));
+                : (config?.ToolbarsVisibility?.FirstOrDefault(t => t.Name == name)?.OrderInRow ?? ToolbarGridArrangement.GetDefaultOrder(name));
 
             LogToolbar($"[FormToolbarsLayout.LoadCurrentLayout] Toolbar '{name}': Row={row}, OrderInRow={orderInRow}, Visible={toolStrip.Visible}");
 
@@ -498,17 +482,6 @@ public partial class FormToolbarsLayout : GitExtensionsForm
                 IconSize = unconfiguredIconSize
             });
         }
-    }
-
-    private static int GetDefaultOrder(string toolbarName)
-    {
-        return toolbarName switch
-        {
-            "Standard" => 0,
-            "Filters" => 1,
-            "Scripts" => 2,
-            _ => 99
-        };
     }
 
     private void BuildVisualGrid()
@@ -725,48 +698,13 @@ public partial class FormToolbarsLayout : GitExtensionsForm
         Point clientPoint = targetRow.PointToClient(new Point(e.X, e.Y));
         int dropIndex = GetDropIndex(targetRow, clientPoint.X);
 
-        // Update layout item
-        ToolbarLayoutItem item = droppedPanel.LayoutItem;
-        int oldRow = item.Row;
-
-        item.Row = targetRow.RowIndex;
-
-        // Recalculate order for all items in target row
-        var itemsInTargetRow = _layoutItems
-            .Where(i => i.Row == targetRow.RowIndex && i != item)
-            .OrderBy(i => i.OrderInRow)
-            .ToList();
-
-        // Insert at drop position
-        itemsInTargetRow.Insert(Math.Min(dropIndex, itemsInTargetRow.Count), item);
-
-        // Update order values
-        for (int i = 0; i < itemsInTargetRow.Count; i++)
-        {
-            itemsInTargetRow[i].OrderInRow = i;
-        }
-
-        // If we moved from a different row, reorder that row too
-        if (oldRow != targetRow.RowIndex)
-        {
-            var itemsInOldRow = _layoutItems
-                .Where(i => i.Row == oldRow)
-                .OrderBy(i => i.OrderInRow)
-                .ToList();
-
-            for (int i = 0; i < itemsInOldRow.Count; i++)
-            {
-                itemsInOldRow[i].OrderInRow = i;
-            }
-        }
+        ToolbarGridArrangement.MoveToRow(_layoutItems, droppedPanel.LayoutItem, targetRow.RowIndex, dropIndex);
 
         droppedPanel.SetHighlight(false);
         _draggedItem = null;
         _isDragging = false;
         HideDropIndicator();
 
-        // Remove empty rows and rebuild
-        RemoveEmptyRows();
         BuildVisualGrid();
     }
 
@@ -869,51 +807,13 @@ public partial class FormToolbarsLayout : GitExtensionsForm
             return;
         }
 
-        ToolbarLayoutItem item = droppedPanel.LayoutItem;
-        int oldRow = item.Row;
-        int newRow = insertionIndex.Value;
-
-        // Shift down all rows at or after the insertion index to make room for the new row.
-        // If the dragged item came from a row that gets shifted, we must apply the shift to its
-        // own old row index too (so we know which row to reorder afterwards).
-        foreach (ToolbarLayoutItem li in _layoutItems)
-        {
-            if (li == item)
-            {
-                continue;
-            }
-
-            if (li.Row >= newRow)
-            {
-                li.Row++;
-            }
-        }
-
-        // Account for the shift on the dragged item's source row index.
-        int adjustedOldRow = oldRow >= newRow ? oldRow + 1 : oldRow;
-
-        item.Row = newRow;
-        item.OrderInRow = 0;
-
-        // Reorder the items remaining in the source row (their OrderInRow may now have gaps).
-        if (adjustedOldRow != newRow)
-        {
-            var itemsInOldRow = _layoutItems
-                .Where(i => i.Row == adjustedOldRow && i != item)
-                .OrderBy(i => i.OrderInRow)
-                .ToList();
-            for (int i = 0; i < itemsInOldRow.Count; i++)
-            {
-                itemsInOldRow[i].OrderInRow = i;
-            }
-        }
+        ToolbarGridArrangement.MoveToNewRow(_layoutItems, droppedPanel.LayoutItem, insertionIndex.Value);
 
         droppedPanel.SetHighlight(false);
         _draggedItem = null;
         _isDragging = false;
         HideDropIndicator();
 
-        RemoveEmptyRows();
         BuildVisualGrid();
     }
 
@@ -1084,28 +984,7 @@ public partial class FormToolbarsLayout : GitExtensionsForm
 
         if (result == DialogResult.Yes)
         {
-            // Built-in toolbars: all on row 0, in the default order (Standard, Filters, Scripts), visible.
-            // Custom toolbars: each on its own row below, disabled. Keeping a custom toolbar on the same
-            // row as the built-in ones makes the total width exceed the panel, which causes WinForms to
-            // wrap the toolbars and leaves a large empty gap at the start of the first row.
-            int builtInOrder = 0;
-            int nextCustomRow = 1;
-            foreach (ToolbarLayoutItem item in _layoutItems.OrderBy(i => GetDefaultOrder(i.Name)))
-            {
-                if (item.IsBuiltIn)
-                {
-                    item.Row = 0;
-                    item.OrderInRow = builtInOrder++;
-                    item.IsVisible = true;
-                }
-                else
-                {
-                    item.Row = nextCustomRow++;
-                    item.OrderInRow = 0;
-                    item.IsVisible = false;
-                }
-            }
-
+            ToolbarGridArrangement.ResetToDefault(_layoutItems);
             BuildVisualGrid();
         }
     }
@@ -1322,35 +1201,6 @@ public partial class FormToolbarsLayout : GitExtensionsForm
     }
 
     #endregion
-
-    private void RemoveEmptyRows()
-    {
-        // Get rows that have items
-        var usedRows = _layoutItems.Select(i => i.Row).Distinct().OrderBy(r => r).ToList();
-
-        // Renumber rows to be contiguous
-        for (int i = 0; i < usedRows.Count; i++)
-        {
-            int oldRow = usedRows[i];
-            if (oldRow != i)
-            {
-                foreach (var item in _layoutItems.Where(it => it.Row == oldRow))
-                {
-                    item.Row = i;
-                }
-            }
-        }
-
-        // Normalize OrderInRow for each row so values are contiguous starting at 0
-        foreach (var rowGroup in _layoutItems.GroupBy(i => i.Row))
-        {
-            int order = 0;
-            foreach (var item in rowGroup.OrderBy(i => i.OrderInRow))
-            {
-                item.OrderInRow = order++;
-            }
-        }
-    }
 
     private void UpdateRemoveRowButton()
     {
