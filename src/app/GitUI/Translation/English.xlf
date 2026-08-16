@@ -9470,10 +9470,6 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Base commit for compare is not selected.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">
         <source>For you own protection dropping more than 10 patch files at once is blocked!</source>
         <target />
