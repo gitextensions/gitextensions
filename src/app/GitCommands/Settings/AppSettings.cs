@@ -1547,7 +1547,8 @@ public static partial class AppSettings
 
     public static Font MenuFont
     {
-        get => GetFont("menufont", SystemFonts.MenuFont ?? SystemFonts.MessageBoxFont!);
+        // SystemFonts.MenuFont is annotated as nullable but never actually returns null.
+        get => GetFont("menufont", SystemFonts.MenuFont!);
         set => SetFont("menufont", value);
     }
 
