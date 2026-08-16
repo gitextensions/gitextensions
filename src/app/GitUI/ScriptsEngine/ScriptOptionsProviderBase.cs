@@ -12,6 +12,15 @@ internal partial class ScriptOptionsProviderBase : IScriptOptionsProvider
 {
     private static readonly string[] _options;
 
+    /// <summary>
+    ///  Matches assembly names that can be skipped when scanning for <see cref="IScriptOptionsProvider"/> implementations.
+    ///  Excluded prefixes fall into three categories:
+    ///  - .NET runtime assemblies
+    ///  - third-party libraries bundled with the application
+    ///  - test infrastructure assemblies
+    ///  Update this list whenever a new third-party or runtime assembly is added to the application
+    ///  that would otherwise be unnecessarily scanned, or when an excluded assembly is removed from the project.
+    /// </summary>
     [GeneratedRegex(@"^(System|Microsoft|netstandard|Accessibility|Ben\.Demystifier|BenjaminAbt\.StrongOf|ExCSS|Git\.Hub|ICSharpCode\.TextEditor|ResourceManager|SmartFormat|TestableIO|Testably|PresentationCore|UIAutomationTypes|WindowsBase|ZString)[.,]", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
     private static partial Regex _excludedAssemblies { get; }
 
