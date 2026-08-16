@@ -150,6 +150,9 @@
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#FDFDFD" />
+          <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#B5D7F3" />
+          <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#393939" />
           <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#A0A0A0" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#E3E3E3" />
@@ -248,6 +251,9 @@
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#2E2E2E" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#2D2D2D" />
+          <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#2E3F56" />
+          <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#E1E3E6" />
           <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsControlBorderBrush" Color="#4A4A4A" />
           <SolidColorBrush x:Key="GitExtensionsControlPointerOverBackgroundBrush" Color="#2E2E2E" />
@@ -975,6 +981,32 @@
     <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-menu-command-toggle /template/ ContentControl#PART_ToggleIconPresenter">
+    <!-- Preserve Avalonia's native checkbox role, but render it in ToolStrip's shared image/check gutter. -->
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-menu-command-toggle:icon /template/ ContentControl#PART_IconPresenter">
+    <Setter Property="Width" Value="18.4" />
+    <Setter Property="Height" Value="18.4" />
+  </Style>
+  <Style Selector="MenuItem.revision-grid-view-menu-row /template/ Border#PART_LayoutRoot">
+    <!-- ToolStrip's renderer paints a menu surface color distinct from the item's BackColor property. -->
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
+  </Style>
+  <Style Selector="MenuItem.revision-grid-view-menu-row /template/ ContentControl#PART_IconPresenter">
+    <Setter Property="Margin" Value="3.2,0,14.4,0" />
+  </Style>
+  <Style Selector="Separator.revision-grid-view-menu-row">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
+          <Border Height="1"
+                  VerticalAlignment="Center"
+                  Background="{TemplateBinding Foreground}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
   </Style>
   <Style Selector="ContextMenu Separator">
     <Setter Property="Height" Value="4.5" />

@@ -429,11 +429,12 @@ public sealed class RevisionGridSupportTests
     [Category("P8.6h.3b.2b.2b.2b.5")]
     public void Checked_menu_commands_should_create_native_checkbox_menu_items()
     {
+        bool isChecked = true;
         MenuCommand command = new()
         {
             Name = "checkedToolStripMenuItem",
             Text = "Checked",
-            IsCheckedFunc = () => true,
+            IsCheckedFunc = () => isChecked,
         };
 
         MenuItem item = MenuCommand.CreateToolStripItem(command).Should().BeOfType<MenuItem>().Subject;
@@ -442,6 +443,16 @@ public sealed class RevisionGridSupportTests
 
         item.ToggleType.Should().Be(MenuItemToggleType.CheckBox);
         item.IsChecked.Should().BeTrue();
+        item.Classes.Should().Contain("gitextensions-menu-command-toggle");
+        Grid checkIcon = item.Icon.Should().BeOfType<Grid>().Subject;
+        checkIcon.Width.Should().Be(18.4);
+        checkIcon.Height.Should().Be(18.4);
+
+        isChecked = false;
+        command.SetCheckForRegisteredMenuItems();
+
+        item.IsChecked.Should().BeFalse();
+        item.Icon.Should().BeNull("an unchecked ToolStrip menu item leaves the shared image/check gutter empty");
     }
 
     [AvaloniaTest]
@@ -451,6 +462,8 @@ public sealed class RevisionGridSupportTests
         RevisionGridControl control = new();
 
         control.ViewMenuItem.Items.OfType<MenuItem>().Should().OnlyContain(item => item.MinWidth == 425.6);
+        control.ViewMenuItem.Items.OfType<Control>().Should().OnlyContain(
+            item => item.Classes.Contains("revision-grid-view-menu-row"));
         control.ViewMenuItem.Items.OfType<Separator>().Should().OnlyContain(
             separator => separator.Width == 423.2 && separator.HorizontalAlignment == Avalonia.Layout.HorizontalAlignment.Center);
     }

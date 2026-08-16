@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -2400,6 +2400,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             if (isViewMenu)
             {
                 // Avalonia derives a narrower shared submenu column than ToolStripDropDownMenu for the same text and shortcuts.
+                item.Classes.Add("revision-grid-view-menu-row");
                 if (item is Separator separator)
                 {
                     separator.Width = 423.2;
