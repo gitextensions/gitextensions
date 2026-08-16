@@ -150,7 +150,14 @@ internal sealed class ParityDiffFixture : IDisposable
             string treeFile = $"{stem}.tree.json";
             string imageFile = $"{stem}.png";
             File.WriteAllText(Path.Combine(directory, treeFile), CaptureJson.Serialize(document));
-            WritePng(Path.Combine(directory, imageFile), red, green: 64, blue: 96, alpha: 255);
+            WritePng(
+                Path.Combine(directory, imageFile),
+                document.Image.WidthPx,
+                document.Image.HeightPx,
+                red,
+                green: 64,
+                blue: 96,
+                alpha: 255);
             entries.Add(new CaptureManifestEntry
             {
                 ComponentType = document.Component.TypeName,
@@ -286,21 +293,42 @@ internal sealed class ParityDiffFixture : IDisposable
         stream.Write([0, 0, 0, 0]);
     }
 
-    private static void WritePng(string path, byte red, byte green, byte blue, byte alpha)
+    private static void WritePng(
+        string path,
+        int width,
+        int height,
+        byte red,
+        byte green,
+        byte blue,
+        byte alpha)
     {
         using FileStream stream = File.Create(path);
         stream.Write([137, 80, 78, 71, 13, 10, 26, 10]);
         Span<byte> header = stackalloc byte[13];
-        BinaryPrimitives.WriteInt32BigEndian(header[..4], 1);
-        BinaryPrimitives.WriteInt32BigEndian(header.Slice(4, 4), 1);
+        BinaryPrimitives.WriteInt32BigEndian(header[..4], width);
+        BinaryPrimitives.WriteInt32BigEndian(header.Slice(4, 4), height);
         header[8] = 8;
         header[9] = 6;
         WriteChunk(stream, "IHDR", header);
 
+        byte[] rows = new byte[((width * 4) + 1) * height];
+        for (int y = 0; y < height; y++)
+        {
+            int rowStart = y * ((width * 4) + 1);
+            for (int x = 0; x < width; x++)
+            {
+                int pixelStart = rowStart + 1 + (x * 4);
+                rows[pixelStart] = red;
+                rows[pixelStart + 1] = green;
+                rows[pixelStart + 2] = blue;
+                rows[pixelStart + 3] = alpha;
+            }
+        }
+
         using MemoryStream compressed = new();
         using (ZLibStream zlib = new(compressed, CompressionLevel.SmallestSize, leaveOpen: true))
         {
-            zlib.Write([0, red, green, blue, alpha]);
+            zlib.Write(rows);
         }
 
         WriteChunk(stream, "IDAT", compressed.ToArray());

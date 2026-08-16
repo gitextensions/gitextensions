@@ -107,6 +107,26 @@ public sealed class ControlTreeReaderTests
         separator.Expanded.Should().BeNull();
     }
 
+    [Test]
+    [Category("P8_6h")]
+    public void ReadPopup_should_keep_absolute_screen_bounds_and_emit_owner_relative_root_bounds()
+    {
+        using ContextMenuStrip menu = new();
+        menu.Items.Add("Copy");
+        menu.Show(new Point(320, 240));
+        ControlTreeReader reader = new(menu, dpi: 96);
+        Point primaryOrigin = new(menu.Bounds.X - 25, menu.Bounds.Y - 40);
+
+        CaptureSurface surface = reader.ReadPopup(menu, ordinal: 0, primaryOrigin);
+
+        surface.ScreenBoundsPx.X.Should().Be(menu.Bounds.X);
+        surface.ScreenBoundsPx.Y.Should().Be(menu.Bounds.Y);
+        surface.Root.BoundsPx.X.Should().Be(25);
+        surface.Root.BoundsPx.Y.Should().Be(40);
+        surface.Root.BoundsDip.X.Should().Be(25);
+        surface.Root.BoundsDip.Y.Should().Be(40);
+    }
+
     private static CaptureNode FindNode(CaptureNode root, string fieldName)
     {
         if (root.FieldName == fieldName)

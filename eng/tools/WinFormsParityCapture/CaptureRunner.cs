@@ -332,9 +332,10 @@ internal static class CaptureRunner
             ControlTreeReader reader = new(root, dpi);
             List<CaptureSurface> surfaces =
             [
-                reader.ReadPrimary(root, NativeMethods.GetWindowRectangle(root.FindForm()?.Handle ?? root.Handle))
+                reader.ReadPrimary(root, image.PrimaryScreenBounds)
             ];
-            surfaces.AddRange(driver.Popups.Select((popup, index) => reader.ReadPopup(popup, index)));
+            surfaces.AddRange(driver.Popups.Select((popup, index) =>
+                reader.ReadPopup(popup, index, image.PrimaryScreenBounds.Location)));
 
             string themePath = Path.Combine(AppContext.BaseDirectory, "Themes", theme.File);
             string relativeImagePath = Path.GetRelativePath(outputRoot, imagePath).Replace('\\', '/');

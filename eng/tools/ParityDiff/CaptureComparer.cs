@@ -65,7 +65,13 @@ internal static class CaptureComparer
 
         string referenceImagePath = ResolveArtifact(referenceDirectory, referenceEntry.ImageFile, "image");
         string candidateImagePath = ResolveArtifact(candidateDirectory, candidateEntry.ImageFile, "image");
-        PixelMetrics pixels = CompareImages(referenceImagePath, candidateImagePath, tolerance.Pixels, findings);
+        PixelMetrics pixels = CompareImages(
+            referenceImagePath,
+            candidateImagePath,
+            reference,
+            candidate,
+            tolerance.Pixels,
+            findings);
         return new CaptureComparison
         {
             Key = key,
@@ -450,18 +456,68 @@ internal static class CaptureComparer
     private static PixelMetrics CompareImages(
         string referencePath,
         string candidatePath,
+        CaptureDocument referenceDocument,
+        CaptureDocument candidateDocument,
         PixelTolerance tolerance,
         ICollection<ParityFinding> findings)
     {
         PngImage reference = PngImage.Load(referencePath);
         PngImage candidate = PngImage.Load(candidatePath);
+        CaptureSurface[] referencePopups = referenceDocument.Surfaces
+            .Where(surface => !surface.Role.Equals("primary", StringComparison.Ordinal))
+            .OrderBy(surface => surface.Role, StringComparer.Ordinal)
+            .ToArray();
+        CaptureSurface[] candidatePopups = candidateDocument.Surfaces
+            .Where(surface => !surface.Role.Equals("primary", StringComparison.Ordinal))
+            .OrderBy(surface => surface.Role, StringComparer.Ordinal)
+            .ToArray();
+        if (referencePopups.Length > 0 && candidatePopups.Length > 0)
+        {
+            CaptureRectangle referenceCanvas = GetCanvasBounds(referenceDocument.Surfaces);
+            CaptureRectangle candidateCanvas = GetCanvasBounds(candidateDocument.Surfaces);
+            List<PixelMetrics> surfaceMetrics = [];
+            Dictionary<string, CaptureSurface> candidateByRole = candidatePopups
+                .ToDictionary(surface => surface.Role, StringComparer.Ordinal);
+            foreach (CaptureSurface referenceSurface in referencePopups)
+            {
+                if (!candidateByRole.TryGetValue(referenceSurface.Role, out CaptureSurface? candidateSurface))
+                {
+                    continue;
+                }
+
+                PngImage referenceCrop = CropSurface(reference, referenceSurface, referenceCanvas);
+                PngImage candidateCrop = CropSurface(candidate, candidateSurface, candidateCanvas);
+                surfaceMetrics.Add(CompareImagePair(
+                    referenceCrop,
+                    candidateCrop,
+                    tolerance,
+                    $"$image/surface[{referenceSurface.Role}]",
+                    findings));
+            }
+
+            if (surfaceMetrics.Count > 0)
+            {
+                return AggregatePixelMetrics(surfaceMetrics);
+            }
+        }
+
+        return CompareImagePair(reference, candidate, tolerance, "$image", findings);
+    }
+
+    private static PixelMetrics CompareImagePair(
+        PngImage reference,
+        PngImage candidate,
+        PixelTolerance tolerance,
+        string path,
+        ICollection<ParityFinding> findings)
+    {
         PixelMetrics metrics = PixelComparer.Compare(reference, candidate, tolerance.MaximumChannelDelta);
         if (reference.Width != candidate.Width || reference.Height != candidate.Height)
         {
             findings.Add(CreateFinding(
                 ImageCategory,
                 "image.dimensions",
-                "$image",
+                path,
                 "The captured image dimensions differ.",
                 $"{reference.Width}x{reference.Height}",
                 $"{candidate.Width}x{candidate.Height}"));
@@ -473,7 +529,7 @@ internal static class CaptureComparer
             {
                 Category = ImageCategory,
                 Code = "image.ssim",
-                Path = "$image",
+                Path = path,
                 Message = "SSIM is below the declared minimum.",
                 ReferenceValue = "1",
                 CandidateValue = metrics.Ssim.ToString("0.######", CultureInfo.InvariantCulture),
@@ -488,7 +544,7 @@ internal static class CaptureComparer
             {
                 Category = ImageCategory,
                 Code = "image.differentPixelFraction",
-                Path = "$image",
+                Path = path,
                 Message = "The per-pixel difference exceeds its declared budget.",
                 CandidateValue = metrics.DifferentPixelFraction.ToString("0.######", CultureInfo.InvariantCulture),
                 Tolerance = tolerance.MaximumDifferentPixelFraction.ToString("0.######", CultureInfo.InvariantCulture)
@@ -501,7 +557,7 @@ internal static class CaptureComparer
             {
                 Category = ImageCategory,
                 Code = "image.maximumChannelDelta",
-                Path = "$image",
+                Path = path,
                 Message = "A channel delta exceeds its declared per-channel budget.",
                 CandidateValue = metrics.MaximumChannelDelta.ToString(CultureInfo.InvariantCulture),
                 Tolerance = tolerance.MaximumChannelDelta.ToString(CultureInfo.InvariantCulture)
@@ -509,6 +565,44 @@ internal static class CaptureComparer
         }
 
         return metrics;
+    }
+
+    private static PngImage CropSurface(PngImage image, CaptureSurface surface, CaptureRectangle canvas) =>
+        image.Crop(
+            surface.ScreenBoundsPx.X - canvas.X,
+            surface.ScreenBoundsPx.Y - canvas.Y,
+            surface.ScreenBoundsPx.Width,
+            surface.ScreenBoundsPx.Height);
+
+    private static CaptureRectangle GetCanvasBounds(IReadOnlyList<CaptureSurface> surfaces)
+    {
+        int left = surfaces.Min(surface => surface.ScreenBoundsPx.X);
+        int top = surfaces.Min(surface => surface.ScreenBoundsPx.Y);
+        int right = surfaces.Max(surface => surface.ScreenBoundsPx.X + surface.ScreenBoundsPx.Width);
+        int bottom = surfaces.Max(surface => surface.ScreenBoundsPx.Y + surface.ScreenBoundsPx.Height);
+        return new CaptureRectangle { X = left, Y = top, Width = right - left, Height = bottom - top };
+    }
+
+    private static PixelMetrics AggregatePixelMetrics(IReadOnlyList<PixelMetrics> metrics)
+    {
+        long totalPixels = metrics.Sum(metric => (long)Math.Max(metric.ReferenceWidth, metric.CandidateWidth)
+                                                       * Math.Max(metric.ReferenceHeight, metric.CandidateHeight));
+        double Weighted(Func<PixelMetrics, double> selector) =>
+            metrics.Sum(metric => selector(metric)
+                                  * (long)Math.Max(metric.ReferenceWidth, metric.CandidateWidth)
+                                  * Math.Max(metric.ReferenceHeight, metric.CandidateHeight)) / totalPixels;
+
+        return new PixelMetrics
+        {
+            ReferenceWidth = metrics.Max(metric => metric.ReferenceWidth),
+            ReferenceHeight = metrics.Sum(metric => metric.ReferenceHeight),
+            CandidateWidth = metrics.Max(metric => metric.CandidateWidth),
+            CandidateHeight = metrics.Sum(metric => metric.CandidateHeight),
+            Ssim = Math.Round(Weighted(metric => metric.Ssim), 6),
+            DifferentPixelFraction = Math.Round(Weighted(metric => metric.DifferentPixelFraction), 6),
+            MaximumChannelDelta = metrics.Max(metric => metric.MaximumChannelDelta),
+            MeanAbsoluteChannelDelta = Math.Round(Weighted(metric => metric.MeanAbsoluteChannelDelta), 6)
+        };
     }
 
     private static void CompareNode(
