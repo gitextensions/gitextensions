@@ -50,6 +50,51 @@ public sealed class PreviewabilityTests
                     $"{failure.Path} ({failure.ClassName}): {failure.ErrorType}: {failure.ErrorMessage}")));
     }
 
+    [AvaloniaTest]
+    [Category("P0_8B")]
+    public void Non_window_AXAML_views_should_not_construct_hidden_top_levels()
+    {
+        IReadOnlyList<ViewDescriptor> views = GetViewDescriptors();
+        List<string> hiddenTopLevels = [];
+        bool originalDesignMode = Design.IsDesignMode;
+        SetDesignMode(true);
+        try
+        {
+            foreach (ViewDescriptor view in views.Where(view => view.ViewType is not null
+                         && !typeof(Window).IsAssignableFrom(view.ViewType)))
+            {
+                Control control = (Control)(Activator.CreateInstance(view.ViewType!)
+                    ?? throw new InvalidOperationException($"Activator returned null for '{view.ClassName}'."));
+                try
+                {
+                    foreach (FieldInfo field in GetProductInstanceFields(view.ViewType!))
+                    {
+                        if (typeof(Window).IsAssignableFrom(field.FieldType)
+                            && field.GetValue(control) is Window window)
+                        {
+                            hiddenTopLevels.Add($"{view.Path}: {field.DeclaringType!.FullName}.{field.Name} ({window.GetType().FullName})");
+                            window.Close();
+                        }
+                    }
+                }
+                finally
+                {
+                    if (control is IDisposable disposable)
+                    {
+                        disposable.Dispose();
+                    }
+                }
+            }
+        }
+        finally
+        {
+            SetDesignMode(originalDesignMode);
+        }
+
+        hiddenTopLevels.Should().BeEmpty(
+            "constructing a hosted view must not allocate native windows before the user invokes them");
+    }
+
     [Test]
     [Category("P0_8B")]
     public void Every_AXAML_control_type_used_by_markup_should_have_a_public_parameterless_constructor()
@@ -232,6 +277,18 @@ public sealed class PreviewabilityTests
         }
 
         return views;
+    }
+
+    private static IEnumerable<FieldInfo> GetProductInstanceFields(Type type)
+    {
+        for (Type? current = type; current is not null && current.Assembly == type.Assembly; current = current.BaseType)
+        {
+            foreach (FieldInfo field in current.GetFields(
+                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+            {
+                yield return field;
+            }
+        }
     }
 
     private static IEnumerable<string> GetAxamlPaths(string repositoryRoot)

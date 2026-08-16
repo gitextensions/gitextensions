@@ -58,7 +58,8 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     private readonly DiffBackgroundRenderer _diffBackgroundRenderer;
     private readonly DiffTextColorizer _diffTextColorizer;
     private readonly DiffViewerLineNumberControl _diffViewerLineNumberControl;
-    private readonly FindAndReplaceForm _findAndReplaceForm;
+    private FindAndReplaceForm? _findAndReplaceForm;
+    private GetNextFileFnc? _findAndReplaceFileLoader;
     private readonly IFullPathResolver _fullPathResolver;
     private readonly List<HighlightedLines> _lineHighlights = [];
     private DiffHighlightService? _diffHighlightService;
@@ -125,9 +126,9 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
             CancelPendingView();
             ClearImage();
+            CloseFindAndReplaceForm();
         };
 
-        _findAndReplaceForm = new FindAndReplaceForm();
         _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
         NumberOfContextLines = AppSettings.NumberOfContextLines;
@@ -1458,16 +1459,53 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     /// <summary>Shows the Find window for this editor.</summary>
     public void Find(bool replace)
     {
-        _findAndReplaceForm.ShowFor(TextEditor, replace && !TextEditor.IsReadOnly);
+        GetOrCreateFindAndReplaceForm().ShowFor(TextEditor, replace && !TextEditor.IsReadOnly);
     }
 
     /// <summary>Finds the next or previous occurrence using the current Find settings.</summary>
     public Task FindNextAsync(bool searchForwardOrOpenWithDifftool)
     {
-        return _findAndReplaceForm.FindNextAsync(
+        return GetOrCreateFindAndReplaceForm().FindNextAsync(
             viaF3: true,
             searchBackward: !searchForwardOrOpenWithDifftool,
             messageIfNotFound: "Text not found");
+    }
+
+    private FindAndReplaceForm GetOrCreateFindAndReplaceForm()
+    {
+        if (_findAndReplaceForm is null)
+        {
+            // Avalonia allocates a native top-level during Window construction, so defer reusable windows until first use.
+            _findAndReplaceForm = new FindAndReplaceForm();
+            _findAndReplaceForm.Closed += FindAndReplaceForm_Closed;
+            if (_findAndReplaceFileLoader is not null)
+            {
+                _findAndReplaceForm.SetFileLoader(_findAndReplaceFileLoader);
+            }
+        }
+
+        return _findAndReplaceForm;
+    }
+
+    private void FindAndReplaceForm_Closed(object? sender, EventArgs e)
+    {
+        if (ReferenceEquals(_findAndReplaceForm, sender))
+        {
+            _findAndReplaceForm = null;
+        }
+    }
+
+    private void CloseFindAndReplaceForm()
+    {
+        FindAndReplaceForm? form = _findAndReplaceForm;
+        if (form is null)
+        {
+            return;
+        }
+
+        _findAndReplaceForm = null;
+        form.Closed -= FindAndReplaceForm_Closed;
+        form.Close();
     }
 
     /// <summary>Reloads the configurable FileViewer hotkeys.</summary>
@@ -1862,7 +1900,11 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     public int TotalNumberOfLines => TextEditor.Document?.LineCount ?? 0;
 
     /// <summary>Configures cross-file search navigation.</summary>
-    public void SetFileLoader(GetNextFileFnc fileLoader) => _findAndReplaceForm.SetFileLoader(fileLoader);
+    public void SetFileLoader(GetNextFileFnc fileLoader)
+    {
+        _findAndReplaceFileLoader = fileLoader;
+        _findAndReplaceForm?.SetFileLoader(fileLoader);
+    }
 
     /// <summary>Moves to the next highlighted Find occurrence.</summary>
     public void GoToNextOccurrence() => internalFileViewer.GoToNextOccurrence();
@@ -2933,7 +2975,9 @@ public partial class FileViewer : GitModuleControl, IFileViewer
             _control = control;
         }
 
-        public FindAndReplaceForm FindAndReplaceForm => _control._findAndReplaceForm;
+        public bool IsFindAndReplaceFormCreated => _control._findAndReplaceForm is not null;
+
+        public FindAndReplaceForm FindAndReplaceForm => _control.GetOrCreateFindAndReplaceForm();
 
         public ComboBox EncodingToolStripComboBox => _control.encodingToolStripComboBox;
 
