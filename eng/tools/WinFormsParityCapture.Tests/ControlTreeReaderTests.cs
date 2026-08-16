@@ -59,6 +59,27 @@ public sealed class ControlTreeReaderTests
 
     [Test]
     [Category("P8_6h")]
+    public void ReadPrimary_should_record_the_data_grid_surface_background()
+    {
+        using Form form = new();
+        using DataGridView grid = new()
+        {
+            BackColor = Color.FromArgb(1, 2, 3),
+            BackgroundColor = Color.FromArgb(4, 5, 6),
+        };
+        form.Controls.Add(grid);
+        form.CreateControl();
+        grid.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode gridNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        gridNode.Colors.Background.Should().Be("#FF040506");
+        gridNode.Colors.DisabledBackground.Should().Be("#FF040506");
+    }
+
+    [Test]
+    [Category("P8_6h")]
     public void ReadPrimary_should_preserve_named_data_grid_child_controls()
     {
         using Form form = new();
@@ -88,9 +109,11 @@ public sealed class ControlTreeReaderTests
             .Where(pair => pair.Key.StartsWith("semantic.", StringComparison.Ordinal))
             .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
 
-        roles.Should().HaveCount(18);
+        roles.Should().HaveCount(20);
         roles.Keys.Should().Contain(
             "semantic.app.panel.background",
+            "semantic.app.revision.alternating.background",
+            "semantic.app.revision.authored.background",
             "semantic.app.selection.background",
             "semantic.system.control.background",
             "semantic.system.highlight.background",
