@@ -17887,14 +17887,20 @@
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-16",
+          "commit": "121dd0eb12bf484fe6874101c8e35014999da4c3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6d/d2c/types/GitUI.Editor.FileViewer.functional-findings.json",
+            "eng/avalonia/parity-evidence/PR-feedback/kde-window-lifetime/inventory/FileViewer.json",
+            "eng/avalonia/parity-evidence/PR-feedback/kde-window-lifetime/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/kde-window-lifetime/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 696,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 651,
+          "note": "P8.6d.2c classifies the surviving source-shape findings as framework representation and composition differences. Reviewer-feedback coverage verifies that FileViewer creates its reusable FindAndReplaceForm only on first use, retains a file loader configured before first use, releases a closed form for recreation, and closes the owned window when the hosted viewer detaches. The complete editor parity audit remains open."
         },
         "visual": {
           "status": "unverified",
@@ -17915,22 +17921,39 @@
           "note": "theme/color behavior has not been captured for this mapped view"
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-16",
+          "commit": "121dd0eb12bf484fe6874101c8e35014999da4c3",
+          "evidence": [
+            "eng/avalonia/parity-evidence/PR-feedback/kde-window-lifetime/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/kde-window-lifetime/tests/linux/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/kde-window-lifetime/preview/windows/previewability.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Focused tests verify lazy creation, pre-first-use configuration, close-and-recreate behavior, and owner-detach cleanup. A repository-wide construction invariant verifies that none of the 165 AXAML hosted views eagerly populate Window-typed fields, preventing the same hidden native-top-level pattern in other current components. The complete interaction state matrix remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-16",
+          "commit": "121dd0eb12bf484fe6874101c8e35014999da4c3",
+          "evidence": [
+            "eng/avalonia/parity-evidence/PR-feedback/kde-window-lifetime/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh Windows, native Wayland, nested X11, and confined Wayland Flatpak smokes pass, and the Linux build succeeds without an explicit RID on a Microsoft-provided SDK. Native KDE Plasma task-switcher confirmation and macOS remain open; startup smoke alone cannot prove compositor task-preview behavior."
         }
       }
     },
