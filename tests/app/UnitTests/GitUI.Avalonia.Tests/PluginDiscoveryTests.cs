@@ -1,10 +1,60 @@
+using System.Reflection;
 using GitExtensions.Compat;
+using GitUIPluginInterfaces;
 
 namespace GitExtensionsTests;
 
 [TestFixture]
 public sealed class PluginDiscoveryTests
 {
+    [Test]
+    public void Managed_extensibility_should_resolve_a_renamed_dependency_by_assembly_metadata()
+    {
+        string directory = Path.Join(
+            Path.GetTempPath(),
+            $"GitExtensions.Avalonia.AssemblyResolution-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+
+        try
+        {
+            File.WriteAllText(Path.Join(directory, "000-native.dll"), "not a managed assembly");
+            string dependencyPath = Path.Join(directory, "renamed-dependency.dll");
+            File.Copy(typeof(ManagedExtensibility).Assembly.Location, dependencyPath);
+
+            string? resolvedPath = FindAssemblyPath(directory, typeof(ManagedExtensibility).Assembly.GetName());
+
+            resolvedPath.Should().Be(dependencyPath);
+        }
+        finally
+        {
+            TestDirectory.Delete(directory);
+        }
+    }
+
+    [Test]
+    public void Managed_extensibility_should_ignore_a_missing_localized_runtime_resource()
+    {
+        string directory = Path.Join(
+            Path.GetTempPath(),
+            $"GitExtensions.Avalonia.AssemblyResolution-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+
+        try
+        {
+            File.WriteAllText(Path.Join(directory, "000-native.dll"), "not a managed assembly");
+            AssemblyName requestedAssembly = new(
+                "System.Private.CoreLib.resources, Version=10.0.0.0, Culture=fr-FR, PublicKeyToken=7cec85d7bea7798e");
+
+            string? resolvedPath = FindAssemblyPath(directory, requestedAssembly);
+
+            resolvedPath.Should().BeNull();
+        }
+        finally
+        {
+            TestDirectory.Delete(directory);
+        }
+    }
+
     [Test]
     public void User_plugins_directory_should_use_the_Avalonia_sibling_under_local_application_data()
     {
@@ -97,5 +147,14 @@ public sealed class PluginDiscoveryTests
             .Which.Should().Contain("disabled")
             .And.Contain("XDG_DATA_HOME")
             .And.Contain("Flatpak");
+    }
+
+    private static string? FindAssemblyPath(string directory, AssemblyName requestedAssembly)
+    {
+        MethodInfo method = typeof(ManagedExtensibility).GetMethod(
+            "FindAssemblyPath",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        return (string?)method.Invoke(null, [directory, requestedAssembly]);
     }
 }
