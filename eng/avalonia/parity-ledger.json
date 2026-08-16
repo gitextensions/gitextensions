@@ -3538,58 +3538,66 @@
         "functional": {
           "status": "verified",
           "verifiedOn": "2026-08-16",
-          "commit": "611e049c94cf4ca42d84b3ece4b440c80c7d760c",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/inventory/MenuCommand.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/inventory/MenuCommand.json",
             "eng/avalonia/parity-evidence/P8.6h/h3a/final/inventory-classification.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/tests/windows/focused.log",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/tests/linux/gate.log",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/avalonia/manifest.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/tests/windows/tranche-focused.log",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/tests/linux/gate.log",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/avalonia/manifest.json"
           ],
           "platforms": ["windows", "linux-wayland"],
-          "findingCount": 11,
-          "note": "Translated command text and tooltips propagate to every registered native menu item, matching the original ToolStrip contract. Commands with an IsCheckedFunc now also declare Avalonia's native checkbox toggle role, so their existing IsChecked synchronization is rendered rather than invisible. All current inventory findings remain classified native menu/icon/shortcut representation differences; exact structure, native DPI, and macOS remain P8.6h.3b/P8.6a/P8.4."
+          "findingCount": 12,
+          "note": "Translated command text and tooltips propagate to every registered native menu item, matching the original ToolStrip contract. Commands with an IsCheckedFunc now render one semantic check-or-icon gutter and preserve the original image when unchecked. All current inventory findings remain classified native menu/icon/shortcut representation differences; exact structure, native DPI, and macOS remain P8.6h.3b/P8.6a/P8.4."
         },
         "visual": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "status": "partial",
+          "verifiedOn": "2026-08-16",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/diff/findings.json"
+          ],
+          "platforms": ["windows"],
+          "findingCount": 54,
+          "note": "The checked View commands now render the original single image/check gutter with a measured native check glyph. The three-theme View-submenu average SSIM improves from 0.229985 to 0.481435, while the remaining image diagnostics keep exact visual parity open."
         },
         "themingAndColor": {
-          "status": "notApplicable",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-16",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/diff/findings.json"
+          ],
+          "platforms": ["windows"],
           "findingCount": 0,
-          "note": "This source mapping does not declare UI chrome."
+          "note": "The single menu gutter and check glyph resolve to the measured WinForms light, dark, and custom-theme menu, border, foreground, and check colors with zero color findings. Exhaustive live theme states remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "611e049c94cf4ca42d84b3ece4b440c80c7d760c",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
-          "note": "The paired open View submenu records the same checked/unchecked state for every command in light, dark, and custom themes, with zero state findings, and focused Windows/Linux tests prove the native toggle role. The complete interaction state matrix remains open."
+          "note": "The paired open View submenu records the same checked/unchecked state for every command in light, dark, and custom themes, with zero state findings. Focused Windows/Linux tests prove that a checked command replaces its image with the check glyph and restores the original image when unchecked. The complete interaction state matrix remains open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "611e049c94cf4ca42d84b3ece4b440c80c7d760c",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b12/accepted/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
@@ -33449,69 +33457,69 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/inventory/RevisionGridControl.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/tests/windows/tranche-focused.log",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/tests/linux/gate.log"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/inventory/RevisionGridControl.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/tests/windows/tranche-focused.log",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/tests/linux/gate.log"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1084,
-          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Popup surfaces retain their absolute ScreenBoundsPx while semantic root bounds are normalized to the primary control origin on both frameworks, so placement remains measurable without leaking the WinForms harness origin into control geometry. Logical children report positions in the emitted semantic parent, including skipped Fluent presenter wrappers. The Rebase-on parent remains visible for every regular revision and opening it applies the original enabled-state calculation to all three actions. Row measurement follows the original GDI+ line-spacing, one-eighth-em padding, physical-pixel truncation and DPI-scaled nine-pixel spacing from the resolved UI font. The reference harness proves every compared popup was opened after repository HEAD selection and the original menu handlers settled. Menu commands with checked state now render native checkbox glyphs. The broader exhaustive behavior audit remains open."
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Popup surfaces retain their absolute ScreenBoundsPx while semantic root bounds are normalized to the primary control origin on both frameworks, so placement remains measurable without leaking the WinForms harness origin into control geometry. Logical children report positions in the emitted semantic parent, including skipped Fluent presenter wrappers. The Rebase-on parent remains visible for every regular revision and opening it applies the original enabled-state calculation to all three actions. Row measurement follows the original GDI+ line-spacing, one-eighth-em padding, physical-pixel truncation and DPI-scaled nine-pixel spacing from the resolved UI font. The reference harness now waits for the product's current visible-range graph-column calculation to reach the rendered column and requests one public grid refresh when late graph data changes that width. Menu commands with checked state render one check-or-image gutter. The broader exhaustive behavior audit remains open."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/remaining-classification.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/preview/previewability.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b10/accepted/preview/RevisionGridControl-preview.png"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/remaining-classification.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/preview/preview.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/preview/RevisionGridControl-preview.png"
           ],
           "platforms": ["windows"],
-          "findingCount": 292,
-          "note": "Eighteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu/View-submenu pairs use the identical external repository and join with 292 diagnostics. The View submenu now matches ToolStrip's 426.4-DIP popup, 425.6-DIP shared row width, and centered 423.2-DIP separators, closing 300 geometry and three image-dimension findings. Layout, color, font, text, control-identity, state, and control findings are zero; four custom-theme column-width diagnostics remain geometry debt. The 238 geometry and 54 image findings are classified debt; native 100/150/200 DPI and exhaustive live states remain open."
+          "findingCount": 288,
+          "note": "Eighteen native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu/View-submenu pairs use the identical external repository and join with 288 diagnostics. Current-visible-range readiness closes the four stale custom-theme graph-column widths. The View submenu retains ToolStrip's measured width and now uses one image/check gutter; its three-theme average SSIM improves from 0.229985 to 0.481435. Layout, color, font, text, control-identity, state, and control findings are zero. The 234 geometry and 54 image findings are classified debt; official IDE preview rendered successfully without sign-in, while native 100/150/200 DPI and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/diff/findings.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
-          "note": "The light/dark/custom matrix resolves the grid, selection, disabled, inactive, menu and separator roles to the same ARGB values, with zero color diagnostics. Exhaustive configurable-color and live theme states remain open, so this axis stays partial."
+          "note": "The light/dark/custom matrix resolves the grid, selection, disabled, inactive, menu, separator, and checked-command roles to the same ARGB values, with zero color diagnostics. Exhaustive configurable-color and live theme states remain open, so this axis stays partial."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/remaining-classification.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/remaining-classification.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
-          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, and complete View-menu checked states across light/dark/custom. Unnamed dynamic popup rows now participate in recursive state comparison, and moving the synthetic pointer outside the headless frame prevents a false selected/focused Copy row. The report has zero state/control findings; the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
+          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, and complete View-menu checked states across light/dark/custom. Checked commands replace their image with the measured check glyph and restore it when unchecked. The report has zero state/control findings; the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-16",
-          "commit": "13ed07925529fc2e90ceb714d6787658b3270e23",
+          "commit": "82737fd3a2aac1b51200350993c99fba72487c05",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b13/accepted/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b14/accepted/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
