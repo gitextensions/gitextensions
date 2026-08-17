@@ -599,7 +599,7 @@ public static partial class AppSettings
 
     #region Avatars
 
-    public static string AvatarImageCachePath => Path.Join(LocalApplicationDataPath.Value!, "Images\\");
+    public static string AvatarImageCachePath => Path.Join(LocalApplicationDataPath.Value!, "Images");
 
     public static AvatarFallbackType AvatarFallbackType
     {
@@ -1036,17 +1036,9 @@ public static partial class AppSettings
         set => SetBool("AlwaysShowAdvOpt", value);
     }
 
-    public static bool DontConfirmAmend
-    {
-        get => GetBool("DontConfirmAmend", false);
-        set => SetBool("DontConfirmAmend", value);
-    }
+    public static ISetting<bool> DontConfirmAmend { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmAmend), false);
 
-    public static bool DontConfirmDeleteUnmergedBranch
-    {
-        get => GetBool("DontConfirmDeleteUnmergedBranch", false);
-        set => SetBool("DontConfirmDeleteUnmergedBranch", value);
-    }
+    public static ISetting<bool> DontConfirmDeleteUnmergedBranch { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmDeleteUnmergedBranch), false);
 
     public static bool DontConfirmCommitIfNoBranch
     {
@@ -1074,11 +1066,7 @@ public static partial class AppSettings
         set => SetNullableEnum("AutoPullOnPushRejectedAction", value);
     }
 
-    public static bool DontConfirmPushNewBranch
-    {
-        get => GetBool("DontConfirmPushNewBranch", false);
-        set => SetBool("DontConfirmPushNewBranch", value);
-    }
+    public static ISetting<bool> DontConfirmPushNewBranch { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmPushNewBranch), false);
 
     public static bool DontConfirmAddTrackingRef
     {
@@ -1086,47 +1074,19 @@ public static partial class AppSettings
         set => SetBool("DontConfirmAddTrackingRef", value);
     }
 
-    public static bool DontConfirmCommitAfterConflictsResolved
-    {
-        get => GetBool("DontConfirmCommitAfterConflictsResolved", false);
-        set => SetBool("DontConfirmCommitAfterConflictsResolved", value);
-    }
+    public static ISetting<bool> DontConfirmCommitAfterConflictsResolved { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmCommitAfterConflictsResolved), false);
 
-    public static bool DontConfirmSecondAbortConfirmation
-    {
-        get => GetBool("DontConfirmSecondAbortConfirmation", false);
-        set => SetBool("DontConfirmSecondAbortConfirmation", value);
-    }
+    public static ISetting<bool> DontConfirmSecondAbortConfirmation { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmSecondAbortConfirmation), false);
 
-    public static bool DontConfirmRebase
-    {
-        get => GetBool("DontConfirmRebase", false);
-        set => SetBool("DontConfirmRebase", value);
-    }
+    public static ISetting<bool> DontConfirmRebase { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmRebase), false);
 
-    public static bool DontConfirmResolveConflicts
-    {
-        get => GetBool("DontConfirmResolveConflicts", false);
-        set => SetBool("DontConfirmResolveConflicts", value);
-    }
+    public static ISetting<bool> DontConfirmResolveConflicts { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmResolveConflicts), false);
 
-    public static bool DontConfirmUndoLastCommit
-    {
-        get => GetBool("DontConfirmUndoLastCommit", false);
-        set => SetBool("DontConfirmUndoLastCommit", value);
-    }
+    public static ISetting<bool> DontConfirmUndoLastCommit { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmUndoLastCommit), false);
 
-    public static bool DontConfirmFetchAndPruneAll
-    {
-        get => GetBool("DontConfirmFetchAndPruneAll", false);
-        set => SetBool("DontConfirmFetchAndPruneAll", value);
-    }
+    public static ISetting<bool> DontConfirmFetchAndPruneAll { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmFetchAndPruneAll), false);
 
-    public static bool DontConfirmSwitchWorktree
-    {
-        get => GetBool("DontConfirmSwitchWorktree", false);
-        set => SetBool("DontConfirmSwitchWorktree", value);
-    }
+    public static ISetting<bool> DontConfirmSwitchWorktree { get; } = Setting.Create(RootSettingsPath, nameof(DontConfirmSwitchWorktree), false);
 
     public static bool IncludeUntrackedFilesInAutoStash
     {

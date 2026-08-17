@@ -5726,11 +5726,6 @@ Examples on branch name: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;ایجاد worktree جدید</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;باز کردن worktree جدید پس از ایجاد</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>چه چیزی checkout شود:</target>
@@ -11924,11 +11919,6 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>commit مبنا برای مقایسه انتخاب نشده است.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>این پیام را دوباره به من نشان نده.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

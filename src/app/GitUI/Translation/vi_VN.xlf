@@ -5678,11 +5678,6 @@ Ví dụ về tên nhánh: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Tạo worktree mới</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Mở worktree mới sau khi tạo</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Checkout gì:</target>
@@ -11870,11 +11865,6 @@ Giữ CTRL trong khi bấm để chọn/bỏ chọn nhiều mục, và giữ th�
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Chưa chọn cam kết base để so sánh.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Không hiển thị lại tin nhắn này.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

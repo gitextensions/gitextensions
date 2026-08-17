@@ -19,7 +19,7 @@
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>빌드하시겠습니까{0}? 
+        <target>{0}을(를) 빌드하시겠습니까?
 
 {1}</target>
         
@@ -246,7 +246,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
-        <target>/(기능|개발)/</target>
+        <target>/(feature|develop)/</target>
         
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
@@ -359,7 +359,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>파일을 삭제하기전에 현재 변경을 리셋하세오. 삭제할 파일을 선택합니다. 원격 리포지토리의 데이터를 변경하려면 force push 해야함.</target>
+        <target>파일을 삭제하기 전에 현재 변경을 리셋하세요. 삭제할 파일을 선택합니다. 원격 리포지토리의 데이터를 변경하려면 force push 해야함.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
@@ -457,7 +457,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0:N0} 주석 줄({1:P1})</target>
+        <target>{0:N0} 주석 줄 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
@@ -536,7 +536,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0}({1} 커밋, {2} 라인 변경)</target>
+        <target>{0} ({1} 커밋, {2} 라인 변경)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
@@ -575,7 +575,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
-        <target>Github 개인 액세스 토큰 만들기</target>
+        <target>GitHub 개인 액세스 토큰 만들기</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
@@ -590,22 +590,22 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
-        <target>Github 개인 액세스 토큰 관리하기</target>
+        <target>GitHub 개인 액세스 토큰 관리하기</target>
         
       </trans-unit>
       <trans-unit id="_noAssignedIssues.Text">
         <source>No assigned GitHub issues found</source>
-        <target>나에게 할당된 Github 이슈를 찾을 수 없음</target>
+        <target>나에게 할당된 GitHub 이슈를 찾을 수 없음</target>
         
       </trans-unit>
       <trans-unit id="_noTokenError.Text">
         <source>No GitHub personal access token (PAT) defined</source>
-        <target>Github 개인 억세스 토큰 (PAT)가 정의되지 않음</target>
+        <target>GitHub 개인 액세스 토큰 (PAT)가 정의되지 않음</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>주의: Git Extensions을 다시 시작해야만 해당 토큰이 계정에 적용됩니다.</target>
+        <target>주의: Git Extensions을 다시 시작해야만 해당 토큰이 적용됩니다.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -629,22 +629,27 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="lblApiToken.Text">
         <source>API &amp;Token</source>
+        <target>API 토큰 (&amp;T)</target>
         
       </trans-unit>
       <trans-unit id="lblApiUrl.Text">
         <source>&amp;API URL</source>
+        <target>API URL (&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="lblOwner.Text">
         <source>&amp;Owner</source>
+        <target>소유자 (&amp;O)</target>
         
       </trans-unit>
       <trans-unit id="lblRepository.Text">
         <source>&amp;Repository</source>
+        <target>리포지토리 (&amp;R)</target>
         
       </trans-unit>
       <trans-unit id="lnkTokenManagement.Text">
         <source>Create a GitHub personal access token</source>
+        <target>GitHub 개인 액세스 토큰 만들기</target>
         
       </trans-unit>
     </body>
@@ -951,7 +956,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
-        <target>&apos;{0}&apos;에서 &apos;{1}&apos; ({2})로 로그 커밋:</target>
+        <target>&apos;{0}&apos;에서 &apos;{1}&apos;까지의 커밋 로그 ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
@@ -1137,7 +1142,7 @@ URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
-        <target>정규 표현식 &apos;Build definition name&apos;이 유효하지 않아 저장되지 않았습니다!</target>
+        <target>정규 표현식 &apos;Build definition name&apos;이 유효하지 않아 저장되지 않습니다!</target>
         
       </trans-unit>
     </body>
@@ -1162,7 +1167,7 @@ Please copy in the clipboard the url of the build before retrying.
         <target>클립보드가 올바른 빌드 url을 갖고 있지 않습니다. 
 
 재시도하기 전에 빌드 url을 클립보드에 복사해주세요.
-(최소한 &quot;buildTypeId&quot; 파라미터를 포함하고 있어야 합니다)</target>
+(최소한 &quot;buildTypeId&quot; 매개변수를 포함하고 있어야 합니다)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">

@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -9,11 +10,12 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
 {
     private readonly AsyncLoader _branchesLoader = new();
     private readonly char[] _invalidCharsInPath = Path.GetInvalidFileNameChars();
+    private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
+    private readonly IGitBranchNameNormaliser _branchNameNormaliser;
 
     private readonly string? _initialDirectoryPath;
 
     public string WorktreeDirectory => txtWorktreeDirectory.Text;
-    public bool OpenWorktree => chkOpenWorktree.Checked;
 
     public IReadOnlyList<IGitRef>? ExistingBranches { get; set; }
 
@@ -21,6 +23,8 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
+
+        _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
 
         tlpnlMain.AdjustWidthToSize(0, rbCheckoutExistingBranch, rbCreateNewBranch, lblNewWorktreeFolder);
         tlpnlCheckout.AdjustWidthToSize(0, rbCheckoutExistingBranch, rbCreateNewBranch, lblNewWorktreeFolder);
@@ -91,6 +95,23 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         }
     }
 
+    private void txtNewBranchName_Leave(object sender, EventArgs e)
+    {
+        NormaliseNewBranchName();
+    }
+
+    private void NormaliseNewBranchName()
+    {
+        if (!AppSettings.AutoNormaliseBranchName || !txtNewBranchName.Text.Any(PathUtil.IsValidPathChar))
+        {
+            return;
+        }
+
+        int caretPosition = txtNewBranchName.SelectionStart;
+        txtNewBranchName.Text = _branchNameNormaliser.Normalise(txtNewBranchName.Text, _gitBranchNameOptions);
+        txtNewBranchName.SelectionStart = caretPosition;
+    }
+
     private void btnCreateWorktree_Click(object sender, EventArgs e)
     {
         CreateWorktree();
@@ -98,6 +119,13 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
 
     private void CreateWorktree()
     {
+        // The branch name may not have lost focus yet (e.g. when triggered via the accept button),
+        // so normalise it here to avoid passing an invalid name (e.g. containing spaces) to git.
+        if (rbCreateNewBranch.Checked)
+        {
+            NormaliseNewBranchName();
+        }
+
         string relativePath = Path.GetRelativePath(Module.WorkingDir, WorktreeDirectory).ToPosixPath().Quote();
         string? newBranchOption =
             rbCreateNewBranch.Checked

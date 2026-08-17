@@ -218,7 +218,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private List<ToolStripItem>? _currentSubmoduleMenuItems;
     private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
-    private readonly ShellProvider _shellProvider = new();
+    private readonly IShellProvider _shellProvider;
     private IConsoleShellRunner? _terminal;
     private Dashboard? _dashboard;
     private bool _isFileHistoryMode;
@@ -262,6 +262,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _repositoryHistoryUIService = commands.GetRequiredService<IRepositoryHistoryUIService>();
 
         _consoleEmulatorsRegistry = commands.GetRequiredService<IConsoleEmulatorsRegistry>();
+        _shellProvider = commands.GetRequiredService<IShellProvider>();
 
         fileToolStripMenuItem.Initialize(() => UICommands);
         helpToolStripMenuItem.Initialize(() => UICommands);
@@ -3039,7 +3040,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (AppSettings.DontConfirmUndoLastCommit || MessageBoxes.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+        bool confirmed = MessageBoxes.ConfirmSuppressible(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, AppSettings.DontConfirmUndoLastCommit, icon: TaskDialogIcon.Warning);
+
+        if (confirmed)
         {
             ArgumentString args = Commands.Reset(ResetMode.Soft, "HEAD~1");
             Module.GitExecutable.RunCommand(args);

@@ -629,22 +629,27 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="lblApiToken.Text">
         <source>API &amp;Token</source>
+        <target>எபிஐ &amp;அணுகல் அடையாளம்</target>
         
       </trans-unit>
       <trans-unit id="lblApiUrl.Text">
         <source>&amp;API URL</source>
+        <target>&amp;எபிஐ முகவரி</target>
         
       </trans-unit>
       <trans-unit id="lblOwner.Text">
         <source>&amp;Owner</source>
+        <target>&amp;உரிமையாளர்</target>
         
       </trans-unit>
       <trans-unit id="lblRepository.Text">
         <source>&amp;Repository</source>
+        <target>&amp;களஞ்சியம்</target>
         
       </trans-unit>
       <trans-unit id="lnkTokenManagement.Text">
         <source>Create a GitHub personal access token</source>
+        <target>அறிவிலிமையம் தனிப்பட்ட அணுகல் அடையாளத்தை உருவாக்கு</target>
         
       </trans-unit>
     </body>

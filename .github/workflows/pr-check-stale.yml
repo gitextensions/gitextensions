@@ -58,8 +58,13 @@ jobs:
           # even if they carry the "needs: author feedback" label.
           exempt-draft-pr: true
 
-          # The stale label is removed automatically when an item is updated.
-          remove-stale-when-updated: true
+          # Do not let the stale action clear the no-recent-activity label on any
+          # update: it treats a comment from *anyone* (e.g. a maintainer) as
+          # activity, which incorrectly resets the stale timer. The label must be
+          # removed only when the original author responds. That author-only
+          # removal is handled by the "Label Lifecycle" workflow
+          # (.github/workflows/label-lifecycle.yml).
+          remove-stale-when-updated: false
 
           # Process a generous number of items per run to avoid backlog.
           operations-per-run: 100

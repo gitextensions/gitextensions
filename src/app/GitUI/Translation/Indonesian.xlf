@@ -5726,11 +5726,6 @@ Contoh nama cabang: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Buat pohon kerja baru</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Buka pohon kerja baru setelah dibuat</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Apa yang akan di-checkout:</target>
@@ -11924,11 +11919,6 @@ Setel ulang filter melalui Tampilan &gt; Tampilkan semua cabang.</target>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Komit base untuk perbandingan belum dipilih.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Jangan tampilkan pesan ini lagi.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

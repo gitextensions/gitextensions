@@ -298,7 +298,7 @@ public sealed partial class FormCommit : GitModuleForm
         SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
         SolveMergeconflicts.SetForeColorForBackColor();
 
-        if (AppSettings.DontConfirmAmend)
+        if (AppSettings.DontConfirmAmend.Value)
         {
             ResetSoft.BackColor = OtherColors.AmendButtonForcedColor;
             ResetSoft.SetForeColorForBackColor();
@@ -1099,15 +1099,7 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
                 // commit, because amend may be used just to change the commit message or timestamp.
-                if (!AppSettings.DontConfirmAmend)
-                {
-                    if (MessageBoxes.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
+                return MessageBoxes.ConfirmSuppressible(this, _amendCommit.Text, _amendCommitCaption.Text, AppSettings.DontConfirmAmend, icon: TaskDialogIcon.Warning);
             }
 
             bool ConfirmEmptyMergeCommit()
@@ -1951,12 +1943,9 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void ResetSoftClick(object sender, EventArgs e)
     {
-        if (!AppSettings.DontConfirmAmend)
+        if (!MessageBoxes.ConfirmSuppressible(this, _amendResetSoft.Text, _amendCommitCaption.Text, AppSettings.DontConfirmAmend, icon: TaskDialogIcon.Warning))
         {
-            if (MessageBoxes.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-            {
-                return;
-            }
+            return;
         }
 
         try

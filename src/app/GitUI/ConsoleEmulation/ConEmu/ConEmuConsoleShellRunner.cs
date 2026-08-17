@@ -10,21 +10,13 @@ namespace GitUI.ConsoleEmulation.ConEmu;
 /// <summary>
 ///  Wraps <see cref="ConEmuControl"/> for the repository browser's terminal tab.
 /// </summary>
-internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
+internal sealed class ConEmuConsoleShellRunner(IShellProvider shellProvider, ConsoleEmulatorSettings settings) : IConsoleShellRunner
 {
-    private readonly ConsoleEmulatorSettings _settings;
-    private readonly ConEmuControl _conEmu;
-    private readonly ShellProvider _shellProvider = new();
-
-    internal ConEmuConsoleShellRunner(ConsoleEmulatorSettings settings)
+    private readonly ConEmuControl _conEmu = new()
     {
-        _settings = settings;
-        _conEmu = new ConEmuControl
-        {
-            Dock = DockStyle.Fill,
-            IsStatusbarVisible = false
-        };
-    }
+        Dock = DockStyle.Fill,
+        IsStatusbarVisible = false
+    };
 
     public Control Control => _conEmu;
 
@@ -33,7 +25,7 @@ internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
     public void ChangeWorkingDirectory(string path)
     {
         string? shellType = AppSettings.ConEmuTerminal.Value;
-        IShellDescriptor shell = _shellProvider.GetShell(shellType);
+        IShellDescriptor shell = shellProvider.GetShell(shellType);
         _conEmu.ChangeFolder(shell, path);
     }
 
@@ -57,7 +49,7 @@ internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
         };
 
         string? shellType = AppSettings.ConEmuTerminal.Value;
-        startInfo.ConsoleProcessCommandLine = _shellProvider.GetShellCommandLine(shellType);
+        startInfo.ConsoleProcessCommandLine = shellProvider.GetShellCommandLine(shellType);
 
         if (!string.IsNullOrEmpty(AppSettings.GitCommandValue))
         {
@@ -70,14 +62,14 @@ internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
 
         try
         {
-            Validates.NotNull(_settings.Font);
+            Validates.NotNull(settings.Font);
 
             _conEmu.Start(
                 startInfo,
                 ThreadHelper.JoinableTaskFactory,
-                _settings.Theme,
-                _settings.Font.Name,
-                _settings.Font.Size.ToString("F0", CultureInfo.InvariantCulture));
+                settings.Theme,
+                settings.Font.Name,
+                settings.Font.Size.ToString("F0", CultureInfo.InvariantCulture));
         }
         catch (InvalidOperationException)
         {

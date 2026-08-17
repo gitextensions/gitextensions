@@ -5726,11 +5726,6 @@ Példák branch névre: „feature/ABC-4587-commitMessageRegex”
         <target>Új worktree &amp;létrehozása</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>Új worktree &amp;megnyitása létrehozás után</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Mit checkoutoljon:</target>
@@ -11925,11 +11920,6 @@ Tartsa lenyomva a CTRL billentyűt kattintás közben több elem ki/kijelölés�
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Az összehasonlításhoz szükséges alap kommit nincs kijelölve.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Ne mutasd ezt az üzenetet még egyszer.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

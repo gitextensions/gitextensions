@@ -470,27 +470,6 @@ public static partial class Commands
         };
     }
 
-    /// <summary>
-    /// Push a local reference to a new commit
-    /// This is similar to "git branch --force "branch" "commit", except that you get a warning if commits are lost.
-    /// </summary>
-    /// <param name="gitRef">The branch to move.</param>
-    /// <param name="targetId">The commit to move to.</param>
-    /// <param name="repoDir">Directory to the current repo.</param>
-    /// <param name="force">Push the reference also if commits are lost.</param>
-    /// <param name="dryRun">Just test whether Git would perform the operation.</param>
-    /// <returns>The Git command to execute.</returns>
-    public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, Func<string?, string?> getPathForGitExecution, bool force = false, bool dryRun = false)
-    {
-        return new GitArgumentBuilder("push")
-        {
-            $@"""file://{getPathForGitExecution(repoDir)}""",
-            $"{targetId}:{gitRef}".QuoteNE(),
-            { force, "--force" },
-            { dryRun, "--dry-run" }
-        };
-    }
-
     /// <summary>Pushes multiple sets of local branches to remote branches.</summary>
     public static ArgumentString PushMultiple(string remote, IEnumerable<GitPushAction> pushActions)
     {

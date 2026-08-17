@@ -5704,11 +5704,6 @@ Zara nosaukuma piemēri: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Izveidot jauno darbstaciju</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Atvērt jauno darbstaciju pēc izveides</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Ko paņemt:</target>
@@ -11823,11 +11818,6 @@ Atiestatiet filtru, izmantojot Skats &gt; Rādīt visus zarus.</target>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Nav atlasīts pamata ieguldījums salīdzināšanai.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Vairs nerādīt šo ziņojumu.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">
