@@ -4468,25 +4468,28 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/FormBrowse.json"
           ],
           "platforms": [],
-          "findingCount": 564,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 1507,
+          "note": "The current whole-FormBrowse inventory retains 1507 broad source-shape findings; this narrow shortcut-tooltip correction does not claim structural parity."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/FormBrowse.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/avalonia-border/manifest.json"
           ],
-          "platforms": [],
+          "platforms": ["windows", "linux"],
           "findingCount": 1517,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "note": "Settings and Quick Fetch expose the original default gestures and exact non-breaking-space parenthesized tooltip suffix. FormBrowse rejects modifier-only/unsupported input before RevisionGrid, FileStatusList, form, control, or script lookup while assigned routes remain active. The complete FormBrowse functional inventory remains open."
         },
         "visual": {
           "status": "notApplicable",
@@ -4507,13 +4510,18 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "evidence": [
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/winforms-border/manifest.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/avalonia-border/manifest.json"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Normal and focused browse states plus assigned, unassigned, modifier-only, focused-child, and script shortcut routes are covered in this narrow slice. The complete interaction state matrix has not been exercised."
         },
         "platform": {
           "status": "unverified",
@@ -4679,7 +4687,7 @@
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/inventory/FormBrowse.json",
             "eng/avalonia/parity-evidence/PR-feedback/focus-mnemonics/preview/windows/previewability.json",
-            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1507,
@@ -4709,9 +4717,9 @@
           "commit": "1a7bb5c077ca36b4cfecd818e99d5a7bd93ead9a",
           "evidence": [
             "eng/avalonia/parity-evidence/PR-feedback/focus-mnemonics/preview/windows/previewability.json",
-            "eng/avalonia/parity-evidence/P0.6/wayland/window.png",
-            "eng/avalonia/parity-evidence/P0.6/x11/window.png",
-            "eng/avalonia/parity-evidence/P0.6/flatpak/window.png"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/window.png",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/x11/window.png",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/flatpak/window.png"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
@@ -20239,25 +20247,27 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/HotkeySettingsManager.json"
           ],
           "platforms": [],
-          "findingCount": 31,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 21,
+          "note": "The current source inventory retains 21 classified source-shape findings; restoring current defaults does not claim structural parity."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/HotkeySettingsManager.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 34,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 21,
+          "note": "The FormBrowse default table now retains the current WinForms Settings Ctrl+comma and Quick Fetch Ctrl+Shift+Down gestures, with Control mapped to Command by the existing macOS input boundary. Tests cover defaults, reset/merge behavior, and assigned dispatch; broader command-inventory parity remains open."
         },
         "visual": {
           "status": "notApplicable",
@@ -20278,13 +20288,16 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "evidence": [
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "The restored default, assigned, and unassigned shortcut states are covered on Windows and Linux; the complete command-state matrix has not been exercised."
         },
         "platform": {
           "status": "unverified",
@@ -33500,31 +33513,34 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-17",
-          "commit": "0fac5499e67d0f0b57bac03a83d279f51b0e7c82",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/inventory/RevisionGridControl.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/RevisionGridControl.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b15/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/windows/revision-grid-support.trx",
-            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/linux/focused.trx",
-            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 1088,
-          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. Final-order replacement now retains the primary and multi-selection by revision identity, scrolls the primary row into view, and restores focus only when the grid owned it before Avalonia reset the collection. The fresh scoped inventory records 1088 structural/functional source-shape findings, including the deliberate Avalonia focus-lifecycle member, and the broader exhaustive behavior audit remains open."
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. Final-order replacement retains the primary and multi-selection by revision identity, scrolls the primary row into view, and restores focus only when the grid owned it before Avalonia reset the collection. Modifier-only or unsupported input no longer reaches its first unassigned command. The fresh scoped inventory records 1088 structural/functional source-shape findings, including the deliberate Avalonia focus-lifecycle member, and the broader exhaustive behavior audit remains open."
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-08-16",
-          "commit": "1a7bb5c077ca36b4cfecd818e99d5a7bd93ead9a",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/diff-accepted/findings.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/winforms-retry/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/preview/isolated-rendered-properties.png"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/winforms-border/manifest.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/avalonia-border/manifest.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/diff-border/findings.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/preview/rendered.png"
           ],
           "platforms": ["windows"],
           "findingCount": 294,
-          "note": "A fresh native-125% light/dark/custom normal/focused/disabled/context-menu/copy-menu/View-submenu pair uses the identical external repository and captures all 18 states after one bounded WinForms metadata-readiness retry. The report has zero layout, color, font, text, control-identity, state, and control findings. The 240 geometry findings include six newly observed absolute popup-position deltas from the fresh reference; all 54 image findings remain open. Paired light normal/context-menu images were inspected. The official VS Code Show Preview command rendered RevisionGridControl.axaml in a disposable process launched with both required build properties and without sign-in; native 100/150/200 DPI and exhaustive live states remain open."
+          "note": "The accepted grid matrix retains 294 classified geometry/image diagnostics. A new same-repository native-125% WinForms and headless Avalonia FormBrowse slice captures and validates all six light/dark/custom normal/focused states; manual image review confirms Avalonia's container-level black focus frame is gone before row focus and remains absent after row focus, matching the original borderless grid. The whole-FormBrowse diff truthfully retains 23501 broader findings. Official Show Preview renders the touched RevisionGridControl.axaml; native 100/150/200 DPI and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
@@ -33542,34 +33558,38 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-17",
-          "commit": "0fac5499e67d0f0b57bac03a83d279f51b0e7c82",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/winforms-retry/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/avalonia/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/diff-accepted/findings.json",
             "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/windows/revision-grid-support.trx",
             "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/linux/focused.trx",
-            "eng/avalonia/parity-evidence/P0.6/wayland/window.png",
-            "eng/avalonia/parity-evidence/P0.6/x11/window.png",
-            "eng/avalonia/parity-evidence/P0.6/flatpak/window.png"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/winforms-border/manifest.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/avalonia-border/manifest.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/window.png",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/x11/window.png",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/flatpak/window.png"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, and complete View-menu checked states across light/dark/custom. Reviewer-feedback tests verify initial list focus after asynchronous loading, explicit filter focus, command-driven focus restoration, and that a pointer-focused selected commit remains selected, visible, and focused when streamed rows receive their final order. The focus is not restored when another surface owned it before completion. The report has zero state/control findings; the exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
+          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, and complete View-menu checked states across light/dark/custom. Reviewer-feedback tests verify initial list focus after asynchronous loading, explicit filter focus, command-driven focus restoration, and that a pointer-focused selected commit remains selected, visible, and focused when streamed rows receive their final order. The focus is not restored when another surface owned it before completion. A dedicated regression verifies the borderless list has no container FocusAdorner both before and after focus moves into a selected row; the six-state browse slice confirms the rendered result. The exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-17",
-          "commit": "0fac5499e67d0f0b57bac03a83d279f51b0e7c82",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. Focused final-order selection/focus tests pass on Windows and native-ext4 Linux. The three Linux captures visibly retain initial revision-list focus after loading. Native DPI beyond 125%, exhaustive component states, and macOS remain open."
+          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. Focused selection/focus and borderless-container tests pass on Windows and native-ext4 Linux; the X11 and confined custom-dark-theme captures visibly retain the borderless grid surface. Native DPI beyond 125%, exhaustive component states, and macOS remain open."
         }
       }
     },
@@ -34893,25 +34913,27 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/GitExtensionsControl.json"
           ],
           "platforms": [],
           "findingCount": 26,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The current source inventory retains 26 classified source-shape findings; this narrow input correction does not claim structural parity."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/GitExtensionsControl.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 38,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 26,
+          "note": "Modifier-only and unsupported key events are rejected as Keys.None before the common control command table is searched, while assigned control shortcuts still execute. Broader source and interaction parity remains open."
         },
         "visual": {
           "status": "notApplicable",
@@ -34932,13 +34954,16 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "evidence": [
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "The common control route now distinguishes unassigned/modifier-only input from assigned shortcuts on Windows and Linux. The complete interaction state matrix has not been exercised."
         },
         "platform": {
           "status": "unverified",
@@ -34958,25 +34983,27 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/GitExtensionsFormBase.json"
           ],
           "platforms": [],
-          "findingCount": 63,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 43,
+          "note": "The current source inventory retains 43 classified source-shape findings; this narrow input correction does not claim structural parity."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/GitExtensionsFormBase.json",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 79,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 43,
+          "note": "Modifier-only and unsupported key events are rejected as Keys.None before the common form command table is searched, while assigned form shortcuts still execute. Broader source and interaction parity remains open."
         },
         "visual": {
           "status": "notApplicable",
@@ -34997,13 +35024,16 @@
           "note": "This source mapping does not declare UI chrome."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-17",
+          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "evidence": [
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "The common form route now distinguishes unassigned/modifier-only input from assigned shortcuts on Windows and Linux. The complete interaction state matrix has not been exercised."
         },
         "platform": {
           "status": "unverified",

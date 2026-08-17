@@ -10,6 +10,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.Compat;
 using GitUI.Editor;
 using GitUI.Hotkey;
@@ -109,6 +110,12 @@ public sealed class HotkeyTests
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.FocusNextTab
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Tab));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.OpenSettings
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Oemcomma));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.QuickFetch
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.Down));
         }
         finally
         {
@@ -402,6 +409,27 @@ public sealed class HotkeyTests
         }
     }
 
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void FormBrowse_should_format_toolbar_shortcuts_like_the_original()
+    {
+        (FormBrowse form, _, _) = CreateBrowseForm(
+            new HotkeyCommand((int)FormBrowse.Command.OpenSettings, nameof(FormBrowse.Command.OpenSettings))
+            {
+                KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.Oemcomma,
+            },
+            new HotkeyCommand((int)FormBrowse.Command.QuickFetch, nameof(FormBrowse.Command.QuickFetch))
+            {
+                KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.Down,
+            });
+
+        ToolTip.GetTip(form.EditSettings).Should().Be("Settings\u00A0(Ctrl+,)");
+        IconButton quickFetch = form.ToolStripMain.Children
+            .OfType<IconButton>()
+            .Single(button => button.Name == FormBrowse.FetchPullToolbarShortcutsPrefix + form.fetchToolStripMenuItem.Name);
+        ToolTip.GetTip(quickFetch).Should().Be("Fetch\u00A0(Ctrl+Shift+Down)");
+    }
+
     [Test]
     [Category("P4.3")]
     public void HotkeySettingsManager_should_load_the_original_left_panel_hotkeys()
@@ -550,6 +578,118 @@ public sealed class HotkeyTests
         }
         finally
         {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void GitExtensionsFormBase_should_not_dispatch_an_unassigned_hotkey()
+    {
+        HotkeyCommand unassigned = new(17, "Unassigned") { KeyData = WinFormsShims.Keys.None };
+        IGitUICommands commands = CreateHotkeyCommands([unassigned]);
+        TestHotkeyForm form = new(commands);
+
+        form.ProcessHotkey(WinFormsShims.Keys.None).Should().BeFalse();
+        form.ExecutedCommand.Should().BeNull();
+
+        form.ProcessHotkey(WinFormsShims.Keys.F5).Should().BeFalse();
+        form.ExecutedCommand.Should().BeNull();
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void GitExtensionsFormBase_should_dispatch_an_assigned_hotkey()
+    {
+        HotkeyCommand assigned = new(17, "Refresh") { KeyData = WinFormsShims.Keys.F5 };
+        IGitUICommands commands = CreateHotkeyCommands([assigned]);
+        TestHotkeyForm form = new(commands);
+
+        form.ProcessHotkey(WinFormsShims.Keys.F5).Should().BeTrue();
+        form.ExecutedCommand.Should().Be(assigned.CommandCode);
+    }
+
+    [Test]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void GitExtensionsControl_should_not_dispatch_an_unassigned_hotkey()
+    {
+        HotkeyCommand unassigned = new(19, "Unassigned") { KeyData = WinFormsShims.Keys.None };
+        IGitUICommands commands = CreateHotkeyCommands([unassigned]);
+        TestHotkeyControl control = new(commands);
+
+        control.ProcessHotkey(WinFormsShims.Keys.None).Should().BeFalse();
+        control.ExecutedCommand.Should().BeNull();
+
+        control.ProcessHotkey(WinFormsShims.Keys.F5).Should().BeFalse();
+        control.ExecutedCommand.Should().BeNull();
+    }
+
+    [Test]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void GitExtensionsControl_should_dispatch_an_assigned_hotkey()
+    {
+        HotkeyCommand assigned = new(19, "Refresh") { KeyData = WinFormsShims.Keys.F5 };
+        IGitUICommands commands = CreateHotkeyCommands([assigned]);
+        TestHotkeyControl control = new(commands);
+
+        control.ProcessHotkey(WinFormsShims.Keys.F5).Should().BeTrue();
+        control.ExecutedCommand.Should().Be(assigned.CommandCode);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void FileStatusList_should_not_dispatch_an_unassigned_hotkey()
+    {
+        (FormBrowse form, _, _) = CreateBrowseForm(
+            browseHotkeys: [],
+            revisionHotkeys: [],
+            fileStatusHotkeys:
+            [
+                new HotkeyCommand(
+                    (int)RevisionDiffControl.Command.StageSelectedFile,
+                    nameof(RevisionDiffControl.Command.StageSelectedFile))
+                {
+                    KeyData = WinFormsShims.Keys.None,
+                },
+            ]);
+        FileStatusList fileStatusList = form.fileTree.FileStatusList;
+        int stageInvocations = 0;
+        fileStatusList.GetTestAccessor().StageMenuItem.Click += (_, _) => stageInvocations++;
+
+        fileStatusList.ProcessHotkey(WinFormsShims.Keys.None).Should().BeFalse();
+
+        stageInvocations.Should().Be(0);
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void FormBrowse_modifier_only_key_should_not_dispatch_an_unassigned_revision_grid_hotkey()
+    {
+        bool originalShowRemoteBranches = AppSettings.ShowRemoteBranches;
+        (FormBrowse form, _, _) = CreateBrowseFormWithRevisionHotkeys(
+            new HotkeyCommand(
+                (int)RevisionGridControl.Command.ShowRemoteBranches,
+                nameof(RevisionGridControl.Command.ShowRemoteBranches))
+            {
+                KeyData = WinFormsShims.Keys.None,
+            });
+        form.Show();
+        try
+        {
+            form.FindControl<Grid>("mainContentGrid")!.IsVisible = true;
+            form.RevisionGrid.GetTestAccessor().SetRevisions(
+                [new GitRevision(ObjectId.Random()) { Subject = "Selected revision" }]);
+            form.RevisionGrid.FocusRevisionGrid();
+            Dispatcher.UIThread.RunJobs();
+            form.RevisionGrid.GetTestAccessor().Revisions.IsKeyboardFocusWithin.Should().BeTrue();
+
+            form.KeyPress(Key.LeftAlt, RawInputModifiers.Alt, PhysicalKey.AltLeft, keySymbol: null);
+
+            AppSettings.ShowRemoteBranches.Should().Be(originalShowRemoteBranches);
+        }
+        finally
+        {
+            AppSettings.ShowRemoteBranches = originalShowRemoteBranches;
             form.Close();
         }
     }
@@ -728,7 +868,8 @@ public sealed class HotkeyTests
         IScriptsManager? scriptsManager = null,
         IScriptsRunner? scriptsRunner = null,
         IReadOnlyList<HotkeyCommand>? scriptHotkeys = null,
-        IReadOnlyList<HotkeyCommand>? leftPanelHotkeys = null)
+        IReadOnlyList<HotkeyCommand>? leftPanelHotkeys = null,
+        IReadOnlyList<HotkeyCommand>? fileStatusHotkeys = null)
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
@@ -739,10 +880,12 @@ public sealed class HotkeyTests
         appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
         IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
         IRepositoryHistoryUIService repositoryHistory = Substitute.For<IRepositoryHistoryUIService>();
+        IUserRepositoriesListController repositoriesController = Substitute.For<IUserRepositoriesListController>();
         loader.LoadHotkeys(FormBrowse.HotkeySettingsName).Returns(browseHotkeys);
         loader.LoadHotkeys(RevisionGridControl.HotkeySettingsName).Returns(revisionHotkeys);
         loader.LoadHotkeys(FormSettings.HotkeySettingsName).Returns(scriptHotkeys ?? []);
         loader.LoadHotkeys(RepoObjectsTree.HotkeySettingsName).Returns(leftPanelHotkeys ?? []);
+        loader.LoadHotkeys(RevisionDiffControl.HotkeySettingsName).Returns(fileStatusHotkeys ?? []);
 
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
@@ -750,9 +893,67 @@ public sealed class HotkeyTests
         commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
         commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
         commands.GetService(typeof(IRepositoryHistoryUIService)).Returns(repositoryHistory);
+        commands.GetService(typeof(IUserRepositoriesListController)).Returns(repositoriesController);
         commands.GetService(typeof(IScriptsManager)).Returns(scriptsManager);
         commands.GetService(typeof(IScriptsRunner)).Returns(scriptsRunner);
 
         return (new FormBrowse(commands), commands, notifier);
+    }
+
+    private static IGitUICommands CreateHotkeyCommands(IReadOnlyList<HotkeyCommand> hotkeys)
+    {
+        IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
+        loader.LoadHotkeys("Test").Returns(hotkeys);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
+        return commands;
+    }
+
+    private sealed class TestHotkeyForm : GitExtensionsFormBase
+    {
+        private readonly IGitUICommands _commands;
+
+        public TestHotkeyForm(IGitUICommands commands)
+        {
+            _commands = commands;
+            HotkeysEnabled = true;
+            LoadHotkeys("Test");
+        }
+
+        public int? ExecutedCommand { get; private set; }
+
+        public override bool TryGetUICommands([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out IGitUICommands? commands)
+        {
+            commands = _commands;
+            return true;
+        }
+
+        protected override bool ExecuteCommand(int command)
+        {
+            ExecutedCommand = command;
+            return true;
+        }
+    }
+
+    private sealed class TestHotkeyControl : GitExtensionsControl
+    {
+        private readonly IServiceProvider _serviceProvider;
+
+        public TestHotkeyControl(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            HotkeysEnabled = true;
+            LoadHotkeys("Test");
+        }
+
+        public int? ExecutedCommand { get; private set; }
+
+        protected override IServiceProvider ServiceProvider => _serviceProvider;
+
+        protected override bool ExecuteCommand(int command)
+        {
+            ExecutedCommand = command;
+            return true;
+        }
     }
 }

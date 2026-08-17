@@ -246,7 +246,8 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
     /// </summary>
     public virtual bool ProcessHotkey(WinFormsShims.Keys keyData)
     {
-        if (!HotkeysEnabled)
+        // Avalonia maps modifier-only and unsupported key events to None; None is not an assignable hotkey.
+        if (!HotkeysEnabled || keyData == WinFormsShims.Keys.None)
         {
             return false;
         }
