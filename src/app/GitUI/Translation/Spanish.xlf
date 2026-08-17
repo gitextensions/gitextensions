@@ -5722,11 +5722,6 @@ Ejemplos con el nombre de rama: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Crear el nuevo árbol de trabajo</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Abrir el nuevo árbol de trabajo tras la creación</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Qué hacer checkout:</target>
@@ -11918,11 +11913,6 @@ Restablece el filtro desde Vista &gt; Mostrar todas las ramas.</target>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>No ha seleccionado el commit base para comparar.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>No mostrarme este mensaje de nuevo.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

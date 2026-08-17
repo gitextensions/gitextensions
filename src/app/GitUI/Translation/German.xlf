@@ -5735,11 +5735,6 @@ Beispiele für Branch-Namen: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>Neuen Worktree &amp;erstellen</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>Neuen Worktree nach der Erstellung &amp;öffnen</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Was ausgecheckt werden soll:</target>
@@ -11935,11 +11930,6 @@ Setzen Sie den Filter über Ansicht &gt; Alle Branches anzeigen zurück.</target
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Basis Commit für den Vergleich nicht ausgewählt.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Diese Meldung nicht mehr anzeigen.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

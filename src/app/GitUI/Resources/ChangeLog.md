@@ -1,6 +1,57 @@
 ﻿Changelog
 =========
 
+### Version v7.2.1 (18 Aug 2026)
+
+#### Changes:
+* [#13238] fix(TextAreaControl): measure glyph width
+* [#13236] feat(issue-triage): close legacy runtime loading reports
+* [#13234] feat(plugins): validate compatibility on load
+* [#13230] fix(scripts): avoid crash by outdated plugins
+* [#13225] fix(bug reporter): remove wrong configuration
+* [#13221] feat(cross-platform): add names of diff/merge tools
+* [#13219] fix(push reject): ignore ANSI escape sequences
+* [#13214] fix: three cross-platform fixes for HOME, the avatar cache path and meld
+* [#13210] ci(pr-automation): set appropriate permissions for updating PRs
+* [#13209] fix(cancellation): Pass cancellation tokens to awaited tasks
+* [#13206] fix(push button): restore color if not behind
+* [#13203] perf(clone): choose Windows / WSL git according to destination directory
+* [#13199] Limit reset check to scope of documentation to "not loose commits"
+* [#13182] ci: only clear no-recent-activity label on author response
+* [#13180] fix(worktree): normalise new branch name and offer to switch after create
+* [#13174] Preserve anchored repositories when trimming recent repository history
+* [#13168] Push ShellProvider into DI
+* [#13165] docs: add DAG (Docs-Augmented Generation) agent documentation
+* [#13163] feat(confirmations): Add in-dialog "Don't show again" checkbox
+* [#13116] ci: harden build workflow and fix test-report gating
+* [#13103] fix-issue-12926-camel-humps-1865650694615130258
+* [#12985] chore(rebase): Bypass false debug assertion
+
+
+[#13238]:https://github.com/gitextensions/gitextensions/pull/13238
+[#13236]:https://github.com/gitextensions/gitextensions/pull/13236
+[#13234]:https://github.com/gitextensions/gitextensions/pull/13234
+[#13230]:https://github.com/gitextensions/gitextensions/pull/13230
+[#13225]:https://github.com/gitextensions/gitextensions/pull/13225
+[#13221]:https://github.com/gitextensions/gitextensions/pull/13221
+[#13219]:https://github.com/gitextensions/gitextensions/pull/13219
+[#13214]:https://github.com/gitextensions/gitextensions/pull/13214
+[#13210]:https://github.com/gitextensions/gitextensions/pull/13210
+[#13209]:https://github.com/gitextensions/gitextensions/pull/13209
+[#13206]:https://github.com/gitextensions/gitextensions/pull/13206
+[#13203]:https://github.com/gitextensions/gitextensions/pull/13203
+[#13199]:https://github.com/gitextensions/gitextensions/pull/13199
+[#13182]:https://github.com/gitextensions/gitextensions/pull/13182
+[#13180]:https://github.com/gitextensions/gitextensions/pull/13180
+[#13174]:https://github.com/gitextensions/gitextensions/pull/13174
+[#13168]:https://github.com/gitextensions/gitextensions/pull/13168
+[#13165]:https://github.com/gitextensions/gitextensions/pull/13165
+[#13163]:https://github.com/gitextensions/gitextensions/pull/13163
+[#13116]:https://github.com/gitextensions/gitextensions/pull/13116
+[#13103]:https://github.com/gitextensions/gitextensions/pull/13103
+[#12985]:https://github.com/gitextensions/gitextensions/pull/12985
+
+
 ### Version v7.2.0 (10 Jul 2026)
 
 #### Changes:

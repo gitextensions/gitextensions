@@ -1,247 +1,247 @@
 <?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
-  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="he">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>それぞれのビルド結果に対してビルド状態サマリ内にテスト結果を表示(ネットワークが集中します!)</target>
+        <target>הצגת תוצאות הבדיקה בתקציר מצב הבנייה עבור כל תוצאת בנייה (עתיר תעבורת רשת!)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
-        <target>サブモジュールの自動コンパイル</target>
+        <target>הידור אוטומטי של תת-מודולים</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>{0} をビルドしますか？
+        <target>האם ברצונך לבנות את {0}?
 
 {1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>プラグイン設定ダイアログで正しい MSBuild のパスを入力し、やり直してください。</target>
+        <target>נא להזין נתיב MSBuild נכון בתיבת הדו-שיח של הגדרות התוסף ולנסות שוב.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe の引数</target>
+        <target>ארגומנטים של msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>有効</target>
+        <target>מופעל</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>msbuild.exe のパス</target>
+        <target>נתיב אל msbuild.exe</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>バックグラウンドで定期的にフェッチ</target>
+        <target>אחזור תקופתי ברקע</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>フェッチ後に表示を更新</target>
+        <target>רענון התצוגה לאחר אחזור</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>サブモジュールをすべて取得</target>
+        <target>אחזור כל תת-המודולים</target>
         
       </trans-unit>
       <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
         <source>Fetch immediately on repository opening</source>
-        <target>リポジトリを開いた際に即時フェッチ</target>
+        <target>אחזור מיידי עם פתיחת המאגר</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>設定された秒ごとにフェッチ (0 で無効)</target>
+        <target>אחזור כל (שניות) - הגדר 0 כדי להשבית</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
-        <target>実行する Git コマンドの引数</target>
+        <target>ארגומנטים של פקודת git להרצה</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="he">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
+        <target>יצירת ענפי מעקב מקומיים</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
+        <target>יצירת ענפי מעקב מקומיים</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
-        <target>作成する追跡ブランチ用のリモート</target>
+        <target>המרוחק שעבורו ליצור ענפי מעקב</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
+        <target>יצירת ענפי מעקב מקומיים</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="he">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
-        <target>不要なブランチを削除</target>
+        <target>מחיקת ענפים מיושנים</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
-        <target>最後の作者</target>
+        <target>יוצר אחרון</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>閉じる</target>
+        <target>סגירה</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>מחיקה</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>対象のリモートブランチを削除</target>
+        <target>מחיקת ענפים מרוחקים מתוך</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
-        <target>最後のメッセージ</target>
+        <target>הודעה אחרונה</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
-        <target>ブランチを検索</target>
+        <target>חיפוש ענפים</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>選択した{0}のブランチを本当に削除しますか?</target>
+        <target>האם אתה בטוח שברצונך למחוק {0} ענפים נבחרים?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
-        <target>{0}/{1} ブランチ選択済み</target>
+        <target>{0}/{1} ענפים נבחרו.</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
         <source>Cancel</source>
-        <target>キャンセル</target>
+        <target>ביטול</target>
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
-        <target>削除するブランチを選択してください。完全に「{0}」にマージされているブランチのみ削除されます。</target>
+        <target>בחר ענפים למחיקה. רק ענפים שמוזגו במלואם אל &apos;{0}&apos; יימחקו.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>危険な操作です!
-リモート「{0}」のブランチを削除しようとしています。
-これはやり直せませんが、本当に続行しますか?</target>
+        <target>פעולה מסוכנת!
+הענפים יימחקו במרוחק &apos;{0}&apos;. לא ניתן לבטל פעולה זו.
+האם אתה בטוח שברצונך להמשיך?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>מחיקה</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
-        <target>ブランチを削除中...</target>
+        <target>מוחק ענפים...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>マージされていないブランチの削除は結果的に dangling コミットになります。注意してください。</target>
+        <target>מחיקת ענפים שלא מוזגו תגרום להגשות תלויות. יש להשתמש בזהירות!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>טוען...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press &apos;{0}&apos; to search for branches to delete.</source>
-        <target>「{0}」で削除したいブランチを検索</target>
+        <target>יש ללחוץ על &apos;{0}&apos; כדי לחפש ענפים למחיקה.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>ブランチを検索</target>
+        <target>חיפוש ענפים</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
-        <target>「{0}」列のチェックボックスで削除するブランチを選択</target>
+        <target>יש לבחור ענפים למחיקה באמצעות תיבות הסימון בעמודה &apos;{0}&apos;.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>設定</target>
+        <target>הגדרות</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
-        <target>最後のアクティビティ</target>
+        <target>פעילות אחרונה</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>未マージのブランチを含む</target>
+        <target>כלול ענפים שלא מוזגו</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>x日以上前のブランチを削除</target>
+        <target>מחיקת ענפים ישנים מ-x ימים</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>別のブランチに完全にマージされたブランチを削除</target>
+        <target>מחיקת ענפים שמוזגו במלואם אל ענף</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>名前</target>
+        <target>שם</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
-        <target>マッチしません</target>
+        <target>אינו תואם</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
@@ -251,125 +251,125 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
-        <target>大文字小文字を区別しない</target>
+        <target>לא תלוי רישיות</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>ブランチのフィルタに正規表現を使用</target>
+        <target>שימוש ב-RegEx לסינון ענפים</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
-        <target>不要なブランチを削除</target>
+        <target>מחיקת ענפים מיושנים</target>
         
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
-        <target>(days)日以上前の不要なブランチを削除</target>
+        <target>מחיקת ענפים מיושנים ישנים מ- (ימים)</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
-        <target>リモートから不要なブランチを削除</target>
+        <target>מחיקת ענפים מיושנים מהמרוחק</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
-        <target>未マージのブランチを削除</target>
+        <target>מחיקת ענפים שלא מוזגו</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
-        <target>すべてのブランチがマージされるべきブランチ</target>
+        <target>הענף שאליו כל הענפים צריכים להתמזג</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>正規表現フィルタの大文字小文字は区別されていませんか？</target>
+        <target>האם מסנן ה-RegEx אינו תלוי רישיות?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>削除するブランチをフィルタする正規表現</target>
+        <target>RegEx לסינון ענפים למחיקה</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
-        <target>正規表現に一致しないブランチを検索</target>
+        <target>חיפוש ענפים שאינם תואמים ל-RegEx</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
-        <target>不要なブランチを削除するリモート名</target>
+        <target>שם המרוחק שממנו יש למחוק ענפים מיושנים</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>削除するブランチのフィルタに正規表現を使用</target>
+        <target>שימוש ב-RegEx לסינון ענפים למחיקה</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="he">
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
-        <target>巨大なファイルを発見する</target>
+        <target>חיפוש קבצים גדולים</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>閉じる</target>
+        <target>סגירה</target>
         
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
-        <target>圧縮後のサイズ</target>
+        <target>גודל דחוס</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>מחיקה</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>選択したファイルを本当に削除しますか?</target>
+        <target>האם אתה בטוח שברצונך למחוק את הקבצים הנבחרים?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>מחיקה</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>コミット数</target>
+        <target>מספר הגשות</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>削除</target>
+        <target>מחיקה</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>ファイル削除前にローカルの変更をリセットします。削除するファイルを選択してください。リモートリポジトリのデータを入れ替える強制プッシュを行います。</target>
+        <target>איפוס שינויים מקומיים לפני מחיקת קבצים. בחר קבצים למחיקה. דחיפה בכפייה להחלפת הנתונים במאגר המרוחק.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
-        <target>最終コミット日時</target>
+        <target>תאריך הגשה אחרון</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
         <source>Path</source>
-        <target>パス</target>
+        <target>נתיב</target>
         
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
@@ -379,179 +379,179 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
-        <target>サイズ</target>
+        <target>גודל</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Find large files</source>
-        <target>巨大なファイルを発見する</target>
+        <target>חיפוש קבצים גדולים</target>
         
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>(Mb)より巨大なファイルを発見する</target>
+        <target>חיפוש קבצים גדולים מ- (Mb)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="he">
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
-        <target>統計情報</target>
+        <target>סטטיסטיקה</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
-        <target>読込中...</target>
+        <target>טוען..</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>טוען...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>טוען...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>טוען...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>טוען...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
-        <target>総コミット数</target>
+        <target>סך כל ההגשות</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
-        <target>総コード行数</target>
+        <target>סך כל שורות הקוד</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
-        <target>総コード行数</target>
+        <target>סך כל שורות הקוד</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
-        <target>総コード行数</target>
+        <target>סך כל שורות הקוד</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>{0:N0} 行の空行 ({1:P1})</target>
+        <target>{0:N0} שורות ריקות ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0:N0} 行のコメント ({1:P1})</target>
+        <target>{0:N0} שורות הערה ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
-        <target>{0:N0} コミット</target>
+        <target>{0:N0} הגשות</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>{1} によるコミット数 {0:N0}</target>
+        <target>{0:N0} הגשות מאת {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>{0:N0} 行のコード</target>
+        <target>{0:N0} שורות קוד</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{0:N0} 行の {1}ファイルのコード ({2:P1})</target>
+        <target>{0:N0} שורות קוד ב-{1} קבצים ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>{0:N0} 行のコード ({1:P1})</target>
+        <target>{0:N0} שורות קוד ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>{0:N0} 行のデザイナーファイル ({1:P1})</target>
+        <target>{0:N0} שורות בקבצי מעצב ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>{0:N0} 行のプロダクションコード ({1:P1})</target>
+        <target>{0:N0} שורות קוד ייצור ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>{0:N0} 行のテストコード</target>
+        <target>{0:N0} שורות קוד בדיקה</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>{0:N0} 行のテストコード ({1:P1})</target>
+        <target>{0:N0} שורות קוד בדיקה ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
-        <target>言語ごとのコード行数</target>
+        <target>שורות קוד לפי שפה</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
-        <target>コントリビューター毎のコミット数</target>
+        <target>הגשות לפי תורם</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
-        <target>タイプ毎のコード行数</target>
+        <target>שורות קוד לפי סוג</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
-        <target>テストコードの行数</target>
+        <target>שורות קוד בדיקה</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="he">
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
-        <target>インパクト</target>
+        <target>השפעה</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} ({1}コミット、 {2} 変更行)</target>
+        <target>{0} ({1} הגשות, {2} שורות שהשתנו)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
-        <target>サブモジュールを含む</target>
+        <target>כולל תת-מודולים</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
-        <target>作者</target>
+        <target>יוצר</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>GitHub</source>
@@ -560,168 +560,168 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
-        <target>GitHub (Enterprise) ホスト名</target>
+        <target>שם מארח GitHub (Enterprise)</target>
         
       </trans-unit>
       <trans-unit id="PersonalAccessToken.Caption">
         <source>Personal Access Token</source>
-        <target>個人アクセストークン</target>
+        <target>אסימון גישה אישי</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>エラー</target>
+        <target>שגיאה</target>
         
       </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを生成</target>
+        <target>יצירת אסימון גישה אישי ל-GitHub</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
         <source>Enable commit message issue helper</source>
-        <target>コミット メッセージ課題ヘルパーを有効にする</target>
+        <target>הפעלת עוזר בעיות בהודעת הגשה</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
         <source>Maximum number of issues retrieved</source>
-        <target>取得する課題の最大数</target>
+        <target>מספר מרבי של בעיות שאוחזרו</target>
         
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを管理</target>
+        <target>ניהול אסימון גישה אישי ל-GitHub</target>
         
       </trans-unit>
       <trans-unit id="_noAssignedIssues.Text">
         <source>No assigned GitHub issues found</source>
-        <target>未割当ての GitHub 課題はありません</target>
+        <target>לא נמצאו בעיות GitHub שהוקצו</target>
         
       </trans-unit>
       <trans-unit id="_noTokenError.Text">
         <source>No GitHub personal access token (PAT) defined</source>
-        <target>GitHub個人アクセストークン (PAT) が未定義です</target>
+        <target>לא הוגדר אסימון גישה אישי (PAT) ל-GitHub</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>注意: トークンが考慮されるようにするため、Git Extensionsを再起動する必要があります。</target>
+        <target>הערה: יש להפעיל את Git Extensions מחדש כדי שהאסימון ייכנס לתוקף.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
         <source>Fail to open the link. Reason: </source>
-        <target>リンクを開くことができませんでした。理由:</target>
+        <target>נכשל בפתיחת הקישור. הסיבה: </target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>個人アクセストークンを取得済みです。新たに取得する場合は、まず古いトークンをプラグイン &gt; プラグイン設定 で削除してください。</target>
+        <target>כבר יש לך אסימון גישה אישי. כדי לקבל אחד חדש, יש למחוק תחילה את הישן בתפריט תוספים &gt; הגדרות תוסף.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
-        <target>{0} で閲覧</target>
+        <target>הצגה ב-{0}</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="he">
     <body>
       <trans-unit id="lblApiToken.Text">
         <source>API &amp;Token</source>
-        <target>API トークン(&amp;T)</target>
+        <target>&amp;אסימון API</target>
         
       </trans-unit>
       <trans-unit id="lblApiUrl.Text">
         <source>&amp;API URL</source>
-        <target>API URL(&amp;A)</target>
+        <target>&amp;API URL</target>
         
       </trans-unit>
       <trans-unit id="lblOwner.Text">
         <source>&amp;Owner</source>
-        <target>所有者(&amp;O)</target>
+        <target>&amp;בעלים</target>
         
       </trans-unit>
       <trans-unit id="lblRepository.Text">
         <source>&amp;Repository</source>
-        <target>リポジトリ(&amp;R)</target>
+        <target>&amp;מאגר</target>
         
       </trans-unit>
       <trans-unit id="lnkTokenManagement.Text">
         <source>Create a GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを作成</target>
+        <target>יצירת אסימון גישה אישי ל-GitHub</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
-        <target>インパクトグラフ</target>
+        <target>גרף השפעה</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="he">
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
-        <target>プロジェクト ID をサーバーから取得</target>
+        <target>קבלת מזהה הפרויקט מהשרת</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
-        <target>プロジェクトをサーバーから取得できませんでした。有効な API トークンを指定するか、インスタンスの URL を確認してみてください</target>
+        <target>נכשל בקבלת הפרויקט מהשרת. נסה לציין אסימון API תקין או לבדוק את כתובת ה-URL של המופע</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>トークン管理ページに移動</target>
+        <target>מעבר לדף ניהול האסימונים</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
-        <target>インスタンスの URL</target>
+        <target>כתובת URL של המופע</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
-        <target>API トークン</target>
+        <target>אסימון API</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
-        <target>プロジェクト ID</target>
+        <target>מזהה פרויקט</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
-        <target>統計情報</target>
+        <target>סטטיסטיקה</target>
         
       </trans-unit>
       <trans-unit id="_codeFiles.Caption">
         <source>Code files</source>
-        <target>コードファイル</target>
+        <target>קבצי קוד</target>
         
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>無視するディレクトリ (後方一致)</target>
+        <target>תיקיות להתעלמות (EndsWith)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
-        <target>サブモジュールを無視</target>
+        <target>התעלמות מתת-מודולים</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
@@ -730,43 +730,44 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
-        <target>{0}バイトダウンロード済み</target>
+        <target>{0} בייטים הורדו.</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Gourceを発見できません。Gourceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
+        <target>לא ניתן למצוא את Gource.
+יש להוריד את Gource ולהגדיר את הנתיב בתיבת הדו-שיח של הגדרות התוספים.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>現在のディレクトリは有効なGitリポジトリではありません。
+        <target>התיקייה הנוכחית אינה מאגר Git תקין.
 
-Gourceは有効なGitリポジトリからしか開始できません。</target>
+ניתן להפעיל את Gource רק ממאגר Git תקין.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
-        <target>Gourceへのパスが設定されていません。
+        <target>לא הוגדר נתיב ל-Gource.
 
-自動的にGourceをダウンロードしますか？</target>
+האם ברצונך להוריד את Gource באופן אוטומטי?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
-        <target>ダウンロード</target>
+        <target>הורדה</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>ダウンロードに失敗しました。
-Gourceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
+        <target>ההורדה נכשלה.
+יש להוריד את Gource ולהגדיר את הנתיב בתיבת הדו-שיח של הגדרות התוספים.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -776,32 +777,31 @@ Gourceをダウンロードし、プラグイン設定ダイアログからパ�
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
-        <target>引数</target>
+        <target>ארגומנטים</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
-        <target>Gourceがダウンロードされ、解凍されました。</target>
+        <target>Gource הורד וחולץ.</target>
         
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>Gourceのパス</target>
+        <target>נתיב אל Gource</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>構成されたパスにGourceが見つかりませんでした:
-{0}
+        <target>לא ניתן למצוא את Gource בנתיב המוגדר: {0}.
 
-パスをリセットしますか？</target>
+האם ברצונך לאפס את הנתיב המוגדר?</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="he">
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
@@ -810,256 +810,257 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
-        <target>引数</target>
+        <target>ארגומנטים</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>参照</target>
+        <target>עיון</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>参照</target>
+        <target>עיון</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Start</source>
-        <target>開始</target>
+        <target>התחלה</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
-        <target>Gourceのパス</target>
+        <target>נתיב אל Gource</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>リポジトリ</target>
+        <target>מאגר</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>Gourceプロジェクト</target>
+        <target>פרויקט Gource</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
-        <target>Gourceコマンドライン</target>
+        <target>שורת הפקודה של Gource</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="he">
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
-        <target>このブランチでビルドを無視</target>
+        <target>התעלמות מבנייה עבור ענף</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>Jenkins サーバの URL</target>
+        <target>כתובת URL של שרת Jenkins</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>プロジェクト名</target>
+        <target>שם הפרויקט</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="he">
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+        <target>מחליף פרוקסי</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>すべてに適用する</target>
+        <target>החלה גלובלית</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
-        <target>グローバルのhttp.proxy:</target>
+        <target>http.proxy גלובלי:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
-        <target>ローカルのhttp.proxy:</target>
+        <target>http.proxy מקומי:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
-        <target>プロキシを設定</target>
+        <target>הגדרת פרוקסי</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
-        <target>プロキシを解除</target>
+        <target>ביטול הגדרת פרוקסי</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>プロキシが設定されていません。プラグインの設定で、プロキシのホスト名を設定してください。</target>
+        <target>לא הוגדר פרוקסי. יש להגדיר את מארח הפרוקסי בהגדרות התוסף.</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+        <target>מחליף פרוקסי</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+        <target>מחליף פרוקסי</target>
         
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
-        <target>HTTPプロキシ</target>
+        <target>פרוקסי HTTP</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
-        <target>HTTPプロキシポート</target>
+        <target>פורט פרוקסי HTTP</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
-        <target>パスワード</target>
+        <target>סיסמה</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>ユーザー名</target>
+        <target>שם משתמש</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="he">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>リリースノートジェネレータ</target>
+        <target>מחולל הערות שחרור</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
-        <target>無効な入力</target>
+        <target>קלט לא תקין</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
-        <target>「{0}」から「{1}」へのコミットログ ({2}):</target>
+        <target>יומן הגשות מ-&apos;{0}&apos; עד &apos;{1}&apos; ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>&apos;From&apos; commit must be specified</source>
-        <target>「From」コミットは必ず指定する必要があります</target>
+        <target>יש לציין הגשה עבור &apos;מ&apos;</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>&apos;To&apos; commit must be specified</source>
-        <target>「To」コミットは必ず指定する必要があります</target>
+        <target>יש לציין הגשה עבור &apos;עד&apos;</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
-        <target>HTMLテーブルとして</target>
+        <target>כטבלת HTML</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>テキストテーブル(空白区切り)として</target>
+        <target>כטבלת טקסט (רווחים)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
-        <target>テキストテーブル(タブ区切り)として</target>
+        <target>כטבלת טקסט (טאבים)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
-        <target>オリジナルの出力</target>
+        <target>פלט מקורי</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
-        <target>生成</target>
+        <target>יצירה</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
-        <target>結果</target>
+        <target>תוצאה</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>クリップボードにコピー</target>
+        <target>העתקה ללוח</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>コミット表現「To」(含む):</target>
+        <target>ביטוי הגשה &quot;עד&quot; (כולל):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
-        <target>列を空白で分割</target>
+        <target>הפרדת עמודות באמצעות רווחים</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>クリップボードは HTML コード (プレーンテキスト) や HTML 形式を含んでおり、MS Word や LibreOffice Writer に貼り付けられます。</target>
+        <target>הלוח יכיל קוד HTML (טקסט רגיל) ותבנית HTML
+שניתן להדביק בתוכנות כגון MS Word או LibreOffice Writer.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>コミット表現「From」(含まず):</target>
+        <target>ביטוי הגשה &quot;מ&quot; (לא כולל):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>gitログ引数:</target>
+        <target>ארגומנטים של git log:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>{0} = 元; {1} = 先</target>
+        <target>{0} = מ; {1} = עד</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>並べ替え: 最新のリビジョンを上に表示。</target>
+        <target>מיון: הגרסאות העדכניות ביותר מופיעות למעלה.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
-        <target>リビジョン数 = </target>
+        <target>מספר הגרסאות = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
-        <target>(コミット表現はコミットハッシュ、
-ブランチ名、タグ名があり得ます)</target>
+        <target>(ביטויי הגשה יכולים להיות גיבובי הגשה,
+שמות ענפים, שמות תגיות)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
-        <target>として</target>
+        <target>כפי שהוא</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>列をタブで分割</target>
+        <target>הפרדת עמודות באמצעות טאבים</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1069,30 +1070,30 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="he">
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
-        <target>リリースノートジェネレータ</target>
+        <target>מחולל הערות שחרור</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="he">
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
-        <target>クリップボードにコピーされたビルド結果のURLからデータを抽出</target>
+        <target>חילוץ נתונים מכתובת URL של תוצאת בנייה שהועתקה ללוח</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>トークン管理ページに移動</target>
+        <target>מעבר לדף ניהול האסימונים</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Could not extract data</source>
-        <target>データを抽出できませんでした</target>
+        <target>לא ניתן היה לחלץ נתונים</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1100,24 +1101,24 @@ branch names, tag names)</source>
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>クリップボードには有効なビルド URL が含まれていません。
+        <target>הלוח אינו מכיל כתובת URL תקינה של בנייה.
 
-リトライする前に、ビルドの URL をクリップボードにコピーしてください。
-(「buildId」パラメータは必須です)</target>
+יש להעתיק את כתובת ה-URL של הבנייה ללוח לפני הניסיון החוזר.
+(עליה להכיל לפחות את הפרמטר &quot;buildId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>URLからビルド定義情報を取得しようとしたときにエラーが発生しました。
+        <target>שגיאה בעת ניסיון לאחזר מידע על הגדרת הבנייה מכתובת ה-URL.
 
-URLが有効であり、APIトークンがビルドおよびプロジェクト情報にアクセスできることを確認してください。</target>
+יש לוודא שכתובת ה-URL תקינה ושלאסימון ה-API יש גישה למידע על הבנייה והפרויקט.</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
         <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
-        <target>APIトークンがないためビルド定義情報を取得できません。フィールドは空白のままになります。</target>
+        <target>לא ניתן לאחזר מידע על הגדרת הבנייה ללא אסימון API. השדה יישאר ריק.</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1125,7 +1126,7 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>例:
+        <target>דוגמאות:
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</target>
@@ -1135,28 +1136,28 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
         <source>You need to create a token with the following scopes:
  - &apos;Build (read)&apos;
  - &apos;Project and team (read)&apos;</source>
-        <target>以下のスコープでトークンを作成する必要があります:
- - 「ビルド(読み取り)」
- - 「プロジェクトとチーム(読み取り)」</target>
+        <target>עליך ליצור אסימון עם ההיקפים הבאים:
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
-        <target>「ビルド定義名」の正規表現は無効なため保存されません。</target>
+        <target>הביטוי הרגולרי &apos;שם הגדרת הבנייה&apos; אינו תקין ולא יישמר!</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="he">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
-        <target>ビルドのレポートを表示するためにゲストとしてログイン</target>
+        <target>התחברות כאורח כדי להציג את דוח הבנייה</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
-        <target>ビルドURLが正しくありません</target>
+        <target>כתובת ה-URL של הבנייה אינה תקינה</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1164,32 +1165,32 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>クリップボードには有効なビルド URL が含まれていません。
+        <target>הלוח אינו מכיל כתובת URL תקינה של בנייה.
 
-リトライする前に、ビルドの URL をクリップボードにコピーしてください。
-(「buildTypeId」パラメータは必須です)</target>
+יש להעתיק ללוח את כתובת ה-URL של הבנייה לפני הניסיון החוזר.
+(עליה להכיל לפחות את הפרמטר &quot;buildTypeId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
-        <target>プロジェクトとビルド一覧を読み込む時にエラーが発生しました</target>
+        <target>שגיאה בטעינת רשימת הפרויקטים והבניות</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>プロジェクト及びビルドリストの読み込みに失敗しました。
-サーバURLを確認してください。</target>
+        <target>נכשל בטעינת רשימת הפרויקטים והבניות.
+יש לוודא את כתובת ה-URL של השרת.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
-        <target>「ビルド ID フィルタ」の正規表現は無効なため保存されません。</target>
+        <target>הביטוי הרגולרי &quot;מסנן מזהה בנייה&quot; אינו תקין ולא יישמר!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
-        <target>クリップボードにコピーされたビルドURLからデータを抽出</target>
+        <target>חילוץ הנתונים מכתובת ה-URL של הבנייה שהועתקה ללוח</target>
         
       </trans-unit>
     </body>

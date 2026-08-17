@@ -5726,11 +5726,6 @@ Examples on branch name: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Створити нове робоче дерево</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Відкрити нове робоче дерево після створення</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>Що переключити:</target>
@@ -11924,11 +11919,6 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>Базовий коміт для порівняння не обрано.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>Більше не показувати це повідомлення.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

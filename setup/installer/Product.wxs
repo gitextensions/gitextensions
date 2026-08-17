@@ -479,15 +479,6 @@
       <Component Id="fa.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\fa.Plugins.xlf" />
       </Component>
-      <Component Id="fa_IR.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\fa_IR.gif" />
-      </Component>
-      <Component Id="fa_IR.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\fa_IR.xlf" />
-      </Component>
-      <Component Id="fa_IR.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\fa_IR.Plugins.xlf" />
-      </Component>
       <Component Id="fi.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\fi.gif" />
       </Component>
@@ -514,6 +505,24 @@
       </Component>
       <Component Id="German.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\German.Plugins.xlf" />
+      </Component>
+      <Component Id="he.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\he.gif" />
+      </Component>
+      <Component Id="he.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\he.xlf" />
+      </Component>
+      <Component Id="he.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\he.Plugins.xlf" />
+      </Component>
+      <Component Id="hr.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\hr.gif" />
+      </Component>
+      <Component Id="hr.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\hr.xlf" />
+      </Component>
+      <Component Id="hr.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\hr.Plugins.xlf" />
       </Component>
       <Component Id="hu.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\hu.gif" />
@@ -650,6 +659,15 @@
       <Component Id="Spanish.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.Plugins.xlf" />
       </Component>
+      <Component Id="sr.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\sr.gif" />
+      </Component>
+      <Component Id="sr.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\sr.xlf" />
+      </Component>
+      <Component Id="sr.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\sr.Plugins.xlf" />
+      </Component>
       <Component Id="sv.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\sv.gif" />
       </Component>
@@ -712,6 +730,15 @@
       </Component>
       <Component Id="uk.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\uk.Plugins.xlf" />
+      </Component>
+      <Component Id="ur.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\ur.gif" />
+      </Component>
+      <Component Id="ur.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\ur.xlf" />
+      </Component>
+      <Component Id="ur.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\ur.Plugins.xlf" />
       </Component>
       <Component Id="vi.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\vi.gif" />
@@ -1003,11 +1030,6 @@
           <ComponentRef Id="fa.Plugins.xlf" />
           <ComponentRef Id="fa.gif" />
         </Feature>
-        <Feature Id="fa_IR" Title="fa_IR" Level="1">
-          <ComponentRef Id="fa_IR.xlf" />
-          <ComponentRef Id="fa_IR.Plugins.xlf" />
-          <ComponentRef Id="fa_IR.gif" />
-        </Feature>
         <Feature Id="fi" Title="fi" Level="1">
           <ComponentRef Id="fi.xlf" />
           <ComponentRef Id="fi.Plugins.xlf" />
@@ -1022,6 +1044,16 @@
           <ComponentRef Id="German.xlf" />
           <ComponentRef Id="German.Plugins.xlf" />
           <ComponentRef Id="German.gif" />
+        </Feature>
+        <Feature Id="he" Title="he" Level="1">
+          <ComponentRef Id="he.xlf" />
+          <ComponentRef Id="he.Plugins.xlf" />
+          <ComponentRef Id="he.gif" />
+        </Feature>
+        <Feature Id="hr" Title="hr" Level="1">
+          <ComponentRef Id="hr.xlf" />
+          <ComponentRef Id="hr.Plugins.xlf" />
+          <ComponentRef Id="hr.gif" />
         </Feature>
         <Feature Id="hu" Title="hu" Level="1">
           <ComponentRef Id="hu.xlf" />
@@ -1098,6 +1130,11 @@
           <ComponentRef Id="Spanish.Plugins.xlf" />
           <ComponentRef Id="Spanish.gif" />
         </Feature>
+        <Feature Id="sr" Title="sr" Level="1">
+          <ComponentRef Id="sr.xlf" />
+          <ComponentRef Id="sr.Plugins.xlf" />
+          <ComponentRef Id="sr.gif" />
+        </Feature>
         <Feature Id="sv" Title="sv" Level="1">
           <ComponentRef Id="sv.xlf" />
           <ComponentRef Id="sv.Plugins.xlf" />
@@ -1132,6 +1169,11 @@
           <ComponentRef Id="uk.xlf" />
           <ComponentRef Id="uk.Plugins.xlf" />
           <ComponentRef Id="uk.gif" />
+        </Feature>
+        <Feature Id="ur" Title="ur" Level="1">
+          <ComponentRef Id="ur.xlf" />
+          <ComponentRef Id="ur.Plugins.xlf" />
+          <ComponentRef Id="ur.gif" />
         </Feature>
         <Feature Id="vi" Title="vi" Level="1">
           <ComponentRef Id="vi.xlf" />

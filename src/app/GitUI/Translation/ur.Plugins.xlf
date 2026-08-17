@@ -1,247 +1,247 @@
 <?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
-  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ur">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>それぞれのビルド結果に対してビルド状態サマリ内にテスト結果を表示(ネットワークが集中します!)</target>
+        <target>ہر بلڈ نتیجے کے لیے بلڈ سٹیٹس کے خلاصے میں ٹیسٹ کے نتائج دکھائیں (نیٹ ورک کا زیادہ استعمال!)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
-        <target>サブモジュールの自動コンパイル</target>
+        <target>ذیلی ماڈیولز خودکار طور پر کمپائل کریں</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>{0} をビルドしますか？
+        <target>کیا آپ {0} بلڈ کرنا چاہتے ہیں؟
 
 {1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>プラグイン設定ダイアログで正しい MSBuild のパスを入力し、やり直してください。</target>
+        <target>براہ کرم پلگ اِن سیٹنگز ڈائیلاگ میں درست MSBuild پاتھ درج کریں اور دوبارہ کوشش کریں۔</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe の引数</target>
+        <target>msbuild.exe کے آرگیومنٹس</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>有効</target>
+        <target>فعال</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>msbuild.exe のパス</target>
+        <target>msbuild.exe کا پاتھ</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>バックグラウンドで定期的にフェッチ</target>
+        <target>متواتر بیک گراؤنڈ فیچ</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>フェッチ後に表示を更新</target>
+        <target>فیچ کے بعد ویو ریفریش کریں</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>サブモジュールをすべて取得</target>
+        <target>تمام ذیلی ماڈیولز فیچ کریں</target>
         
       </trans-unit>
       <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
         <source>Fetch immediately on repository opening</source>
-        <target>リポジトリを開いた際に即時フェッチ</target>
+        <target>رپوزٹری کھلتے ہی فوراً فیچ کریں</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>設定された秒ごとにフェッチ (0 で無効)</target>
+        <target>ہر (سیکنڈز) بعد فیچ کریں - غیر فعال کرنے کے لیے 0 مقرر کریں</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
-        <target>実行する Git コマンドの引数</target>
+        <target>چلانے کے لیے git کمانڈ کے آرگیومنٹس</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ur">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
+        <target>مقامی ٹریکنگ برانچز بنائیں</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
+        <target>مقامی ٹریکنگ برانچز بنائیں</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
-        <target>作成する追跡ブランチ用のリモート</target>
+        <target>جس ریموٹ کے لیے ٹریکنگ برانچز بنانی ہیں</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
+        <target>مقامی ٹریکنگ برانچز بنائیں</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="ur">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
-        <target>不要なブランチを削除</target>
+        <target>متروک برانچز حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
-        <target>最後の作者</target>
+        <target>آخری مصنف</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>閉じる</target>
+        <target>بند کریں</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>対象のリモートブランチを削除</target>
+        <target>ریموٹ برانچز حذف کریں از</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
-        <target>最後のメッセージ</target>
+        <target>آخری پیغام</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
-        <target>ブランチを検索</target>
+        <target>برانچز تلاش کریں</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>選択した{0}のブランチを本当に削除しますか?</target>
+        <target>کیا آپ واقعی {0} منتخب برانچز حذف کرنا چاہتے ہیں؟</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
-        <target>{0}/{1} ブランチ選択済み</target>
+        <target>{0}/{1} برانچز منتخب کی گئیں۔</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
         <source>Cancel</source>
-        <target>キャンセル</target>
+        <target>منسوخ کریں</target>
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
-        <target>削除するブランチを選択してください。完全に「{0}」にマージされているブランチのみ削除されます。</target>
+        <target>حذف کرنے کے لیے برانچز منتخب کریں۔ صرف وہ برانچز حذف ہوں گی جو &apos;{0}&apos; میں مکمل طور پر مرج ہو چکی ہیں۔</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>危険な操作です!
-リモート「{0}」のブランチを削除しようとしています。
-これはやり直せませんが、本当に続行しますか?</target>
+        <target>خطرناک کارروائی!
+ریموٹ &apos;{0}&apos; پر برانچز حذف کر دی جائیں گی۔ اسے واپس نہیں لیا جا سکتا۔
+کیا آپ واقعی جاری رکھنا چاہتے ہیں؟</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
-        <target>ブランチを削除中...</target>
+        <target>برانچز حذف کی جا رہی ہیں...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>マージされていないブランチの削除は結果的に dangling コミットになります。注意してください。</target>
+        <target>غیر مرج شدہ برانچز حذف کرنے سے ڈینگلنگ کمٹس بن جائیں گی۔ احتیاط سے استعمال کریں!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>لوڈ ہو رہا ہے...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press &apos;{0}&apos; to search for branches to delete.</source>
-        <target>「{0}」で削除したいブランチを検索</target>
+        <target>برانچز تلاش کرنے کے لیے &apos;{0}&apos; دبائیں۔</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>ブランチを検索</target>
+        <target>برانچز تلاش کریں</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
-        <target>「{0}」列のチェックボックスで削除するブランチを選択</target>
+        <target>&apos;{0}&apos; کالم میں چیک باکسز کے ذریعے حذف کرنے کے لیے برانچز منتخب کریں۔</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>設定</target>
+        <target>سیٹنگز</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
-        <target>最後のアクティビティ</target>
+        <target>آخری سرگرمی</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>未マージのブランチを含む</target>
+        <target>غیر مرج شدہ برانچز شامل کریں</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>x日以上前のブランチを削除</target>
+        <target>x دن سے پرانی برانچز حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>別のブランチに完全にマージされたブランチを削除</target>
+        <target>برانچ میں مکمل طور پر مرج شدہ برانچز حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>名前</target>
+        <target>نام</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
-        <target>マッチしません</target>
+        <target>مماثل نہیں</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
@@ -251,125 +251,125 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
-        <target>大文字小文字を区別しない</target>
+        <target>بڑے/چھوٹے حروف سے بے نیاز</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>ブランチのフィルタに正規表現を使用</target>
+        <target>برانچز کو فلٹر کرنے کے لیے RegEx استعمال کریں</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
-        <target>不要なブランチを削除</target>
+        <target>متروک برانچز حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
-        <target>(days)日以上前の不要なブランチを削除</target>
+        <target>(دنوں) سے پرانی متروک برانچز حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
-        <target>リモートから不要なブランチを削除</target>
+        <target>ریموٹ سے متروک برانچز حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
-        <target>未マージのブランチを削除</target>
+        <target>غیر مرج شدہ برانچز حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
-        <target>すべてのブランチがマージされるべきブランチ</target>
+        <target>وہ برانچ جس میں تمام برانچز مرج ہونی چاہئیں</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>正規表現フィルタの大文字小文字は区別されていませんか？</target>
+        <target>کیا RegEx فلٹر کیس سے بے نیاز ہے؟</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>削除するブランチをフィルタする正規表現</target>
+        <target>حذف کرنے کے لیے برانچز فلٹر کرنے کا RegEx</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
-        <target>正規表現に一致しないブランチを検索</target>
+        <target>ایسی برانچز تلاش کریں جو RegEx سے مماثل نہ ہوں</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
-        <target>不要なブランチを削除するリモート名</target>
+        <target>ریموٹ کا نام جس سے متروک برانچز حذف کی جائیں</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>削除するブランチのフィルタに正規表現を使用</target>
+        <target>حذف کرنے کے لیے برانچز فلٹر کرنے کے لیے RegEx استعمال کریں</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="ur">
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
-        <target>巨大なファイルを発見する</target>
+        <target>بڑی فائلیں تلاش کریں</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>閉じる</target>
+        <target>بند کریں</target>
         
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
-        <target>圧縮後のサイズ</target>
+        <target>کمپریسڈ سائز</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>選択したファイルを本当に削除しますか?</target>
+        <target>کیا آپ واقعی منتخب فائلیں حذف کرنا چاہتے ہیں؟</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>コミット数</target>
+        <target>کمٹس کی تعداد</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>削除</target>
+        <target>حذف کریں</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>ファイル削除前にローカルの変更をリセットします。削除するファイルを選択してください。リモートリポジトリのデータを入れ替える強制プッシュを行います。</target>
+        <target>فائلیں حذف کرنے سے پہلے مقامی تبدیلیاں ری سیٹ کریں۔ حذف کرنے کے لیے فائلیں منتخب کریں۔ ریموٹ رپوزٹری پر ڈیٹا تبدیل کرنے کے لیے فورس پش کریں۔</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
-        <target>最終コミット日時</target>
+        <target>آخری کمٹ کی تاریخ</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
         <source>Path</source>
-        <target>パス</target>
+        <target>پاتھ</target>
         
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
@@ -379,179 +379,179 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
-        <target>サイズ</target>
+        <target>سائز</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Find large files</source>
-        <target>巨大なファイルを発見する</target>
+        <target>بڑی فائلیں تلاش کریں</target>
         
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>(Mb)より巨大なファイルを発見する</target>
+        <target>(Mb) سے بڑی فائلیں تلاش کریں</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="ur">
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
-        <target>統計情報</target>
+        <target>اعداد و شمار</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
-        <target>読込中...</target>
+        <target>لوڈ ہو رہا ہے..</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>لوڈ ہو رہا ہے...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>لوڈ ہو رہا ہے...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>لوڈ ہو رہا ہے...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>لوڈ ہو رہا ہے...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
-        <target>総コミット数</target>
+        <target>کُل کمٹس</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
-        <target>総コード行数</target>
+        <target>کوڈ کی کُل لائنیں</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
-        <target>総コード行数</target>
+        <target>کوڈ کی کُل لائنیں</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
-        <target>総コード行数</target>
+        <target>کوڈ کی کُل لائنیں</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>{0:N0} 行の空行 ({1:P1})</target>
+        <target>{0:N0} خالی لائنیں ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0:N0} 行のコメント ({1:P1})</target>
+        <target>{0:N0} تبصرہ لائنیں ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
-        <target>{0:N0} コミット</target>
+        <target>{0:N0} کمٹس</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>{1} によるコミット数 {0:N0}</target>
+        <target>{1} کی طرف سے {0:N0} کمٹس</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>{0:N0} 行のコード</target>
+        <target>{0:N0} کوڈ کی لائنیں</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{0:N0} 行の {1}ファイルのコード ({2:P1})</target>
+        <target>{1} فائلوں میں {0:N0} کوڈ کی لائنیں ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>{0:N0} 行のコード ({1:P1})</target>
+        <target>{0:N0} کوڈ کی لائنیں ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>{0:N0} 行のデザイナーファイル ({1:P1})</target>
+        <target>ڈیزائنر فائلوں میں {0:N0} لائنیں ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>{0:N0} 行のプロダクションコード ({1:P1})</target>
+        <target>{0:N0} پروڈکشن کوڈ کی لائنیں ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>{0:N0} 行のテストコード</target>
+        <target>{0:N0} ٹیسٹ کوڈ کی لائنیں</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>{0:N0} 行のテストコード ({1:P1})</target>
+        <target>{0:N0} ٹیسٹ کوڈ کی لائنیں ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
-        <target>言語ごとのコード行数</target>
+        <target>فی زبان کوڈ کی لائنیں</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
-        <target>コントリビューター毎のコミット数</target>
+        <target>فی تعاون کنندہ کمٹس</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
-        <target>タイプ毎のコード行数</target>
+        <target>فی قسم کوڈ کی لائنیں</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
-        <target>テストコードの行数</target>
+        <target>ٹیسٹ کوڈ کی لائنیں</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="ur">
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
-        <target>インパクト</target>
+        <target>اثر</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} ({1}コミット、 {2} 変更行)</target>
+        <target>{0} ({1} کمٹس، {2} تبدیل شدہ لائنیں)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
-        <target>サブモジュールを含む</target>
+        <target>ذیلی ماڈیولز شامل کرتے ہوئے</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
-        <target>作者</target>
+        <target>مصنف</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>GitHub</source>
@@ -560,168 +560,168 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
-        <target>GitHub (Enterprise) ホスト名</target>
+        <target>GitHub (Enterprise) ہوسٹ نیم</target>
         
       </trans-unit>
       <trans-unit id="PersonalAccessToken.Caption">
         <source>Personal Access Token</source>
-        <target>個人アクセストークン</target>
+        <target>پرسنل ایکسیس ٹوکن</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>エラー</target>
+        <target>خرابی</target>
         
       </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを生成</target>
+        <target>GitHub پرسنل ایکسیس ٹوکن بنائیں</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
         <source>Enable commit message issue helper</source>
-        <target>コミット メッセージ課題ヘルパーを有効にする</target>
+        <target>کمٹ میسج ایشو ہیلپر فعال کریں</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
         <source>Maximum number of issues retrieved</source>
-        <target>取得する課題の最大数</target>
+        <target>حاصل کردہ ایشوز کی زیادہ سے زیادہ تعداد</target>
         
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを管理</target>
+        <target>GitHub پرسنل ایکسیس ٹوکن کا انتظام کریں</target>
         
       </trans-unit>
       <trans-unit id="_noAssignedIssues.Text">
         <source>No assigned GitHub issues found</source>
-        <target>未割当ての GitHub 課題はありません</target>
+        <target>کوئی تفویض شدہ GitHub ایشوز نہیں ملے</target>
         
       </trans-unit>
       <trans-unit id="_noTokenError.Text">
         <source>No GitHub personal access token (PAT) defined</source>
-        <target>GitHub個人アクセストークン (PAT) が未定義です</target>
+        <target>کوئی GitHub پرسنل ایکسیس ٹوکن (PAT) متعین نہیں</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>注意: トークンが考慮されるようにするため、Git Extensionsを再起動する必要があります。</target>
+        <target>نوٹ: ٹوکن کو مؤثر ہونے کے لیے Git Extensions کو دوبارہ شروع کرنا ضروری ہے۔</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
         <source>Fail to open the link. Reason: </source>
-        <target>リンクを開くことができませんでした。理由:</target>
+        <target>لنک کھولنے میں ناکامی۔ وجہ: </target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>個人アクセストークンを取得済みです。新たに取得する場合は、まず古いトークンをプラグイン &gt; プラグイン設定 で削除してください。</target>
+        <target>آپ کے پاس پہلے سے ایک پرسنل ایکسیس ٹوکن موجود ہے۔ نیا حاصل کرنے کے لیے، پہلے Plugins &gt; Plugin Settings میں اپنا پرانا ٹوکن حذف کریں۔</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
-        <target>{0} で閲覧</target>
+        <target>{0} میں دیکھیں</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="ur">
     <body>
       <trans-unit id="lblApiToken.Text">
         <source>API &amp;Token</source>
-        <target>API トークン(&amp;T)</target>
+        <target>API &amp;ٹوکن</target>
         
       </trans-unit>
       <trans-unit id="lblApiUrl.Text">
         <source>&amp;API URL</source>
-        <target>API URL(&amp;A)</target>
+        <target>&amp;API URL</target>
         
       </trans-unit>
       <trans-unit id="lblOwner.Text">
         <source>&amp;Owner</source>
-        <target>所有者(&amp;O)</target>
+        <target>&amp;مالک</target>
         
       </trans-unit>
       <trans-unit id="lblRepository.Text">
         <source>&amp;Repository</source>
-        <target>リポジトリ(&amp;R)</target>
+        <target>&amp;رپوزٹری</target>
         
       </trans-unit>
       <trans-unit id="lnkTokenManagement.Text">
         <source>Create a GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを作成</target>
+        <target>GitHub پرسنل ایکسیس ٹوکن بنائیں</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
-        <target>インパクトグラフ</target>
+        <target>اثر گراف</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="ur">
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
-        <target>プロジェクト ID をサーバーから取得</target>
+        <target>سرور سے پراجیکٹ ID حاصل کریں</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
-        <target>プロジェクトをサーバーから取得できませんでした。有効な API トークンを指定するか、インスタンスの URL を確認してみてください</target>
+        <target>سرور سے پراجیکٹ حاصل کرنے میں ناکامی۔ درست API ٹوکن فراہم کرنے کی کوشش کریں یا انسٹینس URL چیک کریں</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>トークン管理ページに移動</target>
+        <target>ٹوکن مینجمنٹ پیج پر جائیں</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
-        <target>インスタンスの URL</target>
+        <target>انسٹینس URL</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
-        <target>API トークン</target>
+        <target>API ٹوکن</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
-        <target>プロジェクト ID</target>
+        <target>پراجیکٹ ID</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
-        <target>統計情報</target>
+        <target>اعداد و شمار</target>
         
       </trans-unit>
       <trans-unit id="_codeFiles.Caption">
         <source>Code files</source>
-        <target>コードファイル</target>
+        <target>کوڈ فائلیں</target>
         
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>無視するディレクトリ (後方一致)</target>
+        <target>نظر انداز کرنے کے لیے ڈائریکٹریز (EndsWith)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
-        <target>サブモジュールを無視</target>
+        <target>ذیلی ماڈیولز نظر انداز کریں</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
@@ -730,43 +730,44 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
-        <target>{0}バイトダウンロード済み</target>
+        <target>{0} بائٹس ڈاؤن لوڈ ہو چکے۔</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Gourceを発見できません。Gourceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
+        <target>Gource نہیں ملا۔
+براہ کرم Gource ڈاؤن لوڈ کریں اور پلگ اِن سیٹنگز ڈائیلاگ میں پاتھ مقرر کریں۔</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>現在のディレクトリは有効なGitリポジトリではありません。
+        <target>موجودہ ڈائریکٹری درست git رپوزٹری نہیں ہے۔
 
-Gourceは有効なGitリポジトリからしか開始できません。</target>
+Gource صرف درست git رپوزٹری سے ہی شروع کیا جا سکتا ہے۔</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
-        <target>Gourceへのパスが設定されていません。
+        <target>Gource کا کوئی پاتھ مقرر نہیں کیا گیا۔
 
-自動的にGourceをダウンロードしますか？</target>
+کیا آپ Gource خودکار طور پر ڈاؤن لوڈ کرنا چاہتے ہیں؟</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
-        <target>ダウンロード</target>
+        <target>ڈاؤن لوڈ کریں</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>ダウンロードに失敗しました。
-Gourceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
+        <target>ڈاؤن لوڈ ناکام ہو گیا۔
+براہ کرم Gource ڈاؤن لوڈ کریں اور پلگ اِن سیٹنگز ڈائیلاگ میں پاتھ مقرر کریں۔</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -776,32 +777,31 @@ Gourceをダウンロードし、プラグイン設定ダイアログからパ�
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
-        <target>引数</target>
+        <target>آرگیومنٹس</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
-        <target>Gourceがダウンロードされ、解凍されました。</target>
+        <target>Gource ڈاؤن لوڈ اور اَن زپ ہو چکا ہے۔</target>
         
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>Gourceのパス</target>
+        <target>Gource کا پاتھ</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>構成されたパスにGourceが見つかりませんでした:
-{0}
+        <target>مقرر کردہ پاتھ {0} میں Gource نہیں ملا۔
 
-パスをリセットしますか？</target>
+کیا آپ مقرر کردہ پاتھ ری سیٹ کرنا چاہتے ہیں؟</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="ur">
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
@@ -810,256 +810,257 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
-        <target>引数</target>
+        <target>آرگیومنٹس</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>参照</target>
+        <target>براؤز کریں</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>参照</target>
+        <target>براؤز کریں</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Start</source>
-        <target>開始</target>
+        <target>شروع کریں</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
-        <target>Gourceのパス</target>
+        <target>Gource کا پاتھ</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>リポジトリ</target>
+        <target>رپوزٹری</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>Gourceプロジェクト</target>
+        <target>Gource پراجیکٹ</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
-        <target>Gourceコマンドライン</target>
+        <target>Gource کمانڈ لائن</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="ur">
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
-        <target>このブランチでビルドを無視</target>
+        <target>برانچ کے لیے بلڈ نظر انداز کریں</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>Jenkins サーバの URL</target>
+        <target>Jenkins سرور URL</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>プロジェクト名</target>
+        <target>پراجیکٹ کا نام</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ur">
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+        <target>پراکسی سوئچر</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>すべてに適用する</target>
+        <target>عالمی سطح پر لاگو کریں</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
-        <target>グローバルのhttp.proxy:</target>
+        <target>عالمی http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
-        <target>ローカルのhttp.proxy:</target>
+        <target>مقامی http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
-        <target>プロキシを設定</target>
+        <target>پراکسی مقرر کریں</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
-        <target>プロキシを解除</target>
+        <target>پراکسی ہٹائیں</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>プロキシが設定されていません。プラグインの設定で、プロキシのホスト名を設定してください。</target>
+        <target>کوئی پراکسی مقرر نہیں ہے۔ براہ کرم پلگ اِن سیٹنگز میں پراکسی ہوسٹ مقرر کریں۔</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+        <target>پراکسی سوئچر</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+        <target>پراکسی سوئچر</target>
         
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
-        <target>HTTPプロキシ</target>
+        <target>HTTP پراکسی</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
-        <target>HTTPプロキシポート</target>
+        <target>HTTP پراکسی پورٹ</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
-        <target>パスワード</target>
+        <target>پاس ورڈ</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>ユーザー名</target>
+        <target>یوزر نیم</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="ur">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>リリースノートジェネレータ</target>
+        <target>ریلیز نوٹس جنریٹر</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
-        <target>無効な入力</target>
+        <target>غلط ان پٹ</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
-        <target>「{0}」から「{1}」へのコミットログ ({2}):</target>
+        <target>&apos;{0}&apos; سے &apos;{1}&apos; تک کمٹ لاگ ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>&apos;From&apos; commit must be specified</source>
-        <target>「From」コミットは必ず指定する必要があります</target>
+        <target>&apos;From&apos; کمٹ متعین ہونا ضروری ہے</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>&apos;To&apos; commit must be specified</source>
-        <target>「To」コミットは必ず指定する必要があります</target>
+        <target>&apos;To&apos; کمٹ متعین ہونا ضروری ہے</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
-        <target>HTMLテーブルとして</target>
+        <target>HTML ٹیبل کی صورت میں</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>テキストテーブル(空白区切り)として</target>
+        <target>ٹیکسٹ ٹیبل کی صورت میں (اسپیسز)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
-        <target>テキストテーブル(タブ区切り)として</target>
+        <target>ٹیکسٹ ٹیبل کی صورت میں (ٹیبز)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
-        <target>オリジナルの出力</target>
+        <target>اصل آؤٹ پٹ</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
-        <target>生成</target>
+        <target>جنریٹ کریں</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
-        <target>結果</target>
+        <target>نتیجہ</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>クリップボードにコピー</target>
+        <target>کلپ بورڈ پر کاپی کریں</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>コミット表現「To」(含む):</target>
+        <target>کمٹ ایکسپریشن &quot;To&quot; (بشمول):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
-        <target>列を空白で分割</target>
+        <target>کالمز کو اسپیسز سے الگ کریں</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>クリップボードは HTML コード (プレーンテキスト) や HTML 形式を含んでおり、MS Word や LibreOffice Writer に貼り付けられます。</target>
+        <target>کلپ بورڈ میں HTML کوڈ (پلین ٹیکسٹ) اور HTML فارمیٹ ہوگا
+جسے MS Word یا LibreOffice Writer جیسے پروگراموں میں پیسٹ کیا جا سکتا ہے۔</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>コミット表現「From」(含まず):</target>
+        <target>کمٹ ایکسپریشن &quot;From&quot; (سوائے):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>gitログ引数:</target>
+        <target>git log کے آرگیومنٹس:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>{0} = 元; {1} = 先</target>
+        <target>{0} = from؛ {1} = to</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>並べ替え: 最新のリビジョンを上に表示。</target>
+        <target>ترتیب: تازہ ترین ریویژنز سب سے اوپر درج ہیں۔</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
-        <target>リビジョン数 = </target>
+        <target>ریویژنز کی تعداد = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
-        <target>(コミット表現はコミットハッシュ、
-ブランチ名、タグ名があり得ます)</target>
+        <target>(کمٹ ایکسپریشنز کمٹ ہیشز،
+برانچ ناموں، ٹیگ ناموں پر مشتمل ہو سکتے ہیں)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
-        <target>として</target>
+        <target>جیسا ہے ویسا ہی</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>列をタブで分割</target>
+        <target>کالمز کو ٹیبز سے الگ کریں</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1069,30 +1070,30 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ur">
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
-        <target>リリースノートジェネレータ</target>
+        <target>ریلیز نوٹس جنریٹر</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="ur">
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
-        <target>クリップボードにコピーされたビルド結果のURLからデータを抽出</target>
+        <target>کلپ بورڈ میں کاپی شدہ بلڈ رزلٹ url سے ڈیٹا نکالیں</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>トークン管理ページに移動</target>
+        <target>ٹوکن مینجمنٹ پیج پر جائیں</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Could not extract data</source>
-        <target>データを抽出できませんでした</target>
+        <target>ڈیٹا نکالا نہیں جا سکا</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1100,24 +1101,24 @@ branch names, tag names)</source>
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>クリップボードには有効なビルド URL が含まれていません。
+        <target>کلپ بورڈ میں درست بلڈ url موجود نہیں ہے۔
 
-リトライする前に、ビルドの URL をクリップボードにコピーしてください。
-(「buildId」パラメータは必須です)</target>
+دوبارہ کوشش کرنے سے پہلے براہ کرم بلڈ کا url کلپ بورڈ میں کاپی کریں۔
+(&quot;buildId&quot; پیرامیٹر کم از کم ہونا چاہیے)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>URLからビルド定義情報を取得しようとしたときにエラーが発生しました。
+        <target>url سے بلڈ ڈیفینیشن کی معلومات حاصل کرنے کی کوشش میں خرابی۔
 
-URLが有効であり、APIトークンがビルドおよびプロジェクト情報にアクセスできることを確認してください。</target>
+براہ کرم یقینی بنائیں کہ url درست ہے اور API ٹوکن کو بلڈ اور پراجیکٹ کی معلومات تک رسائی حاصل ہے۔</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
         <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
-        <target>APIトークンがないためビルド定義情報を取得できません。フィールドは空白のままになります。</target>
+        <target>API ٹوکن کے بغیر بلڈ ڈیفینیشن کی معلومات حاصل نہیں کی جا سکتیں۔ فیلڈ خالی چھوڑ دی جائے گی۔</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1125,7 +1126,7 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>例:
+        <target>مثالیں:
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</target>
@@ -1135,28 +1136,28 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
         <source>You need to create a token with the following scopes:
  - &apos;Build (read)&apos;
  - &apos;Project and team (read)&apos;</source>
-        <target>以下のスコープでトークンを作成する必要があります:
- - 「ビルド(読み取り)」
- - 「プロジェクトとチーム(読み取り)」</target>
+        <target>آپ کو مندرجہ ذیل سکوپس کے ساتھ ایک ٹوکن بنانا ہوگا:
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
-        <target>「ビルド定義名」の正規表現は無効なため保存されません。</target>
+        <target>&apos;Build definition name&apos; RegEx درست نہیں ہے اور محفوظ نہیں کیا جائے گا!</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="ur">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
-        <target>ビルドのレポートを表示するためにゲストとしてログイン</target>
+        <target>بلڈ رپورٹ دکھانے کے لیے مہمان کے طور پر لاگ اِن کریں</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
-        <target>ビルドURLが正しくありません</target>
+        <target>Build url درست نہیں ہے</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1164,32 +1165,32 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>クリップボードには有効なビルド URL が含まれていません。
+        <target>کلپ بورڈ میں درست بلڈ url موجود نہیں ہے۔
 
-リトライする前に、ビルドの URL をクリップボードにコピーしてください。
-(「buildTypeId」パラメータは必須です)</target>
+دوبارہ کوشش کرنے سے پہلے براہ کرم کلپ بورڈ میں بلڈ کا url کاپی کریں۔
+(&quot;buildTypeId&quot; پیرامیٹر کم از کم ہونا چاہیے)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
-        <target>プロジェクトとビルド一覧を読み込む時にエラーが発生しました</target>
+        <target>پراجیکٹس اور بلڈ لسٹ لوڈ کرتے وقت خرابی</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>プロジェクト及びビルドリストの読み込みに失敗しました。
-サーバURLを確認してください。</target>
+        <target>پراجیکٹس اور بلڈ لسٹ لوڈ کرنے میں ناکامی۔
+براہ کرم سرور url کی تصدیق کریں۔</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
-        <target>「ビルド ID フィルタ」の正規表現は無効なため保存されません。</target>
+        <target>&quot;Build Id Filter&quot; RegEx درست نہیں ہے اور محفوظ نہیں کیا جائے گا!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
-        <target>クリップボードにコピーされたビルドURLからデータを抽出</target>
+        <target>کلپ بورڈ میں کاپی شدہ بلڈ url سے ڈیٹا نکالیں</target>
         
       </trans-unit>
     </body>

@@ -5721,11 +5721,6 @@ Examples on branch name: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>建立新工作樹(&amp;C)</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>建立後開啟新工作樹(&amp;O)</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>要簽出的內容：</target>
@@ -11901,11 +11896,6 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>未選取用於比較的基礎提交。</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>不再顯示此訊息(&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

@@ -5724,11 +5724,6 @@ Ejemplos con nombre de branch: &quot;feature/ABC-4587-commitMessageRegex&quot;
         <target>&amp;Crear el nuevo worktree</target>
         
       </trans-unit>
-      <trans-unit id="chkOpenWorktree.Text">
-        <source>&amp;Open the new worktree after the creation</source>
-        <target>&amp;Abrir el nuevo worktree después de crearlo</target>
-        
-      </trans-unit>
       <trans-unit id="gbxWhatToCheckout.Text">
         <source>What to checkout:</source>
         <target>De qué hacer checkout:</target>
@@ -11920,11 +11915,6 @@ Mantené CTRL mientras hacés clic para de/seleccionar varias ramas e incluir no
       <trans-unit id="_baseForCompareNotSelectedError.Text">
         <source>Base commit for compare is not selected.</source>
         <target>No ha seleccionado el commit base para comparar.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don&apos;t show me this message again.</source>
-        <target>No me muestres más este mensaje.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">

@@ -1,247 +1,247 @@
 <?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
-  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="hr">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>それぞれのビルド結果に対してビルド状態サマリ内にテスト結果を表示(ネットワークが集中します!)</target>
+        <target>Prikaži rezultate testova u sažetku statusa izgradnje za svaki rezultat izgradnje (intenzivno korištenje mreže!)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
-        <target>サブモジュールの自動コンパイル</target>
+        <target>Automatski kompajliraj podmodule</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>{0} をビルドしますか？
+        <target>Želite li izgraditi {0}?
 
 {1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>プラグイン設定ダイアログで正しい MSBuild のパスを入力し、やり直してください。</target>
+        <target>Unesite ispravnu putanju do MSBuild-a u dijalogu postavki dodatka i pokušajte ponovno.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe の引数</target>
+        <target>Argumenti za msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>有効</target>
+        <target>Omogućeno</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>msbuild.exe のパス</target>
+        <target>Putanja do msbuild.exe</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>バックグラウンドで定期的にフェッチ</target>
+        <target>Periodično preuzimanje u pozadini</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>フェッチ後に表示を更新</target>
+        <target>Osvježi prikaz nakon preuzimanja</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>サブモジュールをすべて取得</target>
+        <target>Preuzmi sve podmodule</target>
         
       </trans-unit>
       <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
         <source>Fetch immediately on repository opening</source>
-        <target>リポジトリを開いた際に即時フェッチ</target>
+        <target>Preuzmi odmah pri otvaranju repozitorija</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>設定された秒ごとにフェッチ (0 で無効)</target>
+        <target>Preuzimaj svakih (sekundi) - postavite na 0 za onemogućavanje</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
-        <target>実行する Git コマンドの引数</target>
+        <target>Argumenti git naredbe za pokretanje</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="hr">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
+        <target>Stvori lokalne prateće grane</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
+        <target>Stvori lokalne prateće grane</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
-        <target>作成する追跡ブランチ用のリモート</target>
+        <target>Udaljeni repozitorij za koji se stvaraju prateće grane</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
+        <target>Stvori lokalne prateće grane</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="hr">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
-        <target>不要なブランチを削除</target>
+        <target>Izbriši zastarjele grane</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
-        <target>最後の作者</target>
+        <target>Posljednji autor</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>閉じる</target>
+        <target>Zatvori</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>Izbriši</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>対象のリモートブランチを削除</target>
+        <target>Izbriši udaljene grane iz</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
-        <target>最後のメッセージ</target>
+        <target>Posljednja poruka</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
-        <target>ブランチを検索</target>
+        <target>Pretraži grane</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>選択した{0}のブランチを本当に削除しますか?</target>
+        <target>Jeste li sigurni da želite izbrisati {0} odabranih grana?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
-        <target>{0}/{1} ブランチ選択済み</target>
+        <target>{0}/{1} grana odabrano.</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
         <source>Cancel</source>
-        <target>キャンセル</target>
+        <target>Odustani</target>
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
-        <target>削除するブランチを選択してください。完全に「{0}」にマージされているブランチのみ削除されます。</target>
+        <target>Odaberite grane za brisanje. Bit će izbrisane samo grane koje su u potpunosti spojene u &apos;{0}&apos;.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>危険な操作です!
-リモート「{0}」のブランチを削除しようとしています。
-これはやり直せませんが、本当に続行しますか?</target>
+        <target>OPASNA RADNJA!
+Grane će biti izbrisane na udaljenom repozitoriju &apos;{0}&apos;. Ovo se ne može poništiti.
+Jeste li sigurni da želite nastaviti?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>Izbriši</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
-        <target>ブランチを削除中...</target>
+        <target>Brisanje grana...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>マージされていないブランチの削除は結果的に dangling コミットになります。注意してください。</target>
+        <target>Brisanje nespojenih grana rezultirat će visećim podnescima. Koristite s oprezom!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>Učitavanje...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press &apos;{0}&apos; to search for branches to delete.</source>
-        <target>「{0}」で削除したいブランチを検索</target>
+        <target>Pritisnite &apos;{0}&apos; za pretragu grana za brisanje.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>ブランチを検索</target>
+        <target>Pretraži grane</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
-        <target>「{0}」列のチェックボックスで削除するブランチを選択</target>
+        <target>Odaberite grane za brisanje pomoću kućica za potvrdu u stupcu &apos;{0}&apos;.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>設定</target>
+        <target>Postavke</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
-        <target>最後のアクティビティ</target>
+        <target>Posljednja aktivnost</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>未マージのブランチを含む</target>
+        <target>Uključi nespojene grane</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>x日以上前のブランチを削除</target>
+        <target>Izbriši grane starije od x dana</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>別のブランチに完全にマージされたブランチを削除</target>
+        <target>Izbriši grane u potpunosti spojene u granu</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>名前</target>
+        <target>Naziv</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
-        <target>マッチしません</target>
+        <target>Ne odgovara</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
@@ -251,125 +251,125 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
-        <target>大文字小文字を区別しない</target>
+        <target>Bez razlikovanja velikih i malih slova</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>ブランチのフィルタに正規表現を使用</target>
+        <target>Koristi regex za filtriranje grana</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
-        <target>不要なブランチを削除</target>
+        <target>Izbriši zastarjele grane</target>
         
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
-        <target>(days)日以上前の不要なブランチを削除</target>
+        <target>Izbriši zastarjele grane starije od (dana)</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
-        <target>リモートから不要なブランチを削除</target>
+        <target>Izbriši zastarjele grane s udaljenog repozitorija</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
-        <target>未マージのブランチを削除</target>
+        <target>Izbriši nespojene grane</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
-        <target>すべてのブランチがマージされるべきブランチ</target>
+        <target>Grana u koju se sve grane trebaju spojiti</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>正規表現フィルタの大文字小文字は区別されていませんか？</target>
+        <target>Je li regex filtar bez razlikovanja velikih i malih slova?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>削除するブランチをフィルタする正規表現</target>
+        <target>Regex za filtriranje grana za brisanje</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
-        <target>正規表現に一致しないブランチを検索</target>
+        <target>Pretraži grane koje ne odgovaraju regexu</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
-        <target>不要なブランチを削除するリモート名</target>
+        <target>Naziv udaljenog repozitorija s kojeg se brišu zastarjele grane</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>削除するブランチのフィルタに正規表現を使用</target>
+        <target>Koristi regex za filtriranje grana za brisanje</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="hr">
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
-        <target>巨大なファイルを発見する</target>
+        <target>Pronađi velike datoteke</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>閉じる</target>
+        <target>Zatvori</target>
         
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
-        <target>圧縮後のサイズ</target>
+        <target>Komprimirana veličina</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>Izbriši</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>選択したファイルを本当に削除しますか?</target>
+        <target>Jeste li sigurni da želite izbrisati odabrane datoteke?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>削除</target>
+        <target>Izbriši</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>コミット数</target>
+        <target>Broj podnesaka</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>削除</target>
+        <target>Izbriši</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>ファイル削除前にローカルの変更をリセットします。削除するファイルを選択してください。リモートリポジトリのデータを入れ替える強制プッシュを行います。</target>
+        <target>Napravite reset lokalnih promjena prije brisanja datoteka. Odaberite datoteke za brisanje. Upotrijebite force push za zamjenu podataka na udaljenom repozitoriju.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
-        <target>最終コミット日時</target>
+        <target>Datum posljednjeg podneska</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
         <source>Path</source>
-        <target>パス</target>
+        <target>Putanja</target>
         
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
@@ -379,179 +379,179 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
-        <target>サイズ</target>
+        <target>Veličina</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Find large files</source>
-        <target>巨大なファイルを発見する</target>
+        <target>Pronađi velike datoteke</target>
         
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>(Mb)より巨大なファイルを発見する</target>
+        <target>Pronađi velike datoteke veće od (Mb)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="hr">
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
-        <target>統計情報</target>
+        <target>Statistika</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
-        <target>読込中...</target>
+        <target>Učitavanje..</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>Učitavanje...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>Učitavanje...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>Učitavanje...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
-        <target>読込中...</target>
+        <target>Učitavanje...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
-        <target>総コミット数</target>
+        <target>Ukupno podnesaka</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
-        <target>総コード行数</target>
+        <target>Ukupno redaka koda</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
-        <target>総コード行数</target>
+        <target>Ukupno redaka koda</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
-        <target>総コード行数</target>
+        <target>Ukupno redaka koda</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>{0:N0} 行の空行 ({1:P1})</target>
+        <target>{0:N0} praznih redaka ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0:N0} 行のコメント ({1:P1})</target>
+        <target>{0:N0} redaka komentara ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
-        <target>{0:N0} コミット</target>
+        <target>{0:N0} podnesaka</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>{1} によるコミット数 {0:N0}</target>
+        <target>{0:N0} podnesaka od {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>{0:N0} 行のコード</target>
+        <target>{0:N0} redaka koda</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{0:N0} 行の {1}ファイルのコード ({2:P1})</target>
+        <target>{0:N0} redaka koda u {1} datoteka ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>{0:N0} 行のコード ({1:P1})</target>
+        <target>{0:N0} redaka koda ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>{0:N0} 行のデザイナーファイル ({1:P1})</target>
+        <target>{0:N0} redaka u datotekama dizajnera ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>{0:N0} 行のプロダクションコード ({1:P1})</target>
+        <target>{0:N0} redaka produkcijskog koda ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>{0:N0} 行のテストコード</target>
+        <target>{0:N0} redaka testnog koda</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>{0:N0} 行のテストコード ({1:P1})</target>
+        <target>{0:N0} redaka testnog koda ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
-        <target>言語ごとのコード行数</target>
+        <target>Redaka koda po jeziku</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
-        <target>コントリビューター毎のコミット数</target>
+        <target>Podnesaka po suradniku</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
-        <target>タイプ毎のコード行数</target>
+        <target>Redaka koda po vrsti</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
-        <target>テストコードの行数</target>
+        <target>Redaka testnog koda</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="hr">
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
-        <target>インパクト</target>
+        <target>Utjecaj</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} ({1}コミット、 {2} 変更行)</target>
+        <target>{0} ({1} podnesaka, {2} promijenjenih redaka)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
-        <target>サブモジュールを含む</target>
+        <target>Uključujući podmodule</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
-        <target>作者</target>
+        <target>Autor</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>GitHub</source>
@@ -560,168 +560,168 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
-        <target>GitHub (Enterprise) ホスト名</target>
+        <target>GitHub (Enterprise) naziv poslužitelja</target>
         
       </trans-unit>
       <trans-unit id="PersonalAccessToken.Caption">
         <source>Personal Access Token</source>
-        <target>個人アクセストークン</target>
+        <target>Osobni pristupni token</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>エラー</target>
+        <target>Pogreška</target>
         
       </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを生成</target>
+        <target>Generiraj GitHub osobni pristupni token</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
         <source>Enable commit message issue helper</source>
-        <target>コミット メッセージ課題ヘルパーを有効にする</target>
+        <target>Omogući pomoćnika za dodavanje issuea u poruku podneska</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
         <source>Maximum number of issues retrieved</source>
-        <target>取得する課題の最大数</target>
+        <target>Maksimalan broj dohvaćenih issuea</target>
         
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを管理</target>
+        <target>Upravljaj GitHub osobnim pristupnim tokenom</target>
         
       </trans-unit>
       <trans-unit id="_noAssignedIssues.Text">
         <source>No assigned GitHub issues found</source>
-        <target>未割当ての GitHub 課題はありません</target>
+        <target>Nije pronađen nijedan dodijeljeni GitHub issue</target>
         
       </trans-unit>
       <trans-unit id="_noTokenError.Text">
         <source>No GitHub personal access token (PAT) defined</source>
-        <target>GitHub個人アクセストークン (PAT) が未定義です</target>
+        <target>Nije definiran GitHub osobni pristupni token (PAT)</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>注意: トークンが考慮されるようにするため、Git Extensionsを再起動する必要があります。</target>
+        <target>Napomena: Git Extensions je potrebno ponovno pokrenuti kako bi token bio uzet u obzir.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
         <source>Fail to open the link. Reason: </source>
-        <target>リンクを開くことができませんでした。理由:</target>
+        <target>Otvaranje poveznice nije uspjelo. Razlog: </target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>個人アクセストークンを取得済みです。新たに取得する場合は、まず古いトークンをプラグイン &gt; プラグイン設定 で削除してください。</target>
+        <target>Već imate osobni pristupni token. Da biste dobili novi, prvo izbrišite stari u Dodaci &gt; Postavke dodatka.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
-        <target>{0} で閲覧</target>
+        <target>Pogledaj u {0}</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="hr">
     <body>
       <trans-unit id="lblApiToken.Text">
         <source>API &amp;Token</source>
-        <target>API トークン(&amp;T)</target>
+        <target>API &amp;Token</target>
         
       </trans-unit>
       <trans-unit id="lblApiUrl.Text">
         <source>&amp;API URL</source>
-        <target>API URL(&amp;A)</target>
+        <target>&amp;API URL</target>
         
       </trans-unit>
       <trans-unit id="lblOwner.Text">
         <source>&amp;Owner</source>
-        <target>所有者(&amp;O)</target>
+        <target>&amp;Vlasnik</target>
         
       </trans-unit>
       <trans-unit id="lblRepository.Text">
         <source>&amp;Repository</source>
-        <target>リポジトリ(&amp;R)</target>
+        <target>&amp;Repozitorij</target>
         
       </trans-unit>
       <trans-unit id="lnkTokenManagement.Text">
         <source>Create a GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを作成</target>
+        <target>Stvori GitHub osobni pristupni token</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
-        <target>インパクトグラフ</target>
+        <target>Graf utjecaja</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="hr">
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
-        <target>プロジェクト ID をサーバーから取得</target>
+        <target>Dohvati ID projekta s poslužitelja</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
-        <target>プロジェクトをサーバーから取得できませんでした。有効な API トークンを指定するか、インスタンスの URL を確認してみてください</target>
+        <target>Dohvaćanje projekta s poslužitelja nije uspjelo. Pokušajte navesti valjani API token ili provjerite URL instance</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>トークン管理ページに移動</target>
+        <target>Idi na stranicu za upravljanje tokenima</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
-        <target>インスタンスの URL</target>
+        <target>URL instance</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
-        <target>API トークン</target>
+        <target>API token</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
-        <target>プロジェクト ID</target>
+        <target>ID projekta</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
-        <target>統計情報</target>
+        <target>Statistika</target>
         
       </trans-unit>
       <trans-unit id="_codeFiles.Caption">
         <source>Code files</source>
-        <target>コードファイル</target>
+        <target>Datoteke koda</target>
         
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>無視するディレクトリ (後方一致)</target>
+        <target>Direktoriji koje treba zanemariti (završava s)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
-        <target>サブモジュールを無視</target>
+        <target>Zanemari podmodule</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
@@ -730,43 +730,44 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
-        <target>{0}バイトダウンロード済み</target>
+        <target>{0} bajtova preuzeto.</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Gourceを発見できません。Gourceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
+        <target>Nije moguće pronaći Gource.
+Preuzmite Gource i postavite putanju u dijalogu postavki dodataka.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>現在のディレクトリは有効なGitリポジトリではありません。
+        <target>Trenutni direktorij nije valjani git repozitorij.
 
-Gourceは有効なGitリポジトリからしか開始できません。</target>
+Gource se može pokrenuti samo iz valjanog git repozitorija.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
-        <target>Gourceへのパスが設定されていません。
+        <target>Nije konfigurirana putanja do Gource.
 
-自動的にGourceをダウンロードしますか？</target>
+Želite li automatski preuzeti Gource?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
-        <target>ダウンロード</target>
+        <target>Preuzmi</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>ダウンロードに失敗しました。
-Gourceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
+        <target>Preuzimanje nije uspjelo.
+Preuzmite Gource i postavite putanju u dijalogu postavki dodataka.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -776,32 +777,31 @@ Gourceをダウンロードし、プラグイン設定ダイアログからパ�
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
-        <target>引数</target>
+        <target>Argumenti</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
-        <target>Gourceがダウンロードされ、解凍されました。</target>
+        <target>Gource je preuzet i raspakiran.</target>
         
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>Gourceのパス</target>
+        <target>Putanja do Gource</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>構成されたパスにGourceが見つかりませんでした:
-{0}
+        <target>Nije moguće pronaći Gource na konfiguriranoj putanji: {0}.
 
-パスをリセットしますか？</target>
+Želite li resetirati konfiguriranu putanju?</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="hr">
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
@@ -810,289 +810,290 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
-        <target>引数</target>
+        <target>Argumenti</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>参照</target>
+        <target>Pregledaj</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>参照</target>
+        <target>Pregledaj</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Start</source>
-        <target>開始</target>
+        <target>Pokreni</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
-        <target>Gourceのパス</target>
+        <target>Putanja do Gource</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>リポジトリ</target>
+        <target>Repozitorij</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>Gourceプロジェクト</target>
+        <target>Gource projekt</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
-        <target>Gourceコマンドライン</target>
+        <target>Gource naredbeni redak</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="hr">
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
-        <target>このブランチでビルドを無視</target>
+        <target>Zanemari izgradnju za granu</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>Jenkins サーバの URL</target>
+        <target>URL Jenkins poslužitelja</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>プロジェクト名</target>
+        <target>Naziv projekta</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="hr">
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+        <target>Proxy Switcher</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>すべてに適用する</target>
+        <target>Primijeni globalno</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
-        <target>グローバルのhttp.proxy:</target>
+        <target>Globalni http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
-        <target>ローカルのhttp.proxy:</target>
+        <target>Lokalni http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
-        <target>プロキシを設定</target>
+        <target>Postavi proxy</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
-        <target>プロキシを解除</target>
+        <target>Ukloni proxy</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>プロキシが設定されていません。プラグインの設定で、プロキシのホスト名を設定してください。</target>
+        <target>Proxy nije konfiguriran. Postavite proxy poslužitelj u postavkama dodatka.</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+        <target>Proxy Switcher</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+        <target>Proxy Switcher</target>
         
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
-        <target>HTTPプロキシ</target>
+        <target>HTTP proxy</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
-        <target>HTTPプロキシポート</target>
+        <target>HTTP proxy port</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
-        <target>パスワード</target>
+        <target>Lozinka</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>ユーザー名</target>
+        <target>Korisničko ime</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="hr">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>リリースノートジェネレータ</target>
+        <target>Generator bilješki o izdanju</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
-        <target>無効な入力</target>
+        <target>Nevaljani unos</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
-        <target>「{0}」から「{1}」へのコミットログ ({2}):</target>
+        <target>Zapisnik podnesaka od &apos;{0}&apos; do &apos;{1}&apos; ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>&apos;From&apos; commit must be specified</source>
-        <target>「From」コミットは必ず指定する必要があります</target>
+        <target>Podnesak &apos;Od&apos; mora biti naveden</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>&apos;To&apos; commit must be specified</source>
-        <target>「To」コミットは必ず指定する必要があります</target>
+        <target>Podnesak &apos;Do&apos; mora biti naveden</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
-        <target>HTMLテーブルとして</target>
+        <target>kao HTML tablica</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>テキストテーブル(空白区切り)として</target>
+        <target>kao tekstualna tablica (razmaci)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
-        <target>テキストテーブル(タブ区切り)として</target>
+        <target>kao tekstualna tablica (tabulatori)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
-        <target>オリジナルの出力</target>
+        <target>izvorni izlaz</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
-        <target>生成</target>
+        <target>Generiraj</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
-        <target>結果</target>
+        <target>Rezultat</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>クリップボードにコピー</target>
+        <target>Kopiraj u međuspremnik</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>コミット表現「To」(含む):</target>
+        <target>Izraz podneska &quot;Do&quot; (uključujući):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
-        <target>列を空白で分割</target>
+        <target>odvoji stupce razmacima</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>クリップボードは HTML コード (プレーンテキスト) や HTML 形式を含んでおり、MS Word や LibreOffice Writer に貼り付けられます。</target>
+        <target>Međuspremnik će sadržavati HTML kod (obični tekst) i HTML format
+koji se može zalijepiti u programe poput MS Worda ili LibreOffice Writera.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>コミット表現「From」(含まず):</target>
+        <target>Izraz podneska &quot;Od&quot; (isključujući):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>gitログ引数:</target>
+        <target>argumenti git log naredbe:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>{0} = 元; {1} = 先</target>
+        <target>{0} = od; {1} = do</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>並べ替え: 最新のリビジョンを上に表示。</target>
+        <target>Sortiranje: Najnovije revizije navedene su na vrhu.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
-        <target>リビジョン数 = </target>
+        <target>Broj revizija = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
-        <target>(コミット表現はコミットハッシュ、
-ブランチ名、タグ名があり得ます)</target>
+        <target>(Izrazi podneska mogu biti hashovi podnesaka,
+nazivi grana, nazivi oznaka)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
-        <target>として</target>
+        <target>kako jest</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>列をタブで分割</target>
+        <target>odvoji stupce tabulatorima</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
         <source>n/a</source>
-        <target>n/a</target>
+        <target>n/d</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="hr">
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
-        <target>リリースノートジェネレータ</target>
+        <target>Generator bilješki o izdanju</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="hr">
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
-        <target>クリップボードにコピーされたビルド結果のURLからデータを抽出</target>
+        <target>Izvuci podatke iz URL-a rezultata izgradnje kopiranog u međuspremnik</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>トークン管理ページに移動</target>
+        <target>Idi na stranicu za upravljanje tokenima</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Could not extract data</source>
-        <target>データを抽出できませんでした</target>
+        <target>Podatke nije moguće izvući</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1100,24 +1101,24 @@ branch names, tag names)</source>
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>クリップボードには有効なビルド URL が含まれていません。
+        <target>Međuspremnik ne sadrži valjani URL izgradnje.
 
-リトライする前に、ビルドの URL をクリップボードにコピーしてください。
-(「buildId」パラメータは必須です)</target>
+Kopirajte URL izgradnje u međuspremnik prije ponovnog pokušaja.
+(Trebao bi sadržavati barem parametar &quot;buildId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>URLからビルド定義情報を取得しようとしたときにエラーが発生しました。
+        <target>Pogreška prilikom pokušaja dohvaćanja informacija o definiciji izgradnje s URL-a.
 
-URLが有効であり、APIトークンがビルドおよびプロジェクト情報にアクセスできることを確認してください。</target>
+Provjerite je li URL valjan i ima li API token pristup informacijama o izgradnji i projektu.</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
         <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
-        <target>APIトークンがないためビルド定義情報を取得できません。フィールドは空白のままになります。</target>
+        <target>Nije moguće dohvatiti informacije o definiciji izgradnje bez API tokena. Polje će ostati prazno.</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1125,7 +1126,7 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>例:
+        <target>Primjeri:
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</target>
@@ -1135,28 +1136,28 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
         <source>You need to create a token with the following scopes:
  - &apos;Build (read)&apos;
  - &apos;Project and team (read)&apos;</source>
-        <target>以下のスコープでトークンを作成する必要があります:
- - 「ビルド(読み取り)」
- - 「プロジェクトとチーム(読み取り)」</target>
+        <target>Trebate stvoriti token sa sljedećim opsezima:
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
-        <target>「ビルド定義名」の正規表現は無効なため保存されません。</target>
+        <target>Regularni izraz &apos;Naziv definicije izgradnje&apos; nije valjan i neće biti spremljen!</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="hr">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
-        <target>ビルドのレポートを表示するためにゲストとしてログイン</target>
+        <target>Prijavi se kao gost za prikaz izvještaja o izgradnji</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
-        <target>ビルドURLが正しくありません</target>
+        <target>URL izgradnje nije valjan</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1164,32 +1165,32 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>クリップボードには有効なビルド URL が含まれていません。
+        <target>Međuspremnik ne sadrži valjani URL izgradnje.
 
-リトライする前に、ビルドの URL をクリップボードにコピーしてください。
-(「buildTypeId」パラメータは必須です)</target>
+Kopirajte URL izgradnje u međuspremnik prije ponovnog pokušaja.
+(Trebao bi sadržavati barem parametar &quot;buildTypeId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
-        <target>プロジェクトとビルド一覧を読み込む時にエラーが発生しました</target>
+        <target>Pogreška prilikom učitavanja popisa projekata i izgradnji</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>プロジェクト及びビルドリストの読み込みに失敗しました。
-サーバURLを確認してください。</target>
+        <target>Učitavanje popisa projekata i izgradnji nije uspjelo.
+Provjerite URL poslužitelja.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
-        <target>「ビルド ID フィルタ」の正規表現は無効なため保存されません。</target>
+        <target>Regularni izraz &quot;Filtar ID-a izgradnje&quot; nije valjan i neće biti spremljen!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
-        <target>クリップボードにコピーされたビルドURLからデータを抽出</target>
+        <target>Izvuci podatke iz URL-a izgradnje kopiranog u međuspremnik</target>
         
       </trans-unit>
     </body>
