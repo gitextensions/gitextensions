@@ -67,7 +67,7 @@ unconfined toolkit dialog or invoke `xdg-open` directly.
 - A desktop environment:
   - Windows 10 or later
   - Linux with an X11 or Wayland session (standard desktop distributions work out of the box)
-  - macOS 10.15 or later
+  - macOS 11 or later on Apple Silicon
 
 ## Building
 
@@ -148,8 +148,8 @@ dotnet run --project src/app/GitExtensions.Avalonia -- browse /path/to/repositor
 
 Every successful merge to `master` in the development fork creates an
 [Avalonia maintainer prerelease](https://github.com/begota98/gitextensions/releases) with a
-Windows x64 portable archive, an offline Linux x64 Flatpak bundle, and macOS application
-archives for Intel and Apple Silicon. These are unsigned development snapshots intended for
+Windows x64 portable archive, an offline Linux x64 Flatpak bundle, and an Apple Silicon macOS
+application archive. These are unsigned development snapshots intended for
 maintainer testing and issue reports, not production releases. The release title and notes
 identify the exact source commit, and `SHA256SUMS.txt` covers every attached package.
 
