@@ -1,8 +1,8 @@
 # macOS runtime smoke checklist
 
 This checklist is the reproducible macOS leg of the cross-platform parity harness. Run it on
-both Apple Silicon and Intel when machines are available, keeping evidence below
-`eng/avalonia/parity-evidence/P0.6/macos-<architecture>/`.
+Apple Silicon, the supported macOS architecture, keeping evidence below
+`eng/avalonia/parity-evidence/P0.6/macos-arm64/`.
 
 1. Install the .NET 10 SDK, Git, and the Xcode Command Line Tools. Confirm `dotnet --info`,
    `git --version`, `cc --version`, `uname -m`, and `sw_vers`.
