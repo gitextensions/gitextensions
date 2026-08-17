@@ -144,6 +144,26 @@ Windows Forms application additionally requires the submodules
 dotnet run --project src/app/GitExtensions.Avalonia -- browse /path/to/repository
 ```
 
+### Maintainer testing builds
+
+Every successful merge to `master` in the development fork creates an
+[Avalonia maintainer prerelease](https://github.com/begota98/gitextensions/releases) with a
+Windows x64 portable archive, an offline Linux x64 Flatpak bundle, and macOS application
+archives for Intel and Apple Silicon. These are unsigned development snapshots intended for
+maintainer testing and issue reports, not production releases. The release title and notes
+identify the exact source commit, and `SHA256SUMS.txt` covers every attached package.
+
+Install the Flatpak bundle with:
+
+```console
+flatpak install --user ./GitExtensions-Avalonia-*-linux-x64.flatpak
+```
+
+The bundle has no automatic update channel; download and install a newer maintainer build to
+update it. Windows may display a SmartScreen warning for the unsigned archive. macOS packages
+are not Developer ID signed or notarized, so Gatekeeper may require the tester to approve the
+downloaded application explicitly.
+
 Some distribution-built .NET SDKs report a distribution-specific runtime identifier. For
 example, Arch Linux packages can report `arch-x64`, while native NuGet assets use the portable
 Linux identifiers. If restore, build, or launch reports a missing runtime/native asset, select
