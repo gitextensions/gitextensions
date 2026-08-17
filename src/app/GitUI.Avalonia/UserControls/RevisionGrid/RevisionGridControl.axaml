@@ -28,10 +28,12 @@
       <ContentControl x:Name="revisionPage"
                       HorizontalContentAlignment="Stretch"
                       VerticalContentAlignment="Stretch">
+      <!-- Avalonia deviation: suppress its container focus adorner because the original borderless grid uses row selection as its focus cue. -->
       <ListBox x:Name="_gridView"
                Classes="revision-grid"
                SelectionMode="Multiple"
                Focusable="True"
+               FocusAdorner="{x:Null}"
                Background="{DynamicResource GitExtensionsPanelBackgroundBrush}"
                Foreground="{DynamicResource GitExtensionsControlForegroundBrush}">
       <ListBox.ContextMenu>

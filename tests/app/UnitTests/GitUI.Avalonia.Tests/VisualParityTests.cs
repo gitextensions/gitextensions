@@ -809,6 +809,40 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void Revision_grid_should_not_draw_an_outer_focus_frame()
+    {
+        RevisionGridControl control = new() { UICommandsSource = CreateRevisionGridCommandsSource() };
+        ListBox revisions = control.FindControl<ListBox>("_gridView")
+            ?? throw new InvalidOperationException("The revision list was not created.");
+        revisions.ItemsSource = new[] { new GitRevision(ObjectId.Random()) };
+        Window window = new() { Width = 700, Height = 180, Content = control };
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            revisions.Focus();
+            Dispatcher.UIThread.RunJobs();
+            revisions.IsFocused.Should().BeTrue();
+            revisions.FocusAdorner.Should().BeNull(
+                "the original borderless revision grid has no container-level focus frame");
+
+            revisions.SelectedIndex = 0;
+            ListBoxItem item = revisions.ContainerFromIndex(0) as ListBoxItem
+                ?? throw new InvalidOperationException("The revision row was not realized.");
+            item.Focus();
+            Dispatcher.UIThread.RunJobs();
+            item.IsFocused.Should().BeTrue();
+            revisions.FocusAdorner.Should().BeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     [Category("P8.6h.3b.2b")]
     [Category("P8.6h.3b.2b.2a")]
     public void Revision_grid_should_use_the_original_background_and_active_inactive_selection_colors()
