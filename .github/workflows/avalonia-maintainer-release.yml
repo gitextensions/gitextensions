@@ -42,8 +42,11 @@ jobs:
         restore-keys: |
           avalonia-maintainer-nuget-${{ runner.os }}-
 
+    - name: Restore
+      run: dotnet restore GitExtensions.Avalonia.slnx --force-evaluate
+
     - name: Build
-      run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1
+      run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1 --no-restore
 
     - name: Test startup and view construction
       run: >-
@@ -108,8 +111,11 @@ jobs:
           org.freedesktop.Platform//25.08 \
           org.freedesktop.Sdk//25.08
 
+    - name: Restore
+      run: dotnet restore GitExtensions.Avalonia.slnx --force-evaluate
+
     - name: Build
-      run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1
+      run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1 --no-restore
 
     - name: Test startup and view construction
       run: >-
@@ -141,17 +147,9 @@ jobs:
         retention-days: 14
 
   macos:
-    name: macOS ${{ matrix.rid }}
+    name: macOS Apple Silicon
     if: ${{ github.repository == 'begota98/gitextensions' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-        - runner: macos-15-intel
-          rid: osx-x64
-        - runner: macos-15
-          rid: osx-arm64
-    runs-on: ${{ matrix.runner }}
+    runs-on: macos-15
     timeout-minutes: 60
     permissions:
       contents: read
@@ -174,8 +172,11 @@ jobs:
         restore-keys: |
           avalonia-maintainer-nuget-${{ runner.os }}-${{ runner.arch }}-
 
+    - name: Restore
+      run: dotnet restore GitExtensions.Avalonia.slnx --force-evaluate
+
     - name: Build
-      run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1
+      run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1 --no-restore
 
     - name: Test startup and view construction
       run: >-
@@ -187,10 +188,10 @@ jobs:
     - name: Publish and package
       run: |
         label="${{ github.run_number }}-${GITHUB_SHA:0:8}"
-        publish="$RUNNER_TEMP/publish-${{ matrix.rid }}"
-        archive="$RUNNER_TEMP/GitExtensions-Avalonia-$label-${{ matrix.rid }}.app.zip"
+        publish="$RUNNER_TEMP/publish-osx-arm64"
+        archive="$RUNNER_TEMP/GitExtensions-Avalonia-$label-osx-arm64.app.zip"
         dotnet publish src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj \
-          -c Release -p:BuildAvalonia=true -r "${{ matrix.rid }}" --self-contained true -m:1 \
+          -c Release -p:BuildAvalonia=true -r osx-arm64 --self-contained true -m:1 \
           --output "$publish"
         pwsh eng/avalonia/Stage-MaintainerPublish.ps1 -PublishDirectory "$publish"
         bash eng/avalonia/package-macos-app.sh \
@@ -199,8 +200,8 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       with:
-        name: avalonia-maintainer-${{ matrix.rid }}
-        path: ${{ runner.temp }}/GitExtensions-Avalonia-*-${{ matrix.rid }}.app.zip
+        name: avalonia-maintainer-osx-arm64
+        path: ${{ runner.temp }}/GitExtensions-Avalonia-*-osx-arm64.app.zip
         if-no-files-found: error
         retention-days: 14
 
@@ -237,7 +238,7 @@ jobs:
 
         - Windows: extract the \`win-x64.zip\` archive and run \`GitExtensions.Avalonia.exe\`.
         - Linux: install with \`flatpak install --user ./GitExtensions-Avalonia-*-linux-x64.flatpak\`.
-        - macOS: extract the archive matching Intel (\`osx-x64\`) or Apple Silicon (\`osx-arm64\`) and open \`Git Extensions Avalonia.app\`. The app is not Developer ID signed or notarized, so Gatekeeper may require explicit approval.
+        - macOS: on Apple Silicon, extract the \`osx-arm64\` archive and open \`Git Extensions Avalonia.app\`. The app is not Developer ID signed or notarized, so Gatekeeper may require explicit approval.
 
         Verify downloads against \`SHA256SUMS.txt\`. Report problems in this fork and include this build label (\`$label\`) and operating system.
         EOF
