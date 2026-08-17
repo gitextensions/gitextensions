@@ -31,7 +31,7 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   # Single source of truth for the build version base, shared by CI and release.
-  BUILD_VERSION_BASE: 7.3.0
+  BUILD_VERSION_BASE: 7.2.1
 
 jobs:
   build:
