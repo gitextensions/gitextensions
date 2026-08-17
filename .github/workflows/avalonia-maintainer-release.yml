@@ -43,7 +43,9 @@ jobs:
           avalonia-maintainer-nuget-${{ runner.os }}-
 
     - name: Restore
-      run: dotnet restore GitExtensions.Avalonia.slnx -p:Configuration=Release --force-evaluate
+      run: |
+        dotnet restore GitExtensions.Avalonia.slnx --force-evaluate
+        dotnet restore GitExtensions.Avalonia.slnx -p:Configuration=Release --force-evaluate
 
     - name: Build
       run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1 --no-restore
@@ -112,7 +114,9 @@ jobs:
           org.freedesktop.Sdk//25.08
 
     - name: Restore
-      run: dotnet restore GitExtensions.Avalonia.slnx -p:Configuration=Release --force-evaluate
+      run: |
+        dotnet restore GitExtensions.Avalonia.slnx --force-evaluate
+        dotnet restore GitExtensions.Avalonia.slnx -p:Configuration=Release --force-evaluate
 
     - name: Build
       run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1 --no-restore
@@ -173,7 +177,9 @@ jobs:
           avalonia-maintainer-nuget-${{ runner.os }}-${{ runner.arch }}-
 
     - name: Restore
-      run: dotnet restore GitExtensions.Avalonia.slnx -p:Configuration=Release --force-evaluate
+      run: |
+        dotnet restore GitExtensions.Avalonia.slnx --force-evaluate
+        dotnet restore GitExtensions.Avalonia.slnx -p:Configuration=Release --force-evaluate
 
     - name: Build
       run: dotnet build GitExtensions.Avalonia.slnx -c Release -m:1 --no-restore
