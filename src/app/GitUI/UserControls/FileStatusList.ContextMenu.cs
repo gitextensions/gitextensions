@@ -5,6 +5,7 @@ using GitCommands.Git.Extended;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -226,13 +227,15 @@ partial class FileStatusList
     private void CopyAiPromptToClipboard_Click(object sender, EventArgs e)
     {
         List<FileStatusItem> selectedItems = [.. SelectedItems];
+        IGitModule module = Module;
         ThreadHelper.FileAndForget(CopyAiPromptToClipboardAsync);
         return;
 
         async Task CopyAiPromptToClipboardAsync()
         {
             StringBuilder prompt = new();
-            prompt.AppendLine(DetailedSettings.AiDiffPromptPrefix.ValueOrDefault(Module.GetEffectiveSettings()));
+            SettingsSource effectiveSettings = module.GetEffectiveSettings();
+            prompt.AppendLine(DetailedSettings.AiDiffPromptPrefix.ValueOrDefault(effectiveSettings));
             int lengthBeforeDiffs = prompt.Length;
 
             // Group by revision pair so each unique context is one git diff call.
@@ -252,14 +255,14 @@ partial class FileStatusList
                 List<FileStatusItem> untrackedItems = [.. group.Where(item => !item.Item.IsTracked)];
                 foreach (FileStatusItem item in untrackedItems)
                 {
-                    string fullPath = Path.Combine(Module.WorkingDir, item.Item.Name);
+                    string fullPath = Path.Combine(module.WorkingDir, item.Item.Name);
                     if (!File.Exists(fullPath))
                     {
                         continue;
                     }
 
                     string[] lines = await File.ReadAllLinesAsync(fullPath);
-                    prompt.AppendLine($"--- /dev/null");
+                    prompt.AppendLine("--- /dev/null");
                     prompt.AppendLine($"+++ b/{item.Item.Name}");
                     prompt.AppendLine($"@@ -0,0 +1,{lines.Length} @@");
                     foreach (string line in lines)
@@ -292,7 +295,7 @@ partial class FileStatusList
                         args.Add(item.Item.Name.QuoteNE());
                     }
 
-                    output = await Module.GitExecutable.GetOutputAsync(args);
+                    output = await module.GitExecutable.GetOutputAsync(args);
                 }
                 else
                 {
@@ -301,6 +304,7 @@ partial class FileStatusList
                     {
                         "--no-ext-diff",
                         "--no-color",
+                        "--unified=10", // some more context for the AI prompt
                         revArgs,
                         "--"
                     };
@@ -309,7 +313,7 @@ partial class FileStatusList
                         args.Add(item.Item.Name.QuoteNE());
                     }
 
-                    output = await Module.GitExecutable.GetOutputAsync(args);
+                    output = await module.GitExecutable.GetOutputAsync(args);
                 }
 
                 prompt.Append(output);
@@ -323,7 +327,7 @@ partial class FileStatusList
                 return;
             }
 
-            prompt.Append(DetailedSettings.AiDiffPromptSuffix.ValueOrDefault(Module.GetEffectiveSettings()));
+            prompt.Append(DetailedSettings.AiDiffPromptSuffix.ValueOrDefault(effectiveSettings));
             Clipboard.SetText(prompt.ToString());
             MessageBoxes.Show(this, string.Format(_aiPromptCopied.Text, prompt.Length), _aiCaption.Text, MessageBoxButtons.OK);
         }
