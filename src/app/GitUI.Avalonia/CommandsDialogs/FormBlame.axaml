@@ -1,0 +1,10 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:blame="clr-namespace:GitUI.Blame"
+        x:Class="GitUI.CommandsDialogs.FormBlame"
+        Width="784"
+        Height="762"
+        WindowStartupLocation="CenterOwner"
+        Title="File History">
+  <blame:BlameControl x:Name="blameControl1" Margin="4" />
+</Window>

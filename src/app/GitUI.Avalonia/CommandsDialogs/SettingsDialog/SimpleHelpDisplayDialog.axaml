@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.SettingsDialog.SimpleHelpDisplayDialog"
+        Width="299"
+        Height="439"
+        MinWidth="260"
+        MinHeight="240"
+        CanMinimize="False"
+        CanMaximize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="SimpleHelpDisplayDialog">
+  <TextBox x:Name="textBox1"
+           AcceptsReturn="True"
+           Background="{DynamicResource GitExtensionsKnownColorInfoBrush}"
+           Foreground="{DynamicResource GitExtensionsKnownColorInfoTextBrush}"
+           IsReadOnly="True"
+           TextWrapping="NoWrap"
+           ScrollViewer.HorizontalScrollBarVisibility="Auto"
+           ScrollViewer.VerticalScrollBarVisibility="Auto" />
+</Window>

@@ -1,0 +1,5 @@
+[Context]
+shared=network;ipc;
+sockets=wayland;ssh-auth;
+devices=dri;
+filesystems=host;

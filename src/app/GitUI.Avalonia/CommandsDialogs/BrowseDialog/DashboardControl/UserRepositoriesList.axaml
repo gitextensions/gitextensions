@@ -1,0 +1,95 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="DashboardRepositoryHoverBrush" Color="#DBEBF8" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="DashboardRepositoryHoverBrush" Color="#202020" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem:pointerover /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource DashboardRepositoryHoverBrush}" />
+    </Style>
+    <Style Selector="Button.dashboard-group-action">
+      <Setter Property="Padding" Value="4,1" />
+      <Setter Property="Background" Value="{StaticResource GitExtensionsTransparentBrush}" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+  </UserControl.Styles>
+  <Grid x:Name="pnlBody"
+        RowDefinitions="Auto,Auto,*"
+        Margin="20">
+    <Border x:Name="pnlHeader"
+            Margin="-20,-20,-20,12"
+            Padding="20,0,20,11">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock x:Name="lblRecentRepositories"
+                   FontSize="22"
+                   Text="Recent repositories"
+                   VerticalAlignment="Center" />
+        <compat:IconButton x:Name="mnuConfigure"
+                           Grid.Column="1"
+                           Classes="gitextensions-icon-button"
+                           Content="Recent repositories _settings"
+                           Icon="{x:Static properties:Images.Settings}"
+                           Padding="7,3"
+                           VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+    <TextBox x:Name="textBoxSearch"
+             compat:TranslationCompat.TranslateWatermark="False"
+             Grid.Row="1"
+             Margin="0,0,0,10" />
+    <ListBox x:Name="listView1"
+             Grid.Row="2"
+             Background="{DynamicResource ThemeBackgroundBrush}"
+             BorderThickness="0"
+             SelectionMode="Single">
+      <ListBox.ContextMenu>
+        <ContextMenu x:Name="contextMenuStripRepository">
+          <MenuItem x:Name="tsmiOpenFolder"
+                    Header="Show in folder"
+                    Icon="{x:Static properties:Images.BrowseFileExplorer}" />
+          <Separator x:Name="toolStripMenuItem1" />
+          <MenuItem x:Name="tsmiCategories"
+                    Header="Categories">
+            <MenuItem x:Name="tsmiCategoryNone"
+                      Header="(none)" />
+            <MenuItem x:Name="tsmiCategoryAdd"
+                      Header="Add new..."
+                      Icon="{x:Static properties:Images.BulletAdd}" />
+          </MenuItem>
+          <Separator x:Name="toolStripMenuItem2" />
+          <MenuItem x:Name="tsmiRemoveFromList"
+                    Header="Remove project from the list" />
+          <MenuItem x:Name="tsmiRemoveMissingReposFromList"
+                    Header="Remove missing projects from the list" />
+        </ContextMenu>
+      </ListBox.ContextMenu>
+    </ListBox>
+    <Border IsVisible="False">
+      <Border.ContextMenu>
+        <ContextMenu x:Name="contextMenuStripCategory">
+          <MenuItem x:Name="tsmiCategoryRename"
+                    Header="Rename category"
+                    Icon="{x:Static properties:Images.FileStatusModified}" />
+          <MenuItem x:Name="tsmiCategoryDelete"
+                    Header="Delete category"
+                    Icon="{x:Static properties:Images.StarRemove}" />
+          <MenuItem x:Name="tsmiCategoryClear"
+                    Header="Clear all recent repositories"
+                    Icon="{x:Static properties:Images.CleanupRepo}" />
+        </ContextMenu>
+      </Border.ContextMenu>
+    </Border>
+  </Grid>
+</UserControl>

@@ -85,6 +85,7 @@ public sealed class ExecutableExtensionsTests
     }
 
     // Process argument upper bound is actually (short.MaxValue - 1)
+    [Platform(Include = "Win")]
     [TestCase(32766, 32766, 32767, 2, new int[] { 1, 1 })]
     [TestCase(32764, 1, 32767, 1, new int[] { 2 })]
     public void RunBatchCommand_can_handle_max_length_arguments(int arg1Len, int arg2Len,

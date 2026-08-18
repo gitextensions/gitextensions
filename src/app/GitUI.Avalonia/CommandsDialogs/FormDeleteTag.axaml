@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormDeleteTag"
+        Width="500" Height="210"
+        MinWidth="470" MinHeight="210"
+        MaxWidth="1000" MaxHeight="210"
+        WindowStartupLocation="CenterOwner"
+        Title="Delete tag">
+  <Grid Classes="gitextensions-dialog-main"
+        ColumnDefinitions="Auto,*,Auto"
+        RowDefinitions="30,32,30,30,*,24"
+        ColumnSpacing="10">
+    <TextBlock x:Name="label1"
+               Classes="gitextensions-dialog-label"
+               Text="Select tag" />
+    <ComboBox x:Name="Tags"
+              Grid.Column="1"
+              HorizontalAlignment="Stretch"
+              IsEditable="True" />
+    <Button x:Name="Ok"
+            Classes="gitextensions-dialog-action"
+            Grid.Column="2"
+            Content="Delete"
+            IsDefault="True" />
+
+    <TextBlock x:Name="label2"
+               Classes="gitextensions-dialog-label"
+               Grid.Row="1"
+               Grid.ColumnSpan="3"
+               Text="This will delete the selected tag from the (local) repository." />
+
+    <CheckBox x:Name="deleteTag"
+              Grid.Row="2"
+              Grid.ColumnSpan="3"
+              Content="Delete tag also from the following remote(s):"
+              VerticalAlignment="Center" />
+
+    <usercontrols:RemotesComboboxControl x:Name="remotesComboboxControl1"
+                                         Grid.Row="3"
+                                         Grid.ColumnSpan="2"
+                                         Width="270"
+                                         HorizontalAlignment="Left"
+                                         IsEnabled="False"
+                                         AllowMultiselect="False" />
+
+    <Grid x:Name="flowLayoutPanel1"
+          Grid.Row="5"
+          Grid.ColumnSpan="3"
+          ColumnDefinitions="Auto,*"
+          ColumnSpacing="6">
+      <usercontrols:GotoUserManualControl x:Name="gotoUserManualControl1"
+                                          ManualSectionAnchorName="delete-tag"
+                                          ManualSectionSubfolder="tag" />
+      <TextBlock x:Name="label3"
+                 Classes="gitextensions-dialog-label"
+                 Grid.Column="1"
+                 FontSize="11.5"
+                 Text="(includes information about deleting tags which are already pushed)"
+                 TextTrimming="CharacterEllipsis" />
+    </Grid>
+  </Grid>
+</Window>

@@ -1,0 +1,89 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormMergeSubmodule"
+        Width="595"
+        Height="254"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Submodule conflict">
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto"
+        RowSpacing="6">
+    <StackPanel Orientation="Horizontal"
+                Spacing="6">
+      <TextBlock x:Name="label2"
+                 Text="There is a conflict on the submodule:" />
+      <TextBlock x:Name="lbSubmodule"
+                 Text="Submodule" />
+    </StackPanel>
+
+    <Grid Grid.Row="1"
+          ColumnDefinitions="80,*"
+          ColumnSpacing="8">
+      <TextBlock x:Name="label1"
+                 VerticalAlignment="Center"
+                 Text="Base:" />
+      <TextBox x:Name="tbBase"
+               Grid.Column="1"
+               IsReadOnly="True" />
+    </Grid>
+
+    <Grid Grid.Row="2"
+          ColumnDefinitions="80,*"
+          ColumnSpacing="8">
+      <TextBlock x:Name="label3"
+                 VerticalAlignment="Center"
+                 Text="Local:" />
+      <TextBox x:Name="tbLocal"
+               Grid.Column="1"
+               IsReadOnly="True" />
+    </Grid>
+
+    <Grid Grid.Row="3"
+          ColumnDefinitions="80,*"
+          ColumnSpacing="8">
+      <TextBlock x:Name="label4"
+                 VerticalAlignment="Center"
+                 Text="Remote:" />
+      <TextBox x:Name="tbRemote"
+               Grid.Column="1"
+               IsReadOnly="True" />
+    </Grid>
+
+    <Grid Grid.Row="4"
+          ColumnDefinitions="80,*,34"
+          ColumnSpacing="8">
+      <TextBlock x:Name="label5"
+                 VerticalAlignment="Center"
+                 Text="Current:" />
+      <TextBox x:Name="tbCurrent"
+               Grid.Column="1"
+               IsReadOnly="True" />
+      <compat:IconButton x:Name="btRefresh"
+                         Classes="gitextensions-icon-only"
+                         Grid.Column="2"
+                         Width="34"
+                         Icon="{x:Static properties:Images.ReloadRevisions}" />
+    </Grid>
+
+    <Grid Grid.Row="6"
+          ColumnDefinitions="176,181,190"
+          ColumnSpacing="8">
+      <compat:IconButton x:Name="btOpenSubmodule"
+                         Classes="gitextensions-dialog-action"
+                         Icon="{x:Static properties:Images.FolderSubmodule}"
+                         Content="Open submodule"
+                         IsDefault="True" />
+      <Button x:Name="btCheckoutBranch"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="1"
+              Content="Checkout Branch" />
+      <Button x:Name="btStageCurrent"
+              Classes="gitextensions-dialog-action"
+              Grid.Column="2"
+              Content="Stage Current" />
+    </Grid>
+  </Grid>
+</Window>

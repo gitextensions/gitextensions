@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.UserControls.Settings.SettingsCheckBox"
+             d:DesignWidth="104"
+             d:DesignHeight="17">
+  <UserControl.Styles>
+    <Style Selector="CheckBox#checkBox /template/ ContentPresenter">
+      <Setter Property="Margin" Value="3,0,8,0" />
+    </Style>
+  </UserControl.Styles>
+  <StackPanel x:Name="tableLayoutPanel"
+              Orientation="Horizontal">
+    <CheckBox x:Name="checkBox"
+              Margin="0,0,4.8,0"
+              Content="Settings text" />
+    <Image x:Name="pictureBox"
+           Classes="gitextensions-icon-16"
+           Cursor="Hand"
+           IsVisible="False"
+           Source="{x:Static properties:Images.Information}" />
+  </StackPanel>
+</UserControl>

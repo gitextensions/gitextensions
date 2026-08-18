@@ -1,0 +1,12 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:editor="using:GitUI.Editor"
+        x:Class="GitUI.HelperDialogs.FormEdit"
+        Width="733"
+        Height="571"
+        MinWidth="420"
+        MinHeight="280"
+        WindowStartupLocation="CenterOwner"
+        Title="View">
+  <editor:FileViewer x:Name="Viewer" />
+</Window>

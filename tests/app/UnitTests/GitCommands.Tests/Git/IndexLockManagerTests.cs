@@ -9,7 +9,8 @@ namespace GitCommandsTests.Git;
 public class IndexLockManagerTests
 {
     private const string IndexLock = "index.lock";
-    private readonly string _workingDir = @"c:\dev\repo";
+    // The manager derives lock paths natively, so the working directory must be a native one.
+    private readonly string _workingDir = OperatingSystem.IsWindows() ? @"c:\dev\repo" : "/dev/repo";
     private string _gitWorkingDir = null!;
     private string _indexLockFile = null!;
     private string _gitFile = null!;
@@ -97,18 +98,17 @@ public class IndexLockManagerTests
         _file.Received(1).Delete(_indexLockFile);
     }
 
-    [Platform(Include = "Win")]
     [Test]
     public void UnlockIndex_should_delete_submodule_locks_if_requested()
     {
         _file.Exists(_indexLockFile).Returns(true);
 
-        string submoduleGitHubWorkingDir = $@"{_workingDir}\Externals\Git.hub\";
-        string submoduleNbugWorkingDir = $@"{_workingDir}\Externals\NBug\";
-        string submoduleGitHubWorkingDirGitDir = $@"{_gitWorkingDir}\modules\Externals\Git.hub\";
-        string submoduleNBugWorkingDirGitDir = $@"{_gitWorkingDir}\modules\Externals\NBug\";
-        string submoduleGitHubIndexLock = $@"{_gitWorkingDir}\modules\Externals\Git.hub\{IndexLock}";
-        string submoduleNBugIndexLock = $@"{_gitWorkingDir}\modules\Externals\NBug\{IndexLock}";
+        string submoduleGitHubWorkingDir = Path.Combine(_workingDir, "Externals", "Git.hub").EnsureTrailingPathSeparator();
+        string submoduleNbugWorkingDir = Path.Combine(_workingDir, "Externals", "NBug").EnsureTrailingPathSeparator();
+        string submoduleGitHubWorkingDirGitDir = Path.Combine(_gitWorkingDir, "modules", "Externals", "Git.hub").EnsureTrailingPathSeparator();
+        string submoduleNBugWorkingDirGitDir = Path.Combine(_gitWorkingDir, "modules", "Externals", "NBug").EnsureTrailingPathSeparator();
+        string submoduleGitHubIndexLock = Path.Combine(submoduleGitHubWorkingDirGitDir, IndexLock);
+        string submoduleNBugIndexLock = Path.Combine(submoduleNBugWorkingDirGitDir, IndexLock);
 
         _module.GetSubmodulesLocalPaths().Returns(new[] { "Externals/Git.hub", "Externals/NBug" });
         _module.GetSubmoduleFullPath(Arg.Any<string>())

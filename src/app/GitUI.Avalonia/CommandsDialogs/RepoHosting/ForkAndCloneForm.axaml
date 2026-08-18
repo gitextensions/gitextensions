@@ -1,0 +1,232 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm"
+        Width="744"
+        Height="552"
+        MinWidth="560"
+        MinHeight="420"
+        WindowStartupLocation="CenterOwner"
+        Title="Remote repository fork and clone">
+  <Grid x:Name="tableLayoutPanel2"
+        RowDefinitions="*,175,40">
+    <TabControl x:Name="tabControl"
+                Margin="3">
+      <TabItem x:Name="myReposPage"
+               Header="My repositories">
+        <Grid x:Name="tableLayoutPanel5"
+              ColumnDefinitions="7*,3*"
+              Margin="3">
+          <Grid RowDefinitions="24,*">
+            <Grid ColumnDefinitions="*,45,50,45">
+              <Border x:Name="columnHeaderMyReposName"
+                      Classes="gitextensions-section">
+                <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
+              </Border>
+              <Border x:Name="columnHeaderMyReposIsFork"
+                      Grid.Column="1"
+                      Classes="gitextensions-section">
+                <TextBlock Classes="gitextensions-list-header-text"
+                           Text="Is fork"
+                           TextAlignment="Center" />
+              </Border>
+              <Border x:Name="columnHeaderMyReposForks"
+                      Grid.Column="2"
+                      Classes="gitextensions-section">
+                <TextBlock Classes="gitextensions-list-header-text"
+                           Text="# Forks"
+                           TextAlignment="Right" />
+              </Border>
+              <Border x:Name="columnHeaderMyReposIsPrivate"
+                      Grid.Column="3"
+                      Classes="gitextensions-section">
+                <TextBlock Classes="gitextensions-list-header-text"
+                           Text="Private"
+                           TextAlignment="Center" />
+              </Border>
+            </Grid>
+            <ListBox x:Name="myReposLV"
+                     Grid.Row="1"
+                     SelectionMode="Single" />
+          </Grid>
+          <TextBlock x:Name="helpTextLbl"
+                     Grid.Column="1"
+                     Margin="12"
+                     VerticalAlignment="Center"
+                     TextAlignment="Center"
+                     TextWrapping="Wrap"
+                     Text="If you want to fork a repository owned by somebody else, go to the Search for repositories tab." />
+        </Grid>
+      </TabItem>
+
+      <TabItem x:Name="searchReposPage"
+               Header="Search for repositories">
+        <Grid x:Name="tableLayoutPanel1"
+              RowDefinitions="35,*,30"
+              Margin="3">
+          <StackPanel x:Name="flowLayoutPanel2"
+                      Orientation="Horizontal"
+                      Spacing="6">
+            <TextBox x:Name="searchTB"
+                     Width="198" />
+            <Button x:Name="searchBtn"
+                    Classes="gitextensions-dialog-action"
+                    Width="93"
+                    Content="Search" />
+            <TextBlock x:Name="orLbl"
+                       VerticalAlignment="Center"
+                       Text="or" />
+            <Button x:Name="getFromUserBtn"
+                    Classes="gitextensions-dialog-action"
+                    Width="124"
+                    Content="Get from user" />
+          </StackPanel>
+
+          <Grid x:Name="tableLayoutPanel3"
+                Grid.Row="1"
+                ColumnDefinitions="3*,2*">
+            <Grid RowDefinitions="24,*">
+              <Grid ColumnDefinitions="*,110,41,40">
+                <Border x:Name="columnHeaderSearchName"
+                        Classes="gitextensions-section">
+                  <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
+                </Border>
+                <Border x:Name="columnHeaderSearchOwner"
+                        Grid.Column="1"
+                        Classes="gitextensions-section">
+                  <TextBlock Classes="gitextensions-list-header-text" Text="Owner" />
+                </Border>
+                <Border x:Name="columnHeaderSearchIsFork"
+                        Grid.Column="2"
+                        Classes="gitextensions-section">
+                  <TextBlock Classes="gitextensions-list-header-text"
+                             Text="Is fork"
+                             TextAlignment="Center" />
+                </Border>
+                <Border x:Name="columnHeaderSearchForks"
+                        Grid.Column="3"
+                        Classes="gitextensions-section">
+                  <TextBlock Classes="gitextensions-list-header-text"
+                             Text="# Forks"
+                             TextAlignment="Right" />
+                </Border>
+              </Grid>
+              <ListBox x:Name="searchResultsLV"
+                       Grid.Row="1"
+                       SelectionMode="Single" />
+            </Grid>
+
+            <Grid x:Name="tableLayoutPanel4"
+                  Grid.Column="1"
+                  RowDefinitions="Auto,*,Auto"
+                  Margin="6,0,0,0">
+              <TextBlock x:Name="descriptionLbl"
+                         Text="Description:" />
+              <TextBox x:Name="searchResultItemDescription"
+                       Grid.Row="1"
+                       IsReadOnly="True"
+                       AcceptsReturn="True"
+                       TextWrapping="Wrap" />
+              <Button x:Name="openGitupPageBtn"
+                      Grid.Row="2"
+                      Classes="gitextensions-dialog-action"
+                      HorizontalAlignment="Left"
+                      Content="Open github page" />
+            </Grid>
+          </Grid>
+
+          <Button x:Name="forkBtn"
+                  Grid.Row="2"
+                  Classes="gitextensions-dialog-action"
+                  Width="150"
+                  HorizontalAlignment="Left"
+                  Content="Fork!" />
+        </Grid>
+      </TabItem>
+    </TabControl>
+
+    <HeaderedContentControl x:Name="cloneSetupGB"
+                            Grid.Row="1"
+                            Classes="gitextensions-group-box"
+                            Header="Clone"
+                            Margin="4">
+      <Grid RowDefinitions="Auto,30,64,30"
+            ColumnDefinitions="195,215,*">
+        <TextBlock x:Name="label1"
+                   Text="Destination folder:" />
+        <TextBox x:Name="destinationTB"
+                 Grid.Row="1"
+                 Grid.ColumnSpan="2"
+                 Margin="0,2,6,4" />
+        <Button x:Name="browseForCloneToDirbtn"
+                Grid.Row="1"
+                Grid.Column="2"
+                Width="102"
+                HorizontalAlignment="Left"
+                Content="..." />
+
+        <TextBlock x:Name="createDirectoryLbl"
+                   Grid.Row="2"
+                   Text="Create directory:" />
+        <TextBlock x:Name="label3"
+                   Grid.Row="2"
+                   Grid.Column="1"
+                   Text="Add upstream remote as:" />
+        <TextBlock x:Name="ProtocolLabel"
+                   Grid.Row="2"
+                   Grid.Column="2"
+                   Text="Protocol:" />
+        <TextBox x:Name="createDirTB"
+                 Grid.Row="2"
+                 Margin="0,18,6,22" />
+        <ComboBox x:Name="addUpstreamRemoteAsCB"
+                  Grid.Row="2"
+                  Grid.Column="1"
+                  Margin="0,18,6,22"
+                  IsEditable="True" />
+        <ComboBox x:Name="ProtocolDropdownList"
+                  Grid.Row="2"
+                  Grid.Column="2"
+                  Width="121"
+                  Margin="0,18,0,22"
+                  HorizontalAlignment="Left" />
+        <TextBlock x:Name="cloneInfoText"
+                   Grid.Row="2"
+                   Grid.ColumnSpan="3"
+                   Margin="0,46,0,0"
+                   TextWrapping="Wrap" />
+
+        <StackPanel Grid.Row="3"
+                    Grid.ColumnSpan="3"
+                    Orientation="Horizontal"
+                    Spacing="8">
+          <TextBlock x:Name="depthLabel"
+                     VerticalAlignment="Center"
+                     Text="Limit Depth:" />
+          <NumericUpDown x:Name="depthUpDown"
+                         Width="100"
+                         Minimum="0"
+                         Maximum="999"
+                         Value="0" />
+        </StackPanel>
+      </Grid>
+    </HeaderedContentControl>
+
+    <StackPanel x:Name="flowLayoutPanel1"
+                Grid.Row="2"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="6"
+                Margin="3">
+      <Button x:Name="cloneBtn"
+              Classes="gitextensions-dialog-action"
+              Width="120"
+              Height="30"
+              Content="Clone" />
+      <Button x:Name="_NO_TRANSLATE_closeBtn"
+              Classes="gitextensions-dialog-action"
+              Width="120"
+              Height="30"
+              Content="Close" />
+    </StackPanel>
+  </Grid>
+</Window>

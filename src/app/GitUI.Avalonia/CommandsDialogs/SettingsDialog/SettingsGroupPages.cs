@@ -1,0 +1,34 @@
+using GitCommands;
+using GitExtensions.Extensibility.Settings;
+
+namespace GitUI.CommandsDialogs.SettingsDialog;
+
+public class GitSettingsGroup : GroupSettingsPage
+{
+    public GitSettingsGroup()
+        : base("Git")
+    {
+    }
+
+    public static SettingsPageReference GetPageReference() => new SettingsPageReferenceByType(typeof(GitSettingsGroup));
+}
+
+public class GitExtensionsSettingsGroup : GroupSettingsPage
+{
+    public GitExtensionsSettingsGroup()
+        : base(AppSettings.ApplicationName)
+    {
+    }
+
+    public static SettingsPageReference GetPageReference() => new SettingsPageReferenceByType(typeof(GitExtensionsSettingsGroup));
+}
+
+public class PluginsSettingsGroup : GroupSettingsPage
+{
+    public PluginsSettingsGroup()
+        : base("Plugins")
+    {
+    }
+
+    public static SettingsPageReference GetPageReference() => new SettingsPageReferenceByType(typeof(PluginsSettingsGroup));
+}

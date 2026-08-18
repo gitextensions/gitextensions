@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:GitUI.SpellChecker"
+             x:Class="GitUI.SpellChecker.EditNetSpell"
+             d:DesignWidth="386"
+             d:DesignHeight="336">
+  <UserControl.Styles>
+    <Style Selector="ListBox#AutoComplete > ListBoxItem">
+      <Setter Property="Height" Value="15" />
+      <Setter Property="MinHeight" Value="15" />
+      <Setter Property="Padding" Value="2,0" />
+    </Style>
+    <Style Selector="ListBox#AutoComplete:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
+    </Style>
+    <Style Selector="TextBox#TextBox:pointerover /template/ Border#PART_BorderElement,
+                     TextBox#TextBox:focus /template/ Border#PART_BorderElement,
+                     TextBox#TextBox:disabled /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="TextBox#TextBox:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    </Style>
+  </UserControl.Styles>
+  <!-- Avalonia has no ambient UserControl size, so preserve the original Designer surface dimensions. -->
+  <Grid>
+    <TextBox x:Name="TextBox"
+             AcceptsReturn="True"
+             AcceptsTab="True"
+             Background="{DynamicResource GitExtensionsCommitEditorBackgroundBrush}"
+             BorderBrush="Transparent"
+             BorderThickness="0"
+             FocusAdorner="{x:Null}"
+             HorizontalContentAlignment="Left"
+             Padding="0"
+             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             VerticalContentAlignment="Top">
+      <TextBox.ContextMenu>
+        <ContextMenu x:Name="SpellCheckContextMenu" />
+      </TextBox.ContextMenu>
+    </TextBox>
+    <local:SpellCheckAdorner x:Name="SpellCheckAdorner"
+                             IsHitTestVisible="False" />
+    <Canvas Panel.ZIndex="2">
+      <ListBox x:Name="AutoComplete"
+               Canvas.Left="0"
+               Canvas.Top="0"
+               Width="120"
+               Height="92"
+               Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+               BorderBrush="{DynamicResource GitExtensionsControlBorderBrush}"
+               BorderThickness="1"
+               Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+               IsHitTestVisible="True"
+               IsVisible="False"
+               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+               ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    </Canvas>
+  </Grid>
+</UserControl>

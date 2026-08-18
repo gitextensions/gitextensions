@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:properties="using:GitUI.Properties"
+             x:Class="GitUI.UserControls.InteractiveGitActionControl"
+             d:DesignWidth="424"
+             d:DesignHeight="33.6"
+             Height="33.6"
+             Background="{DynamicResource GitExtensionsInteractiveActionBackgroundBrush}">
+  <Grid ColumnDefinitions="28,*,Auto">
+    <Image x:Name="IconBox"
+           Classes="gitextensions-icon-16"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"
+           Source="{x:Static properties:Images.Information}" />
+    <TextBlock x:Name="TextLabel"
+               Grid.Column="1"
+               VerticalAlignment="Center"
+               Foreground="{DynamicResource GitExtensionsInteractiveActionForegroundBrush}" />
+    <StackPanel x:Name="ButtonContainer"
+                Grid.Column="2"
+                Margin="0,0,1.6,0"
+                Orientation="Horizontal"
+                Spacing="0">
+      <Button x:Name="ResolveButton" Width="75.2" Height="23.2" Margin="3.2,4.8,3.2,0" Content="Resolve..." />
+      <Button x:Name="ContinueButton" Width="75.2" Height="23.2" Margin="3.2,4.8,3.2,0" Content="Continue" />
+      <Button x:Name="AbortButton" Width="75.2" Height="23.2" Margin="3.2,4.8,3.2,0" Content="Abort" />
+      <Button x:Name="MoreButton" Width="75.2" Height="23.2" Margin="3.2,4.8,3.2,0" Content="M_ore..." />
+    </StackPanel>
+  </Grid>
+</UserControl>

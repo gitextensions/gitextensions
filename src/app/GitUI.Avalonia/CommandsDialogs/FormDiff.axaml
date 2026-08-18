@@ -1,0 +1,107 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:editor="using:GitUI.Editor"
+        xmlns:gitui="using:GitUI"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormDiff"
+        Width="1042"
+        Height="685"
+        Title="Diff">
+  <Grid x:Name="mainLayoutPanel"
+        RowDefinitions="Auto,*">
+    <Grid x:Name="settingsLayoutPanel"
+          Margin="3"
+          ColumnDefinitions="*,Auto,*"
+          RowDefinitions="Auto,Auto">
+      <GroupBox x:Name="firstCommitGroup"
+                Grid.Column="0"
+                Header="BASE">
+        <StackPanel x:Name="firstCommitPanel"
+                    Orientation="Horizontal">
+          <TextBlock x:Name="lblFirstCommit"
+                     MinWidth="200"
+                     Padding="3,7"
+                     VerticalAlignment="Center"
+                     Background="{DynamicResource GitExtensionsAppColorAnsiTerminalRedBackNormalBrush}" />
+          <Button x:Name="btnAnotherFirstBranch"
+                  Width="28"
+                  Height="28"
+                  Padding="3">
+            <Image Classes="gitextensions-icon-16"
+                   Source="{x:Static properties:Images.BranchCheckout}" />
+          </Button>
+          <Button x:Name="btnAnotherFirstCommit"
+                  Width="28"
+                  Height="28"
+                  Padding="3">
+            <Image Classes="gitextensions-icon-16"
+                   Source="{x:Static properties:Images.SelectRevision}" />
+          </Button>
+        </StackPanel>
+      </GroupBox>
+
+      <Button x:Name="btnSwap"
+              Grid.Column="1"
+              Margin="10,15,10,0"
+              Width="28"
+              Height="28"
+              Padding="3"
+              VerticalAlignment="Top">
+        <Image Classes="gitextensions-icon-16"
+               Source="{x:Static properties:Images.Renamed}" />
+      </Button>
+
+      <GroupBox x:Name="secondCommitGroup"
+                Grid.Column="2"
+                Header="Compare">
+        <StackPanel x:Name="secondCommitPanel"
+                    Orientation="Horizontal">
+          <TextBlock x:Name="lblSecondCommit"
+                     MinWidth="200"
+                     Padding="3,7"
+                     VerticalAlignment="Center"
+                     Background="{DynamicResource GitExtensionsAppColorAnsiTerminalGreenBackNormalBrush}" />
+          <Button x:Name="btnAnotherSecondBranch"
+                  Width="28"
+                  Height="28"
+                  Padding="3">
+            <Image Classes="gitextensions-icon-16"
+                   Source="{x:Static properties:Images.BranchCheckout}" />
+          </Button>
+          <Button x:Name="btnAnotherSecondCommit"
+                  Width="28"
+                  Height="28"
+                  Padding="3">
+            <Image Classes="gitextensions-icon-16"
+                   Source="{x:Static properties:Images.SelectRevision}" />
+          </Button>
+        </StackPanel>
+      </GroupBox>
+
+      <StackPanel x:Name="diffOptionsPanel"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="3"
+                  Margin="3"
+                  Orientation="Horizontal"
+                  Spacing="8">
+        <CheckBox x:Name="ckCompareToMergeBase"
+                  VerticalAlignment="Center"
+                  Content="Compare to merge _base" />
+        <Button x:Name="btnCompareDirectoriesWithDiffTool"
+                Padding="2,0"
+                Content="Open diff using _directory diff tool" />
+      </StackPanel>
+    </Grid>
+
+    <Grid x:Name="splitContainer1"
+          Grid.Row="1"
+          Margin="3,0,3,3"
+          ColumnDefinitions="1*,4,2*">
+      <gitui:FileStatusList x:Name="DiffFiles" />
+      <GridSplitter Grid.Column="1"
+                    ResizeDirection="Columns" />
+      <editor:FileViewer x:Name="DiffText"
+                         Grid.Column="2" />
+    </Grid>
+  </Grid>
+</Window>

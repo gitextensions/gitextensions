@@ -1,0 +1,141 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:editor="using:GitUI.Editor"
+        xmlns:gitui="using:GitUI"
+        xmlns:spellChecker="using:GitUI.SpellChecker"
+        x:Class="GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm"
+        Width="754"
+        Height="511"
+        MinWidth="620"
+        MinHeight="420"
+        WindowStartupLocation="CenterOwner"
+        Title="View Pull Requests">
+  <Grid x:Name="splitContainer2"
+        RowDefinitions="146,6,*">
+    <Grid x:Name="tableLayoutPanel2"
+          RowDefinitions="32,*">
+      <StackPanel x:Name="flowLayoutPanel2"
+                  Margin="3"
+                  Orientation="Horizontal"
+                  Spacing="6">
+        <TextBlock x:Name="_chooseRepo"
+                   VerticalAlignment="Center"
+                   Text="Choose repository:" />
+        <ComboBox x:Name="_selectHostedRepoCB"
+                  Width="258"
+                  VerticalContentAlignment="Center" />
+      </StackPanel>
+
+      <Grid x:Name="tableLayoutPanel3"
+            Grid.Row="1"
+            ColumnDefinitions="*,160">
+        <Grid RowDefinitions="24,*">
+          <Grid ColumnDefinitions="42,*,90,150,170">
+            <Border x:Name="columnHeaderId"
+                    Classes="gitextensions-section">
+              <TextBlock Classes="gitextensions-list-header-text"
+                         Text="#"
+                         TextAlignment="Right" />
+            </Border>
+            <Border x:Name="columnHeaderHeading"
+                    Grid.Column="1"
+                    Classes="gitextensions-section">
+              <TextBlock Classes="gitextensions-list-header-text"
+                         Text="Heading" />
+            </Border>
+            <Border x:Name="columnHeaderBy"
+                    Grid.Column="2"
+                    Classes="gitextensions-section">
+              <TextBlock Classes="gitextensions-list-header-text"
+                         Text="By" />
+            </Border>
+            <Border x:Name="columnHeaderCreated"
+                    Grid.Column="3"
+                    Classes="gitextensions-section">
+              <TextBlock Classes="gitextensions-list-header-text"
+                         Text="Created" />
+            </Border>
+            <Border x:Name="columnHeaderBranch"
+                    Grid.Column="4"
+                    Classes="gitextensions-section">
+              <TextBlock Classes="gitextensions-list-header-text"
+                         Text="Will be fetched to branch" />
+            </Border>
+          </Grid>
+          <ListBox x:Name="_pullRequestsList"
+                   Grid.Row="1"
+                   SelectionMode="Single" />
+        </Grid>
+
+        <StackPanel x:Name="flowLayoutPanel3"
+                    Grid.Column="1"
+                    Margin="3,0,3,3"
+                    Spacing="3">
+          <Button x:Name="_fetchBtn"
+                  Classes="gitextensions-dialog-action"
+                  HorizontalAlignment="Stretch"
+                  Content="Fetch to pr/ branch" />
+          <Button x:Name="_addAndFetchBtn"
+                  Classes="gitextensions-dialog-action"
+                  HorizontalAlignment="Stretch"
+                  Content="Add remote and fetch" />
+          <Button x:Name="_closePullRequestBtn"
+                  Classes="gitextensions-dialog-action"
+                  HorizontalAlignment="Stretch"
+                  Content="Close pull request" />
+        </StackPanel>
+      </Grid>
+    </Grid>
+
+    <GridSplitter Grid.Row="1"
+                  ResizeDirection="Rows" />
+
+    <TabControl x:Name="tabControl1"
+                Grid.Row="2"
+                Margin="3,0,3,3">
+      <TabItem x:Name="tabPage1"
+               Header="Diffs">
+        <Grid x:Name="splitContainer3"
+              RowDefinitions="116,6,*">
+          <Border BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                  BorderThickness="1">
+            <gitui:FileStatusList x:Name="_fileStatusList" />
+          </Border>
+          <GridSplitter Grid.Row="1"
+                        ResizeDirection="Rows" />
+          <Border Grid.Row="2"
+                  BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
+                  BorderThickness="1">
+            <editor:FileViewer x:Name="_diffViewer" />
+          </Border>
+        </Grid>
+      </TabItem>
+
+      <TabItem x:Name="tabPage2"
+               Header="Comments">
+        <Grid x:Name="tableLayoutPanel1"
+              RowDefinitions="*,82,30">
+          <ListBox x:Name="_discussionWB"
+                   SelectionMode="Single" />
+          <spellChecker:EditNetSpell x:Name="_postCommentText"
+                                     Grid.Row="1"
+                                     Margin="0,3" />
+          <StackPanel x:Name="flowLayoutPanel1"
+                      Grid.Row="2"
+                      HorizontalAlignment="Right"
+                      Orientation="Horizontal"
+                      Spacing="6">
+            <Button x:Name="_refreshCommentsBtn"
+                    Classes="gitextensions-dialog-action"
+                    Width="90"
+                    Content="Refresh" />
+            <Button x:Name="_postComment"
+                    Classes="gitextensions-dialog-action-primary"
+                    Width="131"
+                    Content="Post comment" />
+          </StackPanel>
+        </Grid>
+      </TabItem>
+    </TabControl>
+  </Grid>
+</Window>

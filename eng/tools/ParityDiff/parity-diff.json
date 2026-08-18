@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "defaults": {
+    "geometryDip": 0.5,
+    "fontSizePoints": 0.01,
+    "borderWidthDip": 0.01,
+    "cornerRadiusDip": 0.01,
+    "pixels": {
+      "minimumSsim": 0.99,
+      "maximumDifferentPixelFraction": 0.01,
+      "maximumChannelDelta": 8
+    }
+  },
+  "components": {
+    "GitUI.ScriptsEngine.FormFilePrompt": {
+      "geometryDip": 0.5,
+      "fontSizePoints": 0.01,
+      "borderWidthDip": 0.01,
+      "cornerRadiusDip": 0.01,
+      "pixels": {
+        "minimumSsim": 0.99,
+        "maximumDifferentPixelFraction": 0.01,
+        "maximumChannelDelta": 8
+      }
+    }
+  }
+}

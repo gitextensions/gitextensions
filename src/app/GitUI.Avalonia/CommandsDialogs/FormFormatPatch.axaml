@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="using:GitUI"
+        x:Class="GitUI.CommandsDialogs.FormFormatPatch"
+        Width="1030"
+        Height="665"
+        MinWidth="558"
+        MinHeight="395"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Title="Format patch">
+  <Grid x:Name="tableLayoutPanelForm"
+        Margin="4"
+        ColumnDefinitions="*,Auto"
+        RowDefinitions="Auto,*,Auto"
+        RowSpacing="4">
+    <Grid x:Name="tableLayoutPanelSaveTo"
+          Grid.ColumnSpan="2"
+          ColumnDefinitions="Auto,*,Auto"
+          ColumnSpacing="4">
+      <Label x:Name="lblPatches"
+             Padding="0,6,0,0"
+             VerticalAlignment="Top"
+             Content="_Patch:"
+             Target="{Binding #OutputPath}" />
+      <TextBox x:Name="OutputPath"
+               Grid.Column="1"
+               VerticalContentAlignment="Center" />
+      <Button x:Name="Browse"
+              Grid.Column="2"
+              Width="80"
+              Content="Browse" />
+    </Grid>
+
+    <gitui:RevisionGridControl x:Name="RevisionGrid"
+                               Grid.Row="1"
+                               Grid.ColumnSpan="2" />
+
+    <StackPanel x:Name="flowLayoutPanelBranch"
+                Grid.Row="2"
+                Orientation="Horizontal"
+                VerticalAlignment="Center">
+      <TextBlock x:Name="SelectedBranch"
+                 Text="Branch" />
+      <TextBlock x:Name="CurrentBranch"
+                 Margin="8,0,0,0" />
+    </StackPanel>
+    <Button x:Name="FormatPatch"
+            Grid.Row="2"
+            Grid.Column="1"
+            Width="175"
+            Height="31"
+            Content="Create patch(es)" />
+  </Grid>
+</Window>

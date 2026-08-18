@@ -1,0 +1,72 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:compat="using:GitUI.Compat"
+        xmlns:cmd="using:GitUI.CommandsDialogs"
+        xmlns:properties="using:GitUI.Properties"
+        x:Class="GitUI.CommandsDialogs.FormAbout"
+        Width="601" Height="318"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title=" ">
+  <Grid ColumnDefinitions="Auto,*">
+    <StackPanel x:Name="flowLayoutPanel1"
+                Grid.Column="0"
+                Width="157"
+                Margin="2"
+                Orientation="Vertical">
+      <Image x:Name="logoPictureBox"
+             Width="128" Height="128"
+             Margin="12"
+             Stretch="Uniform"
+             Source="{x:Static properties:Images.GitExtensionsLogo256}" />
+      <TextBlock x:Name="label2"
+                 MaxWidth="133"
+                 Margin="12,4"
+                 TextWrapping="Wrap"
+                 TextAlignment="Center"
+                 Text="Git Extensions is open source. Get involved!" />
+      <Image x:Name="pictureDonate"
+             Width="145" Height="32"
+             Margin="6,12,6,4"
+             Cursor="Hand"
+             Stretch="Uniform"
+             StretchDirection="DownOnly"
+             Source="{x:Static properties:Images.DonateBadge}" />
+    </StackPanel>
+
+    <StackPanel x:Name="tableLayoutPanel1"
+                Grid.Column="1"
+                Margin="12,24,12,12"
+                Orientation="Vertical">
+      <HyperlinkButton x:Name="_NO_TRANSLATE_labelProductName"
+                       HorizontalAlignment="Center"
+                       HorizontalContentAlignment="Center"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       Content="Git Extensions" />
+      <TextBlock x:Name="_NO_TRANSLATE_labelProductDescription"
+                 FontWeight="Bold"
+                 TextAlignment="Center"
+                 HorizontalAlignment="Stretch"
+                 Text="Visual Studio and Shell Explorer Extensions for Git" />
+      <Border Height="8" />
+      <TextBlock x:Name="_NO_TRANSLATE_labelCopyright"
+                 Text="Proudly presented by Git Extensions team" />
+      <HyperlinkButton x:Name="_NO_TRANSLATE_ThanksTo"
+                       HorizontalAlignment="Left"
+                       Padding="0" />
+      <HyperlinkButton x:Name="linkLabelIcons"
+                       HorizontalAlignment="Left"
+                       Padding="0"
+                       Content="Some icons by Yusuke Kamiyamane (CCA3)" />
+      <cmd:EnvironmentInfo x:Name="environmentInfo"
+                           Margin="0,12,0,4" />
+      <Border Height="8" />
+      <TextBlock x:Name="label1"
+                 TextWrapping="Wrap"
+                 Foreground="{DynamicResource GitExtensionsKnownColorGrayTextBrush}"
+                 Text="This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE." />
+    </StackPanel>
+  </Grid>
+</Window>

@@ -1,0 +1,138 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:GitUI"
+        xmlns:help="using:GitUI.Help"
+        x:Class="GitUI.CommandsDialogs.FormMergeBranch"
+        Width="772"
+        SizeToContent="Height"
+        MinWidth="478"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Title="Merge branches">
+  <Grid x:Name="tableLayoutPanel1"
+        Margin="8"
+        ColumnDefinitions="Auto,*"
+        RowDefinitions="Auto,Auto"
+        ColumnSpacing="8"
+        RowSpacing="8">
+    <help:HelpImageDisplayUserControl x:Name="helpImageDisplayUserControl1"
+                                      Grid.RowSpan="2"
+                                      MinHeight="416"
+                                      IsExpanded="True"
+                                      IsOnHoverShowImage2="True"
+                                      UniqueIsExpandedSettingsId="MergeBranches" />
+
+    <HeaderedContentControl x:Name="groupBox1"
+                            Classes="gitextensions-group-box"
+                            Grid.Column="1"
+                            Header="Merge">
+      <Border>
+        <Grid x:Name="tableLayoutPanel2"
+              ColumnDefinitions="Auto,*"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+              ColumnSpacing="8"
+              RowSpacing="7">
+          <TextBlock x:Name="label2"
+                     VerticalAlignment="Center"
+                     Text="Merge branch" />
+          <local:BranchComboBox x:Name="Branches"
+                                Grid.Column="1"
+                                MinWidth="330" />
+
+          <TextBlock x:Name="Currentbranch"
+                     Grid.Row="1"
+                     VerticalAlignment="Center"
+                     Text="Into current branch" />
+          <TextBlock x:Name="currentBranchLabel"
+                     Grid.Row="1"
+                     Grid.Column="1"
+                     FontWeight="Bold"
+                     VerticalAlignment="Center"
+                     Text="?" />
+
+          <RadioButton x:Name="fastForward"
+                       Grid.Row="2"
+                       Grid.ColumnSpan="2"
+                       IsChecked="True"
+                       Content="Keep a single branch line if possible (fast forward)" />
+          <RadioButton x:Name="noFastForward"
+                       Grid.Row="3"
+                       Grid.ColumnSpan="2"
+                       Content="Always create a new merge commit" />
+          <CheckBox x:Name="noCommit"
+                    Grid.Row="4"
+                    Grid.ColumnSpan="2"
+                    Content="Do not commit" />
+          <CheckBox x:Name="advanced"
+                    Grid.Row="5"
+                    Grid.ColumnSpan="2"
+                    Content="Show advanced options" />
+
+          <Grid x:Name="advancedPanel"
+                Grid.Row="6"
+                Grid.ColumnSpan="2"
+                ColumnDefinitions="Auto,*"
+                RowDefinitions="Auto,Auto,Auto,Auto,Auto,90"
+                ColumnSpacing="8"
+                RowSpacing="6">
+            <CheckBox x:Name="NonDefaultMergeStrategy"
+                      Content="Use non-default merge strategy" />
+            <StackPanel x:Name="flowLayoutPanel1"
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="6">
+              <ComboBox x:Name="_NO_TRANSLATE_mergeStrategy"
+                        Width="158"
+                        IsEditable="True"
+                        IsVisible="False" />
+              <HyperlinkButton x:Name="strategyHelp"
+                               VerticalAlignment="Center"
+                               Content="Help"
+                               IsVisible="False" />
+            </StackPanel>
+
+            <CheckBox x:Name="squash"
+                      Grid.Row="1"
+                      Grid.ColumnSpan="2"
+                      Content="Squash commits" />
+            <CheckBox x:Name="allowUnrelatedHistories"
+                      Grid.Row="2"
+                      Grid.ColumnSpan="2"
+                      Content="Allow unrelated histories" />
+            <CheckBox x:Name="addLogMessages"
+                      Grid.Row="3"
+                      Content="Add log messages" />
+            <NumericUpDown x:Name="nbMessages"
+                           Grid.Row="3"
+                           Grid.Column="1"
+                           Width="70"
+                           HorizontalAlignment="Left"
+                           Minimum="1"
+                           Maximum="999"
+                           Value="20"
+                           IsEnabled="False" />
+            <CheckBox x:Name="addMergeMessage"
+                      Grid.Row="4"
+                      Grid.ColumnSpan="2"
+                      Content="Specify merge message" />
+            <TextBox x:Name="mergeMessage"
+                     Grid.Row="5"
+                     Grid.ColumnSpan="2"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     IsEnabled="False" />
+          </Grid>
+        </Grid>
+      </Border>
+    </HeaderedContentControl>
+
+    <Button x:Name="Ok"
+            Classes="gitextensions-dialog-action"
+            Grid.Row="1"
+            Grid.Column="1"
+            MinWidth="108"
+            HorizontalAlignment="Right"
+            Content="_Merge"
+            IsDefault="True" />
+  </Grid>
+</Window>

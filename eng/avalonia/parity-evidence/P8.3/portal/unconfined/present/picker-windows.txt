@@ -1,0 +1,5 @@
+P8.2 Open file
+P8.2 Open folder
+P8.2 Save file
+P8.3 Cancel file
+Open With…

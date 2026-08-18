@@ -1,0 +1,95 @@
+<settings:SettingsPageWithHeader xmlns="https://github.com/avaloniaui"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:settings="using:GitUI.CommandsDialogs.SettingsDialog"
+                                 x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ConfirmationsSettingsPage"
+                                 MinWidth="650"
+                                 MinHeight="440"
+                                 Text="Confirmations">
+  <settings:SettingsPageWithHeader.Styles>
+    <Style Selector="TextBlock.confirmation-group">
+      <Setter Property="Margin" Value="0,5,0,1" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+  </settings:SettingsPageWithHeader.Styles>
+
+  <ScrollViewer Classes="gitextensions-compact-checkboxes"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <Grid x:Name="tlpnlMain"
+          Margin="8">
+      <GroupBox x:Name="gbConfirmations"
+                Header="Confirm actions">
+        <StackPanel x:Name="tlpnlConfirmations"
+                    Margin="8,4,8,8"
+                    Spacing="1">
+          <TextBlock x:Name="lblGroupCommits"
+                     Classes="confirmation-group"
+                     Margin="0,0,0,1"
+                     Text="Commits:" />
+          <CheckBox x:Name="chkAmend"
+                    Content="Amend last commit" />
+          <CheckBox x:Name="chkUndoLastCommitConfirmation"
+                    IsThreeState="True"
+                    Content="Undo last commit" />
+          <CheckBox x:Name="chkCommitIfNoBranch"
+                    Content="Commit when no branch is currently checked out (headless state)" />
+          <CheckBox x:Name="chkRebaseOnTopOfSelectedCommit"
+                    IsThreeState="True"
+                    Content="Rebase on top of selected commit" />
+
+          <TextBlock x:Name="lblGroupBranches"
+                     Classes="confirmation-group"
+                     Text="Branches:" />
+          <CheckBox x:Name="chkFetchAndPruneAllConfirmation"
+                    Content="Fetch and prune branches" />
+          <CheckBox x:Name="chkPushNewBranch"
+                    Content="Push a new branch for the remote" />
+          <CheckBox x:Name="chkAddTrackingRef"
+                    Content="Add a tracking reference for newly pushed branch" />
+          <CheckBox x:Name="chkBranchDeleteUnmerged"
+                    Content="Delete unmerged branches" />
+          <CheckBox x:Name="chkBranchCheckoutConfirmation"
+                    Content="Checkout branch using left panel" />
+
+          <TextBlock x:Name="lblGroupStashes"
+                     Classes="confirmation-group"
+                     Text="Stash:" />
+          <CheckBox x:Name="chkAutoPopStashAfterCheckout"
+                    IsThreeState="True"
+                    Content="Apply stashed changes after successful checkout (else stash will be popped automatically)" />
+          <CheckBox x:Name="chkAutoPopStashAfterPull"
+                    IsThreeState="True"
+                    Content="Apply stashed changes after successful pull (else stash will be popped automatically)" />
+          <CheckBox x:Name="chkConfirmStashDrop"
+                    Content="Drop stash" />
+
+          <TextBlock x:Name="lblGroupConflictResolution"
+                     Classes="confirmation-group"
+                     Text="Rebase / conflict resolution:" />
+          <CheckBox x:Name="chkResolveConflicts"
+                    IsThreeState="True"
+                    Content="Resolve conflicts" />
+          <CheckBox x:Name="chkCommitAfterConflictsResolved"
+                    IsThreeState="True"
+                    Content="Commit changes after conflicts have been resolved" />
+          <CheckBox x:Name="chkSecondAbortConfirmation"
+                    IsThreeState="True"
+                    Content="Confirm for the second time to abort a merge" />
+
+          <TextBlock x:Name="lblGroupSubmodules"
+                     Classes="confirmation-group"
+                     Text="Submodules:" />
+          <CheckBox x:Name="chkUpdateModules"
+                    IsThreeState="True"
+                    Content="Update submodules on checkout" />
+
+          <TextBlock x:Name="lblGroupWorktrees"
+                     Classes="confirmation-group"
+                     Text="Worktrees:" />
+          <CheckBox x:Name="chkSwitchWorktree"
+                    Content="Switch worktree" />
+        </StackPanel>
+      </GroupBox>
+    </Grid>
+  </ScrollViewer>
+</settings:SettingsPageWithHeader>

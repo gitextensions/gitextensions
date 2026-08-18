@@ -1,0 +1,280 @@
+﻿using Avalonia.Controls;
+using GitCommands;
+using GitCommands.Git;
+using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtensions.Shims.WinForms;
+using GitUI.HelperDialogs;
+using GitUI.UserControls;
+using GitUIPluginInterfaces;
+using Microsoft;
+using ResourceManager;
+using AvaloniaCheckBox = Avalonia.Controls.CheckBox;
+using AvaloniaToolTip = Avalonia.Controls.ToolTip;
+
+namespace GitUI.CommandsDialogs;
+
+public partial class FormDiff : GitModuleForm
+{
+    private string? _firstCommitDisplayStr;
+    private string? _secondCommitDisplayStr;
+    private GitRevision? _firstRevision;
+    private GitRevision? _secondRevision;
+    private readonly GitRevision? _mergeBase;
+    private Lazy<ObjectId> _currentHead = null!;
+
+    private readonly IGitRevisionTester _revisionTester = null!;
+    private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController = null!;
+    private readonly IFullPathResolver _fullPathResolver = null!;
+    private readonly IFindFilePredicateProvider _findFilePredicateProvider = null!;
+    private readonly CancellationTokenSequence _populateDiffFilesSequence = new();
+    private readonly CancellationTokenSequence _viewChangesSequence = new();
+    private bool _runtimeInitialized;
+
+    private readonly AvaloniaToolTip _toolTipControl = new();
+
+    private readonly TranslationString _anotherBranchTooltip = new("Select another branch");
+    private readonly TranslationString _anotherCommitTooltip = new("Select another commit");
+    private readonly TranslationString _btnSwapTooltip = new("Swap BASE and Compare commits");
+    private readonly TranslationString _ckCompareToMergeBase = new("Compare to merge &base");
+
+    // parity-scaffolding: Avalonia's view inventory and designer require a parameterless constructor.
+    public FormDiff()
+    {
+        InitializeComponent();
+        WireEvents();
+        InitializeComplete();
+    }
+
+    public FormDiff(
+        IGitUICommands commands,
+        ObjectId firstId,
+        ObjectId secondId,
+        string firstCommitDisplayStr, string secondCommitDisplayStr)
+        : base(commands, enablePositionRestore: true)
+    {
+        _firstCommitDisplayStr = firstCommitDisplayStr;
+        _secondCommitDisplayStr = secondCommitDisplayStr;
+
+        InitializeComponent();
+
+        InitializeComplete();
+
+        // Avalonia exposes tooltips as attached properties rather than a ToolTip component.
+        Avalonia.Controls.ToolTip.SetTip(btnAnotherFirstBranch, _anotherBranchTooltip.Text);
+        Avalonia.Controls.ToolTip.SetTip(btnAnotherSecondBranch, _anotherBranchTooltip.Text);
+        Avalonia.Controls.ToolTip.SetTip(btnAnotherFirstCommit, _anotherCommitTooltip.Text);
+        Avalonia.Controls.ToolTip.SetTip(btnAnotherSecondCommit, _anotherCommitTooltip.Text);
+        Avalonia.Controls.ToolTip.SetTip(btnSwap, _btnSwapTooltip.Text);
+
+        _firstRevision = new GitRevision(firstId);
+        _secondRevision = new GitRevision(secondId);
+
+        // _mergeBase is not changed if first/second is changed
+        // similar, _currentHead is not updated if changed in Browse
+        _currentHead = new(() => Module.GetCurrentCheckout());
+        ObjectId firstMergeId = firstId.IsArtificial ? _currentHead.Value : firstId;
+        ObjectId secondMergeId = secondId.IsArtificial ? _currentHead.Value : secondId;
+        if (firstMergeId.IsZero || secondMergeId.IsZero || firstMergeId == secondMergeId)
+        {
+            _mergeBase = null;
+        }
+        else
+        {
+            ObjectId mergeBase = Module.GetMergeBase(firstMergeId, secondMergeId);
+            _mergeBase = mergeBase.IsZero ? null : new GitRevision(mergeBase);
+        }
+
+        ckCompareToMergeBase.Content = $"{_ckCompareToMergeBase} ({_mergeBase?.ObjectId.ToShortString()})";
+        ckCompareToMergeBase.IsEnabled = _mergeBase is not null;
+
+        _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+        _findFilePredicateProvider = new FindFilePredicateProvider();
+        _revisionTester = new GitRevisionTester(_fullPathResolver);
+        _revisionDiffContextMenuController = new FileStatusListContextMenuController();
+
+        WireEvents();
+        _runtimeInitialized = true;
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void OnClosed(EventArgs e)
+    {
+        _populateDiffFilesSequence.Dispose();
+        _viewChangesSequence.Dispose();
+        base.OnClosed(e);
+    }
+
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+        if (!_runtimeInitialized)
+        {
+            return;
+        }
+
+        PopulateDiffFiles();
+    }
+
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
+    {
+        DiffFiles.SelectPreviousVisibleItem();
+        DiffText.ScrollToBottom();
+    }
+
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
+    {
+        DiffFiles.SelectNextVisibleItem();
+        DiffText.ScrollToTop();
+    }
+
+    private void PopulateDiffFiles()
+    {
+        lblFirstCommit.Text = _firstCommitDisplayStr;
+        lblSecondCommit.Text = _secondCommitDisplayStr;
+
+        // Bug in git-for-windows: Comparing working directory to any branch, fails, due to -R
+        // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
+        // git difftool --gui --no-prompt --dir-diff HEAD succeeds
+        // Thus, we disable comparing "from" working directory.
+        bool enableDifftoolDirDiff = _firstRevision?.ObjectId != ObjectId.WorkTreeId;
+        btnCompareDirectoriesWithDiffTool.IsEnabled = enableDifftoolDirDiff;
+
+        Validates.NotNull(_secondRevision);
+        GitRevision[] revisions;
+        if (ckCompareToMergeBase.IsChecked == true)
+        {
+            Validates.NotNull(_mergeBase);
+            revisions = [_secondRevision, _mergeBase];
+        }
+        else
+        {
+            Validates.NotNull(_firstRevision);
+            revisions = [_secondRevision, _firstRevision];
+        }
+
+        DiffFiles.InvokeAndForget(() => DiffFiles.SetDiffsAsync(revisions, _currentHead.Value, _populateDiffFilesSequence.Next()));
+    }
+
+    private void ShowSelectedFileDiff()
+    {
+        _ = DiffText.ViewChangesAsync(DiffFiles.SelectedFileStatusItem,
+            cancellationToken: _viewChangesSequence.Next());
+    }
+
+    private void btnSwap_Click(object? sender, EventArgs e)
+    {
+        (_secondRevision, _firstRevision) = (_firstRevision, _secondRevision);
+        (_secondCommitDisplayStr, _firstCommitDisplayStr) = (_firstCommitDisplayStr, _secondCommitDisplayStr);
+        PopulateDiffFiles();
+    }
+
+    private void ckCompareToMergeBase_CheckedChanged(object? sender, EventArgs e)
+    {
+        PopulateDiffFiles();
+    }
+
+    private void btnCompareDirectoriesWithDiffTool_Clicked(object? sender, EventArgs e)
+    {
+        GitRevision? firstRevision = ckCompareToMergeBase.IsChecked == true ? _mergeBase : _firstRevision;
+        Validates.NotNull(firstRevision);
+        Validates.NotNull(_secondRevision);
+        Module.OpenWithDifftoolDirDiff(firstRevision.Guid, _secondRevision.Guid, customTool: null);
+    }
+
+    private void btnPickAnotherFirstBranch_Click(object? sender, EventArgs e)
+    {
+        Validates.NotNull(_firstRevision);
+        PickAnotherBranch(_firstRevision, ref _firstCommitDisplayStr, ref _firstRevision);
+    }
+
+    private void btnAnotherFirstCommit_Click(object? sender, EventArgs e)
+    {
+        Validates.NotNull(_firstRevision);
+        PickAnotherCommit(_firstRevision, ref _firstCommitDisplayStr, ref _firstRevision);
+    }
+
+    private void btnAnotherSecondBranch_Click(object? sender, EventArgs e)
+    {
+        Validates.NotNull(_secondRevision);
+        PickAnotherBranch(_secondRevision, ref _secondCommitDisplayStr, ref _secondRevision);
+    }
+
+    private void btnAnotherSecondCommit_Click(object? sender, EventArgs e)
+    {
+        Validates.NotNull(_secondRevision);
+        PickAnotherCommit(_secondRevision, ref _secondCommitDisplayStr, ref _secondRevision);
+    }
+
+    private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
+    {
+        List<ObjectId> parentIds = [.. DiffFiles.SelectedItems.FirstIds()];
+        bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(parentIds, _secondRevision);
+        bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItems.Select(i => i.Item));
+
+        bool allAreNew = DiffFiles.SelectedItems.All(i => i.Item.IsNew);
+        bool allAreDeleted = DiffFiles.SelectedItems.All(i => i.Item.IsDeleted);
+
+        return new ContextMenuDiffToolInfo(
+            _secondRevision,
+            parentIds,
+            allAreNew: allAreNew,
+            allAreDeleted: allAreDeleted,
+            firstIsParent: firstIsParent,
+            localExists: localExists);
+    }
+
+    private void PickAnotherBranch(GitRevision preSelectCommit, ref string? displayStr, ref GitRevision? revision)
+    {
+        using FormCompareToBranch form = new(UICommands, preSelectCommit.ObjectId);
+        if (form.ShowDialog(this) == DialogResult.OK)
+        {
+            displayStr = form.BranchName;
+            ObjectId objectId = Module.RevParse(form.BranchName!);
+            revision = objectId.IsZero ? null : new GitRevision(objectId);
+            PopulateDiffFiles();
+        }
+    }
+
+    private void PickAnotherCommit(GitRevision preSelect, ref string? displayStr, ref GitRevision? revision)
+    {
+        using FormChooseCommit form = new(UICommands, preselectCommit: preSelect.Guid, showArtificial: true);
+        if (form.ShowDialog(this) == DialogResult.OK)
+        {
+            revision = form.SelectedRevision;
+            displayStr = form.SelectedRevision?.Subject;
+            PopulateDiffFiles();
+        }
+    }
+
+    private void WireEvents()
+    {
+        DiffFiles.SelectedIndexChanged += delegate { ShowSelectedFileDiff(); };
+        DiffText.ExtraDiffArgumentsChanged += delegate { ShowSelectedFileDiff(); };
+        DiffText.TopScrollReached += FileViewer_TopScrollReached;
+        DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
+        btnSwap.Click += btnSwap_Click;
+        ckCompareToMergeBase.IsCheckedChanged += ckCompareToMergeBase_CheckedChanged;
+        btnCompareDirectoriesWithDiffTool.Click += btnCompareDirectoriesWithDiffTool_Clicked;
+        btnAnotherFirstBranch.Click += btnPickAnotherFirstBranch_Click;
+        btnAnotherFirstCommit.Click += btnAnotherFirstCommit_Click;
+        btnAnotherSecondBranch.Click += btnAnotherSecondBranch_Click;
+        btnAnotherSecondCommit.Click += btnAnotherSecondCommit_Click;
+    }
+
+    // parity-scaffolding: Exposes the original named fields to focused tests and paired capture seeding.
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(FormDiff form)
+    {
+        internal TextBlock FirstCommit => form.lblFirstCommit;
+        internal TextBlock SecondCommit => form.lblSecondCommit;
+        internal Button Swap => form.btnSwap;
+        internal AvaloniaCheckBox CompareToMergeBase => form.ckCompareToMergeBase;
+        internal Button CompareDirectories => form.btnCompareDirectoriesWithDiffTool;
+        internal FileStatusList DiffFiles => form.DiffFiles;
+        internal Editor.FileViewer DiffText => form.DiffText;
+    }
+}

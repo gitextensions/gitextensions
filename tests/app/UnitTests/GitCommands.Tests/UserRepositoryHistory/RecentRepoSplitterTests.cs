@@ -3,12 +3,12 @@
 namespace GitCommandsTests.UserRepositoryHistory;
 public class RecentRepoSplitterTests
 {
-    private const string _relativeLongRepoPath = @"this\is\a\very_very_very_very_very_very_very\long\repo_path";
+    private static readonly string _relativeLongRepoPath = Path.Combine("this", "is", "a", "very_very_very_very_very_very_very", "long", "repo_path");
     private static readonly string repoPathInUserFolder = Path.Combine(Path.GetTempPath(), _relativeLongRepoPath);
-    private static readonly string repoAnchoredInTopPath1 = @"C:\this\is\a\repo_anchored_in_top_path1\";
-    private static readonly string repoAnchoredInTopPath2 = @"C:\this\is\a\repo_anchored_in_top_path2\";
-    private static readonly string repoAnchoredInRecentPath = @"C:\this\is\a\repo_anchored_in_recent_path\";
-    private static readonly string repoNotAnchoredPath = @"C:\this\is\a\repo_not_anchored_path\";
+    private static readonly string repoAnchoredInTopPath1 = Path.Combine(Path.GetTempPath(), "this", "is", "a", "repo_anchored_in_top_path1");
+    private static readonly string repoAnchoredInTopPath2 = Path.Combine(Path.GetTempPath(), "this", "is", "a", "repo_anchored_in_top_path2");
+    private static readonly string repoAnchoredInRecentPath = Path.Combine(Path.GetTempPath(), "this", "is", "a", "repo_anchored_in_recent_path");
+    private static readonly string repoNotAnchoredPath = Path.Combine(Path.GetTempPath(), "this", "is", "a", "repo_not_anchored_path");
 
     #region Shortening strategy
     [Test]
@@ -55,6 +55,7 @@ public class RecentRepoSplitterTests
         recentRepoList.Should().ContainSingle();
     }
 
+    [Platform(Include = "Win")]
     [Test]
     public void SplitRecentRepos_Should_not_shorten_but_handle_user_folder_as_caption()
     {
@@ -77,6 +78,7 @@ public class RecentRepoSplitterTests
         recentRepoList.Should().ContainSingle();
     }
 
+    [Platform(Include = "Win")]
     [Test]
     public void SplitRecentRepos_Should_display_middle_dots_in_caption()
     {
