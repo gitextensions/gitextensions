@@ -88,7 +88,5 @@ public interface IGitRef : INamedGitItem
     /// <returns>
     ///  true if the current ref is tracking the expected remote ref false otherwise.
     /// </returns>
-    bool IsTrackingRemote(IGitRef? remote)
-        => remote is not null && IsHead && remote.IsRemote
-            && TrackingRemote == remote.Remote && MergeWith == remote.LocalName;
+    bool IsTrackingRemote(IGitRef? remote);
 }

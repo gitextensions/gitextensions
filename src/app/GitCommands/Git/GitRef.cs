@@ -121,6 +121,9 @@ public sealed class GitRef : IGitRef
     public ObjectId ObjectId { get; }
 
     public string? Guid => ObjectId.IsZero ? null : ObjectId.ToString();
+    public bool IsTrackingRemote(IGitRef? remote)
+    => remote is not null && IsHead && remote.IsRemote
+        && MergeWith == remote.LocalName && TrackingRemote == remote.Remote;
 
     #endregion
 

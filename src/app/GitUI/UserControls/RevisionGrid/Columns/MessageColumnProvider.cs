@@ -170,10 +170,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 }
 
                 // If this branch has ahead/behind information, draw that info as virtual label of the tracked/tracking branch.
-                (string aheadBehind, string trackedCompleteName) = GetAheadBehind(gitRef, withCounts: false);
+                (string aheadBehind, string trackedCompleteName, bool isGone) = GetAheadBehind(gitRef, withCounts: false);
                 if (aheadBehind.Length > 0)
                 {
-                    NestledRef nestledRef = new(gitRef, trackedCompleteName);
+                    NestledRef nestledRef = new(gitRef, trackedCompleteName, trackingBranchIsGone: isGone);
                     DrawBranchWithNestledRemote(gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, nestledRef, aheadBehind, ref hitInfos);
                     continue;
                 }
@@ -304,7 +304,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             // Draw the nestled directly via DrawRefEx with RefLabelIcon.None — the nestled remote never shows a head indicator.
             (Rectangle nestledRect, Action? drawNestledHighlight) = RevisionGridRefRenderer.DrawRefEx(
                 e.State.HasFlag(DataGridViewElementStates.Selected),
-                nestledName == AheadBehindData.GoneSymbol ? style.BoldFont : style.NormalFont,
+                nestledRef is NestledRef { TrackingBranchIsGone: true } ? style.BoldFont : style.NormalFont,
                 ref offset,
                 nestledName,
                 remoteColor,
@@ -991,7 +991,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
     ///  and <see cref="AheadBehindData.AheadCount"/> are swapped before formatting.
     ///  Returns an empty display string for untracked refs or when the provider is unavailable.
     /// </remarks>
-    private (string Display, string TrackedCompleteName) GetAheadBehind(IGitRef gitRef, bool withCounts = true)
+    private (string Display, string TrackedCompleteName, bool IsGone) GetAheadBehind(IGitRef gitRef, bool withCounts = true)
     {
         _aheadBehindDataByLocalBranch ??= _aheadBehindDataProvider?.GetData() ?? FrozenDictionary<string, AheadBehindData>.Empty;
 
@@ -1005,7 +1005,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
             if (_aheadBehindDataByRemoteBranch.TryGetValue(gitRef.CompleteName, out AheadBehindData aheadBehind))
             {
-               return (aheadBehind.ToDisplay(withCounts), GitRefName.RefsHeadsPrefix + aheadBehind.Branch);
+               return (aheadBehind.ToDisplay(withCounts), GitRefName.RefsHeadsPrefix + aheadBehind.Branch, aheadBehind.AheadCount == AheadBehindData.Gone);
             }
         }
         else
@@ -1014,11 +1014,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
             {
                 // This info is displayed in a virtual remote ref label.
                 // From the remote ref's perspective, ahead/behind are swapped relative to the local branch.
-                return (aheadBehind.ToDisplay(withCounts, reverse: true), aheadBehind.RemoteRef);
+                return (aheadBehind.ToDisplay(withCounts, reverse: true), aheadBehind.RemoteRef, aheadBehind.AheadCount == AheadBehindData.Gone);
             }
         }
 
-        return (string.Empty, string.Empty);
+        return (string.Empty, string.Empty, false);
     }
 
     public AheadBehindData? GetAheadBehindData(bool isRemote, string completeName)
@@ -1046,53 +1046,4 @@ internal sealed class MessageColumnProvider : ColumnProvider
         list.Clear();
         _hitInfoListPool.Push(list);
     }
-
-    private sealed class NestledRef(IGitRef gitRef, string completeName) : IGitRef
-    {
-        public string Name { get; } = GitRef.ParseName(completeName);
-
-        /// <summary>
-        ///  <see cref="ObjectId"/> of a nestled ref is always default/zero.
-        /// </summary>
-        public ObjectId ObjectId => default;
-        public string? Guid => null;
-        public string CompleteName => completeName;
-        public string LocalName => GitRef.ComputeLocalName(IsRemote, Remote, Name);
-
-        /// <summary>
-        ///  The tracked local branch name as on the remote for <see cref="IsHead"/>,
-        ///  or the tracking local branch for <see cref="IsRemote"/>.
-        /// </summary>
-        public string MergeWith
-        {
-            get => gitRef.LocalName;
-            set => throw new NotSupportedException();
-        }
-
-        public string Remote => gitRef.TrackingRemote;
-        public string TrackingRemote
-        {
-            get => gitRef.Remote;
-            set => throw new NotSupportedException();
-        }
-
-        public bool IsHead => gitRef.IsRemote;
-        public bool IsRemote => gitRef.IsHead;
-        public bool IsTag => false;
-        public bool IsStash => false;
-        public bool IsDereference => false;
-        public bool IsSelected { get; set; }
-        public bool IsSelectedHeadMergeSource { get; set; }
-        public bool IsBisect => false;
-        public bool IsBisectGood => false;
-        public bool IsBisectBad => false;
-
-        public IGitModule Module => gitRef.Module;
-
-        public override bool Equals(object? obj) => obj is NestledRef other && CompleteName == other.CompleteName;
-
-        public override int GetHashCode() => completeName.GetHashCode();
-
-        public override string ToString() => $"NestledRef: {CompleteName}";
     }
-}

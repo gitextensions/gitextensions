@@ -3236,7 +3236,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         if (gitRef.ObjectId.IsZero)
         {
-            if (gitRef.Name == AheadBehindData.GoneSymbol)
+            if (gitRef is NestledRef { TrackingBranchIsGone: true })
             {
                 handleGone?.Invoke(gitRef.MergeWith);
             }
