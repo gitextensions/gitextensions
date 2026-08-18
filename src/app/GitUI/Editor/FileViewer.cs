@@ -1622,8 +1622,9 @@ public partial class FileViewer : GitModuleControl
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        IObjectGitItem[] items = [.. Module.GetTree(commitId, full: true, file.Name, cancellationToken)];
-        if (items.Length == 1)
+        IEnumerable<IObjectGitItem> tree = Module.GetTree(commitId, full: true, file.Name, cancellationToken);
+        List<IObjectGitItem> items = tree as List<IObjectGitItem> ?? tree.ToList();
+        if (items.Count == 1)
         {
             IObjectGitItem gitItem = items[0];
             file.IsSubmodule = gitItem.ObjectType == GitObjectType.Commit;
