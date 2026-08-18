@@ -1,3 +1,8 @@
+[Version "7.2.1"]
+    DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v7.2.1/GitExtensions-x64-7.2.1.7-0aea2d6df.msi
+    ReleaseType = ReleaseCandidate
+    ;branch to which bugfixes found in this version should be merged (base for a pull request)
+    BugFixBranch = release/7.0
 [Version "7.2.0"]
     DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v7.2.0/GitExtensions-x64-7.2.0.92-501f831.msi
     ReleaseType = major
