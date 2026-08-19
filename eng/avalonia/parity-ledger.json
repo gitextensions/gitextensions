@@ -33527,12 +33527,12 @@
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-08-17",
-          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "verifiedOn": "2026-08-19",
+          "commit": "8236d962440c08ab9d3fc5175c9460259182db96",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/diff-accepted/findings.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/winforms-retry/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/diff-final/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/avalonia-final/manifest.json",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/winforms-border/manifest.json",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/avalonia-border/manifest.json",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/diff-border/findings.json",
@@ -33540,29 +33540,29 @@
           ],
           "platforms": ["windows"],
           "findingCount": 294,
-          "note": "The accepted grid matrix retains 294 classified geometry/image diagnostics. A new same-repository native-125% WinForms and headless Avalonia FormBrowse slice captures and validates all six light/dark/custom normal/focused states; manual image review confirms Avalonia's container-level black focus frame is gone before row focus and remains absent after row focus, matching the original borderless grid. The whole-FormBrowse diff truthfully retains 23501 broader findings. Official Show Preview renders the touched RevisionGridControl.axaml; native 100/150/200 DPI and exhaustive live states remain open."
+          "note": "The fresh same-repository native-125% matrix captures and validates 18 WinForms plus 18 Avalonia light/dark/custom normal, focused, disabled, context-menu, copy-menu, and View-menu states with zero unsupported entries. Painting the measured ToolStrip renderer surface reduces the context-menu differing-pixel fraction from 0.965024 to 0.212601 and mean delta from 21.5675 to 13.7701; copy-menu values improve from 0.872065 to 0.184880 and 19.7139 to 12.2414. The honest report retains 294 diagnostics: 240 geometry and 54 image, with zero layout, color, font, text, control-identity, state, or control findings. Official view preview is N/A because only the shared style resource changed; the designer build and all 165 views construct, while an optional isolated preview retry was blocked by VS Code's update mutex and the owner's IDE was left untouched. Native 100/150/200 DPI and exhaustive live states remain open."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-08-16",
-          "commit": "1a7bb5c077ca36b4cfecd818e99d5a7bd93ead9a",
+          "verifiedOn": "2026-08-19",
+          "commit": "8236d962440c08ab9d3fc5175c9460259182db96",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/winforms-retry/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/diff-accepted/findings.json"
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/avalonia-final/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/diff-final/findings.json"
           ],
           "platforms": ["windows"],
           "findingCount": 0,
-          "note": "The fresh light/dark/custom matrix resolves ordinary, alternating and authored revision backgrounds through shared semantic roles and exact ARGB values, alongside selection, disabled, inactive, menu, separator and checked-command roles. Regenerating both sides in one session absorbed the host's changed Windows highlight value honestly; all 18 pairs have zero color diagnostics. Exhaustive configurable-color and live theme states remain open, so this axis stays partial."
+          "note": "The fresh light/dark/custom matrix resolves ordinary, alternating and authored revision backgrounds through shared semantic roles and exact ARGB values, alongside selection, disabled, inactive, menu, separator and checked-command roles. The desktop popup renderer surface is distinct from the semantic control BackColor: light resolves to #FFFDFDFD with border #FF808080, while dark and the custom theme resolve to #FF2F2F2F with border #FF6B6B6B. All 18 pairs have zero color diagnostics. Exhaustive configurable-color and live theme states remain open, so this axis stays partial."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-17",
-          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "verifiedOn": "2026-08-19",
+          "commit": "8236d962440c08ab9d3fc5175c9460259182db96",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/winforms-retry/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/diff-accepted/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/avalonia-final/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/diff-final/findings.json",
             "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/windows/revision-grid-support.trx",
             "eng/avalonia/parity-evidence/PR-feedback/revision-grid-final-order-focus/tests/linux/focused.trx",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
@@ -33575,21 +33575,21 @@
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Focused tests and the paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, and complete View-menu checked states across light/dark/custom. Reviewer-feedback tests verify initial list focus after asynchronous loading, explicit filter focus, command-driven focus restoration, and that a pointer-focused selected commit remains selected, visible, and focused when streamed rows receive their final order. The focus is not restored when another surface owned it before completion. A dedicated regression verifies the borderless list has no container FocusAdorner both before and after focus moves into a selected row; the six-state browse slice confirms the rendered result. The exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
+          "note": "Focused tests and the fresh 18-state paired matrix verify final graph order plus normal, focused, inherited-disabled, context-menu owner-focus, copy-menu selection, complete View-menu checked states, and disabled italic caption presentation across light/dark/custom with zero state findings. Reviewer-feedback tests verify initial list focus after asynchronous loading, explicit filter focus, command-driven focus restoration, and that a pointer-focused selected commit remains selected, visible, and focused when streamed rows receive their final order. The focus is not restored when another surface owned it before completion. A dedicated regression verifies the borderless list has no container FocusAdorner both before and after focus moves into a selected row. The exhaustive pointer/keyboard/tooltip/resize/persistence walk remains open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-17",
-          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "verifiedOn": "2026-08-19",
+          "commit": "8236d962440c08ab9d3fc5175c9460259182db96",
           "evidence": [
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P0.6/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. Focused selection/focus and borderless-container tests pass on Windows and native-ext4 Linux; the X11 and confined custom-dark-theme captures visibly retain the borderless grid surface. Native DPI beyond 125%, exhaustive component states, and macOS remain open."
+          "note": "Fresh runtime smokes pass and final screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. The first combined Wayland attempt showed only the Weston desktop and was discarded; the successful Wayland-only retry visibly contains the application. Focused menu, framework-control, graph-golden, and previewability tests pass on Windows and native-ext4 Linux. Native DPI beyond 125%, exhaustive component states, and macOS remain open."
         }
       }
     },
