@@ -255,7 +255,7 @@ public partial class FormRebase : GitExtensionsDialog
 
             EnableButtons();
             PatchGrid.Initialize();
-            string cmdOutput = envVariables.GetValueOrDefault("_output_string");
+            string cmdOutput = envVariables.GetValueOrDefault("_output_string") ?? "";
             if (Module.InTheMiddleOfRebase() && !Module.InTheMiddleOfConflictedMerge() && cmdOutput.Contains("using previous resolution") && cmdOutput.Trim() != "Aborted")
             {
                 BeginInvoke((Action)(() =>
