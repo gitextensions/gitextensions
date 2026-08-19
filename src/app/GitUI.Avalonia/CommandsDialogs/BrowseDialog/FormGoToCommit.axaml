@@ -2,36 +2,36 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit"
         Width="604" Height="302"
-        MinWidth="620" MinHeight="340"
+        MinWidth="604" MinHeight="302"
         WindowStartupLocation="CenterOwner"
         Title="Go to commit">
-  <Grid Classes="gitextensions-dialog-main"
-        ColumnDefinitions="133,*,75"
-        RowDefinitions="28,141,32,32"
-        ColumnSpacing="10"
-        RowSpacing="14">
+  <Grid Margin="12,10,8,10"
+        ColumnDefinitions="133,10,*,6,75"
+        RowDefinitions="28,5,141,32,23,19,23,*">
     <TextBlock x:Name="label1"
                Text="Commit expression:"
                VerticalAlignment="Center" />
     <TextBox x:Name="textboxCommitExpression"
-             Grid.Column="1"
+             Grid.Column="2"
+             Height="23"
              VerticalContentAlignment="Center" />
     <Button x:Name="goButton"
-            Grid.Column="2"
+            Grid.Column="4"
             MinWidth="75"
             Height="28"
             Content="Go"
             IsDefault="True" />
 
     <GroupBox x:Name="groupBox1"
-              Grid.Row="1"
+              Grid.Row="2"
               Grid.Column="0"
-              Grid.ColumnSpan="2"
+              Grid.ColumnSpan="3"
               Margin="33,0,0,0"
               Header="Help">
       <Grid Margin="7,2,7,7"
             RowDefinitions="*,Auto">
         <TextBlock x:Name="label2"
+                   Text="Commit expression examples:&#x0D;&#x0A;- complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9&#x0D;&#x0A;- partial commit hash (if unique): e. g.: 8eab51fcb9c453&#x0D;&#x0A;- tag name&#x0D;&#x0A;- branch name"
                    TextWrapping="Wrap" />
         <TextBlock x:Name="linkGitRevParse"
                    Grid.Row="1"
@@ -41,22 +41,30 @@
     </GroupBox>
 
     <TextBlock x:Name="label3"
-               Grid.Row="2"
+               Grid.Row="4"
                Text="Go to tag:"
-               VerticalAlignment="Center" />
+               Margin="0,3,0,0"
+               VerticalAlignment="Top" />
     <ComboBox x:Name="comboBoxTags"
-              Grid.Row="2"
-              Grid.Column="1"
+              Grid.Row="4"
+              Grid.Column="2"
+              Width="287"
+              Height="23"
+              HorizontalAlignment="Left"
               IsEditable="True"
               IsTextSearchEnabled="True" />
 
     <TextBlock x:Name="label4"
-               Grid.Row="3"
+               Grid.Row="6"
                Text="Go to branch:"
-               VerticalAlignment="Center" />
+               Margin="0,3,0,0"
+               VerticalAlignment="Top" />
     <ComboBox x:Name="comboBoxBranches"
-              Grid.Row="3"
-              Grid.Column="1"
+              Grid.Row="6"
+              Grid.Column="2"
+              Width="287"
+              Height="23"
+              HorizontalAlignment="Left"
               IsEditable="True"
               IsTextSearchEnabled="True" />
   </Grid>
