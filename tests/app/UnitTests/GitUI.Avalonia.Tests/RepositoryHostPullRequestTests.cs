@@ -13,6 +13,7 @@ using GitUI;
 using GitUI.CommandsDialogs.RepoHosting;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -33,6 +34,8 @@ public sealed class RepositoryHostPullRequestTests
         """;
 
     private ServiceContainer _serviceContainer = null!;
+    private StubMessageBoxHost _messageBoxHost = null!;
+    private WinFormsShims.IMessageBoxHost? _originalMessageBoxHost;
 
     [SetUp]
     public void SetUp()
@@ -51,11 +54,16 @@ public sealed class RepositoryHostPullRequestTests
         _serviceContainer.AddService<IRepositoryDescriptionProvider>(repositoryDescriptionProvider);
         GitCommands.ServiceContainerRegistry.RegisterServices(_serviceContainer);
         GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
+
+        _originalMessageBoxHost = TryGetMessageBoxHost();
+        _messageBoxHost = new StubMessageBoxHost();
+        WinFormsShims.ShimHost.MessageBoxHost = _messageBoxHost;
     }
 
     [TearDown]
     public void TearDown()
     {
+        WinFormsShims.ShimHost.MessageBoxHost = _originalMessageBoxHost ?? new StubMessageBoxHost();
         _serviceContainer.Dispose();
     }
 
@@ -162,6 +170,87 @@ public sealed class RepositoryHostPullRequestTests
         discussion.Received(2).ForceReload();
     }
 
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_close_the_selected_pull_request_and_reload()
+    {
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.SelectPullRequest(pullRequest);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.ClosePullRequest();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        pullRequest.Received(1).Close();
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_report_a_close_failure_and_restore_the_action()
+    {
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        pullRequest.When(candidate => candidate.Close())
+            .Do(_ => throw new InvalidOperationException("close failed"));
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.SelectPullRequest(pullRequest);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.ClosePullRequest();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("Failed to close pull request!" + Environment.NewLine + "close failed");
+        accessor.CloseEnabled.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_report_a_discussion_load_failure()
+    {
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        pullRequest.GetDiscussion().Returns(_ => throw new InvalidOperationException("discussion failed"));
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.SelectPullRequest(pullRequest);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("Could not load discussion!" + Environment.NewLine + "discussion failed");
+        accessor.Discussion.ItemCount.Should().Be(0);
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_report_a_post_failure_and_keep_the_comment()
+    {
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        IPullRequestDiscussion discussion = pullRequest.GetDiscussion();
+        discussion.When(candidate => candidate.Post("Keep this comment"))
+            .Do(_ => throw new InvalidOperationException("post failed"));
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.SelectPullRequest(pullRequest);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.Comment = "Keep this comment";
+        accessor.PostComment();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("Failed to post discussion item!" + Environment.NewLine + "post failed");
+        accessor.Comment.Should().Be("Keep this comment");
+        accessor.PostEnabled.Should().BeTrue();
+        accessor.RefreshEnabled.Should().BeTrue();
+    }
+
     [Test]
     public void ViewPullRequestsForm_should_split_provider_diff_into_file_rows()
     {
@@ -174,6 +263,30 @@ public sealed class RepositoryHostPullRequestTests
         items[0].Name.Should().Be("src/file.txt");
         items[0].IsChanged.Should().BeTrue();
         items[0].IsTracked.Should().BeTrue();
+    }
+
+    [Test]
+    public void ViewPullRequestsForm_should_reject_an_invalid_head_revision()
+    {
+        Action action = () => ViewPullRequestsForm.TestAccessor.ParseDiffForTesting(
+            Diff,
+            BaseSha,
+            "not-an-object-id");
+
+        action.Should().Throw<InvalidDataException>();
+    }
+
+    [Test]
+    public void ViewPullRequestsForm_should_reject_an_unrecognised_file_patch()
+    {
+        const string malformedDiff = "diff --git this is not a file header with enough content";
+
+        Action action = () => ViewPullRequestsForm.TestAccessor.ParseDiffForTesting(
+            malformedDiff,
+            BaseSha,
+            HeadSha);
+
+        action.Should().Throw<InvalidDataException>();
     }
 
     [Test]
@@ -257,5 +370,34 @@ public sealed class RepositoryHostPullRequestTests
         pullRequest.GetDiffDataAsync().Returns(Task.FromResult(Diff));
         pullRequest.GetDiscussion().Returns(discussion);
         return pullRequest;
+    }
+
+    private static WinFormsShims.IMessageBoxHost? TryGetMessageBoxHost()
+    {
+        try
+        {
+            return WinFormsShims.ShimHost.MessageBoxHost;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
+    private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
+    {
+        public List<string> Messages { get; } = [];
+
+        public WinFormsShims.DialogResult Show(
+            WinFormsShims.IWin32Window? owner,
+            string? text,
+            string? caption,
+            WinFormsShims.MessageBoxButtons buttons,
+            WinFormsShims.MessageBoxIcon icon,
+            WinFormsShims.MessageBoxDefaultButton defaultButton)
+        {
+            Messages.Add(text ?? string.Empty);
+            return WinFormsShims.DialogResult.OK;
+        }
     }
 }
