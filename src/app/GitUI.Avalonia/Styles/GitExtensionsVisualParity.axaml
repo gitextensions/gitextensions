@@ -851,6 +851,11 @@
     <Setter Property="Padding" Value="0" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
   </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items ListBoxItem">
+    <Setter Property="MinHeight" Value="20" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+  </Style>
   <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background"
             Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
