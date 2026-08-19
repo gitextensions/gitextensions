@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
@@ -109,6 +109,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     protected override void OnClosed(EventArgs e)
     {
+        // Clean up any resources being used.
         _lifetimeCancellation.Cancel();
         _pullRequestsSequence.CancelCurrent();
         _detailsSequence.CancelCurrent();
@@ -125,12 +126,18 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         string currentRemote = await Task.Run(Module.GetCurrentRemote, cancellationToken);
         IReadOnlyList<Remote> remotes = await Module.GetRemotesAsync().WaitAsync(cancellationToken);
+
+        // Load all hosted repositories.
         HostedRemoteRow[] hostedRemotes = await Task.Run(
             () => GetGitHoster().GetHostedRemotesForModule()
                 .Select(HostedRemoteRow.Create)
                 .ToArray(),
             cancellationToken);
 
+        // Local branches have no current remote, return value is empty string.
+        // In this case we fall back to the first remote in the list.
+        // Currently, a local Git repository with no remote shows an error message and cannot open this dialog.
+        // So there will always be at least one remote when this dialog is open.
         Remote? selectedRemote = remotes.FirstOrDefault(
             remote => string.IsNullOrEmpty(currentRemote)
                 || string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
@@ -183,6 +190,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         if (selectedRemote?.Repository is null)
         {
+            // If loading this remote failed, select the next one.
             _pullRequestsList.ItemsSource = Array.Empty<PullRequestRow>();
             _selectHostedRepoCB.IsEnabled = true;
             SelectNextHostedRepositoryIfFirstLoad();
@@ -330,6 +338,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     private static DiffSnapshot ParseDiff(string diffData, string baseSha, string headSha)
     {
+        // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
         GitRevision? baseRevision = ObjectId.TryParse(baseSha, out ObjectId baseId)
             ? new GitRevision(baseId)
             : null;
@@ -362,6 +371,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             patches.Add(item.Name, match.Groups["value"].Value);
         }
 
+        // Note: Commits in PR may not exist in the local repo
         return new DiffSnapshot(baseRevision, new GitRevision(headId), items, patches);
     }
 
@@ -384,6 +394,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         try
         {
+            // The provider API is still synchronous, so keep this operation off the UI thread.
             IPullRequestDiscussion discussion = await Task.Run(
                 () =>
                 {
@@ -836,6 +847,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private IRepositoryHostPlugin GetGitHoster()
         => _gitHoster ?? throw new InvalidOperationException($"{nameof(ViewPullRequestsForm)} was constructed incorrectly.");
 
+    // parity-scaffolding: Exposes repository-host state and actions to the cross-platform parity suite.
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor(ViewPullRequestsForm form)
@@ -856,6 +868,12 @@ public partial class ViewPullRequestsForm : GitModuleForm
             get => form._postCommentText.Text;
             set => form._postCommentText.Text = value;
         }
+
+        public bool CloseEnabled => form._closePullRequestBtn.IsEnabled;
+
+        public bool PostEnabled => form._postComment.IsEnabled;
+
+        public bool RefreshEnabled => form._refreshCommentsBtn.IsEnabled;
 
         public Task LoadPullRequestsAsync(CancellationToken cancellationToken = default)
             => form.LoadPullRequestsAsync(cancellationToken);
@@ -879,6 +897,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
         public void PostComment() => form.StartPostComment();
 
         public void RefreshDiscussion() => form.StartDiscussionRefresh();
+
+        public void ClosePullRequest() => form.StartClosePullRequest();
 
         public void SelectPullRequest(IPullRequestInformation pullRequest)
         {
@@ -908,6 +928,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         {
             try
             {
+                // Do this now because repository loading belongs in the asynchronous part.
                 return new HostedRemoteRow(remote, remote.GetHostedRepository(), null);
             }
             catch (Exception ex)
