@@ -25,6 +25,8 @@ public sealed class RepositoryHostForkCloneTests
     private ServiceContainer _serviceContainer = null!;
     private StubMessageBoxHost _messageBoxHost = null!;
     private WinFormsShims.IMessageBoxHost? _originalMessageBoxHost;
+    private StubFolderPicker _folderPicker = null!;
+    private WinFormsShims.IFolderPicker? _originalFolderPicker;
 
     [SetUp]
     public void SetUp()
@@ -47,12 +49,16 @@ public sealed class RepositoryHostForkCloneTests
         _originalMessageBoxHost = TryGetMessageBoxHost();
         _messageBoxHost = new StubMessageBoxHost();
         WinFormsShims.ShimHost.MessageBoxHost = _messageBoxHost;
+        _originalFolderPicker = TryGetFolderPicker();
+        _folderPicker = new StubFolderPicker();
+        WinFormsShims.ShimHost.FolderPicker = _folderPicker;
     }
 
     [TearDown]
     public void TearDown()
     {
         WinFormsShims.ShimHost.MessageBoxHost = _originalMessageBoxHost ?? new StubMessageBoxHost();
+        WinFormsShims.ShimHost.FolderPicker = _originalFolderPicker ?? new StubFolderPicker();
         _serviceContainer.Dispose();
     }
 
@@ -251,6 +257,118 @@ public sealed class RepositoryHostForkCloneTests
     }
 
     [AvaloniaTest]
+    public void ForkAndCloneForm_should_route_folder_picker_accept_and_cancel()
+    {
+        using ForkAndCloneForm form = CreateForm(Substitute.For<IRepositoryHostPlugin>());
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+        string initialDirectory = Path.Combine(Path.GetTempPath(), "initial-clone-root");
+        string selectedDirectory = Path.Combine(Path.GetTempPath(), "selected-clone-root");
+        accessor.Destination = initialDirectory;
+        _folderPicker.Result = selectedDirectory;
+
+        accessor.BrowseForCloneDirectory();
+
+        accessor.Destination.Should().Be(selectedDirectory);
+        _folderPicker.RequestedPaths.Should().Equal(initialDirectory);
+
+        _folderPicker.Result = null;
+        accessor.BrowseForCloneDirectory();
+
+        accessor.Destination.Should().Be(selectedDirectory);
+        _folderPicker.RequestedPaths.Should().Equal(initialDirectory, selectedDirectory);
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_clone_and_add_the_selected_upstream_remote()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.RepositoryHostClone-{Guid.NewGuid():N}");
+        string sourceDirectory = Path.Combine(root, "source");
+        string destinationRoot = Path.Combine(root, "clones");
+        string targetDirectory = Path.Combine(destinationRoot, "project");
+        Directory.CreateDirectory(destinationRoot);
+        try
+        {
+            GitModule sourceModule = CreateCommittedRepository(sourceDirectory, "main");
+            IGitUICommands commands = CreateCommands(sourceModule);
+            commands.StartGitCommandProcessDialog(
+                    Arg.Any<WinFormsShims.IWin32Window>(),
+                    Arg.Any<ArgumentString>())
+                .Returns(call => sourceModule.GitExecutable.RunCommand(call.ArgAt<ArgumentString>(1)));
+            IGitModule? selectedModule = null;
+            IHostedRepository repository = CreateRepository("project", owner: "me", isFork: true);
+            repository.CloneUrl.Returns(sourceDirectory);
+            repository.ParentOwner.Returns("parent");
+            repository.ParentUrl.Returns("https://example.test/parent/project.git");
+            IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+            host.GetMyRepos().Returns([repository]);
+            using ForkAndCloneForm form = new(
+                commands,
+                host,
+                (_, args) => selectedModule = args.GitModule);
+            ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+            accessor.Destination = destinationRoot;
+            await accessor.LoadMyRepositoriesAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            accessor.SelectMyRepository(0);
+            accessor.UpstreamRemoteName = "upstream";
+
+            accessor.CloneSelectedRepository();
+
+            selectedModule.Should().NotBeNull();
+            Path.TrimEndingDirectorySeparator(selectedModule!.WorkingDir)
+                .Should().Be(Path.TrimEndingDirectorySeparator(targetDirectory));
+            selectedModule.GetCurrentCheckout().Should().Be(sourceModule.GetCurrentCheckout());
+            IReadOnlyList<Remote> remotes = await selectedModule.GetRemotesAsync();
+            Remote origin = remotes.Should().ContainSingle(remote => remote.Name == "origin").Which;
+            Path.GetFullPath(origin.FetchUrl).Should().Be(Path.GetFullPath(sourceDirectory));
+            remotes.Should().Contain(remote => remote.Name == "upstream" && remote.FetchUrl == repository.ParentUrl);
+        }
+        finally
+        {
+            TestDirectory.Delete(root);
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_stop_when_the_clone_process_fails()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.RepositoryHostCloneFailure-{Guid.NewGuid():N}");
+        string sourceDirectory = Path.Combine(root, "source");
+        string destinationRoot = Path.Combine(root, "clones");
+        Directory.CreateDirectory(destinationRoot);
+        try
+        {
+            GitModule sourceModule = CreateCommittedRepository(sourceDirectory, "main");
+            IGitUICommands commands = CreateCommands(sourceModule);
+            commands.StartGitCommandProcessDialog(
+                    Arg.Any<WinFormsShims.IWin32Window>(),
+                    Arg.Any<ArgumentString>())
+                .Returns(false);
+            bool moduleChanged = false;
+            IHostedRepository repository = CreateRepository("project", owner: "me", isFork: false);
+            repository.CloneUrl.Returns(sourceDirectory);
+            IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+            host.GetMyRepos().Returns([repository]);
+            using ForkAndCloneForm form = new(
+                commands,
+                host,
+                (_, _) => moduleChanged = true);
+            ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+            accessor.Destination = destinationRoot;
+            await accessor.LoadMyRepositoriesAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            accessor.SelectMyRepository(0);
+
+            accessor.CloneSelectedRepository();
+
+            moduleChanged.Should().BeFalse();
+            Directory.Exists(Path.Combine(destinationRoot, "project")).Should().BeFalse();
+        }
+        finally
+        {
+            TestDirectory.Delete(root);
+        }
+    }
+
+    [AvaloniaTest]
     public void StartCloneForkFromHoster_should_open_provider_configuration_when_required()
     {
         IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
@@ -262,11 +380,33 @@ public sealed class RepositoryHostForkCloneTests
         host.Received(1).Execute(Arg.Any<GitUIEventArgs>());
     }
 
-    private static ForkAndCloneForm CreateForm(IRepositoryHostPlugin host)
+    private ForkAndCloneForm CreateForm(IRepositoryHostPlugin host)
     {
         host.Name.Returns("Test host");
-        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        IGitUICommands commands = CreateCommands(Substitute.For<IGitModule>());
         return new ForkAndCloneForm(commands, host, gitModuleChanged: null);
+    }
+
+    private IGitUICommands CreateCommands(IGitModule module)
+    {
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+        return commands;
+    }
+
+    private GitModule CreateCommittedRepository(string workingDirectory, string branch)
+    {
+        Directory.CreateDirectory(workingDirectory);
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" }).Should().BeTrue();
+        module.SetSetting("user.name", "Avalonia Test");
+        module.SetSetting("user.email", "avalonia@example.com");
+        File.WriteAllText(Path.Combine(workingDirectory, "tracked.txt"), "content");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "-M", branch }).Should().BeTrue();
+        return module;
     }
 
     private static IHostedRepository CreateRepository(string name, string owner, bool isFork)
@@ -294,6 +434,31 @@ public sealed class RepositoryHostForkCloneTests
         catch (InvalidOperationException)
         {
             return null;
+        }
+    }
+
+    private static WinFormsShims.IFolderPicker? TryGetFolderPicker()
+    {
+        try
+        {
+            return WinFormsShims.ShimHost.FolderPicker;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
+    private sealed class StubFolderPicker : WinFormsShims.IFolderPicker
+    {
+        public string? Result { get; set; }
+
+        public List<string?> RequestedPaths { get; } = [];
+
+        public string? PickFolder(WinFormsShims.IWin32Window? owner, string? selectedPath)
+        {
+            RequestedPaths.Add(selectedPath);
+            return Result;
         }
     }
 
