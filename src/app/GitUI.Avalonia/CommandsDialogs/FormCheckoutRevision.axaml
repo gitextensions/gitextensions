@@ -12,35 +12,41 @@
   <DockPanel>
     <Border x:Name="ControlsPanel"
             DockPanel.Dock="Bottom"
-            Height="41"
-            Classes="gitextensions-dialog-buttons">
+            Height="40"
+            Padding="0,0,13,0"
+            Background="{DynamicResource GitExtensionsControlBackgroundBrush}">
       <compat:IconButton x:Name="OkCheckout"
                          Classes="gitextensions-dialog-action"
-                         MinWidth="118"
+                         Width="88"
+                         Height="25"
                          HorizontalAlignment="Right"
+                         VerticalAlignment="Center"
                          Icon="{x:Static properties:Images.Checkout}"
-                         Content="Checkout"
+                         Content="_Checkout"
                          IsDefault="True" />
     </Border>
     <Border x:Name="MainPanel"
-            Classes="gitextensions-dialog-main">
+            Padding="12"
+            Background="{DynamicResource GitExtensionsPanelBackgroundBrush}">
       <Grid x:Name="tableLayoutPanel1"
-            ColumnDefinitions="124,*"
-            RowDefinitions="32,28,*"
-            ColumnSpacing="6">
+            ColumnDefinitions="130,*"
+            RowDefinitions="32,28,*">
         <Label x:Name="label2"
                Target="{Binding #commitPickerSmallControl1}"
-               Padding="0,5,0,0"
+               Margin="3,5,3,0"
+               Padding="0"
                Content="Checkout this _revision"
                VerticalContentAlignment="Center" />
         <usercontrols:CommitPickerSmallControl x:Name="commitPickerSmallControl1"
                                                Grid.Column="1"
+                                               Margin="2,3,4,3"
                                                MinWidth="100"
                                                MinHeight="26" />
         <CheckBox x:Name="Force"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Content="_Force checkout"
+                  Margin="1,4,0,5"
+                  Content="_Force (reset local changes)"
                   VerticalAlignment="Center" />
       </Grid>
     </Border>
