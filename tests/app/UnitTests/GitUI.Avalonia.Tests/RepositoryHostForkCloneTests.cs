@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
@@ -14,6 +14,7 @@ using GitUI;
 using GitUI.CommandsDialogs.RepoHosting;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -22,6 +23,8 @@ namespace GitExtensionsTests;
 public sealed class RepositoryHostForkCloneTests
 {
     private ServiceContainer _serviceContainer = null!;
+    private StubMessageBoxHost _messageBoxHost = null!;
+    private WinFormsShims.IMessageBoxHost? _originalMessageBoxHost;
 
     [SetUp]
     public void SetUp()
@@ -40,11 +43,16 @@ public sealed class RepositoryHostForkCloneTests
         _serviceContainer.AddService<IRepositoryDescriptionProvider>(repositoryDescriptionProvider);
         GitCommands.ServiceContainerRegistry.RegisterServices(_serviceContainer);
         GitUI.ServiceContainerRegistry.RegisterServices(_serviceContainer);
+
+        _originalMessageBoxHost = TryGetMessageBoxHost();
+        _messageBoxHost = new StubMessageBoxHost();
+        WinFormsShims.ShimHost.MessageBoxHost = _messageBoxHost;
     }
 
     [TearDown]
     public void TearDown()
     {
+        WinFormsShims.ShimHost.MessageBoxHost = _originalMessageBoxHost ?? new StubMessageBoxHost();
         _serviceContainer.Dispose();
     }
 
@@ -149,6 +157,100 @@ public sealed class RepositoryHostForkCloneTests
     }
 
     [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_disable_clone_for_invalid_native_path_characters()
+    {
+        IHostedRepository repository = CreateRepository("project", owner: "me", isFork: false);
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetMyRepos().Returns([repository]);
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.Destination = Path.GetTempPath();
+        await accessor.LoadMyRepositoriesAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.SelectMyRepository(0);
+        accessor.CloneEnabled.Should().BeTrue();
+
+        accessor.CreateDirectory = "project" + Path.GetInvalidPathChars()[0];
+        accessor.ValidatePaths();
+
+        accessor.CloneEnabled.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    public void ForkAndCloneForm_should_report_an_empty_clone_destination()
+    {
+        using ForkAndCloneForm form = CreateForm(Substitute.For<IRepositoryHostPlugin>());
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.Destination = string.Empty;
+        accessor.CreateDirectory = "project";
+
+        accessor.GetTargetDirectoryWithValidation().Should().BeNull();
+
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("Clone folder can not be empty");
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_route_user_not_found_and_restore_search_actions()
+    {
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetRepositoriesOfUser("missing-user")
+            .Returns(_ => throw new InvalidOperationException("HTTP 404"));
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.StartSearch("missing-user", byUser: true);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("User not found!");
+        accessor.SearchEnabled.Should().BeTrue();
+        accessor.GetFromUserEnabled.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_fork_the_selected_repository_and_reload_owned_repositories()
+    {
+        IHostedRepository repository = CreateRepository("project", owner: "other", isFork: false);
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.SearchForRepository("project").Returns([repository]);
+        host.GetMyRepos().Returns([repository]);
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.StartSearch("project", byUser: false);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.SelectSearchResult(0);
+        accessor.ForkSelectedRepository();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        repository.Received(1).Fork();
+        accessor.IsMyRepositoriesTabSelected.Should().BeTrue();
+        accessor.MyRepositoryNames.Should().Equal("project");
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_report_a_fork_failure_and_restore_the_action()
+    {
+        IHostedRepository repository = CreateRepository("project", owner: "other", isFork: false);
+        repository.When(candidate => candidate.Fork())
+            .Do(_ => throw new InvalidOperationException("provider failed"));
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.SearchForRepository("project").Returns([repository]);
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.StartSearch("project", byUser: false);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.SelectSearchResult(0);
+        accessor.ForkSelectedRepository();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("Failed to fork:" + Environment.NewLine + "provider failed");
+        accessor.ForkEnabled.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
     public void StartCloneForkFromHoster_should_open_provider_configuration_when_required()
     {
         IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
@@ -181,5 +283,34 @@ public sealed class RepositoryHostForkCloneTests
         repository.SupportedCloneProtocols.Returns([GitProtocol.Https, GitProtocol.Ssh]);
         repository.CloneProtocol.Returns(GitProtocol.Https);
         return repository;
+    }
+
+    private static WinFormsShims.IMessageBoxHost? TryGetMessageBoxHost()
+    {
+        try
+        {
+            return WinFormsShims.ShimHost.MessageBoxHost;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
+    private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
+    {
+        public List<string> Messages { get; } = [];
+
+        public WinFormsShims.DialogResult Show(
+            WinFormsShims.IWin32Window? owner,
+            string? text,
+            string? caption,
+            WinFormsShims.MessageBoxButtons buttons,
+            WinFormsShims.MessageBoxIcon icon,
+            WinFormsShims.MessageBoxDefaultButton defaultButton)
+        {
+            Messages.Add(text ?? string.Empty);
+            return WinFormsShims.DialogResult.OK;
+        }
     }
 }

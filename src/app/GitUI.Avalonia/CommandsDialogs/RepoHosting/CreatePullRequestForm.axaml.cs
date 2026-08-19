@@ -83,6 +83,7 @@ public partial class CreatePullRequestForm : GitModuleForm
 
     protected override void OnClosed(EventArgs e)
     {
+        // Clean up any resources being used.
         _lifetimeCancellation.Cancel();
         _targetBranchesSequence.CancelCurrent();
         _sourceBranchesSequence.CancelCurrent();
@@ -454,6 +455,7 @@ public partial class CreatePullRequestForm : GitModuleForm
     private IRepositoryHostPlugin GetRepoHost()
         => _repoHost ?? throw new InvalidOperationException($"{nameof(CreatePullRequestForm)} was constructed incorrectly.");
 
+    // parity-scaffolding: Exposes repository-host state and actions to the cross-platform parity suite.
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor(CreatePullRequestForm form)
