@@ -2127,7 +2127,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/CommitPickerSmallControl.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Text entry resolves a revision name or SHA; the picker button opens the shared FormChooseCommit twin. The asynchronous shared GetCommitCountString result shows how the selected revision differs from the current checkout and ignores stale completion after a newer selection."
+    "notes": "Text entry resolves a revision name or SHA; the picker button opens the shared FormChooseCommit twin. The asynchronous shared GetCommitCountString result shows how the selected revision differs from the current checkout and ignores stale completion after a newer selection. The native picker now retains the original zero-margin fill grid, 2px text inset, 25x24 icon button, and compact count-label spacing."
   },
   "src/app/GitUI/UserControls/PatchGrid.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/PatchGrid.axaml.cs",
@@ -2725,13 +2725,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormGoToCommit.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Preserves clipboard revision detection, asynchronous tag/branch loading, focused-input revision selection, immediate committed dropdown navigation, Enter handling, rev-parse validation, and the original documentation link. Avalonia editable ComboBoxes consume display strings while adjacent IGitRef lists retain original object identity."
+    "notes": "Preserves clipboard revision detection, asynchronous tag/branch loading, focused-input revision selection, immediate committed dropdown navigation, Enter handling, rev-parse validation, and the original documentation link. Avalonia editable ComboBoxes consume display strings while adjacent IGitRef lists retain original object identity. The help copy is again owned by the same label2.Text translation key as the original rather than an Avalonia-only initializer."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGoToCommit.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormGoToCommit.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the original named fields, minimum dimensions, help content, editable tag/branch selectors, default Go action, and input metadata."
+    "notes": "Native AXAML retains the original named fields, client/minimum dimensions, translated help content, editable tag/branch selectors, default Go action, and input metadata. The 125% reference capture now drives the original 12/155/521px top row, 45x43x470x141 help group, and 155x216/258 selector geometry."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormOpenDirectory.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormOpenDirectory.axaml.cs",
@@ -2874,7 +2874,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutRevision.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the original commit picker, force option, icon-bearing default checkout action, inherited dialog-panel shape, dimensions, names, and input metadata."
+    "notes": "Native AXAML retains the original commit picker, force option, icon-bearing default checkout action, inherited dialog-panel shape, dimensions, names, and input metadata. Its panel colors, 12px content inset, compact picker, full force caption, and 88x25 right-aligned action follow the fresh 125% WinForms reference."
   },
   "src/app/GitUI/CommandsDialogs/FormCleanupRepository.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCleanupRepository.axaml.cs",
@@ -3122,13 +3122,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchControl.axaml.cs",
     "status": "functional",
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Preserves asynchronous candidate lookup, 20-item limit, first selection, selection range, dropdown sizing and visibility, wraparound arrows, Enter/Escape/double-click routes, cancellation, and configurable default/hover/focus borders. Avalonia compiled AXAML cannot target an open generic type, so the exact generic API derives from a same-named non-generic visual shell."
+    "notes": "Preserves asynchronous candidate lookup, 20-item limit, first selection, selection range, dropdown sizing and visibility, wraparound arrows, Enter/Escape/double-click routes, cancellation, and configurable default/hover/focus borders. Avalonia compiled AXAML cannot target an open generic type, so the exact generic API derives from a same-named non-generic visual shell. WinForms assigns the 300px popup width at runtime in physical pixels, so the twin converts it through the owning top-level render scale."
   },
   "src/app/GitUI/CommandsDialogs/SearchControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchControl.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the original named search box, result list, minimum size, and stacked dropdown geometry through the non-generic compiled-XAML shell."
+    "notes": "Native AXAML retains the original named search box, compact result rows, minimum size, and stacked dropdown geometry through the non-generic compiled-XAML shell. Search results retain the original system-highlight selection while keyboard focus remains in the text box."
   },
   "src/app/GitUI/CommandsDialogs/SearchWindow.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchWindow.axaml.cs",
@@ -3140,7 +3140,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchWindow.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native borderless transparent AXAML retains the original prompt, content host, initial dimensions, center-owner placement, and taskbar suppression through the non-generic compiled-XAML shell."
+    "notes": "Native borderless transparent AXAML retains the original prompt, empty title, content host, initial dimensions, center-owner placement, and taskbar suppression through the non-generic compiled-XAML shell. The prompt uses the resolved control surface/border colors and measured 23px row before child-driven sizing."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs",

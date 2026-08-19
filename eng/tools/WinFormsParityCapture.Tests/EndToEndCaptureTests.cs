@@ -9,6 +9,31 @@ namespace WinFormsParityCapture.Tests;
 public sealed class EndToEndCaptureTests
 {
     [Test]
+    public void StageCapturePlan_should_replace_the_packaged_default()
+    {
+        string directory = Path.Combine(Path.GetTempPath(), $"GitExtensions.ParityPlan-{Guid.NewGuid():N}");
+        string sourceDirectory = Path.Combine(directory, "source");
+        string runtimeDirectory = Path.Combine(directory, "runtime");
+        Directory.CreateDirectory(sourceDirectory);
+        Directory.CreateDirectory(runtimeDirectory);
+        string sourcePlan = Path.Combine(sourceDirectory, "capture-plan.json");
+        string isolatedPlan = Path.Combine(runtimeDirectory, "capture-plan.json");
+        File.WriteAllText(sourcePlan, "caller plan");
+        File.WriteAllText(isolatedPlan, "packaged plan");
+
+        try
+        {
+            CaptureRunner.StageCapturePlan(sourcePlan, isolatedPlan);
+
+            File.ReadAllText(isolatedPlan).Should().Be("caller plan");
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Test]
     public async Task CaptureAsync_should_reject_repository_inside_working_tree_Async()
     {
         CaptureOptions options = new()

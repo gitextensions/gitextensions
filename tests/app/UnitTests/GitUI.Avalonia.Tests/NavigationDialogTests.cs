@@ -1,4 +1,5 @@
 using System.Reflection;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -72,6 +73,51 @@ public sealed class NavigationDialogTests
     }
 
     [AvaloniaTest]
+    public void FormGoToCommit_should_match_the_reference_client_geometry_and_translation_text()
+    {
+        (IGitUICommands commands, _) = CreateCommands();
+        FormGoToCommit form = new(commands);
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            AssertBounds(form.FindControl<TextBox>("textboxCommitExpression")!, 155, 13, 360, 23);
+            AssertBounds(form.FindControl<Button>("goButton")!, 521, 10, 75, 28);
+            AssertBounds(form.FindControl<GroupBox>("groupBox1")!, 45, 43, 470, 141);
+            AssertBounds(form.FindControl<ComboBox>("comboBoxTags")!, 155, 216, 287, 23);
+            AssertBounds(form.FindControl<ComboBox>("comboBoxBranches")!, 155, 258, 287, 23);
+            form.FindControl<TextBlock>("label2")!.Text.Should().Be(
+                "Commit expression examples:\r\n- complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9\r\n- partial commit hash (if unique): e. g.: 8eab51fcb9c453\r\n- tag name\r\n- branch name");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormCheckoutRevision_should_match_the_reference_client_geometry_and_text()
+    {
+        (IGitUICommands commands, _) = CreateCommands();
+        FormCheckoutRevision form = new(commands);
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            AssertBounds(form.FindControl<Grid>("tableLayoutPanel1")!, 12, 12, 457, 67);
+            AssertBounds(form.FindControl<Button>("OkCheckout")!, 380, 98, 88, 25);
+            form.FindControl<Label>("label2")!.Content.Should().Be("Checkout this _revision");
+            form.FindControl<CheckBox>("Force")!.Content.Should().Be("_Force (reset local changes)");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void SearchControl_should_limit_candidates_select_the_first_and_report_its_size()
     {
         Avalonia.Size reportedSize = default;
@@ -85,6 +131,30 @@ public sealed class NavigationDialogTests
         results.SelectedIndex.Should().Be(0);
         results.IsVisible.Should().BeTrue();
         reportedSize.Width.Should().BeGreaterThanOrEqualTo(300);
+    }
+
+    [AvaloniaTest]
+    public void SearchControl_should_convert_the_reference_popup_width_from_physical_pixels()
+    {
+        Avalonia.Size reportedSize = default;
+        SearchControl<string> search = new(_ => [], size => reportedSize = size);
+        Window host = new() { Width = 325, Height = 91, Content = search };
+        host.Show();
+        try
+        {
+            host.SetRenderScaling(1.25);
+            Dispatcher.UIThread.RunJobs();
+            Invoke(search, "SearchForCandidates", (object)new[] { "src/App.cs" });
+            Dispatcher.UIThread.RunJobs();
+
+            reportedSize.Width.Should().BeApproximately(240, 0.01);
+            reportedSize.Height.Should().BeInRange(39, 41);
+            search.FindControl<ListBox>("listBoxSearchResult")!.Classes.Should().Contain("search-results");
+        }
+        finally
+        {
+            host.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -126,6 +196,18 @@ public sealed class NavigationDialogTests
         MethodInfo method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic)
             ?? throw new InvalidOperationException($"{target.GetType().Name}.{methodName} was not found.");
         method.Invoke(target, arguments);
+    }
+
+    private static void AssertBounds(Control control, double x, double y, double width, double height)
+    {
+        TopLevel topLevel = TopLevel.GetTopLevel(control)
+            ?? throw new InvalidOperationException($"{control.Name} is not attached to its window.");
+        Point origin = control.TranslatePoint(default, topLevel)
+            ?? throw new InvalidOperationException($"{control.Name} is not attached to its window.");
+        origin.X.Should().BeApproximately(x, 1, control.Name);
+        origin.Y.Should().BeApproximately(y, 1, control.Name);
+        control.Bounds.Width.Should().BeApproximately(width, 1, control.Name);
+        control.Bounds.Height.Should().BeApproximately(height, 1, control.Name);
     }
 
     private static (IGitUICommands Commands, IGitModule Module) CreateCommands()

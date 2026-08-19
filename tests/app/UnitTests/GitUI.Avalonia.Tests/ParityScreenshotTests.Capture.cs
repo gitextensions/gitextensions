@@ -43,6 +43,14 @@ public sealed partial class ParityScreenshotTests
 
     [Test]
     [Category(P02Category)]
+    public void Generic_search_capture_hosts_should_use_the_declared_shell_sizes()
+    {
+        GetCaptureSize(typeof(SearchControl<string>)).Should().Be((325, 91));
+        GetCaptureSize(typeof(SearchWindow<string>)).Should().Be((325, 113));
+    }
+
+    [Test]
+    [Category(P02Category)]
     public void Capture_plan_should_define_the_shared_acceptance_matrix()
     {
         CapturePlan plan = CapturePlan.Load(GetCapturePlanPath());
