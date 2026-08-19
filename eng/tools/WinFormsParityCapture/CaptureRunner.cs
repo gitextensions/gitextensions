@@ -40,10 +40,7 @@ internal static class CaptureRunner
         {
             CopyRuntime(AppContext.BaseDirectory, runtimeRoot);
             string isolatedPlanPath = Path.Combine(runtimeRoot, Path.GetFileName(planPath));
-            if (!File.Exists(isolatedPlanPath))
-            {
-                File.Copy(planPath, isolatedPlanPath);
-            }
+            StageCapturePlan(planPath, isolatedPlanPath);
 
             foreach (CaptureComponentPlan component in components)
             {
@@ -138,6 +135,12 @@ internal static class CaptureRunner
         {
             DeleteIsolationRoot(isolationRoot);
         }
+    }
+
+    // parity-scaffolding: the isolated worker must consume the caller's exact plan, even when its name matches the packaged default.
+    internal static void StageCapturePlan(string planPath, string isolatedPlanPath)
+    {
+        File.Copy(planPath, isolatedPlanPath, overwrite: true);
     }
 
     public static int CaptureWorker(CaptureOptions options)

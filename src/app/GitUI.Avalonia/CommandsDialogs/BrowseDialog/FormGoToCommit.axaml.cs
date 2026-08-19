@@ -33,7 +33,6 @@ public sealed partial class FormGoToCommit : GitModuleForm
     {
         InitializeComponent();
         WireEvents();
-        InitializeHelpText();
         InitializeComplete();
     }
 
@@ -42,7 +41,6 @@ public sealed partial class FormGoToCommit : GitModuleForm
     {
         InitializeComponent();
         WireEvents();
-        InitializeHelpText();
         AcceptButton = goButton;
         InitializeComplete();
     }
@@ -258,10 +256,5 @@ public sealed partial class FormGoToCommit : GitModuleForm
         comboBoxBranches.KeyUp += comboBoxBranches_KeyUp;
         comboBoxBranches.DropDownOpened += (_, _) => _branchesDropDownOpened = true;
         comboBoxBranches.DropDownClosed += comboBoxBranches_SelectionChangeCommitted;
-    }
-
-    private void InitializeHelpText()
-    {
-        label2.Text = "Commit expression examples:\r\n- complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9\r\n- partial commit hash (if unique): e. g.: 8eab51fcb9c453\r\n- tag name\r\n- branch name";
     }
 }

@@ -146,20 +146,22 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
 
         SearchResultListBox.IsVisible = true;
 
-        double width = 300;
+        double renderScale = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
+        double width = 300 / renderScale;
         foreach (object? item in SearchResultListBox.Items)
         {
             TextBlock measuredText = new() { Text = Convert.ToString(item) };
             measuredText.Measure(AvaloniaSize.Infinity);
-            width = Math.Max(width, measuredText.DesiredSize.Width + 12);
+            width = Math.Max(width, measuredText.DesiredSize.Width);
         }
 
-        double itemHeight = Math.Max(20, SearchTextBox.FontSize * 1.5);
+        // WinForms assigns this runtime popup size in physical pixels; Avalonia sizes in DIPs.
+        double itemHeight = Math.Round(SearchTextBox.FontSize * 0.75 * renderScale) / renderScale;
         double listHeight = Math.Min(800, itemHeight * (SearchResultListBox.ItemCount + 1));
         SearchResultListBox.Width = width;
         SearchResultListBox.Height = listHeight;
 
-        _onSizeChanged(new AvaloniaSize(width, listHeight + Math.Max(23, SearchTextBox.Bounds.Height)));
+        _onSizeChanged(new AvaloniaSize(width, listHeight + Math.Max(22, SearchTextBox.Bounds.Height)));
     }
 
     public T? SelectedItem => (T?)SearchResultListBox.SelectedItem;

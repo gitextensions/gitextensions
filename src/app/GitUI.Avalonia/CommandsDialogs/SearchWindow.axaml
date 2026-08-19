@@ -8,12 +8,13 @@
         WindowDecorations="None"
         TransparencyLevelHint="Transparent"
         Background="Transparent"
+        Title=""
         WindowStartupLocation="CenterOwner">
   <Grid x:Name="tableLayoutPanel1"
-        RowDefinitions="22,*">
+        RowDefinitions="23,*">
     <Border BorderThickness="1"
-            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
-            Background="{DynamicResource ThemeControlLowBrush}">
+            BorderBrush="{DynamicResource GitExtensionsControlBorderBrush}"
+            Background="{DynamicResource GitExtensionsControlBackgroundBrush}">
       <TextBlock x:Name="lblEnterFileName"
                  Padding="0,7,0,0"
                  Text="Enter File Name" />
