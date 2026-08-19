@@ -132,6 +132,38 @@ public sealed class EndToEndCaptureTests
 
     [Test]
     [Apartment(ApartmentState.STA)]
+    public void State_driver_should_activate_a_hidden_tab_before_focusing_its_control()
+    {
+        using Form form = new();
+        using TabControl tabs = new() { Dock = DockStyle.Fill };
+        using TabPage first = new("First");
+        using TabPage second = new("Second");
+        using TextBox target = new() { Name = "txtTarget" };
+        second.Controls.Add(target);
+        tabs.TabPages.Add(first);
+        tabs.TabPages.Add(second);
+        tabs.SelectedTab = first;
+        form.Controls.Add(tabs);
+        form.Show();
+
+        using (ControlStateDriver.Apply(
+                   form,
+                   new CaptureStatePlan
+                   {
+                       Id = "second.focused",
+                       Kind = CaptureStateKind.Focus,
+                       TargetField = target.Name,
+                   }))
+        {
+            tabs.SelectedTab.Should().BeSameAs(second);
+            target.Focused.Should().BeTrue();
+        }
+
+        tabs.SelectedTab.Should().BeSameAs(first);
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
     public void State_driver_should_reject_a_context_menu_that_declines_to_open()
     {
         using CancelingContextMenuForm form = new();

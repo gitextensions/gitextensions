@@ -217,6 +217,7 @@ internal sealed class ControlStateDriver : IDisposable
             throw new CaptureStateUnsupportedException("The focused state requires a focusable Control.");
         }
 
+        ActivateContainingTabs(control);
         _ = control.Handle;
         Form? form = control.FindForm();
         form?.Activate();
@@ -242,6 +243,35 @@ internal sealed class ControlStateDriver : IDisposable
         }
 
         _restoreActions.Add(() => previous?.Focus());
+    }
+
+    private void ActivateContainingTabs(Control control)
+    {
+        TabPage[] tabPages = EnumerateParents(control)
+            .OfType<TabPage>()
+            .Reverse()
+            .ToArray();
+        foreach (TabPage tabPage in tabPages)
+        {
+            if (tabPage.Parent is not TabControl tabControl
+                || ReferenceEquals(tabControl.SelectedTab, tabPage))
+            {
+                continue;
+            }
+
+            TabPage? previous = tabControl.SelectedTab;
+            tabControl.SelectedTab = tabPage;
+            PumpEvents();
+            _restoreActions.Add(() => tabControl.SelectedTab = previous);
+        }
+
+        static IEnumerable<Control> EnumerateParents(Control child)
+        {
+            for (Control? parent = child.Parent; parent is not null; parent = parent.Parent)
+            {
+                yield return parent;
+            }
+        }
     }
 
     private void Hover(object target)

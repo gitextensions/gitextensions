@@ -12,6 +12,7 @@
     <TabControl x:Name="tabControl"
                 Margin="3">
       <TabItem x:Name="myReposPage"
+               Classes="gitextensions-dialog-tab"
                Header="My repositories">
         <Grid x:Name="tableLayoutPanel5"
               ColumnDefinitions="7*,3*"
@@ -46,6 +47,7 @@
             </Grid>
             <ListBox x:Name="myReposLV"
                      Grid.Row="1"
+                     Classes="gitextensions-native-list-items"
                      SelectionMode="Single" />
           </Grid>
           <TextBlock x:Name="helpTextLbl"
@@ -59,6 +61,7 @@
       </TabItem>
 
       <TabItem x:Name="searchReposPage"
+               Classes="gitextensions-dialog-tab"
                Header="Search for repositories">
         <Grid x:Name="tableLayoutPanel1"
               RowDefinitions="35,*,30"
@@ -112,6 +115,7 @@
               </Grid>
               <ListBox x:Name="searchResultsLV"
                        Grid.Row="1"
+                       Classes="gitextensions-native-list-items"
                        SelectionMode="Single" />
             </Grid>
 
