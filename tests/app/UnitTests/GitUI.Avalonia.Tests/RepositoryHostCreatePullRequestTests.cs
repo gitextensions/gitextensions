@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
@@ -167,6 +167,46 @@ public sealed class RepositoryHostCreatePullRequestTests
             "Portable PR",
             "Created from Avalonia");
         _messageBoxHost.Messages.Should().Contain("Done");
+    }
+
+    [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_require_a_non_empty_title()
+    {
+        PullRequestFixture fixture = CreateFixture();
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.Title = "  ";
+
+        accessor.Create();
+
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("You must specify a title.");
+        fixture.TargetRepository.DidNotReceiveWithAnyArgs()
+            .CreatePullRequest(default!, default!, default!, default!);
+    }
+
+    [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_report_a_provider_failure_and_restore_create()
+    {
+        PullRequestFixture fixture = CreateFixture();
+        fixture.TargetRepository
+            .When(repository => repository.CreatePullRequest("feature", "develop", "Portable PR", "Body"))
+            .Do(_ => throw new InvalidOperationException("provider failed"));
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.Title = "Portable PR";
+        accessor.Body = "Body";
+
+        accessor.Create();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("Failed to create pull request." + Environment.NewLine + "provider failed");
+        accessor.CreateEnabled.Should().BeTrue();
     }
 
     [AvaloniaTest]
