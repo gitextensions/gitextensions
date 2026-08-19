@@ -1,5 +1,6 @@
 using System.ComponentModel.Design;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using GitCommands;
@@ -26,6 +27,7 @@ public sealed class RepositoryHostCreatePullRequestTests
 {
     private ServiceContainer _serviceContainer = null!;
     private string _workingDirectory = null!;
+    private string _originalApplicationExecutablePath = null!;
     private StubMessageBoxHost _messageBoxHost = null!;
     private IRepositoryHostPlugin[] _originalGitHosters = null!;
 
@@ -34,6 +36,9 @@ public sealed class RepositoryHostCreatePullRequestTests
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        AppSettings.TestAccessor settingsAccessor = AppSettings.GetTestAccessor();
+        _originalApplicationExecutablePath = settingsAccessor.ApplicationExecutablePath;
+        settingsAccessor.ApplicationExecutablePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "GitExtensions.Avalonia.exe");
 
         _serviceContainer = new ServiceContainer();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(_serviceContainer);
@@ -64,6 +69,7 @@ public sealed class RepositoryHostCreatePullRequestTests
     {
         PluginRegistry.GitHosters.Clear();
         PluginRegistry.GitHosters.AddRange(_originalGitHosters);
+        AppSettings.GetTestAccessor().ApplicationExecutablePath = _originalApplicationExecutablePath;
         _serviceContainer.Dispose();
         TestDirectory.Delete(_workingDirectory);
     }
@@ -102,6 +108,22 @@ public sealed class RepositoryHostCreatePullRequestTests
             nameof(CreatePullRequestForm), "label5", "Text", "Target branch:");
         translation.Received(1).AddTranslationItem(
             nameof(CreatePullRequestForm), "_strFailedToLoadTemplate", "Text", "Failed to load PR template from file.");
+    }
+
+    [AvaloniaTest]
+    public void CreatePullRequestForm_should_focus_the_hosted_body_editor()
+    {
+        using CreatePullRequestForm form = CreateForm(CreateFixture(), chooseRemote: null, chooseBranch: null);
+        GitUI.SpellChecker.EditNetSpell body = form.FindControl<GitUI.SpellChecker.EditNetSpell>("_bodyTB")!;
+        form.Show();
+        form.SetRenderScaling(1.25);
+        Dispatcher.UIThread.RunJobs();
+
+        body.Focus().Should().BeTrue();
+        Dispatcher.UIThread.RunJobs();
+        body.GetTestAccessor().TextBox.IsFocused.Should().BeTrue();
+
+        form.Close();
     }
 
     [AvaloniaTest]

@@ -396,14 +396,19 @@ public sealed partial class ParityScreenshotTests
         IHostedRepository repository,
         bool isOwnedByMe)
     {
+        // parity-scaffolding: Read nested substitutes before configuring the remote; interpolating
+        // substitute calls inside Returns can accidentally configure the repository's last call.
+        string owner = repository.Owner ?? string.Empty;
+        string repositoryName = repository.Name;
+        string cloneUrl = repository.CloneUrl;
         IHostedRemote remote = Substitute.For<IHostedRemote>();
         remote.Name.Returns(name);
-        remote.Data.Returns($"{repository.Owner}/{repository.Name}");
-        remote.DisplayData.Returns($"{remote.Data} ({name})");
+        remote.Data.Returns($"{owner}/{repositoryName}");
+        remote.DisplayData.Returns($"{owner}/{repositoryName} ({name})");
         remote.IsOwnedByMe.Returns(isOwnedByMe);
-        remote.Owner.Returns(repository.Owner);
-        remote.RemoteRepositoryName.Returns(repository.Name);
-        remote.RemoteUrl.Returns(repository.CloneUrl);
+        remote.Owner.Returns(owner);
+        remote.RemoteRepositoryName.Returns(repositoryName);
+        remote.RemoteUrl.Returns(cloneUrl);
         remote.CloneProtocol.Returns(GitProtocol.Https);
         remote.GetHostedRepository().Returns(repository);
         return remote;
@@ -440,8 +445,8 @@ public sealed partial class ParityScreenshotTests
             return new CreatePullRequestForm(
                 context.Commands,
                 CreateRepositoryHostCaptureFixture(context),
-                chooseRemote: "origin",
-                chooseBranch: FeatureBranchName);
+                chooseRemote: null,
+                chooseBranch: null);
         }
 
         if (viewType == typeof(ForkAndCloneForm))
@@ -1396,20 +1401,27 @@ public sealed partial class ParityScreenshotTests
             repositories.ItemCount.Should().BeGreaterThan(0);
         }
 
-        if (root is ViewPullRequestsForm)
+        if (root is ViewPullRequestsForm viewPullRequestsForm)
         {
-            // parity-scaffolding: Wait for the selected provider's pull request and discussion loaders.
+            // parity-scaffolding: Wait for the selected provider's pull request, diff, selected-file,
+            // and discussion loaders so the capture cannot record a settled row over an empty viewer.
+            ViewPullRequestsForm.TestAccessor accessor = viewPullRequestsForm.GetTestAccessor();
             ListBox pullRequests = GetRequiredControl<ListBox>(root, "_pullRequestsList");
             ListBox discussion = GetRequiredControl<ListBox>(root, "_discussionWB");
             Stopwatch pullRequestStopwatch = Stopwatch.StartNew();
-            while ((pullRequests.ItemCount == 0 || discussion.ItemCount == 0)
-                   && pullRequestStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+            while ((pullRequests.ItemCount == 0
+                    || accessor.DiffItems.Count == 0
+                    || string.IsNullOrEmpty(accessor.DiffText)
+                    || discussion.ItemCount == 0)
+                   && pullRequestStopwatch.Elapsed < TimeSpan.FromSeconds(15))
             {
                 Dispatcher.UIThread.RunJobs();
                 await Task.Delay(10);
             }
 
             pullRequests.ItemCount.Should().BeGreaterThan(0);
+            accessor.DiffItems.Should().NotBeEmpty();
+            accessor.DiffText.Should().NotBeNullOrEmpty();
             discussion.ItemCount.Should().BeGreaterThan(0);
         }
 

@@ -72,6 +72,27 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(P02Category)]
+    public void Capture_text_seeding_should_preserve_composite_editors()
+    {
+        EditNetSpell editor = new() { Name = "bodyEditor" };
+        CaptureComponentPlan component = new()
+        {
+            TypeName = typeof(EditNetSpell).FullName!,
+            TextValues = new Dictionary<string, string> { [editor.Name] = "Parity body" },
+            States = [new CaptureStatePlan { Id = "normal", Kind = CaptureStateKind.Normal }],
+        };
+        TextBox textBox = editor.GetTestAccessor().TextBox;
+        object? content = editor.Content;
+
+        ApplyTextValues(editor, component);
+
+        editor.Text.Should().Be("Parity body");
+        editor.GetTestAccessor().TextBox.Should().BeSameAs(textBox);
+        editor.Content.Should().BeSameAs(content);
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
     public void Avalonia_tree_reader_should_emit_canonical_shared_schema()
     {
         Window window = new() { Width = 320, Height = 120 };
@@ -790,6 +811,10 @@ public sealed partial class ParityScreenshotTests
         {
             PrepareView(captureHost, context);
             window.Show();
+            // parity-scaffolding: A form may restore its persisted bounds during OnOpened;
+            // the paired plan's declared size remains authoritative for every state.
+            window.Width = width;
+            window.Height = height;
             window.SetRenderScaling(renderScale);
             if (!isWindow)
             {
@@ -846,6 +871,10 @@ public sealed partial class ParityScreenshotTests
                 fileStatusList.GetTestAccessor().UpdateContextMenu().Should().BeFalse();
             }
 
+            // parity-scaffolding: Each planned state owns a fresh headless window; activate it
+            // before driving focus so a previously closed capture cannot retain the input root.
+            window.Activate();
+            Dispatcher.UIThread.RunJobs();
             using AvaloniaControlStateDriver driver = AvaloniaControlStateDriver.Apply(view, state);
             using WriteableBitmap primaryFrame = CaptureRenderedFrame(window);
             PixelRect primarySurfaceBounds = cropToComponent
@@ -1247,6 +1276,11 @@ public sealed partial class ParityScreenshotTests
                 // parity-scaffolding: Seeds editable Avalonia combo boxes from the shared capture plan.
                 case ComboBox comboBox when comboBox.IsEditable:
                     comboBox.Text = text;
+                    break;
+                // parity-scaffolding: Preserve the composite editor's visual tree while seeding
+                // its product text boundary; assigning Content would replace its native TextBox.
+                case EditNetSpell editNetSpell:
+                    editNetSpell.Text = text;
                     break;
                 case TextBox textBox:
                     textBox.Text = text;
