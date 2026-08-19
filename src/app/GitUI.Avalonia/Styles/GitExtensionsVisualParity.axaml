@@ -151,6 +151,7 @@
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#FDFDFD" />
+          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBorderBrush" Color="#808080" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#B5D7F3" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#393939" />
           <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#000000" />
@@ -251,7 +252,8 @@
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#2E2E2E" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#202020" />
-          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#2D2D2D" />
+          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#2F2F2F" />
+          <SolidColorBrush x:Key="GitExtensionsMenuRenderedBorderBrush" Color="#6B6B6B" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckBackgroundBrush" Color="#2E3F56" />
           <SolidColorBrush x:Key="GitExtensionsMenuCheckForegroundBrush" Color="#E1E3E6" />
           <SolidColorBrush x:Key="GitExtensionsControlForegroundBrush" Color="#FFFFFF" />
@@ -982,8 +984,8 @@
     <Setter Property="Width" Value="18.4" />
     <Setter Property="Height" Value="18.4" />
   </Style>
-  <Style Selector="MenuItem.revision-grid-view-menu-row /template/ Border#PART_LayoutRoot">
-    <!-- ToolStrip's renderer paints a menu surface color distinct from the item's BackColor property. -->
+  <Style Selector="MenuItem:not(:pointerover) /template/ Border#PART_LayoutRoot">
+    <!-- ToolStrip's renderer paints a menu surface color distinct from each item's BackColor property. -->
     <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
   </Style>
   <Style Selector="MenuItem.revision-grid-view-menu-row /template/ ContentControl#PART_IconPresenter">
@@ -995,7 +997,7 @@
         <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
           <Border Height="1"
                   VerticalAlignment="Center"
-                  Background="{TemplateBinding Foreground}" />
+                  Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
         </Border>
       </ControlTemplate>
     </Setter>
@@ -1007,10 +1009,10 @@
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Background="{TemplateBinding Background}">
+        <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
           <Border Height="1"
                   VerticalAlignment="Center"
-                  Background="{TemplateBinding Foreground}" />
+                  Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
         </Border>
       </ControlTemplate>
     </Setter>
@@ -1022,10 +1024,10 @@
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Background="{TemplateBinding Background}">
+        <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
           <Border Height="1"
                   VerticalAlignment="Center"
-                  Background="{TemplateBinding Foreground}" />
+                  Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
         </Border>
       </ControlTemplate>
     </Setter>
@@ -1088,6 +1090,9 @@
   </Style>
   <Style Selector="MenuItem.gitextensions-menu-caption">
     <Setter Property="FontStyle" Value="Italic" />
+  </Style>
+  <Style Selector="MenuItem.gitextensions-menu-caption /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- ToolStrip dims only the caption text; reducing the complete row opacity also changes the painted menu surface. -->
     <Setter Property="Opacity" Value="0.7" />
   </Style>
   <Style Selector="ContextMenu">
@@ -1101,7 +1106,7 @@
     <Setter Property="Padding" Value="0" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
   </Style>
   <Style Selector="ContextMenu /template/ ItemsPresenter#PART_ItemsPresenter">
     <Setter Property="Margin" Value="0" />
@@ -1115,7 +1120,7 @@
     <Setter Property="Padding" Value="0" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlForegroundBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
   </Style>
   <Style Selector="MenuFlyoutPresenter /template/ Border#LayoutRoot">
     <Setter Property="Padding" Value="0" />
@@ -1170,6 +1175,9 @@
     <!-- WinForms joins an open top-level item visually to its dropdown. -->
     <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
     <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
+  </Style>
+  <Style Selector="Menu > MenuItem:not(:selected):not(:pointerover) /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
   </Style>
 
   <Style Selector="GridSplitter">
