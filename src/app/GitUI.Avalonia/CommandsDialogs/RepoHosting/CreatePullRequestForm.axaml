@@ -10,47 +10,55 @@
         Title="Create Pull Request">
   <Grid RowDefinitions="27,27,27,*,39"
         Margin="9,12,8,9">
-    <Grid ColumnDefinitions="126,*">
+    <Grid ColumnDefinitions="132,*">
       <TextBlock x:Name="label3"
                  VerticalAlignment="Center"
                  Text="Target repository:" />
       <ComboBox x:Name="_pullReqTargetsCB"
                 Grid.Column="1"
+                Margin="0,0,6,0"
+                HorizontalAlignment="Stretch"
                 VerticalContentAlignment="Center" />
     </Grid>
 
     <Grid Grid.Row="1"
-          ColumnDefinitions="126,*">
+          ColumnDefinitions="132,*">
       <TextBlock x:Name="label4"
                  VerticalAlignment="Center"
                  Text="Your branch:" />
       <ComboBox x:Name="_yourBranchesCB"
                 Grid.Column="1"
+                Margin="0,0,6,0"
+                HorizontalAlignment="Stretch"
                 VerticalContentAlignment="Center" />
     </Grid>
 
     <Grid Grid.Row="2"
-          ColumnDefinitions="126,*">
+          ColumnDefinitions="132,*">
       <TextBlock x:Name="label5"
                  VerticalAlignment="Center"
                  Text="Target branch:" />
       <ComboBox x:Name="_remoteBranchesCB"
                 Grid.Column="1"
+                Margin="0,0,6,0"
+                HorizontalAlignment="Stretch"
                 VerticalContentAlignment="Center" />
     </Grid>
 
-    <GroupBox x:Name="groupBox1"
-              Grid.Row="3"
-              Margin="3,7,0,0"
-              Header="Pull request data">
+    <HeaderedContentControl x:Name="groupBox1"
+                            Grid.Row="3"
+                            Classes="gitextensions-group-box"
+                            Margin="3,7,0,0"
+                            Padding="6,2,6,6"
+                            Header="Pull request data">
       <Grid RowDefinitions="27,*"
-            ColumnDefinitions="46,*"
-            Margin="6">
+            ColumnDefinitions="52,*">
         <TextBlock x:Name="label1"
                    VerticalAlignment="Center"
                    Text="Title:" />
         <TextBox x:Name="_titleTB"
                  Grid.Column="1"
+                 Height="21"
                  VerticalContentAlignment="Center" />
         <TextBlock x:Name="label2"
                    Grid.Row="1"
@@ -59,10 +67,9 @@
                    Text="Body:" />
         <spellChecker:EditNetSpell x:Name="_bodyTB"
                                    Grid.Row="1"
-                                   Grid.Column="1"
-                                   Margin="0,3,0,0" />
+                                   Grid.Column="1" />
       </Grid>
-    </GroupBox>
+    </HeaderedContentControl>
 
     <Button x:Name="_createBtn"
             Grid.Row="4"

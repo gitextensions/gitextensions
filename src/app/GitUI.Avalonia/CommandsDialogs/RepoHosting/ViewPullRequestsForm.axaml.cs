@@ -848,6 +848,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         public IReadOnlyList<GitItemStatus> DiffItems => form._fileStatusList.GitItemStatuses;
 
+        // parity-scaffolding: Lets the paired capture wait for the selected patch, not just its file row.
+        public string DiffText => form._diffViewer.TextEditor.Text;
+
         public string Comment
         {
             get => form._postCommentText.Text;

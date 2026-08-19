@@ -64,6 +64,7 @@
           </Grid>
           <ListBox x:Name="_pullRequestsList"
                    Grid.Row="1"
+                   Classes="gitextensions-native-list-items"
                    SelectionMode="Single" />
         </Grid>
 
@@ -94,6 +95,7 @@
                 Grid.Row="2"
                 Margin="3,0,3,3">
       <TabItem x:Name="tabPage1"
+               Classes="gitextensions-dialog-tab"
                Header="Diffs">
         <Grid x:Name="splitContainer3"
               RowDefinitions="116,6,*">
@@ -112,6 +114,7 @@
       </TabItem>
 
       <TabItem x:Name="tabPage2"
+               Classes="gitextensions-dialog-tab"
                Header="Comments">
         <Grid x:Name="tableLayoutPanel1"
               RowDefinitions="*,82,30">
