@@ -3,15 +3,16 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.UserControls.CommitPickerSmallControl">
-  <Grid x:Name="tableLayoutPanel1" ColumnDefinitions="*,Auto,Auto" Margin="2">
-    <TextBox x:Name="textBoxCommitHash" MaxLength="100" />
+  <Grid x:Name="tableLayoutPanel1" ColumnDefinitions="*,Auto,Auto">
+    <TextBox x:Name="textBoxCommitHash" Height="22" Margin="0,2,0,0" MaxLength="100" />
     <compat:IconButton x:Name="buttonPickCommit"
                        Classes="gitextensions-icon-only"
                        Grid.Column="1"
-                       Margin="4,0"
-                       Width="28"
+                       Margin="3,0"
+                       Width="25"
+                       Height="24"
                        Icon="{x:Static properties:Images.SelectRevision}" />
-    <TextBlock x:Name="lbCommits" Grid.Column="2" Margin="8,0,0,0"
+    <TextBlock x:Name="lbCommits" Grid.Column="2" Margin="3,0,0,0"
                Opacity="0.65" VerticalAlignment="Center" />
   </Grid>
 </UserControl>

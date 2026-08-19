@@ -519,7 +519,7 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormCheckoutRevision))
         {
             FormCheckoutRevision form = new(context.Commands);
-            form.SetRevision(context.HeadRevision.ObjectId.ToString());
+            form.SetRevision("HEAD");
             return form;
         }
 
@@ -1659,12 +1659,14 @@ public sealed partial class ParityScreenshotTests
             return (1030, 665);
         }
 
-        if (viewType == typeof(SearchControl))
+        if (viewType == typeof(SearchControl)
+            || (viewType.IsGenericType && viewType.GetGenericTypeDefinition() == typeof(SearchControl<>)))
         {
             return (325, 91);
         }
 
-        if (viewType == typeof(SearchWindow))
+        if (viewType == typeof(SearchWindow)
+            || (viewType.IsGenericType && viewType.GetGenericTypeDefinition() == typeof(SearchWindow<>)))
         {
             return (325, 113);
         }

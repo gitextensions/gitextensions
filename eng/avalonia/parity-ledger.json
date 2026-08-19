@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+  "analyzedCommit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
   "axisOrder": [
     "structural",
     "functional",
@@ -2819,61 +2819,97 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 62,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 97,
+          "note": "The current inventory retains 97 source-shape findings for FormGoToCommit; framework deviations and member/markup differences remain to be closed or justified."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
           ],
-          "platforms": [],
-          "findingCount": 119,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 97,
+          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 3428,
+          "note": "The fresh 125% light/dark/custom matrix records 3428 diagnostics for FormGoToCommit; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 654,
+          "note": "Light, dark, and custom captures retain 654 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 201,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 201 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/wayland-retry/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh application-level regression smokes passed and their screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak. These are not component-exhaustive parity walks; macOS remains unavailable."
         }
       }
     },
@@ -2884,61 +2920,97 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 62,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 97,
+          "note": "The current inventory retains 97 source-shape findings for FormGoToCommit; framework deviations and member/markup differences remain to be closed or justified."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
           ],
-          "platforms": [],
-          "findingCount": 119,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 97,
+          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 3428,
+          "note": "The fresh 125% light/dark/custom matrix records 3428 diagnostics for FormGoToCommit; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 654,
+          "note": "Light, dark, and custom captures retain 654 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 201,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 201 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/wayland-retry/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh application-level regression smokes passed and their screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak. These are not component-exhaustive parity walks; macOS remains unavailable."
         }
       }
     },
@@ -4813,61 +4885,97 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 19,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 44,
+          "note": "The current inventory retains 44 source-shape findings for FormCheckoutRevision; framework deviations and member/markup differences remain to be closed or justified."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
           ],
-          "platforms": [],
-          "findingCount": 46,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 44,
+          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 3539,
+          "note": "The fresh 125% light/dark/custom matrix records 3539 diagnostics for FormCheckoutRevision; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 755,
+          "note": "Light, dark, and custom captures retain 755 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 192,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 192 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/wayland-retry/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh application-level regression smokes passed and their screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak. These are not component-exhaustive parity walks; macOS remains unavailable."
         }
       }
     },
@@ -4878,61 +4986,97 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 19,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 44,
+          "note": "The current inventory retains 44 source-shape findings for FormCheckoutRevision; framework deviations and member/markup differences remain to be closed or justified."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
           ],
-          "platforms": [],
-          "findingCount": 46,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 44,
+          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 3539,
+          "note": "The fresh 125% light/dark/custom matrix records 3539 diagnostics for FormCheckoutRevision; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 755,
+          "note": "Light, dark, and custom captures retain 755 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 192,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 192 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/wayland-retry/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh application-level regression smokes passed and their screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak. These are not component-exhaustive parity walks; macOS remains unavailable."
         }
       }
     },
@@ -9796,61 +9940,97 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_SearchControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 45,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 58,
+          "note": "The current inventory retains 58 source-shape findings for SearchControl; framework deviations and member/markup differences remain to be closed or justified."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_SearchControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
           ],
-          "platforms": [],
-          "findingCount": 79,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 58,
+          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 781,
+          "note": "The fresh 125% light/dark/custom matrix records 781 diagnostics for SearchControl; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 178,
+          "note": "Light, dark, and custom captures retain 178 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 39,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 39 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/wayland-retry/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh application-level regression smokes passed and their screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak. These are not component-exhaustive parity walks; macOS remains unavailable."
         }
       }
     },
@@ -9861,61 +10041,97 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_SearchControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 45,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 58,
+          "note": "The current inventory retains 58 source-shape findings for SearchControl; framework deviations and member/markup differences remain to be closed or justified."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_SearchControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
           ],
-          "platforms": [],
-          "findingCount": 79,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 58,
+          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 781,
+          "note": "The fresh 125% light/dark/custom matrix records 781 diagnostics for SearchControl; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 178,
+          "note": "Light, dark, and custom captures retain 178 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 39,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 39 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/wayland-retry/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh application-level regression smokes passed and their screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak. These are not component-exhaustive parity walks; macOS remains unavailable."
         }
       }
     },
@@ -9926,61 +10142,97 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_SearchWindow.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 16,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 26,
+          "note": "The current inventory retains 26 source-shape findings for SearchWindow; framework deviations and member/markup differences remain to be closed or justified."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_SearchWindow.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
           ],
-          "platforms": [],
-          "findingCount": 29,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 26,
+          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1261,
+          "note": "The fresh 125% light/dark/custom matrix records 1261 diagnostics for SearchWindow; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 322,
+          "note": "Light, dark, and custom captures retain 322 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 75,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 75 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/wayland-retry/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh application-level regression smokes passed and their screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak. These are not component-exhaustive parity walks; macOS remains unavailable."
         }
       }
     },
@@ -9991,61 +10243,97 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_SearchWindow.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 16,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 26,
+          "note": "The current inventory retains 26 source-shape findings for SearchWindow; framework deviations and member/markup differences remain to be closed or justified."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_CommandsDialogs_SearchWindow.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
           ],
-          "platforms": [],
-          "findingCount": 29,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 26,
+          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1261,
+          "note": "The fresh 125% light/dark/custom matrix records 1261 diagnostics for SearchWindow; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 322,
+          "note": "Light, dark, and custom captures retain 322 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 75,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 75 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/wayland-retry/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh application-level regression smokes passed and their screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak. These are not component-exhaustive parity walks; macOS remains unavailable."
         }
       }
     },
@@ -28065,61 +28353,97 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_UserControls_CommitPickerSmallControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 14,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 37,
+          "note": "The current inventory retains 37 source-shape findings for CommitPickerSmallControl; framework deviations and member/markup differences remain to be closed or justified."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/inventory/GitUI_UserControls_CommitPickerSmallControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
           ],
-          "platforms": [],
-          "findingCount": 38,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 37,
+          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 3539,
+          "note": "Measured only as the embedded picker inside FormCheckoutRevision; the dialog aggregate still contains 3539 diagnostics, so no standalone visual claim is made."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 755,
+          "note": "The embedded picker was exercised in FormCheckoutRevision across light, dark, and custom themes; the dialog aggregate retains 755 color diagnostics and no standalone color subset is claimed."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/baseline/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/windows/navigation.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/tests/linux/navigation.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland"
+          ],
+          "findingCount": 192,
+          "note": "The embedded picker states were captured through FormCheckoutRevision; the dialog aggregate retains 192 state diagnostics and exhaustive picker interaction remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-19",
+          "commit": "6401c08be0dca60af5c11c9136637a0d8020c63e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/wayland-retry/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-1/final/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh application-level regression smokes passed and their screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak. These are not component-exhaustive parity walks; macOS remains unavailable."
         }
       }
     },
