@@ -552,7 +552,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
             pullRequest.HeadRef,
             pullRequest.FetchBranch,
             fetchTags: false);
-        if (!FormRemoteProcess.ShowDialog(this, UICommands, command))
+
+        // Avalonia routes the modal Git process through the host command boundary.
+        if (!UICommands.StartGitCommandProcessDialog(this, command))
         {
             return;
         }
@@ -626,7 +628,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 remoteRef,
                 $"{remoteName}/{remoteRef}",
                 fetchTags: false);
-            if (!FormRemoteProcess.ShowDialog(this, UICommands, fetchCommand))
+
+            // Avalonia routes the modal Git process through the host command boundary.
+            if (!UICommands.StartGitCommandProcessDialog(this, fetchCommand))
             {
                 return;
             }
@@ -875,6 +879,10 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         public bool RefreshEnabled => form._refreshCommentsBtn.IsEnabled;
 
+        public bool FetchEnabled => form._fetchBtn.IsEnabled;
+
+        public bool AddAndFetchEnabled => form._addAndFetchBtn.IsEnabled;
+
         public Task LoadPullRequestsAsync(CancellationToken cancellationToken = default)
             => form.LoadPullRequestsAsync(cancellationToken);
 
@@ -899,6 +907,11 @@ public partial class ViewPullRequestsForm : GitModuleForm
         public void RefreshDiscussion() => form.StartDiscussionRefresh();
 
         public void ClosePullRequest() => form.StartClosePullRequest();
+
+        public void FetchPullRequest() => form._fetchBtn_Click(form._fetchBtn, EventArgs.Empty);
+
+        public void AddRemoteFetchAndCheckout()
+            => form._addAsRemoteAndFetch_Click(form._addAndFetchBtn, EventArgs.Empty);
 
         public void SelectPullRequest(IPullRequestInformation pullRequest)
         {
