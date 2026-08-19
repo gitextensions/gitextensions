@@ -11,7 +11,6 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitExtUtils.GitUI;
-using GitUI.HelperDialogs;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -486,12 +485,9 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             targetDirectory,
             commands.Module.GetPathForGitExecution,
             depth: GetDepth());
-        using FormRemoteProcess formRemoteProcess = new(commands, command)
-        {
-            Remote = repository.CloneUrl,
-        };
-        formRemoteProcess.ShowDialog(this);
-        if (formRemoteProcess.ErrorOccurred())
+
+        // Avalonia routes the modal Git process through the host command boundary.
+        if (!commands.StartGitCommandProcessDialog(this, command))
         {
             return;
         }
@@ -698,6 +694,12 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             set => form.createDirTB.Text = value;
         }
 
+        public string UpstreamRemoteName
+        {
+            get => form.addUpstreamRemoteAsCB.Text ?? string.Empty;
+            set => form.addUpstreamRemoteAsCB.Text = value;
+        }
+
         public string CloneInfo => form.cloneInfoText.Text ?? string.Empty;
 
         public string Description => form.searchResultItemDescription.Text ?? string.Empty;
@@ -756,6 +758,12 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         public void ForkSelectedRepository()
             => form._forkBtn_Click(form.forkBtn, EventArgs.Empty);
+
+        public void BrowseForCloneDirectory()
+            => form._browseForCloneToDirbtn_Click(form.browseForCloneToDirbtn, EventArgs.Empty);
+
+        public void CloneSelectedRepository()
+            => form._cloneBtn_Click(form.cloneBtn, EventArgs.Empty);
 
         public string? GetTargetDirectoryWithValidation()
             => form.GetTargetDir();

@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
@@ -251,6 +252,127 @@ public sealed class RepositoryHostPullRequestTests
         accessor.RefreshEnabled.Should().BeTrue();
     }
 
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_fetch_the_selected_pull_request_into_its_local_branch()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.PullRequestFetch-{Guid.NewGuid():N}");
+        string sourceDirectory = Path.Combine(root, "source");
+        string targetDirectory = Path.Combine(root, "target");
+        try
+        {
+            GitModule sourceModule = CreateCommittedRepository(sourceDirectory, "feature");
+            GitModule targetModule = CreateCommittedRepository(targetDirectory, "main");
+            ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+            IGitUICommands commands = CreateCommands(targetModule, notifier);
+            commands.StartGitCommandProcessDialog(
+                    Arg.Any<WinFormsShims.IWin32Window>(),
+                    Arg.Any<ArgumentString>())
+                .Returns(call => targetModule.GitExecutable.RunCommand(call.ArgAt<ArgumentString>(1)));
+            IPullRequestInformation pullRequest = CreatePullRequest(sourceDirectory);
+            using ViewPullRequestsForm form = new(commands, Substitute.For<IRepositoryHostPlugin>());
+            ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+            accessor.SelectPullRequest(pullRequest);
+            await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            accessor.FetchEnabled.Should().BeTrue();
+
+            accessor.FetchPullRequest();
+
+            targetModule.GetRefs(RefsFilter.Heads)
+                .Select(gitRef => gitRef.LocalName)
+                .Should().Contain("pr/42");
+            notifier.Received(1).Notify();
+        }
+        finally
+        {
+            TestDirectory.Delete(root);
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_add_remote_fetch_and_checkout_the_selected_pull_request()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"GitExtensions.Avalonia.PullRequestCheckout-{Guid.NewGuid():N}");
+        string sourceDirectory = Path.Combine(root, "source");
+        string targetDirectory = Path.Combine(root, "target");
+        try
+        {
+            GitModule sourceModule = CreateCommittedRepository(sourceDirectory, "feature");
+            GitModule targetModule = CreateCommittedRepository(targetDirectory, "main");
+            ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+            IGitUICommands commands = CreateCommands(targetModule, notifier);
+            commands.StartGitCommandProcessDialog(
+                    Arg.Any<WinFormsShims.IWin32Window>(),
+                    Arg.Any<ArgumentString>())
+                .Returns(call => targetModule.GitExecutable.RunCommand(call.ArgAt<ArgumentString>(1)));
+            IPullRequestInformation pullRequest = CreatePullRequest(sourceDirectory);
+            using ViewPullRequestsForm form = new(commands, Substitute.For<IRepositoryHostPlugin>());
+            ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+            accessor.SelectPullRequest(pullRequest);
+            await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            accessor.AddAndFetchEnabled.Should().BeTrue();
+
+            accessor.AddRemoteFetchAndCheckout();
+
+            IReadOnlyList<Remote> remotes = await targetModule.GetRemotesAsync();
+            Remote contributor = remotes.Should().ContainSingle(remote => remote.Name == "contributor").Which;
+            Path.GetFullPath(contributor.FetchUrl).Should().Be(Path.GetFullPath(sourceDirectory));
+            targetModule.GetCurrentCheckout().Should().Be(sourceModule.GetCurrentCheckout());
+            notifier.Received(1).Lock();
+            notifier.Received(3).Notify();
+            notifier.Received(1).UnLock(false);
+        }
+        finally
+        {
+            TestDirectory.Delete(root);
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_not_notify_when_fetch_is_cancelled_or_fails()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.FetchCmd(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), fetchTags: false)
+            .Returns((ArgumentString)"fetch-command");
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IGitUICommands commands = CreateCommands(module, notifier);
+        commands.StartGitCommandProcessDialog(
+                Arg.Any<WinFormsShims.IWin32Window>(),
+                Arg.Any<ArgumentString>())
+            .Returns(false);
+        using ViewPullRequestsForm form = new(commands, Substitute.For<IRepositoryHostPlugin>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.SelectPullRequest(CreatePullRequest());
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.FetchPullRequest();
+
+        notifier.DidNotReceive().Notify();
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_report_add_remote_failure_and_unlock_notifications()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.AddRemote("contributor", "https://example.test/contributor/repository.git")
+            .Returns("add failed");
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IGitUICommands commands = CreateCommands(module, notifier);
+        using ViewPullRequestsForm form = new(commands, Substitute.For<IRepositoryHostPlugin>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.SelectPullRequest(CreatePullRequest());
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.AddRemoteFetchAndCheckout();
+
+        _messageBoxHost.Messages.Should().ContainSingle().Which.Should().Be("add failed");
+        commands.DidNotReceive().StartGitCommandProcessDialog(
+            Arg.Any<WinFormsShims.IWin32Window>(),
+            Arg.Any<ArgumentString>());
+        notifier.Received(1).Lock();
+        notifier.Received(1).UnLock(false);
+        notifier.DidNotReceive().Notify();
+    }
+
     [Test]
     public void ViewPullRequestsForm_should_split_provider_diff_into_file_rows()
     {
@@ -338,6 +460,29 @@ public sealed class RepositoryHostPullRequestTests
         return new ViewPullRequestsForm(commands, host);
     }
 
+    private IGitUICommands CreateCommands(IGitModule module, ILockableNotifier notifier)
+    {
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+        return commands;
+    }
+
+    private GitModule CreateCommittedRepository(string workingDirectory, string branch)
+    {
+        Directory.CreateDirectory(workingDirectory);
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" }).Should().BeTrue();
+        module.SetSetting("user.name", "Avalonia Test");
+        module.SetSetting("user.email", "avalonia@example.com");
+        File.WriteAllText(Path.Combine(workingDirectory, "tracked.txt"), branch);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" }).Should().BeTrue();
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "-M", branch }).Should().BeTrue();
+        return module;
+    }
+
     private static IHostedRepository CreateRepository(IPullRequestInformation pullRequest)
     {
         IHostedRepository repository = Substitute.For<IHostedRepository>();
@@ -345,10 +490,10 @@ public sealed class RepositoryHostPullRequestTests
         return repository;
     }
 
-    private static IPullRequestInformation CreatePullRequest()
+    private static IPullRequestInformation CreatePullRequest(string? cloneUrl = null)
     {
         IHostedRepository headRepository = Substitute.For<IHostedRepository>();
-        headRepository.CloneUrl.Returns("https://example.test/contributor/repository.git");
+        headRepository.CloneUrl.Returns(cloneUrl ?? "https://example.test/contributor/repository.git");
 
         IDiscussionEntry entry = Substitute.For<IDiscussionEntry>();
         entry.Author.Returns("Contributor");
