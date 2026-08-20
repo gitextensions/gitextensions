@@ -310,7 +310,9 @@ internal static class AvaloniaThemeResources
     internal static DrawingColor ResolveSystemColor(ThemeSettings settings, KnownColor name)
     {
         bool isDark = settings.Theme.SystemColorMode == GitExtensions.Shims.WinForms.SystemColorMode.Dark;
-        DrawingColor color = settings.Theme.GetColor(name);
+        DrawingColor color = settings.Theme.Id == ThemeId.DefaultLight
+            ? DrawingColor.Empty
+            : settings.Theme.GetColor(name);
         if (!color.IsEmpty)
         {
             return color;
@@ -322,7 +324,58 @@ internal static class AvaloniaThemeResources
         }
 
         color = settings.InvariantTheme.GetColor(name);
-        return color.IsEmpty ? DrawingColor.FromKnownColor(name) : color;
+        if (!color.IsEmpty)
+        {
+            return color;
+        }
+
+        // The portable System.Drawing fallback is host-dependent. Preserve invariant.css's
+        // Windows reference colors when a partial/test theme has no invariant value.
+        return TryGetLightSystemColor(name, out color) ? color : DrawingColor.FromKnownColor(name);
+    }
+
+    private static bool TryGetLightSystemColor(KnownColor name, out DrawingColor color)
+    {
+        string? value = name switch
+        {
+            KnownColor.ActiveBorder => "#B4B4B4",
+            KnownColor.ActiveCaption => "#99B4D1",
+            KnownColor.ActiveCaptionText => "#000000",
+            KnownColor.AppWorkspace => "#ABABAB",
+            KnownColor.ButtonFace => "#F0F0F0",
+            KnownColor.ButtonHighlight => "#FFFFFF",
+            KnownColor.ButtonShadow => "#A0A0A0",
+            KnownColor.Control => "#F0F0F0",
+            KnownColor.ControlDark => "#A0A0A0",
+            KnownColor.ControlDarkDark => "#696969",
+            KnownColor.ControlLight => "#E3E3E3",
+            KnownColor.ControlLightLight => "#FFFFFF",
+            KnownColor.ControlText => "#000000",
+            KnownColor.Desktop => "#000000",
+            KnownColor.GradientActiveCaption => "#B9D1EA",
+            KnownColor.GradientInactiveCaption => "#D7E4F2",
+            KnownColor.GrayText => "#6D6D6D",
+            KnownColor.Highlight => "#0078D7",
+            KnownColor.HighlightText => "#FFFFFF",
+            KnownColor.HotTrack => "#0066CC",
+            KnownColor.InactiveBorder => "#F4F7FC",
+            KnownColor.InactiveCaption => "#BFCDDB",
+            KnownColor.InactiveCaptionText => "#000000",
+            KnownColor.Info => "#FFFFE1",
+            KnownColor.InfoText => "#000000",
+            KnownColor.Menu => "#F0F0F0",
+            KnownColor.MenuBar => "#F0F0F0",
+            KnownColor.MenuHighlight => "#0078D7",
+            KnownColor.MenuText => "#000000",
+            KnownColor.ScrollBar => "#C8C8C8",
+            KnownColor.Window => "#FFFFFF",
+            KnownColor.WindowFrame => "#646464",
+            KnownColor.WindowText => "#000000",
+            _ => null,
+        };
+
+        color = value is null ? DrawingColor.Empty : System.Drawing.ColorTranslator.FromHtml(value);
+        return !color.IsEmpty;
     }
 
     private static bool TryGetDarkSystemColor(KnownColor name, out DrawingColor color)

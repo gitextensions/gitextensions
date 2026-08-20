@@ -176,7 +176,7 @@ internal static class CaptureRunner
             int actualDpi = root.DeviceDpi;
             entries.Add(actualDpi != scale * 96 / 100
                 ? Unsupported(componentType, theme.Id, scale, state.Id, $"The WinForms DPI-change path reported {actualDpi} DPI instead of {scale * 96 / 100} DPI.")
-                : CaptureState(bootstrap, root, componentType, theme, scale, dpiMode, state, outputPath));
+                : CaptureState(bootstrap, root, component, theme, scale, dpiMode, state, outputPath));
             Application.DoEvents();
             bootstrap.ThrowIfThreadException();
             ComponentFactory.CleanupBeforeDispose(root);
@@ -309,17 +309,18 @@ internal static class CaptureRunner
     private static CaptureManifestEntry CaptureState(
         WinFormsBootstrap bootstrap,
         Control root,
-        string componentType,
+        CaptureComponentPlan component,
         CaptureThemePlan theme,
         int scale,
         CaptureDpiMode dpiMode,
         CaptureStatePlan state,
         string outputRoot)
     {
+        string componentType = component.TypeName;
         try
         {
             bootstrap.ThrowIfThreadException();
-            using ControlStateDriver driver = ApplyVerifiedCaptureState(root, bootstrap.Commands, state);
+            using ControlStateDriver driver = ApplyVerifiedCaptureState(root, bootstrap.Commands, component, state);
             bootstrap.ThrowIfThreadException();
             using CaptureImageResult image = ImageCapture.Capture(root, driver.Popups);
             string relativeDirectory = Path.Combine(Sanitize(componentType), Sanitize(theme.Id), scale.ToString(CultureInfo.InvariantCulture));
@@ -418,6 +419,7 @@ internal static class CaptureRunner
     private static ControlStateDriver ApplyVerifiedCaptureState(
         Control root,
         IGitUICommands commands,
+        CaptureComponentPlan component,
         CaptureStatePlan state)
     {
         const int maximumAttempts = 3;
@@ -425,6 +427,7 @@ internal static class CaptureRunner
         for (int attempt = 1; attempt <= maximumAttempts; attempt++)
         {
             ComponentFactory.PrepareCaptureState(root, commands);
+            ComponentFactory.ApplyTextValues(root, component);
             ControlStateDriver? driver = null;
             try
             {
