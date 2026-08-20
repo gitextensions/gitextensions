@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -58,6 +59,27 @@ public sealed class AxamlVisualVocabularyTests
         "UserControl",
         "Window",
         "WrapPanel",
+    ];
+
+    private static readonly HashSet<string> DimensionProperties =
+    [
+        "BorderThickness",
+        "ColumnDefinitions",
+        "ColumnSpacing",
+        "CornerRadius",
+        "FontSize",
+        "Height",
+        "Margin",
+        "MaxHeight",
+        "MaxWidth",
+        "MinHeight",
+        "MinWidth",
+        "Padding",
+        "RowDefinitions",
+        "RowSpacing",
+        "Spacing",
+        "StrokeThickness",
+        "Width",
     ];
 
     [Test]
@@ -192,6 +214,58 @@ public sealed class AxamlVisualVocabularyTests
         findings.Should().BeEmpty();
     }
 
+    [Test]
+    public void Layout_metrics_should_not_encode_125_percent_capture_pixels()
+    {
+        string repositoryRoot = GetRepositoryRoot();
+        string appRoot = Path.Combine(repositoryRoot, "src", "app", "GitUI.Avalonia");
+        string pluginRoot = Path.Combine(repositoryRoot, "src", "plugins");
+        string gourceView = Path.Combine(pluginRoot, "Gource", "GourceStart.axaml");
+        string gourceDesigner = Path.Combine(pluginRoot, "Gource", "GourceStart.Designer.cs");
+        File.ReadAllText(gourceDesigner).Should().Contain("AutoScaleDimensions = new SizeF(120F, 120F)");
+
+        List<string> findings = [];
+        foreach (string path in Directory.EnumerateFiles(appRoot, "*.axaml", SearchOption.AllDirectories)
+                     .Concat(Directory.EnumerateFiles(pluginRoot, "*.axaml", SearchOption.AllDirectories))
+                     .Where(path => !string.Equals(path, gourceView, StringComparison.OrdinalIgnoreCase)))
+        {
+            XDocument document = XDocument.Load(path, LoadOptions.SetLineInfo);
+            foreach (XAttribute attribute in document.Descendants()
+                         .Attributes()
+                         .Where(attribute => DimensionProperties.Contains(attribute.Name.LocalName)))
+            {
+                AddCaptureNormalizedNumbers(
+                    findings,
+                    Path.GetRelativePath(repositoryRoot, path),
+                    ((IXmlLineInfo)attribute.Parent!).LineNumber,
+                    attribute.Value);
+            }
+        }
+
+        Regex codeMetric = new(
+            @"(?:\b(?:Width|Height|MinWidth|MaxWidth|MinHeight|MaxHeight|FontSize|StrokeThickness)\s*=|new\s+(?:Thickness|GridLength)\s*\()[^;\r\n]*",
+            RegexOptions.CultureInvariant);
+        foreach (string path in Directory.EnumerateFiles(appRoot, "*.cs", SearchOption.AllDirectories))
+        {
+            int lineNumber = 0;
+            foreach (string line in File.ReadLines(path))
+            {
+                lineNumber++;
+                foreach (Match metric in codeMetric.Matches(line))
+                {
+                    AddCaptureNormalizedNumbers(
+                        findings,
+                        Path.GetRelativePath(repositoryRoot, path),
+                        lineNumber,
+                        metric.Value);
+                }
+            }
+        }
+
+        findings.Should().BeEmpty(
+            "96-DPI WinForms dimensions map one-to-one to Avalonia DIPs; only a source Designer explicitly authored at another DPI may be normalized");
+    }
+
     private static bool IsLiteral(string value) => !value.StartsWith('{');
 
     private static string FormatFinding(string relativePath, XElement element, string message)
@@ -202,16 +276,44 @@ public sealed class AxamlVisualVocabularyTests
 
     private static (string ViewRoot, string DesignerRoot) GetSourceRoots([CallerFilePath] string thisFilePath = "")
     {
+        string repositoryRoot = GetRepositoryRoot(thisFilePath);
+        return (
+            Path.Combine(repositoryRoot, "src", "app", "GitUI.Avalonia"),
+            Path.Combine(repositoryRoot, "src", "app", "GitUI"));
+    }
+
+    private static string GetRepositoryRoot([CallerFilePath] string thisFilePath = "")
+    {
         DirectoryInfo? directory = new(Path.GetDirectoryName(thisFilePath)!);
         while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "GitExtensions.Avalonia.slnx")))
         {
             directory = directory.Parent;
         }
 
-        string repositoryRoot = directory?.FullName
+        return directory?.FullName
             ?? throw new InvalidOperationException($"Could not find the repository root from {thisFilePath}.");
-        return (
-            Path.Combine(repositoryRoot, "src", "app", "GitUI.Avalonia"),
-            Path.Combine(repositoryRoot, "src", "app", "GitUI"));
+    }
+
+    private static void AddCaptureNormalizedNumbers(
+        ICollection<string> findings,
+        string relativePath,
+        int lineNumber,
+        string value)
+    {
+        foreach (Match match in Regex.Matches(value, @"\d+\.\d+", RegexOptions.CultureInvariant))
+        {
+            if (match.Index + match.Length < value.Length && value[match.Index + match.Length] == '*')
+            {
+                continue;
+            }
+
+            double number = double.Parse(match.Value, System.Globalization.CultureInfo.InvariantCulture);
+            bool isFifthDipFraction = number != Math.Truncate(number)
+                && Math.Abs((number * 5) - Math.Round(number * 5)) < 0.0000001;
+            if (isFifthDipFraction)
+            {
+                findings.Add($"{relativePath}:{lineNumber}: {match.Value} looks like physical pixels divided by a 1.25 capture scale");
+            }
+        }
     }
 }

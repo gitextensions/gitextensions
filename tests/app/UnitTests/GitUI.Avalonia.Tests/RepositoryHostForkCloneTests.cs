@@ -94,10 +94,10 @@ public sealed class RepositoryHostForkCloneTests
         Grid.GetRow(form.FindControl<NumericUpDown>("depthUpDown")!).Should().Be(3);
         Grid myRepositoriesHeader = (Grid)form.FindControl<Border>("columnHeaderMyReposName")!.Parent!;
         myRepositoriesHeader.ColumnDefinitions.Select(column => column.Width.Value)
-            .Should().Equal(63.2, 44.8, 49.6, 44.8);
+            .Should().Equal(180, 45, 50, 45);
         Grid searchHeader = (Grid)form.FindControl<Border>("columnHeaderSearchName")!.Parent!;
         searchHeader.ColumnDefinitions.Select(column => column.Width.Value)
-            .Should().Equal(180, 110.4, 40.8, 40);
+            .Should().Equal(180, 110, 41, 40);
 
         translation.Received(1).AddTranslationItem(
             nameof(ForkAndCloneForm), "$this", "Text", "Remote repository fork and clone");
@@ -146,6 +146,30 @@ public sealed class RepositoryHostForkCloneTests
         accessor.TargetDirectory.Should().Be(Path.Combine(accessor.Destination, "alpha"));
         accessor.CloneInfo.Should().Contain("https://example.test/alpha.git");
         accessor.CloneInfo.Should().Contain("push access");
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_autosize_content_columns_instead_of_reusing_capture_widths()
+    {
+        IHostedRepository repository = CreateRepository(
+            "repository-name-that-is-wider-than-the-Designer-column",
+            owner: "owner-name-that-is-wider-than-the-Designer-column",
+            isFork: false);
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetMyRepos().Returns([repository]);
+        host.SearchForRepository("wide").Returns([repository]);
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.LoadMyRepositoriesAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        Grid myHeader = (Grid)form.FindControl<Border>("columnHeaderMyReposName")!.Parent!;
+        myHeader.ColumnDefinitions[0].Width.Value.Should().BeGreaterThan(180);
+
+        accessor.StartSearch("wide", byUser: false);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        Grid searchHeader = (Grid)form.FindControl<Border>("columnHeaderSearchName")!.Parent!;
+        searchHeader.ColumnDefinitions[0].Width.Value.Should().BeGreaterThan(180);
+        searchHeader.ColumnDefinitions[1].Width.Value.Should().BeGreaterThan(110);
     }
 
     [AvaloniaTest]

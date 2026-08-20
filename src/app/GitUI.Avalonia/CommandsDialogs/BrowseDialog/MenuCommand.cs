@@ -217,9 +217,9 @@ internal sealed class MenuCommand
     {
         Border background = new()
         {
-            Width = 18.4,
-            Height = 18.4,
-            BorderThickness = new Avalonia.Thickness(0.8),
+            Width = 18,
+            Height = 18,
+            BorderThickness = new Avalonia.Thickness(1),
             IsHitTestVisible = false,
         };
         background[!Border.BackgroundProperty] = new DynamicResourceExtension("GitExtensionsMenuCheckBackgroundBrush");
@@ -239,8 +239,8 @@ internal sealed class MenuCommand
 
         return new Grid
         {
-            Width = 18.4,
-            Height = 18.4,
+            Width = 18,
+            Height = 18,
             IsHitTestVisible = false,
             Children = { background, check },
         };
@@ -251,7 +251,7 @@ internal sealed class MenuCommand
             {
                 StartPoint = startPoint,
                 EndPoint = endPoint,
-                StrokeThickness = 1.2,
+                StrokeThickness = 1,
                 StrokeLineCap = PenLineCap.Square,
                 IsHitTestVisible = false,
             };

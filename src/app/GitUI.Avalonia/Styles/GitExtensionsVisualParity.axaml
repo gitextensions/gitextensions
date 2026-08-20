@@ -978,7 +978,7 @@
   </Style>
 
   <Style Selector="MenuItem">
-    <Setter Property="MinHeight" Value="20.5" />
+    <Setter Property="MinHeight" Value="21" />
     <Setter Property="Padding" Value="0,1" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
@@ -992,29 +992,15 @@
     <Setter Property="IsVisible" Value="False" />
   </Style>
   <Style Selector="MenuItem.gitextensions-menu-command-toggle:icon /template/ ContentControl#PART_IconPresenter">
-    <Setter Property="Width" Value="18.4" />
-    <Setter Property="Height" Value="18.4" />
+    <Setter Property="Width" Value="18" />
+    <Setter Property="Height" Value="18" />
   </Style>
   <Style Selector="MenuItem:not(:pointerover) /template/ Border#PART_LayoutRoot">
     <!-- ToolStrip's renderer paints a menu surface color distinct from each item's BackColor property. -->
     <Setter Property="Background" Value="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}" />
   </Style>
-  <Style Selector="MenuItem.revision-grid-view-menu-row /template/ ContentControl#PART_IconPresenter">
-    <Setter Property="Margin" Value="3.2,0,14.4,0" />
-  </Style>
-  <Style Selector="Separator.revision-grid-view-menu-row">
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border Background="{DynamicResource GitExtensionsMenuRenderedBackgroundBrush}">
-          <Border Height="1"
-                  VerticalAlignment="Center"
-                  Background="{DynamicResource GitExtensionsMenuRenderedBorderBrush}" />
-        </Border>
-      </ControlTemplate>
-    </Setter>
-  </Style>
   <Style Selector="ContextMenu Separator">
-    <Setter Property="Height" Value="4.5" />
+    <Setter Property="Height" Value="6" />
     <Setter Property="Margin" Value="0" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
@@ -1029,7 +1015,7 @@
     </Setter>
   </Style>
   <Style Selector="MenuFlyoutPresenter Separator">
-    <Setter Property="Height" Value="4.5" />
+    <Setter Property="Height" Value="6" />
     <Setter Property="Margin" Value="0" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />

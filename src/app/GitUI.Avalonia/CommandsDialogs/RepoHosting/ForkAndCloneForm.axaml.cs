@@ -11,6 +11,7 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitUI.Compat;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -44,6 +45,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     private readonly CancellationTokenSequence _myReposSequence = new();
     private readonly CancellationTokenSequence _searchSequence = new();
     private readonly CancellationTokenSource _lifetimeCancellation = new();
+    private readonly double[] _myRepositoryColumnWidths = [180, 45, 50, 45];
+    private readonly double[] _searchResultColumnWidths = [180, 110, 41, 40];
 
     public ForkAndCloneForm()
     {
@@ -75,6 +78,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         searchResultsLV.ItemTemplate = new FuncDataTemplate<HostedRepositoryRow>(
             (row, _) => CreateRepositoryRow(row, isSearchResult: true),
             supportsRecycling: false);
+        ApplyRepositoryColumnWidths(isSearchResult: false);
+        ApplyRepositoryColumnWidths(isSearchResult: true);
 
         searchBtn.Click += _searchBtn_Click;
         getFromUserBtn.Click += _getFromUserBtn_Click;
@@ -170,6 +175,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                 .ToArray();
 
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            ResizeColumnToFitContent(rows, isSearchResult: false, 0);
             myReposLV.ItemsSource = rows;
             UpdateCloneInfo();
         }
@@ -230,6 +236,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                 .ToArray();
 
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            ResizeColumnToFitContent(rows, isSearchResult: true, 0);
+            ResizeColumnToFitContent(rows, isSearchResult: true, 1);
             searchResultsLV.ItemsSource = rows;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -271,9 +279,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     {
         Grid grid = new()
         {
-            ColumnDefinitions = isSearchResult
-                ? new ColumnDefinitions("180,110.4,40.8,40")
-                : new ColumnDefinitions("63.2,44.8,49.6,44.8"),
+            ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(
+                isSearchResult ? _searchResultColumnWidths : _myRepositoryColumnWidths),
         };
         if (row is null)
         {
@@ -315,6 +322,43 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             Grid.SetColumn(cell, column);
             return cell;
         }
+    }
+
+    private void ResizeColumnToFitContent(
+        IReadOnlyList<HostedRepositoryRow> rows,
+        bool isSearchResult,
+        int columnIndex)
+    {
+        ListBox list = isSearchResult ? searchResultsLV : myReposLV;
+        string header = GetHeaderText(isSearchResult, columnIndex);
+        IEnumerable<string?> values = rows.Count == 0
+            ? [header]
+            : rows.Select(row => columnIndex switch
+            {
+                0 => row.Name,
+                1 when isSearchResult => row.Owner,
+                _ => string.Empty,
+            });
+        double[] widths = isSearchResult ? _searchResultColumnWidths : _myRepositoryColumnWidths;
+        widths[columnIndex] = WinFormsListViewColumnSizer.Measure(list, values);
+        ApplyRepositoryColumnWidths(isSearchResult);
+    }
+
+    private void ApplyRepositoryColumnWidths(bool isSearchResult)
+    {
+        Border firstHeader = isSearchResult ? columnHeaderSearchName : columnHeaderMyReposName;
+        Grid header = (Grid)(firstHeader.Parent
+            ?? throw new InvalidOperationException("The repository list header is not attached to its column grid."));
+        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(
+            isSearchResult ? _searchResultColumnWidths : _myRepositoryColumnWidths);
+    }
+
+    private string GetHeaderText(bool isSearchResult, int columnIndex)
+    {
+        Border[] headers = isSearchResult
+            ? [columnHeaderSearchName, columnHeaderSearchOwner, columnHeaderSearchIsFork, columnHeaderSearchForks]
+            : [columnHeaderMyReposName, columnHeaderMyReposIsFork, columnHeaderMyReposForks, columnHeaderMyReposIsPrivate];
+        return (headers[columnIndex].Child as TextBlock)?.Text ?? string.Empty;
     }
 
     private void _searchBtn_Click(object? sender, EventArgs e)

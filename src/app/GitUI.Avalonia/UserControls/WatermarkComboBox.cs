@@ -15,8 +15,6 @@ public sealed class WatermarkComboBox : ComboBox
     public WatermarkComboBox()
     {
         IsEditable = true;
-        Height = 22.4;
-        MinHeight = 0;
         Watermark = string.Empty;
     }
 
