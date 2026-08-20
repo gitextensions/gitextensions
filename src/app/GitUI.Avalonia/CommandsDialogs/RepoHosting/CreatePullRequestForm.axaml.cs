@@ -33,9 +33,12 @@ public partial class CreatePullRequestForm : GitModuleForm
     private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSequence _targetBranchesSequence = new();
     private readonly CancellationTokenSequence _sourceBranchesSequence = new();
+    private readonly CancellationTokenSequence _titleSequence = new();
     private readonly CancellationTokenSequence _templateSequence = new();
+    private readonly CancellationTokenSequence _createSequence = new();
     private readonly CancellationTokenSource _lifetimeCancellation = new();
     private bool _ignoreFirstRemoteLoading = true;
+    private bool _createInProgress;
 
     public CreatePullRequestForm()
     {
@@ -87,11 +90,15 @@ public partial class CreatePullRequestForm : GitModuleForm
         _lifetimeCancellation.Cancel();
         _targetBranchesSequence.CancelCurrent();
         _sourceBranchesSequence.CancelCurrent();
+        _titleSequence.CancelCurrent();
         _templateSequence.CancelCurrent();
+        _createSequence.CancelCurrent();
         _operations.JoinPendingOperations();
         _targetBranchesSequence.Dispose();
         _sourceBranchesSequence.Dispose();
+        _titleSequence.Dispose();
         _templateSequence.Dispose();
+        _createSequence.Dispose();
         _lifetimeCancellation.Dispose();
         base.OnClosed(e);
     }
@@ -112,13 +119,15 @@ public partial class CreatePullRequestForm : GitModuleForm
             .Where(remote => !remote.IsOwnedByMe)
             .ToArray();
 
-        string currentBranch = Module.IsValidGitWorkingDir()
-            ? await Task.Run(() => Module.GetSelectedBranch(), cancellationToken)
-            : string.Empty;
+        string? currentBranch = _currentBranch;
+        if (string.IsNullOrEmpty(currentBranch) && Module.IsValidGitWorkingDir())
+        {
+            currentBranch = await Task.Run(() => Module.GetSelectedBranch(), cancellationToken);
+        }
 
         await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
         _hostedRemotes = hostedRemotes;
-        _currentBranch = currentBranch;
+        _currentBranch = currentBranch ?? string.Empty;
         if (foreignHostedRemotes.Length == 0)
         {
             MessageBoxes.Show(
@@ -278,7 +287,7 @@ public partial class CreatePullRequestForm : GitModuleForm
                 _yourBranchCB_SelectedIndexChanged(comboBox, EventArgs.Empty);
             }
 
-            _createBtn.IsEnabled = true;
+            UpdateCreateButton();
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -289,6 +298,7 @@ public partial class CreatePullRequestForm : GitModuleForm
             if (!cancellationToken.IsCancellationRequested)
             {
                 comboBox.ItemsSource = Array.Empty<string>();
+                UpdateCreateButton();
                 MessageBoxes.Show(
                     this,
                     string.Format(TranslatedStrings.RemoteInError, ex.Message, remote.DisplayData),
@@ -301,18 +311,54 @@ public partial class CreatePullRequestForm : GitModuleForm
 
     private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
     {
-        string yourBranch = _yourBranchesCB.SelectedItem as string ?? _yourBranchesCB.Text ?? string.Empty;
-        if (string.Equals(_prevTitle, _titleTB.Text ?? string.Empty, StringComparison.Ordinal)
-            && !string.IsNullOrWhiteSpace(yourBranch)
-            && MyRemote is not null)
+        UpdateCreateButton();
+        if (!string.Equals(_prevTitle, _titleTB.Text ?? string.Empty, StringComparison.Ordinal)
+            || string.IsNullOrWhiteSpace(GetComboText(_yourBranchesCB))
+            || MyRemote?.Name is not { } remoteName)
         {
-            string? lastMsg = Module.GetPreviousCommitMessages(
-                    count: 1,
-                    revision: MyRemote.Name.Combine("/", yourBranch)!,
-                    authorPattern: string.Empty)
-                .FirstOrDefault();
-            _titleTB.Text = lastMsg?.SubstringUntil('\n') ?? string.Empty;
-            _prevTitle = _titleTB.Text;
+            return;
+        }
+
+        string branch = GetComboText(_yourBranchesCB);
+        string expectedTitle = _titleTB.Text ?? string.Empty;
+        CancellationToken cancellationToken = _titleSequence.Next();
+        _operations.FileAndForget(
+            () => LoadTitleFromCommitAsync(
+                remoteName,
+                branch,
+                expectedTitle,
+                cancellationToken));
+    }
+
+    private async Task LoadTitleFromCommitAsync(
+        string remoteName,
+        string branch,
+        string expectedTitle,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            string revision = remoteName.Combine("/", branch)!;
+            string? title = await Task.Run(
+                () => Module
+                    .GetPreviousCommitMessages(count: 1, revision, authorPattern: string.Empty)
+                    .FirstOrDefault()?
+                    .SubstringUntil('\n'),
+                cancellationToken);
+
+            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            if (string.Equals(_titleTB.Text ?? string.Empty, expectedTitle, StringComparison.Ordinal))
+            {
+                _titleTB.Text = title;
+                _prevTitle = title;
+            }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (Exception)
+        {
+            // A commit-message suggestion is optional; retain the user's current title.
         }
     }
 
@@ -336,31 +382,75 @@ public partial class CreatePullRequestForm : GitModuleForm
             return;
         }
 
+        string sourceBranch = GetComboText(_yourBranchesCB);
+        string targetBranch = GetComboText(_remoteBranchesCB);
+        CancellationToken cancellationToken = _createSequence.Next();
+        _createInProgress = true;
+        UpdateCreateButton();
+        _operations.FileAndForget(
+            () => CreatePullRequestAsync(
+                _currentHostedRemote,
+                sourceBranch,
+                targetBranch,
+                title,
+                body,
+                cancellationToken));
+    }
+
+    private async Task CreatePullRequestAsync(
+        IHostedRemote targetRemote,
+        string sourceBranch,
+        string targetBranch,
+        string title,
+        string body,
+        CancellationToken cancellationToken)
+    {
         try
         {
-            IHostedRepository hostedRepo = _currentHostedRemote.GetHostedRepository();
-
-            string sourceBranch = _yourBranchesCB.SelectedItem as string ?? _yourBranchesCB.Text ?? string.Empty;
-            string targetBranch = _remoteBranchesCB.SelectedItem as string ?? _remoteBranchesCB.Text ?? string.Empty;
-            hostedRepo.CreatePullRequest(sourceBranch, targetBranch, title, body);
+            await Task.Run(
+                () => targetRemote
+                    .GetHostedRepository()
+                    .CreatePullRequest(sourceBranch, targetBranch, title, body),
+                cancellationToken);
+            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             MessageBoxes.Show(
                 this,
                 _strDone.Text,
                 _strPullRequest.Text,
                 WinFormsShims.MessageBoxButtons.OK,
                 WinFormsShims.MessageBoxIcon.Information);
-            Close();
+            Dispatcher.UIThread.Post(Close);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
         }
         catch (Exception ex)
         {
-            MessageBoxes.Show(
-                this,
-                _strFailedToCreatePullRequest.Text + Environment.NewLine + ex.Message,
-                TranslatedStrings.Error,
-                WinFormsShims.MessageBoxButtons.OK,
-                WinFormsShims.MessageBoxIcon.Error);
+            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                _createInProgress = false;
+                UpdateCreateButton();
+                MessageBoxes.Show(
+                    this,
+                    _strFailedToCreatePullRequest.Text + Environment.NewLine + ex.Message,
+                    TranslatedStrings.Error,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
+            }
         }
     }
+
+    private void UpdateCreateButton()
+    {
+        _createBtn.IsEnabled = !_createInProgress
+            && _currentHostedRemote is not null
+            && !string.IsNullOrWhiteSpace(GetComboText(_yourBranchesCB))
+            && !string.IsNullOrWhiteSpace(GetComboText(_remoteBranchesCB));
+    }
+
+    private static string GetComboText(ComboBox comboBox)
+        => comboBox.SelectedItem as string ?? comboBox.Text ?? string.Empty;
 
     // parity-scaffolding: Exposes repository-host state and actions to the cross-platform parity suite.
     internal TestAccessor GetTestAccessor() => new(this);
