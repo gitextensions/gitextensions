@@ -8,52 +8,51 @@
         MinHeight="323"
         WindowStartupLocation="CenterOwner"
         Title="Create Pull Request">
-  <Grid RowDefinitions="27,27,27,*,39"
-        Margin="9,12,8,9">
-    <Grid ColumnDefinitions="132,*">
-      <TextBlock x:Name="label3"
-                 VerticalAlignment="Center"
-                 Text="Target repository:" />
-      <ComboBox x:Name="_pullReqTargetsCB"
-                Grid.Column="1"
-                Margin="0,0,6,0"
-                HorizontalAlignment="Stretch"
-                VerticalContentAlignment="Center" />
-    </Grid>
+  <Grid>
+    <TextBlock x:Name="label3"
+               Margin="9,15,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Text="Target repository:" />
+    <ComboBox x:Name="_pullReqTargetsCB"
+              Margin="141,12,14,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
+              VerticalContentAlignment="Center" />
 
-    <Grid Grid.Row="1"
-          ColumnDefinitions="132,*">
-      <TextBlock x:Name="label4"
-                 VerticalAlignment="Center"
-                 Text="Your branch:" />
-      <ComboBox x:Name="_yourBranchesCB"
-                Grid.Column="1"
-                Margin="0,0,6,0"
-                HorizontalAlignment="Stretch"
-                VerticalContentAlignment="Center" />
-    </Grid>
+    <TextBlock x:Name="label4"
+               Margin="9,42,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Text="Your branch:" />
+    <ComboBox x:Name="_yourBranchesCB"
+              Margin="141,39,14,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
+              VerticalContentAlignment="Center" />
 
-    <Grid Grid.Row="2"
-          ColumnDefinitions="132,*">
-      <TextBlock x:Name="label5"
-                 VerticalAlignment="Center"
-                 Text="Target branch:" />
-      <ComboBox x:Name="_remoteBranchesCB"
-                Grid.Column="1"
-                Margin="0,0,6,0"
-                HorizontalAlignment="Stretch"
-                VerticalContentAlignment="Center" />
-    </Grid>
+    <TextBlock x:Name="label5"
+               Margin="9,69,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Text="Target branch:" />
+    <ComboBox x:Name="_remoteBranchesCB"
+              Margin="141,66,14,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
+              VerticalContentAlignment="Center" />
 
     <HeaderedContentControl x:Name="groupBox1"
-                            Grid.Row="3"
                             Classes="gitextensions-group-box"
-                            Margin="3,7,0,0"
+                            Margin="12,100,8,48"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
                             Padding="6,2,6,6"
                             Header="Pull request data">
       <Grid RowDefinitions="27,*"
             ColumnDefinitions="52,*">
         <TextBlock x:Name="label1"
+                   HorizontalAlignment="Left"
                    VerticalAlignment="Center"
                    Text="Title:" />
         <TextBox x:Name="_titleTB"
@@ -63,6 +62,7 @@
         <TextBlock x:Name="label2"
                    Grid.Row="1"
                    Margin="0,4,0,0"
+                   HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Text="Body:" />
         <spellChecker:EditNetSpell x:Name="_bodyTB"
@@ -72,8 +72,8 @@
     </HeaderedContentControl>
 
     <Button x:Name="_createBtn"
-            Grid.Row="4"
             Classes="gitextensions-dialog-action-primary"
+            Margin="0,0,8,9"
             Width="112"
             Height="33"
             HorizontalAlignment="Right"
