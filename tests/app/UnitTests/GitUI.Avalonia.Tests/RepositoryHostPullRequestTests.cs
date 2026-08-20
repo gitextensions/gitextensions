@@ -130,6 +130,71 @@ public sealed class RepositoryHostPullRequestTests
     }
 
     [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_skip_broken_and_empty_remotes_during_first_load()
+    {
+        IHostedRemote brokenRemote = Substitute.For<IHostedRemote>();
+        brokenRemote.Name.Returns("origin");
+        brokenRemote.DisplayData.Returns("broken/repository (origin)");
+        brokenRemote.GetHostedRepository().Returns(_ => throw new InvalidOperationException("remote failed"));
+        IHostedRepository emptyRepository = CreateRepository();
+        IHostedRemote emptyRemote = CreateRemote("empty", emptyRepository);
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        IHostedRemote populatedRemote = CreateRemote("populated", CreateRepository(pullRequest));
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetHostedRemotesForModule().Returns([brokenRemote, emptyRemote, populatedRemote]);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetCurrentRemote().Returns("origin");
+        module.GetRemotesAsync().Returns([]);
+        using ViewPullRequestsForm form = CreateForm(host, module);
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.HostedRepositories.SelectedIndex.Should().Be(2);
+        accessor.PullRequestTitles.Should().Equal("Portable pull request viewer");
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Contain("remote failed");
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_discard_a_superseded_remote_load()
+    {
+        TaskCompletionSource firstLoadStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource releaseFirstLoad = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        IPullRequestInformation stalePullRequest = CreatePullRequest();
+        stalePullRequest.Title.Returns("Stale pull request");
+        IHostedRepository firstRepository = Substitute.For<IHostedRepository>();
+        firstRepository.GetPullRequests().Returns(_ =>
+        {
+            firstLoadStarted.TrySetResult();
+            releaseFirstLoad.Task.GetAwaiter().GetResult();
+            return [stalePullRequest];
+        });
+        IPullRequestInformation currentPullRequest = CreatePullRequest();
+        currentPullRequest.Title.Returns("Current pull request");
+        IHostedRemote firstRemote = CreateRemote("origin", firstRepository);
+        IHostedRemote secondRemote = CreateRemote("upstream", CreateRepository(currentPullRequest));
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetHostedRemotesForModule().Returns([firstRemote, secondRemote]);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetCurrentRemote().Returns("origin");
+        module.GetRemotesAsync().Returns([]);
+        using ViewPullRequestsForm form = CreateForm(host, module);
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await firstLoadStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.SelectHostedRepository(1);
+        releaseFirstLoad.TrySetResult();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.HostedRepositories.SelectedIndex.Should().Be(1);
+        accessor.PullRequestTitles.Should().Equal("Current pull request");
+        _messageBoxHost.Messages.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
     public async Task ViewPullRequestsForm_should_load_diff_and_native_discussion_rows()
     {
         IPullRequestInformation pullRequest = CreatePullRequest();
@@ -169,6 +234,83 @@ public sealed class RepositoryHostPullRequestTests
         accessor.RefreshDiscussion();
         await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
         discussion.Received(2).ForceReload();
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_cancel_discussion_refresh_when_the_hosted_repository_clears()
+    {
+        TaskCompletionSource refreshStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource releaseRefresh = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        IPullRequestDiscussion discussion = pullRequest.GetDiscussion();
+        discussion.When(candidate => candidate.ForceReload()).Do(_ =>
+        {
+            refreshStarted.TrySetResult();
+            releaseRefresh.Task.GetAwaiter().GetResult();
+        });
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.SelectPullRequest(pullRequest);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.RefreshDiscussion();
+        await refreshStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.ClearHostedRepositorySelection();
+        releaseRefresh.TrySetResult();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.Discussion.ItemCount.Should().Be(0);
+        accessor.FetchEnabled.Should().BeFalse();
+        accessor.AddAndFetchEnabled.Should().BeFalse();
+        accessor.CloseEnabled.Should().BeFalse();
+        accessor.RefreshEnabled.Should().BeFalse();
+        accessor.PostEnabled.Should().BeFalse();
+        _messageBoxHost.Messages.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_cancel_diff_loading_when_pull_request_selection_clears()
+    {
+        TaskCompletionSource<string> diffSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        pullRequest.GetDiffDataAsync().Returns(diffSource.Task);
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.SelectPullRequest(pullRequest);
+        accessor.ClearPullRequestSelection();
+        diffSource.TrySetResult(Diff);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.DiffItems.Should().BeEmpty();
+        accessor.Discussion.ItemCount.Should().Be(0);
+        accessor.FetchEnabled.Should().BeFalse();
+        _messageBoxHost.Messages.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_ignore_an_empty_comment()
+    {
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        IPullRequestDiscussion discussion = pullRequest.GetDiscussion();
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.SelectPullRequest(pullRequest);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.Comment = "   ";
+        accessor.PostComment();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        discussion.DidNotReceive().Post(Arg.Any<string>());
+        accessor.Comment.Should().Be("   ");
+        accessor.PostEnabled.Should().BeTrue();
     }
 
     [AvaloniaTest]
@@ -488,6 +630,22 @@ public sealed class RepositoryHostPullRequestTests
         IHostedRepository repository = Substitute.For<IHostedRepository>();
         repository.GetPullRequests().Returns([pullRequest]);
         return repository;
+    }
+
+    private static IHostedRepository CreateRepository(params IPullRequestInformation[] pullRequests)
+    {
+        IHostedRepository repository = Substitute.For<IHostedRepository>();
+        repository.GetPullRequests().Returns(pullRequests);
+        return repository;
+    }
+
+    private static IHostedRemote CreateRemote(string name, IHostedRepository repository)
+    {
+        IHostedRemote remote = Substitute.For<IHostedRemote>();
+        remote.Name.Returns(name);
+        remote.DisplayData.Returns($"owner/repository ({name})");
+        remote.GetHostedRepository().Returns(repository);
+        return remote;
     }
 
     private static IPullRequestInformation CreatePullRequest(string? cloneUrl = null)
