@@ -107,42 +107,50 @@ public partial class CreatePullRequestForm : GitModuleForm
     {
         _createBtn.IsEnabled = false;
         _yourBranchesCB.PlaceholderText = _strLoading.Text;
+        this.Mask();
         _operations.FileAndForget(() => InitializeAsync(_lifetimeCancellation.Token));
     }
 
     private async Task InitializeAsync(CancellationToken cancellationToken)
     {
-        IReadOnlyList<IHostedRemote> hostedRemotes = await Task.Run(
-            () => _repoHost.GetHostedRemotesForModule(),
-            cancellationToken);
-        IHostedRemote[] foreignHostedRemotes = hostedRemotes
-            .Where(remote => !remote.IsOwnedByMe)
-            .ToArray();
-
-        string? currentBranch = _currentBranch;
-        if (string.IsNullOrEmpty(currentBranch) && Module.IsValidGitWorkingDir())
+        try
         {
-            currentBranch = await Task.Run(() => Module.GetSelectedBranch(), cancellationToken);
-        }
+            IReadOnlyList<IHostedRemote> hostedRemotes = await Task.Run(
+                () => _repoHost.GetHostedRemotesForModule(),
+                cancellationToken);
+            IHostedRemote[] foreignHostedRemotes = hostedRemotes
+                .Where(remote => !remote.IsOwnedByMe)
+                .ToArray();
 
-        await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-        _hostedRemotes = hostedRemotes;
-        _currentBranch = currentBranch ?? string.Empty;
-        if (foreignHostedRemotes.Length == 0)
+            string? currentBranch = _currentBranch;
+            if (string.IsNullOrEmpty(currentBranch) && Module.IsValidGitWorkingDir())
+            {
+                currentBranch = await Task.Run(() => Module.GetSelectedBranch(), cancellationToken);
+            }
+
+            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            _hostedRemotes = hostedRemotes;
+            _currentBranch = currentBranch ?? string.Empty;
+            if (foreignHostedRemotes.Length == 0)
+            {
+                MessageBoxes.Show(
+                    this,
+                    _strFailedToCreatePullRequest.Text + Environment.NewLine + _strPleaseCloneGitHubRep.Text,
+                    string.Empty,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
+                Dispatcher.UIThread.Post(Close);
+                return;
+            }
+
+            LoadRemotes(foreignHostedRemotes);
+            LoadMyBranches();
+            LoadPRTemplate();
+        }
+        finally
         {
-            MessageBoxes.Show(
-                this,
-                _strFailedToCreatePullRequest.Text + Environment.NewLine + _strPleaseCloneGitHubRep.Text,
-                string.Empty,
-                WinFormsShims.MessageBoxButtons.OK,
-                WinFormsShims.MessageBoxIcon.Error);
-            Dispatcher.UIThread.Post(Close);
-            return;
+            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(this.UnMask);
         }
-
-        LoadRemotes(foreignHostedRemotes);
-        LoadMyBranches();
-        LoadPRTemplate();
     }
 
     private void LoadRemotes(IHostedRemote[] foreignHostedRemotes)

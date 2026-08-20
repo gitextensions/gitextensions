@@ -2397,7 +2397,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/CreatePullRequestForm.axaml.cs",
     "status": "functional",
     "basedOn": "cf7fadfd108302027541057a6879a319fd7632ab",
-    "notes": "Retains foreign target and user-owned source repository selection, the caller-requested source branch with current-module fallback, provider branch loading, commit-title suggestion, local pull-request template loading, validation, and provider creation. P8.6i repository-host progress 6 keeps provider and repository work cancellable under one form TaskManager: latest source-branch title suggestions and pull-request creation run off the UI thread, creation disables its action until completion, and close cancels and joins all owned work. Progress 7 cancels the current target-branch request when the repository selection becomes empty, preventing a completed stale provider call from repopulating branches or re-enabling Create; deterministic coverage also closes missing-requested-remote fallback, absent-owned-source, branch-load failure, and superseded-target states. This deliberate Avalonia responsiveness adaptation supersedes progress 5's too-literal synchronous restoration. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. All 97 retained Designer-to-AXAML, native async/event, generated-comment, and marked parity-accessor findings remain checksum-classified; exact structural and visual closure stays open."
+    "notes": "Retains foreign target and user-owned source repository selection, the caller-requested source branch with current-module fallback, provider branch loading, commit-title suggestion, local pull-request template loading, validation, and provider creation. P8.6i repository-host progress 6 keeps provider and repository work cancellable under one form TaskManager: latest source-branch title suggestions and pull-request creation run off the UI thread, creation disables its action until completion, and close cancels and joins all owned work. Progress 7 cancels the current target-branch request when the repository selection becomes empty, preventing a completed stale provider call from repopulating branches or re-enabling Create; deterministic coverage also closes missing-requested-remote fallback, absent-owned-source, branch-load failure, and superseded-target states. Progress 12 restores the original theme-resolved AppWorkspace busy mask for the complete initial remote load and guarantees its removal on success, provider failure, or cancellation. This deliberate Avalonia responsiveness adaptation supersedes progress 5's too-literal synchronous restoration. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. All 97 retained Designer-to-AXAML, native async/event, generated-comment, and marked parity-accessor findings remain explicit; exact structural and visual closure stays open."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/CreatePullRequestForm.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/CreatePullRequestForm.axaml",
@@ -2409,7 +2409,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Retains current-remote hosted-repository selection and fallback, pull-request rows, provider diff/discussion loading, selected-file patch viewing, fetch, add-remote/fetch/checkout, close, refresh, and post-comment actions. Provider work is latest-selection-wins under one form-owned TaskManager; structured Git command builders replace the original raw fetch/checkout strings. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. P8.6i repository-host progress 4 routes both modal fetches through the existing IGitUICommands host boundary and verifies real cross-platform fetch plus add-remote/fetch/checkout, notifier lock/notify/unlock sequencing, process failure, and add-remote failure on Windows and Linux. Progress 8 cancels selected diff and discussion work as soon as the hosted repository changes and verifies broken/empty first-load fallback, superseded remote loads, cleared repository and pull-request selections, refresh cancellation, and empty-comment handling. Progress 10 restores the original named load handler. Progress 11 restores the original header sizing for an empty list, content sizing after rows load, and resize-driven title fill instead of retaining one native-125% width snapshot. The host boundary is the Avalonia framework adaptation for the original concrete FormRemoteProcess; retained browser/list/async representation findings remain checksum-classified and exact visual closure stays open."
+    "notes": "Retains current-remote hosted-repository selection and fallback, pull-request rows, provider diff/discussion loading, selected-file patch viewing, fetch, add-remote/fetch/checkout, close, refresh, and post-comment actions. Provider work is latest-selection-wins under one form-owned TaskManager; structured Git command builders replace the original raw fetch/checkout strings. Design-time construction uses an isolated TaskManager because the previewer runs before ThreadHelper initialization. P8.6i repository-host progress 4 routes both modal fetches through the existing IGitUICommands host boundary and verifies real cross-platform fetch plus add-remote/fetch/checkout, notifier lock/notify/unlock sequencing, process failure, and add-remote failure on Windows and Linux. Progress 8 cancels selected diff and discussion work as soon as the hosted repository changes and verifies broken/empty first-load fallback, superseded remote loads, cleared repository and pull-request selections, refresh cancellation, and empty-comment handling. Progress 10 restores the original named load handler. Progress 11 restores the original header sizing for an empty list, content sizing after rows load, and resize-driven title fill instead of retaining one native-125% width snapshot. Progress 12 restores the original theme-resolved AppWorkspace busy mask for initial hosted-remote discovery and guarantees cleanup on every completion path. The host boundary is the Avalonia framework adaptation for the original concrete FormRemoteProcess; retained browser/list/async representation findings remain explicit and exact visual closure stays open."
   },
   "src/app/GitUI/CommandsDialogs/RepoHosting/ViewPullRequestsForm.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml",
@@ -2725,7 +2725,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormGoToCommit.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Preserves clipboard revision detection, asynchronous tag/branch loading, focused-input revision selection, immediate committed dropdown navigation, Enter handling, rev-parse validation, and the original documentation link. Avalonia editable ComboBoxes consume display strings while adjacent IGitRef lists retain original object identity. The help copy is again owned by the same label2.Text translation key as the original rather than an Avalonia-only initializer."
+    "notes": "Preserves clipboard revision detection, asynchronous tag/branch loading, focused-input revision selection, immediate committed dropdown navigation, Enter handling, rev-parse validation, and the original documentation link. Avalonia editable ComboBoxes consume display strings while adjacent IGitRef lists retain original object identity. P8.6i progress 12 restores the original named load/close and DataSourceToGitRefs boundaries, delays editable-text handling until each async source is installed, ignores a popup close with no user selection change, and limits link activation to the primary pointer. The help copy is owned by the same label2.Text translation key as the original rather than an Avalonia-only initializer."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormGoToCommit.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormGoToCommit.axaml",
@@ -2868,7 +2868,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutRevision.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Preserves revision validation, before/after checkout scripts, forced-reset command selection, process execution, conditional submodule update, dialog result, and trace-only exception path."
+    "notes": "Preserves revision validation, before/after checkout scripts, forced-reset command selection, process execution, conditional submodule update, dialog result, and trace-only exception path. P8.6i progress 12 restores the source 41-DIP action panel, 84x25 checkout button, and resulting 457x66 content grid at native 100% instead of scaled/rounded capture constants."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutRevision.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutRevision.axaml",
@@ -3122,7 +3122,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchControl.axaml.cs",
     "status": "functional",
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Preserves asynchronous candidate lookup, 20-item limit, first selection, selection range, dropdown sizing and visibility, wraparound arrows, Enter/Escape/double-click routes, cancellation, and configurable default/hover/focus borders. Avalonia compiled AXAML cannot target an open generic type, so the exact generic API derives from a same-named non-generic visual shell. WinForms assigns the 300px popup width at runtime in physical pixels, so the twin converts it through the owning top-level render scale."
+    "notes": "Preserves asynchronous candidate lookup, 20-item limit, first selection, selection range, dropdown sizing and visibility, wraparound arrows, Enter/Escape/double-click routes, cancellation, configurable default/hover/focus borders, and the inherited TextChanged notification boundary. Avalonia compiled AXAML cannot target an open generic type, so the exact generic API derives from a same-named non-generic visual shell. P8.6i progress 12 replaces the scaled-capture font approximation with the active typeface's real line metrics, converts the source's 300px width and 800px cap through render scale, measures candidate text with the control font, and restores the native 23px search row."
   },
   "src/app/GitUI/CommandsDialogs/SearchControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchControl.axaml",
@@ -3134,7 +3134,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchWindow.axaml.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves generic candidate lookup, selected-item return, close-on-enter/cancel, child-driven sizing, and search focus. Avalonia compiled AXAML cannot target an open generic type, so the exact generic API derives from a same-named untranslated non-generic visual shell."
+    "notes": "Preserves generic candidate lookup, selected-item return, close-on-enter/cancel, child-driven sizing, and search focus. Avalonia compiled AXAML cannot target an open generic type, so the exact generic API derives from a same-named untranslated non-generic visual shell. P8.6i progress 12 sizes the window from the measured label container and search child rather than a rounded fixed row, matching the native 300x79 client surface for a one-result popup."
   },
   "src/app/GitUI/CommandsDialogs/SearchWindow.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchWindow.axaml",
@@ -3430,9 +3430,10 @@
     "substitute": "The same MainPanel and ControlsPanel chrome declared in each dialog AXAML."
   },
   "src/app/GitUI/GitUIExtensions.cs": {
-    "status": "windowsOnly",
-    "justification": "This aggregation is coupled to WinForms TabPage, LoadingControl overlays, TreeNode collections, ContainerControl focus, and the WinForms FileViewer surface; a single same-shaped cross-platform extension class would recreate those toolkit types.",
-    "substitute": "FileViewer owns ViewChangesAsync; Avalonia item collections, logical trees, FocusManager, and each view's explicit loading state replace the remaining helpers at their call sites. No Avalonia source calls the WinForms extension API."
+    "twin": "src/app/GitUI.Avalonia/GitUIExtensions.cs",
+    "status": "functional",
+    "basedOn": "42a1769df056cf97e702b4f43880099ee289743e",
+    "notes": "The native extension twin currently implements the original Mask, UnMask, and FindMaskPanel contract with an Avalonia LoadingControl overlay and the resolved AppWorkspace system color. Other WinForms-only aggregation helpers remain intentionally absent until a ported consumer requires their exact boundary; FileViewer owns ViewChangesAsync and native collections/logical trees supply the current call-site substitutions."
   },
   "src/app/GitUI/GlobalSuppressions.cs": {
     "status": "windowsOnly",

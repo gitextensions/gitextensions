@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -41,6 +42,8 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
     public event Action? OnTextEntered;
 
     public event Action? OnCancelled;
+
+    public event EventHandler? TextChanged;
 
     [AllowNull]
     public string Text
@@ -147,17 +150,34 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
         SearchResultListBox.IsVisible = true;
 
         double renderScale = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
+        Typeface typeface = new(
+            SearchTextBox.FontFamily,
+            SearchTextBox.FontStyle,
+            SearchTextBox.FontWeight,
+            SearchTextBox.FontStretch);
         double width = 300 / renderScale;
         foreach (object? item in SearchResultListBox.Items)
         {
-            TextBlock measuredText = new() { Text = Convert.ToString(item) };
-            measuredText.Measure(AvaloniaSize.Infinity);
-            width = Math.Max(width, measuredText.DesiredSize.Width);
+            FormattedText measuredText = new(
+                Convert.ToString(item) ?? string.Empty,
+                CultureInfo.CurrentUICulture,
+                FlowDirection.LeftToRight,
+                typeface,
+                SearchTextBox.FontSize,
+                foreground: null);
+            width = Math.Max(width, Math.Ceiling(measuredText.WidthIncludingTrailingWhitespace * renderScale) / renderScale);
         }
 
         // WinForms assigns this runtime popup size in physical pixels; Avalonia sizes in DIPs.
-        double itemHeight = Math.Round(SearchTextBox.FontSize * 0.75 * renderScale) / renderScale;
-        double listHeight = Math.Min(800, itemHeight * (SearchResultListBox.ItemCount + 1));
+        double lineHeight = SearchTextBox.FontSize;
+        if (FontManager.Current.TryGetGlyphTypeface(typeface, out GlyphTypeface? glyphTypeface))
+        {
+            FontMetrics metrics = glyphTypeface.Metrics;
+            lineHeight = metrics.LineSpacing * SearchTextBox.FontSize / metrics.DesignEmHeight;
+        }
+
+        double itemHeight = Math.Ceiling(lineHeight * renderScale) / renderScale;
+        double listHeight = Math.Min(800 / renderScale, itemHeight * (SearchResultListBox.ItemCount + 1));
         SearchResultListBox.Width = width;
         SearchResultListBox.Height = listHeight;
 
@@ -175,6 +195,7 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
 
     private void txtSearchBox_TextChange(object? sender, EventArgs e)
     {
+        TextChanged?.Invoke(this, e);
         if (_isUpdatingTextFromCode)
         {
             _isUpdatingTextFromCode = false;

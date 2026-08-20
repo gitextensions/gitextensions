@@ -106,8 +106,8 @@ public sealed class NavigationDialogTests
         {
             Dispatcher.UIThread.RunJobs();
 
-            AssertBounds(form.FindControl<Grid>("tableLayoutPanel1")!, 12, 12, 457, 67);
-            AssertBounds(form.FindControl<Button>("OkCheckout")!, 380, 98, 88, 25);
+            AssertBounds(form.FindControl<Grid>("tableLayoutPanel1")!, 12, 12, 457, 66);
+            AssertBounds(form.FindControl<Button>("OkCheckout")!, 384, 98, 84, 25);
             form.FindControl<Label>("label2")!.Content.Should().Be("Checkout this _revision");
             form.FindControl<CheckBox>("Force")!.Content.Should().Be("_Force (reset local changes)");
         }
@@ -148,7 +148,17 @@ public sealed class NavigationDialogTests
             Dispatcher.UIThread.RunJobs();
 
             reportedSize.Width.Should().BeApproximately(240, 0.01);
-            reportedSize.Height.Should().BeInRange(39, 41);
+            TextBox searchBox = search.FindControl<TextBox>("txtSearchBox")!;
+            Avalonia.Media.Typeface typeface = new(
+                searchBox.FontFamily,
+                searchBox.FontStyle,
+                searchBox.FontWeight,
+                searchBox.FontStretch);
+            Avalonia.Media.FontManager.Current.TryGetGlyphTypeface(typeface, out Avalonia.Media.GlyphTypeface? glyphTypeface).Should().BeTrue();
+            Avalonia.Media.FontMetrics metrics = glyphTypeface!.Metrics;
+            double lineHeight = metrics.LineSpacing * searchBox.FontSize / metrics.DesignEmHeight;
+            double itemHeight = Math.Ceiling(lineHeight * 1.25) / 1.25;
+            reportedSize.Height.Should().BeApproximately((itemHeight * 2) + Math.Max(22, searchBox.Bounds.Height), 0.01);
             search.FindControl<ListBox>("listBoxSearchResult")!.Classes.Should().Contain("search-results");
         }
         finally
@@ -170,6 +180,31 @@ public sealed class NavigationDialogTests
         search.Text.Should().Be("src/App.cs");
         entered.Should().BeTrue();
         search.FindControl<ListBox>("listBoxSearchResult")!.IsVisible.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    public void SearchControl_should_raise_TextChanged_for_user_and_selected_item_text()
+    {
+        SearchControl<string> search = new(_ => [], _ => { });
+        int changeCount = 0;
+        search.TextChanged += (_, _) => changeCount++;
+        Window host = new() { Content = search };
+        host.Show();
+
+        try
+        {
+            search.Text = "src";
+            Dispatcher.UIThread.RunJobs();
+            Invoke(search, "SearchForCandidates", (object)new[] { "src/App.cs" });
+            Invoke(search, "ItemSelectedFromList");
+            Dispatcher.UIThread.RunJobs();
+
+            changeCount.Should().Be(2);
+        }
+        finally
+        {
+            host.Close();
+        }
     }
 
     [TestCase("app.cs", "src/App.cs", true)]
