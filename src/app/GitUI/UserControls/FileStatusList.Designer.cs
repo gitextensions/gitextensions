@@ -130,6 +130,7 @@ partial class FileStatusList
         tsmiMove = new ToolStripMenuItem();
         tsmiDeleteFile = new ToolStripMenuItem();
         sepFile = new ToolStripSeparator();
+        tsmiCopyAiPromptToClipboard = new ToolStripMenuItem();
         tsmiCopyPaths = new GitUI.CommandsDialogs.Menus.CopyPathsToolStripMenuItem();
         tsmiShowInFolder = new ToolStripMenuItem();
         sepBrowse = new ToolStripSeparator();
@@ -697,7 +698,7 @@ partial class FileStatusList
         // 
         // ItemContextMenu
         // 
-        ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiResetChunkOfFile, tsmiInteractiveAdd, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFile, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiEditWorkingDirectoryFile, tsmiOpenInVisualStudio, tsmiSaveAs, tsmiMove, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepIgnore, tsmiAddFileToGitIgnore, tsmiAddFileToGitInfoExclude, tsmiSkipWorktree, tsmiAssumeUnchanged, tsmiStopTracking, sepScripts, tsmiRunScript });
+        ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiResetChunkOfFile, tsmiInteractiveAdd, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFile, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiEditWorkingDirectoryFile, tsmiOpenInVisualStudio, tsmiSaveAs, tsmiMove, tsmiDeleteFile, sepFile, tsmiCopyAiPromptToClipboard, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepIgnore, tsmiAddFileToGitIgnore, tsmiAddFileToGitInfoExclude, tsmiSkipWorktree, tsmiAssumeUnchanged, tsmiStopTracking, sepScripts, tsmiRunScript });
         ItemContextMenu.Name = "DiffContextMenu";
         ItemContextMenu.Size = new Size(296, 832);
         ItemContextMenu.Opening += ItemContextMenu_Opening;
@@ -961,6 +962,13 @@ partial class FileStatusList
         sepFile.Size = new Size(292, 6);
         sepFile.Tag = "1";
         // 
+        // tsmiCopyAiPromptToClipboard
+        // 
+        tsmiCopyAiPromptToClipboard.Name = "tsmiCopyAiPromptToClipboard";
+        tsmiCopyAiPromptToClipboard.Size = new Size(295, 22);
+        tsmiCopyAiPromptToClipboard.Text = "Copy AI prompt with selected diffs to clipboard (&Q)";
+        tsmiCopyAiPromptToClipboard.Click += CopyAiPromptToClipboard_Click;
+        // 
         // tsmiCopyPaths
         // 
         tsmiCopyPaths.Image = (Image)resources.GetObject("tsmiCopyPaths.Image");
@@ -1215,6 +1223,7 @@ partial class FileStatusList
     private ToolStripMenuItem tsmiMove;
     private ToolStripMenuItem tsmiDeleteFile;
     private ToolStripSeparator sepFile;
+    private ToolStripMenuItem tsmiCopyAiPromptToClipboard;
     private CommandsDialogs.Menus.CopyPathsToolStripMenuItem tsmiCopyPaths;
     private ToolStripMenuItem tsmiShowInFolder;
     private ToolStripSeparator sepBrowse;
