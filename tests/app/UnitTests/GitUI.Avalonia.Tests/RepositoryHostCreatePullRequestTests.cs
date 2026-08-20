@@ -148,6 +148,118 @@ public sealed class RepositoryHostCreatePullRequestTests
     }
 
     [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_fall_back_to_the_first_target_when_the_requested_remote_is_missing()
+    {
+        PullRequestFixture fixture = CreateFixture();
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "missing", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.TargetRepositories.SelectedItem.Should().BeSameAs(fixture.TargetRemote);
+        accessor.TargetBranches.SelectedItem.Should().Be("develop");
+        accessor.CreateEnabled.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_require_an_owned_source_remote()
+    {
+        PullRequestFixture fixture = CreateFixture();
+        fixture.Host.GetHostedRemotesForModule().Returns([fixture.TargetRemote]);
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.SourceBranches.Items.Should().BeEmpty();
+        accessor.TargetBranches.SelectedItem.Should().Be("develop");
+        accessor.CreateEnabled.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_report_a_branch_load_failure_and_keep_create_disabled()
+    {
+        PullRequestFixture fixture = CreateFixture();
+        fixture.TargetRepository.GetBranches().Returns(_ => throw new InvalidOperationException("branch load failed"));
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.TargetBranches.Items.Should().BeEmpty();
+        accessor.CreateEnabled.Should().BeFalse();
+        _messageBoxHost.Messages.Should().ContainSingle(message => message.Contains("branch load failed", StringComparison.Ordinal));
+    }
+
+    [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_discard_a_superseded_target_branch_load()
+    {
+        TaskCompletionSource firstLoadStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseFirstLoad = new(initialState: false);
+        PullRequestFixture fixture = CreateFixture();
+        fixture.TargetRepository.GetBranches().Returns(
+            _ =>
+            {
+                firstLoadStarted.TrySetResult();
+                releaseFirstLoad.Wait(TimeSpan.FromSeconds(5)).Should().BeTrue();
+                return CreateBranches("stale");
+            });
+        IHostedRepository secondRepository = CreateRepository(
+            defaultBranch: "current",
+            branches: ["current"]);
+        IHostedRemote secondRemote = CreateRemote(
+            name: "second",
+            displayData: "project/second",
+            isOwnedByMe: false,
+            secondRepository);
+        fixture.Host.GetHostedRemotesForModule().Returns(
+            [fixture.SourceRemote, fixture.TargetRemote, secondRemote]);
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await firstLoadStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.TargetRepositories.SelectedItem = secondRemote;
+        releaseFirstLoad.Set();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.TargetRepositories.SelectedItem.Should().BeSameAs(secondRemote);
+        accessor.TargetBranches.Items.Cast<string>().Should().Equal("current");
+        accessor.TargetBranches.SelectedItem.Should().Be("current");
+        accessor.CreateEnabled.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_cancel_target_loading_when_the_remote_selection_is_cleared()
+    {
+        TaskCompletionSource loadStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseLoad = new(initialState: false);
+        PullRequestFixture fixture = CreateFixture();
+        fixture.TargetRepository.GetBranches().Returns(
+            _ =>
+            {
+                loadStarted.TrySetResult();
+                releaseLoad.Wait(TimeSpan.FromSeconds(5)).Should().BeTrue();
+                return CreateBranches("stale");
+            });
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await loadStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.TargetRepositories.SelectedIndex = -1;
+        releaseLoad.Set();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.TargetRepositories.SelectedItem.Should().BeNull();
+        accessor.TargetBranches.Items.Should().BeEmpty();
+        accessor.CreateEnabled.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
     public async Task CreatePullRequestForm_should_create_with_selected_provider_values()
     {
         PullRequestFixture fixture = CreateFixture();
@@ -349,7 +461,13 @@ public sealed class RepositoryHostCreatePullRequestTests
     {
         IHostedRepository repository = Substitute.For<IHostedRepository>();
         repository.GetDefaultBranch().Returns(defaultBranch);
-        IHostedBranch[] hostedBranches = branches.Select(
+        IHostedBranch[] hostedBranches = CreateBranches(branches.ToArray());
+        repository.GetBranches().Returns(hostedBranches);
+        return repository;
+    }
+
+    private static IHostedBranch[] CreateBranches(params string[] names)
+        => names.Select(
                 name =>
                 {
                     IHostedBranch branch = Substitute.For<IHostedBranch>();
@@ -357,9 +475,6 @@ public sealed class RepositoryHostCreatePullRequestTests
                     return branch;
                 })
             .ToArray();
-        repository.GetBranches().Returns(hostedBranches);
-        return repository;
-    }
 
     private static IHostedRemote CreateRemote(
         string name,
