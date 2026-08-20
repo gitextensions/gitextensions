@@ -2,7 +2,6 @@
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
-using Avalonia.Layout;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
@@ -2422,26 +2421,10 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, MenuItem targetItem)
     {
-        bool isViewMenu = targetItem.Name == nameof(viewToolStripMenuItem);
         targetItem.Items.Clear();
         foreach (MenuCommand menuCommand in menuCommands)
         {
             Control item = MenuCommand.CreateToolStripItem(menuCommand);
-            if (isViewMenu)
-            {
-                // Avalonia derives a narrower shared submenu column than ToolStripDropDownMenu for the same text and shortcuts.
-                item.Classes.Add("revision-grid-view-menu-row");
-                if (item is Separator separator)
-                {
-                    separator.Width = 423.2;
-                    separator.HorizontalAlignment = HorizontalAlignment.Center;
-                }
-                else
-                {
-                    item.MinWidth = 425.6;
-                }
-            }
-
             targetItem.Items.Add(item);
             if (item is MenuItem menuItem)
             {
@@ -2760,8 +2743,18 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
         protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
         {
+            double rowHeight = GetRowHeight(_owner);
+            foreach ((ColumnProvider provider, _) in _cells)
+            {
+                if (provider is AvatarColumnProvider avatarColumnProvider)
+                {
+                    avatarColumnProvider.ApplyRowHeight(rowHeight);
+                    ColumnDefinitions[provider.Index].Width = provider.Column.EffectiveWidth;
+                }
+            }
+
             Avalonia.Size measured = base.MeasureOverride(availableSize);
-            return new Avalonia.Size(measured.Width, GetRowHeight(_owner));
+            return new Avalonia.Size(measured.Width, rowHeight);
         }
 
         protected override void OnDataContextChanged(EventArgs e)

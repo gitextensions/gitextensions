@@ -89,11 +89,13 @@ public sealed class RepositoryHostPullRequestTests
         repositorySelector.Spacing.Should().Be(16);
         Grid pullRequestLayout = form.FindControl<Grid>("tableLayoutPanel3")!;
         pullRequestLayout.Margin.Should().Be(new Avalonia.Thickness(2));
-        pullRequestLayout.ColumnDefinitions[1].Width.Value.Should().Be(163.2);
+        pullRequestLayout.ColumnDefinitions[1].Width.IsAuto.Should().BeTrue();
         ((Grid)pullRequestLayout.Children[0]).Margin.Should().Be(new Avalonia.Thickness(3));
         Grid pullRequestHeader = (Grid)form.FindControl<Border>("columnHeaderId")!.Parent!;
-        pullRequestHeader.ColumnDefinitions.Select(column => column.Width.Value)
-            .Should().Equal(28, 479.2, 70.4, 125.6, 40);
+        pullRequestHeader.ColumnDefinitions[1].Width.IsStar.Should().BeTrue();
+        pullRequestHeader.ColumnDefinitions
+            .Where((_, index) => index != 1)
+            .Should().OnlyContain(column => column.Width.IsAbsolute && column.Width.Value > 0);
         StackPanel pullRequestActions = form.FindControl<StackPanel>("flowLayoutPanel3")!;
         pullRequestActions.Margin.Should().Be(new Avalonia.Thickness(2));
         foreach (string buttonName in new[] { "_fetchBtn", "_addAndFetchBtn", "_closePullRequestBtn" })
@@ -176,6 +178,32 @@ public sealed class RepositoryHostPullRequestTests
         accessor.HostedRepositories.SelectedIndex.Should().Be(0);
         accessor.PullRequests.ItemCount.Should().Be(1);
         accessor.DiffItems.Should().ContainSingle(item => item.Name == "src/file.txt");
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_size_non_title_columns_to_their_content()
+    {
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        pullRequest.Owner.Returns("a-contributor-name-that-is-wider-than-the-header");
+        pullRequest.FetchBranch.Returns("pr/42");
+        IHostedRemote remote = CreateRemote("origin", CreateRepository(pullRequest));
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetHostedRemotesForModule().Returns([remote]);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetCurrentRemote().Returns("origin");
+        module.GetRemotesAsync().Returns([]);
+        using ViewPullRequestsForm form = CreateForm(host, module);
+        Grid header = (Grid)form.FindControl<Border>("columnHeaderId")!.Parent!;
+        double initialOwnerWidth = header.ColumnDefinitions[2].Width.Value;
+        double initialBranchWidth = header.ColumnDefinitions[4].Width.Value;
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        header.ColumnDefinitions[1].Width.IsStar.Should().BeTrue();
+        header.ColumnDefinitions[2].Width.Value.Should().BeGreaterThan(initialOwnerWidth);
+        header.ColumnDefinitions[4].Width.Value.Should().BeLessThan(initialBranchWidth);
     }
 
     [AvaloniaTest]

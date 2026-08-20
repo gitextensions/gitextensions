@@ -80,7 +80,7 @@ public sealed class CopyContextMenuItem : MenuItem
 
             // Avalonia measures submenu text more narrowly than ToolStrip; retain the original
             // icon-leading and trailing desktop whitespace without constraining longer labels.
-            Padding = new Thickness(4, 1, 17.6, 1),
+            Padding = new Thickness(4, 1, 18, 1),
         };
 
         item.Click += delegate
@@ -135,7 +135,7 @@ public sealed class CopyContextMenuItem : MenuItem
             MenuItem caption = new()
             {
                 Header = TranslatedStrings.Branches,
-                Padding = new Thickness(4, 1, 17.6, 1),
+                Padding = new Thickness(4, 1, 18, 1),
             };
             MenuUtil.SetAsCaptionMenuItem(caption, this);
             Items.Add(caption);
@@ -145,7 +145,7 @@ public sealed class CopyContextMenuItem : MenuItem
                 AddItem(name, textToCopy: name, Images.Branch.AdaptLightness(), hotkey: null);
             }
 
-            Items.Add(new Separator { Margin = new Thickness(1.6, 0, 0.8, 0) });
+            Items.Add(new Separator { Margin = new Thickness(2, 0, 1, 0) });
         }
 
         // Add items for tags
@@ -154,7 +154,7 @@ public sealed class CopyContextMenuItem : MenuItem
             MenuItem caption = new()
             {
                 Header = TranslatedStrings.Tags,
-                Padding = new Thickness(4, 1, 17.6, 1),
+                Padding = new Thickness(4, 1, 18, 1),
             };
             MenuUtil.SetAsCaptionMenuItem(caption, this);
             Items.Add(caption);
@@ -164,7 +164,7 @@ public sealed class CopyContextMenuItem : MenuItem
                 AddItem(name, textToCopy: name, Images.Tag, hotkey: null);
             }
 
-            Items.Add(new Separator { Margin = new Thickness(1.6, 0, 0.8, 0) });
+            Items.Add(new Separator { Margin = new Thickness(2, 0, 1, 0) });
         }
 
         // Add other items

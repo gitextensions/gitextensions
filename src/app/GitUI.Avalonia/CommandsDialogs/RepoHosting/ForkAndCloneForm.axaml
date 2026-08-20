@@ -19,7 +19,7 @@
               ColumnDefinitions="7*,3*"
               Margin="3">
           <Grid RowDefinitions="24,*">
-            <Grid ColumnDefinitions="63.2,44.8,49.6,44.8">
+            <Grid ColumnDefinitions="180,45,50,45">
               <Border x:Name="columnHeaderMyReposName"
                       Classes="gitextensions-section">
                 <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
@@ -89,7 +89,7 @@
                 Grid.Row="1"
                 ColumnDefinitions="3*,2*">
             <Grid RowDefinitions="24,*">
-              <Grid ColumnDefinitions="180,110.4,40.8,40">
+              <Grid ColumnDefinitions="180,110,41,40">
                 <Border x:Name="columnHeaderSearchName"
                         Classes="gitextensions-section">
                   <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
