@@ -396,7 +396,11 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void _browseForCloneToDirbtn_Click(object? sender, EventArgs e)
     {
-        string? selectedPath = OsShellUtil.PickFolder(this, destinationTB.Text);
+        // Avalonia uses the current filesystem root because the original C:\ fallback is not portable.
+        string initialDirectory = string.IsNullOrEmpty(destinationTB.Text)
+            ? Path.GetPathRoot(Environment.CurrentDirectory) ?? Environment.CurrentDirectory
+            : destinationTB.Text;
+        string? selectedPath = OsShellUtil.PickFolder(this, initialDirectory);
         if (selectedPath is not null)
         {
             destinationTB.Text = selectedPath;
@@ -538,12 +542,18 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         IReadOnlyList<GitProtocol> protocols = repository.SupportedCloneProtocols;
         bool hasProtocols = protocols.Count > 0;
-        if (updateProtocols)
+        if (hasProtocols && updateProtocols)
         {
+            GitProtocol currentSelection = ProtocolDropdownList.SelectedItem is GitProtocol selectedProtocol
+                ? selectedProtocol
+                : protocols[0];
             ProtocolDropdownList.ItemsSource = protocols;
-            ProtocolDropdownList.SelectedItem = protocols.Contains(repository.CloneProtocol)
-                ? repository.CloneProtocol
-                : protocols.FirstOrDefault();
+            if (protocols.Contains(currentSelection))
+            {
+                repository.CloneProtocol = currentSelection;
+            }
+
+            ProtocolDropdownList.SelectedItem = repository.CloneProtocol;
         }
 
         SetProtocolSelectionVisibility(hasProtocols);
@@ -704,6 +714,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         public string Description => form.searchResultItemDescription.Text ?? string.Empty;
 
+        public string HelpText => form.helpTextLbl.Text ?? string.Empty;
+
         public bool CloneEnabled => form.cloneBtn.IsEnabled;
 
         public bool ForkEnabled => form.forkBtn.IsEnabled;
@@ -711,6 +723,12 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         public bool SearchEnabled => form.searchBtn.IsEnabled;
 
         public bool GetFromUserEnabled => form.getFromUserBtn.IsEnabled;
+
+        public GitProtocol? SelectedProtocol
+        {
+            get => form.ProtocolDropdownList.SelectedItem is GitProtocol protocol ? protocol : null;
+            set => form.ProtocolDropdownList.SelectedItem = value;
+        }
 
         public bool IsMyRepositoriesTabSelected => ReferenceEquals(form.tabControl.SelectedItem, form.myReposPage);
 
