@@ -17,7 +17,7 @@ internal sealed class AvatarColumnProvider : ColumnProvider
         RevisionGridControl revisionGridView,
         IAvatarProvider avatarProvider,
         IAvatarCacheCleaner avatarCacheCleaner)
-        : base("Avatar", new GridLength(25.6), minimumWidth: 25.6, resizable: false)
+        : base("Avatar", new GridLength(32), minimumWidth: 5, resizable: false)
     {
         _avatarProvider = avatarProvider;
         _ = new CacheRefreshSubscription(
@@ -29,6 +29,12 @@ internal sealed class AvatarColumnProvider : ColumnProvider
     public override void ApplySettings()
     {
         Column.IsVisible = AppSettings.ShowAuthorAvatarColumn;
+    }
+
+    internal void ApplyRowHeight(double rowHeight)
+    {
+        // Framework constraint: Avalonia rows measure separately, so mirror the original per-paint width assignment here.
+        Column.Width = new GridLength(rowHeight);
     }
 
     public override Control CreateCell()

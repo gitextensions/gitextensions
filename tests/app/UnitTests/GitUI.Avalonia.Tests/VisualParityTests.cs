@@ -448,7 +448,7 @@ public sealed class VisualParityTests
             };
             separatorMenu.Open(target);
             Dispatcher.UIThread.RunJobs();
-            contextSeparator.Height.Should().Be(4.5);
+            contextSeparator.Height.Should().Be(6);
             contextSeparator.Margin.Should().Be(new Thickness(0));
             contextSeparator.Foreground.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBorderBrush"));
             contextSeparator.Background.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBackgroundBrush"));
@@ -484,7 +484,7 @@ public sealed class VisualParityTests
             };
             separatorFlyout.ShowAt(target);
             Dispatcher.UIThread.RunJobs();
-            flyoutSeparator.Height.Should().Be(4.5);
+            flyoutSeparator.Height.Should().Be(6);
             flyoutSeparator.Margin.Should().Be(new Thickness(0));
             flyoutSeparator.Foreground.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBorderBrush"));
             flyoutSeparator.Background.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBackgroundBrush"));

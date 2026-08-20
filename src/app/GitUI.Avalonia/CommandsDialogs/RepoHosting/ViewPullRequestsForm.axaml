@@ -29,10 +29,10 @@
       <Grid x:Name="tableLayoutPanel3"
             Grid.Row="1"
             Margin="2"
-            ColumnDefinitions="*,163.2">
+            ColumnDefinitions="*,Auto">
         <Grid Margin="3"
               RowDefinitions="24,*">
-          <Grid ColumnDefinitions="28,479.2,70.4,125.6,40">
+          <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
             <Border x:Name="columnHeaderId"
                     Classes="gitextensions-section">
               <TextBlock Classes="gitextensions-list-header-text"

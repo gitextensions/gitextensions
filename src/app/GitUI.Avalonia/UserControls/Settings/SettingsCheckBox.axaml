@@ -13,11 +13,12 @@
   <StackPanel x:Name="tableLayoutPanel"
               Orientation="Horizontal">
     <CheckBox x:Name="checkBox"
-              Margin="0,0,4.8,0"
+              Margin="0,0,2,0"
               Content="Settings text" />
     <Image x:Name="pictureBox"
            Classes="gitextensions-icon-16"
            Cursor="Hand"
+           Margin="2,0,0,0"
            IsVisible="False"
            Source="{x:Static properties:Images.Information}" />
   </StackPanel>
