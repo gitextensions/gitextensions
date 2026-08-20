@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterOwner"
         Title="Remote repository fork and clone">
   <Grid x:Name="tableLayoutPanel2"
-        RowDefinitions="*,175,40">
+        RowDefinitions="*,183,40">
     <TabControl x:Name="tabControl"
                 Margin="3">
       <TabItem x:Name="myReposPage"
@@ -160,20 +160,29 @@
         <TextBox x:Name="destinationTB"
                  Grid.Row="1"
                  Grid.ColumnSpan="2"
-                 Margin="0,2,6,4" />
+                 Width="294"
+                 Height="21"
+                 Margin="0,2,0,4"
+                 HorizontalAlignment="Left" />
         <Button x:Name="browseForCloneToDirbtn"
                 Grid.Row="1"
-                Grid.Column="2"
+                Grid.ColumnSpan="3"
                 Width="102"
+                Height="23"
+                Margin="300,0,0,0"
+                Padding="4,0"
                 HorizontalAlignment="Left"
+                VerticalContentAlignment="Center"
                 Content="..." />
 
         <TextBlock x:Name="createDirectoryLbl"
                    Grid.Row="2"
+                   Margin="0,-7,0,0"
                    Text="Create directory:" />
         <TextBlock x:Name="label3"
                    Grid.Row="2"
                    Grid.Column="1"
+                   Margin="9,-7,0,0"
                    Text="Add upstream remote as:" />
         <TextBlock x:Name="ProtocolLabel"
                    Grid.Row="2"
@@ -181,11 +190,18 @@
                    Text="Protocol:" />
         <TextBox x:Name="createDirTB"
                  Grid.Row="2"
-                 Margin="0,18,6,22" />
+                 Width="183"
+                 Height="21"
+                 Margin="0,9,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top" />
         <ComboBox x:Name="addUpstreamRemoteAsCB"
                   Grid.Row="2"
                   Grid.Column="1"
-                  Margin="0,18,6,22"
+                  Width="200"
+                  Margin="9,9,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
                   IsEditable="True" />
         <ComboBox x:Name="ProtocolDropdownList"
                   Grid.Row="2"
@@ -196,22 +212,27 @@
         <TextBlock x:Name="cloneInfoText"
                    Grid.Row="2"
                    Grid.ColumnSpan="3"
-                   Margin="0,46,0,0"
+                   Height="35"
+                   Margin="2,35,0,0"
+                   VerticalAlignment="Top"
                    TextWrapping="Wrap" />
 
-        <StackPanel Grid.Row="3"
-                    Grid.ColumnSpan="3"
-                    Orientation="Horizontal"
-                    Spacing="8">
-          <TextBlock x:Name="depthLabel"
-                     VerticalAlignment="Center"
-                     Text="Limit Depth:" />
-          <NumericUpDown x:Name="depthUpDown"
-                         Width="100"
-                         Minimum="0"
-                         Maximum="999"
-                         Value="0" />
-        </StackPanel>
+        <TextBlock x:Name="depthLabel"
+                   Grid.Row="3"
+                   Grid.ColumnSpan="3"
+                   Margin="0,-5,0,0"
+                   VerticalAlignment="Top"
+                   Text="Limit Depth:" />
+        <NumericUpDown x:Name="depthUpDown"
+                       Grid.Row="3"
+                       Grid.ColumnSpan="3"
+                       Width="100"
+                       Margin="2,14,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Minimum="0"
+                       Maximum="999"
+                       Value="0" />
       </Grid>
     </HeaderedContentControl>
 
