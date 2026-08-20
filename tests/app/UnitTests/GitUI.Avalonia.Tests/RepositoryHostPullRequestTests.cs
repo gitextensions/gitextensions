@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -12,6 +13,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs.RepoHosting;
+using GitUI.UserControls.RevisionGrid;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -178,6 +180,39 @@ public sealed class RepositoryHostPullRequestTests
         accessor.HostedRepositories.SelectedIndex.Should().Be(0);
         accessor.PullRequests.ItemCount.Should().Be(1);
         accessor.DiffItems.Should().ContainSingle(item => item.Name == "src/file.txt");
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_mask_the_form_only_while_initial_remotes_load()
+    {
+        TaskCompletionSource loadStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseLoad = new(initialState: false);
+        IHostedRemote remote = CreateRemote("origin", CreateRepository());
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetHostedRemotesForModule().Returns(
+            _ =>
+            {
+                loadStarted.TrySetResult();
+                releaseLoad.Wait(TimeSpan.FromSeconds(5)).Should().BeTrue();
+                return [remote];
+            });
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetCurrentRemote().Returns("origin");
+        module.GetRemotesAsync().Returns([]);
+        using ViewPullRequestsForm form = CreateForm(host, module);
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        await loadStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        form.GetVisualDescendants().OfType<LoadingControl>().Should().ContainSingle();
+
+        releaseLoad.Set();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        Dispatcher.UIThread.RunJobs();
+
+        form.GetVisualDescendants().OfType<LoadingControl>().Should().BeEmpty();
+        form.Close();
     }
 
     [AvaloniaTest]

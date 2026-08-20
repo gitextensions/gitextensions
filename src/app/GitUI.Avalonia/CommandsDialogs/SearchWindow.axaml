@@ -11,7 +11,7 @@
         Title=""
         WindowStartupLocation="CenterOwner">
   <Grid x:Name="tableLayoutPanel1"
-        RowDefinitions="23,*">
+        RowDefinitions="Auto,*">
     <Border BorderThickness="1"
             BorderBrush="{DynamicResource GitExtensionsControlBorderBrush}"
             Background="{DynamicResource GitExtensionsControlBackgroundBrush}">

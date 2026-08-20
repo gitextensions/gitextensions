@@ -28,6 +28,10 @@ public sealed partial class FormGoToCommit : GitModuleForm
     private IReadOnlyList<IGitRef> _branches = [];
     private bool _tagsDropDownOpened;
     private bool _branchesDropDownOpened;
+    private bool _tagsSelectionChangedWhileOpen;
+    private bool _branchesSelectionChangedWhileOpen;
+    private bool _tagsLoaded;
+    private bool _branchesLoaded;
 
     public FormGoToCommit()
     {
@@ -47,20 +51,30 @@ public sealed partial class FormGoToCommit : GitModuleForm
 
     protected override void OnClosed(EventArgs e)
     {
+        FormGoToCommit_Closed(this, e);
+        base.OnClosed(e);
+    }
+
+    private void FormGoToCommit_Closed(object sender, EventArgs e)
+    {
         _branchesLoader.Cancel();
         _tagsLoader.Cancel();
         _tagsLoader.Dispose();
         _branchesLoader.Dispose();
-        base.OnClosed(e);
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
+        FormGoToCommit_Load(this, e);
+        textboxCommitExpression.Focus();
+    }
+
+    private void FormGoToCommit_Load(object sender, EventArgs e)
+    {
         LoadTagsAsync().FileAndForget();
         LoadBranchesAsync().FileAndForget();
         SetCommitExpressionFromClipboard();
-        textboxCommitExpression.Focus();
     }
 
     /// <summary>
@@ -105,6 +119,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
                 // Avalonia's editable ComboBox requires display strings; keep the IGitRef
                 // objects beside it so selection retains the original identity semantics.
                 comboBoxTags.ItemsSource = list.Select(item => item.LocalName).ToList();
+                _tagsLoaded = true;
                 SetSelectedRevisionByFocusedControl();
             });
     }
@@ -122,8 +137,14 @@ public sealed partial class FormGoToCommit : GitModuleForm
                 // Avalonia's editable ComboBox requires display strings; keep the IGitRef
                 // objects beside it so selection retains the original identity semantics.
                 comboBoxBranches.ItemsSource = list.Select(item => item.LocalName).ToList();
+                _branchesLoaded = true;
                 SetSelectedRevisionByFocusedControl();
             });
+    }
+
+    private IReadOnlyList<IGitRef> DataSourceToGitRefs(Avalonia.Controls.ComboBox cb)
+    {
+        return ReferenceEquals(cb, comboBoxTags) ? _tags : _branches;
     }
 
     private void comboBoxTags_Enter(object? sender, RoutedEventArgs e)
@@ -158,19 +179,29 @@ public sealed partial class FormGoToCommit : GitModuleForm
 
     private void comboBoxTags_TextChanged(object? sender, EventArgs e)
     {
-        _selectedTag = _tags.FirstOrDefault(item => item.LocalName == comboBoxTags.Text);
+        if (!_tagsLoaded)
+        {
+            return;
+        }
+
+        _selectedTag = DataSourceToGitRefs(comboBoxTags).FirstOrDefault(item => item.LocalName == comboBoxTags.Text);
         SetSelectedRevisionByFocusedControl();
     }
 
     private void comboBoxBranches_TextChanged(object? sender, EventArgs e)
     {
-        _selectedBranch = _branches.FirstOrDefault(item => item.LocalName == comboBoxBranches.Text);
+        if (!_branchesLoaded)
+        {
+            return;
+        }
+
+        _selectedBranch = DataSourceToGitRefs(comboBoxBranches).FirstOrDefault(item => item.LocalName == comboBoxBranches.Text);
         SetSelectedRevisionByFocusedControl();
     }
 
     private void comboBoxTags_SelectionChangeCommitted(object? sender, EventArgs e)
     {
-        if (!_tagsDropDownOpened || comboBoxTags.SelectedItem is not string selected)
+        if (!_tagsDropDownOpened || !_tagsSelectionChangedWhileOpen || comboBoxTags.SelectedItem is not string selected)
         {
             return;
         }
@@ -183,7 +214,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
 
     private void comboBoxBranches_SelectionChangeCommitted(object? sender, EventArgs e)
     {
-        if (!_branchesDropDownOpened || comboBoxBranches.SelectedItem is not string selected)
+        if (!_branchesDropDownOpened || !_branchesSelectionChangedWhileOpen || comboBoxBranches.SelectedItem is not string selected)
         {
             return;
         }
@@ -233,7 +264,13 @@ public sealed partial class FormGoToCommit : GitModuleForm
     {
         goButton.Click += goButton_Click;
         textboxCommitExpression.TextChanged += commitExpression_TextChanged;
-        linkGitRevParse.PointerReleased += linkGitRevParse_LinkClicked;
+        linkGitRevParse.PointerReleased += (sender, e) =>
+        {
+            if (e.InitialPressMouseButton == MouseButton.Left)
+            {
+                linkGitRevParse_LinkClicked(sender, e);
+            }
+        };
         comboBoxTags.GotFocus += comboBoxTags_Enter;
         comboBoxTags.PropertyChanged += (_, e) =>
         {
@@ -243,7 +280,12 @@ public sealed partial class FormGoToCommit : GitModuleForm
             }
         };
         comboBoxTags.KeyUp += comboBoxTags_KeyUp;
-        comboBoxTags.DropDownOpened += (_, _) => _tagsDropDownOpened = true;
+        comboBoxTags.SelectionChanged += (_, _) => _tagsSelectionChangedWhileOpen = _tagsDropDownOpened;
+        comboBoxTags.DropDownOpened += (_, _) =>
+        {
+            _tagsDropDownOpened = true;
+            _tagsSelectionChangedWhileOpen = false;
+        };
         comboBoxTags.DropDownClosed += comboBoxTags_SelectionChangeCommitted;
         comboBoxBranches.GotFocus += comboBoxBranches_Enter;
         comboBoxBranches.PropertyChanged += (_, e) =>
@@ -254,7 +296,12 @@ public sealed partial class FormGoToCommit : GitModuleForm
             }
         };
         comboBoxBranches.KeyUp += comboBoxBranches_KeyUp;
-        comboBoxBranches.DropDownOpened += (_, _) => _branchesDropDownOpened = true;
+        comboBoxBranches.SelectionChanged += (_, _) => _branchesSelectionChangedWhileOpen = _branchesDropDownOpened;
+        comboBoxBranches.DropDownOpened += (_, _) =>
+        {
+            _branchesDropDownOpened = true;
+            _branchesSelectionChangedWhileOpen = false;
+        };
         comboBoxBranches.DropDownClosed += comboBoxBranches_SelectionChangeCommitted;
     }
 }

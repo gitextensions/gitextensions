@@ -12,12 +12,12 @@
   <DockPanel>
     <Border x:Name="ControlsPanel"
             DockPanel.Dock="Bottom"
-            Height="40"
+            Height="41"
             Padding="0,0,13,0"
             Background="{DynamicResource GitExtensionsControlBackgroundBrush}">
       <compat:IconButton x:Name="OkCheckout"
                          Classes="gitextensions-dialog-action"
-                         Width="88"
+                         Width="84"
                          Height="25"
                          HorizontalAlignment="Right"
                          VerticalAlignment="Center"

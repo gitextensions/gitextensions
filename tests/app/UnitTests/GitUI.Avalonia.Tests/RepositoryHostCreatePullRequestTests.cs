@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -13,6 +14,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -145,6 +147,51 @@ public sealed class RepositoryHostCreatePullRequestTests
         accessor.Title.Should().Be("Suggested title");
         accessor.Body.Should().Be("Template body");
         accessor.CreateEnabled.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_mask_the_form_only_while_initial_remotes_load()
+    {
+        TaskCompletionSource loadStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseLoad = new(initialState: false);
+        PullRequestFixture fixture = CreateFixture();
+        fixture.Host.GetHostedRemotesForModule().Returns(
+            _ =>
+            {
+                loadStarted.TrySetResult();
+                releaseLoad.Wait(TimeSpan.FromSeconds(5)).Should().BeTrue();
+                return [fixture.SourceRemote, fixture.TargetRemote];
+            });
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        await loadStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        form.GetVisualDescendants().OfType<LoadingControl>().Should().ContainSingle();
+
+        releaseLoad.Set();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        Dispatcher.UIThread.RunJobs();
+
+        form.GetVisualDescendants().OfType<LoadingControl>().Should().BeEmpty();
+        form.Close();
+    }
+
+    [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_remove_the_initial_mask_when_remote_loading_fails()
+    {
+        PullRequestFixture fixture = CreateFixture();
+        fixture.Host.GetHostedRemotesForModule().Returns(_ => throw new InvalidOperationException("remote load failed"));
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+        form.Mask();
+
+        Func<Task> act = () => accessor.InitializeAsync();
+        await act.Should().ThrowAsync<InvalidOperationException>().WithMessage("remote load failed");
+        Dispatcher.UIThread.RunJobs();
+
+        ((Panel)form.Content!).Children.OfType<LoadingControl>().Should().BeEmpty();
     }
 
     [AvaloniaTest]
