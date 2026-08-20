@@ -91,6 +91,9 @@ public sealed class RepositoryHostPullRequestTests
         pullRequestLayout.Margin.Should().Be(new Avalonia.Thickness(2));
         pullRequestLayout.ColumnDefinitions[1].Width.Value.Should().Be(163.2);
         ((Grid)pullRequestLayout.Children[0]).Margin.Should().Be(new Avalonia.Thickness(3));
+        Grid pullRequestHeader = (Grid)form.FindControl<Border>("columnHeaderId")!.Parent!;
+        pullRequestHeader.ColumnDefinitions.Select(column => column.Width.Value)
+            .Should().Equal(28, 479.2, 70.4, 125.6, 40);
         StackPanel pullRequestActions = form.FindControl<StackPanel>("flowLayoutPanel3")!;
         pullRequestActions.Margin.Should().Be(new Avalonia.Thickness(2));
         foreach (string buttonName in new[] { "_fetchBtn", "_addAndFetchBtn", "_closePullRequestBtn" })
