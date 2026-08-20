@@ -15,9 +15,9 @@
     <Grid x:Name="tableLayoutPanel2"
           RowDefinitions="32,*">
       <StackPanel x:Name="flowLayoutPanel2"
-                  Margin="3"
+                  Margin="2"
                   Orientation="Horizontal"
-                  Spacing="6">
+                  Spacing="16">
         <TextBlock x:Name="_chooseRepo"
                    VerticalAlignment="Center"
                    Text="Choose repository:" />
@@ -28,8 +28,10 @@
 
       <Grid x:Name="tableLayoutPanel3"
             Grid.Row="1"
-            ColumnDefinitions="*,160">
-        <Grid RowDefinitions="24,*">
+            Margin="2"
+            ColumnDefinitions="*,163.2">
+        <Grid Margin="3"
+              RowDefinitions="24,*">
           <Grid ColumnDefinitions="42,*,90,150,170">
             <Border x:Name="columnHeaderId"
                     Classes="gitextensions-section">
@@ -70,19 +72,30 @@
 
         <StackPanel x:Name="flowLayoutPanel3"
                     Grid.Column="1"
-                    Margin="3,0,3,3"
-                    Spacing="3">
+                    Margin="2">
           <Button x:Name="_fetchBtn"
                   Classes="gitextensions-dialog-action"
-                  HorizontalAlignment="Stretch"
+                  Width="155"
+                  Height="29"
+                  MinHeight="0"
+                  Margin="3"
+                  HorizontalAlignment="Left"
                   Content="Fetch to pr/ branch" />
           <Button x:Name="_addAndFetchBtn"
                   Classes="gitextensions-dialog-action"
-                  HorizontalAlignment="Stretch"
+                  Width="155"
+                  Height="29"
+                  MinHeight="0"
+                  Margin="3"
+                  HorizontalAlignment="Left"
                   Content="Add remote and fetch" />
           <Button x:Name="_closePullRequestBtn"
                   Classes="gitextensions-dialog-action"
-                  HorizontalAlignment="Stretch"
+                  Width="155"
+                  Height="29"
+                  MinHeight="0"
+                  Margin="3"
+                  HorizontalAlignment="Left"
                   Content="Close pull request" />
         </StackPanel>
       </Grid>
@@ -93,11 +106,14 @@
 
     <TabControl x:Name="tabControl1"
                 Grid.Row="2"
-                Margin="3,0,3,3">
+                Margin="0"
+                Padding="2,0">
       <TabItem x:Name="tabPage1"
                Classes="gitextensions-dialog-tab"
+               Padding="8,2"
                Header="Diffs">
         <Grid x:Name="splitContainer3"
+              Margin="3,0"
               RowDefinitions="116,6,*">
           <Border BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
                   BorderThickness="1">
@@ -115,28 +131,38 @@
 
       <TabItem x:Name="tabPage2"
                Classes="gitextensions-dialog-tab"
+               Padding="8,2"
                Header="Comments">
         <Grid x:Name="tableLayoutPanel1"
-              RowDefinitions="*,82,30">
+              Margin="3,0,3,7"
+              RowDefinitions="*,80,33">
           <ListBox x:Name="_discussionWB"
+                   Margin="3"
                    SelectionMode="Single" />
           <spellChecker:EditNetSpell x:Name="_postCommentText"
                                      Grid.Row="1"
-                                     Margin="0,3" />
-          <StackPanel x:Name="flowLayoutPanel1"
-                      Grid.Row="2"
-                      HorizontalAlignment="Right"
-                      Orientation="Horizontal"
-                      Spacing="6">
+                                     Margin="2" />
+          <DockPanel x:Name="flowLayoutPanel1"
+                     Grid.Row="2"
+                     Margin="2"
+                     LastChildFill="False">
             <Button x:Name="_refreshCommentsBtn"
                     Classes="gitextensions-dialog-action"
-                    Width="90"
+                    Width="100"
+                    Height="23"
+                    MinHeight="0"
+                    Margin="3"
+                    DockPanel.Dock="Right"
                     Content="Refresh" />
             <Button x:Name="_postComment"
                     Classes="gitextensions-dialog-action-primary"
                     Width="131"
+                    Height="23"
+                    MinHeight="0"
+                    Margin="3"
+                    DockPanel.Dock="Right"
                     Content="Post comment" />
-          </StackPanel>
+          </DockPanel>
         </Grid>
       </TabItem>
     </TabControl>
