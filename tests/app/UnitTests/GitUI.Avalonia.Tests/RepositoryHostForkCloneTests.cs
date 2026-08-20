@@ -77,6 +77,12 @@ public sealed class RepositoryHostForkCloneTests
         form.FindControl<ListBox>("myReposLV").Should().NotBeNull();
         form.FindControl<ListBox>("searchResultsLV").Should().NotBeNull();
         form.FindControl<NumericUpDown>("depthUpDown")!.Maximum.Should().Be(999);
+        form.FindControl<Grid>("tableLayoutPanel2")!.RowDefinitions[1].Height.Value.Should().Be(183);
+        form.FindControl<TextBox>("destinationTB")!.Width.Should().Be(294);
+        form.FindControl<Button>("browseForCloneToDirbtn")!.Height.Should().Be(23);
+        form.FindControl<TextBox>("createDirTB")!.Width.Should().Be(183);
+        form.FindControl<ComboBox>("addUpstreamRemoteAsCB")!.Width.Should().Be(200);
+        Grid.GetRow(form.FindControl<NumericUpDown>("depthUpDown")!).Should().Be(3);
 
         translation.Received(1).AddTranslationItem(
             nameof(ForkAndCloneForm), "$this", "Text", "Remote repository fork and clone");
@@ -145,6 +151,72 @@ public sealed class RepositoryHostForkCloneTests
         accessor.CloneEnabled.Should().BeTrue();
         accessor.Description.Should().Be("alpha description");
         accessor.CloneInfo.Should().Contain("can not push");
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_publish_only_the_latest_search_result()
+    {
+        TaskCompletionSource firstSearchStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource releaseFirstSearch = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        IHostedRepository stale = CreateRepository("stale", owner: "other", isFork: false);
+        IHostedRepository current = CreateRepository("current", owner: "other", isFork: false);
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.SearchForRepository("first").Returns(_ =>
+        {
+            firstSearchStarted.TrySetResult();
+            releaseFirstSearch.Task.GetAwaiter().GetResult();
+            return [stale];
+        });
+        host.SearchForRepository("second").Returns([current]);
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.StartSearch("first", byUser: false);
+        await firstSearchStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.StartSearch("second", byUser: false);
+        releaseFirstSearch.TrySetResult();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.SearchResultNames.Should().Equal("current");
+        accessor.SearchEnabled.Should().BeTrue();
+        accessor.GetFromUserEnabled.Should().BeTrue();
+        _messageBoxHost.Messages.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_report_owned_repository_load_failure_in_the_help_text()
+    {
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetMyRepos().Returns(_ => throw new InvalidOperationException("owned repositories failed"));
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.LoadMyRepositoriesAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.MyRepositoryNames.Should().BeEmpty();
+        accessor.HelpText.Should().Contain("Failed to get repositories");
+        accessor.HelpText.Should().Contain("owned repositories failed");
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_preserve_the_selected_protocol_across_repository_changes()
+    {
+        IHostedRepository first = CreateRepository("first", owner: "me", isFork: false);
+        IHostedRepository second = CreateRepository("second", owner: "me", isFork: false);
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetMyRepos().Returns([first, second]);
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.Destination = Path.GetTempPath();
+        await accessor.LoadMyRepositoriesAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.SelectMyRepository(0);
+        accessor.SelectedProtocol = GitProtocol.Ssh;
+        accessor.SelectMyRepository(1);
+
+        accessor.SelectedProtocol.Should().Be(GitProtocol.Ssh);
+        second.Received().CloneProtocol = GitProtocol.Ssh;
+        accessor.CloneInfo.Should().Contain("second.git");
     }
 
     [AvaloniaTest]
@@ -276,6 +348,12 @@ public sealed class RepositoryHostForkCloneTests
 
         accessor.Destination.Should().Be(selectedDirectory);
         _folderPicker.RequestedPaths.Should().Equal(initialDirectory, selectedDirectory);
+
+        accessor.Destination = string.Empty;
+        accessor.BrowseForCloneDirectory();
+
+        string expectedRoot = Path.GetPathRoot(Environment.CurrentDirectory) ?? Environment.CurrentDirectory;
+        _folderPicker.RequestedPaths.Should().Equal(initialDirectory, selectedDirectory, expectedRoot);
     }
 
     [AvaloniaTest]

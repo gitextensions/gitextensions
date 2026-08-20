@@ -171,6 +171,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private void StartPullRequestLoad()
     {
         CancellationToken cancellationToken = _pullRequestsSequence.Next();
+        _detailsSequence.CancelCurrent();
+        _discussionSequence.CancelCurrent();
         ResetDetails();
         _pullRequestsList.ItemsSource = new[] { PullRequestRow.Placeholder(_strLoading.Text) };
         _selectHostedRepoCB.IsEnabled = false;
@@ -864,6 +866,13 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         public IReadOnlyList<GitItemStatus> DiffItems => form._fileStatusList.GitItemStatuses;
 
+        public IReadOnlyList<string> PullRequestTitles
+            => form._pullRequestsList.Items
+                .Cast<PullRequestRow>()
+                .Where(row => row.PullRequest is not null)
+                .Select(row => row.Title)
+                .ToArray();
+
         // parity-scaffolding: Lets the paired capture wait for the selected patch, not just its file row.
         public string DiffText => form._diffViewer.TextEditor.Text;
 
@@ -918,6 +927,21 @@ public partial class ViewPullRequestsForm : GitModuleForm
             PullRequestRow row = PullRequestRow.FromPullRequest(pullRequest);
             form._pullRequestsList.ItemsSource = new[] { row };
             form._pullRequestsList.SelectedItem = row;
+            form.StartSelectedPullRequestLoad();
+        }
+
+        public void SelectHostedRepository(int index)
+            => form._selectHostedRepoCB.SelectedIndex = index;
+
+        public void ClearHostedRepositorySelection()
+        {
+            form._selectHostedRepoCB.SelectedItem = null;
+            form._selectedOwner_SelectedIndexChanged(form._selectHostedRepoCB, EventArgs.Empty);
+        }
+
+        public void ClearPullRequestSelection()
+        {
+            form._pullRequestsList.SelectedItem = null;
             form.StartSelectedPullRequestLoad();
         }
 
