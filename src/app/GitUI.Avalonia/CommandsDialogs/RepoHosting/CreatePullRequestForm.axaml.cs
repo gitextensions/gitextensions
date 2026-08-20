@@ -206,7 +206,9 @@ public partial class CreatePullRequestForm : GitModuleForm
         _currentHostedRemote = _pullReqTargetsCB.SelectedItem as IHostedRemote;
         if (_currentHostedRemote is null)
         {
+            _targetBranchesSequence.CancelCurrent();
             _remoteBranchesCB.ItemsSource = Array.Empty<string>();
+            UpdateCreateButton();
             return;
         }
 
