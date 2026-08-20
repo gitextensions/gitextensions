@@ -60,9 +60,10 @@ public partial class SearchWindow<T> : SearchWindow where T : class
 
     private void OnChildSizeChanged(AvaloniaSize newSize)
     {
+        double labelHeight = (SearchPromptLabel.Parent as Control)?.Bounds.Height ?? SearchPromptLabel.Bounds.Height;
         SearchTableLayoutPanel.Width = newSize.Width;
         Width = newSize.Width;
-        SearchTableLayoutPanel.Height = newSize.Height + Math.Max(23, SearchPromptLabel.Bounds.Height);
+        SearchTableLayoutPanel.Height = newSize.Height + labelHeight;
         Height = SearchTableLayoutPanel.Height;
     }
 
