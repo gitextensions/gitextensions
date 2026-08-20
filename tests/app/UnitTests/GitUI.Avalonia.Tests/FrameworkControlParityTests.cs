@@ -204,6 +204,12 @@ public sealed class FrameworkControlParityTests
                 "semantic.system.tooltip.background",
                 "semantic.app.reset.hard.background");
             roles.Values.Should().OnlyContain(color => System.Text.RegularExpressions.Regex.IsMatch(color, "^#[0-9A-F]{8}$"));
+            CaptureNode text = surface.Root.Children.Should().ContainSingle().Which;
+            surface.Root.Colors.Background.Should().Be("#FFF0F0F0");
+            text.Colors.Background.Should().Be(surface.Root.Colors.Background);
+            text.Colors.Foreground.Should().Be("#FF000000");
+            text.Colors.DisabledForeground.Should().Be("#FF6D6D6D");
+            text.Colors.DisabledBackground.Should().Be(surface.Root.Colors.Background);
         }
         finally
         {

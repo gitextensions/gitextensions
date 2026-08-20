@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Design;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
@@ -12,6 +13,8 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs.RepoHosting;
+using GitUI.Compat;
+using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -79,10 +82,22 @@ public sealed class RepositoryHostForkCloneTests
         form.FindControl<NumericUpDown>("depthUpDown")!.Maximum.Should().Be(999);
         form.FindControl<Grid>("tableLayoutPanel2")!.RowDefinitions[1].Height.Value.Should().Be(183);
         form.FindControl<TextBox>("destinationTB")!.Width.Should().Be(294);
-        form.FindControl<Button>("browseForCloneToDirbtn")!.Height.Should().Be(23);
+        FolderBrowserButton browse = form.FindControl<FolderBrowserButton>("browseForCloneToDirbtn")!;
+        browse.Height.Should().Be(23);
+        browse.Text.Should().BeEmpty();
+        browse.PathShowingControl.Should().BeSameAs(form.FindControl<TextBox>("createDirTB"));
+        IconButton browseButton = browse.FindControl<IconButton>("buttonBrowse")!;
+        browseButton.Content.Should().Be("_Browse...");
+        browseButton.Icon.Should().NotBeNull();
         form.FindControl<TextBox>("createDirTB")!.Width.Should().Be(183);
         form.FindControl<ComboBox>("addUpstreamRemoteAsCB")!.Width.Should().Be(200);
         Grid.GetRow(form.FindControl<NumericUpDown>("depthUpDown")!).Should().Be(3);
+        Grid myRepositoriesHeader = (Grid)form.FindControl<Border>("columnHeaderMyReposName")!.Parent!;
+        myRepositoriesHeader.ColumnDefinitions.Select(column => column.Width.Value)
+            .Should().Equal(63.2, 44.8, 49.6, 44.8);
+        Grid searchHeader = (Grid)form.FindControl<Border>("columnHeaderSearchName")!.Parent!;
+        searchHeader.ColumnDefinitions.Select(column => column.Width.Value)
+            .Should().Equal(180, 110.4, 40.8, 40);
 
         translation.Received(1).AddTranslationItem(
             nameof(ForkAndCloneForm), "$this", "Text", "Remote repository fork and clone");
@@ -344,7 +359,9 @@ public sealed class RepositoryHostForkCloneTests
         _folderPicker.RequestedPaths.Should().Equal(initialDirectory);
 
         _folderPicker.Result = null;
-        accessor.BrowseForCloneDirectory();
+        form.FindControl<FolderBrowserButton>("browseForCloneToDirbtn")!
+            .FindControl<Button>("buttonBrowse")!
+            .RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
         accessor.Destination.Should().Be(selectedDirectory);
         _folderPicker.RequestedPaths.Should().Equal(initialDirectory, selectedDirectory);

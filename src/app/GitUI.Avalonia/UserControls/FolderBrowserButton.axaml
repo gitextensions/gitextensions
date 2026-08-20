@@ -6,6 +6,7 @@
   <compat:IconButton x:Name="buttonBrowse"
                      Icon="{x:Static properties:Images.BrowseFileExplorer}"
                      Content="_Browse..."
+                     Padding="4,0"
                      HorizontalAlignment="Stretch"
                      HorizontalContentAlignment="Center" />
 </UserControl>

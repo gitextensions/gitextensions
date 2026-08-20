@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="using:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm"
         Width="744"
         Height="552"
@@ -18,7 +19,7 @@
               ColumnDefinitions="7*,3*"
               Margin="3">
           <Grid RowDefinitions="24,*">
-            <Grid ColumnDefinitions="*,45,50,45">
+            <Grid ColumnDefinitions="63.2,44.8,49.6,44.8">
               <Border x:Name="columnHeaderMyReposName"
                       Classes="gitextensions-section">
                 <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
@@ -88,7 +89,7 @@
                 Grid.Row="1"
                 ColumnDefinitions="3*,2*">
             <Grid RowDefinitions="24,*">
-              <Grid ColumnDefinitions="*,110,41,40">
+              <Grid ColumnDefinitions="180,110.4,40.8,40">
                 <Border x:Name="columnHeaderSearchName"
                         Classes="gitextensions-section">
                   <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
@@ -164,16 +165,14 @@
                  Height="21"
                  Margin="0,2,0,4"
                  HorizontalAlignment="Left" />
-        <Button x:Name="browseForCloneToDirbtn"
+        <usercontrols:FolderBrowserButton x:Name="browseForCloneToDirbtn"
                 Grid.Row="1"
                 Grid.ColumnSpan="3"
                 Width="102"
                 Height="23"
                 Margin="300,0,0,0"
-                Padding="4,0"
                 HorizontalAlignment="Left"
-                VerticalContentAlignment="Center"
-                Content="..." />
+                VerticalContentAlignment="Center" />
 
         <TextBlock x:Name="createDirectoryLbl"
                    Grid.Row="2"

@@ -12,7 +12,7 @@ namespace GitUI.UserControls;
 [LocalizableProperties]
 public partial class FolderBrowserButton : GitExtensionsControl
 {
-    private string _text = "Bro&wse...";
+    private string _text = string.Empty;
 
     public FolderBrowserButton()
     {
@@ -26,6 +26,10 @@ public partial class FolderBrowserButton : GitExtensionsControl
     /// and the Text property is used as path to initialize the folder browser's default selection.
     /// </summary>
     public Control? PathShowingControl { get; set; }
+
+    // Avalonia buttons do not bubble Click through a UserControl; forward it so original
+    // host forms can retain their Designer-wired handler instead of opening two pickers.
+    public event EventHandler? Click;
 
     /// <summary>
     /// Gets or sets the host-form text using the original WinForms mnemonic syntax.
@@ -69,6 +73,12 @@ public partial class FolderBrowserButton : GitExtensionsControl
 
     private void buttonBrowse_Click(object sender, EventArgs e)
     {
+        if (Click is not null)
+        {
+            Click(this, e);
+            return;
+        }
+
         Validates.NotNull(PathShowingControl);
 
         ShowFolderBrowserDialogWithPreselectedPath(

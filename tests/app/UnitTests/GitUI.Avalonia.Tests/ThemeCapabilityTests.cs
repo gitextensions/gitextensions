@@ -191,14 +191,14 @@ public sealed partial class ThemeCapabilityTests
             AvaloniaThemeSettings.ApplyAppSettings();
             window.Show();
             Dispatcher.UIThread.RunJobs();
-            GetBrushColor(window.Background).Should().Be(Colors.White);
+            GetBrushColor(window.Background).Should().Be(Color.Parse("#F0F0F0"));
 
             AppSettings.ThemeId = ThemeId.DefaultDark;
             AvaloniaThemeSettings.ApplyAppSettings();
             Dispatcher.UIThread.RunJobs();
 
             window.IsVisible.Should().BeTrue();
-            GetBrushColor(window.Background).Should().Be(Color.Parse("#323232"));
+            GetBrushColor(window.Background).Should().Be(Color.Parse("#202020"));
         }
         finally
         {
@@ -273,7 +273,7 @@ public sealed partial class ThemeCapabilityTests
                 };
                 window.Show();
                 Dispatcher.UIThread.RunJobs();
-                GetBrushColor(window.Background).Should().Be(Colors.White);
+                GetBrushColor(window.Background).Should().Be(Color.Parse("#F0F0F0"));
 
                 page.SelectedThemeId = userThemeId;
                 page.GetTestAccessor().RestartNeeded.IsVisible.Should().BeTrue();
@@ -284,7 +284,7 @@ public sealed partial class ThemeCapabilityTests
                 AvaloniaThemeResources.Apply(application, ThemeModule.Settings);
                 Dispatcher.UIThread.RunJobs();
 
-                GetBrushColor(window.Background).Should().Be(Color.Parse("#ABCDEF"));
+                GetBrushColor(window.Background).Should().Be(Color.Parse("#F0F0F0"));
                 GetResourceBrushColor(application, AppColor.Branch).Should().Be(Color.Parse("#123456"));
                 AssertEveryMappedColorIsPublished(application, ThemeVariant.Light);
 
@@ -303,7 +303,7 @@ public sealed partial class ThemeCapabilityTests
                 AvaloniaThemeResources.Apply(application, ThemeModule.Settings);
                 Dispatcher.UIThread.RunJobs();
 
-                GetBrushColor(window.Background).Should().Be(Colors.White);
+                GetBrushColor(window.Background).Should().Be(Color.Parse("#F0F0F0"));
                 foreach (AppColor appColor in AvaloniaThemeResources.MappedAppColors)
                 {
                     System.Drawing.Color expected = AppColorDefaults.GetBy(appColor);

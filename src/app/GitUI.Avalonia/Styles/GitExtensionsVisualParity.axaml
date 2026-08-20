@@ -329,7 +329,7 @@
   <!-- Runtime values come from the shared Git Extensions CSS theme. These light/dark values
        remain as designer and pre-startup fallbacks. -->
   <Style Selector="Window">
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsPanelBackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
@@ -855,6 +855,12 @@
     <Setter Property="MinHeight" Value="20" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="CornerRadius" Value="0" />
   </Style>
   <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background"

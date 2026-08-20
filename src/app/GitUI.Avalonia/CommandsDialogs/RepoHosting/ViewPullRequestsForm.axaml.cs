@@ -99,6 +99,11 @@ public partial class ViewPullRequestsForm : GitModuleForm
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
+        ViewPullRequestsForm_Load(this, e);
+    }
+
+    private void ViewPullRequestsForm_Load(object sender, EventArgs e)
+    {
         if (_gitHoster is null)
         {
             return;
@@ -714,7 +719,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         PullRequestRow item = row ?? PullRequestRow.Placeholder(string.Empty);
         return new Grid
         {
-            ColumnDefinitions = new ColumnDefinitions("42,*,90,150,170"),
+            ColumnDefinitions = new ColumnDefinitions("28,479.2,70.4,125.6,40"),
             Children =
             {
                 CreateCell(item.Id, 0, TextAlignment.Right),

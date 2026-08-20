@@ -565,8 +565,9 @@ internal sealed class AvaloniaControlTreeReader
 
         return new CaptureColors
         {
-            Foreground = BrushToArgb(GetPropertyValue(control, "Foreground")),
-            Background = BrushToArgb(GetPropertyValue(control, "Background")),
+            Foreground = BrushToArgb(GetPropertyValue(control, "Foreground"))
+                         ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
+            Background = ResolveEffectiveBackground(control),
             Border = BrushToArgb(GetPropertyValue(control, "BorderBrush")),
             SelectionForeground = BrushToArgb(
                 GetPropertyValue(control, "SelectionForegroundBrush")
@@ -576,11 +577,33 @@ internal sealed class AvaloniaControlTreeReader
                 ?? GetPropertyValue(control, "SelectionBackground")),
             InactiveSelectionForeground = BrushToArgb(GetPropertyValue(control, "InactiveSelectionForeground")),
             InactiveSelectionBackground = BrushToArgb(GetPropertyValue(control, "InactiveSelectionBackground")),
-            DisabledForeground = BrushToArgb(GetPropertyValue(control, "DisabledForeground")),
-            DisabledBackground = BrushToArgb(GetPropertyValue(control, "DisabledBackground")),
+            DisabledForeground = BrushToArgb(GetPropertyValue(control, "DisabledForeground"))
+                                 ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+            DisabledBackground = BrushToArgb(GetPropertyValue(control, "DisabledBackground"))
+                                 ?? ResolveEffectiveBackground(control),
             GridLine = BrushToArgb(GetPropertyValue(control, "GridLinesBrush")),
             Additional = additional
         };
+
+        string? ResolveEffectiveBackground(Control target)
+        {
+            string? direct = BrushToArgb(GetPropertyValue(target, "Background"));
+            if (direct is not null)
+            {
+                return direct;
+            }
+
+            foreach (Control ancestor in target.GetLogicalAncestors().OfType<Control>())
+            {
+                string? inherited = BrushToArgb(GetPropertyValue(ancestor, "Background"));
+                if (inherited is not null)
+                {
+                    return inherited;
+                }
+            }
+
+            return ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
+        }
 
         void AddAdditional(string name, object? brush)
         {
