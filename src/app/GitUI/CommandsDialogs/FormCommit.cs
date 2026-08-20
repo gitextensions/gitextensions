@@ -128,7 +128,7 @@ public sealed partial class FormCommit : GitModuleForm
     private readonly TranslationString _statusBarBranchWithoutRemote = new("(remote not configured)");
     private readonly TranslationString _untrackedRemote = new("(untracked)");
 
-    private readonly TranslationString _wrapCommitMessageBody = new("&Wrap body lines");
+    private readonly TranslationString _wordWrapCommitMessageBody = new("&Word wrap (except subject line)");
     #endregion
 
     private event Action? OnStageAreaLoaded;
@@ -2247,7 +2247,22 @@ public sealed partial class FormCommit : GitModuleForm
     private void Message_ContextMenuPopulating(object? sender, ContextMenuStrip menu)
     {
         int insertAt = menu.Items.OfType<ToolStripSeparator>().FirstOrDefault() is { } firstSeparator ? menu.Items.IndexOf(firstSeparator) : 0;
-        menu.Items.Insert(insertAt, new ToolStripMenuItem(_wrapCommitMessageBody.Text, null, (s, e) => WrapCommitMessageBodyLines()));
+        menu.Items.Insert(insertAt, new ToolStripMenuItem(_wordWrapCommitMessageBody.Text, null, (s, e) => WordWrapCommitMessageBody()));
+
+        return;
+
+        void WordWrapCommitMessageBody()
+        {
+            const int DefaultBodyLineLimit = 72;
+            int lineLimit = AppSettings.CommitValidationMaxCntCharsPerLine > 0
+                ? AppSettings.CommitValidationMaxCntCharsPerLine
+                : DefaultBodyLineLimit;
+
+            for (int line = 1; line < Message.LineCount(); line++)
+            {
+                WordWrapCommitMessageLineIfNecessary(line, lineLimit);
+            }
+        }
     }
 
     private void Message_KeyDown(object sender, KeyEventArgs e)
@@ -2347,7 +2362,7 @@ public sealed partial class FormCommit : GitModuleForm
 
             if (limitX > 0 && line >= (empty2 ? 2 : 1))
             {
-                if (commitValidationAutoWrap && WrapIfNecessary())
+                if (commitValidationAutoWrap && WordWrapCommitMessageLineIfNecessary(line, limitX))
                 {
                     changed = true;
                 }
@@ -2388,8 +2403,6 @@ public sealed partial class FormCommit : GitModuleForm
                     }
                 }
             }
-
-            bool WrapIfNecessary() => WrapMessageLineIfNecessary(line, limitX);
         }
 
         void SetFormattedLine(int lineNumber)
@@ -2819,20 +2832,7 @@ public sealed partial class FormCommit : GitModuleForm
         AppSettings.CommitDialogSelectStagedOnEnterMessage.Value = !AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
     }
 
-    private void WrapCommitMessageBodyLines()
-    {
-        const int DefaultBodyLineLimit = 72;
-        int lineLimit = AppSettings.CommitValidationMaxCntCharsPerLine > 0
-            ? AppSettings.CommitValidationMaxCntCharsPerLine
-            : DefaultBodyLineLimit;
-
-        for (int line = 1; line < Message.LineCount(); line++)
-        {
-            WrapMessageLineIfNecessary(line, lineLimit);
-        }
-    }
-
-    private bool WrapMessageLineIfNecessary(int line, int lineLimit)
+    private bool WordWrapCommitMessageLineIfNecessary(int line, int lineLimit)
     {
         if (Message.LineLength(line) <= lineLimit)
         {
