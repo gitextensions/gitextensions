@@ -96,7 +96,7 @@ public static class ManagedExtensibility
         {
             try
             {
-                Assembly assembly = Assembly.LoadFile(file.FullName);
+                Assembly assembly = Assembly.Load(file.FullName);
 
                 // Eagerly validate that all types in the assembly can be resolved.
                 // Outdated plugins targeting an incompatible interface version succeed
@@ -182,7 +182,7 @@ public static class ManagedExtensibility
 
                     return fileDescription is not null && args.Name.StartsWith(fileDescription);
                 });
-            return dll is null ? null : Assembly.LoadFile(dll);
+            return dll is null ? null : Assembly.Load(dll);
         }
         catch
         {
