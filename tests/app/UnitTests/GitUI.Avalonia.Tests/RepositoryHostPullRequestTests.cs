@@ -84,6 +84,52 @@ public sealed class RepositoryHostPullRequestTests
         form.FindControl<GitUI.Editor.FileViewer>("_diffViewer").Should().NotBeNull();
         form.FindControl<GitUI.SpellChecker.EditNetSpell>("_postCommentText").Should().NotBeNull();
 
+        StackPanel repositorySelector = form.FindControl<StackPanel>("flowLayoutPanel2")!;
+        repositorySelector.Margin.Should().Be(new Avalonia.Thickness(2));
+        repositorySelector.Spacing.Should().Be(16);
+        Grid pullRequestLayout = form.FindControl<Grid>("tableLayoutPanel3")!;
+        pullRequestLayout.Margin.Should().Be(new Avalonia.Thickness(2));
+        pullRequestLayout.ColumnDefinitions[1].Width.Value.Should().Be(163.2);
+        ((Grid)pullRequestLayout.Children[0]).Margin.Should().Be(new Avalonia.Thickness(3));
+        StackPanel pullRequestActions = form.FindControl<StackPanel>("flowLayoutPanel3")!;
+        pullRequestActions.Margin.Should().Be(new Avalonia.Thickness(2));
+        foreach (string buttonName in new[] { "_fetchBtn", "_addAndFetchBtn", "_closePullRequestBtn" })
+        {
+            Button button = form.FindControl<Button>(buttonName)!;
+            button.Width.Should().Be(155);
+            button.Height.Should().Be(29);
+            button.Margin.Should().Be(new Avalonia.Thickness(3));
+            button.HorizontalAlignment.Should().Be(Avalonia.Layout.HorizontalAlignment.Left);
+        }
+
+        TabControl tabControl = form.FindControl<TabControl>("tabControl1")!;
+        tabControl.Margin.Should().Be(new Avalonia.Thickness(0));
+        tabControl.Padding.Should().Be(new Avalonia.Thickness(2, 0));
+        form.FindControl<TabItem>("tabPage1")!.Padding.Should().Be(new Avalonia.Thickness(8, 2));
+        form.FindControl<TabItem>("tabPage2")!.Padding.Should().Be(new Avalonia.Thickness(8, 2));
+        form.FindControl<Grid>("splitContainer3")!.Margin.Should().Be(new Avalonia.Thickness(3, 0));
+
+        Grid commentsLayout = form.FindControl<Grid>("tableLayoutPanel1")!;
+        commentsLayout.Margin.Should().Be(new Avalonia.Thickness(3, 0, 3, 7));
+        commentsLayout.RowDefinitions[0].Height.IsStar.Should().BeTrue();
+        commentsLayout.RowDefinitions[1].Height.Value.Should().Be(80);
+        commentsLayout.RowDefinitions[2].Height.Value.Should().Be(33);
+        form.FindControl<ListBox>("_discussionWB")!.Margin.Should().Be(new Avalonia.Thickness(3));
+        form.FindControl<GitUI.SpellChecker.EditNetSpell>("_postCommentText")!.Margin.Should().Be(new Avalonia.Thickness(2));
+        DockPanel commentActions = form.FindControl<DockPanel>("flowLayoutPanel1")!;
+        commentActions.Margin.Should().Be(new Avalonia.Thickness(2));
+        commentActions.LastChildFill.Should().BeFalse();
+        Button refreshComments = form.FindControl<Button>("_refreshCommentsBtn")!;
+        refreshComments.Width.Should().Be(100);
+        refreshComments.Height.Should().Be(23);
+        refreshComments.Margin.Should().Be(new Avalonia.Thickness(3));
+        DockPanel.GetDock(refreshComments).Should().Be(Dock.Right);
+        Button postComment = form.FindControl<Button>("_postComment")!;
+        postComment.Width.Should().Be(131);
+        postComment.Height.Should().Be(23);
+        postComment.Margin.Should().Be(new Avalonia.Thickness(3));
+        DockPanel.GetDock(postComment).Should().Be(Dock.Right);
+
         translation.Received(1).AddTranslationItem(
             nameof(ViewPullRequestsForm), "$this", "Text", "View Pull Requests");
         translation.Received(1).AddTranslationItem(
