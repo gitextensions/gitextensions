@@ -127,7 +127,7 @@ public sealed class RepositoryHostCreatePullRequestTests
     }
 
     [AvaloniaTest]
-    public async Task CreatePullRequestForm_should_load_selected_remotes_branches_title_and_template()
+    public async Task CreatePullRequestForm_should_load_selected_remote_current_branch_title_and_template()
     {
         PullRequestFixture fixture = CreateFixture();
         await File.WriteAllTextAsync(
@@ -140,7 +140,7 @@ public sealed class RepositoryHostCreatePullRequestTests
         await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
 
         accessor.TargetRepositories.SelectedItem.Should().BeSameAs(fixture.TargetRemote);
-        accessor.SourceBranches.SelectedItem.Should().Be("feature");
+        accessor.SourceBranches.SelectedItem.Should().Be("main");
         accessor.TargetBranches.SelectedItem.Should().Be("develop");
         accessor.Title.Should().Be("Suggested title");
         accessor.Body.Should().Be("Template body");
@@ -148,7 +148,7 @@ public sealed class RepositoryHostCreatePullRequestTests
     }
 
     [AvaloniaTest]
-    public async Task CreatePullRequestForm_should_create_with_selected_provider_values()
+    public async Task CreatePullRequestForm_should_create_synchronously_with_selected_provider_values()
     {
         PullRequestFixture fixture = CreateFixture();
         using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
@@ -159,10 +159,9 @@ public sealed class RepositoryHostCreatePullRequestTests
         accessor.Body = "Created from Avalonia";
 
         accessor.Create();
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
 
         fixture.TargetRepository.Received(1).CreatePullRequest(
-            "feature",
+            "main",
             "develop",
             "Portable PR",
             "Created from Avalonia");
@@ -192,7 +191,7 @@ public sealed class RepositoryHostCreatePullRequestTests
     {
         PullRequestFixture fixture = CreateFixture();
         fixture.TargetRepository
-            .When(repository => repository.CreatePullRequest("feature", "develop", "Portable PR", "Body"))
+            .When(repository => repository.CreatePullRequest("main", "develop", "Portable PR", "Body"))
             .Do(_ => throw new InvalidOperationException("provider failed"));
         using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
         CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
@@ -202,7 +201,6 @@ public sealed class RepositoryHostCreatePullRequestTests
         accessor.Body = "Body";
 
         accessor.Create();
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
 
         _messageBoxHost.Messages.Should().ContainSingle()
             .Which.Should().Be("Failed to create pull request." + Environment.NewLine + "provider failed");
@@ -271,7 +269,7 @@ public sealed class RepositoryHostCreatePullRequestTests
         module.GetSelectedBranch().Returns("main");
         module.GetPreviousCommitMessages(
                 count: 1,
-                revision: "origin/feature",
+                revision: "origin/main",
                 authorPattern: string.Empty)
             .Returns(["Suggested title\nDetails"]);
         IGitUICommands commands = Substitute.For<IGitUICommands>();
