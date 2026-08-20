@@ -2415,7 +2415,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native 754x511 split layout preserves the repository selector, five-column pull-request list, action rail, Diff/Comments tabs, FileStatusList/FileViewer and EditNetSpell boundaries. Discussion entries use typed Avalonia rows instead of the WinForms WebBrowser/GDI HTML renderer, while the four translated header identities and literal # header remain unchanged. P8.6i repository-host progress 2 adds compact tab/list metrics and restores the requested bounds after persisted placement is applied, producing the intended 754x511 matrix with real diff and Comments-tab states; exact closure remains open."
+    "notes": "Native 754x511 split layout preserves the repository selector, five-column pull-request list, action rail, Diff/Comments tabs, FileStatusList/FileViewer and EditNetSpell boundaries. Discussion entries use typed Avalonia rows instead of the WinForms WebBrowser/GDI HTML renderer, while the four translated header identities and literal # header remain unchanged. P8.6i repository-host progress 9 restores the measured Designer margins and dimensions across the repository selector, pull-request list, action rail, tab content, diff split, comment editor, and right-to-left comment action rail; the 18 paired states close 1212 geometry diagnostics without suppressions. Exact chrome, native-list/browser representation, colors, remaining metrics, other scales, and exhaustive state closure remain open."
   },
   "src/app/GitUI/GitUICommands.cs": {
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
