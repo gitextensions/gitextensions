@@ -68,6 +68,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     private void WireControls()
     {
         _NO_TRANSLATE_closeBtn.Content = TranslatedStrings.Close;
+        browseForCloneToDirbtn.PathShowingControl = createDirTB;
         myReposLV.ItemTemplate = new FuncDataTemplate<HostedRepositoryRow>(
             (row, _) => CreateRepositoryRow(row, isSearchResult: false),
             supportsRecycling: false);
@@ -102,6 +103,11 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
+        ForkAndCloneForm_Load(this, e);
+    }
+
+    private void ForkAndCloneForm_Load(object sender, EventArgs e)
+    {
         if (_commands is null || _gitHoster is null)
         {
             return;
@@ -266,8 +272,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         Grid grid = new()
         {
             ColumnDefinitions = isSearchResult
-                ? new ColumnDefinitions("*,110,41,40")
-                : new ColumnDefinitions("*,45,50,45"),
+                ? new ColumnDefinitions("180,110.4,40.8,40")
+                : new ColumnDefinitions("63.2,44.8,49.6,44.8"),
         };
         if (row is null)
         {

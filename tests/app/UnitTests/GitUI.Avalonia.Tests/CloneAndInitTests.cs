@@ -103,6 +103,7 @@ public sealed class CloneAndInitTests
 
         button.AddTranslationItems(translation);
 
+        button.Text.Should().BeEmpty();
         translation.Received(1).AddTranslationItem(nameof(FolderBrowserButton), "buttonBrowse", "Text", "&Browse...");
     }
 
