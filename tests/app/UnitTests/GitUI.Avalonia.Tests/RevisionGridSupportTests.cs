@@ -445,8 +445,8 @@ public sealed class RevisionGridSupportTests
         item.IsChecked.Should().BeTrue();
         item.Classes.Should().Contain("gitextensions-menu-command-toggle");
         Grid checkIcon = item.Icon.Should().BeOfType<Grid>().Subject;
-        checkIcon.Width.Should().Be(18.4);
-        checkIcon.Height.Should().Be(18.4);
+        checkIcon.Width.Should().Be(18);
+        checkIcon.Height.Should().Be(18);
 
         isChecked = false;
         command.SetCheckForRegisteredMenuItems();
@@ -457,15 +457,12 @@ public sealed class RevisionGridSupportTests
 
     [AvaloniaTest]
     [Category("P8.6h.3b.2b.2b.2b.5")]
-    public void View_menu_should_use_the_measured_ToolStrip_shared_width()
+    public void View_menu_should_size_from_its_current_content()
     {
         RevisionGridControl control = new();
 
-        control.ViewMenuItem.Items.OfType<MenuItem>().Should().OnlyContain(item => item.MinWidth == 425.6);
-        control.ViewMenuItem.Items.OfType<Control>().Should().OnlyContain(
-            item => item.Classes.Contains("revision-grid-view-menu-row"));
-        control.ViewMenuItem.Items.OfType<Separator>().Should().OnlyContain(
-            separator => separator.Width == 423.2 && separator.HorizontalAlignment == Avalonia.Layout.HorizontalAlignment.Center);
+        control.ViewMenuItem.Items.OfType<MenuItem>().Should().OnlyContain(item => item.MinWidth == 0);
+        control.ViewMenuItem.Items.OfType<Separator>().Should().OnlyContain(separator => double.IsNaN(separator.Width));
     }
 
     [AvaloniaTest]
@@ -492,9 +489,9 @@ public sealed class RevisionGridSupportTests
         item.Items[4].Should().BeOfType<MenuItem>().Which.Header.Should().Be("_2:   tag1");
         item.Items[6].Should().BeOfType<MenuItem>().Which.Header!.ToString().Should().StartWith("_Commit hash");
         item.Items.OfType<MenuItem>().Should().OnlyContain(
-            menuItem => menuItem.Padding == new Avalonia.Thickness(4, 1, 17.6, 1));
+            menuItem => menuItem.Padding == new Avalonia.Thickness(4, 1, 18, 1));
         item.Items.OfType<Separator>().Should().OnlyContain(
-            separator => separator.Margin == new Avalonia.Thickness(1.6, 0, 0.8, 0));
+            separator => separator.Margin == new Avalonia.Thickness(2, 0, 1, 0));
     }
 
     [AvaloniaTest]

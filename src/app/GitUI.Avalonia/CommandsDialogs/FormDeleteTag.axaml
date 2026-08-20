@@ -55,7 +55,6 @@
       <TextBlock x:Name="label3"
                  Classes="gitextensions-dialog-label"
                  Grid.Column="1"
-                 FontSize="11.5"
                  Text="(includes information about deleting tags which are already pushed)"
                  TextTrimming="CharacterEllipsis" />
     </Grid>

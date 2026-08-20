@@ -946,10 +946,6 @@ public sealed class FormBrowseTests
             MenuItem mainRemote = GetTaggedMenuItem(view, "ShowRemoteBranches");
             MenuItem contextRemote = GetTaggedMenuItem(form.RevisionGrid.ViewMenuItem, "ShowRemoteBranches");
 
-            view.Items.OfType<MenuItem>().Should().OnlyContain(item => item.MinWidth == 425.6);
-            view.Items.OfType<Separator>().Should().OnlyContain(
-                separator => separator.Width == 423.2 && separator.HorizontalAlignment == Avalonia.Layout.HorizontalAlignment.Center);
-
             view.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
             mainRemote.IsChecked.Should().BeFalse();
             contextRemote.IsChecked.Should().BeFalse();

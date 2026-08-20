@@ -92,6 +92,21 @@ public sealed class AvatarTests
     }
 
     [AvaloniaTest]
+    public void AvatarColumnProvider_should_start_at_the_Designer_width_and_follow_the_runtime_row_height()
+    {
+        IAvatarProvider provider = Substitute.For<IAvatarProvider>();
+        IAvatarCacheCleaner cleaner = Substitute.For<IAvatarCacheCleaner>();
+        RevisionGridControl grid = new();
+        AvatarColumnProvider column = new(grid, provider, cleaner);
+
+        column.Column.Width.Value.Should().Be(32);
+
+        column.ApplyRowHeight(26);
+
+        column.Column.Width.Value.Should().Be(26);
+    }
+
+    [AvaloniaTest]
     public async Task Avatar_cell_should_retain_a_resolved_image_when_reattached_for_the_same_author()
     {
         byte[] imageData = (await new InitialsAvatarProvider().GetAvatarAsync(
