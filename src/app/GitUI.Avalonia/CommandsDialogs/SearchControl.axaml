@@ -17,7 +17,7 @@
   <Grid x:Name="tableLayoutPanel1"
         RowDefinitions="Auto,Auto">
     <Border x:Name="searchBoxBorder"
-            Height="22"
+            Height="23"
             BorderThickness="1">
       <TextBox x:Name="txtSearchBox"
                AutomationProperties.Name="Enter File Name"

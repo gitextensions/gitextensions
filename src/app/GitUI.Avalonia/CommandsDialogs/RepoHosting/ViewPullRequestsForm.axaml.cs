@@ -112,6 +112,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             return;
         }
 
+        this.Mask();
         _operations.FileAndForget(() => InitializeAsync(_lifetimeCancellation.Token));
     }
 
@@ -132,48 +133,55 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     private async Task InitializeAsync(CancellationToken cancellationToken)
     {
-        string currentRemote = await Task.Run(Module.GetCurrentRemote, cancellationToken);
-        IReadOnlyList<Remote> remotes = await Module.GetRemotesAsync().WaitAsync(cancellationToken);
-
-        // Load all hosted repositories.
-        HostedRemoteRow[] hostedRemotes = await Task.Run(
-            () => GetGitHoster().GetHostedRemotesForModule()
-                .Select(HostedRemoteRow.Create)
-                .ToArray(),
-            cancellationToken);
-
-        // Local branches have no current remote, return value is empty string.
-        // In this case we fall back to the first remote in the list.
-        // Currently, a local Git repository with no remote shows an error message and cannot open this dialog.
-        // So there will always be at least one remote when this dialog is open.
-        Remote? selectedRemote = remotes.FirstOrDefault(
-            remote => string.IsNullOrEmpty(currentRemote)
-                || string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
-        _cloneGitProtocol = selectedRemote is Remote currentGitRemote
-            && !string.IsNullOrEmpty(currentGitRemote.FetchUrl)
-            && currentGitRemote.FetchUrl.IsUrlUsingHttp()
-            ? GitProtocol.Https
-            : GitProtocol.Ssh;
-
-        await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-        _hostedRemotes = hostedRemotes;
-        _isFirstLoad = true;
-        _selectHostedRepoCB.ItemsSource = hostedRemotes;
-
-        foreach (HostedRemoteRow remote in hostedRemotes.Where(remote => remote.Error is not null))
+        try
         {
-            MessageBoxes.Show(
-                this,
-                string.Format(TranslatedStrings.RemoteInError, remote.Error!.Message, remote.DisplayData),
-                _strRemoteIgnore.Text,
-                WinFormsShims.MessageBoxButtons.OK,
-                WinFormsShims.MessageBoxIcon.Error);
-        }
+            string currentRemote = await Task.Run(Module.GetCurrentRemote, cancellationToken);
+            IReadOnlyList<Remote> remotes = await Module.GetRemotesAsync().WaitAsync(cancellationToken);
 
-        int selectedIndex = Array.FindIndex(
-            hostedRemotes,
-            remote => string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
-        _selectHostedRepoCB.SelectedIndex = selectedIndex >= 0 ? selectedIndex : hostedRemotes.Length > 0 ? 0 : -1;
+            // Load all hosted repositories.
+            HostedRemoteRow[] hostedRemotes = await Task.Run(
+                () => GetGitHoster().GetHostedRemotesForModule()
+                    .Select(HostedRemoteRow.Create)
+                    .ToArray(),
+                cancellationToken);
+
+            // Local branches have no current remote, return value is empty string.
+            // In this case we fall back to the first remote in the list.
+            // Currently, a local Git repository with no remote shows an error message and cannot open this dialog.
+            // So there will always be at least one remote when this dialog is open.
+            Remote? selectedRemote = remotes.FirstOrDefault(
+                remote => string.IsNullOrEmpty(currentRemote)
+                    || string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
+            _cloneGitProtocol = selectedRemote is Remote currentGitRemote
+                && !string.IsNullOrEmpty(currentGitRemote.FetchUrl)
+                && currentGitRemote.FetchUrl.IsUrlUsingHttp()
+                ? GitProtocol.Https
+                : GitProtocol.Ssh;
+
+            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            _hostedRemotes = hostedRemotes;
+            _isFirstLoad = true;
+            _selectHostedRepoCB.ItemsSource = hostedRemotes;
+
+            foreach (HostedRemoteRow remote in hostedRemotes.Where(remote => remote.Error is not null))
+            {
+                MessageBoxes.Show(
+                    this,
+                    string.Format(TranslatedStrings.RemoteInError, remote.Error!.Message, remote.DisplayData),
+                    _strRemoteIgnore.Text,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
+            }
+
+            int selectedIndex = Array.FindIndex(
+                hostedRemotes,
+                remote => string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
+            _selectHostedRepoCB.SelectedIndex = selectedIndex >= 0 ? selectedIndex : hostedRemotes.Length > 0 ? 0 : -1;
+        }
+        finally
+        {
+            await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(this.UnMask);
+        }
     }
 
     private void StartPullRequestLoad()
