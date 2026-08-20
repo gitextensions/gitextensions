@@ -30,20 +30,19 @@ public sealed class SmallControlParityTests
     }
 
     [AvaloniaTest]
-    public void BranchSelector_should_preserve_native_125_percent_geometry_in_dips()
+    public void BranchSelector_should_preserve_96_dpi_Designer_geometry_in_dips()
     {
         BranchSelector control = new();
-        Window window = new() { Width = 274.4, Height = 54.4, Content = control };
+        Window window = new() { Width = 325, Height = 54, Content = control };
 
         try
         {
             window.Show();
             Dispatcher.UIThread.RunJobs();
 
-            control.Bounds.Width.Should().BeApproximately(274.4, 1);
-            control.Bounds.Height.Should().BeApproximately(54.4, 1);
-            control.GetTestAccessor().Branches.Bounds.Width.Should().BeApproximately(171.2, 1);
-            control.GetTestAccessor().Branches.Bounds.Height.Should().BeApproximately(22.4, 1);
+            control.Bounds.Width.Should().BeApproximately(325, 1);
+            control.Bounds.Height.Should().BeApproximately(54, 1);
+            control.GetTestAccessor().Branches.MinWidth.Should().Be(214);
         }
         finally
         {

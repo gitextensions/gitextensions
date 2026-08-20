@@ -13,6 +13,7 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
@@ -48,6 +49,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private IPullRequestDiscussion? _currentDiscussion;
     private Dictionary<string, string> _diffCache = [];
     private IReadOnlyList<HostedRemoteRow> _hostedRemotes = [];
+    private readonly double[] _pullRequestColumnWidths = new double[5];
     private bool _isFirstLoad;
 
     [GeneratedRegex(@"(?:\n|^)diff --git ", RegexOptions.ExplicitCapture)]
@@ -80,6 +82,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _discussionWB.ItemTemplate = new FuncDataTemplate<DiscussionRow>(
             CreateDiscussionRow,
             supportsRecycling: false);
+        ApplyPullRequestColumnWidths();
 
         _selectHostedRepoCB.SelectionChanged += _selectedOwner_SelectedIndexChanged;
         _pullRequestsList.SelectionChanged += _pullRequestsList_SelectedIndexChanged;
@@ -198,6 +201,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         if (selectedRemote?.Repository is null)
         {
             // If loading this remote failed, select the next one.
+            ResizeColumnsToFitContent([]);
             _pullRequestsList.ItemsSource = Array.Empty<PullRequestRow>();
             _selectHostedRepoCB.IsEnabled = true;
             SelectNextHostedRepositoryIfFirstLoad();
@@ -219,6 +223,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             }
 
             _isFirstLoad = false;
+            ResizeColumnsToFitContent(rows);
             _pullRequestsList.ItemsSource = rows;
             _pullRequestsList.SelectedIndex = rows.Length > 0 ? 0 : -1;
         }
@@ -231,6 +236,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             if (!cancellationToken.IsCancellationRequested)
             {
                 _selectHostedRepoCB.IsEnabled = true;
+                ResizeColumnsToFitContent([]);
                 _pullRequestsList.ItemsSource = Array.Empty<PullRequestRow>();
                 MessageBoxes.Show(
                     this,
@@ -714,12 +720,12 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _postComment.IsEnabled = hasPullRequest;
     }
 
-    private static Control CreatePullRequestRow(PullRequestRow? row, Avalonia.Controls.INameScope nameScope)
+    private Control CreatePullRequestRow(PullRequestRow? row, Avalonia.Controls.INameScope nameScope)
     {
         PullRequestRow item = row ?? PullRequestRow.Placeholder(string.Empty);
         return new Grid
         {
-            ColumnDefinitions = new ColumnDefinitions("28,479.2,70.4,125.6,40"),
+            ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1),
             Children =
             {
                 CreateCell(item.Id, 0, TextAlignment.Right),
@@ -730,6 +736,67 @@ public partial class ViewPullRequestsForm : GitModuleForm
             },
         };
     }
+
+    private void ApplyPullRequestColumnWidths()
+    {
+        // Framework constraint: Grid star sizing replaces the original ListView.Resize handler after column widths are measured.
+        string[] headers =
+        [
+            GetHeaderText(columnHeaderId),
+            GetHeaderText(columnHeaderHeading),
+            GetHeaderText(columnHeaderBy),
+            GetHeaderText(columnHeaderCreated),
+            GetHeaderText(columnHeaderBranch),
+        ];
+
+        for (int columnIndex = 0; columnIndex < _pullRequestColumnWidths.Length; columnIndex++)
+        {
+            _pullRequestColumnWidths[columnIndex] = WinFormsListViewColumnSizer.Measure(
+                _pullRequestsList,
+                [headers[columnIndex]]);
+        }
+
+        Grid header = (Grid)(columnHeaderId.Parent
+            ?? throw new InvalidOperationException("The pull-request header is not attached to its column grid."));
+        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
+    }
+
+    private void ResizeColumnsToFitContent(IReadOnlyList<PullRequestRow> rows)
+    {
+        string[] headers =
+        [
+            GetHeaderText(columnHeaderId),
+            GetHeaderText(columnHeaderHeading),
+            GetHeaderText(columnHeaderBy),
+            GetHeaderText(columnHeaderCreated),
+            GetHeaderText(columnHeaderBranch),
+        ];
+        for (int columnIndex = 0; columnIndex < _pullRequestColumnWidths.Length; columnIndex++)
+        {
+            IEnumerable<string?> values = rows.Count == 0
+                ? [headers[columnIndex]]
+                : rows.Select(row => columnIndex switch
+                {
+                    0 => row.Id,
+                    1 => row.Title,
+                    2 => row.Owner,
+                    3 => row.Created,
+                    4 => row.Branch,
+                    _ => string.Empty,
+                });
+            _pullRequestColumnWidths[columnIndex] = WinFormsListViewColumnSizer.Measure(
+                _pullRequestsList,
+                values,
+                additionalWidth: columnIndex == 0 && rows.Count > 0 ? 5 : 0);
+        }
+
+        Grid header = (Grid)(columnHeaderId.Parent
+            ?? throw new InvalidOperationException("The pull-request header is not attached to its column grid."));
+        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
+    }
+
+    private static string GetHeaderText(Border header)
+        => (header.Child as TextBlock)?.Text ?? string.Empty;
 
     private static Control CreateDiscussionRow(DiscussionRow? row, Avalonia.Controls.INameScope nameScope)
     {
@@ -766,7 +833,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             {
                 TextBlock commit = new()
                 {
-                    FontSize = 9.333,
+                    FontSize = 7d * 96 / 72,
                     Text = $"Commit:  {item.Commit}",
                 };
                 Grid.SetColumnSpan(commit, 2);
