@@ -293,6 +293,28 @@ public sealed class EndToEndCaptureTests
             dateLabels: ["Date", "Author date", "Commit date"]).Should().BeFalse();
     }
 
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void Text_plan_should_remain_authoritative_after_a_load_handler_changes_the_control()
+    {
+        using TextSeedForm form = new();
+        CaptureComponentPlan component = new()
+        {
+            TypeName = typeof(TextSeedForm).FullName!,
+            TextValues = new Dictionary<string, string>
+            {
+                ["_target"] = "planned value"
+            },
+            States = []
+        };
+        form.Show();
+        form.TargetText.Should().Be("value from load");
+
+        ComponentFactory.ApplyTextValues(form, component);
+
+        form.TargetText.Should().Be("planned value");
+    }
+
     private sealed class CancelingContextMenuForm : Form
     {
         private readonly ContextMenuStrip _menuMain = new() { Name = "menuMain" };
@@ -302,6 +324,23 @@ public sealed class EndToEndCaptureTests
             _menuMain.Items.Add("Child");
             _menuMain.Opening += (_, e) => e.Cancel = true;
             ContextMenuStrip = _menuMain;
+        }
+    }
+
+    private sealed class TextSeedForm : Form
+    {
+        private readonly TextBox _target = new();
+
+        public TextSeedForm()
+        {
+            Controls.Add(_target);
+            Load += (_, _) => _target.Text = "value from load";
+        }
+
+        public string TargetText
+        {
+            get => _target.Text;
+            set => _target.Text = value;
         }
     }
 }

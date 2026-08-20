@@ -32,7 +32,7 @@
             ColumnDefinitions="*,163.2">
         <Grid Margin="3"
               RowDefinitions="24,*">
-          <Grid ColumnDefinitions="42,*,90,150,170">
+          <Grid ColumnDefinitions="28,479.2,70.4,125.6,40">
             <Border x:Name="columnHeaderId"
                     Classes="gitextensions-section">
               <TextBlock Classes="gitextensions-list-header-text"

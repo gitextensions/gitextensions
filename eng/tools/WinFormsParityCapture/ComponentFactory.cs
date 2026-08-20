@@ -65,15 +65,7 @@ internal static class ComponentFactory
             _ => CreateParameterless(component.TypeName)
         };
         PrepareInitialSize(control);
-        foreach ((string fieldName, string text) in component.TextValues)
-        {
-            if (FindFieldValue(control, fieldName) is not Control target)
-            {
-                throw new InvalidDataException($"Text seed field '{fieldName}' was not found on {component.TypeName}.");
-            }
-
-            target.Text = text;
-        }
+        ApplyTextValues(control, component);
 
         return control;
     }
@@ -223,7 +215,12 @@ internal static class ComponentFactory
                 break;
         }
 
-        // parity-scaffolding: Load handlers may replace plan seeds; the shared plan remains authoritative.
+        ApplyTextValues(control, component);
+    }
+
+    // parity-scaffolding: Load and asynchronous handlers may replace plan seeds; the shared plan remains authoritative.
+    internal static void ApplyTextValues(Control control, CaptureComponentPlan component)
+    {
         foreach ((string fieldName, string text) in component.TextValues)
         {
             if (FindFieldValue(control, fieldName) is not Control target)
