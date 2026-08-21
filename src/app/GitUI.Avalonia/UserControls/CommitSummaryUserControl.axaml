@@ -5,20 +5,34 @@
   <HeaderedContentControl x:Name="groupBox1"
                           compat:TranslationCompat.TranslateText="False"
                           Classes="gitextensions-group-box"
-                          Padding="10"
+                          Padding="11"
                           Header="...">
-    <Grid x:Name="tableLayoutPanel1" ColumnDefinitions="Auto,*"
-          RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="3">
-      <TextBlock x:Name="labelMessage" Grid.ColumnSpan="2" Margin="0,0,0,5"
-                 FontWeight="SemiBold" Text="..." TextWrapping="Wrap" />
-      <TextBlock x:Name="labelAuthorCaption" Grid.Row="1" Text="Author:" />
-      <TextBlock x:Name="labelAuthor" Grid.Row="1" Grid.Column="1" Text="..." />
-      <TextBlock x:Name="labelDateCaption" Grid.Row="2" Text="Commit date:" />
-      <TextBlock x:Name="labelDate" Grid.Row="2" Grid.Column="1" Text="..." />
-      <TextBlock x:Name="labelBranchesCaption" Grid.Row="3" Text="Branch(es):" />
-      <TextBlock x:Name="labelBranches" Grid.Row="3" Grid.Column="1" Text="..." TextWrapping="Wrap" />
-      <TextBlock x:Name="labelTagsCaption" Grid.Row="4" Text="Tag(s):" />
-      <TextBlock x:Name="labelTags" Grid.Row="4" Grid.Column="1" Text="..." TextWrapping="Wrap" />
+    <HeaderedContentControl.HeaderTemplate>
+      <DataTemplate>
+        <TextBlock Height="16"
+                   VerticalAlignment="Center"
+                   Text="{Binding}" />
+      </DataTemplate>
+    </HeaderedContentControl.HeaderTemplate>
+    <Grid x:Name="tableLayoutPanel1"
+          ColumnDefinitions="85,*"
+          RowDefinitions="15,13,21,21,21,21">
+      <TextBlock x:Name="labelMessage"
+                 Grid.ColumnSpan="2"
+                 Height="15"
+                 Margin="2,0"
+                 FontWeight="Bold"
+                 Text="..."
+                 TextTrimming="CharacterEllipsis"
+                 TextWrapping="Wrap" />
+      <TextBlock x:Name="labelAuthorCaption" Grid.Row="2" Height="15" Margin="3,3,2,3" Text="Author:" />
+      <TextBlock x:Name="labelAuthor" Grid.Row="2" Grid.Column="1" Height="21" Margin="3,0,2,0" FontWeight="Bold" Text="..." />
+      <TextBlock x:Name="labelDateCaption" Grid.Row="3" Height="15" Margin="3,3,2,3" Text="Commit date:" />
+      <TextBlock x:Name="labelDate" Grid.Row="3" Grid.Column="1" Height="21" Margin="3,0,2,0" Text="..." />
+      <TextBlock x:Name="labelBranchesCaption" Grid.Row="4" Height="15" Margin="3,3,2,3" Text="Branch(es):" />
+      <TextBlock x:Name="labelBranches" Grid.Row="4" Grid.Column="1" Height="21" Margin="3,0,2,0" Text="..." TextWrapping="Wrap" />
+      <TextBlock x:Name="labelTagsCaption" Grid.Row="5" Height="15" Margin="3,3,2,3" Text="Tag(s):" />
+      <TextBlock x:Name="labelTags" Grid.Row="5" Grid.Column="1" Height="21" Margin="3,0,2,0" Text="..." TextWrapping="Wrap" />
     </Grid>
   </HeaderedContentControl>
 </UserControl>

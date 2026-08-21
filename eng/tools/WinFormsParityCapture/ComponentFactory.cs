@@ -14,6 +14,7 @@ using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
+using GitUI.HelperDialogs;
 using GitUI.LeftPanel;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -44,6 +45,8 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormCleanupRepository" => new FormCleanupRepository(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormBisect" => CreateFormBisect(commands),
             "GitUI.CommandsDialogs.FormSparseWorkingCopy" => new FormSparseWorkingCopy(commands),
+            "GitUI.CommandsDialogs.FormDeleteRemoteBranch" => new FormDeleteRemoteBranch(commands, "origin/feature/delete-me"),
+            "GitUI.HelperDialogs.FormResetAnotherBranch" => FormResetAnotherBranch.Create(commands, CreateRevision(commands)),
             "GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog" => CreateGitCommandLog(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
             "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),

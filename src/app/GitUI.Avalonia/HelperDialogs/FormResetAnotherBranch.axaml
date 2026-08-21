@@ -3,68 +3,90 @@
         xmlns:usercontrols="using:GitUI.UserControls"
         xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.HelperDialogs.FormResetAnotherBranch"
-        Width="535" Height="381"
-        MinWidth="535" MinHeight="381"
+        Width="545" Height="347"
+        MinWidth="545" MinHeight="347"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         Title="Reset branch">
-  <Grid x:Name="tableLayoutPanel1"
-        Margin="8"
-        RowDefinitions="Auto,10,Auto,Auto,Auto,Auto,Auto,Auto">
-    <Grid x:Name="tlpnlWarning"
-          Margin="2"
-          ColumnDefinitions="Auto,*"
-          ColumnSpacing="6">
-      <Image x:Name="pictureBox1"
-             Classes="gitextensions-icon-16"
-             VerticalAlignment="Top"
-             Source="{x:Static properties:Images.Warning}" />
-      <TextBlock x:Name="lblResetBranchWarning"
-                 Grid.Column="1"
-                 TextWrapping="Wrap"
-                 Text="You can only reset a branch safely if there is a direct path from it to selected revision.&#10;Forcing a branch to reset if it has not been merged might leave some commits unreachable." />
+  <Grid x:Name="tableLayoutPanel1" Margin="8">
+    <Grid Margin="3"
+          RowDefinitions="34,10,15,29,152,25,25,35">
+      <Grid x:Name="tlpnlWarning"
+            Margin="2"
+            ColumnDefinitions="22,*">
+        <Border x:Name="pictureBox1"
+                Width="16"
+                Height="24"
+                Margin="3"
+                HorizontalAlignment="Left">
+          <Image Stretch="Uniform"
+                 Source="{x:Static properties:Images.Warning}" />
+        </Border>
+        <TextBlock x:Name="lblResetBranchWarning"
+                   Grid.Column="1"
+                   Height="30"
+                   Margin="3,0"
+                   LineHeight="15"
+                   TextWrapping="Wrap"
+                   Text="You can only reset a branch safely if there is a direct path from it to selected revision.&#10;Forcing a branch to reset if it has not been merged might leave some commits unreachable." />
+      </Grid>
+
+      <Label x:Name="BranchInfo"
+             Grid.Row="2"
+             Height="15"
+             Margin="3,0"
+             Padding="0"
+             VerticalAlignment="Center"
+             Content="Reset local _branch:"
+             Target="{Binding #Branches}" />
+      <ComboBox x:Name="Branches"
+                Grid.Row="3"
+                Height="23"
+                Margin="8,3"
+                HorizontalAlignment="Stretch"
+                IsEditable="True" />
+
+      <usercontrols:CommitSummaryUserControl x:Name="commitSummaryUserControl"
+                                             Grid.Row="4"
+                                             Margin="1"
+                                             MinWidth="493"
+                                             MinHeight="150" />
+
+      <CheckBox x:Name="cbxCheckoutBranch"
+                Grid.Row="5"
+                Height="19"
+                Margin="3"
+                HorizontalAlignment="Stretch"
+                Content="Chec_kout branch after reset" />
+      <CheckBox x:Name="ForceReset"
+                Grid.Row="6"
+                Height="19"
+                Margin="3"
+                HorizontalAlignment="Stretch"
+                Content="_Force reset for a non-fast-forward reset" />
+
+      <Grid x:Name="flowLayoutPanel1"
+            Grid.Row="7"
+            Margin="2"
+            ColumnDefinitions="*,91,6,91,3">
+        <Button x:Name="Ok"
+                Classes="gitextensions-dialog-action"
+                Grid.Column="1"
+                Width="91"
+                Height="25"
+                MinHeight="0"
+                Margin="0,3"
+                Content="OK" />
+        <Button x:Name="Cancel"
+                Classes="gitextensions-dialog-action"
+                Grid.Column="3"
+                Width="91"
+                Height="25"
+                MinHeight="0"
+                Margin="0,3"
+                Content="Cancel"
+                IsCancel="True" />
+      </Grid>
     </Grid>
-
-    <Label x:Name="BranchInfo"
-           Grid.Row="2"
-           Padding="0"
-           VerticalAlignment="Center"
-           Content="Reset local _branch:"
-           Target="{Binding #Branches}" />
-    <ComboBox x:Name="Branches"
-              Grid.Row="3"
-              Margin="8,3"
-              HorizontalAlignment="Stretch"
-              IsEditable="True" />
-
-    <usercontrols:CommitSummaryUserControl x:Name="commitSummaryUserControl"
-                                           Grid.Row="4"
-                                           Margin="1"
-                                           MinWidth="493"
-                                           MinHeight="150" />
-
-    <CheckBox x:Name="cbxCheckoutBranch"
-              Grid.Row="5"
-              Content="Chec_kout branch after reset" />
-    <CheckBox x:Name="ForceReset"
-              Grid.Row="6"
-              Content="_Force reset for a non-fast-forward reset" />
-
-    <StackPanel x:Name="flowLayoutPanel1"
-                Grid.Row="7"
-                Classes="gitextensions-dialog-controls"
-                Margin="2">
-      <Button x:Name="Ok"
-              Classes="gitextensions-dialog-action"
-              Width="91"
-              Height="25"
-              Content="OK" />
-      <Button x:Name="Cancel"
-              Classes="gitextensions-dialog-action"
-              Width="91"
-              Height="25"
-              Content="Cancel"
-              IsCancel="True" />
-    </StackPanel>
   </Grid>
 </Window>
