@@ -3,13 +3,13 @@
         xmlns:controls="using:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormCompareToBranch"
         Width="434"
-        Height="110"
+        Height="106"
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="Compare to branch">
   <Canvas Width="434"
-          Height="110">
+          Height="106">
     <controls:BranchSelector x:Name="branchSelector"
                              Width="322"
                              Height="58"

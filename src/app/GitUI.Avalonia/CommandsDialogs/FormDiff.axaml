@@ -8,7 +8,7 @@
         Height="685"
         Title="Diff">
   <Grid x:Name="mainLayoutPanel"
-        RowDefinitions="115,*">
+        RowDefinitions="112,*">
     <Grid x:Name="settingsLayoutPanel"
           Height="106"
           Margin="3"
@@ -19,10 +19,15 @@
                 Classes="gitextensions-group-box"
                 Grid.Column="0"
                 Height="50"
-                Padding="3"
+                Padding="0"
+                Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                 Header="BASE">
         <StackPanel x:Name="firstCommitPanel"
+                    Width="491"
                     Height="28"
+                    Margin="3,0"
+                    HorizontalAlignment="Left"
+                    Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                     Orientation="Horizontal">
           <TextBlock x:Name="lblFirstCommit"
                      Margin="3,0"
@@ -51,7 +56,7 @@
 
       <Button x:Name="btnSwap"
               Grid.Column="1"
-              Margin="10,15,10,0"
+              Margin="10,21,10,0"
               Width="22"
               Height="22"
               Padding="0"
@@ -64,10 +69,15 @@
                 Classes="gitextensions-group-box"
                 Grid.Column="2"
                 Height="50"
-                Padding="3"
+                Padding="0"
+                Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                 Header="Compare">
         <StackPanel x:Name="secondCommitPanel"
+                    Width="491"
                     Height="28"
+                    Margin="3,0"
+                    HorizontalAlignment="Left"
+                    Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                     Orientation="Horizontal">
           <TextBlock x:Name="lblSecondCommit"
                      Margin="3,0"
@@ -120,14 +130,17 @@
     <Grid x:Name="splitContainer1"
           Grid.Row="1"
           Height="602"
-          Margin="3,0,3,3"
+          Margin="3"
+          Background="Transparent"
           VerticalAlignment="Top"
           ColumnDefinitions="345,4,*">
-      <gitui:FileStatusList x:Name="DiffFiles" />
+      <gitui:FileStatusList x:Name="DiffFiles"
+                            Background="Transparent" />
       <GridSplitter Grid.Column="1"
                     ResizeDirection="Columns" />
       <editor:FileViewer x:Name="DiffText"
-                         Grid.Column="2" />
+                         Grid.Column="2"
+                         Background="Transparent" />
     </Grid>
   </Grid>
 </Window>

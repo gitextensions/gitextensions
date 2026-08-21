@@ -11,48 +11,74 @@
         Title="Format patch">
   <!-- The 120-DPI WinForms Designer values resolve through AutoScale to these integer 96-DPI dimensions. -->
   <Grid x:Name="tableLayoutPanelForm"
-        Margin="3"
         ColumnDefinitions="*,Auto"
-        RowDefinitions="Auto,*,Auto"
-        RowSpacing="3">
+        RowDefinitions="34,*,36"
+        TabIndex="0">
     <Grid x:Name="tableLayoutPanelSaveTo"
           Grid.ColumnSpan="2"
+          Margin="3"
           ColumnDefinitions="Auto,*,Auto"
-          ColumnSpacing="3">
+          TabIndex="0">
       <Label x:Name="lblPatches"
-             Padding="0,5,0,0"
+             Width="40"
+             Height="20"
+             Margin="3,0"
+             Padding="3,5,4,0"
+             TabIndex="0"
              VerticalAlignment="Top"
              Content="_Patch:"
              Target="{Binding #OutputPath}" />
       <TextBox x:Name="OutputPath"
                Grid.Column="1"
                Height="23"
+               Margin="3"
+               Padding="0"
+               TabIndex="0"
+               VerticalAlignment="Top"
                VerticalContentAlignment="Center" />
       <Button x:Name="Browse"
               Grid.Column="2"
               Width="64"
               Height="25"
+              Margin="3"
+              Padding="0"
+              TabIndex="0"
+              VerticalAlignment="Top"
               Content="Browse" />
     </Grid>
 
     <gitui:RevisionGridControl x:Name="RevisionGrid"
                                Grid.Row="1"
-                               Grid.ColumnSpan="2" />
+                               Grid.ColumnSpan="2"
+                               Margin="3"
+                               TabIndex="1" />
 
     <StackPanel x:Name="flowLayoutPanelBranch"
                 Grid.Row="2"
+                Height="30"
+                Margin="3"
                 Orientation="Horizontal"
-                VerticalAlignment="Center">
+                TabIndex="2">
       <TextBlock x:Name="SelectedBranch"
+                 Height="15"
+                 Margin="3,0"
+                 Padding="3,0,4,0"
+                 TabIndex="0"
                  Text="Branch" />
       <TextBlock x:Name="CurrentBranch"
-                 Margin="6,0,0,0" />
+                 Height="15"
+                 Margin="3,0"
+                 TabIndex="0" />
     </StackPanel>
     <Button x:Name="FormatPatch"
             Grid.Row="2"
             Grid.Column="1"
             Width="140"
             Height="25"
+            Margin="3"
+            Padding="0"
+            TabIndex="3"
+            VerticalAlignment="Bottom"
             Content="Create patch(es)" />
   </Grid>
 </Window>
