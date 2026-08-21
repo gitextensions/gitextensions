@@ -97,7 +97,9 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
                     .AppendFormat(_andMore.Text, localTracking.Length - maxDisplayed);
             }
 
-            _NO_TRANSLATE_labelLocalTrackingBranches.Text = branchesToDelete.ToString();
+            // Avalonia constraint: TextBlock renders a final line break as an extra blank line;
+            // WinForms Label measures the same StringBuilder output without that blank row.
+            _NO_TRANSLATE_labelLocalTrackingBranches.Text = branchesToDelete.ToString().TrimEnd();
         }
     }
 
@@ -181,5 +183,8 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
         public Avalonia.Controls.CheckBox DeleteRemote => form.DeleteRemote;
         public Avalonia.Controls.CheckBox DeleteLocalTrackingBranch => form.DeleteLocalTrackingBranch;
         public BranchComboBox Branches => form.Branches;
+        public string TrackingCandidateText => form._NO_TRANSLATE_labelLocalTrackingBranches.Text ?? string.Empty;
+
+        public void Load() => form.OnRuntimeLoad(EventArgs.Empty);
     }
 }
