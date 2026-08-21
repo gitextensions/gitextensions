@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
+  "analyzedCommit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
   "axisOrder": [
     "structural",
     "functional",
@@ -5356,73 +5356,83 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormCompareToBranch.json"
           ],
           "platforms": [],
-          "findingCount": 13,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 9,
+          "note": "The fresh scoped inventory retains generic-XAML and framework member representation differences."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormCompareToBranch.json"
           ],
           "platforms": [],
-          "findingCount": 25,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 21,
+          "note": "The fresh scoped inventory and focused branch-selection tests cover the bounded correction, not exhaustive functional closure."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6843,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 1932,
+          "note": "The fresh native-100 light/dark/custom paired matrix retains visual findings for this component."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 1143,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 135,
+          "note": "The fresh three-theme paired matrix retains exact resolved-color findings."
         },
         "behavioralState": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 423,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 57,
+          "note": "The planned normal/focus/hover/pressed/disabled matrix retains state findings; exhaustive interaction remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh isolated Windows, native Wayland, nested X11, and Wayland-only Flatpak smokes pass and their screenshots were inspected; macOS and exhaustive live dialog interaction remain open."
         }
       }
     },
@@ -5433,73 +5443,83 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormCompareToBranch.json"
           ],
           "platforms": [],
-          "findingCount": 13,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 9,
+          "note": "The fresh scoped inventory retains generic-XAML and framework member representation differences."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormCompareToBranch.json"
           ],
           "platforms": [],
-          "findingCount": 25,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 21,
+          "note": "The fresh scoped inventory and focused branch-selection tests cover the bounded correction, not exhaustive functional closure."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6843,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 1932,
+          "note": "The fresh native-100 light/dark/custom paired matrix retains visual findings for this component."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 1143,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 135,
+          "note": "The fresh three-theme paired matrix retains exact resolved-color findings."
         },
         "behavioralState": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 423,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 57,
+          "note": "The planned normal/focus/hover/pressed/disabled matrix retains state findings; exhaustive interaction remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh isolated Windows, native Wayland, nested X11, and Wayland-only Flatpak smokes pass and their screenshots were inspected; macOS and exhaustive live dialog interaction remain open."
         }
       }
     },
@@ -5773,73 +5793,83 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormDiff.json"
           ],
           "platforms": [],
-          "findingCount": 74,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 47,
+          "note": "The fresh scoped inventory retains generic-XAML and framework member representation differences."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormDiff.json"
           ],
           "platforms": [],
-          "findingCount": 152,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 122,
+          "note": "Original member ordering and handler signatures are restored; the remaining scoped inventory and exhaustive action matrix stay open."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 35713,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 15837,
+          "note": "The fresh native-100 three-theme matrix retains visual findings after restoring source-authored header and button metrics."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 7788,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 4071,
+          "note": "The fresh three-theme paired matrix retains exact resolved-color findings."
         },
         "behavioralState": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 2400,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 894,
+          "note": "The planned normal/focus/hover/pressed/checked/disabled matrix retains state findings; exhaustive interaction remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh isolated Windows, native Wayland, nested X11, and Wayland-only Flatpak smokes pass and their screenshots were inspected; macOS and exhaustive live dialog interaction remain open."
         }
       }
     },
@@ -5850,73 +5880,83 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormDiff.json"
           ],
           "platforms": [],
-          "findingCount": 74,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 47,
+          "note": "The fresh scoped inventory retains generic-XAML and framework member representation differences."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormDiff.json"
           ],
           "platforms": [],
-          "findingCount": 152,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 122,
+          "note": "Original member ordering and handler signatures are restored; the remaining scoped inventory and exhaustive action matrix stay open."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 35713,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 15837,
+          "note": "The fresh native-100 three-theme matrix retains visual findings after restoring source-authored header and button metrics."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 7788,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 4071,
+          "note": "The fresh three-theme paired matrix retains exact resolved-color findings."
         },
         "behavioralState": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 2400,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 894,
+          "note": "The planned normal/focus/hover/pressed/checked/disabled matrix retains state findings; exhaustive interaction remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh isolated Windows, native Wayland, nested X11, and Wayland-only Flatpak smokes pass and their screenshots were inspected; macOS and exhaustive live dialog interaction remain open."
         }
       }
     },
@@ -6057,73 +6097,83 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormFormatPatch.json"
           ],
           "platforms": [],
-          "findingCount": 35,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 28,
+          "note": "The fresh scoped inventory retains generic-XAML, BindingSource, and framework member representation differences."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormFormatPatch.json"
           ],
           "platforms": [],
-          "findingCount": 79,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 70,
+          "note": "The original load-handler identity and one/two/many range behavior are covered; exhaustive portal, persistence, error, and restart states stay open."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 19111,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 4022,
+          "note": "The fresh native-100 three-theme matrix uses WinForms AutoScale's integer 120-to-96-DPI results and retains the reported visual findings."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 3327,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 239,
+          "note": "The fresh three-theme paired matrix retains exact resolved-color findings."
         },
         "behavioralState": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 918,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 66,
+          "note": "The planned normal/focus/hover/pressed/disabled matrix retains state findings; exhaustive interaction remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh isolated Windows, native Wayland, nested X11, and Wayland-only Flatpak smokes pass and their screenshots were inspected; macOS and exhaustive live dialog interaction remain open."
         }
       }
     },
@@ -6134,73 +6184,83 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormFormatPatch.json"
           ],
           "platforms": [],
-          "findingCount": 35,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 28,
+          "note": "The fresh scoped inventory retains generic-XAML, BindingSource, and framework member representation differences."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormFormatPatch.json"
           ],
           "platforms": [],
-          "findingCount": 79,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "findingCount": 70,
+          "note": "The original load-handler identity and one/two/many range behavior are covered; exhaustive portal, persistence, error, and restart states stay open."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 19111,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 4022,
+          "note": "The fresh native-100 three-theme matrix uses WinForms AutoScale's integer 120-to-96-DPI results and retains the reported visual findings."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 3327,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 239,
+          "note": "The fresh three-theme paired matrix retains exact resolved-color findings."
         },
         "behavioralState": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 918,
-          "note": "The paired capture report contains findings for this component."
+          "findingCount": 66,
+          "note": "The planned normal/focus/hover/pressed/disabled matrix retains state findings; exhaustive interaction remains open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Fresh isolated Windows, native Wayland, nested X11, and Wayland-only Flatpak smokes pass and their screenshots were inspected; macOS and exhaustive live dialog interaction remain open."
         }
       }
     },
