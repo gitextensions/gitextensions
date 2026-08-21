@@ -6706,15 +6706,6 @@ Inactive remote is completely invisible to git.</source>
         <source>Active</source>
         <target />
       </trans-unit>
-      <trans-unit id="_questionAutoPullBehaviour.Text">
-        <source>You have added a new remote repository.
-Do you want to automatically configure the default push and pull behavior for this remote?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_questionAutoPullBehaviourCaption.Text">
-        <source>New remote</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_questionDeleteRemote.Text">
         <source>Are you sure you want to delete this remote?</source>
         <target />
