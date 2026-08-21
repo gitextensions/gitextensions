@@ -26,6 +26,7 @@ using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
+using GitUI.HelperDialogs;
 using GitUI.SpellChecker;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -87,6 +88,14 @@ public sealed partial class ParityScreenshotTests
         GetCaptureSize(typeof(FormCleanupRepository)).Should().Be((434, 582));
         GetCaptureSize(typeof(FormBisect)).Should().Be((248, 169));
         GetCaptureSize(typeof(FormSparseWorkingCopy)).Should().Be((784, 561));
+    }
+
+    [Test]
+    [Category(P02Category)]
+    public void Branch_operation_capture_hosts_should_use_native_96_dpi_runtime_dimensions()
+    {
+        GetCaptureSize(typeof(FormDeleteRemoteBranch)).Should().Be((403, 167));
+        GetCaptureSize(typeof(FormResetAnotherBranch)).Should().Be((545, 347));
     }
 
     [AvaloniaTest]
@@ -173,6 +182,24 @@ public sealed partial class ParityScreenshotTests
         editor.Text.Should().Be("Parity body");
         editor.GetTestAccessor().TextBox.Should().BeSameAs(textBox);
         editor.Content.Should().BeSameAs(content);
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    public void Capture_text_seeding_should_close_an_editable_combo_popup()
+    {
+        ComboBox comboBox = new() { Name = "Branches", IsEditable = true, IsDropDownOpen = true };
+        CaptureComponentPlan component = new()
+        {
+            TypeName = typeof(ComboBox).FullName!,
+            TextValues = new Dictionary<string, string> { [comboBox.Name] = "feature/reset-target" },
+            States = [new CaptureStatePlan { Id = "normal", Kind = CaptureStateKind.Normal }],
+        };
+
+        ApplyTextValues(comboBox, component);
+
+        comboBox.Text.Should().Be("feature/reset-target");
+        comboBox.IsDropDownOpen.Should().BeFalse();
     }
 
     [AvaloniaTest]
@@ -1363,6 +1390,7 @@ public sealed partial class ParityScreenshotTests
                 // parity-scaffolding: Seeds editable Avalonia combo boxes from the shared capture plan.
                 case ComboBox comboBox when comboBox.IsEditable:
                     comboBox.Text = text;
+                    comboBox.IsDropDownOpen = false;
                     break;
                 // parity-scaffolding: Preserve the composite editor's visual tree while seeding
                 // its product text boundary; assigning Content would replace its native TextBox.

@@ -2,50 +2,66 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:gitui="clr-namespace:GitUI"
         x:Class="GitUI.CommandsDialogs.FormDeleteRemoteBranch"
-        Width="403" Height="180"
-        MinWidth="403" MinHeight="150"
+        Width="403" Height="139"
+        MinWidth="403" MinHeight="102"
         WindowStartupLocation="CenterOwner"
         SizeToContent="Height"
         Title="Delete branch">
   <DockPanel>
-    <StackPanel x:Name="ControlsPanel"
-                Classes="gitextensions-dialog-controls"
-                DockPanel.Dock="Bottom"
-                Spacing="8"
-                Margin="10,8">
+    <Grid x:Name="ControlsPanel"
+          DockPanel.Dock="Bottom"
+          Height="41">
       <Button x:Name="Delete"
               Classes="gitextensions-dialog-action"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Width="75"
+              Height="25"
+              MinHeight="0"
+              Margin="0,8,13,0"
               Content="_Delete"
               IsEnabled="False"
               IsDefault="True" />
-    </StackPanel>
+    </Grid>
 
-    <Grid x:Name="tlpnlMain"
-          Classes="gitextensions-dialog-main"
-          Margin="9"
-          ColumnDefinitions="Auto,*"
-          RowDefinitions="Auto,Auto,Auto,Auto"
-          ColumnSpacing="6"
-          RowSpacing="6">
-      <Label x:Name="labelSelectBranches"
-             Classes="gitextensions-dialog-label"
-             VerticalAlignment="Center"
-             Padding="0"
-             Content="Select _branches"
-             Target="{Binding #Branches}" />
-      <gitui:BranchComboBox x:Name="Branches"
-                            Grid.Column="1"
-                            MinWidth="290" />
+    <Grid x:Name="MainPanel">
+      <Grid x:Name="tlpnlMain"
+            Margin="9"
+            ColumnDefinitions="95,*"
+            RowDefinitions="28,25,25,Auto">
+        <Label x:Name="labelSelectBranches"
+               Classes="gitextensions-dialog-label"
+               Width="89"
+               Height="28"
+               Margin="3,0"
+               VerticalAlignment="Center"
+               Padding="0"
+               Content="Select _branches"
+               Target="{Binding #Branches}" />
+        <gitui:BranchComboBox x:Name="Branches"
+                              Grid.Column="1"
+                              Height="28" />
 
-      <CheckBox x:Name="DeleteRemote"
-                Grid.Row="1" Grid.Column="1"
-                Content="Delete branch(es) from _remote repository" />
-      <CheckBox x:Name="DeleteLocalTrackingBranch"
-                Grid.Row="2" Grid.Column="1"
-                Content="Delete _local tracking branch (if available)" />
-      <TextBlock x:Name="_NO_TRANSLATE_labelLocalTrackingBranches"
-                 Grid.Row="3" Grid.Column="1"
-                 TextWrapping="Wrap" />
+        <CheckBox x:Name="DeleteRemote"
+                  Grid.Row="1" Grid.Column="1"
+                  Height="19"
+                  Margin="3"
+                  HorizontalAlignment="Stretch"
+                  Content="Delete branch(es) from _remote repository" />
+        <CheckBox x:Name="DeleteLocalTrackingBranch"
+                  Grid.Row="2" Grid.Column="1"
+                  Height="19"
+                  Margin="3"
+                  HorizontalAlignment="Stretch"
+                  Content="Delete _local tracking branch (if available)" />
+        <TextBlock x:Name="_NO_TRANSLATE_labelLocalTrackingBranches"
+                   Grid.Row="3" Grid.Column="1"
+                   Margin="3,0"
+                   MinWidth="258"
+                   HorizontalAlignment="Left"
+                   LineHeight="15"
+                   TextWrapping="Wrap" />
+      </Grid>
     </Grid>
   </DockPanel>
 </Window>

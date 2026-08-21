@@ -403,6 +403,19 @@ public sealed partial class ThemeCapabilityTests
             application.TryGetResource(key, themeVariant, out object? resource).Should().BeTrue();
             resource.Should().BeOfType<SolidColorBrush>();
         }
+
+        string[] commitSummaryResourceKeys =
+        [
+            "GitExtensionsCommitSummaryTagsBackgroundBrush",
+            "GitExtensionsCommitSummaryTagsForegroundBrush",
+            "GitExtensionsCommitSummaryBranchesBackgroundBrush",
+            "GitExtensionsCommitSummaryBranchesForegroundBrush",
+        ];
+        foreach (string key in commitSummaryResourceKeys)
+        {
+            application.TryGetResource(key, themeVariant, out object? resource).Should().BeTrue();
+            resource.Should().BeOfType<SolidColorBrush>();
+        }
     }
 
     private static Color GetResourceBrushColor(Application application, AppColor appColor)
