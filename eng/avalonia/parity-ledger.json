@@ -28368,61 +28368,88 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/BranchComboBox.json"
           ],
           "platforms": [],
-          "findingCount": 17,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 14,
+          "note": "The refreshed inventory retains 14 member-shape findings after restoring the original native-96 child geometry."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/BranchComboBox.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 32,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 28,
+          "note": "Focused tests cover selection and the embedded geometry; the refreshed comment/event/member findings and unexercised live multi-select interaction keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1649,
+          "note": "The selector is captured inside FormDeleteRemoteBranch at native 100 percent in light, dark, and custom themes; the containing-dialog diagnostics are not all attributable to this control, and remaining scales stay open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 317,
+          "note": "Resolved-ARGB containing-dialog comparisons cover all three themes at native 100 percent; color diagnostics remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 24,
+          "note": "Normal and focused embedded states are paired; the live multi-selection dialog and exhaustive keyboard/popup states remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke covers Windows, Wayland, X11, and Wayland-only Flatpak with --filesystem=host; component-specific live interaction and macOS remain unverified."
         }
       }
     },
@@ -28748,61 +28775,90 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/CommitSummaryUserControl.json"
           ],
           "platforms": [],
-          "findingCount": 36,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 31,
+          "note": "The refreshed inventory retains 31 member-shape findings after restoring captions, emphasis, adaptive colors, and source-derived layout."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/CommitSummaryUserControl.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 92,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 75,
+          "note": "Focused tests cover revision content, ref emphasis, translated keys, theme resources, and null clearing; refreshed comment/event/member differences remain open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 2331,
+          "note": "The control is captured inside FormResetAnotherBranch at native 100 percent in all three themes; its named runtime geometry is exact, but containing-dialog diagnostics and remaining scales stay open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "theme/color behavior has not been captured for this mapped view"
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 216,
+          "note": "The original adapted LightSteelBlue and LightSalmon roles now resolve through dynamic resources; resolved-ARGB comparison still records containing-dialog color gaps."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Revision-present and null transitions are covered; exhaustive theme-switch, resizing, and consumer-state walks remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke covers Windows, Wayland, X11, and Wayland-only Flatpak with --filesystem=host; component-specific live interaction and macOS remain unverified."
         }
       }
     },
@@ -39068,61 +39124,93 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.6/inventory/FormDeleteRemoteBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/FormDeleteRemoteBranch.json"
           ],
           "platforms": [],
           "findingCount": 24,
-          "note": "The P5.6 source inventory found structural/member/comment differences from the WinForms original."
+          "note": "The refreshed inventory retains 24 member-shape findings after restoring the measured native-96 layout and shared-control geometry."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.6/inventory/FormDeleteRemoteBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/FormDeleteRemoteBranch.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 63,
-          "note": "The P5.6 functional inventory found member/event/hotkey/settings/translation differences."
+          "note": "Focused tests cover construction, checkbox enablement, tracking candidates, and native-96 layout; remaining inventory findings and live delete/error/confirmation paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/winforms-baseline/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/avalonia-final/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1649,
+          "note": "Twelve native-100 light, dark, and custom state captures compare with no unsupported or unavailable cell; exact diagnostics and 125/150/200 percent captures remain open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 317,
+          "note": "Resolved-ARGB comparisons cover light, dark, and custom themes at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"
+          ],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 24,
+          "note": "Normal, focused, and checked options are paired and focused behavior passes on both OSes; exhaustive confirmation, multi-select, action, and keyboard states remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/flatpak/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke covers Windows, Wayland, X11, and Wayland-only Flatpak with --filesystem=host; component-specific live interaction and macOS remain unverified."
         }
       }
     }
@@ -39134,61 +39222,63 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.6/inventory/FormDeleteRemoteBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/FormDeleteRemoteBranch.json"
           ],
           "platforms": [],
           "findingCount": 24,
-          "note": "The P5.6 source inventory found structural/member/comment differences from the WinForms original."
+          "note": "The refreshed inventory retains 24 member-shape findings after restoring the measured native-96 layout and shared-control geometry."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.6/inventory/FormDeleteRemoteBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/FormDeleteRemoteBranch.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"
           ],
-          "platforms": [],
+          "platforms": ["windows", "linux"],
           "findingCount": 63,
-          "note": "The P5.6 functional inventory found member/event/hotkey/settings/translation differences."
+          "note": "Focused tests cover construction, checkbox enablement, tracking candidates, and native-96 layout; remaining inventory findings and live delete/error/confirmation paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/winforms-baseline/manifest.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/avalonia-final/manifest.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 1649,
+          "note": "Twelve native-100 light, dark, and custom state captures compare with no unsupported or unavailable cell; exact diagnostics and 125/150/200 percent captures remain open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 317,
+          "note": "Resolved-ARGB comparisons cover light, dark, and custom themes at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"],
+          "platforms": ["windows", "linux"],
+          "findingCount": 24,
+          "note": "Normal, focused, and checked options are paired and focused behavior passes on both OSes; exhaustive confirmation, multi-select, action, and keyboard states remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/flatpak/smoke.json"],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke covers Windows, Wayland, X11, and Wayland-only Flatpak with --filesystem=host; component-specific live interaction and macOS remain unverified."
         }
       }
     }
@@ -39200,61 +39290,63 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.6/inventory/FormResetAnotherBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/FormResetAnotherBranch.json"
           ],
           "platforms": [],
           "findingCount": 36,
-          "note": "The P5.6 source inventory found structural/member/comment differences from the WinForms original."
+          "note": "The refreshed inventory retains 36 member-shape findings after restoring the exact native-96 dialog and nested-summary geometry."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.6/inventory/FormResetAnotherBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/FormResetAnotherBranch.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 90,
-          "note": "The P5.6 functional inventory found member/event/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 89,
+          "note": "Focused tests cover load, summary population, forced validation, translation, capture seeding, and native-96 layout; remaining inventory and live process/error/cancellation paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/winforms-baseline/manifest.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/avalonia-final/manifest.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 2331,
+          "note": "Twelve native-100 light, dark, and custom state captures compare with no unsupported or unavailable cell; named geometry is exact, while template diagnostics and remaining scales stay open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 216,
+          "note": "Resolved-ARGB comparisons cover light, dark, and custom themes at native 100 percent; adapted summary-ref colors are restored and remaining color findings stay open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"],
+          "platforms": ["windows", "linux"],
+          "findingCount": 29,
+          "note": "Normal, focused, force-checked, and OK-disabled states are paired; exhaustive dropdown, async validation, action, cancellation, and keyboard states remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/flatpak/smoke.json"],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke covers Windows, Wayland, X11, and Wayland-only Flatpak with --filesystem=host; component-specific live interaction and macOS remain unverified."
         }
       }
     }
@@ -39266,61 +39358,63 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.6/inventory/FormResetAnotherBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/FormResetAnotherBranch.json"
           ],
           "platforms": [],
           "findingCount": 36,
-          "note": "The P5.6 source inventory found structural/member/comment differences from the WinForms original."
+          "note": "The refreshed inventory retains 36 member-shape findings after restoring the exact native-96 dialog and nested-summary geometry."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.6/inventory/FormResetAnotherBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/FormResetAnotherBranch.json",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 90,
-          "note": "The P5.6 functional inventory found member/event/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 89,
+          "note": "Focused tests cover load, summary population, forced validation, translation, capture seeding, and native-96 layout; remaining inventory and live process/error/cancellation paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/winforms-baseline/manifest.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/avalonia-final/manifest.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 2331,
+          "note": "Twelve native-100 light, dark, and custom state captures compare with no unsupported or unavailable cell; named geometry is exact, while template diagnostics and remaining scales stay open."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json"],
+          "platforms": ["windows"],
+          "findingCount": 216,
+          "note": "Resolved-ARGB comparisons cover light, dark, and custom themes at native 100 percent; adapted summary-ref colors are restored and remaining color findings stay open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/diff-final/findings.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/tests/linux/focused.trx"],
+          "platforms": ["windows", "linux"],
+          "findingCount": 29,
+          "note": "Normal, focused, force-checked, and OK-disabled states are paired; exhaustive dropdown, async validation, action, cancellation, and keyboard states remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "88d0f1a2204b99635109a7ad02a8b0c3c27277e9",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/runtime/flatpak/smoke.json"],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke covers Windows, Wayland, X11, and Wayland-only Flatpak with --filesystem=host; component-specific live interaction and macOS remain unverified."
         }
       }
     },

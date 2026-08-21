@@ -1,7 +1,9 @@
 using System.ComponentModel.Design;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
@@ -9,8 +11,11 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Compat;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -90,6 +95,58 @@ public sealed class CreateBranchTests
             .Select(call => string.Join('.', call.GetArguments().Take(3)))
             .ToArray();
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(emittedKeys.Length);
+    }
+
+    [AvaloniaTest]
+    public void CommitSummaryUserControl_should_preserve_revision_ref_emphasis_and_clear_it_with_the_revision()
+    {
+        AvaloniaThemeResources.Apply(Application.Current!, ThemeModule.Settings);
+        GitRevision revision = new(RevisionId)
+        {
+            Author = "Avalonia Contributor",
+            Subject = "Restore branch operation parity",
+            CommitUnixTime = new DateTimeOffset(2026, 8, 21, 12, 0, 0, TimeSpan.Zero).ToUnixTimeSeconds(),
+            Refs =
+            [
+                new GitRef(null!, RevisionId, "refs/heads/feature/reset-target"),
+                new GitRef(null!, RevisionId, "refs/tags/v1.0"),
+            ],
+        };
+        CommitSummaryUserControl control = new() { Width = 521, Height = 150, Revision = revision };
+        Window host = new() { Width = 521, Height = 150, Content = control };
+
+        try
+        {
+            host.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            TextBlock author = control.FindControl<TextBlock>("labelAuthor")!;
+            TextBlock message = control.FindControl<TextBlock>("labelMessage")!;
+            TextBlock branches = control.FindControl<TextBlock>("labelBranches")!;
+            TextBlock tags = control.FindControl<TextBlock>("labelTags")!;
+
+            author.Text.Should().Be("Avalonia Contributor");
+            author.FontWeight.Should().Be(FontWeight.Bold);
+            message.Text.Should().Be("Restore branch operation parity");
+            message.FontWeight.Should().Be(FontWeight.Bold);
+            branches.Text.Should().Be("feature/reset-target");
+            branches.FontWeight.Should().Be(FontWeight.Bold);
+            branches.Background.Should().NotBeNull();
+            tags.Text.Should().Be("v1.0");
+            tags.FontWeight.Should().Be(FontWeight.Bold);
+            tags.Background.Should().NotBeNull();
+
+            control.Revision = null;
+
+            branches.Text.Should().Be("---");
+            branches.Background.Should().BeNull();
+            tags.Text.Should().Be("---");
+            tags.Background.Should().BeNull();
+        }
+        finally
+        {
+            host.Close();
+        }
     }
 
     [AvaloniaTest]

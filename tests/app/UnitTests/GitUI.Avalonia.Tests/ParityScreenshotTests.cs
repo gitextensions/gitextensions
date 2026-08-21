@@ -498,6 +498,16 @@ public sealed partial class ParityScreenshotTests
             return new FormSparseWorkingCopy(context.Commands);
         }
 
+        if (viewType == typeof(FormDeleteRemoteBranch))
+        {
+            return new FormDeleteRemoteBranch(context.Commands, "origin/feature/delete-me");
+        }
+
+        if (viewType == typeof(FormResetAnotherBranch))
+        {
+            return FormResetAnotherBranch.Create(context.Commands, context.HeadRevision);
+        }
+
         if (viewType == typeof(FormAddToGitIgnore))
         {
             return new FormAddToGitIgnore(context.Commands, localExclude: false, "src/*.cs");
@@ -1863,6 +1873,16 @@ public sealed partial class ParityScreenshotTests
             return (784, 561);
         }
 
+        if (viewType == typeof(FormDeleteRemoteBranch))
+        {
+            return (403, 167);
+        }
+
+        if (viewType == typeof(FormResetAnotherBranch))
+        {
+            return (545, 347);
+        }
+
         if (viewType == typeof(FormAddToGitIgnore))
         {
             return (599, 341);
@@ -2295,17 +2315,10 @@ public sealed partial class ParityScreenshotTests
             ObjectId parentId = Module.RevParse("HEAD~1");
             long headTime = new DateTimeOffset(2026, 7, 17, 10, 30, 0, TimeSpan.Zero).ToUnixTimeSeconds();
             long parentTime = new DateTimeOffset(2026, 7, 16, 16, 45, 0, TimeSpan.Zero).ToUnixTimeSeconds();
-            if (_ownsWorkingDirectory)
-            {
-                ParentRevision = CreateRevision(parentId, InitialCommitSubject, parentTime, []);
-                HeadRevision = CreateRevision(headId, HeadCommitSubject, headTime, [parentId]);
-            }
-            else
-            {
-                // parity-scaffolding: Paired captures must render the supplied repository's real revision metadata.
-                ParentRevision = Module.GetRevision(parentId, loadRefs: true);
-                HeadRevision = Module.GetRevision(headId, loadRefs: true);
-            }
+            // parity-scaffolding: Paired captures use the same deterministic revision metadata;
+            // the externally-owned repository supplies object ids, refs, and branch topology only.
+            ParentRevision = CreateRevision(parentId, InitialCommitSubject, parentTime, []);
+            HeadRevision = CreateRevision(headId, HeadCommitSubject, headTime, [parentId]);
 
             Stashes =
             [

@@ -157,6 +157,8 @@ internal static class AvaloniaThemeResources
         DrawingColor warningPanel = DrawingColor.FromArgb(230, 99, 99);
         DrawingColor interactiveAction = DrawingColor.LightSkyBlue.AdaptBackColor();
         DrawingColor interactiveConflict = DrawingColor.Orange.AdaptBackColor();
+        DrawingColor commitSummaryTags = DrawingColor.LightSteelBlue.AdaptBackColor();
+        DrawingColor commitSummaryBranches = DrawingColor.LightSalmon.AdaptBackColor();
         if (isDark)
         {
             resetSoft = resetSoft.DimColor();
@@ -261,6 +263,10 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsInteractiveActionForegroundBrush", interactiveAction.GetTextColor());
         SetBrush(resources, "GitExtensionsInteractiveConflictBackgroundBrush", interactiveConflict);
         SetBrush(resources, "GitExtensionsInteractiveConflictForegroundBrush", interactiveConflict.GetTextColor());
+        SetBrush(resources, "GitExtensionsCommitSummaryTagsBackgroundBrush", commitSummaryTags);
+        SetBrush(resources, "GitExtensionsCommitSummaryTagsForegroundBrush", commitSummaryTags.GetTextColor());
+        SetBrush(resources, "GitExtensionsCommitSummaryBranchesBackgroundBrush", commitSummaryBranches);
+        SetBrush(resources, "GitExtensionsCommitSummaryBranchesForegroundBrush", commitSummaryBranches.GetTextColor());
         SetBrush(resources, "GitExtensionsDiffEditorBackgroundBrush", editor);
         SetBrush(resources, "GitExtensionsDiffTextBrush", windowText);
         SetBrush(resources, "GitExtensionsDiffLineNumberBackgroundBrush", ResolveAppColor(settings, AppColor.LineNumberBackground));

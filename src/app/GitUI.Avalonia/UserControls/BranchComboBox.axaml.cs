@@ -16,6 +16,7 @@ public partial class BranchComboBox : GitExtensionsControl
 {
     private readonly TranslationString _branchCheckoutError = new("Branch '{0}' is not selectable, this branch has been removed from the selection.");
     private IReadOnlyList<IGitRef>? _branchesToSelect;
+    private bool _settingSelectedText;
 
     public BranchComboBox()
     {
@@ -85,8 +86,19 @@ public partial class BranchComboBox : GitExtensionsControl
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        branches.SelectedItem = _branchesToSelect?.FirstOrDefault(branch => branch.Name == text);
-        branches.Text = text;
+        // Avalonia constraint: selecting an editable ComboBox item raises SelectionChanged
+        // before its text is updated; expose only the final WinForms-shaped notification.
+        _settingSelectedText = true;
+        try
+        {
+            branches.SelectedItem = _branchesToSelect?.FirstOrDefault(branch => branch.Name == text);
+            branches.Text = text;
+        }
+        finally
+        {
+            _settingSelectedText = false;
+        }
+
         OnSelectedValueChanged();
     }
 
@@ -113,7 +125,12 @@ public partial class BranchComboBox : GitExtensionsControl
     }
 
     private void branches_SelectedValueChanged(object? sender, EventArgs e)
-        => OnSelectedValueChanged();
+    {
+        if (!_settingSelectedText)
+        {
+            OnSelectedValueChanged();
+        }
+    }
 
     private void OnSelectedValueChanged() => SelectedValueChanged?.Invoke(this, EventArgs.Empty);
 }
