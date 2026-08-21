@@ -102,8 +102,9 @@ public partial class FormDiff : GitModuleForm
 
     private void PopulateDiffFiles()
     {
-        lblFirstCommit.Text = _firstCommitDisplayStr;
-        lblSecondCommit.Text = _secondCommitDisplayStr;
+        // Avalonia Label exposes its text through Content instead of WinForms Label.Text.
+        lblFirstCommit.Content = _firstCommitDisplayStr;
+        lblSecondCommit.Content = _secondCommitDisplayStr;
 
         // Bug in git-for-windows: Comparing working directory to any branch, fails, due to -R
         // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
@@ -269,8 +270,8 @@ public partial class FormDiff : GitModuleForm
 
     internal readonly struct TestAccessor(FormDiff form)
     {
-        internal TextBlock FirstCommit => form.lblFirstCommit;
-        internal TextBlock SecondCommit => form.lblSecondCommit;
+        internal Label FirstCommit => form.lblFirstCommit;
+        internal Label SecondCommit => form.lblSecondCommit;
         internal Button Swap => form.btnSwap;
         internal AvaloniaCheckBox CompareToMergeBase => form.ckCompareToMergeBase;
         internal Button CompareDirectories => form.btnCompareDirectoriesWithDiffTool;

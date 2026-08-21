@@ -161,10 +161,10 @@ internal sealed class AvaloniaControlTreeReader
             return null;
         }
 
-        object? value = GetPropertyValue(control, "Text")
-            ?? GetPropertyValue(control, "Content")
-            ?? GetPropertyValue(control, "Header");
-        return value is not string text
+        string? text = GetPropertyValue(control, "Text") as string
+            ?? GetPropertyValue(control, "Content") as string
+            ?? GetPropertyValue(control, "Header") as string;
+        return text is null
             ? string.Empty
             : control is MenuItem or Button or Label
                 ? ToWinFormsMnemonics(text)
@@ -416,6 +416,24 @@ internal sealed class AvaloniaControlTreeReader
         if (control is Separator)
         {
             return [];
+        }
+
+        if (control is Label)
+        {
+            // parity-scaffolding: Label.Content is the WinForms Label.Text value; Avalonia's
+            // generated AccessText is renderer infrastructure, not a second semantic control.
+            return [];
+        }
+
+        if (control is HeaderedContentControl)
+        {
+            // parity-scaffolding: The string Header is emitted on the owning semantic control;
+            // retain its product content but omit the generated header AccessText.
+            return control.GetLogicalChildren()
+                .OfType<Control>()
+                .Where(child => child is not AccessText
+                                && child.TemplatedParent is null
+                                && child.GetType().Name != "TopLevelHost");
         }
 
         if (IsPopupPresenter(control) || IsOverlayPopupHost(control))
