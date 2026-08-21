@@ -27,6 +27,10 @@ public sealed class SmallControlParityTests
         accessor.Branches.IsEditable.Should().BeTrue();
         control.IsRemoteBranchChecked.Should().BeFalse();
         control.SelectedBranchName.Should().BeEmpty();
+        accessor.LocalBranch.MinWidth.Should().Be(93);
+        accessor.Remotebranch.MinWidth.Should().Be(112);
+        accessor.Remotebranch.Margin.Left.Should().Be(2);
+        accessor.Remotebranch.Padding.Left.Should().Be(6);
     }
 
     [AvaloniaTest]
