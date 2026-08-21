@@ -49,6 +49,15 @@ public sealed partial class ParityScreenshotTests
         GetCaptureSize(typeof(SearchWindow<string>)).Should().Be((325, 213));
     }
 
+    [Test]
+    [Category(P02Category)]
+    public void Diff_patch_capture_hosts_should_use_96_dpi_designer_dimensions()
+    {
+        GetCaptureSize(typeof(FormDiff)).Should().Be((1042, 685));
+        GetCaptureSize(typeof(FormCompareToBranch)).Should().Be((434, 110));
+        GetCaptureSize(typeof(FormFormatPatch)).Should().Be((824, 532));
+    }
+
     [AvaloniaTest]
     [Category(P02Category)]
     public void Avalonia_tree_reader_should_measure_named_controls_from_their_nearest_semantic_owner()
