@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
+  "analyzedCommit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
   "axisOrder": [
     "structural",
     "functional",
@@ -5379,22 +5379,22 @@
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
+          "commit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 1302,
-          "note": "The fresh native-100 light/dark/custom matrix reduces this component by 630 diagnostics after restoring its integer runtime AutoSize geometry; exact parity remains open."
+          "findingCount": 1228,
+          "note": "The fresh native-100 light/dark/custom matrix reduces this component by another 74 diagnostics after restoring the runtime 434x106 AutoSize client and exact hosted-selector child geometry; exact parity remains open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
+          "commit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5455,13 +5455,15 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
+          "commit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormCompareToBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/inventory/FormCompareToBranch.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/tests/windows/p8.6i-progress17-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/tests/linux/p8.6i-progress17-focused-linux.trx"
           ],
           "platforms": [],
           "findingCount": 21,
-          "note": "The fresh scoped inventory and focused branch-selection tests cover the bounded correction, not exhaustive functional closure."
+          "note": "Focused Windows/Linux tests now cover both selected-commit and current-checkout count routes in addition to branch selection; the 21 scoped inventory findings and exhaustive functional closure remain open."
         },
         "visual": {
           "status": "gap",
@@ -5816,35 +5818,35 @@
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
+          "commit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 14055,
-          "note": "The fresh native-100 three-theme matrix reduces this component by 1,782 diagnostics after restoring its integer runtime AutoSize/header/split geometry; exact parity remains open."
+          "findingCount": 13893,
+          "note": "The fresh native-100 three-theme matrix reduces this component by another 162 diagnostics after restoring the group content inset, control-color header background, swap position, and split-panel margin semantics; exact parity remains open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
+          "commit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 4071,
-          "note": "The fresh three-theme paired matrix retains exact resolved-color findings."
+          "findingCount": 3783,
+          "note": "The fresh three-theme paired matrix removes 288 resolved-color findings after restoring the opaque WinForms control-color group surfaces; exact color closure remains open."
         },
         "behavioralState": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
+          "commit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -6120,15 +6122,15 @@
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
+          "commit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 4022,
-          "note": "The fresh native-100 three-theme matrix uses WinForms AutoScale's integer 120-to-96-DPI results and retains the reported visual findings."
+          "findingCount": 2348,
+          "note": "The fresh native-100 three-theme matrix removes 1,674 findings after restoring the complete integer 120-to-96-DPI table allocation, margins, child bounds, and tab order; exact parity remains open."
         },
         "themingAndColor": {
           "status": "gap",
@@ -6196,13 +6198,15 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
+          "commit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormFormatPatch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/inventory/FormFormatPatch.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/tests/windows/p8.6i-progress17-focused-windows.trx",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/tests/linux/p8.6i-progress17-focused-linux.trx"
           ],
           "platforms": [],
           "findingCount": 70,
-          "note": "The original load-handler identity and one/two/many range behavior are covered; exhaustive portal, persistence, error, and restart states stay open."
+          "note": "The original load-handler identity, one/two/many range behavior, and success/error message owner, caption, and icon metadata are covered on Windows and Linux; exhaustive portal, persistence, cancellation, and restart states stay open."
         },
         "visual": {
           "status": "gap",
@@ -28231,7 +28235,7 @@
           "findingCount": 52,
           "note": "Focused Windows/Linux tests verify both local-to-remote and remote-to-local reloads, containment, selection, and count behavior. All current findings are classified generated Designer/AXAML fields, framework events, comments, and dynamic translation identities; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
-        "visual": { "status": "gap", "verifiedOn": "2026-08-21", "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93", "evidence": ["eng/avalonia/parity-evidence/P8.6i/diff-patch-15/winforms/manifest.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/avalonia-final/manifest.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"], "platforms": ["windows"], "findingCount": 1302, "note": "The selector is measured in its real FormCompareToBranch owner across the native-100 light/dark/custom state matrix. The 1,302 count is the owning-form aggregate, not a claim that every diagnostic belongs to the selector; exact standalone and owner-state closure remain P8.6g.3b." },
+        "visual": { "status": "gap", "verifiedOn": "2026-08-21", "commit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1", "evidence": ["eng/avalonia/parity-evidence/P8.6i/diff-patch-15/winforms/manifest.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/avalonia-final/manifest.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-17/diff-final/findings.json"], "platforms": ["windows"], "findingCount": 1228, "note": "The selector is measured in its real FormCompareToBranch owner across the native-100 light/dark/custom state matrix. The owner aggregate drops to 1,228 after restoring the exact prompt alignment, ComboBox padding, and change-summary position; selector-only attribution and exact standalone/owner-state closure remain P8.6g.3b." },
         "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-21", "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93", "evidence": ["eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"], "platforms": ["windows"], "findingCount": 135, "note": "The embedded three-theme owner matrix retains 135 resolved-color findings for the complete FormCompareToBranch surface; selector-only color attribution and exact closure remain open." },
         "behavioralState": { "status": "partial", "verifiedOn": "2026-08-21", "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93", "evidence": ["eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/tests/windows/p8.6i-progress16-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/tests/linux/p8.6i-progress16-focused-linux.trx"], "platforms": ["windows", "linux"], "findingCount": 57, "note": "Focused owner behavior tests pass and the owner matrix retains 57 state findings. Exhaustive pointer/focus/disabled/dropdown/consumer states remain P8.6g.3b." },
         "platform": { "status": "partial", "verifiedOn": "2026-08-21", "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93", "evidence": ["eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/windows-final/smoke.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/wayland-final/smoke.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/x11-final/smoke.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/flatpak-final/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh isolated Windows, native Wayland, X11, and Wayland-only Flatpak smokes passed and screenshots were inspected; Flatpak used --filesystem=host. macOS and final live owner-state closure remain P8.6g.3b/P8.4." }
