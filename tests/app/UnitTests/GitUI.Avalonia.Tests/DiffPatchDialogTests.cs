@@ -84,7 +84,8 @@ public sealed class DiffPatchDialogTests
         diff.FindControl<Button>("btnAnotherFirstBranch")!.Height.Should().Be(22);
 
         compareToBranch.Width.Should().Be(434);
-        compareToBranch.Height.Should().Be(110);
+        // Runtime AutoSize resolves the Designer's 110-pixel client minimum to 106 pixels.
+        compareToBranch.Height.Should().Be(106);
         // The Designer's 60x23 minimum grows through WinForms AutoSize to 66x25 with the runtime font.
         compareToBranch.FindControl<Button>("btnCompare")!.Width.Should().Be(66);
         compareToBranch.FindControl<Button>("btnCompare")!.Height.Should().Be(25);
@@ -95,16 +96,17 @@ public sealed class DiffPatchDialogTests
         formatPatch.Height.Should().Be(532);
         formatPatch.MinWidth.Should().Be(446);
         formatPatch.MinHeight.Should().Be(316);
-        formatPatch.FindControl<Grid>("tableLayoutPanelForm")!.Margin.Left.Should().Be(3);
-        formatPatch.FindControl<Grid>("tableLayoutPanelForm")!.RowSpacing.Should().Be(3);
-        formatPatch.FindControl<Grid>("tableLayoutPanelSaveTo")!.ColumnSpacing.Should().Be(3);
+        formatPatch.FindControl<Grid>("tableLayoutPanelForm")!.Margin.Left.Should().Be(0);
+        formatPatch.FindControl<Grid>("tableLayoutPanelForm")!.RowSpacing.Should().Be(0);
+        formatPatch.FindControl<Grid>("tableLayoutPanelSaveTo")!.Margin.Left.Should().Be(3);
+        formatPatch.FindControl<Grid>("tableLayoutPanelSaveTo")!.ColumnSpacing.Should().Be(0);
         formatPatch.FindControl<Label>("lblPatches")!.Padding.Top.Should().Be(5);
         formatPatch.FindControl<TextBox>("OutputPath")!.Height.Should().Be(23);
         formatPatch.FindControl<Button>("Browse")!.Width.Should().Be(64);
         formatPatch.FindControl<Button>("Browse")!.Height.Should().Be(25);
         formatPatch.FindControl<Button>("FormatPatch")!.Width.Should().Be(140);
         formatPatch.FindControl<Button>("FormatPatch")!.Height.Should().Be(25);
-        formatPatch.FindControl<TextBlock>("CurrentBranch")!.Margin.Left.Should().Be(6);
+        formatPatch.FindControl<TextBlock>("CurrentBranch")!.Margin.Left.Should().Be(3);
     }
 
     [AvaloniaTest]
@@ -126,6 +128,10 @@ public sealed class DiffPatchDialogTests
             compare.Bounds.Y.Should().Be(78);
             compare.Bounds.Width.Should().Be(66);
             compare.Bounds.Height.Should().Be(25);
+            branchSelector.FindControl<Label>("label1")!.Bounds.X.Should().Be(12);
+            branchSelector.FindControl<Label>("label1")!.Bounds.Width.Should().Be(78);
+            branchSelector.FindControl<ComboBox>("Branches")!.Padding.Left.Should().Be(0);
+            branchSelector.FindControl<TextBlock>("lbChanges")!.Bounds.Y.Should().Be(35);
         }
         finally
         {
@@ -143,23 +149,65 @@ public sealed class DiffPatchDialogTests
             Dispatcher.UIThread.RunJobs();
             Grid settings = form.FindControl<Grid>("settingsLayoutPanel")!;
             GroupBox firstGroup = form.FindControl<GroupBox>("firstCommitGroup")!;
+            StackPanel firstPanel = form.FindControl<StackPanel>("firstCommitPanel")!;
+            Button swap = form.FindControl<Button>("btnSwap")!;
             StackPanel options = form.FindControl<StackPanel>("diffOptionsPanel")!;
             Grid split = form.FindControl<Grid>("splitContainer1")!;
             FileStatusList files = form.FindControl<FileStatusList>("DiffFiles")!;
 
-            settings.Bounds.X.Should().Be(3);
-            settings.Bounds.Y.Should().Be(3);
+            settings.Bounds.X.Should().Be(3, "the settings panel keeps the original left margin");
+            settings.Bounds.Y.Should().Be(3, "the settings panel keeps the original top margin");
             settings.Bounds.Height.Should().Be(106);
             firstGroup.Bounds.Height.Should().Be(50);
-            options.Bounds.X.Should().Be(3);
+            firstPanel.Bounds.X.Should().Be(3, "the first commit panel keeps the original group-box inset");
+            firstPanel.Bounds.Width.Should().Be(491);
+            swap.Bounds.Y.Should().Be(21);
+            options.Bounds.X.Should().Be(3, "the options panel keeps the original left margin");
             options.Bounds.Y.Should().Be(53);
             options.Bounds.Width.Should().Be(412);
             options.Bounds.Height.Should().Be(25);
-            split.Bounds.X.Should().Be(3);
+            split.Bounds.X.Should().Be(3, "the split panel keeps the original left margin");
             split.Bounds.Y.Should().Be(115);
             split.Bounds.Height.Should().Be(602);
+            split.Margin.Top.Should().Be(3, "the split panel records the original table-layout margin");
             files.Bounds.Width.Should().Be(345);
             files.Bounds.Height.Should().Be(602);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Format_patch_should_preserve_the_original_runtime_table_layout()
+    {
+        FormFormatPatch form = new();
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Grid root = form.FindControl<Grid>("tableLayoutPanelForm")!;
+            Grid saveTo = form.FindControl<Grid>("tableLayoutPanelSaveTo")!;
+            Label patches = form.FindControl<Label>("lblPatches")!;
+            TextBox output = form.FindControl<TextBox>("OutputPath")!;
+            Button browse = form.FindControl<Button>("Browse")!;
+            RevisionGridControl revisions = form.FindControl<RevisionGridControl>("RevisionGrid")!;
+            StackPanel branch = form.FindControl<StackPanel>("flowLayoutPanelBranch")!;
+            Button create = form.FindControl<Button>("FormatPatch")!;
+
+            root.Bounds.Should().Be(new Avalonia.Rect(0, 0, 824, 532));
+            saveTo.Bounds.Should().Be(new Avalonia.Rect(3, 3, 818, 28));
+            patches.Bounds.Should().Be(new Avalonia.Rect(3, 0, 40, 20));
+            output.Bounds.Should().Be(new Avalonia.Rect(49, 3, 696, 23));
+            browse.Bounds.Should().Be(new Avalonia.Rect(751, 3, 64, 25));
+            revisions.Bounds.Should().Be(new Avalonia.Rect(3, 37, 818, 456));
+            branch.Bounds.Should().Be(new Avalonia.Rect(3, 499, 672, 30));
+            create.Bounds.Should().Be(new Avalonia.Rect(681, 504, 140, 25));
+            output.TabIndex.Should().Be(0);
+            revisions.TabIndex.Should().Be(1);
+            branch.TabIndex.Should().Be(2);
+            create.TabIndex.Should().Be(3);
         }
         finally
         {
@@ -204,6 +252,29 @@ public sealed class DiffPatchDialogTests
 
         form.BranchName.Should().BeNull();
         form.DialogResult.Should().Be(WinFormsShims.DialogResult.None);
+    }
+
+    [AvaloniaTest]
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task Compare_to_branch_should_count_against_the_requested_commit(bool useCurrentCheckout)
+    {
+        ObjectId selectedCommit = ObjectId.Parse("2222222222222222222222222222222222222222");
+        ObjectId currentCheckout = ObjectId.Parse("3333333333333333333333333333333333333333");
+        ObjectId expectedCommit = useCurrentCheckout ? currentCheckout : selectedCommit;
+        IGitRef remoteBranch = Substitute.For<IGitRef>();
+        remoteBranch.Name.Returns("origin/main");
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetRefs(RefsFilter.Remotes).Returns([remoteBranch]);
+        module.GetCurrentCheckout().Returns(currentCheckout);
+        module.GetCommitCountString(expectedCommit, "origin/main").Returns("1 ahead, 2 behind");
+        FormCompareToBranch form = new(commands, useCurrentCheckout ? default : selectedCommit);
+        FormCompareToBranch.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.BranchSelector.GetTestAccessor().Branches.SelectedItem = "origin/main";
+        await WaitUntilAsync(() => accessor.BranchSelector.GetTestAccessor().Changes.Text == "1 ahead, 2 behind");
+
+        module.Received(1).GetCommitCountString(expectedCommit, "origin/main");
     }
 
     [AvaloniaTest]
@@ -311,6 +382,10 @@ public sealed class DiffPatchDialogTests
 
         module.Received(1).FormatPatch(parent.ToString(), head.ToString(), outputPath);
         _messageBoxes.Messages.Should().ContainSingle().Which.Should().Be("0001-parity.patch");
+        _messageBoxes.Requests.Should().ContainSingle().Which.Should().Match<MessageRequest>(
+            request => ReferenceEquals(request.Owner, form)
+                       && request.Caption == "Patch result"
+                       && request.Icon == WinFormsShims.MessageBoxIcon.Information);
     }
 
     [AvaloniaTest]
@@ -323,6 +398,7 @@ public sealed class DiffPatchDialogTests
 
         module.DidNotReceiveWithAnyArgs().FormatPatch(default!, default!, default!);
         _messageBoxes.Messages.Should().ContainSingle().Which.Should().Be("You need to enter an output path.");
+        _messageBoxes.Requests.Should().ContainSingle().Which.Caption.Should().Be("Error");
     }
 
     [AvaloniaTest]
@@ -354,6 +430,8 @@ public sealed class DiffPatchDialogTests
 
         module.DidNotReceiveWithAnyArgs().FormatPatch(default!, default!, default!);
         _messageBoxes.Messages.Should().ContainSingle().Which.Should().Be("You need to select at least one revision");
+        _messageBoxes.Requests.Should().ContainSingle().Which.Should().Match<MessageRequest>(
+            request => request.Caption == "Patch error" && request.Icon == WinFormsShims.MessageBoxIcon.Error);
     }
 
     [AvaloniaTest]
@@ -374,6 +452,8 @@ public sealed class DiffPatchDialogTests
 
         module.Received(1).FormatPatch(string.Empty, head.ToString(), outputPath);
         _messageBoxes.Messages.Should().ContainSingle().Which.Should().Be("Unable to create patch file(s)");
+        _messageBoxes.Requests.Should().ContainSingle().Which.Should().Match<MessageRequest>(
+            request => request.Caption == "Patch error" && request.Icon == WinFormsShims.MessageBoxIcon.Error);
     }
 
     [AvaloniaTest]
@@ -436,6 +516,22 @@ public sealed class DiffPatchDialogTests
             ParentIds = [ObjectId.Parse(new string(parentId, 40))],
         };
 
+    private static async Task WaitUntilAsync(Func<bool> condition)
+    {
+        for (int retry = 0; retry < 100; retry++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            if (condition())
+            {
+                return;
+            }
+
+            await Task.Delay(10);
+        }
+
+        throw new TimeoutException("The expected asynchronous dialog state was not reached.");
+    }
+
     private static void Invoke(object target, string methodName, params object[] arguments)
     {
         MethodInfo method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic)
@@ -458,6 +554,7 @@ public sealed class DiffPatchDialogTests
     private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
     {
         public List<string> Messages { get; } = [];
+        public List<MessageRequest> Requests { get; } = [];
 
         public WinFormsShims.DialogResult Show(
             WinFormsShims.IWin32Window? owner,
@@ -468,9 +565,16 @@ public sealed class DiffPatchDialogTests
             WinFormsShims.MessageBoxDefaultButton defaultButton)
         {
             Messages.Add(text ?? string.Empty);
+            Requests.Add(new MessageRequest(owner, text, caption, icon));
             return WinFormsShims.DialogResult.OK;
         }
     }
+
+    private sealed record MessageRequest(
+        WinFormsShims.IWin32Window? Owner,
+        string? Text,
+        string? Caption,
+        WinFormsShims.MessageBoxIcon Icon);
 
     private sealed class StubFolderPicker : WinFormsShims.IFolderPicker
     {
