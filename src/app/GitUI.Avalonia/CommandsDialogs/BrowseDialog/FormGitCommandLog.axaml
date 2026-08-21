@@ -10,70 +10,140 @@
   <Grid RowDefinitions="*,Auto">
     <commandsDialogs:FullBleedTabControl x:Name="TabControl"
                                          Grid.Row="0"
-                                         Padding="0">
-      <TabItem x:Name="tabPageCommandLog" Header="Command log">
-        <Grid x:Name="splitContainer2" RowDefinitions="264*,5,150*">
+                                         Margin="0,3,0,0"
+                                         Padding="0"
+                                         TabIndex="1">
+      <TabItem x:Name="tabPageCommandLog"
+               Classes="gitextensions-dialog-tab"
+               Background="{DynamicResource GitExtensionsKnownColorControlLightBrush}"
+               Header="Command log"
+               TabIndex="0">
+        <TabItem.ContextMenu>
+          <ContextMenu x:Name="contextMenu">
+            <MenuItem x:Name="mnuSaveToFile" Header="_Save to file" InputGesture="Ctrl+S">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="mnuCopyCommandLine" Header="_Copy full command line" InputGesture="Ctrl+C">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="mnuClear" Header="C_lear" InputGesture="Ctrl+L">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ClearLog}" /></MenuItem.Icon>
+            </MenuItem>
+          </ContextMenu>
+        </TabItem.ContextMenu>
+        <Grid x:Name="splitContainer2"
+              RowDefinitions="*,4,150"
+              Margin="1,0,1,1"
+              TabIndex="1">
           <ListBox x:Name="LogItems"
                    Grid.Row="0"
-                   FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}">
-            <ListBox.ContextMenu>
-              <ContextMenu x:Name="contextMenu">
-                <MenuItem x:Name="mnuSaveToFile" Header="_Save to file" InputGesture="Ctrl+S">
-                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
-                </MenuItem>
-                <MenuItem x:Name="mnuCopyCommandLine" Header="_Copy full command line" InputGesture="Ctrl+C">
-                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
-                </MenuItem>
-                <MenuItem x:Name="mnuClear" Header="C_lear" InputGesture="Ctrl+L">
-                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ClearLog}" /></MenuItem.Icon>
-                </MenuItem>
-              </ContextMenu>
-            </ListBox.ContextMenu>
+                   Padding="0"
+                   BorderThickness="0"
+                   Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+                   Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+                   Focusable="True"
+                   FontFamily="{DynamicResource GitExtensionsGenericMonospaceFontFamily}"
+                   FontSize="12"
+                   TabIndex="0">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="MinHeight" Value="15" />
+                <Setter Property="Padding" Value="0" />
+              </Style>
+            </ListBox.Styles>
           </ListBox>
           <GridSplitter Grid.Row="1"
-                        Height="5"
+                        Height="4"
+                        MinHeight="4"
                         ResizeDirection="Rows" />
           <TextBox x:Name="LogOutput"
                    Grid.Row="2"
+                   Padding="0"
+                   BorderThickness="0"
+                   Background="{DynamicResource GitExtensionsKnownColorControlLightBrush}"
                    IsReadOnly="True"
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
-                   FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}" />
+                   FontFamily="{DynamicResource GitExtensionsGenericMonospaceFontFamily}"
+                   FontSize="12"
+                   TabIndex="0" />
         </Grid>
       </TabItem>
-      <TabItem x:Name="tabPageCommandCache" Header="Command cache">
-        <Grid x:Name="splitContainer1" RowDefinitions="183*,5,231*">
+      <TabItem x:Name="tabPageCommandCache"
+               Classes="gitextensions-dialog-tab"
+               Background="{DynamicResource GitExtensionsKnownColorControlLightBrush}"
+               Header="Command cache"
+               TabIndex="1">
+        <TabItem.ContextMenu>
+          <ContextMenu x:Name="cmsCache">
+            <MenuItem x:Name="tsmiClearCache" Header="C_lear" InputGesture="Ctrl+L">
+              <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ClearLog}" /></MenuItem.Icon>
+            </MenuItem>
+          </ContextMenu>
+        </TabItem.ContextMenu>
+        <Grid x:Name="splitContainer1"
+              RowDefinitions="183*,4,231*"
+              Margin="1,0,1,1"
+              TabIndex="0">
           <ListBox x:Name="CommandCacheItems"
                    Grid.Row="0"
-                   FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}">
-            <ListBox.ContextMenu>
-              <ContextMenu x:Name="cmsCache">
-                <MenuItem x:Name="tsmiClearCache" Header="C_lear" InputGesture="Ctrl+L">
-                  <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ClearLog}" /></MenuItem.Icon>
-                </MenuItem>
-              </ContextMenu>
-            </ListBox.ContextMenu>
+                   Padding="0"
+                   BorderThickness="0"
+                   Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+                   Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
+                   Focusable="True"
+                   FontFamily="{DynamicResource GitExtensionsGenericMonospaceFontFamily}"
+                   FontSize="12"
+                   TabIndex="0">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="MinHeight" Value="15" />
+                <Setter Property="Padding" Value="0" />
+              </Style>
+            </ListBox.Styles>
           </ListBox>
           <GridSplitter Grid.Row="1"
-                        Height="5"
+                        Height="4"
+                        MinHeight="4"
                         ResizeDirection="Rows" />
           <TextBox x:Name="commandCacheOutput"
                    Grid.Row="2"
+                   Padding="0"
+                   BorderThickness="0"
+                   Background="{DynamicResource GitExtensionsKnownColorControlLightBrush}"
                    IsReadOnly="True"
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
-                   FontFamily="{DynamicResource GitExtensionsMonospaceFontFamily}" />
+                   FontFamily="{DynamicResource GitExtensionsGenericMonospaceFontFamily}"
+                   FontSize="12"
+                   TabIndex="0" />
         </Grid>
       </TabItem>
     </commandsDialogs:FullBleedTabControl>
 
-    <StackPanel Grid.Row="1"
-                Orientation="Horizontal"
-                Margin="4,3"
-                Spacing="6">
-      <CheckBox x:Name="chkAlwaysOnTop" Content="Always on top" />
-      <CheckBox x:Name="chkWordWrap" Content="Word wrap" IsChecked="True" />
-      <CheckBox x:Name="chkCaptureCallStacks" Content="Capture call stacks" />
-    </StackPanel>
+    <Canvas Grid.Row="1" Height="25">
+      <CheckBox x:Name="chkAlwaysOnTop"
+                Canvas.Left="4"
+                Canvas.Top="4"
+                Width="101"
+                Height="19"
+                Content="Always on top"
+                TabIndex="2" />
+      <CheckBox x:Name="chkWordWrap"
+                Canvas.Left="104"
+                Canvas.Top="4"
+                Width="84"
+                Height="19"
+                Content="Word wrap"
+                IsChecked="True"
+                TabIndex="3" />
+      <CheckBox x:Name="chkCaptureCallStacks"
+                Canvas.Left="191"
+                Canvas.Top="3"
+                Width="124"
+                Height="19"
+                Content="Capture call stacks"
+                TabIndex="4" />
+    </Canvas>
   </Grid>
 </Window>

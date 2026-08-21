@@ -29,8 +29,8 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
         gitGUIToolStripMenuItem.Click += GitGuiToolStripMenuItemClick;
         kGitToolStripMenuItem.Click += KGitToolStripMenuItemClick;
 
-        // The original menu item carries a static Keys.F12 accelerator; the twin displays it.
-        // Global execution while the submenu is closed is owned by FormBrowse re-verification.
+        // The original menu item carries a static Keys.F12 accelerator; FormBrowse routes it
+        // while this submenu is closed because Avalonia otherwise only displays the gesture.
         gitcommandLogToolStripMenuItem.InputGesture = new KeyGesture(Key.F12);
         gitcommandLogToolStripMenuItem.Click += GitcommandLogToolStripMenuItemClick;
         settingsToolStripMenuItem.Click += OnShowSettingsClick;

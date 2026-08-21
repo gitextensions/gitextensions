@@ -10,18 +10,29 @@
         WindowStartupLocation="CenterOwner"
         Title="Diff">
   <Grid x:Name="splitContainer1"
-        RowDefinitions="205*,5,319*">
-    <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="0" />
+        RowDefinitions="205,4,*"
+        TabIndex="0">
+    <gitui:RevisionGridControl x:Name="RevisionGrid"
+                               Grid.Row="0"
+                               TabIndex="1" />
     <GridSplitter Grid.Row="1"
-                  Height="5"
+                  Height="4"
+                  MinHeight="4"
                   ResizeDirection="Rows" />
     <Grid x:Name="splitContainer3"
           Grid.Row="2"
-          ColumnDefinitions="188,4,*">
-      <gitui:FileStatusList x:Name="DiffFiles" Grid.Column="0" />
+          ColumnDefinitions="188,4,*"
+          TabIndex="1">
+      <gitui:FileStatusList x:Name="DiffFiles"
+                            Grid.Column="0"
+                            TabIndex="0" />
       <GridSplitter Grid.Column="1"
+                    Width="4"
+                    MinWidth="4"
                     ResizeDirection="Columns" />
-      <editor:FileViewer x:Name="diffViewer" Grid.Column="2" />
+      <editor:FileViewer x:Name="diffViewer"
+                         Grid.Column="2"
+                         TabIndex="1" />
     </Grid>
   </Grid>
 </Window>
