@@ -11,7 +11,7 @@ using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 using AvaloniaCheckBox = Avalonia.Controls.CheckBox;
-using AvaloniaToolTip = Avalonia.Controls.ToolTip;
+using ToolTip = GitUI.Compat.Components.ToolTip;
 
 namespace GitUI.CommandsDialogs;
 
@@ -31,7 +31,7 @@ public partial class FormDiff : GitModuleForm
     private readonly CancellationTokenSequence _populateDiffFilesSequence = new();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
 
-    private readonly AvaloniaToolTip _toolTipControl = new();
+    private readonly ToolTip _toolTipControl = new();
 
     private readonly TranslationString _anotherBranchTooltip = new("Select another branch");
     private readonly TranslationString _anotherCommitTooltip = new("Select another commit");
@@ -52,12 +52,11 @@ public partial class FormDiff : GitModuleForm
 
         InitializeComplete();
 
-        // Avalonia exposes tooltips as attached properties rather than a ToolTip component.
-        Avalonia.Controls.ToolTip.SetTip(btnAnotherFirstBranch, _anotherBranchTooltip.Text);
-        Avalonia.Controls.ToolTip.SetTip(btnAnotherSecondBranch, _anotherBranchTooltip.Text);
-        Avalonia.Controls.ToolTip.SetTip(btnAnotherFirstCommit, _anotherCommitTooltip.Text);
-        Avalonia.Controls.ToolTip.SetTip(btnAnotherSecondCommit, _anotherCommitTooltip.Text);
-        Avalonia.Controls.ToolTip.SetTip(btnSwap, _btnSwapTooltip.Text);
+        _toolTipControl.SetToolTip(btnAnotherFirstBranch, _anotherBranchTooltip.Text);
+        _toolTipControl.SetToolTip(btnAnotherSecondBranch, _anotherBranchTooltip.Text);
+        _toolTipControl.SetToolTip(btnAnotherFirstCommit, _anotherCommitTooltip.Text);
+        _toolTipControl.SetToolTip(btnAnotherSecondCommit, _anotherCommitTooltip.Text);
+        _toolTipControl.SetToolTip(btnSwap, _btnSwapTooltip.Text);
 
         _firstRevision = new GitRevision(firstId);
         _secondRevision = new GitRevision(secondId);

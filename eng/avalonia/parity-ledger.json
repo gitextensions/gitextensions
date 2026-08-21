@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+  "analyzedCommit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
   "axisOrder": [
     "structural",
     "functional",
@@ -5357,9 +5357,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormCompareToBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormCompareToBranch.json"
           ],
           "platforms": [],
           "findingCount": 9,
@@ -5368,9 +5368,9 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormCompareToBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormCompareToBranch.json"
           ],
           "platforms": [],
           "findingCount": 21,
@@ -5379,22 +5379,22 @@
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 1932,
-          "note": "The fresh native-100 light/dark/custom paired matrix retains visual findings for this component."
+          "findingCount": 1302,
+          "note": "The fresh native-100 light/dark/custom matrix reduces this component by 630 diagnostics after restoring its integer runtime AutoSize geometry; exact parity remains open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5405,9 +5405,9 @@
         "behavioralState": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5418,12 +5418,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/flatpak-final/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -5444,9 +5444,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormCompareToBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormCompareToBranch.json"
           ],
           "platforms": [],
           "findingCount": 9,
@@ -5455,9 +5455,9 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormCompareToBranch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormCompareToBranch.json"
           ],
           "platforms": [],
           "findingCount": 21,
@@ -5466,22 +5466,22 @@
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 1932,
-          "note": "The fresh native-100 light/dark/custom paired matrix retains visual findings for this component."
+          "findingCount": 1302,
+          "note": "The fresh native-100 light/dark/custom matrix reduces this component by 630 diagnostics after restoring its integer runtime AutoSize geometry; exact parity remains open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5492,9 +5492,9 @@
         "behavioralState": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5505,12 +5505,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/flatpak-final/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -5794,44 +5794,44 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormDiff.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormDiff.json"
           ],
           "platforms": [],
-          "findingCount": 47,
+          "findingCount": 46,
           "note": "The fresh scoped inventory retains generic-XAML and framework member representation differences."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormDiff.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormDiff.json"
           ],
           "platforms": [],
-          "findingCount": 122,
-          "note": "Original member ordering and handler signatures are restored; the remaining scoped inventory and exhaustive action matrix stay open."
+          "findingCount": 121,
+          "note": "Original member ordering, handler signatures, and ToolTip component call shape are restored; the remaining scoped inventory and exhaustive action matrix stay open."
         },
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 15837,
-          "note": "The fresh native-100 three-theme matrix retains visual findings after restoring source-authored header and button metrics."
+          "findingCount": 14055,
+          "note": "The fresh native-100 three-theme matrix reduces this component by 1,782 diagnostics after restoring its integer runtime AutoSize/header/split geometry; exact parity remains open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5842,9 +5842,9 @@
         "behavioralState": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5855,12 +5855,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/flatpak-final/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -5881,44 +5881,44 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormDiff.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormDiff.json"
           ],
           "platforms": [],
-          "findingCount": 47,
+          "findingCount": 46,
           "note": "The fresh scoped inventory retains generic-XAML and framework member representation differences."
         },
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormDiff.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormDiff.json"
           ],
           "platforms": [],
-          "findingCount": 122,
-          "note": "Original member ordering and handler signatures are restored; the remaining scoped inventory and exhaustive action matrix stay open."
+          "findingCount": 121,
+          "note": "Original member ordering, handler signatures, and ToolTip component call shape are restored; the remaining scoped inventory and exhaustive action matrix stay open."
         },
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 15837,
-          "note": "The fresh native-100 three-theme matrix retains visual findings after restoring source-authored header and button metrics."
+          "findingCount": 14055,
+          "note": "The fresh native-100 three-theme matrix reduces this component by 1,782 diagnostics after restoring its integer runtime AutoSize/header/split geometry; exact parity remains open."
         },
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5929,9 +5929,9 @@
         "behavioralState": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5942,12 +5942,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/flatpak-final/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -6098,9 +6098,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormFormatPatch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormFormatPatch.json"
           ],
           "platforms": [],
           "findingCount": 28,
@@ -6109,9 +6109,9 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormFormatPatch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormFormatPatch.json"
           ],
           "platforms": [],
           "findingCount": 70,
@@ -6120,9 +6120,9 @@
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -6133,9 +6133,9 @@
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -6146,9 +6146,9 @@
         "behavioralState": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -6159,12 +6159,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/flatpak-final/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -6185,9 +6185,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormFormatPatch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormFormatPatch.json"
           ],
           "platforms": [],
           "findingCount": 28,
@@ -6196,9 +6196,9 @@
         "functional": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/inventory/FormFormatPatch.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/FormFormatPatch.json"
           ],
           "platforms": [],
           "findingCount": 70,
@@ -6207,9 +6207,9 @@
         "visual": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -6220,9 +6220,9 @@
         "themingAndColor": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -6233,9 +6233,9 @@
         "behavioralState": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/diff-final4/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"
           ],
           "platforms": [
             "windows"
@@ -6246,12 +6246,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "bcc23d206dd6ffcd4439811fc02ee853ab6956cc",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/windows-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/wayland-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/x11-final/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/diff-patch-15/runtime/flatpak-final/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/flatpak-final/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -28205,14 +28205,14 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-21",
+          "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/inventory/BranchSelector.json"
           ],
           "platforms": [],
           "findingCount": 17,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "note": "The fresh scoped inventory retains 17 structural/member representation differences."
         },
         "functional": {
           "status": "verified",
@@ -28231,10 +28231,10 @@
           "findingCount": 52,
           "note": "Focused Windows/Linux tests verify both local-to-remote and remote-to-local reloads, containment, selection, and count behavior. All current findings are classified generated Designer/AXAML fields, framework events, comments, and dynamic translation identities; exact structure and visual/theme/exhaustive-state closure remain P8.6g.3."
         },
-        "visual": { "status": "gap", "verifiedOn": "2026-08-20", "commit": "8e4f01c0ceb570655bcdfcdae97898729ff1bb9a", "evidence": ["eng/avalonia/parity-evidence/P8.6i/dimensional-provenance-11/winforms-native100-accepted/manifest.json", "eng/avalonia/parity-evidence/P8.6i/dimensional-provenance-11/avalonia-native100/manifest.json", "eng/avalonia/parity-evidence/P8.6i/dimensional-provenance-11/diff-native100/findings.json"], "platforms": ["windows"], "findingCount": 298, "note": "Three native-100% light/dark/custom pairs use the original 325x54 Designer geometry one-to-one in Avalonia DIPs, replacing the earlier native-125% capture-normalized values. The 298 current diagnostics and exhaustive state/other-scale closure remain P8.6g.3b." },
-        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 219, "note": "Light, dark, and custom native-125% pairs retain 219 resolved-color diagnostics for P8.6g.3b; none were suppressed." },
-        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/windows-focused/p8.6g.3a-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/linux-focused/p8.6g.3a-focused-linux.trx"], "platforms": ["windows", "linux-wayland", "linux-x11"], "findingCount": 90, "note": "Normal, local-selected, and remote-selected paired states plus focused branch behavior tests pass. Exhaustive pointer/focus/disabled/dropdown/consumer states remain P8.6g.3b." },
-        "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh isolated Windows, native Wayland, X11, and Wayland-only Flatpak smokes passed and screenshots were inspected; Flatpak used --filesystem=host. macOS and final live owner-state closure remain P8.6g.3b/P8.4." }
+        "visual": { "status": "gap", "verifiedOn": "2026-08-21", "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93", "evidence": ["eng/avalonia/parity-evidence/P8.6i/diff-patch-15/winforms/manifest.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/avalonia-final/manifest.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"], "platforms": ["windows"], "findingCount": 1302, "note": "The selector is measured in its real FormCompareToBranch owner across the native-100 light/dark/custom state matrix. The 1,302 count is the owning-form aggregate, not a claim that every diagnostic belongs to the selector; exact standalone and owner-state closure remain P8.6g.3b." },
+        "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-21", "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93", "evidence": ["eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json"], "platforms": ["windows"], "findingCount": 135, "note": "The embedded three-theme owner matrix retains 135 resolved-color findings for the complete FormCompareToBranch surface; selector-only color attribution and exact closure remain open." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-21", "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93", "evidence": ["eng/avalonia/parity-evidence/P8.6i/diff-patch-16/diff-final/findings.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/tests/windows/p8.6i-progress16-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/tests/linux/p8.6i-progress16-focused-linux.trx"], "platforms": ["windows", "linux"], "findingCount": 57, "note": "Focused owner behavior tests pass and the owner matrix retains 57 state findings. Exhaustive pointer/focus/disabled/dropdown/consumer states remain P8.6g.3b." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-21", "commit": "22522b54c2c8fd546dba4ef3fe586b61e2605a93", "evidence": ["eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/windows-final/smoke.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/wayland-final/smoke.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/x11-final/smoke.json", "eng/avalonia/parity-evidence/P8.6i/diff-patch-16/runtime/flatpak-final/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh isolated Windows, native Wayland, X11, and Wayland-only Flatpak smokes passed and screenshots were inspected; Flatpak used --filesystem=host. macOS and final live owner-state closure remain P8.6g.3b/P8.4." }
       }
     },
     {
