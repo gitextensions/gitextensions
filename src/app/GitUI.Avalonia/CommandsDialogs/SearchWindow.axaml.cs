@@ -25,11 +25,13 @@ public partial class SearchWindow : GitExtensionsFormBase
         }
     }
 
-    protected ContentControl SearchControlHost => searchControlHost;
+    protected ContentControl SearchControlHost => tableLayoutPanel1.Children
+        .OfType<ContentControl>()
+        .Single(control => Grid.GetRow(control) == 1);
 
     protected Grid SearchTableLayoutPanel => tableLayoutPanel1;
 
-    protected TextBlock SearchPromptLabel => lblEnterFileName;
+    protected Label SearchPromptLabel => lblEnterFileName;
 }
 
 public partial class SearchWindow<T> : SearchWindow where T : class
@@ -60,7 +62,7 @@ public partial class SearchWindow<T> : SearchWindow where T : class
 
     private void OnChildSizeChanged(AvaloniaSize newSize)
     {
-        double labelHeight = (SearchPromptLabel.Parent as Control)?.Bounds.Height ?? SearchPromptLabel.Bounds.Height;
+        double labelHeight = Math.Max(24, SearchPromptLabel.Bounds.Height);
         SearchTableLayoutPanel.Width = newSize.Width;
         Width = newSize.Width;
         SearchTableLayoutPanel.Height = newSize.Height + labelHeight;
