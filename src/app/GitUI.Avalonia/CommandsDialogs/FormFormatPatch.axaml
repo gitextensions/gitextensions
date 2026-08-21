@@ -33,7 +33,7 @@
                Height="23"
                Margin="3"
                Padding="0"
-               TabIndex="0"
+               TabIndex="1"
                VerticalAlignment="Top"
                VerticalContentAlignment="Center" />
       <Button x:Name="Browse"
@@ -42,7 +42,7 @@
               Height="25"
               Margin="3"
               Padding="0"
-              TabIndex="0"
+              TabIndex="2"
               VerticalAlignment="Top"
               Content="Browse" />
     </Grid>
@@ -59,16 +59,19 @@
                 Margin="3"
                 Orientation="Horizontal"
                 TabIndex="2">
-      <TextBlock x:Name="SelectedBranch"
-                 Height="15"
-                 Margin="3,0"
-                 Padding="3,0,4,0"
-                 TabIndex="0"
-                 Text="Branch" />
-      <TextBlock x:Name="CurrentBranch"
-                 Height="15"
-                 Margin="3,0"
-                 TabIndex="0" />
+      <Label x:Name="SelectedBranch"
+             Height="15"
+             Margin="3,0"
+             Padding="0"
+             TabIndex="0"
+             VerticalAlignment="Top"
+             Content="Branch" />
+      <Label x:Name="CurrentBranch"
+             Height="15"
+             Margin="3,0"
+             Padding="0"
+             TabIndex="1"
+             VerticalAlignment="Top" />
     </StackPanel>
     <Button x:Name="FormatPatch"
             Grid.Row="2"

@@ -44,7 +44,9 @@ public partial class FormFormatPatch : GitModuleForm
     {
         OutputPath.Text = AppSettings.LastFormatPatchDir;
         string selectedHead = Module.GetSelectedBranch();
-        SelectedBranch.Text = _currentBranchText.Text + " " + selectedHead;
+
+        // Avalonia Label exposes its text through Content instead of WinForms Label.Text.
+        SelectedBranch.Content = _currentBranchText.Text + " " + selectedHead;
 
         OutputPath.TextChanged += OutputPath_TextChanged;
 
@@ -150,6 +152,6 @@ public partial class FormFormatPatch : GitModuleForm
         internal Button Browse => form.Browse;
         internal Button FormatPatch => form.FormatPatch;
         internal RevisionGridControl RevisionGrid => form.RevisionGrid;
-        internal TextBlock SelectedBranch => form.SelectedBranch;
+        internal Label SelectedBranch => form.SelectedBranch;
     }
 }

@@ -106,7 +106,7 @@ public sealed class DiffPatchDialogTests
         formatPatch.FindControl<Button>("Browse")!.Height.Should().Be(25);
         formatPatch.FindControl<Button>("FormatPatch")!.Width.Should().Be(140);
         formatPatch.FindControl<Button>("FormatPatch")!.Height.Should().Be(25);
-        formatPatch.FindControl<TextBlock>("CurrentBranch")!.Margin.Left.Should().Be(3);
+        formatPatch.FindControl<Label>("CurrentBranch")!.Margin.Left.Should().Be(3);
     }
 
     [AvaloniaTest]
@@ -128,10 +128,16 @@ public sealed class DiffPatchDialogTests
             compare.Bounds.Y.Should().Be(78);
             compare.Bounds.Width.Should().Be(66);
             compare.Bounds.Height.Should().Be(25);
+            branchSelector.TabIndex.Should().Be(0);
+            compare.TabIndex.Should().Be(1);
             branchSelector.FindControl<Label>("label1")!.Bounds.X.Should().Be(12);
             branchSelector.FindControl<Label>("label1")!.Bounds.Width.Should().Be(78);
+            branchSelector.FindControl<RadioButton>("LocalBranch")!.TabIndex.Should().Be(0);
+            branchSelector.FindControl<RadioButton>("Remotebranch")!.TabIndex.Should().Be(0);
             branchSelector.FindControl<ComboBox>("Branches")!.Padding.Left.Should().Be(0);
+            branchSelector.FindControl<ComboBox>("Branches")!.TabIndex.Should().Be(1);
             branchSelector.FindControl<TextBlock>("lbChanges")!.Bounds.Y.Should().Be(35);
+            branchSelector.FindControl<TextBlock>("lbChanges")!.TabIndex.Should().Be(30);
         }
         finally
         {
@@ -159,6 +165,10 @@ public sealed class DiffPatchDialogTests
             settings.Bounds.Y.Should().Be(3, "the settings panel keeps the original top margin");
             settings.Bounds.Height.Should().Be(106);
             firstGroup.Bounds.Height.Should().Be(50);
+            form.FindControl<Label>("lblFirstCommit")!.Bounds.Should().Be(new Avalonia.Rect(3, 6, 200, 15));
+            form.FindControl<Label>("lblSecondCommit")!.Bounds.Should().Be(new Avalonia.Rect(3, 6, 200, 15));
+            form.FindControl<Label>("lblFirstCommit")!.TabIndex.Should().Be(14);
+            form.FindControl<Label>("lblSecondCommit")!.TabIndex.Should().Be(1);
             firstPanel.Bounds.X.Should().Be(3, "the first commit panel keeps the original group-box inset");
             firstPanel.Bounds.Width.Should().Be(491);
             swap.Bounds.Y.Should().Be(21);
@@ -172,6 +182,14 @@ public sealed class DiffPatchDialogTests
             split.Margin.Top.Should().Be(3, "the split panel records the original table-layout margin");
             files.Bounds.Width.Should().Be(345);
             files.Bounds.Height.Should().Be(602);
+            files.TabIndex.Should().Be(0);
+            form.FindControl<Button>("btnAnotherFirstBranch")!.TabIndex.Should().Be(7);
+            form.FindControl<Button>("btnAnotherFirstCommit")!.TabIndex.Should().Be(10);
+            form.FindControl<Button>("btnAnotherSecondBranch")!.TabIndex.Should().Be(16);
+            form.FindControl<Button>("btnAnotherSecondCommit")!.TabIndex.Should().Be(17);
+            swap.TabIndex.Should().Be(6);
+            form.FindControl<CheckBox>("ckCompareToMergeBase")!.TabIndex.Should().Be(9);
+            form.FindControl<Button>("btnCompareDirectoriesWithDiffTool")!.TabIndex.Should().Be(10);
         }
         finally
         {
@@ -204,9 +222,20 @@ public sealed class DiffPatchDialogTests
             revisions.Bounds.Should().Be(new Avalonia.Rect(3, 37, 818, 456));
             branch.Bounds.Should().Be(new Avalonia.Rect(3, 499, 672, 30));
             create.Bounds.Should().Be(new Avalonia.Rect(681, 504, 140, 25));
-            output.TabIndex.Should().Be(0);
+            Label selectedBranch = form.FindControl<Label>("SelectedBranch")!;
+            Label currentBranch = form.FindControl<Label>("CurrentBranch")!;
+            selectedBranch.Bounds.X.Should().Be(3);
+            selectedBranch.Bounds.Y.Should().Be(0);
+            selectedBranch.Bounds.Height.Should().Be(15);
+            currentBranch.Bounds.X.Should().BeGreaterThan(selectedBranch.Bounds.Right);
+            currentBranch.Bounds.Y.Should().Be(0);
+            currentBranch.Bounds.Height.Should().Be(15);
+            output.TabIndex.Should().Be(1);
+            browse.TabIndex.Should().Be(2);
             revisions.TabIndex.Should().Be(1);
             branch.TabIndex.Should().Be(2);
+            selectedBranch.TabIndex.Should().Be(0);
+            currentBranch.TabIndex.Should().Be(1);
             create.TabIndex.Should().Be(3);
         }
         finally
@@ -358,9 +387,86 @@ public sealed class DiffPatchDialogTests
         accessor.Swap.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         accessor.CompareDirectories.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
-        accessor.FirstCommit.Text.Should().Be("HEAD");
-        accessor.SecondCommit.Text.Should().Be("HEAD~1");
+        accessor.FirstCommit.Content.Should().Be("HEAD");
+        accessor.SecondCommit.Content.Should().Be("HEAD~1");
         module.Received(1).OpenWithDifftoolDirDiff(head.ToString(), parent.ToString(), customTool: null);
+    }
+
+    [AvaloniaTest]
+    public async Task Diff_should_cancel_an_obsolete_file_population_when_restarted()
+    {
+        ObjectId parent = ObjectId.Parse("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        ObjectId head = ObjectId.Parse("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetCurrentCheckout().Returns(head);
+        module.GetMergeBase(parent, head).Returns(parent);
+        CancellationToken firstToken = default;
+        ManualResetEventSlim firstCallStarted = new();
+        int callCount = 0;
+        module.GetDiffFilesWithSubmodulesStatus(
+                Arg.Any<ObjectId>(),
+                Arg.Any<ObjectId>(),
+                Arg.Any<ObjectId>(),
+                Arg.Any<bool>(),
+                Arg.Any<UntrackedFilesMode>(),
+                Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                CancellationToken token = callInfo.ArgAt<CancellationToken>(5);
+                if (Interlocked.Increment(ref callCount) == 1)
+                {
+                    firstToken = token;
+                    firstCallStarted.Set();
+                    token.WaitHandle.WaitOne(TimeSpan.FromSeconds(5));
+                    token.ThrowIfCancellationRequested();
+                }
+
+                return [];
+            });
+        FormDiff form = new(commands, parent, head, "HEAD~1", "HEAD");
+
+        Invoke(form, "PopulateDiffFiles");
+        await WaitUntilAsync(() => firstCallStarted.IsSet);
+        Invoke(form, "PopulateDiffFiles");
+        await WaitUntilAsync(() => firstToken.IsCancellationRequested && Volatile.Read(ref callCount) >= 2);
+
+        firstToken.IsCancellationRequested.Should().BeTrue();
+        form.Close();
+    }
+
+    [AvaloniaTest]
+    public async Task Diff_should_cancel_file_population_when_closed()
+    {
+        ObjectId parent = ObjectId.Parse("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        ObjectId head = ObjectId.Parse("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetCurrentCheckout().Returns(head);
+        module.GetMergeBase(parent, head).Returns(parent);
+        CancellationToken populationToken = default;
+        ManualResetEventSlim callStarted = new();
+        module.GetDiffFilesWithSubmodulesStatus(
+                Arg.Any<ObjectId>(),
+                Arg.Any<ObjectId>(),
+                Arg.Any<ObjectId>(),
+                Arg.Any<bool>(),
+                Arg.Any<UntrackedFilesMode>(),
+                Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                populationToken = callInfo.ArgAt<CancellationToken>(5);
+                callStarted.Set();
+                populationToken.WaitHandle.WaitOne(TimeSpan.FromSeconds(5));
+                populationToken.ThrowIfCancellationRequested();
+                return [];
+            });
+        FormDiff form = new(commands, parent, head, "HEAD~1", "HEAD");
+        form.Show();
+
+        await WaitUntilAsync(() => callStarted.IsSet);
+        form.Close();
+        await WaitUntilAsync(() => populationToken.IsCancellationRequested);
+
+        populationToken.IsCancellationRequested.Should().BeTrue();
     }
 
     [AvaloniaTest]
