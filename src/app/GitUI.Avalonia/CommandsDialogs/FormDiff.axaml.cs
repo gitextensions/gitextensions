@@ -4,6 +4,7 @@ using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Shims.WinForms;
+using GitUI.Compat;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -29,7 +30,6 @@ public partial class FormDiff : GitModuleForm
     private readonly IFindFilePredicateProvider _findFilePredicateProvider = null!;
     private readonly CancellationTokenSequence _populateDiffFilesSequence = new();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
-    private bool _runtimeInitialized;
 
     private readonly AvaloniaToolTip _toolTipControl = new();
 
@@ -37,14 +37,6 @@ public partial class FormDiff : GitModuleForm
     private readonly TranslationString _anotherCommitTooltip = new("Select another commit");
     private readonly TranslationString _btnSwapTooltip = new("Swap BASE and Compare commits");
     private readonly TranslationString _ckCompareToMergeBase = new("Compare to merge &base");
-
-    // parity-scaffolding: Avalonia's view inventory and designer require a parameterless constructor.
-    public FormDiff()
-    {
-        InitializeComponent();
-        WireEvents();
-        InitializeComplete();
-    }
 
     public FormDiff(
         IGitUICommands commands,
@@ -85,7 +77,8 @@ public partial class FormDiff : GitModuleForm
             _mergeBase = mergeBase.IsZero ? null : new GitRevision(mergeBase);
         }
 
-        ckCompareToMergeBase.Content = $"{_ckCompareToMergeBase} ({_mergeBase?.ObjectId.ToShortString()})";
+        ckCompareToMergeBase.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(
+            $"{_ckCompareToMergeBase} ({_mergeBase?.ObjectId.ToShortString()})");
         ckCompareToMergeBase.IsEnabled = _mergeBase is not null;
 
         _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
@@ -94,28 +87,6 @@ public partial class FormDiff : GitModuleForm
         _revisionDiffContextMenuController = new FileStatusListContextMenuController();
 
         WireEvents();
-        _runtimeInitialized = true;
-    }
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    protected override void OnClosed(EventArgs e)
-    {
-        _populateDiffFilesSequence.Dispose();
-        _viewChangesSequence.Dispose();
-        base.OnClosed(e);
-    }
-
-    protected override void OnRuntimeLoad(EventArgs e)
-    {
-        base.OnRuntimeLoad(e);
-        if (!_runtimeInitialized)
-        {
-            return;
-        }
-
-        PopulateDiffFiles();
     }
 
     private void FileViewer_TopScrollReached(object? sender, EventArgs e)
@@ -164,19 +135,22 @@ public partial class FormDiff : GitModuleForm
             cancellationToken: _viewChangesSequence.Next());
     }
 
-    private void btnSwap_Click(object? sender, EventArgs e)
+    private void btnSwap_Click(object sender, EventArgs e)
     {
         (_secondRevision, _firstRevision) = (_firstRevision, _secondRevision);
         (_secondCommitDisplayStr, _firstCommitDisplayStr) = (_firstCommitDisplayStr, _secondCommitDisplayStr);
         PopulateDiffFiles();
     }
 
-    private void ckCompareToMergeBase_CheckedChanged(object? sender, EventArgs e)
+    private void ckCompareToMergeBase_CheckedChanged(object sender, EventArgs e)
     {
-        PopulateDiffFiles();
+        if (TryGetUICommands(out _))
+        {
+            PopulateDiffFiles();
+        }
     }
 
-    private void btnCompareDirectoriesWithDiffTool_Clicked(object? sender, EventArgs e)
+    private void btnCompareDirectoriesWithDiffTool_Clicked(object sender, EventArgs e)
     {
         GitRevision? firstRevision = ckCompareToMergeBase.IsChecked == true ? _mergeBase : _firstRevision;
         Validates.NotNull(firstRevision);
@@ -184,25 +158,25 @@ public partial class FormDiff : GitModuleForm
         Module.OpenWithDifftoolDirDiff(firstRevision.Guid, _secondRevision.Guid, customTool: null);
     }
 
-    private void btnPickAnotherFirstBranch_Click(object? sender, EventArgs e)
+    private void btnPickAnotherFirstBranch_Click(object sender, EventArgs e)
     {
         Validates.NotNull(_firstRevision);
         PickAnotherBranch(_firstRevision, ref _firstCommitDisplayStr, ref _firstRevision);
     }
 
-    private void btnAnotherFirstCommit_Click(object? sender, EventArgs e)
+    private void btnAnotherFirstCommit_Click(object sender, EventArgs e)
     {
         Validates.NotNull(_firstRevision);
         PickAnotherCommit(_firstRevision, ref _firstCommitDisplayStr, ref _firstRevision);
     }
 
-    private void btnAnotherSecondBranch_Click(object? sender, EventArgs e)
+    private void btnAnotherSecondBranch_Click(object sender, EventArgs e)
     {
         Validates.NotNull(_secondRevision);
         PickAnotherBranch(_secondRevision, ref _secondCommitDisplayStr, ref _secondRevision);
     }
 
-    private void btnAnotherSecondCommit_Click(object? sender, EventArgs e)
+    private void btnAnotherSecondCommit_Click(object sender, EventArgs e)
     {
         Validates.NotNull(_secondRevision);
         PickAnotherCommit(_secondRevision, ref _secondCommitDisplayStr, ref _secondRevision);
@@ -245,6 +219,33 @@ public partial class FormDiff : GitModuleForm
         {
             revision = form.SelectedRevision;
             displayStr = form.SelectedRevision?.Subject;
+            PopulateDiffFiles();
+        }
+    }
+
+    // parity-scaffolding: Avalonia's view inventory and designer require a parameterless constructor.
+    public FormDiff()
+    {
+        InitializeComponent();
+        WireEvents();
+        InitializeComplete();
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    protected override void OnClosed(EventArgs e)
+    {
+        _populateDiffFilesSequence.Dispose();
+        _viewChangesSequence.Dispose();
+        base.OnClosed(e);
+    }
+
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+        if (TryGetUICommands(out _))
+        {
             PopulateDiffFiles();
         }
     }

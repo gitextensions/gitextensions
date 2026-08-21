@@ -1668,7 +1668,8 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormFormatPatch))
         {
-            return (1030, 665);
+            // parity-scaffolding: The source Designer is authored at 120 DPI; capture uses normalized 96-DPI DIPs.
+            return (824, 532);
         }
 
         if (viewType == typeof(SearchControl)

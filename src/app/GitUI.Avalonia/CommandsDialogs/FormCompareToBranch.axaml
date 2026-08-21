@@ -15,6 +15,9 @@
     <Button x:Name="btnCompare"
             Grid.Row="1"
             Margin="0,18,8,0"
+            Width="60"
+            Height="23"
+            Padding="0"
             HorizontalAlignment="Right"
             Content="Compare"
             IsDefault="True" />

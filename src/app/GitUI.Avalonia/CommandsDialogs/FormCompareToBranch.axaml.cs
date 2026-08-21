@@ -6,14 +6,6 @@ namespace GitUI.CommandsDialogs;
 
 public partial class FormCompareToBranch : GitModuleForm
 {
-    // parity-scaffolding: Avalonia's view inventory and designer require a parameterless constructor.
-    public FormCompareToBranch()
-    {
-        InitializeComponent();
-        WireEvents();
-        InitializeComplete();
-    }
-
     public FormCompareToBranch(IGitUICommands commands, ObjectId selectedCommit)
         : base(commands, enablePositionRestore: true)
     {
@@ -36,7 +28,7 @@ public partial class FormCompareToBranch : GitModuleForm
 
     public string? BranchName { get; private set; }
 
-    private void btnCompare_Click(object? sender, EventArgs e)
+    private void btnCompare_Click(object sender, EventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(branchSelector.SelectedBranchName))
         {
@@ -46,6 +38,14 @@ public partial class FormCompareToBranch : GitModuleForm
         }
 
         branchSelector.Focus();
+    }
+
+    // parity-scaffolding: Avalonia's view inventory and designer require a parameterless constructor.
+    public FormCompareToBranch()
+    {
+        InitializeComponent();
+        WireEvents();
+        InitializeComplete();
     }
 
     private void WireEvents()
