@@ -70,6 +70,16 @@ public sealed partial class ParityScreenshotTests
         GetCaptureSize(typeof(FormGitCommandLog)).Should().Be((659, 470));
     }
 
+    [Test]
+    [Category(P02Category)]
+    public void Ignore_editor_capture_hosts_should_use_96_dpi_designer_dimensions()
+    {
+        GetCaptureSize(typeof(FormAddToGitIgnore)).Should().Be((599, 341));
+        GetCaptureSize(typeof(FormGitIgnore)).Should().Be((634, 623));
+        GetCaptureSize(typeof(FormGitAttributes)).Should().Be((634, 474));
+        GetCaptureSize(typeof(FormMailMap)).Should().Be((634, 474));
+    }
+
     [AvaloniaTest]
     [Category(P02Category)]
     public void Avalonia_tree_reader_should_measure_named_controls_from_their_nearest_semantic_owner()
@@ -224,7 +234,9 @@ public sealed partial class ParityScreenshotTests
         MenuItem command = new() { Name = "command", Header = "_Commit & __literal" };
         ContextMenu menu = new() { ItemsSource = new[] { command } };
         Button owner = new() { Name = "owner", Content = "_Open & __literal", ContextMenu = menu };
-        window.Content = owner;
+        Label literal = new() { Name = "literal", Content = new TextBlock { Text = "literal_value" } };
+        TranslationCompat.SetConvertMnemonics(literal, false);
+        window.Content = new StackPanel { Children = { owner, literal } };
         window.Show();
         menu.Open(owner);
         Dispatcher.UIThread.RunJobs();
@@ -235,6 +247,7 @@ public sealed partial class ParityScreenshotTests
         CaptureSurface popup = reader.ReadSurface(popupRoot, "popup:0", new PixelRect(0, 0, 320, 160));
 
         Flatten(primary.Root).Single(node => node.FieldName == "owner").Text.Should().Be("&Open && _literal");
+        Flatten(primary.Root).Single(node => node.FieldName == "literal").Text.Should().Be("literal_value");
         Flatten(popup.Root).Single(node => node.Name == "command").Text.Should().Be("&Commit && _literal");
         primary.Root.Text.Should().BeEmpty("WinForms records controls without a text property as empty text");
         Control overlayHost = window.GetVisualDescendants().OfType<Control>()
@@ -893,7 +906,7 @@ public sealed partial class ParityScreenshotTests
 
             ApplyTextValues(view, component);
 
-            await WaitForAsyncViewsAsync(captureHost);
+            await WaitForAsyncViewsAsync(captureHost, context);
             // parity-scaffolding: Async loaders may replace seeded text; the capture plan remains authoritative.
             ApplyTextValues(view, component);
             if (view is RevisionGridControl revisionGrid)

@@ -11,27 +11,6 @@ namespace GitUI.CommandsDialogs;
 
 public partial class FormGitAttributes : GitModuleForm
 {
-    // The original label1 text is a resx-backed help string; it is seeded here and not yet
-    // routed through the Avalonia translation walker (deferred localization gap).
-    private const string GitAttributesHelpText = """
-        Edit the git attributes
-        Define attributes per path
-
-        Examples
-        Mark all jpg files as binary:
-        *.jpg binary
-
-        Mark sln files as binary:
-        *.sln binary
-
-        Mark single file as text:
-        weirdchars.txt text
-
-        For more information run
-        command "git help gitattributes"
-
-        """;
-
     private readonly TranslationString _noWorkingDir =
         new(".gitattributes is only supported when there is a working directory.");
     private readonly TranslationString _noWorkingDirCaption =
@@ -54,7 +33,6 @@ public partial class FormGitAttributes : GitModuleForm
     public FormGitAttributes()
     {
         InitializeComponent();
-        label1.Text = GitAttributesHelpText;
         Save.Click += SaveClick;
         InitializeComplete();
     }
@@ -63,7 +41,6 @@ public partial class FormGitAttributes : GitModuleForm
         : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
-        label1.Text = GitAttributesHelpText;
         _NO_TRANSLATE_GitAttributesText.IsReadOnly = false;
         Save.Click += SaveClick;
         InitializeComplete();
@@ -73,16 +50,9 @@ public partial class FormGitAttributes : GitModuleForm
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
-
-        if (Module.IsBareRepository())
-        {
-            MessageBoxes.Show(this, _noWorkingDir.Text, _noWorkingDirCaption.Text, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
-            Close();
-            return;
-        }
-
         LoadFile();
         _NO_TRANSLATE_GitAttributesText.TextLoaded += GitAttributesFileLoaded;
+        FormGitAttributesLoad(this, e);
     }
 
     private void LoadFile()
@@ -101,7 +71,7 @@ public partial class FormGitAttributes : GitModuleForm
         }
     }
 
-    private void SaveClick(object? sender, EventArgs e)
+    private void SaveClick(object sender, EventArgs e)
     {
         SaveFile();
         Close();
@@ -137,6 +107,13 @@ public partial class FormGitAttributes : GitModuleForm
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
+        FormGitAttributesClosing(this, e);
+        base.OnClosing(e);
+    }
+
+    // Avalonia exposes WindowClosingEventArgs at the original FormClosing event boundary.
+    private void FormGitAttributesClosing(object sender, WindowClosingEventArgs e)
+    {
         bool needToClose = false;
 
         if (!IsFileUpToDate())
@@ -164,8 +141,17 @@ public partial class FormGitAttributes : GitModuleForm
         {
             e.Cancel = true;
         }
+    }
 
-        base.OnClosing(e);
+    private void FormGitAttributesLoad(object sender, EventArgs e)
+    {
+        if (!Module.IsBareRepository())
+        {
+            return;
+        }
+
+        MessageBoxes.Show(this, _noWorkingDir.Text, _noWorkingDirCaption.Text, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
+        Close();
     }
 
     private bool IsFileUpToDate()
@@ -184,5 +170,6 @@ public partial class FormGitAttributes : GitModuleForm
     {
         public Editor.FileViewer Editor => form._NO_TRANSLATE_GitAttributesText;
         public Button Save => form.Save;
+        public Label Help => form.label1;
     }
 }

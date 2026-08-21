@@ -12,46 +12,6 @@ namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormGitIgnore : GitModuleForm
 {
-    // The original label1 text is a resx-backed help string; it is seeded here and not yet
-    // routed through the Avalonia translation walker (deferred localization gap).
-    private const string GitIgnoreHelpText = """
-        Specify filepatterns you want git to ignore.
-
-        Example:
-        #Ignore thumbnails created by Windows
-        Thumbs.db
-        #Ignore files built by Visual Studio
-        *.obj
-        *.exe
-        *.pdb
-        *.user
-        *.aps
-        *.pch
-        *.vspscc
-        *_i.c
-        *_p.c
-        *.ncb
-        *.suo
-        *.tlb
-        *.tlh
-        *.bak
-        *.cache
-        *.ilk
-        *.log
-        [Bb]in
-        [Dd]ebug*/
-        *.lib
-        *.sbr
-        obj/
-        [Rr]elease*/
-        _ReSharper*/
-        [Tt]est[Rr]esult*
-        .vs/
-        .idea/
-        #Nuget packages folder
-        packages/
-        """;
-
     private readonly TranslationString _gitignoreOnlyInWorkingDirSupportedCaption =
         new("No working directory");
 
@@ -109,7 +69,6 @@ public sealed partial class FormGitIgnore : GitModuleForm
     public FormGitIgnore()
     {
         InitializeComponent();
-        label1.Text = GitIgnoreHelpText;
         WireEvents();
         InitializeComplete();
     }
@@ -119,7 +78,6 @@ public sealed partial class FormGitIgnore : GitModuleForm
     {
         _localExclude = localExclude;
         InitializeComponent();
-        label1.Text = GitIgnoreHelpText;
         _NO_TRANSLATE_GitIgnoreEdit.IsReadOnly = false;
         WireEvents();
         InitializeComplete();
@@ -155,16 +113,9 @@ public sealed partial class FormGitIgnore : GitModuleForm
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
-
-        if (Module.IsBareRepository())
-        {
-            MessageBoxes.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
-            Close();
-            return;
-        }
-
         LoadGitIgnore();
         _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
+        FormGitIgnoreLoad(this, e);
     }
 
     private void LoadGitIgnore()
@@ -182,7 +133,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         }
     }
 
-    private void SaveClick(object? sender, EventArgs e)
+    private void SaveClick(object sender, EventArgs e)
     {
         SaveGitIgnore();
         Close();
@@ -224,6 +175,13 @@ public sealed partial class FormGitIgnore : GitModuleForm
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
+        FormGitIgnoreFormClosing(this, e);
+        base.OnClosing(e);
+    }
+
+    // Avalonia exposes WindowClosingEventArgs at the original FormClosing event boundary.
+    private void FormGitIgnoreFormClosing(object sender, WindowClosingEventArgs e)
+    {
         if (HasUnsavedChanges())
         {
             switch (MessageBoxes.Show(this, _dialogModel.SaveFileQuestion, _saveFileQuestionCaption.Text,
@@ -241,11 +199,20 @@ public sealed partial class FormGitIgnore : GitModuleForm
                     break;
             }
         }
-
-        base.OnClosing(e);
     }
 
-    private void AddDefaultClick(object? sender, EventArgs e)
+    private void FormGitIgnoreLoad(object sender, EventArgs e)
+    {
+        if (!Module.IsBareRepository())
+        {
+            return;
+        }
+
+        MessageBoxes.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
+        Close();
+    }
+
+    private void AddDefaultClick(object sender, EventArgs e)
     {
         string[] defaultIgnorePatterns = File.Exists(DefaultIgnorePatternsFile) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
 
@@ -268,7 +235,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
             });
     }
 
-    private void AddPattern_Click(object? sender, EventArgs e)
+    private void AddPattern_Click(object sender, EventArgs e)
     {
         SaveGitIgnore();
         UICommands.StartAddToGitIgnoreDialog(this, _localExclude, "*.dll");
@@ -285,17 +252,17 @@ public sealed partial class FormGitIgnore : GitModuleForm
         _originalGitIgnoreFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
     }
 
-    private void lnkGitIgnorePatterns_LinkClicked(object? sender, EventArgs e)
+    private void lnkGitIgnorePatterns_LinkClicked(object sender, EventArgs e)
     {
         OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/github/gitignore");
     }
 
-    private void lnkGitIgnoreGenerate_LinkClicked(object? sender, EventArgs e)
+    private void lnkGitIgnoreGenerate_LinkClicked(object sender, EventArgs e)
     {
         OsShellUtil.OpenUrlInDefaultBrowser(@"https://www.gitignore.io/");
     }
 
-    private void btnCancel_Click(object? sender, EventArgs e)
+    private void btnCancel_Click(object sender, EventArgs e)
     {
         Close();
     }

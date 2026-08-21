@@ -29,6 +29,11 @@ internal static class AvaloniaTranslationUtils
             }
 
             RememberTextBlockSource(textBlock, text);
+            if (item is Control control && !TranslationCompat.GetConvertMnemonics(control))
+            {
+                continue;
+            }
+
             textBlock.Text = RemoveAvaloniaMnemonics(text);
         }
     }
@@ -60,6 +65,13 @@ internal static class AvaloniaTranslationUtils
             bool convertMnemonics = false;
             bool isAvaloniaText = !hostHasWinFormsText
                 && TryGetAvaloniaText(item, out text, out convertMnemonics);
+            if (isAvaloniaText
+                && item is Control controlWithText
+                && !TranslationCompat.GetConvertMnemonics(controlWithText))
+            {
+                convertMnemonics = false;
+            }
+
             bool hasText = isAvaloniaText
                 && (item is not Control textControl || TranslationCompat.GetTranslateText(textControl));
             bool suppressSharedText = item is Control sharedTextControl
@@ -133,6 +145,13 @@ internal static class AvaloniaTranslationUtils
             bool convertMnemonics = false;
             bool isAvaloniaText = !hostHasWinFormsText
                 && TryGetAvaloniaText(item, out text, out convertMnemonics);
+            if (isAvaloniaText
+                && item is Control controlWithText
+                && !TranslationCompat.GetConvertMnemonics(controlWithText))
+            {
+                convertMnemonics = false;
+            }
+
             bool hasText = isAvaloniaText
                 && (item is not Control textControl || TranslationCompat.GetTranslateText(textControl));
             bool suppressSharedText = item is Control sharedTextControl
@@ -168,13 +187,19 @@ internal static class AvaloniaTranslationUtils
                 string? translatedText = translation.TranslateItem(category, name, "Text", () => neutralText);
                 if (!string.IsNullOrEmpty(translatedText))
                 {
-                    SetAvaloniaText(item, convertMnemonics ? ToAvaloniaMnemonics(translatedText) : translatedText);
+                    SetAvaloniaText(
+                        item,
+                        convertMnemonics ? ToAvaloniaMnemonics(translatedText) : translatedText,
+                        removeMnemonicMarkers: convertMnemonics);
                 }
                 else if (item is TextBlock or ContentControl { Content: TextBlock })
                 {
                     // English XLF targets are intentionally empty, so the source AXAML is
                     // also the display fallback and still needs its access marker removed.
-                    SetAvaloniaText(item, text);
+                    SetAvaloniaText(
+                        item,
+                        convertMnemonics ? ToAvaloniaMnemonics(neutralText) : text,
+                        removeMnemonicMarkers: convertMnemonics);
                 }
             }
 
@@ -235,7 +260,7 @@ internal static class AvaloniaTranslationUtils
         }
     }
 
-    private static void SetAvaloniaText(object item, string text)
+    private static void SetAvaloniaText(object item, string text, bool removeMnemonicMarkers)
     {
         switch (item)
         {
@@ -258,7 +283,7 @@ internal static class AvaloniaTranslationUtils
                 accessText.Text = text;
                 break;
             case ContentControl { Content: TextBlock contentTextBlock }:
-                contentTextBlock.Text = RemoveAvaloniaMnemonics(text);
+                contentTextBlock.Text = removeMnemonicMarkers ? RemoveAvaloniaMnemonics(text) : text;
                 break;
             case ContentControl contentControl:
                 contentControl.Content = text;
@@ -269,7 +294,7 @@ internal static class AvaloniaTranslationUtils
             case TextBlock textBlock:
                 // TextBlock has no access-key presenter. Keep the marker in AXAML so the
                 // existing WinForms XLF key round-trips, but do not render it to the user.
-                textBlock.Text = RemoveAvaloniaMnemonics(text);
+                textBlock.Text = removeMnemonicMarkers ? RemoveAvaloniaMnemonics(text) : text;
                 break;
         }
     }
@@ -278,6 +303,7 @@ internal static class AvaloniaTranslationUtils
     {
         const string escapedAmpersand = "\u0001";
         return text
+            .Replace("_", "__", StringComparison.Ordinal)
             .Replace("&&", escapedAmpersand, StringComparison.Ordinal)
             .Replace('&', '_')
             .Replace(escapedAmpersand, "&", StringComparison.Ordinal);
@@ -329,8 +355,8 @@ internal static class AvaloniaTranslationUtils
 }
 
 /// <summary>
-/// Marks controls whose WinForms translation uses a ToolStripItem.ToolTipText key rather
-/// than a ToolTip component's toolTip key.
+/// Marks controls that require a WinForms-shaped translation exception, including alternate
+/// tooltip keys and text that must not be interpreted as an access-key mnemonic.
 /// </summary>
 public sealed class TranslationCompat : AvaloniaObject
 {
@@ -339,6 +365,9 @@ public sealed class TranslationCompat : AvaloniaObject
 
     public static readonly AttachedProperty<bool> TranslateToolTipProperty =
         AvaloniaProperty.RegisterAttached<TranslationCompat, Control, bool>("TranslateToolTip", defaultValue: true);
+
+    public static readonly AttachedProperty<bool> ConvertMnemonicsProperty =
+        AvaloniaProperty.RegisterAttached<TranslationCompat, Control, bool>("ConvertMnemonics", defaultValue: true);
 
     public static readonly AttachedProperty<bool> TranslateWatermarkProperty =
         AvaloniaProperty.RegisterAttached<TranslationCompat, TextBox, bool>("TranslateWatermark", defaultValue: true);
@@ -360,6 +389,12 @@ public sealed class TranslationCompat : AvaloniaObject
 
     public static void SetTranslateToolTip(Control control, bool value)
         => control.SetValue(TranslateToolTipProperty, value);
+
+    public static bool GetConvertMnemonics(Control control)
+        => control.GetValue(ConvertMnemonicsProperty);
+
+    public static void SetConvertMnemonics(Control control, bool value)
+        => control.SetValue(ConvertMnemonicsProperty, value);
 
     public static bool GetTranslateWatermark(TextBox textBox)
         => textBox.GetValue(TranslateWatermarkProperty);

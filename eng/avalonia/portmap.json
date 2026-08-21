@@ -2820,13 +2820,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddToGitIgnore.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preview dialog for adding a file pattern to .gitignore or .git/info/exclude. Preserves the async ignored-files preview loader, pattern entry, no-match panel, add/cancel, and local-exclude title. WinForms ListBox DataSource maps to ItemsSource; TextBox.Lines maps to a newline split. Wired through StartAddToGitIgnoreDialog with PostEditGitIgnore."
+    "notes": "Preview dialog for adding a file pattern to .gitignore or .git/info/exclude. Preserves the async ignored-files preview loader, pattern entry, no-match panel, add/cancel, and local-exclude title. WinForms ListBox DataSource maps to ItemsSource; TextBox.Lines maps to a newline split. The paired headless harness waits the original 300 ms debounce and publishes the same repository query through the preview boundary because AsyncLoader's main-thread continuation is unavailable there. Wired through StartAddToGitIgnoreDialog with PostEditGitIgnore."
   },
   "src/app/GitUI/CommandsDialogs/FormAddToGitIgnore.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddToGitIgnore.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Native AXAML preserves the file-pattern group, preview group with the _NO_TRANSLATE_Preview list, matched-count label, centered no-match panel (Unmerged icon + label2), and the Ignore/Cancel action row with the original field names and 599x341 size."
+    "notes": "Native AXAML preserves the source 599x341 96-DPI client, 93/remainder/44 rows, group padding, panel1/panel2/panel3 identities, 71-high pattern editor, preview/count/no-match composition, exact integer no-match child bounds, 110x25 action bounds, and source tab order. All dimensions come directly from the 96-DPI Designer."
   },
   "src/app/GitUI/CommandsDialogs/FormBlame.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBlame.axaml.cs",
@@ -2956,25 +2956,25 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitAttributes.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Edit .gitattributes dialog over the FileViewer editor. Preserves load/save, unsaved-changes close confirmation, and bare-repo guard. label1 help is a read-only TextBox seeded from the original resx text. Wired through StartEditGitAttributesDialog."
+    "notes": "Edit .gitattributes dialog over the FileViewer editor. Preserves the original FormGitAttributesLoad/FormGitAttributesClosing boundaries and order, load/save, unsaved-changes close confirmation, and bare-repo guard. The original Label help text stays in AXAML so its established label1 translation key is emitted. Wired through StartEditGitAttributesDialog."
   },
   "src/app/GitUI/CommandsDialogs/FormGitAttributes.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitAttributes.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Native AXAML preserves the editor/help split with the Save action, original field names, and 634x474 size. The Label help maps to a read-only TextBox."
+    "notes": "Native AXAML preserves the source 634x474 96-DPI client, integer 381/4/remainder editor split, original Label help identity and 209x285 bounds, 75x25 Save action, source margins, and tab order. All dimensions come directly from the 96-DPI Designer."
   },
   "src/app/GitUI/CommandsDialogs/FormGitIgnore.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitIgnore.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Edit .gitignore / .git/info/exclude dialog over the FileViewer editor and the linked GitIgnoreModel/GitLocalExcludeModel. Preserves load/save, unsaved-changes close confirmation, add-default-patterns, add-pattern (opens FormAddToGitIgnore), example/generate links, and bare-repo guard. Escape close is handled by the base OnKeyDown; ProcessCmdKey is not reintroduced. label1 help is a read-only TextBox seeded from the original resx text. Wired through StartEditGitIgnoreDialog with PostEditGitIgnore."
+    "notes": "Edit .gitignore / .git/info/exclude dialog over the FileViewer editor and the linked GitIgnoreModel/GitLocalExcludeModel. Preserves the original FormGitIgnoreLoad/FormGitIgnoreFormClosing boundaries and order, load/save, unsaved-changes close confirmation, add-default-patterns, add-pattern (opens FormAddToGitIgnore), example/generate links, and bare-repo guard. Escape close is handled by the base OnKeyDown; ProcessCmdKey is not reintroduced. The original borderless read-only TextBox help text stays in AXAML so its established label1 translation key is emitted. Wired through StartEditGitIgnoreDialog with PostEditGitIgnore."
   },
   "src/app/GitUI/CommandsDialogs/FormGitIgnore.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitIgnore.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Native AXAML preserves the editor/help split with the AddDefault/AddPattern buttons, the example/generate hyperlink row, the Save/Cancel action row, original field names, 634x623 size, and 650x498 minimum. LinkLabel maps to HyperlinkButton; the help label is a read-only TextBox."
+    "notes": "Native AXAML preserves the source 634x623 96-DPI client, fixed 270-wide help panel, 160x27 left actions, 75x27 Cancel and 160x27 Save actions, integer link bounds, source tab order, and original field names. LinkLabel maps to HyperlinkButton. WinForms MinimumSize 650x498 includes its native-96 16x39 non-client frame, so the Avalonia client minimum is 634x459."
   },
   "src/app/GitUI/CommandsDialogs/FormLog.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormLog.axaml.cs",
@@ -2992,13 +2992,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMailMap.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Edit .mailmap dialog over the FileViewer editor. Preserves load/save (with RepoChangedNotifier.Notify), unsaved-changes close confirmation, and bare-repo guard. label1 help is a read-only TextBox seeded from the original resx text. Wired through StartMailMapDialog."
+    "notes": "Edit .mailmap dialog over the FileViewer editor. Preserves the original FormMailMapLoad/FormMailMapFormClosing boundaries and order, load/save (with RepoChangedNotifier.Notify), unsaved-changes close confirmation, and bare-repo guard. The original Label help text stays in AXAML so its established label1 translation key is emitted; mnemonic conversion is disabled for that prose so literal underscores round-trip unchanged. Wired through StartMailMapDialog."
   },
   "src/app/GitUI/CommandsDialogs/FormMailMap.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMailMap.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Native AXAML preserves the editor/help split with the Save action, original field names, and 634x474 size. The Label help maps to a read-only TextBox."
+    "notes": "Native AXAML preserves the source 634x474 96-DPI client, integer 381/4/remainder editor split, original Label help identity and 302x171 bounds, 75x25 Save action, source margins, and tab order. All dimensions come directly from the 96-DPI Designer."
   },
   "src/app/GitUI/CommandsDialogs/FormSparseWorkingCopy.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSparseWorkingCopy.cs",

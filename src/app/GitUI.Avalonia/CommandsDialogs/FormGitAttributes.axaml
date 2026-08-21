@@ -7,21 +7,33 @@
         WindowStartupLocation="CenterOwner"
         Title="Edit .gitattributes">
   <Grid x:Name="splitContainer1"
-        ColumnDefinitions="381,4,*">
-    <editor:FileViewer x:Name="_NO_TRANSLATE_GitAttributesText" Grid.Column="0" />
+        ColumnDefinitions="381,4,*"
+        TabIndex="0">
+    <editor:FileViewer x:Name="_NO_TRANSLATE_GitAttributesText"
+                       Grid.Column="0"
+                       Margin="0"
+                       TabIndex="0" />
     <GridSplitter Grid.Column="1"
                   ResizeDirection="Columns" />
-    <DockPanel Grid.Column="2" Margin="3">
+    <Grid Grid.Column="2">
       <Button x:Name="Save"
-              DockPanel.Dock="Bottom"
               Classes="gitextensions-dialog-action"
+              Width="75"
+              Height="25"
               HorizontalAlignment="Right"
+              VerticalAlignment="Bottom"
+              Margin="0,0,12,10"
+              TabIndex="0"
               Content="Save" />
-      <TextBox x:Name="label1"
-               IsReadOnly="True"
-               AcceptsReturn="True"
-               TextWrapping="NoWrap"
-               ScrollViewer.VerticalScrollBarVisibility="Auto" />
-    </DockPanel>
+      <Label x:Name="label1"
+             Width="209"
+             Height="285"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top"
+             Margin="3,9,0,0"
+             Padding="0"
+             TabIndex="1"
+             Content="Edit the git attributes&#10;Define attributes per path&#10;&#10;Examples&#10;Mark all jpg files as binary:&#10;*.jpg binary&#10;&#10;Mark sln files as binary:&#10;*.sln binary&#10;&#10;Mark single file as text:&#10;weirdchars.txt text&#10;&#10;For more information run&#10;command &quot;git help gitattributes&quot;&#10;" />
+    </Grid>
   </Grid>
 </Window>
