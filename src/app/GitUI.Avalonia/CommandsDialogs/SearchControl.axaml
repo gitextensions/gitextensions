@@ -5,7 +5,6 @@
              MinHeight="23">
   <UserControl.Styles>
     <Style Selector="ListBox.search-results ListBoxItem">
-      <Setter Property="Height" Value="16" />
       <Setter Property="MinHeight" Value="16" />
       <Setter Property="Padding" Value="1,0" />
     </Style>
@@ -16,8 +15,7 @@
   </UserControl.Styles>
   <Grid x:Name="tableLayoutPanel1"
         RowDefinitions="Auto,Auto">
-    <Border x:Name="searchBoxBorder"
-            Height="23"
+    <Border Height="23"
             BorderThickness="1">
       <TextBox x:Name="txtSearchBox"
                AutomationProperties.Name="Enter File Name"
@@ -29,6 +27,8 @@
              AutomationProperties.Name="File search results"
              Grid.Row="1"
              Classes="search-results"
+             Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+             Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
              MinWidth="64"
              Margin="0"
              IsVisible="False" />

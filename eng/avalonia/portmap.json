@@ -2127,7 +2127,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/CommitPickerSmallControl.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Text entry resolves a revision name or SHA; the picker button opens the shared FormChooseCommit twin. The asynchronous shared GetCommitCountString result shows how the selected revision differs from the current checkout and ignores stale completion after a newer selection. The native picker now retains the original zero-margin fill grid, 2px text inset, 25x24 icon button, and compact count-label spacing."
+    "notes": "Text entry resolves a revision name or SHA; the picker button opens the shared FormChooseCommit twin. The asynchronous shared GetCommitCountString result shows how the selected revision differs from the current checkout and ignores stale completion after a newer selection. The native picker now retains the original zero-margin fill grid and measured 321x26 checkout-host geometry: a 284x23 text field at 0,2, a 25x24 top-aligned icon button at 287,0, and the original compact count-label column."
   },
   "src/app/GitUI/UserControls/PatchGrid.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/PatchGrid.axaml.cs",
@@ -2731,7 +2731,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormGoToCommit.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the original named fields, client/minimum dimensions, translated help content, editable tag/branch selectors, default Go action, and input metadata. The 125% reference capture now drives the original 12/155/521px top row, 45x43x470x141 help group, and 155x216/258 selector geometry."
+    "notes": "Native AXAML retains the original named fields, client/minimum dimensions, translated help content, editable tag/branch selectors, default Go action, and input metadata. The native-100 reference drives the original 12/155/521px top row, 45x43x470x141 help group, 413x75 help copy, 126x15 link, and 155x216/258 selector geometry. The expression, help group, Go action, and both selectors preserve their Designer-authored right-anchor resize behavior rather than freezing a captured width; a scoped 22-DIP header minimum prevents platform fallback fonts from moving the Designer-authored help content."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormOpenDirectory.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormOpenDirectory.axaml.cs",
@@ -2874,7 +2874,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutRevision.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the original commit picker, force option, icon-bearing default checkout action, inherited dialog-panel shape, dimensions, names, and input metadata. Its panel colors, 12px content inset, compact picker, full force caption, and 88x25 right-aligned action follow the fresh 125% WinForms reference."
+    "notes": "Native AXAML retains the original commit picker, force option, icon-bearing default checkout action, inherited dialog-panel shape, dimensions, names, and input metadata. The native-100 reference now pins the 12px content inset, 457x66 grid, 321x26 picker at 133,3, 166x19 force option at 133,35, and 84x25 right-aligned action without capture-derived scaling."
   },
   "src/app/GitUI/CommandsDialogs/FormCleanupRepository.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCleanupRepository.axaml.cs",
@@ -3122,13 +3122,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchControl.axaml.cs",
     "status": "functional",
     "basedOn": "91aa5c0b5d2dcc62337c2b3450bd388385afe0dc",
-    "notes": "Preserves asynchronous candidate lookup, 20-item limit, first selection, selection range, dropdown sizing and visibility, wraparound arrows, Enter/Escape/double-click routes, cancellation, configurable default/hover/focus borders, and the inherited TextChanged notification boundary. Avalonia compiled AXAML cannot target an open generic type, so the exact generic API derives from a same-named non-generic visual shell. P8.6i progress 12 replaces the scaled-capture font approximation with the active typeface's real line metrics, converts the source's 300px width and 800px cap through render scale, measures candidate text with the control font, and restores the native 23px search row."
+    "notes": "Preserves asynchronous candidate lookup, 20-item limit, first selection, selection range, dropdown sizing and visibility, wraparound arrows, Enter/Escape/double-click routes, cancellation, configurable default/hover/focus borders, and the inherited TextChanged notification boundary. Avalonia compiled AXAML cannot target an open generic type, so the exact generic API derives from a same-named non-generic visual shell. The source's 300px width and 800px cap are converted through render scale, candidate text and configured row growth use the active typeface, and the WinForms 96-DPI 16px minimum row prevents shorter platform fallback metrics from shrinking the popup. Attachment-time focus preserves the original constructor-time Select() after Avalonia supplies a visual root."
   },
   "src/app/GitUI/CommandsDialogs/SearchControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchControl.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the original named search box, compact result rows, minimum size, and stacked dropdown geometry through the non-generic compiled-XAML shell. Search results retain the original system-highlight selection while keyboard focus remains in the text box."
+    "notes": "Native AXAML retains the original named search box, compact result rows, 64x23 standalone Designer size, and stacked dropdown geometry through the non-generic compiled-XAML shell. The window-owned results overlay is reported at the same semantic owner as WinForms' runtime reparenting, while standalone capture remains the source-authored 64x23 primary surface. Search results use the resolved system window and highlight roles."
   },
   "src/app/GitUI/CommandsDialogs/SearchWindow.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchWindow.axaml.cs",
@@ -3140,7 +3140,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SearchWindow.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native borderless transparent AXAML retains the original prompt, empty title, content host, initial dimensions, center-owner placement, and taskbar suppression through the non-generic compiled-XAML shell. The prompt uses the resolved control surface/border colors and measured 23px row before child-driven sizing."
+    "notes": "Native borderless transparent AXAML retains the original prompt, empty title, anonymous framework-only content host, 325x213 Designer dimensions, center-owner placement, and taskbar suppression through the non-generic compiled-XAML shell. The prompt is the original named 300x24 label surface; one result drives the same 300x79 client geometry through the original child-size callback."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs",

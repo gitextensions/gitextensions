@@ -505,7 +505,9 @@ internal sealed class ControlTreeReader
             ReadOnly = GetNullableBoolProperty(control, "ReadOnly"),
             CheckState = control is CheckBox checkBox ? checkBox.CheckState.ToString() : null,
             Selected = control is ListControl listControl ? listControl.SelectedValue is not null : null,
-            Expanded = control is TreeView treeView && treeView.Nodes.Cast<TreeNode>().Any(node => node.IsExpanded),
+            Expanded = control is TreeView treeView
+                ? treeView.Nodes.Cast<TreeNode>().Any(node => node.IsExpanded)
+                : null,
             Columns = GetColumns(control),
             Children = children
         };

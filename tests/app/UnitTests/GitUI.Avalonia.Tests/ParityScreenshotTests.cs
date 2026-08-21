@@ -1674,13 +1674,13 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(SearchControl)
             || (viewType.IsGenericType && viewType.GetGenericTypeDefinition() == typeof(SearchControl<>)))
         {
-            return (325, 91);
+            return (64, 23);
         }
 
         if (viewType == typeof(SearchWindow)
             || (viewType.IsGenericType && viewType.GetGenericTypeDefinition() == typeof(SearchWindow<>)))
         {
-            return (325, 113);
+            return (325, 213);
         }
 
         if (viewType == typeof(FormDashboardCategoryTitle))

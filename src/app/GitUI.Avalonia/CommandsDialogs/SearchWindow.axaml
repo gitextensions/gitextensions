@@ -12,14 +12,15 @@
         WindowStartupLocation="CenterOwner">
   <Grid x:Name="tableLayoutPanel1"
         RowDefinitions="Auto,*">
-    <Border BorderThickness="1"
-            BorderBrush="{DynamicResource GitExtensionsControlBorderBrush}"
-            Background="{DynamicResource GitExtensionsControlBackgroundBrush}">
-      <TextBlock x:Name="lblEnterFileName"
-                 Padding="0,7,0,0"
-                 Text="Enter File Name" />
-    </Border>
-    <ContentControl x:Name="searchControlHost"
-                    Grid.Row="1" />
+    <Label x:Name="lblEnterFileName"
+           Height="24"
+           Padding="0,7,0,0"
+           BorderThickness="1"
+           BorderBrush="{DynamicResource GitExtensionsControlBorderBrush}"
+           Background="{DynamicResource GitExtensionsControlBackgroundBrush}"
+           Content="Enter File Name"
+           HorizontalContentAlignment="Left"
+           VerticalContentAlignment="Top" />
+    <ContentControl Grid.Row="1" />
   </Grid>
 </Window>
