@@ -18,6 +18,8 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
     public FormGitCommandLog()
         : base(enablePositionRestore: true)
     {
+        // Avalonia's generated x:Name field cannot share the enclosing class name; set the original Form.Name in code.
+        Name = nameof(FormGitCommandLog);
         InitializeComponent();
         InitializeComplete();
         ActiveControl = LogItems;
@@ -170,8 +172,14 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
         }
     }
 
-    private void TabControl_SelectedIndexChanged(object? sender, EventArgs e)
+    private void TabControl_SelectedIndexChanged(object? sender, SelectionChangedEventArgs e)
     {
+        // Avalonia selection events bubble from descendant lists; WinForms raised this handler only for the TabControl.
+        if (!ReferenceEquals(e.Source, TabControl))
+        {
+            return;
+        }
+
         RefreshLogItems();
         RefreshCommandCacheItems();
     }
@@ -198,13 +206,13 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
 
         IStorageFile? file = await PortalPickerGuard.SaveFilePickerAsync(StorageProvider, new FilePickerSaveOptions
         {
-            Title = Title,
+            Title = Name,
             DefaultExtension = "txt",
             FileTypeChoices =
             [
                 new FilePickerFileType("Text files (*.txt)") { Patterns = ["*.txt"] },
                 new FilePickerFileType("CSV files (*.csv)") { Patterns = ["*.csv"] },
-                new FilePickerFileType("All files (*.*)") { Patterns = ["*.*"] },
+                new FilePickerFileType("All files *.*") { Patterns = ["*.*"] },
             ],
         });
 
@@ -320,6 +328,8 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
         public MenuItem CopyCommandLine => form.mnuCopyCommandLine;
         public MenuItem ClearLog => form.mnuClear;
         public MenuItem ClearCache => form.tsmiClearCache;
+
+        public static FormGitCommandLog? OpenInstance => instance;
 
         public static void Refresh(ListBox log, IReadOnlyList<object> dataSource) => RefreshListBox(log, dataSource);
     }

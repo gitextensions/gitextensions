@@ -14,6 +14,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Editor;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -126,6 +127,28 @@ public sealed class FileHistoryTests
         form.FindControl<FileViewer>("Diff").Should().NotBeNull();
         form.FindControl<FileViewer>("View").Should().NotBeNull();
         form.FindControl<GitUI.Blame.BlameControl>("Blame").Should().NotBeNull();
+    }
+
+    [AvaloniaTest]
+    public void FormFileHistory_should_expose_and_execute_the_original_git_command_log_toolbar_command()
+    {
+        FormGitCommandLog.TestAccessor.OpenInstance?.Close();
+        Dispatcher.UIThread.RunJobs();
+        FormFileHistory form = new();
+        Button commandLogButton = form.FindControl<Button>("gitcommandLogToolStripMenuItem")
+            ?? throw new AssertionException("The Git command log toolbar button was not created.");
+
+        ToolTip.GetTip(commandLogButton).Should().Be("Git command log");
+        commandLogButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Dispatcher.UIThread.RunJobs();
+
+        FormGitCommandLog commandLog = FormGitCommandLog.TestAccessor.OpenInstance
+            ?? throw new AssertionException("The toolbar command did not open the Git command log.");
+        commandLog.IsVisible.Should().BeTrue();
+
+        commandLog.Close();
+        form.Close();
+        Dispatcher.UIThread.RunJobs();
     }
 
     [AvaloniaTest]

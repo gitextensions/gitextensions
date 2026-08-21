@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitCommands.Logging;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -34,6 +35,9 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormDiff" => CreateFormDiff(commands),
             "GitUI.CommandsDialogs.FormCompareToBranch" => new FormCompareToBranch(commands, commands.Module.RevParse("HEAD")),
             "GitUI.CommandsDialogs.FormFormatPatch" => new FormFormatPatch(commands),
+            "GitUI.CommandsDialogs.FormBlame" => CreateFormBlame(commands),
+            "GitUI.CommandsDialogs.FormLog" => new FormLog(commands),
+            "GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog" => CreateGitCommandLog(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
             "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),
             "GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm" =>
@@ -236,7 +240,18 @@ internal static class ComponentFactory
     // different times in isolated workers; every paired state must start from repository HEAD.
     public static void PrepareCaptureState(Control control, IGitUICommands commands)
     {
-        if (control is not RevisionGridControl revisionGrid)
+        if (control is FormBlame)
+        {
+            WaitForBlameContent(control);
+        }
+
+        RevisionGridControl? revisionGrid = control as RevisionGridControl;
+        if (revisionGrid is null && control is FormLog)
+        {
+            revisionGrid = (RevisionGridControl?)FindFieldValue(control, "RevisionGrid");
+        }
+
+        if (revisionGrid is null)
         {
             return;
         }
@@ -270,6 +285,11 @@ internal static class ComponentFactory
             ?? throw new CaptureStateUnsupportedException("The original revision grid did not expose its selected-row state.");
         ObjectId head = commands.Module.RevParse("HEAD");
         WaitForStableHeadSelection();
+
+        if (control is FormLog)
+        {
+            WaitForLogDiffContent(control);
+        }
 
         // parity-scaffolding: Data loading and visible-row graph rendering settle independently;
         // capture only after the product's background renderer publishes its measured width.
@@ -343,7 +363,13 @@ internal static class ComponentFactory
     // replaced HEAD after preparation or if the real opening handlers did not finish.
     public static void VerifyCaptureState(Control control, IGitUICommands commands, CaptureStatePlan state)
     {
-        if (control is not RevisionGridControl revisionGrid)
+        RevisionGridControl? revisionGrid = control as RevisionGridControl;
+        if (revisionGrid is null && control is FormLog)
+        {
+            revisionGrid = (RevisionGridControl?)FindFieldValue(control, "RevisionGrid");
+        }
+
+        if (revisionGrid is null)
         {
             return;
         }
@@ -554,6 +580,13 @@ internal static class ComponentFactory
             revisionGrid = nestedRevisionGrid;
         }
 
+        if (revisionGrid is null
+            && control is FormLog
+            && FindFieldValue(control, "RevisionGrid") is RevisionGridControl logRevisionGrid)
+        {
+            revisionGrid = logRevisionGrid;
+        }
+
         if (revisionGrid is not null)
         {
             InvokeNonPublic(revisionGrid, "CancelBackgroundTasks");
@@ -588,6 +621,68 @@ internal static class ComponentFactory
         ObjectId head = commands.Module.RevParse("HEAD");
         ObjectId parent = commands.Module.RevParse("HEAD~1");
         return new FormDiff(commands, parent, head, "HEAD~1", "HEAD");
+    }
+
+    // parity-scaffolding: Loads the original blame form against the shared deterministic file.
+    private static FormBlame CreateFormBlame(GitUICommands commands)
+        => new(
+            commands,
+            "src/App.cs",
+            commands.Module.GetRevision(commands.Module.GetCurrentCheckout(), loadRefs: true),
+            initialLine: 2);
+
+    // parity-scaffolding: The original single-instance form has a private constructor.
+    private static FormGitCommandLog CreateGitCommandLog(IGitUICommands commands)
+    {
+        CommandLog.Clear();
+        GitModule.GitCommandCache.Clear();
+        GitModule.GitCommandCache.Add(
+            "status --porcelain=v2",
+            "1 .M N... 100644 100644 src/App.cs",
+            string.Empty);
+        ProcessOperation operation = CommandLog.LogProcessStart(
+            "git",
+            "-c core.quotepath=false log --oneline --decorate",
+            commands.Module.WorkingDir);
+        operation.LogProcessEnd(0);
+        return (FormGitCommandLog)CreateNonPublicParameterless(typeof(FormGitCommandLog));
+    }
+
+    private static void WaitForBlameContent(Control control)
+    {
+        GitUI.Editor.FileViewer blameFile = (GitUI.Editor.FileViewer?)FindFieldValue(control, "BlameFile")
+            ?? throw new CaptureStateUnsupportedException("The original blame form did not expose its file viewer.");
+        DateTime deadline = DateTime.UtcNow.AddSeconds(30);
+        while (string.IsNullOrEmpty(blameFile.GetText()) && DateTime.UtcNow < deadline)
+        {
+            Application.DoEvents();
+            Thread.Sleep(25);
+        }
+
+        if (string.IsNullOrEmpty(blameFile.GetText()))
+        {
+            throw new CaptureStateUnsupportedException("The original blame loader did not publish file content before capture.");
+        }
+    }
+
+    private static void WaitForLogDiffContent(Control control)
+    {
+        FileStatusList diffFiles = (FileStatusList?)FindFieldValue(control, "DiffFiles")
+            ?? throw new CaptureStateUnsupportedException("The original log form did not expose its file list.");
+        GitUI.Editor.FileViewer diffViewer = (GitUI.Editor.FileViewer?)FindFieldValue(control, "diffViewer")
+            ?? throw new CaptureStateUnsupportedException("The original log form did not expose its diff viewer.");
+        DateTime deadline = DateTime.UtcNow.AddSeconds(30);
+        while ((diffFiles.AllItemsCount == 0 || string.IsNullOrEmpty(diffViewer.GetText()))
+               && DateTime.UtcNow < deadline)
+        {
+            Application.DoEvents();
+            Thread.Sleep(25);
+        }
+
+        if (diffFiles.AllItemsCount == 0 || string.IsNullOrEmpty(diffViewer.GetText()))
+        {
+            throw new CaptureStateUnsupportedException("The original log form did not publish its selected revision diff before capture.");
+        }
     }
 
     // parity-scaffolding: Seeds private original state without adding product-facing capture hooks.
@@ -684,6 +779,17 @@ internal static class ComponentFactory
 
         return (Control?)Activator.CreateInstance(type)
             ?? throw new InvalidOperationException($"{typeName} could not be constructed.");
+    }
+
+    private static Control CreateNonPublicParameterless(Type type)
+    {
+        if (!typeof(Control).IsAssignableFrom(type))
+        {
+            throw new InvalidOperationException($"{type.FullName} is not a Windows Forms control.");
+        }
+
+        return (Control?)Activator.CreateInstance(type, nonPublic: true)
+            ?? throw new InvalidOperationException($"{type.FullName} could not be constructed.");
     }
 
     private static Control CreateWithCommands(string typeName, GitUICommands commands)
