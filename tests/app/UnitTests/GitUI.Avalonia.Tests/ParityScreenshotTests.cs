@@ -165,7 +165,7 @@ public sealed partial class ParityScreenshotTests
                 await SeedStandaloneControlAsync(view, context);
             }
 
-            await WaitForAsyncViewsAsync(view);
+            await WaitForAsyncViewsAsync(view, context);
             Dispatcher.UIThread.RunJobs();
             if (view is FormBrowse formBrowse)
             {
@@ -480,6 +480,26 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormBrowse))
         {
             return new FormBrowse(context.Commands);
+        }
+
+        if (viewType == typeof(FormAddToGitIgnore))
+        {
+            return new FormAddToGitIgnore(context.Commands, localExclude: false, "src/*.cs");
+        }
+
+        if (viewType == typeof(FormGitIgnore))
+        {
+            return new FormGitIgnore(context.Commands, localExclude: false);
+        }
+
+        if (viewType == typeof(FormGitAttributes))
+        {
+            return new FormGitAttributes(context.Commands);
+        }
+
+        if (viewType == typeof(FormMailMap))
+        {
+            return new FormMailMap(context.Commands);
         }
 
         if (viewType == typeof(FormBlame))
@@ -1398,7 +1418,7 @@ public sealed partial class ParityScreenshotTests
         => root.FindControl<T>(name)
             ?? throw new InvalidOperationException($"{root.GetType().Name}.{name} could not be found.");
 
-    private static async Task WaitForAsyncViewsAsync(Control root)
+    private static async Task WaitForAsyncViewsAsync(Control root, CaptureContext context)
     {
         if (root is CreatePullRequestForm)
         {
@@ -1531,6 +1551,34 @@ public sealed partial class ParityScreenshotTests
             accessor.DiffViewer.TextEditor.Text.Should().NotBeEmpty();
         }
 
+        if (root is FormAddToGitIgnore formAddToGitIgnore)
+        {
+            // parity-scaffolding: The headless dispatcher does not complete AsyncLoader's delayed
+            // main-thread continuation; publish the same repository query through the product boundary.
+            FormAddToGitIgnore.TestAccessor accessor = formAddToGitIgnore.GetTestAccessor();
+            await Task.Delay(350);
+            Dispatcher.UIThread.RunJobs();
+            accessor.UpdatePreview(context.Module.GetIgnoredFiles(["src/*.cs"]));
+
+            accessor.Preview.IsEnabled.Should().BeTrue();
+            accessor.Preview.ItemCount.Should().BeGreaterThan(0);
+        }
+
+        if (root is FormGitIgnore formGitIgnore)
+        {
+            await WaitForEditorContentAsync(formGitIgnore.GetTestAccessor().Editor, ".gitignore");
+        }
+
+        if (root is FormGitAttributes formGitAttributes)
+        {
+            await WaitForEditorContentAsync(formGitAttributes.GetTestAccessor().Editor, ".gitattributes");
+        }
+
+        if (root is FormMailMap formMailMap)
+        {
+            await WaitForEditorContentAsync(formMailMap.GetTestAccessor().Editor, ".mailmap");
+        }
+
         if (FindNamedControl(root, "listBoxSearchResult") is ListBox searchResults
             && FindNamedControl(root, "txtSearchBox") is TextBox searchText
             && !string.IsNullOrEmpty(searchText.Text))
@@ -1638,6 +1686,19 @@ public sealed partial class ParityScreenshotTests
         }
 
         loadingStatuses.Should().OnlyContain(status => IsLoadingComplete(status.Text));
+    }
+
+    // parity-scaffolding: File-backed editor dialogs must be compared only after their real loader settles.
+    private static async Task WaitForEditorContentAsync(FileViewer editor, string fileName)
+    {
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        while (string.IsNullOrEmpty(editor.TextEditor.Text) && stopwatch.Elapsed < TimeSpan.FromSeconds(15))
+        {
+            Dispatcher.UIThread.RunJobs();
+            await Task.Delay(10);
+        }
+
+        editor.TextEditor.Text.Should().NotBeEmpty($"the {fileName} loader must publish file content before capture");
     }
 
     private static async Task WaitForCommitDiffAsync(CommitDiff commitDiff)
@@ -1760,6 +1821,21 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormGitCommandLog))
         {
             return (659, 470);
+        }
+
+        if (viewType == typeof(FormAddToGitIgnore))
+        {
+            return (599, 341);
+        }
+
+        if (viewType == typeof(FormGitIgnore))
+        {
+            return (634, 623);
+        }
+
+        if (viewType == typeof(FormGitAttributes) || viewType == typeof(FormMailMap))
+        {
+            return (634, 474);
         }
 
         if (viewType == typeof(SearchControl)
