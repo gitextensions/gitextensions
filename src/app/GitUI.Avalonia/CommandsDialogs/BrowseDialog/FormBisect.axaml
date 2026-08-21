@@ -1,30 +1,18 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="GitUI.CommandsDialogs.BrowseDialog.FormBisect"
-        SizeToContent="WidthAndHeight"
+        Width="248"
+        Height="169"
         CanResize="False"
         WindowStartupLocation="CenterOwner"
         Title="Bisect">
-  <StackPanel Orientation="Vertical" Margin="12" Spacing="4" MinWidth="224">
-    <Button x:Name="Start"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Content="Start bisect" />
-    <Button x:Name="Bad"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Content="Mark current revision _bad" />
-    <Button x:Name="Good"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Content="Mark current revision _good" />
-    <Button x:Name="btnSkip"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Content="_Skip current revision" />
-    <Button x:Name="Stop"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Content="Stop bisect" />
-  </StackPanel>
+  <!-- Framework constraint: WinForms AutoSize contracts the 171-pixel Designer client to
+       this integer 169-pixel native-96-DPI runtime size. -->
+  <Grid>
+    <Button x:Name="Start" Margin="12,12,12,0" Height="25" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Center" TabIndex="0" Content="Start bisect" />
+    <Button x:Name="Bad" Margin="12,41,12,0" Height="25" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Center" TabIndex="1" Content="Mark current revision _bad" />
+    <Button x:Name="Good" Margin="12,70,12,0" Height="25" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Center" TabIndex="2" Content="Mark current revision _good" />
+    <Button x:Name="btnSkip" Margin="12,101,12,0" Height="25" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Center" TabIndex="3" Content="_Skip current revision" />
+    <Button x:Name="Stop" Margin="12,132,12,0" Height="25" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Center" TabIndex="4" Content="Stop bisect" />
+  </Grid>
 </Window>

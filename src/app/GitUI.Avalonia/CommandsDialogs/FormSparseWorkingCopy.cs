@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using GitCommands;
@@ -97,8 +98,11 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
     {
         Text = Globalized.Strings.SparseWorkingCopy.Text;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        MinWidth = 800;
-        MinHeight = 600;
+
+        // Framework constraint: Avalonia sizes a Window by its client area; WinForms' 800x600
+        // minimum outer window has a 784x561 client at the native 96-DPI baseline.
+        MinWidth = 784;
+        MinHeight = 561;
 
         Control panelHeader = CreateViewHeader();
 
@@ -148,17 +152,18 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         Grid tableFooterButtons = new()
         {
             ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto,Auto"),
+            ColumnSpacing = 3,
             Margin = new Thickness(10, 15, 10, 15),
         };
         SetDynamicBackground(tableFooterButtons, "GitExtensionsKnownColorControlLightLightBrush");
 
-        CheckBox check = new() { Content = Globalized.Strings.RefreshWorkingCopyUsingTheCurrentSettingsAndRules.Text, IsChecked = sparse.IsRefreshWorkingCopyOnSave, VerticalAlignment = VerticalAlignment.Center };
+        CheckBox check = new() { Content = Globalized.Strings.RefreshWorkingCopyUsingTheCurrentSettingsAndRules.Text, IsChecked = sparse.IsRefreshWorkingCopyOnSave, Width = 598, Height = 23, MinHeight = 0, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center };
         check.IsCheckedChanged += delegate { sparse.IsRefreshWorkingCopyOnSave = check.IsChecked == true; };
         ToolTip.SetTip(check, string.Format(Globalized.Strings.RefreshWorkingCopyCheckboxHint.Text, FormSparseWorkingCopyViewModel.RefreshWorkingCopyCommandName));
         Grid.SetColumn(check, 0);
         tableFooterButtons.Children.Add(check);
 
-        btnSave = new Button { MinWidth = 75, MinHeight = 23, Content = ToAccessKey(Globalized.Strings.Save.Text), VerticalAlignment = VerticalAlignment.Bottom };
+        btnSave = new Button { Width = 75, Height = 23, Padding = new Thickness(4, 0), Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(Globalized.Strings.Save.Text), VerticalContentAlignment = VerticalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom };
         Grid.SetColumn(btnSave, 1);
         tableFooterButtons.Children.Add(btnSave);
 
@@ -166,7 +171,7 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         Grid.SetColumn(spacer, 2);
         tableFooterButtons.Children.Add(spacer);
 
-        btnCancel = new Button { MinWidth = 75, MinHeight = 23, Content = ToAccessKey(Globalized.Strings.Cancel.Text), VerticalAlignment = VerticalAlignment.Bottom };
+        btnCancel = new Button { Width = 75, Height = 23, Padding = new Thickness(4, 0), Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(Globalized.Strings.Cancel.Text), VerticalContentAlignment = VerticalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom };
         Grid.SetColumn(btnCancel, 3);
         tableFooterButtons.Children.Add(btnCancel);
 
@@ -175,13 +180,15 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
 
     private static Control CreateViewHeader()
     {
-        StackPanel panelHeaderMain = new() { Orientation = Orientation.Vertical };
+        Grid panelHeaderMain = new() { Height = 71, RowDefinitions = new RowDefinitions("25,46") };
         SetDynamicBackground(panelHeaderMain, "GitExtensionsKnownColorControlLightLightBrush");
 
-        TextBlock labelTitle = new() { Text = Globalized.Strings.SparseWorkingCopy.Text, Margin = new Thickness(10, 10, 10, 0), FontWeight = FontWeight.Bold };
+        TextBlock labelTitle = new() { Text = Globalized.Strings.SparseWorkingCopy.Text, Margin = new Thickness(10, 10, 10, 0), Height = 15, FontWeight = FontWeight.Bold };
         panelHeaderMain.Children.Add(labelTitle);
 
-        panelHeaderMain.Children.Add(new TextBlock { Text = Globalized.Strings.HeaderDetailsText.Text, Margin = new Thickness(25, 6, 10, 10), TextWrapping = TextWrapping.Wrap });
+        TextBlock labelDetails = new() { Text = Globalized.Strings.HeaderDetailsText.Text, Margin = new Thickness(25, 6, 10, 10), Height = 30, LineHeight = 15, TextWrapping = TextWrapping.Wrap };
+        Grid.SetRow(labelDetails, 1);
+        panelHeaderMain.Children.Add(labelDetails);
 
         return panelHeaderMain;
     }
@@ -195,7 +202,7 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         SetDynamicForeground(disabledText, "GitExtensionsKnownColorInfoTextBrush");
         Grid.SetColumn(disabledText, 0);
         panelWhenDisabled.Children.Add(disabledText);
-        Button btnEnable = new() { MinWidth = 75, MinHeight = 23, Content = ToAccessKey(Globalized.Strings.Enable.Text), HorizontalAlignment = HorizontalAlignment.Right };
+        Button btnEnable = new() { Width = 75, Height = 23, Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(Globalized.Strings.Enable.Text), HorizontalAlignment = HorizontalAlignment.Right };
         btnEnable.Click += delegate { sparse.IsSparseCheckoutEnabled = true; };
         ToolTip.SetTip(btnEnable, string.Format(Globalized.Strings.SetsTheGitPropertyToTrueForTheLocalRepository.Text, FormSparseWorkingCopyViewModel.SettingCoreSparseCheckout));
         Grid.SetColumn(btnEnable, 1);
@@ -207,9 +214,9 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         sparse.PropertyChanged += delegate { separatorWhenDisabled.IsVisible = !sparse.IsSparseCheckoutEnabled; };
 
         // When enabled: a less bold link to disable
-        StackPanel labelWhenEnabled = new() { Orientation = Orientation.Horizontal, Margin = new Thickness(10, 10, 10, 5) };
-        labelWhenEnabled.Children.Add(new TextBlock { Text = Globalized.Strings.SparseWorkingCopySupportIsEnabled.Text + ' ', VerticalAlignment = VerticalAlignment.Center });
-        HyperlinkButton linkDisable = new() { Content = Globalized.Strings.DisableForThisRepository.Text };
+        StackPanel labelWhenEnabled = new() { Orientation = Orientation.Horizontal, Height = 36 };
+        labelWhenEnabled.Children.Add(new TextBlock { Text = Globalized.Strings.SparseWorkingCopySupportIsEnabled.Text + ' ', Margin = new Thickness(10, 10, 0, 5), Height = 21, VerticalAlignment = VerticalAlignment.Top });
+        HyperlinkButton linkDisable = new() { Content = Globalized.Strings.DisableForThisRepository.Text, Margin = new Thickness(0, 10, 10, 5), Height = 21, MinHeight = 0, Padding = new Thickness(0) };
         linkDisable.Click += delegate { sparse.IsSparseCheckoutEnabled = false; };
         ToolTip.SetTip(labelWhenEnabled, string.Format(Globalized.Strings.SetsTheGitPropertyToFalseForTheLocalRepository.Text, FormSparseWorkingCopyViewModel.SettingCoreSparseCheckout));
         labelWhenEnabled.Children.Add(linkDisable);
@@ -224,11 +231,11 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
 
     private static Control CreateViewRules(FormSparseWorkingCopyViewModel sparse, IGitUICommandsSource commandsSource)
     {
-        Grid panel = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,*") };
+        Grid panel = new() { RowDefinitions = new RowDefinitions("20,36,2,*") };
 
         // Label
-        TextBlock label1 = new() { Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories.Text, Margin = new Thickness(10, 5, 10, 0), TextWrapping = TextWrapping.Wrap };
-        TextBlock label2 = new() { Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectoriesLine2.Text, Margin = new Thickness(25, 3, 10, 3), TextWrapping = TextWrapping.Wrap };
+        TextBlock label1 = new() { Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories.Text, Width = 294, Height = 20, Padding = new Thickness(10, 5, 10, 0), HorizontalAlignment = HorizontalAlignment.Left, TextWrapping = TextWrapping.Wrap };
+        TextBlock label2 = new() { Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectoriesLine2.Text, Margin = new Thickness(0, 0, 19, 0), Height = 36, Padding = new Thickness(25, 3, 10, 3), LineHeight = 15, HorizontalAlignment = HorizontalAlignment.Stretch, TextWrapping = TextWrapping.Wrap };
         SetDynamicForeground(label2, "GitExtensionsKnownColorGrayTextBrush");
         sparse.PropertyChanged += delegate { label1.IsVisible = label2.IsVisible = sparse.IsSparseCheckoutEnabled; };
         Grid.SetRow(label1, 0);
@@ -287,11 +294,6 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
 
     private static void SetDynamicForeground(TextBlock control, string resourceKey)
         => control[!TextBlock.ForegroundProperty] = new DynamicResourceExtension(resourceKey);
-
-    // The WinForms mnemonic marker '&' has no meaning in Avalonia; convert it to the access-key
-    // marker '_' (doubling escapes literals) so keyboard accelerators keep working.
-    private static string ToAccessKey(string text)
-        => text.Replace("_", "__").Replace("&&", "").Replace("&", "_").Replace("", "&");
 
     private sealed class Globalized : Translate
     {
@@ -356,5 +358,7 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
     internal readonly struct TestAccessor(FormSparseWorkingCopy form)
     {
         public Grid Root => (Grid)form.Content!;
+
+        public FileViewer Editor => Root.GetLogicalDescendants().OfType<FileViewer>().Single();
     }
 }

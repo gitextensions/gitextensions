@@ -482,6 +482,22 @@ public sealed partial class ParityScreenshotTests
             return new FormBrowse(context.Commands);
         }
 
+        if (viewType == typeof(FormCleanupRepository))
+        {
+            return new FormCleanupRepository(context.Commands);
+        }
+
+        if (viewType == typeof(FormBisect))
+        {
+            RevisionGridControl revisionGrid = new() { UICommandsSource = context };
+            return new FormBisect(revisionGrid);
+        }
+
+        if (viewType == typeof(FormSparseWorkingCopy))
+        {
+            return new FormSparseWorkingCopy(context.Commands);
+        }
+
         if (viewType == typeof(FormAddToGitIgnore))
         {
             return new FormAddToGitIgnore(context.Commands, localExclude: false, "src/*.cs");
@@ -1579,6 +1595,11 @@ public sealed partial class ParityScreenshotTests
             await WaitForEditorContentAsync(formMailMap.GetTestAccessor().Editor, ".mailmap");
         }
 
+        if (root is FormSparseWorkingCopy formSparseWorkingCopy)
+        {
+            await WaitForEditorContentAsync(formSparseWorkingCopy.GetTestAccessor().Editor, ".git/info/sparse-checkout");
+        }
+
         if (FindNamedControl(root, "listBoxSearchResult") is ListBox searchResults
             && FindNamedControl(root, "txtSearchBox") is TextBox searchText
             && !string.IsNullOrEmpty(searchText.Text))
@@ -1821,6 +1842,25 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormGitCommandLog))
         {
             return (659, 470);
+        }
+
+        if (viewType == typeof(FormCleanupRepository))
+        {
+            // parity-scaffolding: The source Designer is authored at 120 DPI; WinForms' native
+            // 96-DPI AutoScale result is the authoritative Avalonia client size.
+            return (434, 582);
+        }
+
+        if (viewType == typeof(FormBisect))
+        {
+            // parity-scaffolding: WinForms AutoSize contracts the 171-pixel Designer client to 169.
+            return (248, 169);
+        }
+
+        if (viewType == typeof(FormSparseWorkingCopy))
+        {
+            // parity-scaffolding: WinForms declares an 800x600 minimum outer window.
+            return (784, 561);
         }
 
         if (viewType == typeof(FormAddToGitIgnore))
@@ -2115,6 +2155,7 @@ public sealed partial class ParityScreenshotTests
             new("UserControls/WaitSpinner.cs", "UserControls/WaitSpinner", typeof(WaitSpinner).FullName!, typeof(WaitSpinner)),
             new("UserControls/WatermarkComboBox.cs", "UserControls/WatermarkComboBox", typeof(WatermarkComboBox).FullName!, typeof(WatermarkComboBox)),
             new("UserControls/CaseSensitiveComboBox.cs", "UserControls/CaseSensitiveComboBox", typeof(CaseSensitiveComboBox).FullName!, typeof(CaseSensitiveComboBox)),
+            new("CommandsDialogs/FormSparseWorkingCopy.cs", "CommandsDialogs/FormSparseWorkingCopy", typeof(FormSparseWorkingCopy).FullName!, typeof(FormSparseWorkingCopy)),
             // parity-scaffolding: Plugin-owned AXAML lives outside GitUI.Avalonia but shares the capture schema and state driver.
             new("../../plugins/Gource/GourceStart.axaml", "../../plugins/Gource/GourceStart", typeof(GourceStart).FullName!, typeof(GourceStart)),
         ];
