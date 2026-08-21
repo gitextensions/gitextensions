@@ -101,7 +101,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
         Go();
     }
 
-    private void linkGitRevParse_LinkClicked(object? sender, PointerReleasedEventArgs e)
+    private void linkGitRevParse_LinkClicked(object? sender, RoutedEventArgs e)
     {
         OsShellUtil.OpenUrlInDefaultBrowser(@"https://git-scm.com/docs/git-rev-parse#_specifying_revisions");
     }
@@ -264,13 +264,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
     {
         goButton.Click += goButton_Click;
         textboxCommitExpression.TextChanged += commitExpression_TextChanged;
-        linkGitRevParse.PointerReleased += (sender, e) =>
-        {
-            if (e.InitialPressMouseButton == MouseButton.Left)
-            {
-                linkGitRevParse_LinkClicked(sender, e);
-            }
-        };
+        linkGitRevParse.Click += linkGitRevParse_LinkClicked;
         comboBoxTags.GotFocus += comboBoxTags_Enter;
         comboBoxTags.PropertyChanged += (_, e) =>
         {
