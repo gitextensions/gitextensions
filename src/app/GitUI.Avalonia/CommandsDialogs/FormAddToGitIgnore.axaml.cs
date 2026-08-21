@@ -72,7 +72,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
         }
     }
 
-    private void AddToIgnoreClick(object? sender, EventArgs e)
+    private void AddToIgnoreClick(object sender, EventArgs e)
     {
         string[] patterns = [.. GetCurrentPatterns()];
         if (patterns.Length == 0)
@@ -116,7 +116,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
     private void UpdatePreviewPanel(IReadOnlyList<string> ignoredFiles)
     {
         _NO_TRANSLATE_Preview.ItemsSource = ignoredFiles;
-        _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.ItemCount);
+        _NO_TRANSLATE_filesWillBeIgnored.Content = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.ItemCount);
         _NO_TRANSLATE_Preview.IsEnabled = true;
         noMatchPanel.IsVisible = _NO_TRANSLATE_Preview.ItemCount == 0;
     }
@@ -129,13 +129,13 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
     private string[] GetLines()
         => FilePattern.Text?.Split(["\r\n", "\r", "\n"], StringSplitOptions.None) ?? [];
 
-    private void FilePattern_TextChanged(object? sender, EventArgs e)
+    private void FilePattern_TextChanged(object sender, EventArgs e)
     {
         _ignoredFilesLoader.Cancel();
         if (_NO_TRANSLATE_Preview.IsEnabled)
         {
             _ignoredFilesLoader.Delay = TimeSpan.FromMilliseconds(300);
-            _NO_TRANSLATE_filesWillBeIgnored.Text = _updateStatusString.Text;
+            _NO_TRANSLATE_filesWillBeIgnored.Content = _updateStatusString.Text;
             _NO_TRANSLATE_Preview.ItemsSource = new List<string> { _updateStatusString.Text };
             _NO_TRANSLATE_Preview.IsEnabled = false;
         }

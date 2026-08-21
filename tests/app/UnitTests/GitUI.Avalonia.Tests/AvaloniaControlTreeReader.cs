@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.VisualTree;
 using GitExtensions.ParityCapture;
 using GitUI;
+using GitUI.Compat;
 using GitUI.UserControls.RevisionGrid.Columns;
 
 namespace GitExtensionsTests;
@@ -161,12 +162,16 @@ internal sealed class AvaloniaControlTreeReader
             return null;
         }
 
+        object? content = GetPropertyValue(control, "Content");
+        object? header = GetPropertyValue(control, "Header");
         string? text = GetPropertyValue(control, "Text") as string
-            ?? GetPropertyValue(control, "Content") as string
-            ?? GetPropertyValue(control, "Header") as string;
+            ?? content as string
+            ?? (content as TextBlock)?.Text
+            ?? header as string
+            ?? (header as TextBlock)?.Text;
         return text is null
             ? string.Empty
-            : control is MenuItem or Button or Label
+            : control is MenuItem or Button or Label && TranslationCompat.GetConvertMnemonics(control)
                 ? ToWinFormsMnemonics(text)
                 : text;
     }
