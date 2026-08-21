@@ -2910,7 +2910,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCompareToBranch.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML preserves the BranchSelector, field names, order, default-button route, title, and compact centered 96-DPI layout. The Designer's 60x23 Compare size is the AutoSize minimum; the inherited runtime font resolves it to 66x25, the hosted selector resolves to 322x58, and the complete client contracts to 434x106. The integer Canvas geometry records those native-96 WinForms runtime results without capture scaling. XAML-named controls replace Designer fields and therefore remain a documented structural representation difference."
+    "notes": "Native AXAML preserves the BranchSelector, field names, source tab indices, order, default-button route, title, and compact centered 96-DPI layout. The Designer's 60x23 Compare size is the AutoSize minimum; the inherited runtime font resolves it to 66x25, the hosted selector resolves to 322x58, and the complete client contracts to 434x106. The integer Canvas geometry records those native-96 WinForms runtime results without capture scaling. XAML-named controls replace Designer fields and therefore remain a documented structural representation difference."
   },
   "src/app/GitUI/CommandsDialogs/FormDeleteRemoteBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteRemoteBranch.axaml.cs",
@@ -2928,13 +2928,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDiff.axaml.cs",
     "status": "functional",
     "basedOn": "8f50ee6e174f307ab645837859d0d550d80d6f5f",
-    "notes": "Preserves adjacent-revision and merge-base calculation, async changed-file population, selected-file diff viewing, continuous-scroll file navigation, swap, branch/commit replacement, directory difftool launch, theme colors, and tooltips. A small compat ToolTip component preserves the original SetToolTip call sites while forwarding to Avalonia's attached property; IsChecked/IsEnabled boundaries replace their WinForms counterparts, and dynamic WinForms ampersand mnemonics are converted through the shared Avalonia translation boundary. Parameterless construction, runtime-load/close adaptation, and centralized event wiring are parity scaffolding placed after the original member sequence."
+    "notes": "Preserves adjacent-revision and merge-base calculation, async changed-file population with restart/close cancellation, selected-file diff viewing, continuous-scroll file navigation, swap, branch/commit replacement, directory difftool launch, theme colors, and tooltips. A small compat ToolTip component preserves the original SetToolTip call sites while forwarding to Avalonia's attached property; Avalonia Label.Content replaces WinForms Label.Text, IsChecked/IsEnabled boundaries replace their WinForms counterparts, and dynamic WinForms ampersand mnemonics are converted through the shared Avalonia translation boundary. Parameterless construction, runtime-load/close adaptation, and centralized event wiring are parity scaffolding placed after the original member sequence."
   },
   "src/app/GitUI/CommandsDialogs/FormDiff.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDiff.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML preserves the named BASE/Compare groups, 22x22 picker/swap buttons, file-status list, file viewer, original 96-DPI window size, icon resources, and theme-resolved red/green backgrounds. The Designer's AutoSize groups and labels resolve under the runtime font to integer 50-pixel groups and 15-pixel labels; the settings row occupies 112 pixels and the split panel's original 3-pixel table margin places its 602-pixel region at y=115. The group content panels retain their 3-pixel inset and 491-pixel width, and the opaque control-color header background is explicit. The integer layout records native-96 WinForms runtime results without capture scaling. XAML-named controls replace Designer fields and therefore remain a documented structural representation difference."
+    "notes": "Native AXAML preserves the named BASE/Compare groups, original Label control identities and tab indices, 22x22 picker/swap buttons, file-status list, file viewer, original 96-DPI window size, icon resources, and theme-resolved red/green backgrounds. The Designer's AutoSize groups and labels resolve under the runtime font to integer 50-pixel groups and 15-pixel labels; the settings row occupies 112 pixels and the split panel's original 3-pixel table margin places its 602-pixel region at y=115. The group content panels retain their 3-pixel inset and 491-pixel width, and the opaque control-color header background is explicit. The integer layout records native-96 WinForms runtime results without capture scaling. XAML-named controls replace Designer fields and therefore remain a documented structural representation difference."
   },
   "src/app/GitUI/CommandsDialogs/FormFileHistoryController.cs": {
     "status": "unported",
@@ -2950,7 +2950,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormFormatPatch.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML preserves the save-to row, RevisionGrid, branch labels, create button, field names, resize minimum, title, table margins, and tab order. This Designer explicitly records 120 DPI, so WinForms AutoScale resolves its integer 1030x665 authored size to an integer 824x532 client at 96 DPI; the twin records the resulting 34/462/36 row allocation and exact integer child bounds. The paired capture host uses that client size. WinForms-only BindingSource components have no rendered Avalonia counterpart, and XAML-named controls replace Designer fields."
+    "notes": "Native AXAML preserves the save-to row, RevisionGrid, original Label control identities, top-flowed branch row, create button, field names, resize minimum, title, table margins, and source tab order. This Designer explicitly records 120 DPI, so WinForms AutoScale resolves its integer 1030x665 authored size to an integer 824x532 client at 96 DPI; the twin records the resulting 34/462/36 row allocation and exact integer child bounds. The paired capture host uses that client size. WinForms-only BindingSource components have no rendered Avalonia counterpart, and XAML-named controls replace Designer fields."
   },
   "src/app/GitUI/CommandsDialogs/FormGitAttributes.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormGitAttributes.axaml.cs",
@@ -3923,7 +3923,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/BranchSelector.axaml",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Native Avalonia grid preserves the original named fields and autosizing contract. The standalone Designer default remains 325x54 at 96 DPI; when FormCompareToBranch supplies its inherited runtime font, WinForms AutoSize resolves the hosted selector to 322x58 with integer 23-pixel first-row, 15-pixel labels, 93-pixel local choice, 112-pixel remote choice, right-aligned 78-pixel prompt, zero ComboBox content padding, and the change summary at y=35. The twin records those source/default/runtime results directly, never capture-normalized dimensions. Exhaustive translations, native DPI, theme/state, manual, and macOS closure remain P8.6g.3b."
+    "notes": "Native Avalonia grid preserves the original named fields, source tab indices, and autosizing contract. The standalone Designer default remains 325x54 at 96 DPI; when FormCompareToBranch supplies its inherited runtime font, WinForms AutoSize resolves the hosted selector to 322x58 with integer 23-pixel first-row, 15-pixel labels, 93-pixel local choice, 112-pixel remote choice, right-aligned 78-pixel prompt, zero ComboBox content padding, and the change summary at y=35. The twin records those source/default/runtime results directly, never capture-normalized dimensions. Exhaustive translations, native DPI, theme/state, manual, and macOS closure remain P8.6g.3b."
   },
   "src/app/GitUI/UserControls/CaseSensitiveComboBox.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/CaseSensitiveComboBox.cs",
