@@ -1,12 +1,16 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
+using GitCommands;
+using GitCommands.Logging;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
+using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.Menus;
@@ -46,6 +50,20 @@ public sealed class BlameAndLogTests
     }
 
     [AvaloniaTest]
+    public void FormBlame_should_fill_the_96_dpi_designer_client_without_a_synthetic_inset()
+    {
+        FormBlame form = new() { Width = 784, Height = 762 };
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        BlameControl blame = form.GetTestAccessor().BlameControl;
+        blame.Bounds.Should().Be(new Rect(0, 0, 784, 762));
+        blame.TabIndex.Should().Be(0);
+
+        form.Close();
+    }
+
+    [AvaloniaTest]
     public void FormLog_should_construct_and_host_the_grid_files_and_viewer()
     {
         FormLog form = new();
@@ -82,6 +100,28 @@ public sealed class BlameAndLogTests
     }
 
     [AvaloniaTest]
+    public void FormLog_should_preserve_the_96_dpi_designer_split_and_tab_order()
+    {
+        FormLog form = new() { Width = 750, Height = 529 };
+
+        FormLog.TestAccessor accessor = form.GetTestAccessor();
+        Grid root = (Grid)form.Content!;
+        root.RowDefinitions[0].Height.Should().Be(new GridLength(205));
+        root.RowDefinitions[1].Height.Should().Be(new GridLength(4));
+        root.ColumnDefinitions.Should().BeEmpty();
+        Grid lower = (Grid)accessor.DiffFiles.Parent!;
+        lower.ColumnDefinitions[0].Width.Should().Be(new GridLength(188));
+        lower.ColumnDefinitions[1].Width.Should().Be(new GridLength(4));
+        root.Children.OfType<GridSplitter>().Should().ContainSingle();
+        lower.Children.OfType<GridSplitter>().Should().ContainSingle();
+        accessor.RevisionGrid.TabIndex.Should().Be(1);
+        accessor.DiffFiles.TabIndex.Should().Be(0);
+        accessor.DiffViewer.TabIndex.Should().Be(1);
+
+        form.Close();
+    }
+
+    [AvaloniaTest]
     public void FormGitCommandLog_should_construct_with_two_tabs_and_wrap_enabled()
     {
         FormGitCommandLog form = new();
@@ -93,6 +133,67 @@ public sealed class BlameAndLogTests
         accessor.WordWrap.IsChecked.Should().BeTrue();
         accessor.LogOutput.IsReadOnly.Should().BeTrue();
         accessor.CommandCacheOutput.IsReadOnly.Should().BeTrue();
+
+        form.Close();
+    }
+
+    [AvaloniaTest]
+    public void FormGitCommandLog_should_preserve_the_96_dpi_designer_layout_theme_and_context_surfaces()
+    {
+        FormGitCommandLog form = new();
+        FormGitCommandLog.TestAccessor accessor = form.GetTestAccessor();
+        Grid logSplit = form.FindControl<Grid>("splitContainer2")!;
+        Grid cacheSplit = form.FindControl<Grid>("splitContainer1")!;
+        TabItem logTab = form.FindControl<TabItem>("tabPageCommandLog")!;
+        TabItem cacheTab = form.FindControl<TabItem>("tabPageCommandCache")!;
+
+        form.Name.Should().Be(nameof(FormGitCommandLog));
+        form.Width.Should().Be(659);
+        form.Height.Should().Be(470);
+        accessor.TabControl.Margin.Should().Be(new Thickness(0, 3, 0, 0));
+        accessor.TabControl.TabIndex.Should().Be(1);
+        logSplit.RowDefinitions.Select(row => row.Height).Should().Equal(
+            GridLength.Star,
+            new GridLength(4),
+            new GridLength(150));
+        cacheSplit.RowDefinitions.Select(row => row.Height).Should().Equal(
+            new GridLength(183, GridUnitType.Star),
+            new GridLength(4),
+            new GridLength(231, GridUnitType.Star));
+        logSplit.Margin.Should().Be(new Thickness(1, 0, 1, 1));
+        cacheSplit.Margin.Should().Be(new Thickness(1, 0, 1, 1));
+        logSplit.Children.OfType<GridSplitter>().Single().MinHeight.Should().Be(4);
+        cacheSplit.Children.OfType<GridSplitter>().Single().MinHeight.Should().Be(4);
+        logTab.Classes.Should().Contain("gitextensions-dialog-tab");
+        cacheTab.Classes.Should().Contain("gitextensions-dialog-tab");
+        accessor.LogItems.BorderThickness.Should().Be(default(Thickness));
+        accessor.CommandCacheItems.BorderThickness.Should().Be(default(Thickness));
+        accessor.LogItems.Focusable.Should().BeTrue();
+        accessor.CommandCacheItems.Focusable.Should().BeTrue();
+        accessor.LogItems.FontSize.Should().Be(12);
+        accessor.CommandCacheItems.FontSize.Should().Be(12);
+        accessor.LogOutput.FontSize.Should().Be(12);
+        accessor.CommandCacheOutput.FontSize.Should().Be(12);
+        string genericMonospace = OperatingSystem.IsWindows() ? "Courier New" : "DejaVu Sans Mono";
+        accessor.LogItems.FontFamily.Name.Should().Be(genericMonospace);
+        accessor.CommandCacheItems.FontFamily.Should().Be(accessor.LogItems.FontFamily);
+        accessor.LogOutput.FontFamily.Should().Be(accessor.LogItems.FontFamily);
+        accessor.CommandCacheOutput.FontFamily.Should().Be(accessor.LogItems.FontFamily);
+        logTab.Background.Should().NotBeNull();
+        cacheTab.Background.Should().Be(logTab.Background);
+        accessor.LogOutput.Background.Should().NotBeNull();
+        accessor.CommandCacheOutput.Background.Should().Be(accessor.LogOutput.Background);
+        logTab.ContextMenu.Should().NotBeNull();
+        cacheTab.ContextMenu.Should().NotBeNull();
+        accessor.AlwaysOnTop.TabIndex.Should().Be(2);
+        accessor.AlwaysOnTop.Width.Should().Be(101);
+        accessor.AlwaysOnTop.Height.Should().Be(19);
+        accessor.WordWrap.TabIndex.Should().Be(3);
+        accessor.WordWrap.Width.Should().Be(84);
+        accessor.WordWrap.Height.Should().Be(19);
+        accessor.CaptureCallStacks.TabIndex.Should().Be(4);
+        accessor.CaptureCallStacks.Width.Should().Be(124);
+        accessor.CaptureCallStacks.Height.Should().Be(19);
 
         form.Close();
     }
@@ -148,6 +249,31 @@ public sealed class BlameAndLogTests
         FormGitCommandLog.TestAccessor.Refresh(log, ["x", "y", "z"]);
 
         log.SelectedIndex.Should().Be(0);
+    }
+
+    [AvaloniaTest]
+    public void FormGitCommandLog_should_ignore_bubbled_list_selection_when_switching_to_the_cache_tab()
+    {
+        CommandLog.Clear();
+        GitModule.GitCommandCache.Clear();
+        GitModule.GitCommandCache.Add("status --porcelain=v2", "1 .M src/App.cs", string.Empty);
+        ProcessOperation operation = CommandLog.LogProcessStart("git", "status --short");
+        operation.LogProcessEnd(0);
+        FormGitCommandLog form = new();
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        FormGitCommandLog.TestAccessor accessor = form.GetTestAccessor();
+
+        Action selectCacheTab = () => accessor.TabControl.SelectedIndex = 1;
+
+        selectCacheTab.Should().NotThrow();
+        Dispatcher.UIThread.RunJobs();
+        accessor.CommandCacheItems.ItemCount.Should().Be(1);
+        accessor.CommandCacheItems.SelectedIndex.Should().Be(0);
+
+        form.Close();
+        CommandLog.Clear();
+        GitModule.GitCommandCache.Clear();
     }
 
     [AvaloniaTest]

@@ -6,6 +6,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -116,6 +117,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         showAuthorTimeToolStripMenuItem.Click += showAuthorTimeToolStripMenuItem_Click;
         showLineNumbersToolStripMenuItem.Click += showLineNumbersToolStripMenuItem_Click;
         showOriginalFilePathToolStripMenuItem.Click += showOriginalFilePathToolStripMenuItem_Click;
+        gitcommandLogToolStripMenuItem.Click += GitcommandLogToolStripMenuItemClick;
 
         UpdateFollowHistoryMenuItems();
         UpdateHistoryMenuItems();
@@ -422,6 +424,11 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         AppSettings.BlameShowOriginalFilePath = !AppSettings.BlameShowOriginalFilePath;
         UpdateBlameMenuItems();
         UpdateSelectedFileViewers(force: true);
+    }
+
+    private void GitcommandLogToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        FormGitCommandLog.ShowOrActivate(this);
     }
 
     private void UpdateBlameMenuItems()

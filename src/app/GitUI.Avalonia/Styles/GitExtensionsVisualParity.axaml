@@ -24,6 +24,7 @@
       <x:Double x:Key="GitExtensionsMonospaceFontSize">12</x:Double>
       <FontStyle x:Key="GitExtensionsMonospaceFontStyle">Normal</FontStyle>
       <FontWeight x:Key="GitExtensionsMonospaceFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsGenericMonospaceFontFamily">Courier New</FontFamily>
       <x:Double x:Key="GitExtensionsTreeViewItemIndent">18</x:Double>
       <Thickness x:Key="GitExtensionsTreeViewChevronMargin">4,0</Thickness>
       <SolidColorBrush x:Key="GitExtensionsTransparentBrush" Color="Transparent" />
