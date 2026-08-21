@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "bf5b0beb13b70ae7a73b3780b818b62f88e695c1",
+  "analyzedCommit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
   "axisOrder": [
     "structural",
     "functional",
@@ -4088,61 +4088,89 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormAddToGitIgnore.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormAddToGitIgnore.json"
           ],
           "platforms": [],
-          "findingCount": 83,
-          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+          "findingCount": 78,
+          "note": "The re-inventory records the remaining generated-Designer/AXAML, member, and comment differences after restoring the source-authored 96-DPI layout and control identities."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormAddToGitIgnore.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormAddToGitIgnore.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
           ],
-          "platforms": [],
-          "findingCount": 3,
-          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 33,
+          "note": "Focused tests cover the restored editor/load/close contracts and translation behavior, but the source inventory and unexercised file-write, prompt, and link paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 2018,
+          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 197,
+          "note": "Resolved-ARGB comparisons exist for light, dark, and parity-custom at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 45,
+          "note": "Normal, focused, and disabled capture states are paired where applicable, while remaining state findings and the exhaustive popup, keyboard, and error-path walk stay open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke passed on Windows, native Wayland, native X11, and Wayland-only Flatpak with --filesystem=host; component-specific runtime interaction and macOS remain unverified."
         }
       }
     },
@@ -4153,61 +4181,89 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormAddToGitIgnore.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormAddToGitIgnore.json"
           ],
           "platforms": [],
-          "findingCount": 83,
-          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+          "findingCount": 78,
+          "note": "The re-inventory records the remaining generated-Designer/AXAML, member, and comment differences after restoring the source-authored 96-DPI layout and control identities."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormAddToGitIgnore.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormAddToGitIgnore.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
           ],
-          "platforms": [],
-          "findingCount": 3,
-          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 33,
+          "note": "Focused tests cover the restored editor/load/close contracts and translation behavior, but the source inventory and unexercised file-write, prompt, and link paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 2018,
+          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 197,
+          "note": "Resolved-ARGB comparisons exist for light, dark, and parity-custom at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 45,
+          "note": "Normal, focused, and disabled capture states are paired where applicable, while remaining state findings and the exhaustive popup, keyboard, and error-path walk stay open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke passed on Windows, native Wayland, native X11, and Wayland-only Flatpak with --filesystem=host; component-specific runtime interaction and macOS remain unverified."
         }
       }
     },
@@ -6275,61 +6331,89 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitAttributes.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormGitAttributes.json"
           ],
           "platforms": [],
-          "findingCount": 55,
-          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+          "findingCount": 38,
+          "note": "The re-inventory records the remaining generated-Designer/AXAML, member, and comment differences after restoring the source-authored 96-DPI layout and control identities."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitAttributes.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormGitAttributes.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
           ],
-          "platforms": [],
-          "findingCount": 2,
-          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 14,
+          "note": "Focused tests cover the restored editor/load/close contracts and translation behavior, but the source inventory and unexercised file-write, prompt, and link paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 3530,
+          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1031,
+          "note": "Resolved-ARGB comparisons exist for light, dark, and parity-custom at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 204,
+          "note": "Normal, focused, and disabled capture states are paired where applicable, while remaining state findings and the exhaustive popup, keyboard, and error-path walk stay open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke passed on Windows, native Wayland, native X11, and Wayland-only Flatpak with --filesystem=host; component-specific runtime interaction and macOS remain unverified."
         }
       }
     },
@@ -6340,61 +6424,89 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitAttributes.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormGitAttributes.json"
           ],
           "platforms": [],
-          "findingCount": 55,
-          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+          "findingCount": 38,
+          "note": "The re-inventory records the remaining generated-Designer/AXAML, member, and comment differences after restoring the source-authored 96-DPI layout and control identities."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitAttributes.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormGitAttributes.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
           ],
-          "platforms": [],
-          "findingCount": 2,
-          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 14,
+          "note": "Focused tests cover the restored editor/load/close contracts and translation behavior, but the source inventory and unexercised file-write, prompt, and link paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 3530,
+          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1031,
+          "note": "Resolved-ARGB comparisons exist for light, dark, and parity-custom at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 204,
+          "note": "Normal, focused, and disabled capture states are paired where applicable, while remaining state findings and the exhaustive popup, keyboard, and error-path walk stay open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke passed on Windows, native Wayland, native X11, and Wayland-only Flatpak with --filesystem=host; component-specific runtime interaction and macOS remain unverified."
         }
       }
     },
@@ -6405,61 +6517,89 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitIgnore.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormGitIgnore.json"
           ],
           "platforms": [],
-          "findingCount": 108,
-          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+          "findingCount": 84,
+          "note": "The re-inventory records the remaining generated-Designer/AXAML, member, and comment differences after restoring the source-authored 96-DPI layout and control identities."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitIgnore.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormGitIgnore.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
           ],
-          "platforms": [],
-          "findingCount": 6,
-          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 36,
+          "note": "Focused tests cover the restored editor/load/close contracts and translation behavior, but the source inventory and unexercised file-write, prompt, and link paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 4818,
+          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1155,
+          "note": "Resolved-ARGB comparisons exist for light, dark, and parity-custom at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 204,
+          "note": "Normal, focused, and disabled capture states are paired where applicable, while remaining state findings and the exhaustive popup, keyboard, and error-path walk stay open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke passed on Windows, native Wayland, native X11, and Wayland-only Flatpak with --filesystem=host; component-specific runtime interaction and macOS remain unverified."
         }
       }
     },
@@ -6470,61 +6610,89 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitIgnore.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormGitIgnore.json"
           ],
           "platforms": [],
-          "findingCount": 108,
-          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+          "findingCount": 84,
+          "note": "The re-inventory records the remaining generated-Designer/AXAML, member, and comment differences after restoring the source-authored 96-DPI layout and control identities."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormGitIgnore.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormGitIgnore.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
           ],
-          "platforms": [],
-          "findingCount": 6,
-          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 36,
+          "note": "Focused tests cover the restored editor/load/close contracts and translation behavior, but the source inventory and unexercised file-write, prompt, and link paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 4818,
+          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1155,
+          "note": "Resolved-ARGB comparisons exist for light, dark, and parity-custom at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 204,
+          "note": "Normal, focused, and disabled capture states are paired where applicable, while remaining state findings and the exhaustive popup, keyboard, and error-path walk stay open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke passed on Windows, native Wayland, native X11, and Wayland-only Flatpak with --filesystem=host; component-specific runtime interaction and macOS remain unverified."
         }
       }
     },
@@ -6730,61 +6898,89 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormMailMap.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormMailMap.json"
           ],
           "platforms": [],
-          "findingCount": 55,
-          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+          "findingCount": 39,
+          "note": "The re-inventory records the remaining generated-Designer/AXAML, member, and comment differences after restoring the source-authored 96-DPI layout and control identities."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormMailMap.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormMailMap.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
           ],
-          "platforms": [],
-          "findingCount": 2,
-          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 15,
+          "note": "Focused tests cover the restored editor/load/close contracts and translation behavior, but the source inventory and unexercised file-write, prompt, and link paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 3530,
+          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1031,
+          "note": "Resolved-ARGB comparisons exist for light, dark, and parity-custom at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 204,
+          "note": "Normal, focused, and disabled capture states are paired where applicable, while remaining state findings and the exhaustive popup, keyboard, and error-path walk stay open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke passed on Windows, native Wayland, native X11, and Wayland-only Flatpak with --filesystem=host; component-specific runtime interaction and macOS remain unverified."
         }
       }
     },
@@ -6795,61 +6991,89 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormMailMap.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormMailMap.json"
           ],
           "platforms": [],
-          "findingCount": 55,
-          "note": "The P5.4 source inventory found structural/member/comment differences from the WinForms original."
+          "findingCount": 39,
+          "note": "The re-inventory records the remaining generated-Designer/AXAML, member, and comment differences after restoring the source-authored 96-DPI layout and control identities."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.4/inventory/FormMailMap.json"
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/inventory-final-2/FormMailMap.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
           ],
-          "platforms": [],
-          "findingCount": 2,
-          "note": "The P5.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 15,
+          "note": "Focused tests cover the restored editor/load/close contracts and translation behavior, but the source inventory and unexercised file-write, prompt, and link paths keep functional parity open."
         },
         "visual": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired WinForms/Avalonia captures were not produced this tranche; exact visual closure is owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/winforms-baseline/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/avalonia-final-4/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 3530,
+          "note": "Native-100 paired light, dark, and custom-theme captures now cover the declared states; the recorded geometry, font, text, control, layout, and image findings remain open, and 125/150/200 captures are deferred debt."
         },
         "themingAndColor": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Paired theme/color captures were not produced this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 1031,
+          "note": "Resolved-ARGB comparisons exist for light, dark, and parity-custom at native 100 percent; recorded color findings remain open."
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "The complete interaction state matrix was not exercised this tranche; owned by P5.9/P8.6i."
+          "status": "gap",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/diff-final-4/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/tests/windows/p8.6i-progress20-focused-windows-final.trx"
+          ],
+          "platforms": [
+            "windows"
+          ],
+          "findingCount": 204,
+          "note": "Normal, focused, and disabled capture states are paired where applicable, while remaining state findings and the exhaustive popup, keyboard, and error-path walk stay open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-06",
-          "commit": "4bcc1a51b63da7125548aa7469df5e35148d7cb8",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-21",
+          "commit": "c93a27cf48387a050de1ff4ab6864b9fc9c160fd",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/windows-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/wayland-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/x11-final/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/ignore-editors-20/runtime/flatpak-final/smoke.json"
+          ],
+          "platforms": [
+            "windows",
+            "linux-wayland",
+            "linux-x11",
+            "flatpak"
+          ],
           "findingCount": 0,
-          "note": "Windows build and WSL headless gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "Shipping-app runtime smoke passed on Windows, native Wayland, native X11, and Wayland-only Flatpak with --filesystem=host; component-specific runtime interaction and macOS remain unverified."
         }
       }
     },
