@@ -37,6 +37,10 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormFormatPatch" => new FormFormatPatch(commands),
             "GitUI.CommandsDialogs.FormBlame" => CreateFormBlame(commands),
             "GitUI.CommandsDialogs.FormLog" => new FormLog(commands),
+            "GitUI.CommandsDialogs.FormAddToGitIgnore" => new FormAddToGitIgnore(commands, localExclude: false, "src/*.cs"),
+            "GitUI.CommandsDialogs.FormGitIgnore" => new FormGitIgnore(commands, localExclude: false),
+            "GitUI.CommandsDialogs.FormGitAttributes" => new FormGitAttributes(commands),
+            "GitUI.CommandsDialogs.FormMailMap" => new FormMailMap(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog" => CreateGitCommandLog(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
             "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),
@@ -243,6 +247,26 @@ internal static class ComponentFactory
         if (control is FormBlame)
         {
             WaitForBlameContent(control);
+        }
+
+        if (control is FormAddToGitIgnore)
+        {
+            WaitForIgnorePreview(control);
+        }
+
+        if (control is FormGitIgnore)
+        {
+            WaitForEditorContent(control, "_NO_TRANSLATE_GitIgnoreEdit", ".gitignore");
+        }
+
+        if (control is FormGitAttributes)
+        {
+            WaitForEditorContent(control, "_NO_TRANSLATE_GitAttributesText", ".gitattributes");
+        }
+
+        if (control is FormMailMap)
+        {
+            WaitForEditorContent(control, "_NO_TRANSLATE_MailMapText", ".mailmap");
         }
 
         RevisionGridControl? revisionGrid = control as RevisionGridControl;
@@ -682,6 +706,40 @@ internal static class ComponentFactory
         if (diffFiles.AllItemsCount == 0 || string.IsNullOrEmpty(diffViewer.GetText()))
         {
             throw new CaptureStateUnsupportedException("The original log form did not publish its selected revision diff before capture.");
+        }
+    }
+
+    private static void WaitForIgnorePreview(Control control)
+    {
+        ListBox preview = (ListBox?)FindFieldValue(control, "_NO_TRANSLATE_Preview")
+            ?? throw new CaptureStateUnsupportedException("The original ignore-pattern form did not expose its preview list.");
+        DateTime deadline = DateTime.UtcNow.AddSeconds(30);
+        while ((!preview.Enabled || preview.Items.Count == 0) && DateTime.UtcNow < deadline)
+        {
+            Application.DoEvents();
+            Thread.Sleep(25);
+        }
+
+        if (!preview.Enabled || preview.Items.Count == 0)
+        {
+            throw new CaptureStateUnsupportedException("The original ignored-files loader did not publish its preview before capture.");
+        }
+    }
+
+    private static void WaitForEditorContent(Control control, string fieldName, string fileName)
+    {
+        GitUI.Editor.FileViewer editor = (GitUI.Editor.FileViewer?)FindFieldValue(control, fieldName)
+            ?? throw new CaptureStateUnsupportedException($"The original {fileName} form did not expose its editor.");
+        DateTime deadline = DateTime.UtcNow.AddSeconds(30);
+        while (string.IsNullOrEmpty(editor.GetText()) && DateTime.UtcNow < deadline)
+        {
+            Application.DoEvents();
+            Thread.Sleep(25);
+        }
+
+        if (string.IsNullOrEmpty(editor.GetText()))
+        {
+            throw new CaptureStateUnsupportedException($"The original {fileName} loader did not publish file content before capture.");
         }
     }
 

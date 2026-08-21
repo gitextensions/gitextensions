@@ -11,20 +11,6 @@ namespace GitUI.CommandsDialogs;
 
 public partial class FormMailMap : GitModuleForm
 {
-    // The original label1 text is a resx-backed help string; it is seeded here and not yet
-    // routed through the Avalonia translation walker (deferred localization gap).
-    private const string MailMapHelpText = """
-        Edit the mailmap.
-        This file is meant to correct usernames.
-
-        Example:
-        Henk Westhuis <Henk@.(none)>
-        Henk Westhuis <henk_westhuis@hotmail.com>
-
-        For more information run
-        command "git help shortlog"
-        """;
-
     private readonly TranslationString _mailmapOnlyInWorkingDirSupported =
         new(".mailmap is only supported when there is a working directory.");
     private readonly TranslationString _mailmapOnlyInWorkingDirSupportedCaption =
@@ -47,7 +33,6 @@ public partial class FormMailMap : GitModuleForm
     public FormMailMap()
     {
         InitializeComponent();
-        label1.Text = MailMapHelpText;
         Save.Click += SaveClick;
         InitializeComplete();
     }
@@ -56,7 +41,6 @@ public partial class FormMailMap : GitModuleForm
         : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
-        label1.Text = MailMapHelpText;
         _NO_TRANSLATE_MailMapText.IsReadOnly = false;
         Save.Click += SaveClick;
         InitializeComplete();
@@ -66,16 +50,9 @@ public partial class FormMailMap : GitModuleForm
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
-
-        if (Module.IsBareRepository())
-        {
-            MessageBoxes.Show(this, _mailmapOnlyInWorkingDirSupported.Text, _mailmapOnlyInWorkingDirSupportedCaption.Text, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
-            Close();
-            return;
-        }
-
         LoadFile();
         _NO_TRANSLATE_MailMapText.TextLoaded += MailMapFileLoaded;
+        FormMailMapLoad(this, e);
     }
 
     private void LoadFile()
@@ -94,7 +71,7 @@ public partial class FormMailMap : GitModuleForm
         }
     }
 
-    private void SaveClick(object? sender, EventArgs e)
+    private void SaveClick(object sender, EventArgs e)
     {
         SaveFile();
         Close();
@@ -134,6 +111,13 @@ public partial class FormMailMap : GitModuleForm
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
+        FormMailMapFormClosing(this, e);
+        base.OnClosing(e);
+    }
+
+    // Avalonia exposes WindowClosingEventArgs at the original FormClosing event boundary.
+    private void FormMailMapFormClosing(object sender, WindowClosingEventArgs e)
+    {
         bool needToClose = false;
 
         if (!IsFileUpToDate())
@@ -161,8 +145,17 @@ public partial class FormMailMap : GitModuleForm
         {
             e.Cancel = true;
         }
+    }
 
-        base.OnClosing(e);
+    private void FormMailMapLoad(object sender, EventArgs e)
+    {
+        if (!Module.IsBareRepository())
+        {
+            return;
+        }
+
+        MessageBoxes.Show(this, _mailmapOnlyInWorkingDirSupported.Text, _mailmapOnlyInWorkingDirSupportedCaption.Text, WinFormsShims.MessageBoxButtons.OK, WinFormsShims.MessageBoxIcon.Error);
+        Close();
     }
 
     private bool IsFileUpToDate()
@@ -181,5 +174,6 @@ public partial class FormMailMap : GitModuleForm
     {
         public Editor.FileViewer Editor => form._NO_TRANSLATE_MailMapText;
         public Button Save => form.Save;
+        public Label Help => form.label1;
     }
 }
