@@ -188,7 +188,8 @@ public sealed class GitRef : IGitRef
     }
 
     /// <summary>
-    ///  Computes <see cref="IGitRef.LocalName"/> of a ref, given <see cref="IGitRef.Remote"/> and <see cref="IGitRef.Name"/>.
+    ///  Computes <see cref="IGitRef.LocalName"/> for a ref,
+    ///  given <see cref="IGitRef.Remote"/> and <see cref="INamedGitItem.Name"/>.
     /// </summary>
     public static string ComputeLocalName(bool isRemote, string remote, string name)
     {

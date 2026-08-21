@@ -2000,8 +2000,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
                 if (hitInfo?.GitRef is { } gitRef)
                 {
-                    // Nestled ref
-                    if (gitRef.ObjectId.IsZero)
+                    if (gitRef is NestledVirtualRef)
                     {
                         // Let the related ref be added to the selection afterwards in order to simulate standard Ctrl+click behavior.
                         // For this, let DataGridView's native Ctrl+click processing select this revision again first.
@@ -2235,7 +2234,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
 
         IGitRef? clickedRef = _rightClickedHitInfo?.GitRef;
-        string? relatedBranch = clickedRef is { ObjectId: { IsZero: true } }
+        string? relatedBranch = clickedRef is NestledVirtualRef
             ? (clickedRef.IsRemote ? clickedRef.Remote + "/" : "") + clickedRef.MergeWith
             : null;
         _rightClickedHitInfo = null;
@@ -3234,15 +3233,15 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void GoToRelatedRef(IGitRef gitRef, Action<string>? handleGone = null, bool toggleSelection = false)
     {
-        if (gitRef.ObjectId.IsZero)
+        if (gitRef is NestledVirtualRef nestledRef)
         {
-            if (gitRef is NestledRef { TrackingBranchIsGone: true })
+            if (nestledRef.TrackingBranchIsGone)
             {
-                handleGone?.Invoke(gitRef.MergeWith);
+                handleGone?.Invoke(nestledRef.MergeWith);
             }
             else
             {
-                GoToRef(gitRef.CompleteName, showNoRevisionMsg: true, toggleSelection);
+                GoToRef(nestledRef.CompleteName, showNoRevisionMsg: true, toggleSelection);
             }
         }
         else if (_messageColumnProvider.GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } aheadBehindData)

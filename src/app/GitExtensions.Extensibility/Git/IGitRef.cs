@@ -3,22 +3,14 @@
 public interface IGitRef : INamedGitItem
 {
     /// <summary>
-    ///  Display name of the ref.
-    ///  Deviates from <see cref="INamedGitItem.Name"/>: the prefix <c>refs/*/</c>,
-    ///  is stripped.
-    ///  See <see cref="CompleteName"/> for the full ref path.
-    /// </summary>
-    new string Name { get; }
-
-    /// <summary>
     ///  The complete Git reference name, including prefix <c>refs/</c>.
     /// </summary>
     string CompleteName { get; }
 
     /// <summary>
     ///  The name of the reference in a local repo.
-    ///  The same as <see cref="Name"/>, except for <see cref="IsRemote"/>:
-    ///  <see cref="Remote"/> is dropped.
+    ///  The same as the modified use of <see cref="INamedGitItem.Name"/>,
+    ///  except for <see cref="IsRemote"/>: <see cref="Remote"/> is dropped.
     /// </summary>
     string LocalName { get; }
 

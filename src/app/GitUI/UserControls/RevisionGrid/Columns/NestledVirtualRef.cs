@@ -1,10 +1,9 @@
 ﻿using GitCommands;
-using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
-public sealed class NestledRef(IGitRef gitRef, string completeName, bool trackingBranchIsGone) : IGitRef
+public sealed class NestledVirtualRef(IGitRef gitRef, string completeName, bool trackingBranchIsGone) : IGitRef
 {
     public string Name { get; } = GitRef.ParseName(completeName);
 
@@ -51,9 +50,9 @@ public sealed class NestledRef(IGitRef gitRef, string completeName, bool trackin
     => remote is not null && IsHead && remote.IsRemote
         && MergeWith == remote.LocalName && TrackingRemote == remote.Remote;
 
-    public override bool Equals(object? obj) => obj is NestledRef other && CompleteName == other.CompleteName;
+    public override bool Equals(object? obj) => obj is NestledVirtualRef other && CompleteName == other.CompleteName;
 
     public override int GetHashCode() => completeName.GetHashCode();
 
-    public override string ToString() => $"NestledRef: {CompleteName}";
+    public override string ToString() => $"NestledVirtualRef: {CompleteName}";
 }

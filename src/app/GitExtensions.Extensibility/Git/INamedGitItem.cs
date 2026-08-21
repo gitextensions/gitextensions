@@ -4,9 +4,10 @@ public interface INamedGitItem : IGitItem
 {
     /// <summary>
     ///  The name of the item.
-    ///  This is generally not a unique name in global Git namespace.
-    ///  For instance, the derived interface <c>IGitRef</c> removes
-    ///  the initial <c>refs/*/</c> from the names.
+    ///
+    ///  For <see cref="IGitRef"/> this is a display name stripping the prefix
+    ///  <c>refs/*/</c> from the full unique name
+    ///  (<see cref="IGitRef.CompleteName"/> for the full name).
     /// </summary>
     string Name { get; }
 }

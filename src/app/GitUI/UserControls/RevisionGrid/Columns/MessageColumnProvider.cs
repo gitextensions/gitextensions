@@ -173,7 +173,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 (string aheadBehind, string trackedCompleteName, bool isGone) = GetAheadBehind(gitRef, withCounts: false);
                 if (aheadBehind.Length > 0)
                 {
-                    NestledRef nestledRef = new(gitRef, trackedCompleteName, trackingBranchIsGone: isGone);
+                    NestledVirtualRef nestledRef = new(gitRef, trackedCompleteName, trackingBranchIsGone: isGone);
                     DrawBranchWithNestledRemote(gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, nestledRef, aheadBehind, ref hitInfos);
                     continue;
                 }
@@ -304,14 +304,14 @@ internal sealed class MessageColumnProvider : ColumnProvider
             // Draw the nestled directly via DrawRefEx with RefLabelIcon.None — the nestled remote never shows a head indicator.
             (Rectangle nestledRect, Action? drawNestledHighlight) = RevisionGridRefRenderer.DrawRefEx(
                 e.State.HasFlag(DataGridViewElementStates.Selected),
-                nestledRef is NestledRef { TrackingBranchIsGone: true } ? style.BoldFont : style.NormalFont,
+                nestledRef is NestledVirtualRef { TrackingBranchIsGone: true } ? style.BoldFont : style.NormalFont,
                 ref offset,
                 nestledName,
                 remoteColor,
                 RefLabelIcon.None,
                 messageBounds,
                 e.Graphics!,
-                dashedLine: nestledRef.ObjectId.IsZero,
+                dashedLine: nestledRef is NestledVirtualRef,
                 fill: _settings.FillRefLabels,
                 highlight: isRemoteHighlighted,
                 shape2);
@@ -373,9 +373,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         if (highlightRef is not null)
         {
-            if (highlightRef is { ObjectId: { IsZero: true } } aheadBehindRef)
+            if (highlightRef is NestledVirtualRef aheadBehindRef)
             {
-                // NestledRef
                 bool realRefIsRemote = !aheadBehindRef.IsRemote;
                 string realRefLocalName = aheadBehindRef.MergeWith;
                 string realRefCompleteName = realRefIsRemote ? GitRefName.GetFullRemoteName(realRefLocalName, aheadBehindRef.TrackingRemote) : GitRefName.GetFullBranchName(realRefLocalName);
