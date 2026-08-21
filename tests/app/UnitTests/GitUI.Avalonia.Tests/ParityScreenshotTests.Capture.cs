@@ -53,8 +53,10 @@ public sealed partial class ParityScreenshotTests
     [Category(P02Category)]
     public void Diff_patch_capture_hosts_should_use_96_dpi_designer_dimensions()
     {
+        GetCaptureSize(typeof(BranchSelector)).Should().Be((325, 54));
         GetCaptureSize(typeof(FormDiff)).Should().Be((1042, 685));
-        GetCaptureSize(typeof(FormCompareToBranch)).Should().Be((434, 110));
+        // WinForms AutoSize contracts the 110-pixel Designer client to 106 pixels with the runtime font.
+        GetCaptureSize(typeof(FormCompareToBranch)).Should().Be((434, 106));
         GetCaptureSize(typeof(FormFormatPatch)).Should().Be((824, 532));
     }
 
@@ -76,6 +78,29 @@ public sealed partial class ParityScreenshotTests
 
         commandNode.BoundsDip.Should().Be(
             new CaptureRectangleF { X = 32, Y = 24, Width = 75, Height = 25 });
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    public void Avalonia_tree_reader_should_emit_label_and_group_text_without_template_children()
+    {
+        Label label = new() { Name = "lblValue", Content = "_Value" };
+        StackPanel content = new() { Name = "contentPanel", Children = { label } };
+        GroupBox group = new() { Name = "valueGroup", Header = "Group", Content = content };
+        Window window = new() { Width = 320, Height = 160, Content = group };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureSurface surface = new AvaloniaControlTreeReader(window, renderScale: 1)
+            .ReadPrimary(window, new PixelSize(320, 160));
+        CaptureNode groupNode = Flatten(surface.Root).Single(node => node.FieldName == group.Name);
+        CaptureNode labelNode = Flatten(surface.Root).Single(node => node.FieldName == label.Name);
+
+        groupNode.Text.Should().Be("Group");
+        groupNode.Children.Should().ContainSingle(node => node.FieldName == content.Name);
+        labelNode.Text.Should().Be("&Value");
+        labelNode.Children.Should().BeEmpty();
         window.Close();
     }
 

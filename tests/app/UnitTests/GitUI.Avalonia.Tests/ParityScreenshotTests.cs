@@ -1588,7 +1588,7 @@ public sealed partial class ParityScreenshotTests
     {
         if (viewType == typeof(BranchSelector))
         {
-            return (274.4, 54.4);
+            return (325, 54);
         }
 
         if (viewType == typeof(InteractiveGitActionControl))
@@ -1663,7 +1663,9 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(FormCompareToBranch))
         {
-            return (434, 110);
+            // parity-scaffolding: WinForms AutoSize contracts the 110-pixel Designer client
+            // to the measured 106-pixel runtime client before capture.
+            return (434, 106);
         }
 
         if (viewType == typeof(FormFormatPatch))
