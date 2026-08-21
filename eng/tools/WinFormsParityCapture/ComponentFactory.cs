@@ -41,6 +41,9 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormGitIgnore" => new FormGitIgnore(commands, localExclude: false),
             "GitUI.CommandsDialogs.FormGitAttributes" => new FormGitAttributes(commands),
             "GitUI.CommandsDialogs.FormMailMap" => new FormMailMap(commands),
+            "GitUI.CommandsDialogs.FormCleanupRepository" => new FormCleanupRepository(commands),
+            "GitUI.CommandsDialogs.BrowseDialog.FormBisect" => CreateFormBisect(commands),
+            "GitUI.CommandsDialogs.FormSparseWorkingCopy" => new FormSparseWorkingCopy(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog" => CreateGitCommandLog(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
             "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),
@@ -115,6 +118,16 @@ internal static class ComponentFactory
         FormCheckoutRevision form = new(commands);
         form.SetRevision("HEAD");
         return form;
+    }
+
+    // parity-scaffolding: Supplies FormBisect's original RevisionGridControl ownership contract.
+    private static FormBisect CreateFormBisect(GitUICommands commands)
+    {
+        RevisionGridControl revisionGrid = new()
+        {
+            UICommandsSource = new CaptureCommandsSource(commands),
+        };
+        return new FormBisect(revisionGrid);
     }
 
     // parity-scaffolding: Closes the open generic capture boundary with representative paths.
@@ -236,7 +249,9 @@ internal static class ComponentFactory
                 throw new InvalidDataException($"Text seed field '{fieldName}' was not found on {component.TypeName}.");
             }
 
-            target.Text = text;
+            // parity-scaffolding: Capture plans use platform-neutral LF; WinForms multiline
+            // controls require the Windows newline sequence to preserve line boundaries.
+            target.Text = text.Replace("\r\n", "\n").Replace('\r', '\n').Replace("\n", Environment.NewLine);
         }
     }
 
@@ -267,6 +282,14 @@ internal static class ComponentFactory
         if (control is FormMailMap)
         {
             WaitForEditorContent(control, "_NO_TRANSLATE_MailMapText", ".mailmap");
+        }
+
+        if (control is FormSparseWorkingCopy)
+        {
+            GitUI.Editor.FileViewer editor = EnumerateSelfAndDescendants(control)
+                .OfType<GitUI.Editor.FileViewer>()
+                .Single();
+            WaitForEditorContent(editor, ".git/info/sparse-checkout");
         }
 
         RevisionGridControl? revisionGrid = control as RevisionGridControl;
@@ -730,6 +753,11 @@ internal static class ComponentFactory
     {
         GitUI.Editor.FileViewer editor = (GitUI.Editor.FileViewer?)FindFieldValue(control, fieldName)
             ?? throw new CaptureStateUnsupportedException($"The original {fileName} form did not expose its editor.");
+        WaitForEditorContent(editor, fileName);
+    }
+
+    private static void WaitForEditorContent(GitUI.Editor.FileViewer editor, string fileName)
+    {
         DateTime deadline = DateTime.UtcNow.AddSeconds(30);
         while (string.IsNullOrEmpty(editor.GetText()) && DateTime.UtcNow < deadline)
         {
@@ -740,6 +768,18 @@ internal static class ComponentFactory
         if (string.IsNullOrEmpty(editor.GetText()))
         {
             throw new CaptureStateUnsupportedException($"The original {fileName} loader did not publish file content before capture.");
+        }
+    }
+
+    private static IEnumerable<Control> EnumerateSelfAndDescendants(Control control)
+    {
+        yield return control;
+        foreach (Control child in control.Controls)
+        {
+            foreach (Control descendant in EnumerateSelfAndDescendants(child))
+            {
+                yield return descendant;
+            }
         }
     }
 
