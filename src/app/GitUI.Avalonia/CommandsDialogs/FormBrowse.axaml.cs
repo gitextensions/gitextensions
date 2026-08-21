@@ -2030,6 +2030,21 @@ public sealed partial class FormBrowse : GitModuleForm
 
     protected override bool CloseOnEscape => false;
 
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        // Avalonia does not execute a closed submenu item's InputGesture, so route the
+        // original static F12 accelerator through the owning form.
+        MenuItem gitCommandLog = toolsToolStripMenuItem.GetTestAccessor().GitCommandLogMenuItem;
+        if (gitCommandLog.InputGesture?.Matches(e) == true)
+        {
+            gitCommandLog.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent, gitCommandLog));
+            e.Handled = true;
+            return;
+        }
+
+        base.OnKeyDown(e);
+    }
+
     protected override void OnClosed(EventArgs e)
     {
         if (_hasRuntimeCommands)

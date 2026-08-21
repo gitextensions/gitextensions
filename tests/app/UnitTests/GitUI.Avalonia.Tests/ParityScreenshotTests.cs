@@ -18,6 +18,7 @@ using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;
 using GitCommands.Git.Gpg;
+using GitCommands.Logging;
 using GitCommands.Settings;
 using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
@@ -479,6 +480,32 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormBrowse))
         {
             return new FormBrowse(context.Commands);
+        }
+
+        if (viewType == typeof(FormBlame))
+        {
+            return new FormBlame(context.Commands, AppSourcePath, context.HeadRevision, initialLine: 2);
+        }
+
+        if (viewType == typeof(FormLog))
+        {
+            return new FormLog(context.Commands);
+        }
+
+        if (viewType == typeof(FormGitCommandLog))
+        {
+            CommandLog.Clear();
+            GitModule.GitCommandCache.Clear();
+            GitModule.GitCommandCache.Add(
+                "status --porcelain=v2",
+                "1 .M N... 100644 100644 src/App.cs",
+                string.Empty);
+            ProcessOperation operation = CommandLog.LogProcessStart(
+                "git",
+                "-c core.quotepath=false log --oneline --decorate",
+                context.WorkingDirectory);
+            operation.LogProcessEnd(0);
+            return new FormGitCommandLog();
         }
 
         if (viewType == typeof(FormRecentReposSettings))
@@ -1458,6 +1485,52 @@ public sealed partial class ParityScreenshotTests
             accessor.DiffText.TextEditor.Text.Should().NotBeEmpty();
         }
 
+        if (root is FormBlame formBlame)
+        {
+            // parity-scaffolding: Wait for repository-backed blame text before capturing the editor surface.
+            BlameControl.TestAccessor accessor = formBlame.GetTestAccessor().BlameControl.GetTestAccessor();
+            Stopwatch blameStopwatch = Stopwatch.StartNew();
+            while (string.IsNullOrEmpty(accessor.BlameFile.TextEditor.Text)
+                   && blameStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            accessor.BlameFile.TextEditor.Text.Should().NotBeEmpty();
+        }
+
+        if (root is FormLog formLog)
+        {
+            // parity-scaffolding: Wait for the selected revision's file list and viewer to settle together.
+            FormLog.TestAccessor accessor = formLog.GetTestAccessor();
+            TextBlock loadingStatus = GetRequiredControl<TextBlock>(accessor.RevisionGrid, "lblLoadingStatus");
+            Stopwatch revisionStopwatch = Stopwatch.StartNew();
+            while (!IsLoadingComplete(loadingStatus.Text)
+                   && revisionStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            IsLoadingComplete(loadingStatus.Text).Should().BeTrue();
+            ObjectId head = accessor.RevisionGrid.CurrentCheckout;
+            head.IsZero.Should().BeFalse();
+            accessor.RevisionGrid.SetSelectedRevision(head).Should().BeTrue();
+            Dispatcher.UIThread.RunJobs();
+            Stopwatch logStopwatch = Stopwatch.StartNew();
+            while ((accessor.DiffFiles.AllItemsCount == 0
+                    || string.IsNullOrEmpty(accessor.DiffViewer.TextEditor.Text))
+                   && logStopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+
+            accessor.DiffFiles.AllItems.Should().NotBeEmpty();
+            accessor.DiffViewer.TextEditor.Text.Should().NotBeEmpty();
+        }
+
         if (FindNamedControl(root, "listBoxSearchResult") is ListBox searchResults
             && FindNamedControl(root, "txtSearchBox") is TextBox searchText
             && !string.IsNullOrEmpty(searchText.Text))
@@ -1672,6 +1745,21 @@ public sealed partial class ParityScreenshotTests
         {
             // parity-scaffolding: The source Designer is authored at 120 DPI; capture uses normalized 96-DPI DIPs.
             return (824, 532);
+        }
+
+        if (viewType == typeof(FormBlame))
+        {
+            return (784, 762);
+        }
+
+        if (viewType == typeof(FormLog))
+        {
+            return (750, 529);
+        }
+
+        if (viewType == typeof(FormGitCommandLog))
+        {
+            return (659, 470);
         }
 
         if (viewType == typeof(SearchControl)
@@ -2090,8 +2178,18 @@ public sealed partial class ParityScreenshotTests
             ObjectId parentId = Module.RevParse("HEAD~1");
             long headTime = new DateTimeOffset(2026, 7, 17, 10, 30, 0, TimeSpan.Zero).ToUnixTimeSeconds();
             long parentTime = new DateTimeOffset(2026, 7, 16, 16, 45, 0, TimeSpan.Zero).ToUnixTimeSeconds();
-            ParentRevision = CreateRevision(parentId, InitialCommitSubject, parentTime, []);
-            HeadRevision = CreateRevision(headId, HeadCommitSubject, headTime, [parentId]);
+            if (_ownsWorkingDirectory)
+            {
+                ParentRevision = CreateRevision(parentId, InitialCommitSubject, parentTime, []);
+                HeadRevision = CreateRevision(headId, HeadCommitSubject, headTime, [parentId]);
+            }
+            else
+            {
+                // parity-scaffolding: Paired captures must render the supplied repository's real revision metadata.
+                ParentRevision = Module.GetRevision(parentId, loadRefs: true);
+                HeadRevision = Module.GetRevision(headId, loadRefs: true);
+            }
+
             Stashes =
             [
                 new GitRevision(ObjectId.Parse("4444444444444444444444444444444444444444"))

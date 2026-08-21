@@ -120,6 +120,11 @@
           </MenuFlyout>
         </compat:IconDropDownButton.Flyout>
       </compat:IconDropDownButton>
+      <compat:IconButton x:Name="gitcommandLogToolStripMenuItem"
+                         Classes="gitextensions-toolbar-button gitextensions-icon-only"
+                         Icon="{x:Static properties:Images.GitCommandLog}"
+                         ToolTip.Tip="Git command log"
+                         compat:TranslationCompat.UseToolTipText="True" />
     </StackPanel>
 
     <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="1" />

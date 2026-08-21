@@ -25,6 +25,7 @@ public static class AvaloniaFontSettings
         FontFamily fontFamily = new(GetPlatformMonospaceFontName());
         application.Resources["GitExtensionsFixedWidthFontFamily"] = fontFamily;
         application.Resources["GitExtensionsMonospaceFontFamily"] = fontFamily;
+        application.Resources["GitExtensionsGenericMonospaceFontFamily"] = fontFamily;
     }
 
     /// <summary>

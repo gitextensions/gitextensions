@@ -23,6 +23,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.Menus;
 using GitUI.Compat;
@@ -774,6 +775,31 @@ public sealed class FormBrowseTests
         {
             AppSettings.TelemetryEnabled = originalTelemetry;
         }
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_should_execute_the_git_command_log_shortcut_while_the_tools_menu_is_closed()
+    {
+        FormGitCommandLog.TestAccessor.OpenInstance?.Close();
+        Dispatcher.UIThread.RunJobs();
+        using FormBrowse form = new();
+        KeyEventArgs keyEvent = new()
+        {
+            RoutedEvent = InputElement.KeyDownEvent,
+            Key = Key.F12,
+        };
+
+        form.RaiseEvent(keyEvent);
+        Dispatcher.UIThread.RunJobs();
+
+        keyEvent.Handled.Should().BeTrue();
+        FormGitCommandLog commandLog = FormGitCommandLog.TestAccessor.OpenInstance
+            ?? throw new AssertionException("F12 did not open the Git command log.");
+        commandLog.IsVisible.Should().BeTrue();
+        form.toolsToolStripMenuItem.IsSubMenuOpen.Should().BeFalse();
+
+        commandLog.Close();
+        Dispatcher.UIThread.RunJobs();
     }
 
     [AvaloniaTest]
