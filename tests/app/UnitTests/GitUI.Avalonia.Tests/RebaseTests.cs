@@ -459,6 +459,7 @@ public sealed class RebaseTests
             await WaitUntilAsync(() => commitCount.Text == expected);
 
             commitCount.Text.Should().Be("(+2-0)");
+            commitCount.Bounds.Width.Should().BeGreaterThan(1, "the original auto-sized count label expands to show its text");
         }
         finally
         {

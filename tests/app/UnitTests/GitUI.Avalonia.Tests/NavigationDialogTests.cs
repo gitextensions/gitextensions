@@ -1,8 +1,11 @@
+using System.Diagnostics;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -15,6 +18,7 @@ using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using DrawingColor = System.Drawing.Color;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -22,12 +26,21 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed class NavigationDialogTests
 {
+    private RecordingOsShell _shell = null!;
+    private RecordingMessageBoxHost _messageBoxes = null!;
+    private StubClipboard _clipboard = null!;
+
     [SetUp]
     public void SetUp()
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
-        WinFormsShims.ShimHost.Clipboard = new StubClipboard();
+        _clipboard = new StubClipboard();
+        WinFormsShims.ShimHost.Clipboard = _clipboard;
+        _shell = new RecordingOsShell();
+        WinFormsShims.ShimHost.OsShell = _shell;
+        _messageBoxes = new RecordingMessageBoxHost();
+        WinFormsShims.ShimHost.MessageBoxHost = _messageBoxes;
     }
 
     [AvaloniaTest]
@@ -88,12 +101,102 @@ public sealed class NavigationDialogTests
             AssertBounds(form.FindControl<TextBox>("textboxCommitExpression")!, 155, 13, 360, 23);
             AssertBounds(form.FindControl<Button>("goButton")!, 521, 10, 75, 28);
             AssertBounds(form.FindControl<GroupBox>("groupBox1")!, 45, 43, 470, 141);
+            AssertBounds(form.FindControl<TextBlock>("label1")!, 12, 17, 112, 15);
             AssertBounds(form.FindControl<TextBlock>("label2")!, 64, 65, 413, 75);
-            AssertBounds(form.FindControl<TextBlock>("linkGitRevParse")!, 64, 155, 126, 15);
+            AssertBounds(form.FindControl<HyperlinkButton>("linkGitRevParse")!, 64, 155, 126, 15);
+            AssertBounds(form.FindControl<TextBlock>("label3")!, 12, 219, 59, 15);
             AssertBounds(form.FindControl<ComboBox>("comboBoxTags")!, 155, 216, 287, 23);
+            AssertBounds(form.FindControl<TextBlock>("label4")!, 12, 261, 79, 15);
             AssertBounds(form.FindControl<ComboBox>("comboBoxBranches")!, 155, 258, 287, 23);
             form.FindControl<TextBlock>("label2")!.Text.Should().Be(
                 "Commit expression examples:\r\n- complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9\r\n- partial commit hash (if unique): e. g.: 8eab51fcb9c453\r\n- tag name\r\n- branch name");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormGoToCommit_rev_parse_link_should_be_keyboard_focusable_and_open_the_original_uri()
+    {
+        (IGitUICommands commands, _) = CreateCommands();
+        FormGoToCommit form = new(commands);
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            HyperlinkButton link = form.FindControl<HyperlinkButton>("linkGitRevParse")!;
+            link.Focus();
+
+            link.IsKeyboardFocusWithin.Should().BeTrue();
+            link.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            _shell.Target.Should().Be("https://git-scm.com/docs/git-rev-parse#_specifying_revisions");
+            _shell.Kind.Should().Be(WinFormsShims.OsShellLaunchKind.OpenUri);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormGoToCommit_should_load_and_resolve_the_original_tag_and_branch_identities()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        const string tagObjectId = "1111111111111111111111111111111111111111";
+        const string branchObjectId = "2222222222222222222222222222222222222222";
+        IGitRef tag = CreateRef("v1.0", tagObjectId);
+        IGitRef branch = CreateRef("feature", branchObjectId);
+        module.GetRefs(RefsFilter.Tags).Returns([tag]);
+        module.GetRefs(RefsFilter.Heads).Returns([branch]);
+        ObjectId tagId = ObjectId.Parse(tagObjectId);
+        ObjectId branchId = ObjectId.Parse(branchObjectId);
+        module.RevParse(tagObjectId).Returns(tagId);
+        module.RevParse(branchObjectId).Returns(branchId);
+        FormGoToCommit form = new(commands);
+        form.Show();
+        try
+        {
+            ComboBox tags = form.FindControl<ComboBox>("comboBoxTags")!;
+            ComboBox branches = form.FindControl<ComboBox>("comboBoxBranches")!;
+            await WaitUntilAsync(() => tags.ItemCount == 1 && branches.ItemCount == 1);
+
+            tags.Focus();
+            tags.Text = tag.LocalName;
+            Dispatcher.UIThread.RunJobs();
+            form.ValidateAndGetSelectedObjectId().Should().Be(tagId);
+
+            branches.Focus();
+            branches.Text = branch.LocalName;
+            Dispatcher.UIThread.RunJobs();
+            form.ValidateAndGetSelectedObjectId().Should().Be(branchId);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormGoToCommit_should_restore_a_valid_clipboard_revision_and_select_it()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        const string revision = "3333333333333333333333333333333333333333";
+        _clipboard.Text = revision;
+        module.RevParse(revision).Returns(ObjectId.Parse(revision));
+        FormGoToCommit form = new(commands);
+        form.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            TextBox expression = form.FindControl<TextBox>("textboxCommitExpression")!;
+
+            expression.Text.Should().Be(revision);
+            expression.SelectionStart.Should().Be(0);
+            expression.SelectionEnd.Should().Be(revision.Length);
+            form.ValidateAndGetSelectedObjectId().Should().Be(ObjectId.Parse(revision));
         }
         finally
         {
@@ -264,6 +367,147 @@ public sealed class NavigationDialogTests
         }
     }
 
+    [AvaloniaTest]
+    public void SearchControl_should_preserve_wraparound_enter_and_escape_keyboard_routes()
+    {
+        SearchControl<string> search = new(_ => [], _ => { });
+        Invoke(search, "SearchForCandidates", (object)new[] { "first", "second", "third" });
+        TextBox searchBox = search.FindControl<TextBox>("txtSearchBox")!;
+        ListBox results = search.FindControl<ListBox>("listBoxSearchResult")!;
+
+        RaiseKey(searchBox, InputElement.KeyDownEvent, Key.Up);
+        results.SelectedIndex.Should().Be(2);
+        RaiseKey(searchBox, InputElement.KeyDownEvent, Key.Down);
+        results.SelectedIndex.Should().Be(0);
+
+        bool entered = false;
+        search.OnTextEntered += () => entered = true;
+        RaiseKey(searchBox, InputElement.KeyUpEvent, Key.Enter);
+        entered.Should().BeTrue();
+        search.Text.Should().Be("first");
+        results.IsVisible.Should().BeFalse();
+
+        Invoke(search, "SearchForCandidates", (object)new[] { "first", "second" });
+        bool cancelled = false;
+        search.OnCancelled += () => cancelled = true;
+        RaiseKey(searchBox, InputElement.KeyUpEvent, Key.Escape);
+        cancelled.Should().BeTrue();
+        results.SelectedItem.Should().BeNull();
+        results.IsVisible.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
+    public void SearchControl_should_close_results_only_after_focus_leaves_the_search_composite()
+    {
+        SearchControl<string> search = new(_ => [], _ => { });
+        Button outside = new() { Content = "Outside" };
+        StackPanel layout = new();
+        layout.Children.Add(search);
+        layout.Children.Add(outside);
+        Window host = new() { Content = layout };
+        host.Show();
+        try
+        {
+            Invoke(search, "SearchForCandidates", (object)new[] { "first", "second" });
+            TextBox searchBox = search.FindControl<TextBox>("txtSearchBox")!;
+            ListBox results = search.FindControl<ListBox>("listBoxSearchResult")!;
+
+            searchBox.Focus();
+            results.Focus();
+            Dispatcher.UIThread.RunJobs();
+            results.IsVisible.Should().BeTrue();
+
+            outside.Focus();
+            Dispatcher.UIThread.RunJobs();
+            results.IsVisible.Should().BeFalse();
+        }
+        finally
+        {
+            host.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void SearchControl_should_apply_the_original_default_and_focused_border_colors()
+    {
+        SearchControl<string> search = new(_ => [], _ => { })
+        {
+            SearchBoxBorderDefaultColor = DrawingColor.Red,
+            SearchBoxBorderFocusedColor = DrawingColor.Blue,
+            SearchBoxBorderStyle = WinFormsShims.BorderStyle.FixedSingle,
+        };
+        Button outside = new() { Content = "Outside" };
+        StackPanel layout = new();
+        layout.Children.Add(search);
+        layout.Children.Add(outside);
+        Window host = new() { Content = layout };
+        host.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            TextBox searchBox = search.FindControl<TextBox>("txtSearchBox")!;
+            Border border = (Border)searchBox.Parent!;
+
+            searchBox.Focus();
+            Dispatcher.UIThread.RunJobs();
+            border.BorderBrush.Should().BeOfType<Avalonia.Media.SolidColorBrush>()
+                .Which.Color.Should().Be(Avalonia.Media.Colors.Blue);
+            border.BorderThickness.Should().Be(new Thickness(1));
+
+            outside.Focus();
+            Dispatcher.UIThread.RunJobs();
+            border.BorderBrush.Should().BeOfType<Avalonia.Media.SolidColorBrush>()
+                .Which.Color.Should().Be(Avalonia.Media.Colors.Red);
+        }
+        finally
+        {
+            host.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormCheckoutRevision_should_reject_an_empty_revision_with_the_original_error()
+    {
+        (IGitUICommands commands, _) = CreateCommands();
+        FormCheckoutRevision form = new(commands);
+        form.Show();
+        try
+        {
+            Button checkout = form.FindControl<Button>("OkCheckout")!;
+            checkout.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            _messageBoxes.Messages.Should().ContainSingle()
+                .Which.Should().Be("Select 1 revision to checkout.");
+            _messageBoxes.Captions.Should().ContainSingle()
+                .Which.Should().Be("Checkout");
+            form.IsVisible.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void SearchControl_should_focus_without_selecting_existing_text()
+    {
+        SearchControl<string> search = new(_ => [], _ => { }) { Text = "src/App.cs" };
+        Window host = new() { Content = search };
+        host.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            TextBox searchBox = search.FindControl<TextBox>("txtSearchBox")!;
+
+            searchBox.IsKeyboardFocusWithin.Should().BeTrue();
+            searchBox.SelectionEnd.Should().Be(searchBox.SelectionStart);
+        }
+        finally
+        {
+            host.Close();
+        }
+    }
+
     [TestCase("app.cs", "src/App.cs", true)]
     [TestCase("APP.CS", "src/App.cs", true)]
     [TestCase("missing", "src/App.cs", false)]
@@ -290,6 +534,15 @@ public sealed class NavigationDialogTests
         method.Invoke(target, arguments);
     }
 
+    private static void RaiseKey(InputElement target, RoutedEvent<KeyEventArgs> routedEvent, Key key)
+    {
+        target.RaiseEvent(new KeyEventArgs
+        {
+            RoutedEvent = routedEvent,
+            Key = key,
+        });
+    }
+
     private static void AssertBounds(Control control, double x, double y, double width, double height)
     {
         TopLevel topLevel = TopLevel.GetTopLevel(control)
@@ -313,14 +566,71 @@ public sealed class NavigationDialogTests
         return (commands, module);
     }
 
+    private static IGitRef CreateRef(string localName, string objectId)
+    {
+        IGitRef gitRef = Substitute.For<IGitRef>();
+        gitRef.LocalName.Returns(localName);
+        gitRef.Guid.Returns(objectId);
+        return gitRef;
+    }
+
+    private static async Task WaitUntilAsync(Func<bool> predicate)
+    {
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        while (!predicate() && stopwatch.Elapsed < TimeSpan.FromSeconds(5))
+        {
+            Dispatcher.UIThread.RunJobs();
+            await Task.Delay(10);
+        }
+
+        predicate().Should().BeTrue("the asynchronous navigation operation should complete within five seconds");
+    }
+
     private sealed class StubClipboard : WinFormsShims.IClipboard
     {
-        public bool ContainsText() => false;
+        public string Text { get; set; } = string.Empty;
 
-        public string GetText() => string.Empty;
+        public bool ContainsText() => !string.IsNullOrEmpty(Text);
+
+        public string GetText() => Text;
 
         public void SetText(string value)
         {
+            Text = value;
+        }
+    }
+
+    private sealed class RecordingOsShell : WinFormsShims.IOsShell
+    {
+        public string? Target { get; private set; }
+
+        public WinFormsShims.OsShellLaunchKind? Kind { get; private set; }
+
+        public bool TryLaunch(string target, WinFormsShims.OsShellLaunchKind kind)
+        {
+            Target = target;
+            Kind = kind;
+            return true;
+        }
+    }
+
+    private sealed class RecordingMessageBoxHost : WinFormsShims.IMessageBoxHost
+    {
+        public List<string> Messages { get; } = [];
+
+        public List<string> Captions { get; } = [];
+
+        public WinFormsShims.DialogResult Show(
+            WinFormsShims.IWin32Window? owner,
+            string? text,
+            string? caption,
+            WinFormsShims.MessageBoxButtons buttons,
+            WinFormsShims.MessageBoxIcon icon,
+            WinFormsShims.MessageBoxDefaultButton defaultButton)
+        {
+            Messages.Add(text ?? string.Empty);
+            Captions.Add(caption ?? string.Empty);
+            return WinFormsShims.DialogResult.OK;
         }
     }
 }

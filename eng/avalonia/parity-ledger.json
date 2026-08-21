@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "d4d1299edde2ef737598ed949f513effec124ad4",
+  "analyzedCommit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
   "axisOrder": [
     "structural",
     "functional",
@@ -2820,9 +2820,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.json"
           ],
           "platforms": [],
           "findingCount": 100,
@@ -2831,11 +2831,11 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -2847,60 +2847,60 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 2422,
-          "note": "The fresh native-100 light/dark/custom matrix records 2422 diagnostics for FormGoToCommit; exact geometry, image, layout, font, text, and control closure remains open."
+          "findingCount": 2318,
+          "note": "The fresh native-100 light/dark/custom matrix records 2318 diagnostics for FormGoToCommit; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 239,
-          "note": "Light, dark, and custom captures retain 239 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
+          "findingCount": 288,
+          "note": "Light, dark, and custom captures retain 288 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
             "linux-wayland"
           ],
-          "findingCount": 34,
-          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 34 state diagnostics and the exhaustive live interaction matrix remain open."
+          "findingCount": 32,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 32 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -2921,9 +2921,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.json"
           ],
           "platforms": [],
           "findingCount": 100,
@@ -2932,11 +2932,11 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_BrowseDialog_FormGoToCommit.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -2948,60 +2948,60 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 2422,
-          "note": "The fresh native-100 light/dark/custom matrix records 2422 diagnostics for FormGoToCommit; exact geometry, image, layout, font, text, and control closure remains open."
+          "findingCount": 2318,
+          "note": "The fresh native-100 light/dark/custom matrix records 2318 diagnostics for FormGoToCommit; exact geometry, image, layout, font, text, and control closure remains open."
         },
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 239,
-          "note": "Light, dark, and custom captures retain 239 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
+          "findingCount": 288,
+          "note": "Light, dark, and custom captures retain 288 resolved-color diagnostics; configurable-color and live theme-switch coverage remain open."
         },
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
             "linux-wayland"
           ],
-          "findingCount": 34,
-          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 34 state diagnostics and the exhaustive live interaction matrix remain open."
+          "findingCount": 32,
+          "note": "Representative normal, focus, selection, validation, and disabled states were captured where applicable; 32 state diagnostics and the exhaustive live interaction matrix remain open."
         },
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -4889,9 +4889,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.json"
           ],
           "platforms": [],
           "findingCount": 44,
@@ -4900,11 +4900,11 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -4916,11 +4916,11 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -4931,11 +4931,11 @@
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -4946,13 +4946,13 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -4964,12 +4964,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -4990,9 +4990,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.json"
           ],
           "platforms": [],
           "findingCount": 44,
@@ -5001,11 +5001,11 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_FormCheckoutRevision.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -5017,11 +5017,11 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5032,11 +5032,11 @@
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -5047,13 +5047,13 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -5065,12 +5065,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -9947,9 +9947,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_SearchControl.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_SearchControl.json"
           ],
           "platforms": [],
           "findingCount": 59,
@@ -9958,11 +9958,11 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_SearchControl.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_SearchControl.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -9974,11 +9974,11 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -9989,11 +9989,11 @@
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -10004,13 +10004,13 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -10022,12 +10022,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -10048,9 +10048,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_SearchControl.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_SearchControl.json"
           ],
           "platforms": [],
           "findingCount": 59,
@@ -10059,11 +10059,11 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_SearchControl.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_SearchControl.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -10075,11 +10075,11 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -10090,11 +10090,11 @@
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -10105,13 +10105,13 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -10123,12 +10123,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -10149,9 +10149,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_SearchWindow.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_SearchWindow.json"
           ],
           "platforms": [],
           "findingCount": 25,
@@ -10160,11 +10160,11 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_SearchWindow.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_SearchWindow.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -10176,11 +10176,11 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -10191,11 +10191,11 @@
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -10206,13 +10206,13 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -10224,12 +10224,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -10250,9 +10250,9 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_SearchWindow.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_SearchWindow.json"
           ],
           "platforms": [],
           "findingCount": 25,
@@ -10261,11 +10261,11 @@
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_CommandsDialogs_SearchWindow.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_CommandsDialogs_SearchWindow.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -10277,11 +10277,11 @@
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -10292,11 +10292,11 @@
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -10307,13 +10307,13 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -10325,12 +10325,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -28360,38 +28360,38 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_UserControls_CommitPickerSmallControl.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_UserControls_CommitPickerSmallControl.json"
           ],
           "platforms": [],
-          "findingCount": 37,
-          "note": "The current inventory retains 37 source-shape findings for CommitPickerSmallControl; framework deviations and member/markup differences remain to be closed or justified."
+          "findingCount": 31,
+          "note": "The refreshed inventory retains 31 source-shape findings for CommitPickerSmallControl after restoring the original attributes, comments, member order, and result boundary; Designer/AXAML and required framework deviations remain to be closed or justified."
         },
         "functional": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/inventory/GitUI_UserControls_CommitPickerSmallControl.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/inventory/GitUI_UserControls_CommitPickerSmallControl.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
             "linux-wayland"
           ],
-          "findingCount": 37,
-          "note": "Focused navigation and capture-fixture behavior is covered on Windows and native-ext4 WSL, but exhaustive action, cancellation, validation, error, and persistence routes remain open."
+          "findingCount": 31,
+          "note": "Focused Windows and native-ext4 WSL coverage proves the original revision/count contract and that the auto-sized count label exposes its text; exhaustive chooser, validation, error, and persistence routes remain open."
         },
         "visual": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -28402,11 +28402,11 @@
         "themingAndColor": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json"
           ],
           "platforms": [
             "windows"
@@ -28417,13 +28417,13 @@
         "behavioralState": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/winforms/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/avalonia/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/diff/findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/avalonia/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/tests/linux/focused.trx"
           ],
           "platforms": [
             "windows",
@@ -28435,12 +28435,12 @@
         "platform": {
           "status": "partial",
           "verifiedOn": "2026-08-21",
-          "commit": "d4d1299edde2ef737598ed949f513effec124ad4",
+          "commit": "0fc58605d95c8b05f429f1249e88ebd634ef90b4",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/navigation-13/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/navigation-14/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",

@@ -14,6 +14,9 @@
         ColumnDefinitions="133,10,*,6,75"
         RowDefinitions="28,5,141,32,23,19,23,*">
     <TextBlock x:Name="label1"
+               Width="112"
+               Height="15"
+               HorizontalAlignment="Left"
                Text="Commit expression:"
                VerticalAlignment="Center" />
     <TextBox x:Name="textboxCommitExpression"
@@ -43,18 +46,22 @@
                    Padding="2,0,0,0"
                    Text="Commit expression examples:&#x0D;&#x0A;- complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9&#x0D;&#x0A;- partial commit hash (if unique): e. g.: 8eab51fcb9c453&#x0D;&#x0A;- tag name&#x0D;&#x0A;- branch name"
                    TextWrapping="Wrap" />
-        <TextBlock x:Name="linkGitRevParse"
-                   Canvas.Top="90"
-                   Width="126"
-                   Height="15"
-                   Padding="3,0,0,0"
-                   Classes="gitextensions-link"
-                   Text="More see git-rev-parse" />
+        <HyperlinkButton x:Name="linkGitRevParse"
+                         Canvas.Top="90"
+                         Width="126"
+                         Height="15"
+                         Padding="3,0,0,0"
+                         Classes="gitextensions-link"
+                         Focusable="True"
+                         Content="More see git-rev-parse" />
       </Canvas>
     </GroupBox>
 
     <TextBlock x:Name="label3"
                Grid.Row="4"
+               Width="59"
+               Height="15"
+               HorizontalAlignment="Left"
                Text="Go to tag:"
                Margin="0,3,0,0"
                VerticalAlignment="Top" />
@@ -69,6 +76,9 @@
 
     <TextBlock x:Name="label4"
                Grid.Row="6"
+               Width="79"
+               Height="15"
+               HorizontalAlignment="Left"
                Text="Go to branch:"
                Margin="0,3,0,0"
                VerticalAlignment="Top" />
