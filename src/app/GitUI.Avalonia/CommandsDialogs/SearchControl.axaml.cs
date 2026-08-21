@@ -57,7 +57,6 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
     {
         SearchTextBox.LostFocus += delegate { CloseDropDownWhenLostFocus(); };
         SearchResultListBox.LostFocus += delegate { CloseDropDownWhenLostFocus(); };
-        SearchTextBox.SelectAll();
 
         _getCandidates = getCandidates;
         _onSizeChanged = onSizeChanged;
