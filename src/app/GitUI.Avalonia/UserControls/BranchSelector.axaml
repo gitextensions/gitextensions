@@ -6,10 +6,12 @@
              d:DesignHeight="54">
   <Grid x:Name="tableLayoutPanel1"
         ColumnDefinitions="Auto,*,Auto"
-        RowDefinitions="23,*">
+        RowDefinitions="23,*"
+        TabIndex="1">
     <RadioButton x:Name="LocalBranch"
                  Margin="0"
                  MinWidth="93"
+                 TabIndex="0"
                  VerticalAlignment="Center"
                  Content="Local branch"
                  IsChecked="True" />
@@ -18,6 +20,7 @@
                  Margin="2"
                  MinWidth="112"
                  Padding="6,0,0,0"
+                 TabIndex="0"
                  HorizontalAlignment="Left"
                  VerticalAlignment="Center"
                  Content="Remote branch" />
@@ -27,6 +30,7 @@
            Height="15"
            Margin="2,10,3,0"
            Padding="0"
+           TabIndex="7"
            HorizontalAlignment="Right"
            VerticalAlignment="Center"
            Content="_Select branch"
@@ -38,7 +42,8 @@
               Margin="2,10,6,2"
               Padding="0"
               HorizontalAlignment="Stretch"
-              IsEditable="True" />
+              IsEditable="True"
+              TabIndex="1" />
     <TextBlock x:Name="lbChanges"
                Grid.Row="1"
                Grid.Column="2"
@@ -46,6 +51,7 @@
                Margin="2,12,5,2"
                VerticalAlignment="Top"
                Foreground="{DynamicResource GitExtensionsKnownColorGrayTextBrush}"
+               TabIndex="30"
                Text="-" />
   </Grid>
 </UserControl>

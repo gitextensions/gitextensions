@@ -13,7 +13,8 @@
     <controls:BranchSelector x:Name="branchSelector"
                              Width="322"
                              Height="58"
-                             Margin="8" />
+                             Margin="8"
+                             TabIndex="0" />
     <Button x:Name="btnCompare"
             Canvas.Left="349"
             Canvas.Top="75"
@@ -21,6 +22,7 @@
             Width="66"
             Height="25"
             Padding="0"
+            TabIndex="1"
             Content="Compare"
             IsDefault="True" />
   </Canvas>

@@ -8,7 +8,8 @@
         Height="685"
         Title="Diff">
   <Grid x:Name="mainLayoutPanel"
-        RowDefinitions="112,*">
+        RowDefinitions="112,*"
+        TabIndex="0">
     <Grid x:Name="settingsLayoutPanel"
           Height="106"
           Margin="3"
@@ -20,6 +21,7 @@
                 Grid.Column="0"
                 Height="50"
                 Padding="0"
+                TabIndex="16"
                 Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                 Header="BASE">
         <StackPanel x:Name="firstCommitPanel"
@@ -28,18 +30,22 @@
                     Margin="3,0"
                     HorizontalAlignment="Left"
                     Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
-                    Orientation="Horizontal">
-          <TextBlock x:Name="lblFirstCommit"
-                     Margin="3,0"
-                     MinWidth="200"
-                     Height="15"
-                     VerticalAlignment="Center"
-                     Background="{DynamicResource GitExtensionsAppColorAnsiTerminalRedBackNormalBrush}" />
+                    Orientation="Horizontal"
+                    TabIndex="14">
+          <Label x:Name="lblFirstCommit"
+                 Margin="3,0"
+                 MinWidth="200"
+                 Height="15"
+                 Padding="0"
+                 TabIndex="14"
+                 VerticalAlignment="Center"
+                 Background="{DynamicResource GitExtensionsAppColorAnsiTerminalRedBackNormalBrush}" />
           <Button x:Name="btnAnotherFirstBranch"
                   Margin="3"
                   Width="22"
                   Height="22"
-                  Padding="0">
+                  Padding="0"
+                  TabIndex="7">
             <Image Classes="gitextensions-icon-16"
                    Source="{x:Static properties:Images.BranchCheckout}" />
           </Button>
@@ -47,7 +53,8 @@
                   Margin="3"
                   Width="22"
                   Height="22"
-                  Padding="0">
+                  Padding="0"
+                  TabIndex="10">
             <Image Classes="gitextensions-icon-16"
                    Source="{x:Static properties:Images.SelectRevision}" />
           </Button>
@@ -60,6 +67,7 @@
               Width="22"
               Height="22"
               Padding="0"
+              TabIndex="6"
               VerticalAlignment="Top">
         <Image Classes="gitextensions-icon-16"
                Source="{x:Static properties:Images.Renamed}" />
@@ -70,6 +78,7 @@
                 Grid.Column="2"
                 Height="50"
                 Padding="0"
+                TabIndex="17"
                 Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                 Header="Compare">
         <StackPanel x:Name="secondCommitPanel"
@@ -78,18 +87,22 @@
                     Margin="3,0"
                     HorizontalAlignment="Left"
                     Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
-                    Orientation="Horizontal">
-          <TextBlock x:Name="lblSecondCommit"
-                     Margin="3,0"
-                     MinWidth="200"
-                     Height="15"
-                     VerticalAlignment="Center"
-                     Background="{DynamicResource GitExtensionsAppColorAnsiTerminalGreenBackNormalBrush}" />
+                    Orientation="Horizontal"
+                    TabIndex="15">
+          <Label x:Name="lblSecondCommit"
+                 Margin="3,0"
+                 MinWidth="200"
+                 Height="15"
+                 Padding="0"
+                 TabIndex="1"
+                 VerticalAlignment="Center"
+                 Background="{DynamicResource GitExtensionsAppColorAnsiTerminalGreenBackNormalBrush}" />
           <Button x:Name="btnAnotherSecondBranch"
                   Margin="3"
                   Width="22"
                   Height="22"
-                  Padding="0">
+                  Padding="0"
+                  TabIndex="16">
             <Image Classes="gitextensions-icon-16"
                    Source="{x:Static properties:Images.BranchCheckout}" />
           </Button>
@@ -97,7 +110,8 @@
                   Margin="3"
                   Width="22"
                   Height="22"
-                  Padding="0">
+                  Padding="0"
+                  TabIndex="17">
             <Image Classes="gitextensions-icon-16"
                    Source="{x:Static properties:Images.SelectRevision}" />
           </Button>
@@ -113,16 +127,19 @@
                   HorizontalAlignment="Left"
                   VerticalAlignment="Top"
                   Orientation="Horizontal"
-                  Spacing="0">
+                  Spacing="0"
+                  TabIndex="14">
         <CheckBox x:Name="ckCompareToMergeBase"
                   Margin="3"
                   Width="212"
+                  TabIndex="9"
                   VerticalAlignment="Center"
                   Content="Compare to merge _base" />
         <Button x:Name="btnCompareDirectoriesWithDiffTool"
                 Width="194"
                 Height="25"
                 Padding="0"
+                TabIndex="10"
                 Content="Open diff using _directory diff tool" />
       </StackPanel>
     </Grid>
@@ -133,14 +150,17 @@
           Margin="3"
           Background="Transparent"
           VerticalAlignment="Top"
-          ColumnDefinitions="345,4,*">
+          ColumnDefinitions="345,4,*"
+          TabIndex="1">
       <gitui:FileStatusList x:Name="DiffFiles"
-                            Background="Transparent" />
+                            Background="Transparent"
+                            TabIndex="0" />
       <GridSplitter Grid.Column="1"
                     ResizeDirection="Columns" />
       <editor:FileViewer x:Name="DiffText"
                          Grid.Column="2"
-                         Background="Transparent" />
+                         Background="Transparent"
+                         TabIndex="0" />
     </Grid>
   </Grid>
 </Window>
