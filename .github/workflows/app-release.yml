@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  check:
+  tagcheck:
     name: Check HEAD has a version tag
     runs-on: ubuntu-latest
     # Releases are only produced from the upstream repository, never from forks.
@@ -33,9 +33,9 @@ jobs:
 
   build:
     name: ${{ matrix.os }}
-    needs: check
+    needs: tagcheck
     # Releases are only produced from the upstream repository, never from forks.
-    if: ${{ needs.check.outputs.proceed == 'true' }}
+    if: ${{ needs.tagcheck.outputs.proceed == 'true' }}
     strategy:
       fail-fast: false
       matrix:
