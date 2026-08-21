@@ -1898,8 +1898,8 @@
   "src/app/GitUI/UserControls/BranchComboBox.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/BranchComboBox.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Editable branch/ref selector with typed display template, selected-text API, validation, and the multi-branch selection dialog. Avalonia's editable ComboBox supplies completion behavior instead of WinForms Suggest mode."
+    "basedOn": "65219315bbf009c79d57e1599137a5c355d7358f",
+    "notes": "Editable branch/ref selector with typed display template, selected-text API, validation, and the multi-branch selection dialog. Avalonia's editable ComboBox supplies completion behavior instead of WinForms Suggest mode. P8.6i progress 22 restores the Designer's integer native-96 23-pixel editor, 23-pixel multi-select button, four-pixel gap, and anchored hosted-height behavior; remaining inventory and containing-dialog comparison diagnostics stay open."
   },
   "src/app/GitUI/UserControls/HelpImageDisplayUserControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/HelpImageDisplayUserControl.axaml.cs",
@@ -2162,8 +2162,8 @@
   "src/app/GitUI/UserControls/CommitSummaryUserControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/CommitSummaryUserControl.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Compact author/date/message/branches/tags summary; WinForms-specific color adaptation and resize code are unnecessary in the Avalonia layout."
+    "basedOn": "65219315bbf009c79d57e1599137a5c355d7358f",
+    "notes": "Compact author/date/message/branches/tags summary. P8.6i progress 22 restores the original captions, bold message/author/ref emphasis, adapted LightSteelBlue tag and LightSalmon branch backgrounds through dynamic theme resources, null-revision clearing, and the exact integer runtime bounds produced from the Designer's explicit 144-DPI baseline normalized to native-96 DIPs. Remaining source and containing-dialog comparison diagnostics stay open."
   },
   "src/app/GitUI/LeftPanel/BaseBranchLeafNode.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/BaseBranchLeafNode.cs",
@@ -2915,14 +2915,14 @@
   "src/app/GitUI/CommandsDialogs/FormDeleteRemoteBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteRemoteBranch.axaml.cs",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Delete-remote-branches dialog over the shared BranchComboBox. Preserves the remote-branch multi-selection, the merged-branch background load through a TaskManager joined before delete, the unmerged-branch confirmation, the delete-remote/delete-local-tracking checkboxes with the tracking-candidate summary, the before/after push event scripts, DeleteRemoteBranches through FormRemoteProcess per remote, and the optional local-tracking delete via StartDeleteBranchDialog. Deviations: OnShown work folds into OnRuntimeLoad; the PuTTY/Pageant EnsurePageant step is dropped because OpenSSH owns portable authentication (platform matrix). Wired through StartDeleteRemoteBranchDialog."
+    "basedOn": "65219315bbf009c79d57e1599137a5c355d7358f",
+    "notes": "Delete-remote-branches dialog over the shared BranchComboBox. Preserves the remote-branch multi-selection, the merged-branch background load through a TaskManager joined before delete, the unmerged-branch confirmation, the delete-remote/delete-local-tracking checkboxes with the tracking-candidate summary, the before/after push event scripts, DeleteRemoteBranches through FormRemoteProcess per remote, and the optional local-tracking delete via StartDeleteBranchDialog. Deviations: OnShown work folds into OnRuntimeLoad; TextBlock trims the final StringBuilder line break that WinForms Label does not measure as a blank row; the PuTTY/Pageant EnsurePageant step is dropped because OpenSSH owns portable authentication (platform matrix). P8.6i progress 22 adds real paired capture hosting and native-100 state evidence. Wired through StartDeleteRemoteBranchDialog."
   },
   "src/app/GitUI/CommandsDialogs/FormDeleteRemoteBranch.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteRemoteBranch.axaml",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Native AXAML preserves the GitExtensionsDialog MainPanel/ControlsPanel chrome, original field names, the label+BranchComboBox row, the two checkboxes, and the tracking-candidate label. The WinForms title-bar HelpButton is not reproduced (deferred, matching the FormDeleteBranch twin); ManualSection anchors are retained in code-behind."
+    "basedOn": "65219315bbf009c79d57e1599137a5c355d7358f",
+    "notes": "Native AXAML preserves the GitExtensionsDialog MainPanel/ControlsPanel chrome, original field names, the label+BranchComboBox row, the two checkboxes, tracking-candidate label, and exact integer native-96 runtime bounds measured from the real original with a selected tracking branch. The WinForms title-bar HelpButton is not reproduced and remains explicit debt; ManualSection anchors are retained in code-behind."
   },
   "src/app/GitUI/CommandsDialogs/FormDiff.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDiff.axaml.cs",
@@ -3443,14 +3443,14 @@
   "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetAnotherBranch.axaml.cs",
     "status": "functional",
-    "basedOn": "e3206275aecf12813ec08a702bec1d52e969b6b2",
-    "notes": "Reset-another-branch dialog. Preserves the local-branches-without-current ordering (tracking remotes first), the editable branch combo with default-remote preselection, the commit summary, the checkout-after-reset setting, the force-reset option, and the asynchronous cancellable merge-base ancestor validation that enables OK and tints invalid input. UpdateRef runs through FormProcess, then optional StartCheckoutBranch. Deviations: the WinForms editable ComboBox maps to an editable Avalonia ComboBox whose items are branch-name strings; the invalid LightCoral background maps to the shared semantic invalid-input brush; the Application.Idle drop-down open maps to a posted action; the KeyUp caret dance is unnecessary in Avalonia. Opened from the revision-grid Reset-another-branch context command."
+    "basedOn": "65219315bbf009c79d57e1599137a5c355d7358f",
+    "notes": "Reset-another-branch dialog. Preserves the local-branches-without-current ordering (tracking remotes first), the editable branch combo with default-remote preselection, the commit summary, the checkout-after-reset setting, the force-reset option, and the asynchronous cancellable merge-base ancestor validation that enables OK and tints invalid input. UpdateRef runs through FormProcess, then optional StartCheckoutBranch. Deviations: the WinForms editable ComboBox maps to an editable Avalonia ComboBox whose items are branch-name strings; the invalid LightCoral background maps to the shared semantic invalid-input brush; the Application.Idle drop-down open maps to a posted action; the KeyUp caret dance is unnecessary in Avalonia. P8.6i progress 22 adds real paired capture hosting, deterministic shared revision metadata, and capture-only popup closure after text seeding. Opened from the revision-grid Reset-another-branch context command."
   },
   "src/app/GitUI/HelperDialogs/FormResetAnotherBranch.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormResetAnotherBranch.axaml",
     "status": "functional",
-    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Native AXAML preserves the original field names, the warning icon+label row, the branch label+combo, the commit summary control, the checkout/force checkboxes, and the OK/Cancel row. The multiline warning keeps its exact translation source; PictureBox maps to a 16px Image and the warning-label ForeColor adaptation is deferred with the visual axis."
+    "basedOn": "65219315bbf009c79d57e1599137a5c355d7358f",
+    "notes": "Native AXAML preserves the original field names and exact integer native-96 runtime bounds for the 545x347 autosized client, warning icon+label row, branch label+combo, nested commit summary, checkout/force checkboxes, and OK/Cancel row. The multiline warning keeps its exact translation source; PictureBox maps to a named 16x24 host containing a uniformly scaled 16px image so the source host geometry and square icon both survive. Remaining template/color diagnostics stay open."
   },
   "src/app/GitUI/Infrastructure/Plink.cs": {
     "status": "windowsOnly",

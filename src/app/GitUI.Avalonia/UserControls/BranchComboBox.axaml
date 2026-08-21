@@ -3,17 +3,22 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.BranchComboBox"
+             VerticalContentAlignment="Stretch"
              MinHeight="26">
-  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+  <Grid ColumnDefinitions="*,23" ColumnSpacing="4">
     <ComboBox x:Name="branches"
               IsEditable="True"
+              Height="23"
               HorizontalAlignment="Stretch"
-              VerticalAlignment="Center" />
+              VerticalAlignment="Top"
+              Margin="0,3,0,0" />
     <compat:IconButton x:Name="selectMultipleBranchesButton"
                        Classes="gitextensions-icon-only"
                        Grid.Column="1"
-                       Width="27"
-                       MinHeight="24"
+                       Width="23"
+                       MinHeight="0"
+                       Margin="0,1,0,2"
+                       VerticalAlignment="Stretch"
                        Padding="2"
                        Icon="{x:Static properties:Images.SelectBranch}" />
   </Grid>
