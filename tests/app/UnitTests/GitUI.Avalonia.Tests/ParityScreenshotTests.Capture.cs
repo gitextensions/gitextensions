@@ -23,6 +23,7 @@ using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
 using GitUI.SpellChecker;
@@ -58,6 +59,15 @@ public sealed partial class ParityScreenshotTests
         // WinForms AutoSize contracts the 110-pixel Designer client to 106 pixels with the runtime font.
         GetCaptureSize(typeof(FormCompareToBranch)).Should().Be((434, 106));
         GetCaptureSize(typeof(FormFormatPatch)).Should().Be((824, 532));
+    }
+
+    [Test]
+    [Category(P02Category)]
+    public void Blame_log_capture_hosts_should_use_96_dpi_designer_dimensions()
+    {
+        GetCaptureSize(typeof(FormBlame)).Should().Be((784, 762));
+        GetCaptureSize(typeof(FormLog)).Should().Be((750, 529));
+        GetCaptureSize(typeof(FormGitCommandLog)).Should().Be((659, 470));
     }
 
     [AvaloniaTest]

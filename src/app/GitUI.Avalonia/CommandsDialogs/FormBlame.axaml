@@ -6,5 +6,6 @@
         Height="762"
         WindowStartupLocation="CenterOwner"
         Title="File History">
-  <blame:BlameControl x:Name="blameControl1" Margin="4" />
+  <blame:BlameControl x:Name="blameControl1"
+                      TabIndex="0" />
 </Window>
