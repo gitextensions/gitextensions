@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitUI.Compat;
 using DrawingColor = System.Drawing.Color;
@@ -26,7 +27,7 @@ public partial class SearchControl : UserControl
 
     protected ListBox SearchResultListBox => listBoxSearchResult;
 
-    protected Border SearchTextBoxBorder => searchBoxBorder;
+    protected Border SearchTextBoxBorder => (Border)txtSearchBox.Parent!;
 }
 
 public partial class SearchControl<T> : SearchControl, IDisposable where T : class
@@ -79,6 +80,16 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
     public void FocusSearchBox()
     {
         SearchTextBox.Focus();
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+
+        // Avalonia cannot focus an unattached control; preserve the original Select() at the attachment boundary.
+        Dispatcher.UIThread.Post(
+            () => SearchTextBox.Focus(),
+            DispatcherPriority.Input);
     }
 
     public void CloseDropdown()
@@ -176,7 +187,8 @@ public partial class SearchControl<T> : SearchControl, IDisposable where T : cla
             lineHeight = metrics.LineSpacing * SearchTextBox.FontSize / metrics.DesignEmHeight;
         }
 
-        double itemHeight = Math.Ceiling(lineHeight * renderScale) / renderScale;
+        // Avalonia may substitute a shorter platform font; preserve the WinForms 96-DPI default row height while allowing configured fonts to grow.
+        double itemHeight = Math.Max(16, Math.Ceiling(lineHeight * renderScale) / renderScale);
         double listHeight = Math.Min(800 / renderScale, itemHeight * (SearchResultListBox.ItemCount + 1));
         SearchResultListBox.Width = width;
         SearchResultListBox.Height = listHeight;

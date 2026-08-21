@@ -277,6 +277,9 @@ internal sealed class AvaloniaControlTreeReader
             ? null
             : fieldNames.FirstOrDefault()
               ?? (control is MenuItem or Separator || string.IsNullOrEmpty(control.Name) ? null : control.Name);
+        Control? childSemanticParent = isSurfaceRoot || fieldName is not null
+            ? control
+            : semanticParent;
         string segment = isSurfaceRoot
             ? $"$root:{control.GetType().Name}"
             : fieldName ?? $"$unnamed[{ordinal}]:{control.GetType().Name}";
@@ -290,7 +293,7 @@ internal sealed class AvaloniaControlTreeReader
                 id,
                 childOrdinal,
                 childSubmenusOpen,
-                control,
+                childSemanticParent,
                 boundsOverride: null))
             .ToArray();
 
@@ -394,7 +397,7 @@ internal sealed class AvaloniaControlTreeReader
             ? names
             : [];
 
-    private static IEnumerable<Control> GetCaptureChildren(Control control)
+    private IEnumerable<Control> GetCaptureChildren(Control control)
     {
         if (control is RevisionGridControl)
         {
@@ -433,11 +436,31 @@ internal sealed class AvaloniaControlTreeReader
             return [];
         }
 
-        return control.GetLogicalChildren()
+        IEnumerable<Control> children = control.GetLogicalChildren()
             .OfType<Control>()
             .Where(child => child.TemplatedParent is null
-                            && child.GetType().Name != "TopLevelHost");
+                            && child.GetType().Name != "TopLevelHost")
+            .Where(child => !IsSearchResultOverlay(child));
+
+        if (ReferenceEquals(control, _root) && control is Window)
+        {
+            // parity-scaffolding: WinForms reparents SearchControl's result list to its owning
+            // form. Avalonia keeps the same overlay in the control's logical tree, so lift it
+            // to the emitted window root and measure it against that semantic owner.
+            children = children.Concat(
+                control.GetLogicalDescendants()
+                    .OfType<Control>()
+                    .Where(IsSearchResultOverlay));
+        }
+
+        return children;
     }
+
+    private static bool IsSearchResultOverlay(Control control)
+        => control.Name == "listBoxSearchResult"
+           && control.GetLogicalAncestors()
+               .OfType<Control>()
+               .Any(ancestor => ancestor.GetType().Name.StartsWith("SearchControl", StringComparison.Ordinal));
 
     private CaptureColors ReadColors(Control control)
     {

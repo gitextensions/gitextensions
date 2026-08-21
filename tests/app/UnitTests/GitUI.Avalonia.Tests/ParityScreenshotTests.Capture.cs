@@ -45,8 +45,29 @@ public sealed partial class ParityScreenshotTests
     [Category(P02Category)]
     public void Generic_search_capture_hosts_should_use_the_declared_shell_sizes()
     {
-        GetCaptureSize(typeof(SearchControl<string>)).Should().Be((325, 91));
-        GetCaptureSize(typeof(SearchWindow<string>)).Should().Be((325, 113));
+        GetCaptureSize(typeof(SearchControl<string>)).Should().Be((64, 23));
+        GetCaptureSize(typeof(SearchWindow<string>)).Should().Be((325, 213));
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    public void Avalonia_tree_reader_should_measure_named_controls_from_their_nearest_semantic_owner()
+    {
+        Window window = new() { Width = 320, Height = 160 };
+        Canvas layout = new() { Margin = new Thickness(32, 24, 0, 0) };
+        Button command = new() { Name = "btnCommand", Width = 75, Height = 25 };
+        layout.Children.Add(command);
+        window.Content = layout;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureSurface surface = new AvaloniaControlTreeReader(window, renderScale: 1)
+            .ReadPrimary(window, new PixelSize(320, 160));
+        CaptureNode commandNode = Flatten(surface.Root).Single(node => node.FieldName == command.Name);
+
+        commandNode.BoundsDip.Should().Be(
+            new CaptureRectangleF { X = 32, Y = 24, Width = 75, Height = 25 });
+        window.Close();
     }
 
     [Test]

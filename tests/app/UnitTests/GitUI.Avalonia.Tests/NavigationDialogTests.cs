@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -36,6 +37,7 @@ public sealed class NavigationDialogTests
         FormCheckoutRevision checkoutRevision = new();
         SearchControl searchControl = new();
         SearchWindow searchWindow = new();
+        SearchWindow<string> genericSearchWindow = new(_ => []);
 
         goToCommit.FindControl<TextBox>("textboxCommitExpression").Should().NotBeNull();
         goToCommit.FindControl<ComboBox>("comboBoxTags").Should().NotBeNull();
@@ -43,7 +45,8 @@ public sealed class NavigationDialogTests
         checkoutRevision.FindControl<CheckBox>("Force").Should().NotBeNull();
         searchControl.FindControl<TextBox>("txtSearchBox").Should().NotBeNull();
         searchControl.FindControl<ListBox>("listBoxSearchResult").Should().NotBeNull();
-        searchWindow.FindControl<TextBlock>("lblEnterFileName")!.Text.Should().Be("Enter File Name");
+        searchWindow.FindControl<Label>("lblEnterFileName")!.Content.Should().Be("Enter File Name");
+        genericSearchWindow.GetLogicalDescendants().OfType<SearchControl<string>>().Should().ContainSingle();
     }
 
     [AvaloniaTest]
@@ -85,10 +88,35 @@ public sealed class NavigationDialogTests
             AssertBounds(form.FindControl<TextBox>("textboxCommitExpression")!, 155, 13, 360, 23);
             AssertBounds(form.FindControl<Button>("goButton")!, 521, 10, 75, 28);
             AssertBounds(form.FindControl<GroupBox>("groupBox1")!, 45, 43, 470, 141);
+            AssertBounds(form.FindControl<TextBlock>("label2")!, 64, 65, 413, 75);
+            AssertBounds(form.FindControl<TextBlock>("linkGitRevParse")!, 64, 155, 126, 15);
             AssertBounds(form.FindControl<ComboBox>("comboBoxTags")!, 155, 216, 287, 23);
             AssertBounds(form.FindControl<ComboBox>("comboBoxBranches")!, 155, 258, 287, 23);
             form.FindControl<TextBlock>("label2")!.Text.Should().Be(
                 "Commit expression examples:\r\n- complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9\r\n- partial commit hash (if unique): e. g.: 8eab51fcb9c453\r\n- tag name\r\n- branch name");
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormGoToCommit_should_preserve_the_original_right_anchored_resize_behavior()
+    {
+        (IGitUICommands commands, _) = CreateCommands();
+        FormGoToCommit form = new(commands);
+        form.Show();
+        try
+        {
+            form.Width = 704;
+            Dispatcher.UIThread.RunJobs();
+
+            AssertBounds(form.FindControl<TextBox>("textboxCommitExpression")!, 155, 13, 460, 23);
+            AssertBounds(form.FindControl<Button>("goButton")!, 621, 10, 75, 28);
+            AssertBounds(form.FindControl<GroupBox>("groupBox1")!, 45, 43, 570, 141);
+            AssertBounds(form.FindControl<ComboBox>("comboBoxTags")!, 155, 216, 387, 23);
+            AssertBounds(form.FindControl<ComboBox>("comboBoxBranches")!, 155, 258, 387, 23);
         }
         finally
         {
@@ -108,6 +136,11 @@ public sealed class NavigationDialogTests
 
             AssertBounds(form.FindControl<Grid>("tableLayoutPanel1")!, 12, 12, 457, 66);
             AssertBounds(form.FindControl<Button>("OkCheckout")!, 384, 98, 84, 25);
+            GitUI.UserControls.CommitPickerSmallControl commitPicker = form.FindControl<GitUI.UserControls.CommitPickerSmallControl>("commitPickerSmallControl1")!;
+            AssertBounds(commitPicker, 145, 15, 321, 26);
+            AssertBounds(commitPicker.FindControl<TextBox>("textBoxCommitHash")!, 145, 17, 284, 23);
+            AssertBounds(commitPicker.FindControl<Button>("buttonPickCommit")!, 432, 15, 25, 24);
+            AssertBounds(form.FindControl<CheckBox>("Force")!, 145, 47, 166, 19);
             form.FindControl<Label>("label2")!.Content.Should().Be("Checkout this _revision");
             form.FindControl<CheckBox>("Force")!.Content.Should().Be("_Force (reset local changes)");
         }
@@ -134,6 +167,28 @@ public sealed class NavigationDialogTests
     }
 
     [AvaloniaTest]
+    public void SearchWindow_should_match_the_reference_one_result_geometry()
+    {
+        SearchWindow<string> window = new(_ => []);
+        window.Show();
+        try
+        {
+            SearchControl<string> search = window.GetLogicalDescendants().OfType<SearchControl<string>>().Single();
+            Invoke(search, "SearchForCandidates", (object)new[] { "src/App.cs" });
+            Dispatcher.UIThread.RunJobs();
+
+            window.Bounds.Width.Should().BeApproximately(300, 1);
+            window.Bounds.Height.Should().BeApproximately(79, 1);
+            AssertBounds(window.FindControl<Label>("lblEnterFileName")!, 0, 0, 300, 24);
+            AssertBounds(search.FindControl<ListBox>("listBoxSearchResult")!, 0, 47, 300, 32);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void SearchControl_should_convert_the_reference_popup_width_from_physical_pixels()
     {
         Avalonia.Size reportedSize = default;
@@ -157,7 +212,7 @@ public sealed class NavigationDialogTests
             Avalonia.Media.FontManager.Current.TryGetGlyphTypeface(typeface, out Avalonia.Media.GlyphTypeface? glyphTypeface).Should().BeTrue();
             Avalonia.Media.FontMetrics metrics = glyphTypeface!.Metrics;
             double lineHeight = metrics.LineSpacing * searchBox.FontSize / metrics.DesignEmHeight;
-            double itemHeight = Math.Ceiling(lineHeight * 1.25) / 1.25;
+            double itemHeight = Math.Max(16, Math.Ceiling(lineHeight * 1.25) / 1.25);
             reportedSize.Height.Should().BeApproximately((itemHeight * 2) + Math.Max(22, searchBox.Bounds.Height), 0.01);
             search.FindControl<ListBox>("listBoxSearchResult")!.Classes.Should().Contain("search-results");
         }
@@ -195,6 +250,8 @@ public sealed class NavigationDialogTests
         {
             search.Text = "src";
             Dispatcher.UIThread.RunJobs();
+            TextBox searchBox = search.FindControl<TextBox>("txtSearchBox")!;
+            searchBox.IsKeyboardFocusWithin.Should().BeTrue();
             Invoke(search, "SearchForCandidates", (object)new[] { "src/App.cs" });
             Invoke(search, "ItemSelectedFromList");
             Dispatcher.UIThread.RunJobs();
