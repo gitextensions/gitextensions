@@ -303,7 +303,7 @@ public sealed class EndToEndCaptureTests
             TypeName = typeof(TextSeedForm).FullName!,
             TextValues = new Dictionary<string, string>
             {
-                ["_target"] = "planned value"
+                ["_target"] = "planned\nvalue"
             },
             States = []
         };
@@ -312,7 +312,7 @@ public sealed class EndToEndCaptureTests
 
         ComponentFactory.ApplyTextValues(form, component);
 
-        form.TargetText.Should().Be("planned value");
+        form.TargetText.Should().Be($"planned{Environment.NewLine}value");
     }
 
     private sealed class CancelingContextMenuForm : Form

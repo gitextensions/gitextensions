@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using GitCommands;
@@ -40,6 +41,34 @@ public sealed class RepositoryMaintenanceTests
 
         // RemoveAll is checked by default, mirroring the original.
         accessor.RemoveAll.IsChecked.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public void FormCleanupRepository_should_use_the_native_96_dpi_WinForms_layout()
+    {
+        FormCleanupRepository form = new();
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        form.ClientSize.Should().Be(new Avalonia.Size(434, 582));
+        AssertBounds(form.FindControl<HeaderedContentControl>("groupBox1"), 12, 12, 410, 100);
+        AssertBounds(form.FindControl<CheckBox>("RemoveDirectories"), 19, 118, 183, 19);
+        AssertBounds(form.FindControl<CheckBox>("CleanSubmodules"), 19, 142, 183, 19);
+        AssertBounds(form.FindControl<CheckBox>("checkBoxIncludePathFilter"), 19, 167, 250, 19);
+        AssertBounds(form.FindControl<Button>("AddInclusivePath"), 302, 162, 120, 25);
+        AssertBounds(form.FindControl<TextBox>("textBoxIncludePaths"), 48, 192, 374, 63);
+        AssertBounds(form.FindControl<TextBlock>("labelPathHintInclude"), 50, 258, 104, 15);
+        AssertBounds(form.FindControl<CheckBox>("checkBoxExcludePathFilter"), 19, 288, 201, 19);
+        AssertBounds(form.FindControl<Button>("AddExclusivePath"), 302, 283, 120, 25);
+        AssertBounds(form.FindControl<TextBox>("textBoxExcludePaths"), 48, 313, 374, 63);
+        AssertBounds(form.FindControl<TextBlock>("labelPathHintExclude"), 50, 380, 104, 15);
+        AssertBounds(form.FindControl<Button>("Preview"), 48, 423, 120, 25);
+        AssertBounds(form.FindControl<Button>("Cleanup"), 174, 423, 120, 25);
+        AssertBounds(form.FindControl<Button>("_NO_TRANSLATE_Close"), 301, 423, 120, 25);
+        AssertBounds(form.FindControl<TextBlock>("label1"), 14, 458, 30, 15);
+        AssertBounds(form.FindControl<TextBox>("PreviewOutput"), 14, 478, 410, 94);
+
+        form.Close();
     }
 
     [AvaloniaTest]
@@ -116,6 +145,23 @@ public sealed class RepositoryMaintenanceTests
     }
 
     [AvaloniaTest]
+    public void FormBisect_should_use_the_native_96_dpi_WinForms_layout()
+    {
+        FormBisect form = new();
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        form.ClientSize.Should().Be(new Avalonia.Size(248, 169));
+        AssertBounds(form.FindControl<Button>("Start"), 12, 12, 224, 25);
+        AssertBounds(form.FindControl<Button>("Bad"), 12, 41, 224, 25);
+        AssertBounds(form.FindControl<Button>("Good"), 12, 70, 224, 25);
+        AssertBounds(form.FindControl<Button>("btnSkip"), 12, 101, 224, 25);
+        AssertBounds(form.FindControl<Button>("Stop"), 12, 132, 224, 25);
+
+        form.Close();
+    }
+
+    [AvaloniaTest]
     public void FormBisect_should_emit_its_translation_keys()
     {
         FormBisect form = new();
@@ -146,6 +192,32 @@ public sealed class RepositoryMaintenanceTests
         form.GetTestAccessor().Root.Should().NotBeNull();
 
         Dispatcher.UIThread.RunJobs();
+    }
+
+    [AvaloniaTest]
+    public void FormSparseWorkingCopy_should_use_the_WinForms_native_client_minimum_and_load_rules()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"ge-sparse-{Guid.NewGuid():N}");
+        string info = Path.Combine(root, ".git", "info");
+        Directory.CreateDirectory(info);
+        File.WriteAllText(Path.Combine(info, "sparse-checkout"), "/*");
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(root);
+        module.ResolveGitInternalPath("info").Returns(info);
+        module.GetEffectiveSetting(FormSparseWorkingCopyViewModel.SettingCoreSparseCheckout).Returns("true");
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+
+        FormSparseWorkingCopy form = new(commands);
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        form.MinWidth.Should().Be(784);
+        form.MinHeight.Should().Be(561);
+        form.GetTestAccessor().Editor.Should().NotBeNull();
+
+        form.Close();
+        Directory.Delete(root, recursive: true);
     }
 
     [AvaloniaTest]
@@ -204,5 +276,47 @@ public sealed class RepositoryMaintenanceTests
 
         model.IsSparseCheckoutEnabled = false;
         model.IsWithUnsavedChanges().Should().BeTrue();
+    }
+
+    [Test]
+    public void FormSparseWorkingCopyViewModel_should_adjust_rules_when_disabling_sparse_checkout()
+    {
+        string root = Path.Combine(Path.GetTempPath(), $"ge-sparse-vm-{Guid.NewGuid():N}");
+        string info = Path.Combine(root, ".git", "info");
+        Directory.CreateDirectory(info);
+        string sparseFile = Path.Combine(info, "sparse-checkout");
+        File.WriteAllText(sparseFile, "/src\n#existing");
+        IGitModule module = Substitute.For<IGitModule>();
+        module.ResolveGitInternalPath("info").Returns(info);
+        module.GetEffectiveSetting(FormSparseWorkingCopyViewModel.SettingCoreSparseCheckout).Returns("true");
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        FormSparseWorkingCopyViewModel model = new(commands)
+        {
+            IsRefreshWorkingCopyOnSave = false,
+            RulesText = "/src\n#existing",
+        };
+        model.SetRulesTextAsOnDisk(model.RulesText);
+        bool confirmationRaised = false;
+        model.ComfirmAdjustingRulesOnDeactRequested += (sender, args) =>
+        {
+            confirmationRaised = true;
+            args.IsCurrentRuleSetEmpty.Should().BeFalse();
+        };
+
+        model.IsSparseCheckoutEnabled = false;
+        model.SaveChanges();
+
+        confirmationRaised.Should().BeTrue();
+        File.ReadAllText(sparseFile).Should().Be($"/*{Environment.NewLine}#/src{Environment.NewLine}#existing");
+        module.Received(1).SetSetting(FormSparseWorkingCopyViewModel.SettingCoreSparseCheckout, "false");
+        model.IsWithUnsavedChanges().Should().BeFalse();
+        Directory.Delete(root, recursive: true);
+    }
+
+    private static void AssertBounds(Control? control, double x, double y, double width, double height)
+    {
+        control.Should().NotBeNull();
+        control!.Bounds.Should().Be(new Avalonia.Rect(x, y, width, height));
     }
 }

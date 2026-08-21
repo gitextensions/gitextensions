@@ -2671,7 +2671,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/BrowseDialog/FormBisect.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Native AXAML preserves the five original button field names and the vertical button stack in an auto-sized fixed dialog. The &good/&bad/&Skip mnemonics map to Avalonia access keys."
+    "notes": "Native AXAML preserves the five original button field names and the vertical button stack in a fixed dialog. The &good/&bad/&Skip mnemonics map to Avalonia access keys. The measured native-96-DPI WinForms AutoSize result supplies the integer 248x169 client and exact five 224x25 button bounds/tab order; no capture-derived fractions are used."
   },
   "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseUtil.cs": {
     "twin": "src/app/GitUI/CommandsDialogs/BrowseDialog/FormBrowseUtil.cs",
@@ -2880,13 +2880,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCleanupRepository.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Clean working directory dialog. Preserves the clean-mode radios, remove-directories/clean-submodules options, include/exclude path filters with per-checkbox enable/hint toggles, dry-run Preview and confirmed Cleanup through Commands.Clean/CleanSubmodules and FormProcess.ReadDialog, and the read-only preview output. Deviations: WinForms TextBox.Lines maps to a newline split; FolderBrowserDialog/OpenFileDialog map to the portal-backed StorageProvider pumped through DispatcherPump. Wired through StartCleanupRepositoryDialog and the cleanup command-line verb."
+    "notes": "Clean working directory dialog. Preserves the clean-mode radios, remove-directories/clean-submodules options, include/exclude path filters with per-checkbox enable/hint toggles, dry-run Preview and confirmed Cleanup through Commands.Clean/CleanSubmodules and FormProcess.ReadDialog, and the read-only preview output. Deviations: WinForms TextBox.Lines maps to a newline split; FolderBrowserDialog/OpenFileDialog map to the portal-backed StorageProvider pumped through DispatcherPump. Wired through StartCleanupRepositoryDialog and the cleanup command-line verb. The native-100 capture matrix covers five normal/checked/focused/disabled states across light, dark, and custom themes."
   },
   "src/app/GitUI/CommandsDialogs/FormCleanupRepository.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCleanupRepository.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Native AXAML preserves the original field names, the group-box clean-mode radios, the include/exclude filter sections with their Add-a-path buttons and one-path-per-line hints, and the log output. GroupBox maps to HeaderedContentControl; the image Preview/Cleanup buttons map to IconButton; absolute Designer positions map to a Grid."
+    "notes": "Native AXAML preserves the original field names, the group-box clean-mode radios, the include/exclude filter sections with their Add-a-path buttons and one-path-per-line hints, and the log output. GroupBox maps to HeaderedContentControl and the image Preview/Cleanup buttons map to IconButton. The source Designer's 120-DPI coordinates are represented by the integer bounds produced by WinForms AutoScale at the measured native-96-DPI runtime: 434x582 client, 120x25 actions, 19px checkboxes, 15px clean-mode radios, and exact source anchor behavior; no capture-derived fractions are used."
   },
   "src/app/GitUI/CommandsDialogs/FormCommandlineHelp.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommandlineHelp.axaml.cs",
@@ -3004,7 +3004,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSparseWorkingCopy.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Sparse working copy dialog. Like the original it has no Designer and builds its view in code; the twin mirrors the CreateViewHeader/Footer/OnOff/Rules/Separator structure with Avalonia controls over the FileViewer editor. Preserves the enable/disable link, the pass-filter rules editor, the refresh-on-save option, Ctrl+Enter commit, and the save-on-close/unsaved-changes prompt. Deviations: WinForms Form.Text/SystemColors panels map to the Title and the AvaloniaThemeResources system-color brushes; LinkLabel maps to a TextBlock + HyperlinkButton; the ToolTip component maps to ToolTip.SetTip; Button.DialogResult maps to click handlers setting the form DialogResult; the form is [Untranslated] because it self-translates through the nested Globalized helper (XLF category Globalized). Wired through StartSparseWorkingCopyDialog."
+    "notes": "Sparse working copy dialog. Like the original it has no Designer and builds its view in code; the twin mirrors the CreateViewHeader/Footer/OnOff/Rules/Separator structure with Avalonia controls over the FileViewer editor. Preserves the enable/disable link, the pass-filter rules editor, the refresh-on-save option, Ctrl+Enter commit, and the save-on-close/unsaved-changes prompt. Deviations: WinForms Form.Text/SystemColors panels map to the Title and the AvaloniaThemeResources system-color brushes; LinkLabel maps to a TextBlock + HyperlinkButton; the ToolTip component maps to ToolTip.SetTip; Button.DialogResult maps to click handlers setting the form DialogResult; the form is [Untranslated] because it self-translates through the nested Globalized helper (XLF category Globalized). The 800x600 WinForms minimum outer window maps to its measured integer 784x561 native-96-DPI client, and the code-built header/rules/footer use the original integer runtime row and control bounds. Wired through StartSparseWorkingCopyDialog."
   },
   "src/app/GitUI/CommandsDialogs/FormSparseWorkingCopyViewModel.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSparseWorkingCopyViewModel.cs",
