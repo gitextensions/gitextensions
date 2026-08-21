@@ -34,19 +34,22 @@
         <Label x:Name="label2"
                Target="{Binding #commitPickerSmallControl1}"
                Margin="3,5,3,0"
-               Padding="0"
+               Padding="3,0,0,0"
                Content="Checkout this _revision"
                VerticalContentAlignment="Center" />
         <usercontrols:CommitPickerSmallControl x:Name="commitPickerSmallControl1"
                                                Grid.Column="1"
-                                               Margin="2,3,4,3"
+                                               Margin="3,3,3,3"
                                                MinWidth="100"
                                                MinHeight="26" />
         <CheckBox x:Name="Force"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Margin="1,4,0,5"
+                  Width="166"
+                  Height="19"
+                  Margin="3,3,0,6"
                   Content="_Force (reset local changes)"
+                  HorizontalAlignment="Left"
                   VerticalAlignment="Center" />
       </Grid>
     </Border>

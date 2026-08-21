@@ -23,6 +23,24 @@ public sealed class ControlTreeReaderTests
         button.FieldName.Should().Be("_btnAction");
         button.Colors.Foreground.Should().MatchRegex("^#[0-9A-F]{8}$");
         button.Colors.Background.Should().MatchRegex("^#[0-9A-F]{8}$");
+        button.Expanded.Should().BeNull("expanded state applies only to expandable controls");
+    }
+
+    [Test]
+    public void ReadPrimary_should_record_tree_expansion_only_for_tree_controls()
+    {
+        using Form form = new();
+        using TreeView tree = new();
+        tree.Nodes.Add("root").Expand();
+        form.Controls.Add(tree);
+        form.CreateControl();
+        tree.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode treeNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        treeNode.Expanded.Should().BeTrue();
+        treeNode.Children.Should().BeEmpty();
     }
 
     [Test]
