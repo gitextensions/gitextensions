@@ -8,35 +8,41 @@
         Height="685"
         Title="Diff">
   <Grid x:Name="mainLayoutPanel"
-        RowDefinitions="80,*">
+        RowDefinitions="115,*">
     <Grid x:Name="settingsLayoutPanel"
-          Height="71"
+          Height="106"
           Margin="3"
+          VerticalAlignment="Top"
           ColumnDefinitions="*,Auto,*"
-          RowDefinitions="Auto,Auto">
+          RowDefinitions="50,*">
       <GroupBox x:Name="firstCommitGroup"
+                Classes="gitextensions-group-box"
                 Grid.Column="0"
-                Height="48"
+                Height="50"
+                Padding="3"
                 Header="BASE">
         <StackPanel x:Name="firstCommitPanel"
                     Height="28"
                     Orientation="Horizontal">
           <TextBlock x:Name="lblFirstCommit"
+                     Margin="3,0"
                      MinWidth="200"
-                     Height="13"
+                     Height="15"
                      VerticalAlignment="Center"
                      Background="{DynamicResource GitExtensionsAppColorAnsiTerminalRedBackNormalBrush}" />
           <Button x:Name="btnAnotherFirstBranch"
+                  Margin="3"
                   Width="22"
                   Height="22"
-                  Padding="3">
+                  Padding="0">
             <Image Classes="gitextensions-icon-16"
                    Source="{x:Static properties:Images.BranchCheckout}" />
           </Button>
           <Button x:Name="btnAnotherFirstCommit"
+                  Margin="3"
                   Width="22"
                   Height="22"
-                  Padding="3">
+                  Padding="0">
             <Image Classes="gitextensions-icon-16"
                    Source="{x:Static properties:Images.SelectRevision}" />
           </Button>
@@ -48,35 +54,40 @@
               Margin="10,15,10,0"
               Width="22"
               Height="22"
-              Padding="3"
+              Padding="0"
               VerticalAlignment="Top">
         <Image Classes="gitextensions-icon-16"
                Source="{x:Static properties:Images.Renamed}" />
       </Button>
 
       <GroupBox x:Name="secondCommitGroup"
+                Classes="gitextensions-group-box"
                 Grid.Column="2"
-                Height="48"
+                Height="50"
+                Padding="3"
                 Header="Compare">
         <StackPanel x:Name="secondCommitPanel"
                     Height="28"
                     Orientation="Horizontal">
           <TextBlock x:Name="lblSecondCommit"
+                     Margin="3,0"
                      MinWidth="200"
-                     Height="13"
+                     Height="15"
                      VerticalAlignment="Center"
                      Background="{DynamicResource GitExtensionsAppColorAnsiTerminalGreenBackNormalBrush}" />
           <Button x:Name="btnAnotherSecondBranch"
+                  Margin="3"
                   Width="22"
                   Height="22"
-                  Padding="3">
+                  Padding="0">
             <Image Classes="gitextensions-icon-16"
                    Source="{x:Static properties:Images.BranchCheckout}" />
           </Button>
           <Button x:Name="btnAnotherSecondCommit"
+                  Margin="3"
                   Width="22"
                   Height="22"
-                  Padding="3">
+                  Padding="0">
             <Image Classes="gitextensions-icon-16"
                    Source="{x:Static properties:Images.SelectRevision}" />
           </Button>
@@ -85,25 +96,33 @@
 
       <StackPanel x:Name="diffOptionsPanel"
                   Grid.Row="1"
-                  Grid.ColumnSpan="3"
-                  Height="23"
+                  Grid.Column="0"
+                  Width="412"
+                  Height="25"
                   Margin="3"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
                   Orientation="Horizontal"
                   Spacing="0">
         <CheckBox x:Name="ckCompareToMergeBase"
+                  Margin="3"
+                  Width="212"
                   VerticalAlignment="Center"
                   Content="Compare to merge _base" />
         <Button x:Name="btnCompareDirectoriesWithDiffTool"
-                Height="17"
-                Padding="2,0"
+                Width="194"
+                Height="25"
+                Padding="0"
                 Content="Open diff using _directory diff tool" />
       </StackPanel>
     </Grid>
 
     <Grid x:Name="splitContainer1"
           Grid.Row="1"
+          Height="602"
           Margin="3,0,3,3"
-          ColumnDefinitions="1*,4,2*">
+          VerticalAlignment="Top"
+          ColumnDefinitions="345,4,*">
       <gitui:FileStatusList x:Name="DiffFiles" />
       <GridSplitter Grid.Column="1"
                     ResizeDirection="Columns" />

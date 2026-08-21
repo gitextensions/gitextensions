@@ -6,20 +6,22 @@
         Height="110"
         CanResize="False"
         ShowInTaskbar="False"
-        SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
         Title="Compare to branch">
-  <Grid Margin="8"
-        RowDefinitions="Auto,Auto">
-    <controls:BranchSelector x:Name="branchSelector" />
+  <Canvas Width="434"
+          Height="110">
+    <controls:BranchSelector x:Name="branchSelector"
+                             Width="322"
+                             Height="58"
+                             Margin="8" />
     <Button x:Name="btnCompare"
-            Grid.Row="1"
-            Margin="0,18,8,0"
-            Width="60"
-            Height="23"
+            Canvas.Left="349"
+            Canvas.Top="75"
+            Margin="3"
+            Width="66"
+            Height="25"
             Padding="0"
-            HorizontalAlignment="Right"
             Content="Compare"
             IsDefault="True" />
-  </Grid>
+  </Canvas>
 </Window>
