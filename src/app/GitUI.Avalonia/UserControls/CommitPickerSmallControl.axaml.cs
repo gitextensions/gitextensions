@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Avalonia.Controls;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -6,10 +7,11 @@ using GitUI.HelperDialogs;
 
 namespace GitUI.UserControls;
 
-/// <summary>Small revision picker accepting a revision name/SHA or the shared commit chooser.</summary>
 public partial class CommitPickerSmallControl : GitModuleControl
 {
-    /// <summary>Occurs whenever the selected commit changes.</summary>
+    /// <summary>
+    /// Occurs whenever the selected commit hash changes.
+    /// </summary>
     public event EventHandler? SelectedObjectIdChanged;
 
     public CommitPickerSmallControl()
@@ -20,10 +22,13 @@ public partial class CommitPickerSmallControl : GitModuleControl
         InitializeComplete();
     }
 
-    /// <summary>Gets the selected object id.</summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public ObjectId SelectedObjectId { get; private set; }
 
-    /// <summary>Resolves and selects a revision name or commit hash.</summary>
+    /// <summary>
+    /// shows a message box if commitHash is invalid.
+    /// </summary>
     public void SetSelectedCommitHash(string? commitHash)
     {
         ObjectId oldCommitHash = SelectedObjectId;
@@ -61,20 +66,12 @@ public partial class CommitPickerSmallControl : GitModuleControl
                 string toRef = selectedObjectId.IsArtificial ? "HEAD" : selectedObjectId.ToString();
                 string text = Module.GetCommitCountString(currentCheckout, toRef);
                 await this.SwitchToMainThreadAsync();
-                if (SelectedObjectId == selectedObjectId)
-                {
-                    lbCommits.Text = text;
-                }
+                lbCommits.Text = text;
             });
         }
     }
 
-    private void textBoxCommitHash_TextLeave(object? sender, EventArgs e)
-    {
-        SetSelectedCommitHash(textBoxCommitHash.Text?.Trim());
-    }
-
-    private void buttonPickCommit_Click(object? sender, EventArgs e)
+    private void buttonPickCommit_Click(object sender, EventArgs e)
     {
         using FormChooseCommit chooseForm = new(
             UICommands,
@@ -82,7 +79,12 @@ public partial class CommitPickerSmallControl : GitModuleControl
         if (chooseForm.ShowDialog(TopLevel.GetTopLevel(this) as IWin32Window) == DialogResult.OK
             && chooseForm.SelectedRevision is not null)
         {
-            SetSelectedCommitHash(chooseForm.SelectedRevision.ObjectId.ToString());
+            SetSelectedCommitHash(chooseForm.SelectedRevision.Guid);
         }
+    }
+
+    private void textBoxCommitHash_TextLeave(object sender, EventArgs e)
+    {
+        SetSelectedCommitHash(textBoxCommitHash.Text!.Trim());
     }
 }
