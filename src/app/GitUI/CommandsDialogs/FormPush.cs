@@ -1045,7 +1045,7 @@ public partial class FormPush : GitModuleForm
             foreach (IGitRef head in localHeads)
             {
                 string remoteName = head.Remote == remote
-                    ? head.MergeWith ?? head.Name
+                    ? head.MergeWith ?? head.LocalName
                     : string.Empty;
                 bool isKnownAtRemote = remoteBranches.TryGetValue(head.Name, out IGitRef? remoteBranch);
                 DataRow row = _branchTable.NewRow();
