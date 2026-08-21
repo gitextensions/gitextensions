@@ -23,9 +23,11 @@
                  Content="Remote branch" />
     <Label x:Name="label1"
            Grid.Row="1"
+           Width="78"
            Height="15"
            Margin="2,10,3,0"
            Padding="0"
+           HorizontalAlignment="Right"
            VerticalAlignment="Center"
            Content="_Select branch"
            Target="{Binding #Branches}" />
@@ -34,6 +36,7 @@
               Grid.Column="1"
               MinWidth="214"
               Margin="2,10,6,2"
+              Padding="0"
               HorizontalAlignment="Stretch"
               IsEditable="True" />
     <TextBlock x:Name="lbChanges"
@@ -41,7 +44,7 @@
                Grid.Column="2"
                Height="15"
                Margin="2,12,5,2"
-               VerticalAlignment="Center"
+               VerticalAlignment="Top"
                Foreground="{DynamicResource GitExtensionsKnownColorGrayTextBrush}"
                Text="-" />
   </Grid>
