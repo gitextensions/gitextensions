@@ -64,6 +64,7 @@ case "$flatpak_home" in
 esac
 
 settings_directory="$flatpak_home/config/GitExtensions/GitExtensions"
+git_config_global="$flatpak_home/config/git/config"
 rm -rf -- "$flatpak_home" "$smoke_parent"
 mkdir -p \
     "$evidence_dir" \
@@ -73,8 +74,10 @@ mkdir -p \
     "$packaging_root" \
     "$smoke_repo" \
     "$settings_directory" \
+    "$(dirname "$git_config_global")" \
     "$data_root/GitExtensions"
 find "$publish_root" -mindepth 1 -maxdepth 1 ! -name .gitignore -exec rm -rf -- {} +
+touch "$git_config_global"
 
 cat > "$settings_directory/GitExtensions.settings" <<'EOF'
 <?xml version="1.0" encoding="utf-8"?>
@@ -275,6 +278,19 @@ wait_for_flatpak_start()
     return 1
 }
 
+reject_failure_signatures()
+{
+    local description=$1
+    shift
+    if grep -Eiq 'Unhandled exception|fatal error|JIT debugger|Avalonia.*error|(^|[[:space:]])[[:alnum:]_.]+Exception:' "$@"; then
+        echo "error: $description logs contain a failure signature" >&2
+        for log in "$@"; do
+            sed -n '1,160p' "$log" >&2
+        done
+        exit 1
+    fi
+}
+
 # First prove that an inaccessible UserPlugins.Avalonia entry does not abort confined startup.
 flatpak run --user \
     --nosocket=x11 \
@@ -284,6 +300,7 @@ flatpak run --user \
     --env=LIBGL_ALWAYS_SOFTWARE=1 \
     --env=MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
     --env=GALLIUM_DRIVER=llvmpipe \
+    --env=GIT_CONFIG_GLOBAL="$git_config_global" \
     "$app_id" \
     browse \
     "$smoke_repo" >"$unreachable_stdout_log" 2>"$unreachable_stderr_log" &
@@ -305,6 +322,9 @@ if ! grep -Fq "User plugin discovery is disabled because '$unreachable_user_plug
     sed -n '1,160p' "$unreachable_stderr_log" >&2
     exit 1
 fi
+reject_failure_signatures "confined inaccessible-user-plugin probe" \
+    "$unreachable_stdout_log" \
+    "$unreachable_stderr_log"
 flatpak kill "$app_id" 2>/dev/null || true
 wait "$flatpak_pid" 2>/dev/null || true
 flatpak_pid=
@@ -325,6 +345,7 @@ flatpak run --user \
     --env=LIBGL_ALWAYS_SOFTWARE=1 \
     --env=MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
     --env=GALLIUM_DRIVER=llvmpipe \
+    --env=GIT_CONFIG_GLOBAL="$git_config_global" \
     "$app_id" \
     browse \
     "$smoke_repo" >"$stdout_log" 2>"$stderr_log" &
@@ -376,11 +397,7 @@ if [[ ! -s "$screenshot" ]]; then
     echo "error: confined screenshot provider produced no image" >&2
     exit 1
 fi
-if grep -Eiq 'Unhandled exception|fatal error|JIT debugger|Avalonia.*error' "$stdout_log" "$stderr_log"; then
-    echo "error: confined runtime logs contain a failure signature" >&2
-    sed -n '1,160p' "$stderr_log" >&2
-    exit 1
-fi
+reject_failure_signatures "confined runtime" "$stdout_log" "$stderr_log"
 
 screenshot_sha256="$(sha256sum "$screenshot" | cut -d' ' -f1)"
 cat > "$manifest_output" <<EOF
@@ -398,6 +415,7 @@ cat > "$manifest_output" <<EOF
   "filesystemGrant": "--filesystem=host",
   "theme": "P83Confined",
   "themeSource": "<XDG_CONFIG_HOME>/GitExtensions/GitExtensions/Themes/P83Confined.css",
+  "gitConfigGlobal": "<XDG_CONFIG_HOME>/git/config",
   "userPluginsDirectory": "<XDG_DATA_HOME>/GitExtensions/UserPlugins.Avalonia",
   "userPluginsNormal": "created-and-readable",
   "userPluginsUnreachable": "bundled-plugins-only",
