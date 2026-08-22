@@ -2,9 +2,9 @@ name: App release (x64, arm64)
 
 on:
   push:
-    tags:
-      # Any tag starting with 'v' followed by a digit: v4, v4.2, v4.2.1, v3.5-RC1, v4-beta, v4.2-rc1, v4.2.1-win32-aarch64, ...
-      - 'v[0-9]*'
+    branches:
+      - 'release'
+      - 'release/*'
   workflow_dispatch:
 
 concurrency:
@@ -12,10 +12,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
-    name: ${{ matrix.os }}
+  tagcheck:
+    name: Check HEAD has a version tag
+    runs-on: ubuntu-latest
     # Releases are only produced from the upstream repository, never from forks.
     if: ${{ github.repository_owner == 'gitextensions' }}
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - id: check
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || git tag --points-at HEAD | grep -qE '^v'; then
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    name: ${{ matrix.os }}
+    needs: tagcheck
+    # Releases are only produced from the upstream repository, never from forks.
+    if: ${{ needs.tagcheck.outputs.proceed == 'true' }}
     strategy:
       fail-fast: false
       matrix:
