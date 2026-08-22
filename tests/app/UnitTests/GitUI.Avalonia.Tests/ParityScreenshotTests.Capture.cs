@@ -24,6 +24,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
@@ -98,6 +99,13 @@ public sealed partial class ParityScreenshotTests
         GetCaptureSize(typeof(FormResetAnotherBranch)).Should().Be((545, 347));
     }
 
+    [Test]
+    [Category(P02Category)]
+    public void Commit_template_settings_capture_host_should_use_native_96_dpi_runtime_dimensions()
+    {
+        GetCaptureSize(typeof(FormCommitTemplateSettings)).Should().Be((698, 361));
+    }
+
     [AvaloniaTest]
     [Category(P02Category)]
     public void Avalonia_tree_reader_should_measure_named_controls_from_their_nearest_semantic_owner()
@@ -139,6 +147,32 @@ public sealed partial class ParityScreenshotTests
         groupNode.Children.Should().ContainSingle(node => node.FieldName == content.Name);
         labelNode.Text.Should().Be("&Value");
         labelNode.Children.Should().BeEmpty();
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    public void Avalonia_tree_reader_should_emit_selected_tab_content_once_under_its_tab_item()
+    {
+        TextBox editor = new() { Name = "txtEditor", Text = "Content" };
+        TabItem firstTab = new() { Name = "tabPage1", Header = "First", Content = editor };
+        TabItem secondTab = new() { Name = "tabPage2", Header = "Second", Content = new TextBlock { Text = "Other" } };
+        TabControl tabs = new() { Name = "tabControl1" };
+        tabs.Items.Add(firstTab);
+        tabs.Items.Add(secondTab);
+        tabs.SelectedItem = firstTab;
+        Window window = new() { Width = 320, Height = 160, Content = tabs };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureSurface surface = new AvaloniaControlTreeReader(window, renderScale: 1)
+            .ReadPrimary(window, new PixelSize(320, 160));
+        CaptureNode[] nodes = Flatten(surface.Root).ToArray();
+
+        nodes.Select(node => node.FieldName ?? node.Type).Should().ContainSingle(
+            name => name == editor.Name,
+            string.Join(", ", nodes.Select(node => $"{node.Id}={node.FieldName ?? node.Type}")));
+        nodes.Single(node => node.FieldName == editor.Name).Id.Should().Contain("/tabPage1/");
         window.Close();
     }
 
