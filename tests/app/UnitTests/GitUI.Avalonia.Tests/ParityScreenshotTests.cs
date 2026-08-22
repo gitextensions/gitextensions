@@ -34,6 +34,7 @@ using GitUI.Blame;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.Menus;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -506,6 +507,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormResetAnotherBranch))
         {
             return FormResetAnotherBranch.Create(context.Commands, context.HeadRevision);
+        }
+
+        if (viewType == typeof(FormCommitTemplateSettings))
+        {
+            return new FormCommitTemplateSettings(context.Commands);
         }
 
         if (viewType == typeof(FormAddToGitIgnore))
@@ -1881,6 +1887,11 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormResetAnotherBranch))
         {
             return (545, 347);
+        }
+
+        if (viewType == typeof(FormCommitTemplateSettings))
+        {
+            return (698, 361);
         }
 
         if (viewType == typeof(FormAddToGitIgnore))
