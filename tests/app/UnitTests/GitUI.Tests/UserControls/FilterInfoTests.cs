@@ -1145,13 +1145,22 @@ public class FilterInfoTests
                 args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/stash($|\s)");
             }
 
-            if (showAll && !showSessionRefs)
+            string[] sessionRefExclusions =
             {
-                args.ToString().Should().MatchRegex(@"(^|\s)--exclude=refs/sessions/\*\*($|\s)");
-            }
-            else
+                @"(^|\s)--exclude=refs/sessions/\*\*($|\s)",
+                @"(^|\s)--exclude=refs/copilot/checkpoints/\*\*($|\s)"
+            };
+
+            foreach (string sessionRefExclusion in sessionRefExclusions)
             {
-                args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/sessions/\*\*($|\s)");
+                if (showAll && !showSessionRefs)
+                {
+                    args.ToString().Should().MatchRegex(sessionRefExclusion);
+                }
+                else
+                {
+                    args.ToString().Should().NotMatchRegex(sessionRefExclusion);
+                }
             }
 
             if (showCurrentBranchOnly && !objectId.IsZero)
