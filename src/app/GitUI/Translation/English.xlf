@@ -4241,6 +4241,10 @@ You can unset the template:
         <source>(untracked)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_wordWrapCommitMessageBody.Text">
+        <source>&amp;Word wrap (except subject line)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="branchNameLabel.Text">
         <source>(Branch name)</source>
         <target />
