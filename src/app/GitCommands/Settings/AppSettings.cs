@@ -1279,7 +1279,7 @@ public static partial class AppSettings
 
     public static ISetting<bool> ShowProcessDialogPasswordInput => Setting.Create(DetailedSettingsPath, nameof(ShowProcessDialogPasswordInput), false);
 
-    public static BoolRuntimeSetting ShowCurrentBranchOnly { get; } = new(RootSettingsPath, nameof(ShowCurrentBranchOnly), false);
+    public static ISetting<bool> ShowCurrentBranchOnly { get; } = Setting.Create(RootSettingsPath, nameof(ShowCurrentBranchOnly), false);
 
     public static bool ShowSimplifyByDecoration
     {
