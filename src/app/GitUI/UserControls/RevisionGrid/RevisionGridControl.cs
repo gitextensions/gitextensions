@@ -287,7 +287,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         };
 
         _toolTipProvider = new RevisionGridToolTipProvider(_gridView);
-        _toolTipProvider.ShowRevisionGridTooltips = AppSettings.ShowRevisionGridTooltips.Value;
+        _toolTipProvider.ShowRevisionGridTooltips = AppSettings.ShowRevisionGridTooltips;
 
         _quickSearchProvider = new QuickSearchProvider(_gridView, () => Module.WorkingDir);
 
@@ -1196,7 +1196,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         observeRevisions,
                         _filterInfo.GetRevisionFilter(currentCheckout),
                         pathFilter,
-                        AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes,
+                        AppSettings.ShowGitNotesColumn || AppSettings.ShowGitNotes,
                         ResourceManager.TranslatedStrings.Autostash,
                         cancellationToken);
                 },
@@ -2706,7 +2706,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
                 if (page.Verification.Checked)
                 {
-                    AppSettings.DontConfirmStashDrop = true;
+                    AppSettings.DontConfirmStashDrop.Value = true;
                 }
             }
 
@@ -2859,7 +2859,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleShowGitNotesColumn()
     {
-        AppSettings.ShowGitNotesColumn.Value = !AppSettings.ShowGitNotesColumn.Value;
+        AppSettings.ShowGitNotesColumn.Value = !AppSettings.ShowGitNotesColumn;
         PerformRefreshRevisions();
     }
 
