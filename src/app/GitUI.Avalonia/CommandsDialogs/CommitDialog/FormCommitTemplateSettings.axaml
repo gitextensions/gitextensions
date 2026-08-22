@@ -7,55 +7,90 @@
         WindowStartupLocation="CenterOwner"
         Title="Commit message settings">
   <DockPanel>
-    <StackPanel x:Name="ControlsPanel"
-                Classes="gitextensions-dialog-controls"
-                DockPanel.Dock="Bottom"
-                Spacing="8"
-                Margin="10,8">
+    <Grid x:Name="ControlsPanel"
+          DockPanel.Dock="Bottom"
+          Height="41"
+          ColumnDefinitions="*,75,6,75,13">
       <Button x:Name="buttonOk"
+              Grid.Column="1"
               Classes="gitextensions-dialog-action"
+              Width="75" Height="25"
+              Margin="0,8"
               Content="OK"
               IsDefault="True" />
       <Button x:Name="buttonCancel"
+              Grid.Column="3"
               Classes="gitextensions-dialog-action"
+              Width="75" Height="25"
+              Margin="0,8"
               Content="Cancel"
               IsCancel="True" />
-    </StackPanel>
+    </Grid>
 
     <TabControl x:Name="tabControl1"
                 Classes="gitextensions-dialog-main"
-                Margin="9">
-      <TabItem x:Name="tabPage1" Header="Commit templates">
-        <Grid Margin="3"
-              ColumnDefinitions="Auto,*"
-              RowDefinitions="Auto,Auto,*,Auto"
-              ColumnSpacing="6"
-              RowSpacing="6">
+                Margin="9"
+                Padding="4,0,4,5"
+                TabIndex="4">
+      <TabItem x:Name="tabPage1"
+               Classes="gitextensions-dialog-tab"
+               Header="Commit templates"
+               HorizontalContentAlignment="Stretch"
+               VerticalContentAlignment="Stretch"
+               TabIndex="0">
+        <Grid x:Name="tableLayoutPanel5"
+              Margin="3"
+              ColumnDefinitions="110,*"
+              RowDefinitions="29,29,Auto,*"
+              TabIndex="1">
           <ComboBox x:Name="_NO_TRANSLATE_comboBoxCommitTemplates"
                     Grid.Row="0" Grid.ColumnSpan="2"
-                    HorizontalAlignment="Stretch" />
+                    Height="23"
+                    Margin="3"
+                    HorizontalAlignment="Stretch"
+                    TabIndex="0" />
 
           <TextBlock x:Name="labelCommitTemplateName"
                      Grid.Row="1" Grid.Column="0"
+                     Width="104" Height="15"
+                     Margin="3,0"
+                     HorizontalAlignment="Left"
                      VerticalAlignment="Center"
-                     Text="Name:" />
+                     Text="Name:"
+                     TabIndex="7" />
           <TextBox x:Name="_NO_TRANSLATE_textBoxCommitTemplateName"
-                   Grid.Row="1" Grid.Column="1" />
+                   Grid.Row="1" Grid.Column="1"
+                   Height="23"
+                   Margin="3"
+                   VerticalAlignment="Center"
+                   TabIndex="1" />
 
           <TextBlock x:Name="labelCommitTemplate"
                      Grid.Row="2" Grid.Column="0"
+                     Width="104" Height="15"
+                     Margin="3,6,3,0"
+                     HorizontalAlignment="Left"
                      VerticalAlignment="Top"
-                     Text="Commit template:" />
+                     Text="Commit template:"
+                     TabIndex="5" />
           <TextBox x:Name="_NO_TRANSLATE_textCommitTemplateText"
                    Grid.Row="2" Grid.RowSpan="2" Grid.Column="1"
+                   Margin="3"
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
-                   ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                   VerticalContentAlignment="Top"
+                   ScrollViewer.VerticalScrollBarVisibility="Visible"
+                   TabIndex="2" />
 
           <CheckBox x:Name="checkBoxRegexEnabled"
                     Grid.Row="3" Grid.Column="0"
+                    Width="92" Height="19"
+                    Margin="3,6,3,0"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
+                    FlowDirection="RightToLeft"
                     Content="Enable regex"
+                    TabIndex="8"
                     compat:TranslationCompat.ToolTipPropertyName="toolTipRegex">
             <ToolTip.Tip><![CDATA[Use {{regex}}[regex group number] to extract branch name part
 Group number is optional, default is 1
@@ -68,61 +103,115 @@ Examples on branch name: "feature/ABC-4587-commitMessageRegex"
         </Grid>
       </TabItem>
 
-      <TabItem x:Name="tabPage2" Header="Commit validation">
-        <Grid Margin="3"
-              ColumnDefinitions="Auto,*"
-              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
-              ColumnSpacing="6"
-              RowSpacing="7">
+      <TabItem x:Name="tabPage2"
+               Classes="gitextensions-dialog-tab"
+               Header="Commit validation"
+               HorizontalContentAlignment="Stretch"
+               VerticalContentAlignment="Stretch"
+               TabIndex="1">
+        <Grid x:Name="tableLayoutPanel3"
+              Margin="3"
+              ColumnDefinitions="374,*"
+              RowDefinitions="29,29,28,29,28,28,*"
+              TabIndex="0">
           <TextBlock x:Name="labelMaxFirstLineLength"
                      Grid.Row="0" Grid.Column="0"
+                     Width="368" Height="15"
+                     Margin="3"
+                     HorizontalAlignment="Left"
                      VerticalAlignment="Center"
-                     Text="Maximum number of characters in the first line (0 = check disabled):" />
+                     Text="Maximum number of characters in the first line (0 = check disabled):"
+                     TabIndex="3" />
           <NumericUpDown x:Name="_NO_TRANSLATE_numericMaxFirstLineLength"
                          Grid.Row="0" Grid.Column="1"
-                         Width="80"
+                         Width="60" Height="23"
+                         Margin="3"
                          HorizontalAlignment="Left"
-                         Minimum="0" Maximum="100" />
+                         VerticalAlignment="Center"
+                         Minimum="0" Maximum="100"
+                         TabIndex="4" />
 
           <TextBlock x:Name="labelMaxLineLength"
                      Grid.Row="1" Grid.Column="0"
+                     Width="332" Height="15"
+                     Margin="3"
+                     HorizontalAlignment="Left"
                      VerticalAlignment="Center"
-                     Text="Maximum number of characters per line (0 = check disabled):" />
+                     Text="Maximum number of characters per line (0 = check disabled):"
+                     TabIndex="5" />
           <NumericUpDown x:Name="_NO_TRANSLATE_numericMaxLineLength"
                          Grid.Row="1" Grid.Column="1"
-                         Width="80"
+                         Width="60" Height="23"
+                         Margin="3"
                          HorizontalAlignment="Left"
-                         Minimum="0" Maximum="100" />
+                         VerticalAlignment="Center"
+                         Minimum="0" Maximum="100"
+                         TabIndex="6" />
 
           <TextBlock x:Name="labelAutoWrap"
                      Grid.Row="2" Grid.Column="0"
+                     Width="267" Height="15"
+                     Margin="3"
+                     HorizontalAlignment="Left"
                      VerticalAlignment="Center"
-                     Text="Auto-wrap commit message (except subject line)" />
+                     Text="Auto-wrap commit message (except subject line)"
+                     TabIndex="7" />
           <CheckBox x:Name="checkBoxAutoWrap"
                     Grid.Row="2" Grid.Column="1"
+                    Width="15" Height="14" MinHeight="14"
+                    Margin="3,7"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    TabIndex="12"
                     compat:TranslationCompat.TranslateText="False" />
 
           <TextBlock x:Name="labelRegExCheck"
                      Grid.Row="3" Grid.Column="0"
+                     Width="346" Height="15"
+                     Margin="3"
+                     HorizontalAlignment="Left"
                      VerticalAlignment="Center"
-                     Text="Commit must match following RegEx (Empty = check disabled):" />
+                     Text="Commit must match following RegEx (Empty = check disabled):"
+                     TabIndex="13" />
           <TextBox x:Name="_NO_TRANSLATE_textBoxCommitValidationRegex"
-                   Grid.Row="3" Grid.Column="1" />
+                   Grid.Row="3" Grid.Column="1"
+                   Height="23"
+                   Margin="3"
+                   VerticalAlignment="Center"
+                   TabIndex="14" />
 
           <TextBlock x:Name="labelUseIndent"
                      Grid.Row="4" Grid.Column="0"
+                     Width="163" Height="15"
+                     Margin="3"
+                     HorizontalAlignment="Left"
                      VerticalAlignment="Center"
-                     Text="Indent lines after the first line:" />
+                     Text="Indent lines after the first line:"
+                     TabIndex="15" />
           <CheckBox x:Name="checkBoxUseIndent"
                     Grid.Row="4" Grid.Column="1"
+                    Width="15" Height="14" MinHeight="14"
+                    Margin="3,7"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    TabIndex="16"
                     compat:TranslationCompat.TranslateText="False" />
 
           <TextBlock x:Name="labelSecondLineEmpty"
                      Grid.Row="5" Grid.Column="0"
+                     Width="154" Height="15"
+                     Margin="3"
+                     HorizontalAlignment="Left"
                      VerticalAlignment="Center"
-                     Text="Second line must be empty:" />
+                     Text="Second line must be empty:"
+                     TabIndex="17" />
           <CheckBox x:Name="checkBoxSecondLineEmpty"
                     Grid.Row="5" Grid.Column="1"
+                    Width="15" Height="14" MinHeight="14"
+                    Margin="3,7"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    TabIndex="18"
                     compat:TranslationCompat.TranslateText="False" />
         </Grid>
       </TabItem>

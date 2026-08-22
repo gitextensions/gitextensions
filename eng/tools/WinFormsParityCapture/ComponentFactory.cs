@@ -10,6 +10,7 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -47,6 +48,7 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormSparseWorkingCopy" => new FormSparseWorkingCopy(commands),
             "GitUI.CommandsDialogs.FormDeleteRemoteBranch" => new FormDeleteRemoteBranch(commands, "origin/feature/delete-me"),
             "GitUI.HelperDialogs.FormResetAnotherBranch" => FormResetAnotherBranch.Create(commands, CreateRevision(commands)),
+            "GitUI.CommandsDialogs.CommitDialog.FormCommitTemplateSettings" => new FormCommitTemplateSettings(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog" => CreateGitCommandLog(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
             "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),

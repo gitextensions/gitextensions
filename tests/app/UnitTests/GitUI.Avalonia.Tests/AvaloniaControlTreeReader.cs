@@ -213,6 +213,13 @@ internal sealed class AvaloniaControlTreeReader
         foreach (Control owner in EnumerateLogicalControls(root))
         {
             Type type = owner.GetType();
+            if (type.Namespace?.StartsWith("Avalonia.", StringComparison.Ordinal) is true)
+            {
+                // parity-scaffolding: Framework bookkeeping fields such as TabControl's
+                // _selectedContent are renderer internals, not WinForms control-field twins.
+                continue;
+            }
+
             foreach (FieldInfo field in type.GetFields(
                          BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
             {
@@ -428,6 +435,34 @@ internal sealed class AvaloniaControlTreeReader
             // parity-scaffolding: Label.Content is the WinForms Label.Text value; Avalonia's
             // generated AccessText is renderer infrastructure, not a second semantic control.
             return [];
+        }
+
+        if (control is TabControl tabControl)
+        {
+            // parity-scaffolding: TabControl exposes its selected content both beneath the owning
+            // TabItem and through an internal selected-content presenter. Emit each product view
+            // once through its TabItem, matching WinForms TabPage ownership.
+            IEnumerable items = tabControl.ItemsSource ?? tabControl.Items;
+            return items.OfType<Control>();
+        }
+
+        if (control is TabItem tabItem)
+        {
+            // parity-scaffolding: TabPage owns its product content directly; the Avalonia
+            // selected-content presenter between them is template infrastructure.
+            if (tabItem.IsSelected
+                && tabItem.GetLogicalAncestors().OfType<TabControl>().FirstOrDefault() is { } owner
+                && GetPropertyValue(owner, "SelectedContent") is Control selectedContent)
+            {
+                if (GetPropertyValue(selectedContent, "Content") is Control productContent)
+                {
+                    return [productContent];
+                }
+
+                return [selectedContent];
+            }
+
+            return tabItem.Content is Control content ? [content] : [];
         }
 
         if (control is HeaderedContentControl)
