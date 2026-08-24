@@ -6,8 +6,6 @@ namespace GitUI.SettingControlBindings;
 
 internal class PseudoSettingControlBinding : SettingControlBinding<PseudoSetting, Control>
 {
-    private PluginSettingControlFactory.ShimControlAdapter? _adapter;
-
     public PseudoSettingControlBinding(PseudoSetting setting, Control? customControl)
         : base(setting, customControl)
     {
@@ -18,19 +16,20 @@ internal class PseudoSettingControlBinding : SettingControlBinding<PseudoSetting
         GitExtensions.Shims.WinForms.Control model = Setting.CustomControl
             ?? Setting.TextBoxCreator?.Invoke()
             ?? throw new InvalidOperationException("Pseudo setting did not supply a control model.");
-        _adapter = PluginSettingControlFactory.CreateAdapter(model);
-        return _adapter.Control;
+        PluginSettingControlFactory.ShimControlAdapter adapter = PluginSettingControlFactory.CreateAdapter(model);
+        adapter.Control.Tag = adapter;
+        return adapter.Control;
     }
 
     public override void LoadSetting(SettingsSource settings, Control control)
     {
         // The native control mirrors the portable plugin model at the toolkit boundary.
-        _adapter?.Load();
+        (control.Tag as PluginSettingControlFactory.ShimControlAdapter)?.Load();
     }
 
     public override void SaveSetting(SettingsSource settings, Control control)
     {
         // The native control mirrors the portable plugin model at the toolkit boundary.
-        _adapter?.Save();
+        (control.Tag as PluginSettingControlFactory.ShimControlAdapter)?.Save();
     }
 }

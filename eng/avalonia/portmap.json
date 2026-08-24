@@ -376,61 +376,61 @@
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/BoolSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original class boundary and member order. Native Avalonia CheckBox replaces the WinForms control while preserving nullable/effective tri-state load and save behavior."
+    "notes": "P6.2 restores the original class boundary and member order. Native Avalonia CheckBox replaces the WinForms control while preserving nullable/effective tri-state load and save behavior. P8.6i progress 26 finds zero current source-inventory differences and exercises the real binding in the shared native-100 light/dark/custom capture surface; exact visual/state closure remains open."
   },
   "src/app/GitUI/SettingControlBindings/ChoiceSettingControlBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/ChoiceSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original class boundary. Avalonia's non-editable ComboBox uses PlaceholderText for an unmatched legacy value because it has no writable DropDownList Text surface."
+    "notes": "P6.2 restores the original class boundary. Avalonia's non-editable ComboBox uses PlaceholderText for an unmatched legacy value because it has no writable DropDownList Text surface. P8.6i progress 26 finds zero current source-inventory differences and exercises normal, focused, disabled, and unmatched/null states in the shared native-100 light/dark/custom capture surface; exact visual/state closure remains open."
   },
   "src/app/GitUI/SettingControlBindings/CredentialsSettingControlBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/CredentialsSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original class boundary. A native Grid and TextBox fields replace the WinForms CredentialsControl visual while retaining its portable model, supported levels, masked password, custom labels, save, and post-save reload."
+    "notes": "P6.2 restores the original class boundary. A native Grid and named TextBox children replace the WinForms CredentialsControl while retaining its portable model, supported levels, masked password, custom labels, save, post-save reload, and source-authored native-96 integer geometry. P8.6i progress 26 reduces the current inventory to four framework-forced Grid/signature/comment findings and exercises the real binding in the shared native-100 light/dark/custom capture surface; exact closure remains open."
   },
   "src/app/GitUI/SettingControlBindings/NumberSettingControlBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/NumberSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original static placeholder class and property; the translated value is applied to native numeric controls."
+    "notes": "P6.2 restores the original static placeholder class and property; the translated value is applied to native numeric controls. P8.6i progress 26 finds zero current source-inventory differences and exercises both native numeric implementations in the shared native-100 light/dark/custom capture surface; exact visual/state closure remains open."
   },
   "src/app/GitUI/SettingControlBindings/NumberSettingNumericUpDownBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/NumberSettingNumericUpDownBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original class boundary and TODO. Avalonia's nullable NumericUpDown and attached ToolTip replace ResetText and the WinForms ToolTip while preserving the range and null/effective behavior."
+    "notes": "P6.2 restores the original class boundary and TODO. Avalonia's nullable NumericUpDown and attached native ToolTip replace ResetText and the WinForms tooltip presentation while preserving the original member shape, range, and null/effective behavior. P8.6i progress 26 finds zero current source-inventory differences and exercises normal, focused, disabled, and null states in the shared native-100 light/dark/custom capture surface; exact visual/state closure remains open."
   },
   "src/app/GitUI/SettingControlBindings/NumberSettingTextBoxBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/NumberSettingTextBoxBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original generic class boundary. A local parser mirrors the inaccessible internal NumberSetting<T> parser, and an Avalonia validation class replaces direct SystemColors assignments."
+    "notes": "P6.2 restores the original generic class boundary. The compat factory provides the cross-assembly equivalent of the inaccessible internal NumberSetting<T> parser, and an Avalonia validation class replaces direct SystemColors assignments. P8.6i progress 26 finds zero current source-inventory differences, covers all four supported numeric types, and exercises valid/focused/disabled/invalid states in the shared native-100 light/dark/custom capture surface; exact visual/state closure remains open."
   },
   "src/app/GitUI/SettingControlBindings/PasswordSettingControlBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/PasswordSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original class boundary; the native TextBox preserves masking and the string binding's null, explicit-empty, trim, placeholder, and effective semantics."
+    "notes": "P6.2 restores the original class boundary; the native TextBox preserves masking and the string binding's null, explicit-empty, trim, placeholder, and effective semantics. P8.6i progress 26 finds zero current source-inventory differences and exercises normal, focused, disabled, and null states in the shared native-100 light/dark/custom capture surface; exact visual/state closure remains open."
   },
   "src/app/GitUI/SettingControlBindings/PseudoSettingControlBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/PseudoSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original class boundary. The compat adapter synchronizes the supplied portable text/check/choice/link model because Avalonia cannot host the headless control directly; no setting value is persisted."
+    "notes": "P6.2 restores the original class boundary. The compat adapter is retained on the native control Tag and synchronizes the supplied portable text/check/choice/link model because Avalonia cannot host the headless control directly; no setting value is persisted. P8.6i progress 26 finds zero current source-inventory differences and exercises the real binding in the shared native-100 light/dark/custom capture surface; exact visual/state closure remains open."
   },
   "src/app/GitUI/SettingControlBindings/SettingControlBindingsProvider.cs": {
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/SettingControlBindingsProvider.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original provider boundary and typed/runtime dispatch. It returns native PluginSettingBinding objects because the shared ISettingControlBinding contract exposes headless WinForms-shaped controls; custom bindings retain their exact instance through Compat."
+    "notes": "P6.2 restores the original provider boundary and typed/runtime dispatch. It returns native PluginSettingBinding objects because the shared ISettingControlBinding contract exposes headless WinForms-shaped controls; custom bindings retain their exact instance through Compat. P8.6i progress 26 leaves only two intentional XML-documentation adaptations in the current inventory and exercises every materialized binding through the shared native-100 capture surface; exact closure remains open."
   },
   "src/app/GitUI/SettingControlBindings/StringSettingControlBinding.cs": {
     "twin": "src/app/GitUI.Avalonia/SettingControlBindings/StringSettingControlBinding.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "P6.2 restores the original class, constants, placeholder property, comments, and member order; native TextBox replaces WinForms while preserving null, explicit-empty, trim, multiline, and effective semantics."
+    "notes": "P6.2 restores the original class, constants, placeholder property, comments, and member order; native TextBox replaces WinForms while preserving null, explicit-empty, trim, multiline, and effective semantics. P8.6i progress 26 finds zero current source-inventory differences and exercises normal, focused, disabled, and null states in the shared native-100 light/dark/custom capture surface; exact visual/state closure remains open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageBase.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.cs",

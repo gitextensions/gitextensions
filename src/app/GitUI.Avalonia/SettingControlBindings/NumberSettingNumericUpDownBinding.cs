@@ -5,7 +5,7 @@ namespace GitUI.SettingControlBindings;
 
 internal class NumberSettingNumericUpDownBinding : SettingControlBinding<NumberSetting<int>, NumericUpDown>
 {
-    private string _toolTip = "";
+    private readonly ToolTip _toolTip = new();
 
     public NumberSettingNumericUpDownBinding(NumberSetting<int> setting, NumericUpDown? customControl)
         : base(setting, customControl)
@@ -33,7 +33,7 @@ internal class NumberSettingNumericUpDownBinding : SettingControlBinding<NumberS
             if (settings.SettingLevel != SettingLevel.Effective)
             {
                 control.Value = null;
-                _toolTip = NumberSettingControlBinding.PlaceholderText;
+                _toolTip.Content = NumberSettingControlBinding.PlaceholderText;
                 ToolTip.SetTip(control, _toolTip);
                 return;
             }
@@ -43,8 +43,9 @@ internal class NumberSettingNumericUpDownBinding : SettingControlBinding<NumberS
 
         control.Value = (int)value;
 
-        // Avalonia updates its text when Value is assigned; this is needed if Value was cleared.
-        _toolTip = "";
+        // needed if Text was cleared
+        // Avalonia updates its native text when Value is assigned.
+        _toolTip.Content = "";
         ToolTip.SetTip(control, _toolTip);
     }
 

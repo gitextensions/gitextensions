@@ -121,7 +121,7 @@ public sealed class SettingControlBindingsTests
         TestSettingsSource global = new() { SettingLevel = SettingLevel.Global };
         binding.LoadSetting(global);
         control.Value.Should().BeNull();
-        ToolTip.GetTip(control).Should().Be("no value set");
+        ToolTip.GetTip(control).Should().BeOfType<ToolTip>().Which.Content.Should().Be("no value set");
         binding.SaveSetting(global);
         global.SetCount.Should().Be(1);
         global.GetValue("Interval").Should().BeNull();
@@ -152,6 +152,114 @@ public sealed class SettingControlBindingsTests
     }
 
     [AvaloniaTest]
+    public void Numeric_text_bindings_should_parse_every_original_supported_type()
+    {
+        AssertNumberSaved(new NumberSetting<float>("Float", 1), "1.25", 1.25f);
+        AssertNumberSaved(new NumberSetting<double>("Double", 1), "2.5", 2.5d);
+        AssertNumberSaved(new NumberSetting<long>("Long", 1), "9223372036854775806", 9223372036854775806L);
+
+        static void AssertNumberSaved<T>(NumberSetting<T> setting, string text, T expected)
+        {
+            TestSettingsSource settings = new() { SettingLevel = SettingLevel.Global };
+            PluginSettingBinding binding = SettingControlBindingsProvider.CreateControlBinding(setting, control: null);
+            TextBox control = binding.GetControl().Should().BeOfType<TextBox>().Subject;
+            control.Text = text;
+
+            binding.SaveSetting(settings);
+
+            setting[settings].Should().Be(expected);
+            control.Classes.Should().NotContain("plugin-setting-invalid");
+        }
+    }
+
+    [AvaloniaTest]
+    public void Portable_custom_control_models_should_preserve_the_original_control_contract()
+    {
+        WinFormsShims.TextBox textModel = new()
+        {
+            BorderStyle = WinFormsShims.BorderStyle.None,
+            Height = 40,
+            Multiline = true,
+            ReadOnly = true,
+            Text = "model text",
+        };
+        StringSetting stringSetting = new("Custom", "default") { CustomControl = textModel };
+
+        TextBox textControl = SettingControlBindingsProvider.CreateControlBinding(stringSetting)
+            .GetControl().Should().BeOfType<TextBox>().Subject;
+
+        textControl.Text.Should().Be("model text");
+        textControl.IsReadOnly.Should().BeTrue();
+        textControl.AcceptsReturn.Should().BeTrue();
+        textControl.Height.Should().Be(40);
+        textControl.BorderThickness.Should().Be(new Avalonia.Thickness(0));
+
+        WinFormsShims.CheckBox checkModel = new()
+        {
+            CheckState = WinFormsShims.CheckState.Indeterminate,
+            Text = "Tri-state",
+        };
+        BoolSetting boolSetting = new("TriState", defaultValue: false) { CustomControl = checkModel };
+        CheckBox checkControl = SettingControlBindingsProvider.CreateControlBinding(boolSetting)
+            .GetControl().Should().BeOfType<CheckBox>().Subject;
+
+        checkControl.Content.Should().Be("Tri-state");
+        checkControl.IsChecked.Should().BeNull();
+        checkControl.IsThreeState.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public void Pseudo_binding_should_round_trip_the_portable_model_through_its_native_adapter()
+    {
+        WinFormsShims.TextBox model = new() { Text = "initial" };
+        PseudoSetting setting = new(model);
+        PluginSettingBinding binding = SettingControlBindingsProvider.CreateControlBinding(setting);
+        TextBox control = binding.GetControl().Should().BeOfType<TextBox>().Subject;
+        TestSettingsSource settings = new();
+
+        control.Text = "native edit";
+        binding.SaveSetting(settings);
+        model.Text.Should().Be("native edit");
+
+        model.Text = "model update";
+        binding.LoadSetting(settings);
+        control.Text.Should().Be("model update");
+    }
+
+    [AvaloniaTest]
+    public void Paired_capture_surfaces_should_expose_all_binding_controls_and_edge_states()
+    {
+        SettingControlBindingsCaptureSurface normal = new();
+        SettingControlBindingsNullCaptureSurface edge = new();
+        Dispatcher.UIThread.RunJobs();
+        string[] names =
+        [
+            "boolControl",
+            "choiceControl",
+            "stringControl",
+            "passwordControl",
+            "numberControl",
+            "numberTextControl",
+            "credentialsControl",
+            "pseudoControl",
+        ];
+
+        normal.Children.OfType<TextBlock>().Should().HaveCount(8);
+        names.Should().OnlyContain(name => normal.Children.OfType<Control>().Any(control => control.Name == name));
+        Find<CheckBox>(normal, "boolControl").IsChecked.Should().BeTrue();
+        Find<ComboBox>(normal, "choiceControl").SelectedItem.Should().Be("two");
+        Find<TextBox>(normal, "numberTextControl").Text.Should().Be("1.5");
+
+        Find<CheckBox>(edge, "boolControl").IsChecked.Should().BeNull();
+        Find<NumericUpDown>(edge, "numberControl").Value.Should().BeNull();
+        Find<TextBox>(edge, "numberTextControl").Text.Should().Be("invalid");
+        Find<Grid>(edge, "credentialsControl").IsEnabled.Should().BeFalse();
+
+        static T Find<T>(Grid surface, string name) where T : Control
+            => surface.Children.OfType<T>().Single(control => control.Name == name);
+    }
+
+    [AvaloniaTest]
     public void Credentials_binding_should_disable_and_clear_unsupported_setting_levels()
     {
         CredentialsSetting setting = new("Credentials", "Credentials", () => null);
@@ -166,6 +274,13 @@ public sealed class SettingControlBindingsTests
         binding.LoadSetting(settings);
 
         Grid control = binding.GetControl().Should().BeOfType<Grid>().Subject;
+        control.Height.Should().Be(21);
+        control.Children.OfType<TextBox>().Should().OnlyContain(textBox => textBox.Height == 20);
+        control.Children.OfType<Control>().Select(child => child.Name).Should().Contain(
+            "userNameLabel",
+            "userNameTextBox",
+            "passwordLabel",
+            "passwordTextBox");
         control.IsEnabled.Should().BeFalse();
         control.Children.OfType<TextBox>().Should().OnlyContain(textBox => string.IsNullOrEmpty(textBox.Text));
         setting.CustomControl.UserName.Should().BeEmpty();
