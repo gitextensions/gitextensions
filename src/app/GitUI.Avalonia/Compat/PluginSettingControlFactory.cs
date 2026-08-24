@@ -110,6 +110,38 @@ internal static class PluginSettingControlFactory
         };
     }
 
+    // Avalonia cannot call the internal parser exposed only to the original GitUI assembly.
+    internal static bool TryConvertNumberFromString<T>(string? value, out object? result)
+    {
+        Type type = typeof(T);
+        if (type == typeof(int) && int.TryParse(value, out int intResult))
+        {
+            result = intResult;
+            return true;
+        }
+
+        if (type == typeof(float) && float.TryParse(value, out float floatResult))
+        {
+            result = floatResult;
+            return true;
+        }
+
+        if (type == typeof(double) && double.TryParse(value, out double doubleResult))
+        {
+            result = doubleResult;
+            return true;
+        }
+
+        if (type == typeof(long) && long.TryParse(value, out long longResult))
+        {
+            result = longResult;
+            return true;
+        }
+
+        result = null;
+        return false;
+    }
+
     internal static ShimControlAdapter CreateAdapter(WinFormsShims.Control model)
         => model switch
         {
