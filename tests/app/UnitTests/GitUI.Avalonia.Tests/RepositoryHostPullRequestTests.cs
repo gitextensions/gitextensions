@@ -102,7 +102,7 @@ public sealed class RepositoryHostPullRequestTests
         pullRequestLayout.Margin.Should().Be(new Avalonia.Thickness(2));
         pullRequestLayout.ColumnDefinitions[1].Width.IsAuto.Should().BeTrue();
         ((Grid)pullRequestLayout.Children[0]).Margin.Should().Be(new Avalonia.Thickness(3));
-        Grid pullRequestHeader = (Grid)form.FindControl<Border>("columnHeaderId")!.Parent!;
+        Grid pullRequestHeader = (Grid)form.FindControl<ContentControl>("columnHeaderId")!.Parent!;
         pullRequestHeader.ColumnDefinitions[1].Width.IsStar.Should().BeTrue();
         pullRequestHeader.ColumnDefinitions
             .Where((_, index) => index != 1)
@@ -248,7 +248,7 @@ public sealed class RepositoryHostPullRequestTests
         module.GetCurrentRemote().Returns("origin");
         module.GetRemotesAsync().Returns([]);
         using ViewPullRequestsForm form = CreateForm(host, module);
-        Grid header = (Grid)form.FindControl<Border>("columnHeaderId")!.Parent!;
+        Grid header = (Grid)form.FindControl<ContentControl>("columnHeaderId")!.Parent!;
         double initialOwnerWidth = header.ColumnDefinitions[2].Width.Value;
         double initialBranchWidth = header.ColumnDefinitions[4].Width.Value;
         ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();

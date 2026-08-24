@@ -1222,6 +1222,28 @@
     <Setter Property="BorderBrush"
             Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
   </Style>
+  <Style Selector="ContentControl.gitextensions-list-header-cell">
+    <Setter Property="Padding" Value="6,3" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush"
+            Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
   <Style Selector="TextBlock.gitextensions-list-header-text">
     <Setter Property="Margin" Value="6,3" />
   </Style>
