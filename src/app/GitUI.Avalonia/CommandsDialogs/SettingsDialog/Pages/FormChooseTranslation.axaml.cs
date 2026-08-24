@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
@@ -16,7 +17,6 @@ public partial class FormChooseTranslation : GitExtensionsForm
     {
         InitializeComponent();
         Text = "Choose language";
-        lvTranslations.DoubleTapped += lvTranslations_ItemActivate;
         lvTranslations.KeyDown += lvTranslations_KeyDown;
         InitializeComplete();
     }
@@ -58,35 +58,52 @@ public partial class FormChooseTranslation : GitExtensionsForm
         List<ListBoxItem> items = [];
         foreach (string translation in translations)
         {
-            StackPanel content = new()
+            Grid content = new()
             {
-                Orientation = Orientation.Horizontal,
-                Spacing = 10,
-                VerticalAlignment = VerticalAlignment.Center,
+                Width = 190,
+                Height = 98,
+                RowDefinitions = new RowDefinitions("78,20"),
+            };
+            Border imageHost = new()
+            {
+                Width = 150,
+                Height = 75,
+                Margin = new Avalonia.Thickness(0, 3, 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
             };
             string imagePath = Path.Join(Translator.GetTranslationDir(), translation + ".gif");
             if (File.Exists(imagePath))
             {
                 Bitmap image = new(imagePath);
                 _translationImages.Add(image);
-                content.Children.Add(new Image
+                imageHost.Child = new Image
                 {
                     Width = 150,
                     Height = 75,
+                    Stretch = Stretch.None,
                     Source = image,
-                });
+                };
             }
 
-            content.Children.Add(new TextBlock
+            content.Children.Add(imageHost);
+            TextBlock label = new()
             {
                 Text = translation,
+                HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-            });
-            items.Add(new ListBoxItem
+            };
+            Grid.SetRow(label, 1);
+            content.Children.Add(label);
+
+            ListBoxItem item = new()
             {
                 Content = content,
                 Tag = translation,
-            });
+            };
+            item.PointerEntered += lvTranslations_ItemPointerEntered;
+            item.PointerReleased += lvTranslations_ItemActivate;
+            items.Add(item);
         }
 
         lvTranslations.ItemsSource = items;
@@ -100,10 +117,23 @@ public partial class FormChooseTranslation : GitExtensionsForm
         }
     }
 
-    private void lvTranslations_ItemActivate(object? sender, TappedEventArgs e)
+    private void lvTranslations_ItemActivate(object? sender, PointerReleasedEventArgs e)
     {
         // take the selection if any, else see the fallback in FormChooseTranslation_FormClosing
-        ActivateSelectedTranslation();
+        if (e.InitialPressMouseButton == MouseButton.Left)
+        {
+            ActivateSelectedTranslation();
+            e.Handled = true;
+        }
+    }
+
+    private void lvTranslations_ItemPointerEntered(object? sender, PointerEventArgs e)
+    {
+        if (sender is ListBoxItem item)
+        {
+            // Avalonia constraint: reproduce NativeListView.HoverSelection at the item boundary.
+            lvTranslations.SelectedItem = item;
+        }
     }
 
     private void ActivateSelectedTranslation()

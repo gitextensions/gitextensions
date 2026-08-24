@@ -8,6 +8,7 @@
                          MinHeight="360"
                          CanResize="True"
                          WindowStartupLocation="CenterScreen"
+                         Background="{DynamicResource GitExtensionsKnownColorControlLightLightBrush}"
                          Title="Choose language">
   <Grid Width="800"
         Height="539"
@@ -32,6 +33,26 @@
                TextWrapping="Wrap" />
     <ListBox x:Name="lvTranslations"
              Grid.Row="5"
-             Grid.Column="1" />
+             Grid.Column="1"
+             Background="{DynamicResource GitExtensionsKnownColorWindowBrush}"
+             BorderBrush="{DynamicResource GitExtensionsKnownColorWindowFrameBrush}"
+             Foreground="{DynamicResource GitExtensionsKnownColorWindowTextBrush}"
+             Padding="2,1,0,0">
+      <ListBox.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+      </ListBox.ItemsPanel>
+      <ListBox.Styles>
+        <Style Selector="ListBoxItem">
+          <Setter Property="Width" Value="190" />
+          <Setter Property="Height" Value="119" />
+          <Setter Property="Margin" Value="0,0,4,0" />
+          <Setter Property="Padding" Value="0" />
+          <Setter Property="HorizontalContentAlignment" Value="Center" />
+          <Setter Property="VerticalContentAlignment" Value="Top" />
+        </Style>
+      </ListBox.Styles>
+    </ListBox>
   </Grid>
 </gitui:GitExtensionsForm>
