@@ -76,6 +76,40 @@ public sealed class VisualParityTests
     }
 
     [AvaloniaTest]
+    public void Window_ambient_text_should_use_ControlText_while_inputs_use_WindowText()
+    {
+        TextBlock label = new() { Text = "Repository" };
+        TextBox textBox = new() { Text = "gitextensions" };
+        ComboBox comboBox = new() { ItemsSource = new[] { "main" }, SelectedIndex = 0 };
+        StackPanel content = new();
+        content.Children.Add(label);
+        content.Children.Add(textBox);
+        content.Children.Add(comboBox);
+        Window window = new() { Width = 320, Height = 160, Content = content };
+
+        window.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Color controlText = ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(
+                ThemeModule.Settings,
+                System.Drawing.KnownColor.ControlText));
+            Color windowText = ToMediaColor(AvaloniaThemeResources.ResolveSystemColor(
+                ThemeModule.Settings,
+                System.Drawing.KnownColor.WindowText));
+
+            GetColor(window.Foreground).Should().Be(controlText);
+            GetColor(label.Foreground).Should().Be(controlText);
+            GetColor(textBox.Foreground).Should().Be(windowText);
+            GetColor(comboBox.Foreground).Should().Be(windowText);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void Dialog_styles_should_use_WinForms_metrics_and_square_group_box_chrome()
     {
         Grid mainPanel = new()

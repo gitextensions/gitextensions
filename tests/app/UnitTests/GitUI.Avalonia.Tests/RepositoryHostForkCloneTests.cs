@@ -118,6 +118,48 @@ public sealed class RepositoryHostForkCloneTests
         Grid searchHeader = (Grid)form.FindControl<ContentControl>("columnHeaderSearchName")!.Parent!;
         searchHeader.ColumnDefinitions.Select(column => column.Width.Value)
             .Should().Equal(180, 110, 41, 40);
+        Grid myRepositoriesLayout = form.FindControl<Grid>("tableLayoutPanel5")!;
+        myRepositoriesLayout.Margin.Should().Be(new Avalonia.Thickness(7, 4, 7, 7));
+        ((Grid)myRepositoriesLayout.Children[0]).Margin.Should().Be(new Avalonia.Thickness(3));
+        form.FindControl<TextBlock>("helpTextLbl")!.Margin.Should().Be(new Avalonia.Thickness(3, 0));
+
+        Grid searchLayout = form.FindControl<Grid>("tableLayoutPanel1")!;
+        searchLayout.Margin.Should().Be(new Avalonia.Thickness(7, 4, 7, 7));
+        searchLayout.RowDefinitions[0].Height.IsAuto.Should().BeTrue();
+        searchLayout.RowDefinitions[1].Height.IsStar.Should().BeTrue();
+        searchLayout.RowDefinitions[2].Height.IsAuto.Should().BeTrue();
+        StackPanel searchActions = form.FindControl<StackPanel>("flowLayoutPanel2")!;
+        searchActions.Height.Should().Be(35);
+        searchActions.Margin.Should().Be(new Avalonia.Thickness(3));
+        searchActions.Spacing.Should().Be(0);
+        foreach (string fieldName in new[] { "searchTB", "searchBtn", "getFromUserBtn" })
+        {
+            Control control = form.FindControl<Control>(fieldName)!;
+            control.Height.Should().Be(23);
+            control.Margin.Should().Be(new Avalonia.Thickness(3));
+            control.VerticalAlignment.Should().Be(Avalonia.Layout.VerticalAlignment.Top);
+        }
+
+        TextBlock orLabel = form.FindControl<TextBlock>("orLbl")!;
+        orLabel.Classes.Should().Contain("gitextensions-auto-label");
+        orLabel.Margin.Should().Be(new Avalonia.Thickness(3, 0));
+        Grid repositorySearchResults = form.FindControl<Grid>("tableLayoutPanel3")!;
+        repositorySearchResults.Margin.Should().Be(new Avalonia.Thickness(3));
+        ((Grid)repositorySearchResults.Children[0]).Margin.Should().Be(new Avalonia.Thickness(3));
+        Grid repositoryDescription = form.FindControl<Grid>("tableLayoutPanel4")!;
+        repositoryDescription.Margin.Should().Be(new Avalonia.Thickness(3));
+        TextBlock description = form.FindControl<TextBlock>("descriptionLbl")!;
+        description.Classes.Should().Contain("gitextensions-auto-label");
+        description.Margin.Should().Be(new Avalonia.Thickness(3, 0));
+        form.FindControl<TextBox>("searchResultItemDescription")!.Margin.Should().Be(new Avalonia.Thickness(3));
+        Button openRepository = form.FindControl<Button>("openGitupPageBtn")!;
+        openRepository.Width.Should().Be(116);
+        openRepository.Height.Should().Be(23);
+        openRepository.Margin.Should().Be(new Avalonia.Thickness(3));
+        Button fork = form.FindControl<Button>("forkBtn")!;
+        fork.Width.Should().Be(150);
+        fork.Height.Should().Be(23);
+        fork.Margin.Should().Be(new Avalonia.Thickness(3));
 
         translation.Received(1).AddTranslationItem(
             nameof(ForkAndCloneForm), "$this", "Text", "Remote repository fork and clone");

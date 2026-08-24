@@ -331,7 +331,7 @@
        remain as designer and pre-startup fallbacks. -->
   <Style Selector="Window">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
-    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
     <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
@@ -767,6 +767,10 @@
   <Style Selector="TextBlock.gitextensions-dialog-label">
     <Setter Property="Margin" Value="3" />
     <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-auto-label">
+    <Setter Property="Height" Value="15" />
+    <Setter Property="Padding" Value="3,0" />
   </Style>
   <Style Selector="TextBlock.gitextensions-error-text">
     <Setter Property="Foreground" Value="{StaticResource GitExtensionsErrorForegroundBrush}" />
