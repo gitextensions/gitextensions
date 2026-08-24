@@ -433,22 +433,22 @@
     "notes": "P6.2 restores the original class, constants, placeholder property, comments, and member order; native TextBox replaces WinForms while preserving null, explicit-empty, trim, multiline, and effective semantics. P8.6i progress 26 finds zero current source-inventory differences and exercises normal, focused, disabled, and null states in the shared native-100 light/dark/custom capture surface; exact visual/state closure remains open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageBase.cs": {
-    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.cs",
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves the same type-created page lifecycle, host/services/settings access, load/save state, extensibility ISettingControlBinding reuse, title/reference contract, search-keyword extraction, and an Avalonia ComboBox binding. Future pages can add Avalonia-native bindings without duplicating the extensibility settings model."
+    "notes": "Preserves the same type-created page lifecycle, host/services/settings access, load/save state, extensibility ISettingControlBinding reuse, title/reference contract, breadth-first visible-control search with invisible/numeric subtree pruning, and the original public StringComboBoxAdapter boundary. Avalonia ComboBox synchronization is isolated behind PluginSettingBinding. P8.6i progress 29 reduces the exact source inventory from 55 to 10 findings; the remaining items are the empty Designer component fields/method plus required native text and binding helpers."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageBase.Designer.cs": {
-    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.cs",
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageBase.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "The empty WinForms designer surface and component ToolTip map to the code-only Avalonia base and SettingsToolTip adapter."
+    "notes": "The empty WinForms designer surface now has the same-named empty AXAML structural twin. It is deliberately excluded from compiled Avalonia resources and omits x:Class because an abstract compiled-XAML base emits InitializeComponent, collides with every derived generated partial, and would be misidentified as a constructible designer view; the code-behind remains partial and the ToolTip maps to the native compat adapter."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageWithHeader.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageWithHeader.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Preserves the lazy same-named source-selector wrapper, global settings container, repository save eligibility, and read-only delegation with Avalonia Control replacing WinForms Control."
+    "notes": "Preserves the lazy same-named source-selector wrapper, global settings container, repository save eligibility, read-only delegation, and source comments with Avalonia Control replacing WinForms Control. P8.6i progress 29 records zero current source-inventory findings."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsPageHeader.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageHeader.axaml.cs",
@@ -3143,16 +3143,16 @@
     "notes": "Native borderless transparent AXAML retains the original prompt, empty title, anonymous framework-only content host, 325x213 Designer dimensions, center-owner placement, and taskbar suppression through the non-generic compiled-XAML shell. The prompt is the original named 300x24 label surface; one result drives the same 300x79 client geometry through the original child-size callback."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs": {
-    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs",
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves the original ISettingsLayout, BaseSettingsLayout, and TableSettingsLayout boundaries while materializing each shared plugin setting through the native Avalonia control factory. P8.6i progress 25 refreshes its 25-finding inventory; the abstract builder has no standalone capture surface and exact binding-class reconciliation remains owned by P6.2."
+    "notes": "Preserves the original ISettingsLayout, BaseSettingsLayout, and TableSettingsLayout boundaries while materializing each shared plugin setting through the native Avalonia control factory. P8.6i progress 29 restores source-default three-DIP control margins, zero fabricated row/column spacing, AutoScroll through a native ScrollViewer, and the original throwing root GetControl contract; its inventory falls from 25 to 15 framework/designer findings."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.Designer.cs": {
-    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs",
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "The generated WinForms autosizing table maps to a code-created native Avalonia Grid; P8.6i progress 25 records the framework-forced single-file boundary in the refreshed 25-finding inventory. Concrete binding visuals and states remain owned by P6.2."
+    "notes": "The generated WinForms autosizing table maps to a code-created native Avalonia Grid and ScrollViewer. The same-named empty AXAML structural twin uses a neutral UserControl marker, is excluded from compiled resources, and omits x:Class because Avalonia cannot compile or design-construct the abstract base without colliding generated InitializeComponent members; P8.6i progress 29 records 15 remaining framework/designer findings."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.axaml.cs",
@@ -3170,13 +3170,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves the complete commit-dialog settings load/save surface, including previous-message count and amend-state persistence. P8.6i progress 25 adds the formerly unsupported numeric-focus capture and native-96 layout coverage; remaining inventory, diagnostics, actions, scales, IDE preview, and macOS stay open."
+    "notes": "Preserves the complete commit-dialog settings load/save surface, including previous-message count and amend-state persistence. P8.6i progress 29 retains 81 analyzer findings classified as AXAML-field and Designer-comment representations, verifies the five requested states across three themes at native 100%, and keeps exhaustive actions, higher scales, preview, and macOS open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML restores the original integer 96-DPI page/group geometry, same-named controls, and vertical order. P8.6i progress 25 captures the numeric focus state at native 100%; measured renderer, color, and state differences remain open."
+    "notes": "Native AXAML restores the original integer 96-DPI page/group geometry, same-named controls, and vertical order. P8.6i progress 29 replaces negative-padding compensation with the measured classic GroupBox template: both group bounds, content allocations, nested group bounds, and the resolved #DCDCDC native border match the WinForms 96-DPI light/dark/custom captures. The diagnostic report falls from 2519 to 2219 findings; shared checkbox/rendering and exhaustive-state debt remains open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.axaml.cs",

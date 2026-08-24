@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using GitCommands;
@@ -471,7 +472,9 @@ public sealed class P61SettingsPagesTests
             new CommitDialogSettingsPage(),
             1014,
             950,
-            ("groupBoxBehaviour", new Avalonia.Rect(0, 0, 1014, 294)));
+            ("groupBoxBehaviour", new Avalonia.Rect(0, 0, 1014, 294)),
+            ("tableLayoutPanelBehaviour", new Avalonia.Rect(3, 19, 1008, 272)),
+            ("grpAdditionalButtons", new Avalonia.Rect(6, 191, 1002, 97)));
         AssertNativeLayout(
             new FormBrowseRepoSettingsPage(),
             738,
@@ -531,15 +534,22 @@ public sealed class P61SettingsPagesTests
         TestSettingControlBinding binding = new(setting);
         page.AddSettingControl(binding);
 
-        Grid grid = page.Content.Should().BeOfType<Grid>().Subject;
+        ScrollViewer scrollViewer = page.Content.Should().BeOfType<ScrollViewer>().Subject;
+        scrollViewer.HorizontalScrollBarVisibility.Should().Be(ScrollBarVisibility.Auto);
+        scrollViewer.VerticalScrollBarVisibility.Should().Be(ScrollBarVisibility.Auto);
+        Grid grid = scrollViewer.Content.Should().BeOfType<Grid>().Subject;
         grid.ColumnDefinitions.Should().HaveCount(3);
+        grid.ColumnSpacing.Should().Be(0);
+        grid.RowSpacing.Should().Be(0);
         grid.Children.OfType<TextBlock>().Should().ContainSingle().Which.Text.Should().Be("Enabled");
         CheckBox checkBox = grid.Children.OfType<CheckBox>().Single();
+        checkBox.Margin.Should().Be(new Avalonia.Thickness(3));
 
         page.LoadSettings();
         checkBox.IsThreeState.Should().BeTrue();
         checkBox.IsChecked.Should().BeNull("the global source has no explicit value for the test setting");
         binding.LoadCount.Should().Be(1, "AutoLayout must use the supplied binding instance");
+        ((ISettingsLayout)page).Invoking(layout => layout.GetControl()).Should().Throw<NotImplementedException>();
     }
 
     private static void AssertNativeLayout(
