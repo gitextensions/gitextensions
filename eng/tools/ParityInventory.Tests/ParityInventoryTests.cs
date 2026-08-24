@@ -155,6 +155,70 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_match_designer_fields_with_axaml_named_controls()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Designer.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private Button actionButton;
+                private TextBox inputText;
+            }
+            """);
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml", """
+            <UserControl xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         x:Class="Sample.Widget">
+              <StackPanel>
+                <TextBox x:Name="inputText" />
+                <Button x:Name="actionButton" />
+              </StackPanel>
+            </UserControl>
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Findings.Should().NotContain(item =>
+            (item.Code == "member.missing" || item.Code == "member.extra")
+            && (item.Path.EndsWith("field:actionButton", StringComparison.Ordinal)
+                || item.Path.EndsWith("field:inputText", StringComparison.Ordinal)));
+        report.Findings.Should().NotContain(item => item.Code == "member.signature");
+        report.Findings.Should().NotContain(item => item.Code == "member.order");
+    }
+
+    [TestCase("SelectedIndexChanged", "SelectionChanged")]
+    [TestCase("Resize", "SizeChanged")]
+    [TestCase("Enter", "GotFocus")]
+    [TestCase("Leave", "LostFocus")]
+    public void Run_should_match_framework_equivalent_event_names(string originalEvent, string twinEvent)
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", $$"""
+            namespace Sample;
+            public partial class Widget
+            {
+                private void Wire() => control.{{originalEvent}} += HandleChanged;
+                private void HandleChanged(object sender, EventArgs e) { }
+            }
+            """);
+        fixture.WriteTwin("Widget.axaml.cs", $$"""
+            namespace Sample;
+            public partial class Widget
+            {
+                private void Wire() => control.{{twinEvent}} += HandleChanged;
+                private void HandleChanged(object sender, EventArgs e) { }
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Findings.Should().NotContain(item => item.Code.StartsWith("event.wiring", StringComparison.Ordinal));
+    }
+
+    [Test]
     public void Run_should_compare_relative_order_without_cascading_after_framework_only_member()
     {
         using InventoryFixture fixture = new();
@@ -217,6 +281,33 @@ public sealed class ParityInventoryTests
             item.Parent == "menu" && item.Name == "open");
         report.Twin.Menus.Should().ContainSingle(item =>
             item.Parent == "menu" && item.Name == "open");
+    }
+
+    [Test]
+    public void Run_should_not_treat_non_menu_items_collections_as_menus()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private readonly ComboBox choices = new();
+                private void Populate() => choices.Items.Add("choice");
+            }
+            """);
+        fixture.WriteTwin("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private readonly ComboBox choices = new();
+                private void Populate() => choices.Items.Add("choice");
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Original.Menus.Should().BeEmpty();
+        report.Twin.Menus.Should().BeEmpty();
     }
 
     [Test]
