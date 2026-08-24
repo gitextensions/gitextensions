@@ -109,6 +109,13 @@ public sealed partial class ParityScreenshotTests
 
     [Test]
     [Category(P02Category)]
+    public void Settings_shell_capture_host_should_use_native_96_dpi_client_dimensions()
+    {
+        GetCaptureSize(typeof(FormSettings)).Should().Be((958, 746));
+    }
+
+    [Test]
+    [Category(P02Category)]
     public void Help_about_capture_hosts_should_use_native_96_dpi_runtime_dimensions()
     {
         GetCaptureSize(typeof(FormAbout)).Should().Be((601, 318));
@@ -1027,6 +1034,13 @@ public sealed partial class ParityScreenshotTests
             ApplyTextValues(view, component);
 
             await WaitForAsyncViewsAsync(captureHost, context);
+            foreach (ChecklistSettingsPage checklist in new[] { captureHost }
+                         .Concat(captureHost.GetLogicalDescendants().OfType<Control>())
+                         .OfType<ChecklistSettingsPage>())
+            {
+                SeedChecklist(checklist);
+            }
+
             // parity-scaffolding: Async loaders may replace seeded text; the capture plan remains authoritative.
             ApplyTextValues(view, component);
             if (view is RevisionGridControl revisionGrid)
