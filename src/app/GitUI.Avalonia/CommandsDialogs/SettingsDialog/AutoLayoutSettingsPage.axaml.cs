@@ -21,7 +21,12 @@ public abstract partial class AutoLayoutSettingsPage : DistributedSettingsPage, 
             _settingsLayout = CreateSettingsLayout();
             if (_settingsLayout.GetControl().Parent is null)
             {
-                Content = _settingsLayout.GetControl();
+                Content = new ScrollViewer
+                {
+                    HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    Content = _settingsLayout.GetControl(),
+                };
             }
         }
 
@@ -38,8 +43,6 @@ public abstract partial class AutoLayoutSettingsPage : DistributedSettingsPage, 
         return new Grid
         {
             ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
-            ColumnSpacing = 10,
-            RowSpacing = 6,
         };
     }
 
@@ -50,7 +53,7 @@ public abstract partial class AutoLayoutSettingsPage : DistributedSettingsPage, 
 
     public Control GetControl()
     {
-        return this;
+        throw new NotImplementedException();
     }
 
     public void AddSettingsLayout(ISettingsLayout layout)
@@ -155,6 +158,7 @@ public class TableSettingsLayout : BaseSettingsLayout
 
         Grid.SetRow(binding.Control, _currentRow);
         Grid.SetColumn(binding.Control, 1);
+        binding.Control.Margin = new Avalonia.Thickness(3);
         Panel.Children.Add(binding.Control);
     }
 
@@ -165,6 +169,7 @@ public class TableSettingsLayout : BaseSettingsLayout
         Panel.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
         Grid.SetRow(control, _currentRow);
         Grid.SetColumn(control, 1);
+        control.Margin = new Avalonia.Thickness(3);
         Panel.Children.Add(control);
     }
 

@@ -13,6 +13,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Avalonia generates one InitializeComponent method per inheritance level, which makes
+         an empty compiled-XAML base collide with every concrete settings-page partial. Keep the
+         source-shaped empty Designer twin available to parity tooling without compiling it. -->
+    <AvaloniaXaml Remove="CommandsDialogs\SettingsDialog\SettingsPageBase.axaml" />
+    <AvaloniaXaml Remove="CommandsDialogs\SettingsDialog\AutoLayoutSettingsPage.axaml" />
+
     <!-- Mirror of the implicit System.Drawing using that UseWindowsForms provides in GitUI,
          so portable GitUI files can be linked below without source changes. Files that also
          use Avalonia's Point/Size alias per file. -->

@@ -8,9 +8,9 @@
   <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
     <GroupBox x:Name="groupBoxBehaviour"
+              Classes="gitextensions-native-group-box"
               Width="1014"
               Height="294"
-              Padding="-3"
               HorizontalAlignment="Left"
               VerticalAlignment="Top"
               Header="Behaviour">
@@ -75,11 +75,11 @@
                   Grid.ColumnSpan="2"
                   Content="Remember 'Amend commit' checkbox on commit form close" />
         <GroupBox x:Name="grpAdditionalButtons"
+                  Classes="gitextensions-native-group-box"
                   Grid.Row="7"
                   Grid.ColumnSpan="2"
                   Height="97"
                   Margin="3"
-                  Padding="-3"
                   Header="Show additional buttons in commit button area">
           <Grid x:Name="flowLayoutPanel1"
                 RowDefinitions="25,25,25">
