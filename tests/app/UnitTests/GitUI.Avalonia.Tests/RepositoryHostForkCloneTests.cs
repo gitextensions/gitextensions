@@ -225,6 +225,24 @@ public sealed class RepositoryHostForkCloneTests
     }
 
     [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_preserve_source_query_whitespace_rules()
+    {
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.SearchForRepository("  repository  ").Returns([]);
+        host.GetRepositoriesOfUser("user").Returns([]);
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.StartSearch("  repository  ", byUser: false);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.StartSearch("  user  ", byUser: true);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        host.Received(1).SearchForRepository("  repository  ");
+        host.Received(1).GetRepositoriesOfUser("user");
+    }
+
+    [AvaloniaTest]
     public async Task ForkAndCloneForm_should_publish_only_the_latest_search_result()
     {
         TaskCompletionSource firstSearchStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
