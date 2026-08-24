@@ -3146,73 +3146,73 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves the original ISettingsLayout, BaseSettingsLayout, and TableSettingsLayout boundaries while materializing each shared plugin setting through the native Avalonia control factory. Exact binding-class reconciliation remains owned by P6.2."
+    "notes": "Preserves the original ISettingsLayout, BaseSettingsLayout, and TableSettingsLayout boundaries while materializing each shared plugin setting through the native Avalonia control factory. P8.6i progress 25 refreshes its 25-finding inventory; the abstract builder has no standalone capture surface and exact binding-class reconciliation remains owned by P6.2."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/AutoLayoutSettingsPage.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "The generated WinForms autosizing table maps to a code-created native Avalonia Grid; the framework-forced single-file visual boundary is measured by the P6.1 inventory."
+    "notes": "The generated WinForms autosizing table maps to a code-created native Avalonia Grid; P8.6i progress 25 records the framework-forced single-file boundary in the refreshed 25-finding inventory. Concrete binding visuals and states remain owned by P6.2."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves all blame option loads, saves, translation identities, and the copy/move warning tooltip through native Avalonia controls."
+    "notes": "Preserves all blame option loads, saves, translation identities, and the copy/move warning tooltip through native Avalonia controls. P8.6i progress 25 adds checked/composite-focus capture coverage and native-96 layout contracts; remaining inventory, paired diagnostics, higher scales, exhaustive actions, IDE preview, and macOS stay open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the two original groups and every same-named checkbox; measured visual differences remain open."
+    "notes": "Native AXAML restores the original integer 96-DPI page and outer-group coordinates with every same-named checkbox. P8.6i progress 25 records real 100% light/dark/custom pairs; framework rendering and the measured residual diagnostics remain open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves the complete commit-dialog settings load/save surface, including previous-message count and amend-state persistence."
+    "notes": "Preserves the complete commit-dialog settings load/save surface, including previous-message count and amend-state persistence. P8.6i progress 25 adds the formerly unsupported numeric-focus capture and native-96 layout coverage; remaining inventory, diagnostics, actions, scales, IDE preview, and macOS stay open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the original same-named controls and vertical order; measured visual and focus differences remain open."
+    "notes": "Native AXAML restores the original integer 96-DPI page/group geometry, same-named controls, and vertical order. P8.6i progress 25 captures the numeric focus state at native 100%; measured renderer, color, and state differences remain open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
-    "notes": "Preserves browse, tab, output-history, shell selection, unavailable-shell error, and hotkey-tooltip behavior. The portable ShellOption list and ITerminalLauncher substitute for upstream's Windows ShellProvider at the UI boundary."
+    "notes": "Preserves browse, tab, output-history, shell selection, unavailable-shell error, and hotkey-tooltip behavior. The portable ShellOption list and ITerminalLauncher substitute for upstream's Windows ShellProvider at the UI boundary. P8.6i progress 25 adds native-96 geometry and complete requested 100% state capture; exact diagnostics and exhaustive actions remain open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.axaml",
     "status": "functional",
     "basedOn": "2061dd857c3893c1a2657331da6e2bc01f9c1e86",
-    "notes": "Native AXAML retains the original General and Tabs groups, same-named controls, help affordances, and measured physical capture size."
+    "notes": "Native AXAML restores the original integer 96-DPI main layout and outer General/Tabs group geometry with same-named controls and help affordances. P8.6i progress 25 measures all requested native-100 states in three themes without unsupported cells; exact rendering remains open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.axaml.cs",
     "status": "functional",
     "basedOn": "659a574db848a0e180d414231c90a14d448fc9b5",
-    "notes": "Preserves sorted translation discovery with English first, optional flag images, one-action selection, close fallback, and startup/checklist entry points through a native Avalonia list."
+    "notes": "Preserves sorted translation discovery with English first, optional flag images, activation-driven selection, close fallback, and startup/checklist entry points through a native Avalonia list. P8.6i progress 25 corrects one-click selection to the original double-click/Enter ItemActivate contract and covers selection-versus-activation behavior."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the original labels, translation list, resizable window contract, and initial dimensions; the list uses Avalonia item layout instead of WinForms LargeIcon mode."
+    "notes": "Native AXAML restores the original integer native-96 816x578 window, 800x539 client, label, and list coordinates while retaining the resizable contract. P8.6i progress 25 records native-100 light/dark/custom pairs; Avalonia item layout versus WinForms LargeIcon rendering remains measured debt."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Preserves all 18 menu entries, 0/1/2 tri-state persistence and cycle order, preview, help, registration status, and register/unregister actions. FormSettings exposes the page only on Windows while the page remains constructible and explicitly disabled elsewhere."
+    "notes": "Preserves all 18 menu entries, 0/1/2 tri-state persistence and cycle order, preview, help, registration status, and register/unregister actions. FormSettings exposes the page only on Windows while the page remains constructible and explicitly disabled elsewhere. P8.6i progress 25 adds complete available native-100 state capture; the unavailable disabled registration focus request is not fabricated."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML retains the original groups, same-named controls, information icon, checklist and preview geometry; exact visual/state parity remains measured debt."
+    "notes": "Native AXAML restores the original integer 96-DPI main layout, outer group geometry, panel1 identity, same-named controls, information icon, checklist, and preview structure. P8.6i progress 25 measures the available native-100 three-theme matrix; exact rendering and exhaustive states remain open."
   },
   "src/app/GitUI/CommitInfo/CommitInfoHeader.cs": {
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfoHeader.axaml.cs",
@@ -4169,13 +4169,13 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsCheckBox.axaml.cs",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Preserves checked/text/tooltip/manual-link properties and the original event names with native Avalonia controls; the native checkbox automation name follows its displayed text. P8.6g.1 verifies those routes and the original information image identity; exact visual/theme/exhaustive-state closure remains P8.6g.3."
+    "notes": "Preserves checked/text/tooltip/manual-link properties and the original event names with native Avalonia controls; the native checkbox automation name follows its displayed text. P8.6i progress 25 adds shared composite checked/focus state driving and a refreshed 34-finding inventory; exact visual/theme/exhaustive-state closure remains P8.6g.3b."
   },
   "src/app/GitUI/UserControls/Settings/SettingsCheckBox.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/Settings/SettingsCheckBox.axaml",
     "status": "functional",
     "basedOn": "136d2f5e7b6876b0f334d17d89b36ef40eeaaf0a",
-    "notes": "Native AXAML preserves the checkbox, information icon, tooltip, and manual-link fields. P8.6g.1 restores the original default information image and uses the shared 16-pixel icon class. The source-provenance correction maps the original integer logical margins directly and keeps translated content auto-sized; capture measurements are evidence, not layout input. Exact theme/state, native-DPI, manual, and macOS closure remain P8.6g.3b."
+    "notes": "Native AXAML preserves the checkbox, information icon, tooltip, and manual-link fields. P8.6i progress 25 restores the original explicit 19x18 information-image contract and integer logical margins instead of forcing the shared 16-pixel icon class; Avalonia still arranges the intrinsic bitmap at 16x16 in current paired captures, so that renderer delta remains open. Exact theme/state, native-DPI, manual, and macOS closure remain P8.6g.3b."
   },
   "src/app/GitUI/UserControls/SortDiffListContextMenuItem.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/SortDiffListContextMenuItem.cs",

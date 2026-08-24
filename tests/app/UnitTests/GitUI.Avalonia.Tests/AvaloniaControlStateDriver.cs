@@ -169,9 +169,23 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
     private void Check(object target)
     {
-        if (target is not ToggleButton toggle)
+        ToggleButton? toggle = target as ToggleButton;
+        if (toggle is null && target is Control composite)
         {
-            throw new AvaloniaCaptureStateUnsupportedException("The checked state requires a ToggleButton.");
+            ToggleButton[] descendants = EnumerateLogicalControls(composite)
+                .OfType<ToggleButton>()
+                .Take(2)
+                .ToArray();
+            if (descendants.Length == 1)
+            {
+                toggle = descendants[0];
+            }
+        }
+
+        if (toggle is null)
+        {
+            throw new AvaloniaCaptureStateUnsupportedException(
+                "The checked state requires a ToggleButton or a composite control with one ToggleButton.");
         }
 
         bool? previous = toggle.IsChecked;

@@ -16,7 +16,7 @@ public partial class FormChooseTranslation : GitExtensionsForm
     {
         InitializeComponent();
         Text = "Choose language";
-        lvTranslations.SelectionChanged += lvTranslations_ItemActivate;
+        lvTranslations.DoubleTapped += lvTranslations_ItemActivate;
         lvTranslations.KeyDown += lvTranslations_KeyDown;
         InitializeComplete();
     }
@@ -100,7 +100,7 @@ public partial class FormChooseTranslation : GitExtensionsForm
         }
     }
 
-    private void lvTranslations_ItemActivate(object? sender, SelectionChangedEventArgs e)
+    private void lvTranslations_ItemActivate(object? sender, TappedEventArgs e)
     {
         // take the selection if any, else see the fallback in FormChooseTranslation_FormClosing
         ActivateSelectedTranslation();
@@ -130,5 +130,6 @@ public partial class FormChooseTranslation : GitExtensionsForm
     {
         internal ListBox Translations => form.lvTranslations;
         internal void LoadTranslations() => form.LoadTranslations();
+        internal void ActivateSelectedTranslation() => form.ActivateSelectedTranslation();
     }
 }

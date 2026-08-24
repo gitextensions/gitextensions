@@ -16,9 +16,12 @@
               Margin="0,0,2,0"
               Content="Settings text" />
     <Image x:Name="pictureBox"
-           Classes="gitextensions-icon-16"
+           Width="19"
+           Height="18"
            Cursor="Hand"
            Margin="2,0,0,0"
+           Stretch="None"
+           VerticalAlignment="Top"
            IsVisible="False"
            Source="{x:Static properties:Images.Information}" />
   </StackPanel>

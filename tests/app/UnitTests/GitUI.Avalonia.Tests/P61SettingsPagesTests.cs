@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
@@ -328,7 +329,7 @@ public sealed class P61SettingsPagesTests
 
     [AvaloniaTest]
     [NonParallelizable]
-    public void Translation_chooser_should_list_English_and_commit_a_one_click_selection()
+    public void Translation_chooser_should_list_English_and_commit_only_an_activated_selection()
     {
         string originalTranslation = AppSettings.Translation;
         try
@@ -345,12 +346,52 @@ public sealed class P61SettingsPagesTests
 
             accessor.Translations.SelectedItem = items[0];
 
+            AppSettings.Translation.Should().BeEmpty("selecting a WinForms ListView item does not activate it");
+            accessor.ActivateSelectedTranslation();
+
             AppSettings.Translation.Should().Be("English");
         }
         finally
         {
             AppSettings.Translation = originalTranslation;
         }
+    }
+
+    [AvaloniaTest]
+    public void Settings_pages_should_preserve_native_96_dpi_designer_geometry()
+    {
+        AssertNativeLayout(
+            new BlameViewerSettingsPage(),
+            341,
+            272,
+            ("groupBoxBlameSettings", new Avalonia.Rect(11, 11, 372, 97)),
+            ("groupBoxDisplayResult", new Avalonia.Rect(11, 114, 319, 197)));
+        AssertNativeLayout(
+            new CommitDialogSettingsPage(),
+            1014,
+            950,
+            ("groupBoxBehaviour", new Avalonia.Rect(0, 0, 1014, 294)));
+        AssertNativeLayout(
+            new FormBrowseRepoSettingsPage(),
+            738,
+            438,
+            ("tlpnlMain", new Avalonia.Rect(8, 8, 722, 422)),
+            ("groupBox1", new Avalonia.Rect(11, 11, 716, 159)),
+            ("gbTabs", new Avalonia.Rect(11, 176, 716, 136)));
+        AssertNativeLayout(
+            new ShellExtensionSettingsPage(),
+            1502,
+            331,
+            ("tlpnlMain", new Avalonia.Rect(8, 8, 1486, 315)),
+            ("gbExplorerIntegration", new Avalonia.Rect(11, 11, 1480, 63)),
+            ("gbCascadingMenu", new Avalonia.Rect(11, 80, 1480, 502)));
+        AssertNativeLayout(
+            new FormChooseTranslation(),
+            816,
+            578,
+            ("label1", new Avalonia.Rect(12, 9, 126, 15)),
+            ("label2", new Avalonia.Rect(12, 33, 338, 15)),
+            ("lvTranslations", new Avalonia.Rect(12, 51, 776, 476)));
     }
 
     [AvaloniaTest]
@@ -398,6 +439,44 @@ public sealed class P61SettingsPagesTests
         checkBox.IsThreeState.Should().BeTrue();
         checkBox.IsChecked.Should().BeNull("the global source has no explicit value for the test setting");
         binding.LoadCount.Should().Be(1, "AutoLayout must use the supplied binding instance");
+    }
+
+    private static void AssertNativeLayout(
+        Control view,
+        double width,
+        double height,
+        params (string Name, Avalonia.Rect Bounds)[] expectedControls)
+    {
+        Window window = view as Window ?? new Window { Content = view };
+        window.Width = width;
+        window.Height = height;
+        window.SizeToContent = SizeToContent.Manual;
+        try
+        {
+            window.Show();
+            window.Width = width;
+            window.Height = height;
+            Dispatcher.UIThread.RunJobs();
+
+            foreach ((string name, Avalonia.Rect expectedBounds) in expectedControls)
+            {
+                Control control = view.FindControl<Control>(name)
+                    ?? throw new InvalidOperationException($"The native-layout control '{name}' was not created.");
+                Avalonia.Point origin = Avalonia.VisualExtensions.TranslatePoint(control, default, view)
+                    ?? throw new InvalidOperationException($"The native-layout control '{name}' is detached from its page.");
+                new Avalonia.Rect(origin, control.Bounds.Size).Should().Be(
+                    expectedBounds,
+                    $"{name} must retain the WinForms 96-DPI Designer bounds");
+            }
+        }
+        finally
+        {
+            window.Close();
+            if (!ReferenceEquals(window, view))
+            {
+                (view as IDisposable)?.Dispose();
+            }
+        }
     }
 
     private sealed class TestAutoLayoutPage : AutoLayoutSettingsPage
