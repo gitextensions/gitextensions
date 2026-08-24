@@ -53,6 +53,17 @@ internal static partial class NativeMethods
         return Rectangle.FromLTRB(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
     }
 
+    internal static Rectangle GetComboBoxListRectangle(IntPtr handle)
+    {
+        ComboBoxInfo info = new() { Size = Marshal.SizeOf<ComboBoxInfo>() };
+        if (!GetComboBoxInfo(handle, ref info) || info.ListHandle == IntPtr.Zero)
+        {
+            throw new InvalidOperationException("GetComboBoxInfo did not expose the native list window.");
+        }
+
+        return GetWindowRectangle(info.ListHandle);
+    }
+
     internal static bool PrintWindowContent(IntPtr handle, IntPtr deviceContext) =>
         PrintWindow(handle, deviceContext, PwRenderFullContent);
 
@@ -120,6 +131,10 @@ internal static partial class NativeMethods
 
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool GetComboBoxInfo(IntPtr comboBox, ref ComboBoxInfo info);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool PrintWindow(IntPtr window, IntPtr deviceContext, uint flags);
 
     [LibraryImport("user32.dll")]
@@ -157,5 +172,17 @@ internal static partial class NativeMethods
         public NativeRectangle Monitor;
         public NativeRectangle Work;
         public uint Flags;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct ComboBoxInfo
+    {
+        public int Size;
+        public NativeRectangle ItemRectangle;
+        public NativeRectangle ButtonRectangle;
+        public uint ButtonState;
+        public IntPtr ComboBoxHandle;
+        public IntPtr EditHandle;
+        public IntPtr ListHandle;
     }
 }

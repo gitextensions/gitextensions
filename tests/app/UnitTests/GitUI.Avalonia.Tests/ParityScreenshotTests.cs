@@ -26,6 +26,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
+using GitExtensions.ParityCapture;
 using GitExtensions.Plugins.Gource;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
@@ -71,6 +72,7 @@ namespace GitExtensionsTests;
 [TestFixture]
 public sealed partial class ParityScreenshotTests
 {
+    private static readonly ConditionalWeakTable<Control, CaptureRepositoryHostFixture> RepositoryHostCaptureFixtures = new();
     private const string CaptureCategory = "VisualParityCapture";
     private const string CaptureEnvironmentVariable = "GITEXT_CAPTURE_PARITY_SHOTS";
     private const string CaptureViewEnvironmentVariable = "GITEXT_CAPTURE_PARITY_VIEW";
@@ -281,6 +283,8 @@ public sealed partial class ParityScreenshotTests
         }
         finally
         {
+            ReleaseRepositoryHostCaptureFixture(view);
+            await DrainRepositoryHostCaptureAsync(view);
             window.Close();
             if (!ReferenceEquals(window, view) && view is IDisposable disposableView)
             {
@@ -302,8 +306,12 @@ public sealed partial class ParityScreenshotTests
             .Where(candidate => candidate.Contains(value, StringComparison.OrdinalIgnoreCase));
 
     // parity-scaffolding: Gives all three repository-host dialogs the WinForms capture model.
-    private static IRepositoryHostPlugin CreateRepositoryHostCaptureFixture(CaptureContext context)
+    private static CaptureRepositoryHostFixture CreateRepositoryHostCaptureFixture(
+        CaptureContext context,
+        Type viewType,
+        string stateId)
     {
+        ManualResetEventSlim providerGate = new(initialState: false);
         IHostedBranch mainBranch = Substitute.For<IHostedBranch>();
         mainBranch.Name.Returns(MainBranchName);
         mainBranch.Sha.Returns(context.ParentRevision.ObjectId);
@@ -357,7 +365,38 @@ public sealed partial class ParityScreenshotTests
             + "@@ -1 +1 @@\n"
             + "-old\n"
             + "+new\n"));
-        target.GetPullRequests().Returns([pullRequest]);
+        target.GetPullRequests().Returns(_ =>
+        {
+            if (stateId == "pull-requests.loading")
+            {
+                providerGate.Wait();
+            }
+
+            return new[] { pullRequest };
+        });
+        mine.GetPullRequests().Returns(_ =>
+        {
+            if (stateId == "pull-requests.loading")
+            {
+                providerGate.Wait();
+            }
+
+            return Array.Empty<IPullRequestInformation>();
+        });
+
+        if (stateId == "branches.loading")
+        {
+            mine.GetBranches().Returns(_ =>
+            {
+                providerGate.Wait();
+                return new[] { mainBranch, featureBranch };
+            });
+            target.GetBranches().Returns(_ =>
+            {
+                providerGate.Wait();
+                return new[] { mainBranch, featureBranch };
+            });
+        }
 
         IHostedRemote targetRemote = CreateHostedRemote("origin", target, isOwnedByMe: false);
         IHostedRemote mineRemote = CreateHostedRemote("contributor", mine, isOwnedByMe: true);
@@ -365,10 +404,42 @@ public sealed partial class ParityScreenshotTests
         host.Name.Returns("Parity Host");
         host.ConfigurationOk.Returns(true);
         host.OwnerLogin.Returns("contributor");
-        host.GetMyRepos().Returns([mine]);
+        host.GetMyRepos().Returns(_ =>
+        {
+            if (viewType == typeof(ForkAndCloneForm) && stateId == "initial.loading")
+            {
+                providerGate.Wait();
+            }
+
+            if (stateId == "owned.error")
+            {
+                throw new InvalidOperationException("Deterministic owned repository failure.");
+            }
+
+            return new[] { mine };
+        });
         host.SearchForRepository(Arg.Any<string>()).Returns([target]);
-        host.GetHostedRemotesForModule().Returns([targetRemote, mineRemote]);
-        return host;
+        IReadOnlyList<IHostedRemote> remotes = [targetRemote, mineRemote];
+        host.GetHostedRemotesForModule().Returns(_ =>
+        {
+            if (stateId == "provider.empty")
+            {
+                return [];
+            }
+
+            if (viewType == typeof(ViewPullRequestsForm) && stateId == "initial.loading")
+            {
+                providerGate.Wait();
+            }
+
+            if (viewType == typeof(CreatePullRequestForm) && stateId == "initial.loading")
+            {
+                return new BlockingReadOnlyList<IHostedRemote>(remotes, providerGate);
+            }
+
+            return remotes;
+        });
+        return new CaptureRepositoryHostFixture(host, providerGate);
     }
 
     private static IHostedRepository CreateHostedRepository(
@@ -419,7 +490,7 @@ public sealed partial class ParityScreenshotTests
         return remote;
     }
 
-    private static Control CreateView(CaptureContext context, Type viewType)
+    private static Control CreateView(CaptureContext context, Type viewType, CaptureStatePlan? captureState = null)
     {
         // parity-scaffolding: The real application initialises this before constructing About/EnvironmentInfo.
         UserEnvironmentInformation.Initialise("9999999999999999999999999999999999abcdef", isDirty: true);
@@ -460,24 +531,42 @@ public sealed partial class ParityScreenshotTests
 
         if (viewType == typeof(CreatePullRequestForm))
         {
-            return new CreatePullRequestForm(
+            CaptureRepositoryHostFixture fixture = CreateRepositoryHostCaptureFixture(
+                context,
+                viewType,
+                captureState?.Id ?? "normal");
+            CreatePullRequestForm form = new(
                 context.Commands,
-                CreateRepositoryHostCaptureFixture(context),
+                fixture.Host,
                 chooseRemote: null,
                 chooseBranch: null);
+            RepositoryHostCaptureFixtures.Add(form, fixture);
+            return form;
         }
 
         if (viewType == typeof(ForkAndCloneForm))
         {
-            return new ForkAndCloneForm(
+            CaptureRepositoryHostFixture fixture = CreateRepositoryHostCaptureFixture(
+                context,
+                viewType,
+                captureState?.Id ?? "normal");
+            ForkAndCloneForm form = new(
                 context.Commands,
-                CreateRepositoryHostCaptureFixture(context),
+                fixture.Host,
                 gitModuleChanged: null);
+            RepositoryHostCaptureFixtures.Add(form, fixture);
+            return form;
         }
 
         if (viewType == typeof(ViewPullRequestsForm))
         {
-            return new ViewPullRequestsForm(context.Commands, CreateRepositoryHostCaptureFixture(context));
+            CaptureRepositoryHostFixture fixture = CreateRepositoryHostCaptureFixture(
+                context,
+                viewType,
+                captureState?.Id ?? "normal");
+            ViewPullRequestsForm form = new(context.Commands, fixture.Host);
+            RepositoryHostCaptureFixtures.Add(form, fixture);
+            return form;
         }
 
         if (viewType == typeof(HotkeysSettingsPage))
@@ -1498,10 +1587,48 @@ public sealed partial class ParityScreenshotTests
         => root.FindControl<T>(name)
             ?? throw new InvalidOperationException($"{root.GetType().Name}.{name} could not be found.");
 
-    private static async Task WaitForAsyncViewsAsync(Control root, CaptureContext context)
+    private static async Task WaitForAsyncViewsAsync(
+        Control root,
+        CaptureContext context,
+        CaptureStatePlan? state = null)
     {
-        if (root is CreatePullRequestForm)
+        if (root is CreatePullRequestForm createPullRequestForm)
         {
+            CreatePullRequestForm.TestAccessor accessor = createPullRequestForm.GetTestAccessor();
+            if (state?.Id == "initial.loading")
+            {
+                Stopwatch loadingStopwatch = Stopwatch.StartNew();
+                while (!root.GetVisualDescendants().OfType<LoadingControl>().Any()
+                       && loadingStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(10);
+                }
+
+                root.GetVisualDescendants().OfType<LoadingControl>().Should().ContainSingle();
+                accessor.CreateEnabled.Should().BeFalse();
+                return;
+            }
+
+            if (state?.Id == "branches.loading")
+            {
+                Stopwatch branchesStopwatch = Stopwatch.StartNew();
+                while ((root.GetVisualDescendants().OfType<LoadingControl>().Any()
+                        || accessor.TargetRepositories.ItemCount == 0)
+                       && branchesStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(10);
+                }
+
+                root.GetVisualDescendants().OfType<LoadingControl>().Should().BeEmpty();
+                accessor.TargetRepositories.ItemCount.Should().BeGreaterThan(0);
+                accessor.SourceBranches.ItemCount.Should().Be(0);
+                accessor.TargetBranches.ItemCount.Should().Be(0);
+                accessor.CreateEnabled.Should().BeFalse();
+                return;
+            }
+
             // parity-scaffolding: Wait for both provider branch loaders before capturing the settled form.
             Button create = GetRequiredControl<Button>(root, "_createBtn");
             Stopwatch createStopwatch = Stopwatch.StartNew();
@@ -1514,12 +1641,46 @@ public sealed partial class ParityScreenshotTests
             create.IsEnabled.Should().BeTrue();
         }
 
-        if (root is ForkAndCloneForm)
+        if (root is ForkAndCloneForm forkAndCloneForm)
         {
+            ForkAndCloneForm.TestAccessor accessor = forkAndCloneForm.GetTestAccessor();
+            if (state?.Id == "initial.loading")
+            {
+                Stopwatch loadingStopwatch = Stopwatch.StartNew();
+                while (accessor.MyRepositories.ItemCount == 0
+                       && loadingStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(10);
+                }
+
+                accessor.MyRepositoryNames.Should().ContainSingle().Which.Should().Contain("LOADING");
+                accessor.CloneEnabled.Should().BeFalse();
+                return;
+            }
+
+            if (state?.Id == "owned.error")
+            {
+                Stopwatch errorStopwatch = Stopwatch.StartNew();
+                while (!accessor.HelpText.Contains("Deterministic owned repository failure", StringComparison.Ordinal)
+                       && errorStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(10);
+                }
+
+                accessor.MyRepositories.ItemCount.Should().Be(0);
+                accessor.HelpText.Should().Contain("Failed to get repositories");
+                accessor.HelpText.Should().Contain("Deterministic owned repository failure");
+                return;
+            }
+
             // parity-scaffolding: Wait for the provider-owned repository list to replace its loading row.
             ListBox repositories = GetRequiredControl<ListBox>(root, "myReposLV");
             Stopwatch repositoryStopwatch = Stopwatch.StartNew();
-            while (repositories.ItemCount == 0 && repositoryStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+            while ((repositories.ItemCount == 0
+                    || accessor.MyRepositoryNames.Any(name => name.Contains("LOADING", StringComparison.Ordinal)))
+                   && repositoryStopwatch.Elapsed < TimeSpan.FromSeconds(5))
             {
                 Dispatcher.UIThread.RunJobs();
                 await Task.Delay(10);
@@ -1535,6 +1696,57 @@ public sealed partial class ParityScreenshotTests
             ViewPullRequestsForm.TestAccessor accessor = viewPullRequestsForm.GetTestAccessor();
             ListBox pullRequests = GetRequiredControl<ListBox>(root, "_pullRequestsList");
             ListBox discussion = GetRequiredControl<ListBox>(root, "_discussionWB");
+            if (state?.Id == "initial.loading")
+            {
+                Stopwatch loadingStopwatch = Stopwatch.StartNew();
+                while (!root.GetVisualDescendants().OfType<LoadingControl>().Any()
+                       && loadingStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(10);
+                }
+
+                root.GetVisualDescendants().OfType<LoadingControl>().Should().ContainSingle();
+                accessor.HostedRepositories.ItemCount.Should().Be(0);
+                return;
+            }
+
+            if (state?.Id == "provider.empty")
+            {
+                Stopwatch emptyStopwatch = Stopwatch.StartNew();
+                while (root.GetVisualDescendants().OfType<LoadingControl>().Any()
+                       && emptyStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(10);
+                }
+
+                root.GetVisualDescendants().OfType<LoadingControl>().Should().BeEmpty();
+                accessor.HostedRepositories.ItemCount.Should().Be(0);
+                pullRequests.ItemCount.Should().Be(0);
+                return;
+            }
+
+            if (state?.Id == "pull-requests.loading")
+            {
+                Stopwatch pullRequestLoadingStopwatch = Stopwatch.StartNew();
+                while ((root.GetVisualDescendants().OfType<LoadingControl>().Any()
+                        || accessor.HostedRepositories.ItemCount == 0
+                        || pullRequests.ItemCount == 0)
+                       && pullRequestLoadingStopwatch.Elapsed < TimeSpan.FromSeconds(5))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(10);
+                }
+
+                root.GetVisualDescendants().OfType<LoadingControl>().Should().BeEmpty();
+                accessor.HostedRepositories.ItemCount.Should().BeGreaterThan(0);
+                accessor.PullRequestTitles.Should().BeEmpty();
+                pullRequests.ItemCount.Should().Be(1);
+                accessor.HostedRepositories.IsEnabled.Should().BeFalse();
+                return;
+            }
+
             Stopwatch pullRequestStopwatch = Stopwatch.StartNew();
             while ((pullRequests.ItemCount == 0
                     || accessor.DiffItems.Count == 0
@@ -2342,6 +2554,71 @@ public sealed partial class ParityScreenshotTests
         int Width,
         int Height,
         string File);
+
+    private static void ReleaseRepositoryHostCaptureFixture(Control control)
+    {
+        if (RepositoryHostCaptureFixtures.TryGetValue(control, out CaptureRepositoryHostFixture? fixture))
+        {
+            fixture.Dispose();
+            RepositoryHostCaptureFixtures.Remove(control);
+        }
+    }
+
+    private static void PrepareRepositoryHostCaptureState(Control control, CaptureStatePlan state)
+    {
+        if (control is ForkAndCloneForm forkAndCloneForm
+            && state.Id is "protocol.open" or "clone.hover" or "clone.pressed")
+        {
+            ForkAndCloneForm.TestAccessor accessor = forkAndCloneForm.GetTestAccessor();
+            accessor.SelectMyRepository(0);
+            Dispatcher.UIThread.RunJobs();
+            accessor.CloneEnabled.Should().BeTrue();
+            if (state.Id == "protocol.open")
+            {
+                accessor.SelectedProtocol.Should().NotBeNull();
+            }
+        }
+    }
+
+    private static Task DrainRepositoryHostCaptureAsync(Control control)
+        => control switch
+        {
+            CreatePullRequestForm form => form.GetTestAccessor().JoinOperationsAsync(),
+            ForkAndCloneForm form => form.GetTestAccessor().JoinOperationsAsync(),
+            ViewPullRequestsForm form => form.GetTestAccessor().JoinOperationsAsync(),
+            _ => Task.CompletedTask,
+        };
+
+    private sealed class CaptureRepositoryHostFixture(
+        IRepositoryHostPlugin host,
+        ManualResetEventSlim providerGate) : IDisposable
+    {
+        public IRepositoryHostPlugin Host { get; } = host;
+
+        public void Dispose()
+        {
+            // parity-scaffolding: The released provider worker owns the final Wait return; disposing
+            // the gate before the form's operation observes it would turn a truthful loading state into a race.
+            providerGate.Set();
+        }
+    }
+
+    private sealed class BlockingReadOnlyList<T>(
+        IReadOnlyList<T> items,
+        ManualResetEventSlim providerGate) : IReadOnlyList<T>
+    {
+        public int Count => items.Count;
+
+        public T this[int index] => items[index];
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            providerGate.Wait();
+            return items.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    }
 
     private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
     {

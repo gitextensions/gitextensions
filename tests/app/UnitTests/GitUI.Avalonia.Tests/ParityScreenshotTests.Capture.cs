@@ -612,6 +612,33 @@ public sealed partial class ParityScreenshotTests
 
         menuWindow.Close();
 
+        Window comboWindow = new() { Width = 320, Height = 180 };
+        ComboBox comboBox = new()
+        {
+            Name = "cbxTarget",
+            ItemsSource = new[] { "main", "feature/visual-parity" },
+            SelectedIndex = 0,
+            Width = 220,
+        };
+        comboWindow.Content = comboBox;
+        comboWindow.Show();
+        Dispatcher.UIThread.RunJobs();
+        using (AvaloniaControlStateDriver comboDriver = AvaloniaControlStateDriver.Apply(
+                   comboWindow,
+                   new CaptureStatePlan
+                   {
+                       Id = "combo.open",
+                       Kind = CaptureStateKind.MenuOpen,
+                       TargetField = comboBox.Name,
+                   }))
+        {
+            comboBox.IsDropDownOpen.Should().BeTrue();
+            (comboDriver.PopupSurfaceRoots.Count + comboDriver.ExternalTopLevels.Count).Should().BeGreaterThan(0);
+        }
+
+        comboBox.IsDropDownOpen.Should().BeFalse();
+        comboWindow.Close();
+
         Window longMenuWindow = new() { Width = 240, Height = 100 };
         Button longMenuOwner = new() { Name = "btnLongMenu", Content = "Long menu" };
         longMenuOwner.ContextMenu = new ContextMenu
@@ -965,7 +992,7 @@ public sealed partial class ParityScreenshotTests
         CaptureStatePlan state,
         string outputRoot)
     {
-        Control view = CreateView(context, descriptor.ViewType);
+        Control view = CreateView(context, descriptor.ViewType, state);
         Control captureHost = view;
         bool cropToComponent = false;
         (double width, double height) = GetCaptureSize(captureHost.GetType());
@@ -1033,7 +1060,8 @@ public sealed partial class ParityScreenshotTests
 
             ApplyTextValues(view, component);
 
-            await WaitForAsyncViewsAsync(captureHost, context);
+            await WaitForAsyncViewsAsync(captureHost, context, state);
+            PrepareRepositoryHostCaptureState(captureHost, state);
             foreach (ChecklistSettingsPage checklist in new[] { captureHost }
                          .Concat(captureHost.GetLogicalDescendants().OfType<Control>())
                          .OfType<ChecklistSettingsPage>())
@@ -1241,6 +1269,8 @@ public sealed partial class ParityScreenshotTests
         }
         finally
         {
+            ReleaseRepositoryHostCaptureFixture(view);
+            await DrainRepositoryHostCaptureAsync(view);
             window.Close();
             if (!ReferenceEquals(window, captureHost) && captureHost is IDisposable disposableHost)
             {

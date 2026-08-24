@@ -30,7 +30,9 @@ namespace WinFormsParityCapture;
 
 internal static class ComponentFactory
 {
-    public static Control Create(CaptureComponentPlan component, GitUICommands commands)
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Control, RepositoryHostCaptureFixture> RepositoryHostFixtures = new();
+
+    public static Control Create(CaptureComponentPlan component, GitUICommands commands, CaptureStatePlan state)
     {
         // parity-scaffolding: The real application initialises this before constructing About/EnvironmentInfo.
         UserEnvironmentInformation.Initialise("9999999999999999999999999999999999abcdef", isDirty: true);
@@ -67,11 +69,11 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
             "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),
             "GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm" =>
-                new CreatePullRequestForm(commands, RepositoryHostCaptureFixture.Create(commands), null, null),
+                CreateCreatePullRequestForm(component.TypeName, state.Id, commands),
             "GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm" =>
-                new ForkAndCloneForm(commands, RepositoryHostCaptureFixture.Create(commands), null),
+                CreateForkAndCloneForm(component.TypeName, state.Id, commands),
             "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm" =>
-                new ViewPullRequestsForm(commands, RepositoryHostCaptureFixture.Create(commands)),
+                CreateViewPullRequestsForm(component.TypeName, state.Id, commands),
             "GitUI.CommandsDialogs.SearchControl" => CreateSearchControl(),
             "GitUI.CommandsDialogs.SearchWindow" => CreateSearchWindow(),
             "GitUI.CommitInfo.CommitInfo" => CreateCommitInfo(),
@@ -102,6 +104,39 @@ internal static class ComponentFactory
         ApplyTextValues(control, component);
 
         return control;
+    }
+
+    private static CreatePullRequestForm CreateCreatePullRequestForm(
+        string componentType,
+        string stateId,
+        GitUICommands commands)
+    {
+        RepositoryHostCaptureFixture fixture = RepositoryHostCaptureFixture.Create(commands, componentType, stateId);
+        CreatePullRequestForm form = new(commands, fixture.Host, null, null);
+        RepositoryHostFixtures.Add(form, fixture);
+        return form;
+    }
+
+    private static ForkAndCloneForm CreateForkAndCloneForm(
+        string componentType,
+        string stateId,
+        GitUICommands commands)
+    {
+        RepositoryHostCaptureFixture fixture = RepositoryHostCaptureFixture.Create(commands, componentType, stateId);
+        ForkAndCloneForm form = new(commands, fixture.Host, null);
+        RepositoryHostFixtures.Add(form, fixture);
+        return form;
+    }
+
+    private static ViewPullRequestsForm CreateViewPullRequestsForm(
+        string componentType,
+        string stateId,
+        GitUICommands commands)
+    {
+        RepositoryHostCaptureFixture fixture = RepositoryHostCaptureFixture.Create(commands, componentType, stateId);
+        ViewPullRequestsForm form = new(commands, fixture.Host);
+        RepositoryHostFixtures.Add(form, fixture);
+        return form;
     }
 
     // parity-scaffolding: Standalone settings pages are normally loaded by FormSettings.
@@ -283,8 +318,13 @@ internal static class ComponentFactory
 
     // parity-scaffolding: Async revision loading can settle on a stash or artificial row at
     // different times in isolated workers; every paired state must start from repository HEAD.
-    public static void PrepareCaptureState(Control control, IGitUICommands commands)
+    public static void PrepareCaptureState(
+        Control control,
+        IGitUICommands commands,
+        CaptureStatePlan state)
     {
+        PrepareRepositoryHostCaptureState(control, state);
+
         ChecklistSettingsPage? checklist = EnumerateSelfAndDescendants(control)
             .OfType<ChecklistSettingsPage>()
             .SingleOrDefault();
@@ -424,6 +464,156 @@ internal static class ComponentFactory
             {
                 throw new CaptureStateUnsupportedException(
                     "The original revision grid did not retain a stable repository HEAD selection before capture.");
+            }
+        }
+    }
+
+    private static void PrepareRepositoryHostCaptureState(Control control, CaptureStatePlan state)
+    {
+        if (control is CreatePullRequestForm)
+        {
+            ComboBox targetRepositories = RequireField<ComboBox>("_pullReqTargetsCB");
+            ComboBox sourceBranches = RequireField<ComboBox>("_yourBranchesCB");
+            ComboBox targetBranches = RequireField<ComboBox>("_remoteBranchesCB");
+            Button create = RequireField<Button>("_createBtn");
+            if (state.Id == "initial.loading")
+            {
+                WaitUntil(
+                    () => control.Controls.OfType<LoadingControl>().Count() == 1
+                          && targetRepositories.Items.Count == 0
+                          && !create.Enabled,
+                    "The Create Pull Request initial provider mask did not become stable.");
+                return;
+            }
+
+            if (state.Id == "branches.loading")
+            {
+                WaitUntil(
+                    () => !control.Controls.OfType<LoadingControl>().Any()
+                          && targetRepositories.Items.Count > 0
+                          && sourceBranches.Items.Count == 0
+                          && targetBranches.Items.Count == 0
+                          && !create.Enabled,
+                    "The Create Pull Request branch-loading state did not become stable.");
+                return;
+            }
+
+            WaitUntil(
+                () => targetRepositories.Items.Count > 0
+                      && sourceBranches.Items.Count > 0
+                      && targetBranches.Items.Count > 0
+                      && create.Enabled,
+                "The Create Pull Request provider state did not settle.");
+            return;
+        }
+
+        if (control is ForkAndCloneForm)
+        {
+            ListView repositories = RequireField<ListView>("myReposLV");
+            Label help = RequireField<Label>("helpTextLbl");
+            if (state.Id == "initial.loading")
+            {
+                WaitUntil(
+                    () => repositories.Items.Count == 1
+                          && repositories.Items[0].Text.Contains("LOADING", StringComparison.Ordinal),
+                    "The Fork and Clone owned-repository loading row did not become stable.");
+                return;
+            }
+
+            if (state.Id == "owned.error")
+            {
+                WaitUntil(
+                    () => repositories.Items.Count == 0
+                          && help.Text.Contains("Deterministic owned repository failure", StringComparison.Ordinal),
+                    "The Fork and Clone owned-repository error did not become stable.");
+                return;
+            }
+
+            WaitUntil(
+                () => repositories.Items.Count > 0
+                      && !repositories.Items[0].Text.Contains("LOADING", StringComparison.Ordinal),
+                "The Fork and Clone owned-repository list did not settle.");
+            if (state.Id is "protocol.open" or "clone.hover" or "clone.pressed")
+            {
+                repositories.Items[0].Selected = true;
+                repositories.Select();
+                Application.DoEvents();
+                if (state.Id == "protocol.open")
+                {
+                    WaitUntil(
+                        () => RequireField<ComboBox>("ProtocolDropdownList").Items.Count > 0,
+                        "The selected repository did not publish its clone protocols.");
+                }
+            }
+
+            return;
+        }
+
+        if (control is ViewPullRequestsForm)
+        {
+            ComboBox providers = RequireField<ComboBox>("_selectHostedRepoCB");
+            ListView pullRequests = RequireField<ListView>("_pullRequestsList");
+            if (state.Id == "initial.loading")
+            {
+                WaitUntil(
+                    () => control.Controls.OfType<LoadingControl>().Count() == 1
+                          && providers.Items.Count == 0,
+                    "The View Pull Requests initial provider mask did not become stable.");
+                return;
+            }
+
+            if (state.Id == "provider.empty")
+            {
+                WaitUntil(
+                    () => !control.Controls.OfType<LoadingControl>().Any()
+                          && providers.Items.Count == 0
+                          && pullRequests.Items.Count == 0,
+                    "The View Pull Requests empty-provider state did not settle.");
+                return;
+            }
+
+            if (state.Id == "pull-requests.loading")
+            {
+                WaitUntil(
+                    () => !control.Controls.OfType<LoadingControl>().Any()
+                          && providers.Items.Count > 0
+                          && !providers.Enabled
+                          && pullRequests.Items.Count == 1
+                          && pullRequests.Items[0].Tag is null,
+                    "The View Pull Requests provider list did not enter its loading state.",
+                    () => $"mask={control.Controls.OfType<LoadingControl>().Count()}, "
+                          + $"providers={providers.Items.Count}/{providers.Enabled}, "
+                          + $"pullRequests={pullRequests.Items.Count}/"
+                          + $"{(pullRequests.Items.Count > 0 ? pullRequests.Items[0].Text : "<empty>")}");
+                return;
+            }
+
+            WaitUntil(
+                () => providers.Items.Count > 0
+                      && providers.Enabled
+                      && pullRequests.Items.Count > 0
+                      && pullRequests.Items[0].Tag is not null,
+                "The View Pull Requests provider state did not settle.");
+        }
+
+        T RequireField<T>(string fieldName) where T : class
+            => FindFieldValue(control, fieldName) as T
+               ?? throw new CaptureStateUnsupportedException(
+                   $"The original {control.GetType().Name} did not expose '{fieldName}'.");
+
+        static void WaitUntil(Func<bool> condition, string message, Func<string>? details = null)
+        {
+            System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            while (!condition() && stopwatch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                Application.DoEvents();
+                Thread.Sleep(10);
+            }
+
+            if (!condition())
+            {
+                string suffix = details is null ? string.Empty : $" ({details()})";
+                throw new CaptureStateNotReadyException(message + suffix);
             }
         }
     }
@@ -689,6 +879,12 @@ internal static class ComponentFactory
     // parity-scaffolding: Cancel the original grid's asynchronous refresh before WinForms disposal joins it.
     public static void CleanupBeforeDispose(Control control)
     {
+        if (RepositoryHostFixtures.TryGetValue(control, out RepositoryHostCaptureFixture? fixture))
+        {
+            fixture.Dispose();
+            RepositoryHostFixtures.Remove(control);
+        }
+
         RevisionGridControl? revisionGrid = control as RevisionGridControl;
         if (revisionGrid is null
             && control is FormFormatPatch

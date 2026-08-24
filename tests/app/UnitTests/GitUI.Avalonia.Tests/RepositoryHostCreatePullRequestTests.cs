@@ -179,6 +179,35 @@ public sealed class RepositoryHostCreatePullRequestTests
     }
 
     [AvaloniaTest]
+    public async Task CreatePullRequestForm_should_enumerate_lazy_remotes_off_the_UI_thread()
+    {
+        TaskCompletionSource enumerationStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using ManualResetEventSlim releaseEnumeration = new(initialState: false);
+        PullRequestFixture fixture = CreateFixture();
+        fixture.Host.GetHostedRemotesForModule().Returns(
+            new BlockingReadOnlyList<IHostedRemote>(
+                [fixture.SourceRemote, fixture.TargetRemote],
+                enumerationStarted,
+                releaseEnumeration));
+        using CreatePullRequestForm form = CreateForm(fixture, chooseRemote: "upstream", chooseBranch: "feature");
+        CreatePullRequestForm.TestAccessor accessor = form.GetTestAccessor();
+
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        await enumerationStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        Dispatcher.UIThread.CheckAccess().Should().BeTrue();
+        form.GetVisualDescendants().OfType<LoadingControl>().Should().ContainSingle();
+
+        releaseEnumeration.Set();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        Dispatcher.UIThread.RunJobs();
+
+        accessor.TargetRepositories.ItemCount.Should().Be(1);
+        form.GetVisualDescendants().OfType<LoadingControl>().Should().BeEmpty();
+        form.Close();
+    }
+
+    [AvaloniaTest]
     public async Task CreatePullRequestForm_should_remove_the_initial_mask_when_remote_loading_fails()
     {
         PullRequestFixture fixture = CreateFixture();
@@ -543,6 +572,25 @@ public sealed class RepositoryHostCreatePullRequestTests
         IHostedRemote TargetRemote,
         IHostedRepository SourceRepository,
         IHostedRepository TargetRepository);
+
+    private sealed class BlockingReadOnlyList<T>(
+        IReadOnlyList<T> items,
+        TaskCompletionSource enumerationStarted,
+        ManualResetEventSlim releaseEnumeration) : IReadOnlyList<T>
+    {
+        public int Count => items.Count;
+
+        public T this[int index] => items[index];
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            enumerationStarted.TrySetResult();
+            releaseEnumeration.Wait(TimeSpan.FromSeconds(5)).Should().BeTrue();
+            return items.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    }
 
     private sealed class StubMessageBoxHost : WinFormsShims.IMessageBoxHost
     {
