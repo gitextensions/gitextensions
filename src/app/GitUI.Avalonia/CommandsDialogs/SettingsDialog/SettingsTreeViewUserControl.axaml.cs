@@ -8,27 +8,30 @@ namespace GitUI.CommandsDialogs.SettingsDialog;
 
 public sealed partial class SettingsTreeViewUserControl : UserControl
 {
-    private readonly Dictionary<SettingsPageReference, TreeViewItem> _pages2NodeMap = [];
-    private readonly Dictionary<TreeViewItem, TreeViewItem?> _parents = [];
-    private readonly List<ISettingsPage> _settingsPages = [];
     private bool _isSelectionChangeTriggeredByGoto;
     private List<TreeViewItem> _nodesFoundByTextBox = [];
+    private readonly Dictionary<SettingsPageReference, TreeViewItem> _pages2NodeMap = [];
+
+    // Avalonia TreeViewItem has no parent-node property, so preserve that relationship explicitly.
+    private readonly Dictionary<TreeViewItem, TreeViewItem?> _parents = [];
+    private readonly List<ISettingsPage> _settingsPages = [];
+
+    public event EventHandler<SettingsPageSelectedEventArgs>? SettingsPageSelected;
+    public IEnumerable<ISettingsPage> SettingsPages => _settingsPages;
 
     public SettingsTreeViewUserControl()
     {
         InitializeComponent();
+
         textBoxFind.PlaceholderText = TranslatedStrings.SettingsTypeToFind;
         textBoxFind.TextChanged += textBoxFind_TextChanged;
-        textBoxFind.KeyDown += textBoxFind_KeyDown;
-        treeView1.SelectionChanged += treeView1_SelectionChanged;
+        textBoxFind.KeyDown += textBoxFind_KeyUp;
+        treeView1.SelectionChanged += treeView1_AfterSelect;
 
+        // Scale ImageSize and images scale automatically
         // Avalonia requires automation properties to be projected explicitly for this standalone control.
         InputAccessibility.Apply(this);
     }
-
-    public event EventHandler<SettingsPageSelectedEventArgs>? SettingsPageSelected;
-
-    public IEnumerable<ISettingsPage> SettingsPages => _settingsPages;
 
     /// <summary>Add page to settings tree.</summary>
     /// <param name="page">The settings page to add.</param>
@@ -40,23 +43,28 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
         TreeViewItem node;
         if (parentPageReference is null)
         {
+            // add one of the root nodes (e. g. "Git Extensions" or "Plugins"
             node = AddPage(treeView1.Items, page, icon, parent: null);
-        }
-        else if (asRoot)
-        {
-            if (!_pages2NodeMap.TryGetValue(parentPageReference, out node!))
-            {
-                throw new ArgumentException("You have to add parent page first: " + parentPageReference);
-            }
         }
         else
         {
-            if (!_pages2NodeMap.TryGetValue(parentPageReference, out TreeViewItem? parent))
+            if (asRoot)
             {
-                throw new ArgumentException("You have to add parent page first: " + parentPageReference);
+                // e. g. to set the Checklist on the "Git Extensions" node
+                if (!_pages2NodeMap.TryGetValue(parentPageReference, out node!))
+                {
+                    throw new ArgumentException("You have to add parent page first: " + parentPageReference);
+                }
             }
+            else
+            {
+                if (!_pages2NodeMap.TryGetValue(parentPageReference, out TreeViewItem? parentNode))
+                {
+                    throw new ArgumentException("You have to add parent page first: " + parentPageReference);
+                }
 
-            node = AddPage(parent.Items, page, icon, parent);
+                node = AddPage(parentNode.Items, page, icon, parentNode);
+            }
         }
 
         node.Tag = page;
@@ -64,37 +72,8 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
         _settingsPages.Add(page);
     }
 
-    public void GotoPage(SettingsPageReference? settingsPageReference)
-    {
-        TreeViewItem? node = settingsPageReference is null
-            ? treeView1.Items.OfType<TreeViewItem>().FirstOrDefault()
-            : _pages2NodeMap.GetValueOrDefault(settingsPageReference);
-        if (node is null)
-        {
-            return;
-        }
-
-        for (TreeViewItem? parent = _parents.GetValueOrDefault(node); parent is not null; parent = _parents.GetValueOrDefault(parent))
-        {
-            parent.IsExpanded = true;
-        }
-
-        _isSelectionChangeTriggeredByGoto = true;
-        try
-        {
-            node.IsSelected = true;
-            treeView1.SelectedItem = node;
-            node.IsExpanded = true;
-            FireSettingsPageSelectedEvent(node);
-            node.BringIntoView();
-        }
-        finally
-        {
-            _isSelectionChangeTriggeredByGoto = false;
-        }
-    }
-
-    private TreeViewItem AddPage(ItemCollection items, ISettingsPage page, IImage? icon, TreeViewItem? parent)
+    // Avalonia uses an item collection and a composed icon/text header in place of TreeNodeCollection.
+    private TreeViewItem AddPage(ItemCollection treeNodeCollection, ISettingsPage page, IImage? icon, TreeViewItem? parent)
     {
         StackPanel header = new()
         {
@@ -107,12 +86,13 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
             },
         };
         TreeViewItem node = new() { Header = header };
-        items.Add(node);
+        treeNodeCollection.Add(node);
         _parents.Add(node, parent);
         return node;
     }
 
-    private void treeView1_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    // Avalonia exposes SelectionChanged rather than WinForms AfterSelect.
+    private void treeView1_AfterSelect(object? sender, SelectionChangedEventArgs e)
     {
         if (!_isSelectionChangeTriggeredByGoto && treeView1.SelectedItem is TreeViewItem node)
         {
@@ -122,84 +102,176 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
 
     private void FireSettingsPageSelectedEvent(TreeViewItem node)
     {
-        if (node.Tag is not ISettingsPage page)
+        if (SettingsPageSelected is not null)
         {
-            return;
-        }
-
-        if (page.GuiControl is null && node.Items.OfType<TreeViewItem>().FirstOrDefault() is TreeViewItem firstChild)
-        {
-            firstChild.IsSelected = true;
-            treeView1.SelectedItem = firstChild;
-            if (_isSelectionChangeTriggeredByGoto)
+            if (node.Tag is not ISettingsPage page)
             {
-                FireSettingsPageSelectedEvent(firstChild);
+                return;
             }
 
-            return;
-        }
+            if (page.GuiControl is null)
+            {
+                TreeViewItem? firstSubNode = node.Items.OfType<TreeViewItem>().FirstOrDefault();
+                if (firstSubNode is not null)
+                {
+                    firstSubNode.IsSelected = true;
+                    treeView1.SelectedItem = firstSubNode;
+                    return;
+                }
+            }
 
-        SettingsPageSelected?.Invoke(this, new SettingsPageSelectedEventArgs(page, _isSelectionChangeTriggeredByGoto));
+            SettingsPageSelected?.Invoke(this, new SettingsPageSelectedEventArgs(page, _isSelectionChangeTriggeredByGoto));
+        }
     }
 
     private void textBoxFind_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        foreach (TreeViewItem node in _pages2NodeMap.Values.Distinct())
-        {
-            node.Classes.Remove("settings-search-match");
-        }
+        _nodesFoundByTextBox.Clear();
 
-        _nodesFoundByTextBox = [];
         if (string.IsNullOrWhiteSpace(textBoxFind.Text))
         {
+            ResetAllNodeHighlighting();
             return;
         }
 
-        string searchFor = textBoxFind.Text.Trim();
-        string[] keywords = searchFor.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        string searchFor = textBoxFind.Text.ToLowerInvariant();
+        string[] andKeywords = searchFor.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         foreach (TreeViewItem node in _pages2NodeMap.Values.Distinct())
         {
-            if (node.Tag is not ISettingsPage page)
+            if (node.Tag is not ISettingsPage settingsPage)
             {
                 continue;
             }
 
-            bool titleMatches = page.GetTitle().Contains(searchFor, StringComparison.InvariantCultureIgnoreCase);
-            bool keywordsMatch = keywords.All(keyword => page.GetSearchKeywords()
-                .Any(candidate => candidate.Contains(keyword, StringComparison.InvariantCultureIgnoreCase)));
-            if (titleMatches || keywordsMatch)
+            // search for title
+            if (settingsPage.GetTitle().Contains(searchFor, StringComparison.InvariantCultureIgnoreCase))
             {
-                node.Classes.Add("settings-search-match");
                 _nodesFoundByTextBox.Add(node);
-                for (TreeViewItem? parent = _parents.GetValueOrDefault(node); parent is not null; parent = _parents.GetValueOrDefault(parent))
+                continue;
+            }
+
+            // search for keywords (space combines as 'and')
+            if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Any(k => k.Contains(keyword, StringComparison.InvariantCultureIgnoreCase))))
+            {
+                // only part of a keyword must match to have a match
+                if (!_nodesFoundByTextBox.Contains(node))
                 {
-                    parent.IsExpanded = true;
+                    _nodesFoundByTextBox.Add(node);
                 }
+            }
+        }
+
+        ResetAllNodeHighlighting();
+
+        foreach (TreeViewItem node in _nodesFoundByTextBox)
+        {
+            HighlightNode(node, true);
+            for (TreeViewItem? parent = _parents.GetValueOrDefault(node); parent is not null; parent = _parents.GetValueOrDefault(parent))
+            {
+                parent.IsExpanded = true;
+            }
+
+            node.BringIntoView();
+        }
+    }
+
+    /// <summary>Highlights a <see cref="TreeViewItem"/> or returns it to the default colors.</summary>
+    private static void HighlightNode(TreeViewItem treeNode, bool highlight)
+    {
+        if (highlight)
+        {
+            treeNode.Classes.Add("settings-search-match");
+        }
+        else
+        {
+            treeNode.Classes.Remove("settings-search-match");
+        }
+    }
+
+    private void ResetAllNodeHighlighting()
+    {
+        foreach (TreeViewItem node in _pages2NodeMap.Values.Distinct())
+        {
+            HighlightNode(node, false);
+        }
+    }
+
+    public void GotoPage(SettingsPageReference? settingsPageReference)
+    {
+        TreeViewItem? node;
+        if (settingsPageReference is null)
+        {
+            node = treeView1.Items.OfType<TreeViewItem>().FirstOrDefault();
+        }
+        else
+        {
+            _pages2NodeMap.TryGetValue(settingsPageReference, out node);
+        }
+
+        if (node is not null)
+        {
+            for (TreeViewItem? parent = _parents.GetValueOrDefault(node); parent is not null; parent = _parents.GetValueOrDefault(parent))
+            {
+                parent.IsExpanded = true;
+            }
+
+            _isSelectionChangeTriggeredByGoto = true;
+            try
+            {
+                node.IsSelected = true;
+                treeView1.SelectedItem = node;
+                node.IsExpanded = true;
+                FireSettingsPageSelectedEvent(node);
+                node.BringIntoView();
+            }
+            finally
+            {
+                _isSelectionChangeTriggeredByGoto = false;
             }
         }
     }
 
-    private void textBoxFind_KeyDown(object? sender, KeyEventArgs e)
+    // Avalonia exposes KeyDown rather than WinForms KeyUp.
+    private void textBoxFind_KeyUp(object? sender, KeyEventArgs e)
     {
-        if (e.Key != Key.Enter || _nodesFoundByTextBox.Count == 0)
+        if (e.Key == Key.Enter)
         {
-            return;
-        }
+            // TODO: how to avoid the windows sound when pressing ENTER?
+            e.Handled = true;
 
-        int currentIndex = treeView1.SelectedItem is TreeViewItem selected
-            ? _nodesFoundByTextBox.IndexOf(selected)
-            : -1;
-        TreeViewItem next = _nodesFoundByTextBox[(currentIndex + 1) % _nodesFoundByTextBox.Count];
-        next.IsSelected = true;
-        treeView1.SelectedItem = next;
-        next.BringIntoView();
-        e.Handled = true;
+            // each enter key press selects next highlighted node (cycle)
+            int indexOfSelectedNode = treeView1.SelectedItem is TreeViewItem selected
+                ? _nodesFoundByTextBox.IndexOf(selected)
+                : -1;
+            if (indexOfSelectedNode == -1 || indexOfSelectedNode + 1 == _nodesFoundByTextBox.Count)
+            {
+                TreeViewItem? firstFoundNode = _nodesFoundByTextBox.FirstOrDefault();
+                if (firstFoundNode is not null)
+                {
+                    firstFoundNode.IsSelected = true;
+                    treeView1.SelectedItem = firstFoundNode;
+                    firstFoundNode.BringIntoView();
+                }
+            }
+            else
+            {
+                TreeViewItem nextNode = _nodesFoundByTextBox[indexOfSelectedNode + 1];
+                nextNode.IsSelected = true;
+                treeView1.SelectedItem = nextNode;
+                nextNode.BringIntoView();
+            }
+        }
     }
 }
 
-public class SettingsPageSelectedEventArgs(ISettingsPage settingsPage, bool isTriggeredByGoto) : EventArgs
+public class SettingsPageSelectedEventArgs : EventArgs
 {
-    public ISettingsPage SettingsPage { get; } = settingsPage;
+    public ISettingsPage SettingsPage { get; }
+    public bool IsTriggeredByGoto { get; }
 
-    public bool IsTriggeredByGoto { get; } = isTriggeredByGoto;
+    public SettingsPageSelectedEventArgs(ISettingsPage settingsPage, bool isTriggeredByGoto)
+    {
+        SettingsPage = settingsPage;
+        IsTriggeredByGoto = isTriggeredByGoto;
+    }
 }
