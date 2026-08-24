@@ -10,7 +10,6 @@ using GitCommands.Remotes;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
-using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Compat;
@@ -43,16 +42,19 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private readonly CancellationTokenSequence _detailsSequence = new();
     private readonly CancellationTokenSequence _discussionSequence = new();
     private readonly CancellationTokenSource _lifetimeCancellation = new();
+    private string _currentRemoteName = string.Empty;
+    private IReadOnlyList<Remote> _moduleRemotes = [];
 
     private GitProtocol _cloneGitProtocol;
     private IPullRequestInformation? _currentPullRequestInfo;
     private IPullRequestDiscussion? _currentDiscussion;
-    private Dictionary<string, string> _diffCache = [];
+    private Dictionary<string, string>? _diffCache;
     private readonly IRepositoryHostPlugin _gitHoster = null!;
-    private IReadOnlyList<HostedRemoteRow> _hostedRemotes = [];
-    private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
-    private readonly double[] _pullRequestColumnWidths = new double[5];
+    private IReadOnlyList<IHostedRemote>? _hostedRemotes;
     private bool _isFirstLoad;
+    private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
+    private IReadOnlyList<HostedRemoteRow> _hostedRemoteRows = [];
+    private readonly double[] _pullRequestColumnWidths = new double[5];
 
     [GeneratedRegex(@"(?:\n|^)diff --git ", RegexOptions.ExplicitCapture)]
     private static partial Regex DiffCommandRegex { get; }
@@ -88,6 +90,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         _selectHostedRepoCB.SelectionChanged += _selectedOwner_SelectedIndexChanged;
         _pullRequestsList.SelectionChanged += _pullRequestsList_SelectedIndexChanged;
+        _pullRequestsList.SizeChanged += _pullRequestsList_Resize;
         _fileStatusList.SelectedIndexChanged += _fileStatusList_SelectedIndexChanged;
         _diffViewer.ExtraDiffArgumentsChanged += _fileStatusList_SelectedIndexChanged;
         _diffViewer.TopScrollReached += FileViewer_TopScrollReached;
@@ -115,6 +118,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
 
         this.Mask();
+
+        // load all hosted repositories.
+        // We do this now because we want to do it in the async part.
         _operations.FileAndForget(() => InitializeAsync(_lifetimeCancellation.Token));
     }
 
@@ -141,31 +147,25 @@ public partial class ViewPullRequestsForm : GitModuleForm
             IReadOnlyList<Remote> remotes = await Module.GetRemotesAsync().WaitAsync(cancellationToken);
 
             // Load all hosted repositories.
-            HostedRemoteRow[] hostedRemotes = await Task.Run(
-                () => GetGitHoster().GetHostedRemotesForModule()
-                    .Select(HostedRemoteRow.Create)
-                    .ToArray(),
+            (IHostedRemote[] hostedRemotes, HostedRemoteRow[] hostedRemoteRows) = await Task.Run(
+                () =>
+                {
+                    IHostedRemote[] remotesForModule = GetGitHoster().GetHostedRemotesForModule().ToArray();
+                    return (
+                        remotesForModule,
+                        remotesForModule.Select(HostedRemoteRow.Create).ToArray());
+                },
                 cancellationToken);
 
-            // Local branches have no current remote, return value is empty string.
-            // In this case we fall back to the first remote in the list.
-            // Currently, a local Git repository with no remote shows an error message and cannot open this dialog.
-            // So there will always be at least one remote when this dialog is open.
-            Remote? selectedRemote = remotes.FirstOrDefault(
-                remote => string.IsNullOrEmpty(currentRemote)
-                    || string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
-            _cloneGitProtocol = selectedRemote is Remote currentGitRemote
-                && !string.IsNullOrEmpty(currentGitRemote.FetchUrl)
-                && currentGitRemote.FetchUrl.IsUrlUsingHttp()
-                ? GitProtocol.Https
-                : GitProtocol.Ssh;
-
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            _currentRemoteName = currentRemote;
+            _moduleRemotes = remotes;
             _hostedRemotes = hostedRemotes;
+            _hostedRemoteRows = hostedRemoteRows;
             _isFirstLoad = true;
-            _selectHostedRepoCB.ItemsSource = hostedRemotes;
+            _selectHostedRepoCB.ItemsSource = hostedRemoteRows;
 
-            foreach (HostedRemoteRow remote in hostedRemotes.Where(remote => remote.Error is not null))
+            foreach (HostedRemoteRow remote in hostedRemoteRows.Where(remote => remote.Error is not null))
             {
                 MessageBoxes.Show(
                     this,
@@ -175,10 +175,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                     WinFormsShims.MessageBoxIcon.Error);
             }
 
-            int selectedIndex = Array.FindIndex(
-                hostedRemotes,
-                remote => string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
-            _selectHostedRepoCB.SelectedIndex = selectedIndex >= 0 ? selectedIndex : hostedRemotes.Length > 0 ? 0 : -1;
+            SelectHostedRepositoryForCurrentRemote();
         }
         finally
         {
@@ -196,8 +193,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _operations.FileAndForget(() => LoadPullRequestsAsync(cancellationToken));
     }
 
-    private void _selectedOwner_SelectedIndexChanged(object? sender, EventArgs e)
+    private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
     {
+        // if fails to load this remote, select the next one
         StartPullRequestLoad();
     }
 
@@ -210,8 +208,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
         if (selectedRemote?.Repository is null)
         {
             // If loading this remote failed, select the next one.
-            ResizeColumnsToFitContent([]);
             _pullRequestsList.ItemsSource = Array.Empty<PullRequestRow>();
+            ResizeColumnsToFitContent();
             _selectHostedRepoCB.IsEnabled = true;
             SelectNextHostedRepositoryIfFirstLoad();
             return;
@@ -236,8 +234,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
             if (!cancellationToken.IsCancellationRequested)
             {
                 _selectHostedRepoCB.IsEnabled = true;
-                ResizeColumnsToFitContent([]);
                 _pullRequestsList.ItemsSource = Array.Empty<PullRequestRow>();
+                ResizeColumnsToFitContent();
                 MessageBoxes.Show(
                     this,
                     _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message,
@@ -253,9 +251,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         if (_isFirstLoad)
         {
-            if (infos?.Count is 0 && _hostedRemotes.Count > 0)
+            if (infos?.Count is 0 && _hostedRemoteRows.Count > 0)
             {
-                if (SelectNextHostedRepository())
+                if (TrySelectNextHostedRepository())
                 {
                     return;
                 }
@@ -284,9 +282,31 @@ public partial class ViewPullRequestsForm : GitModuleForm
         IReadOnlyList<IPullRequestInformation> pullRequests = _pullRequestsInfo
             ?? throw new InvalidOperationException("Pull request data has not been loaded.");
         PullRequestRow[] rows = pullRequests.Select(PullRequestRow.FromPullRequest).ToArray();
-        ResizeColumnsToFitContent(rows);
         _pullRequestsList.ItemsSource = rows;
+        ResizeColumnsToFitContent();
         _pullRequestsList.SelectedIndex = rows.Length > 0 ? 0 : -1;
+    }
+
+    private void SelectHostedRepositoryForCurrentRemote()
+    {
+        string currentRemote = _currentRemoteName;
+
+        // Local branches have no current remote, return value is empty string.
+        // In this case we fallback to the first remote in the list.
+        // Currently, local git repo with no remote will show error message and can not open this dialog.
+        // So there will always be at least 1 remote when this dialog is open
+        Remote? selectedRemote = _moduleRemotes.FirstOrDefault(
+            remote => string.IsNullOrEmpty(currentRemote)
+                || string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
+        _cloneGitProtocol = selectedRemote is Remote currentGitRemote
+            && !string.IsNullOrEmpty(currentGitRemote.FetchUrl)
+            && currentGitRemote.FetchUrl.IsUrlUsingHttp()
+            ? GitProtocol.Https
+            : GitProtocol.Ssh;
+
+        HostedRemoteRow? hostedRemote = _hostedRemoteRows.FirstOrDefault(
+            remote => string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
+        _selectHostedRepoCB.SelectedItem = hostedRemote ?? _hostedRemoteRows.FirstOrDefault();
     }
 
     private void SelectNextHostedRepositoryIfFirstLoad()
@@ -297,10 +317,15 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
     }
 
-    private bool SelectNextHostedRepository()
+    private void SelectNextHostedRepository()
+    {
+        TrySelectNextHostedRepository();
+    }
+
+    private bool TrySelectNextHostedRepository()
     {
         int nextIndex = _selectHostedRepoCB.SelectedIndex + 1;
-        if (nextIndex < 0 || nextIndex >= _hostedRemotes.Count)
+        if (nextIndex < 0 || nextIndex >= _hostedRemoteRows.Count)
         {
             _isFirstLoad = false;
             return false;
@@ -330,12 +355,11 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
 
         _currentPullRequestInfo.HeadRepo.CloneProtocol = _cloneGitProtocol;
-        CancellationToken cancellationToken = _detailsSequence.Next();
-        _operations.FileAndForget(() => LoadDiffPatchAsync(_currentPullRequestInfo, cancellationToken));
-        StartDiscussionLoad(forceReload: false);
+        LoadDiffPatch();
+        LoadDiscussion();
     }
 
-    private void _pullRequestsList_SelectedIndexChanged(object? sender, EventArgs e)
+    private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
     {
         StartSelectedPullRequestLoad();
     }
@@ -389,9 +413,29 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
     }
 
-    private static DiffSnapshot ParseDiff(string diffData, string baseSha, string headSha)
+    private void LoadDiffPatch()
+    {
+        if (_currentPullRequestInfo is not { } pullRequest)
+        {
+            return;
+        }
+
+        CancellationToken cancellationToken = _detailsSequence.Next();
+        _operations.FileAndForget(() => LoadDiffPatchAsync(pullRequest, cancellationToken));
+    }
+
+    private void SplitAndLoadDiff(string diffData, string baseSha, string secondSha)
     {
         // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
+        DiffSnapshot snapshot = ParseDiff(diffData, baseSha, secondSha);
+        _diffCache = snapshot.Patches;
+
+        // Note: Commits in PR may not exist in the local repo
+        _fileStatusList.SetDiffs(snapshot.BaseRevision, snapshot.HeadRevision, snapshot.Items);
+    }
+
+    private static DiffSnapshot ParseDiff(string diffData, string baseSha, string headSha)
+    {
         GitRevision? baseRevision = ObjectId.TryParse(baseSha, out ObjectId baseId)
             ? new GitRevision(baseId)
             : null;
@@ -424,7 +468,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
             patches.Add(item.Name, match.Groups["value"].Value);
         }
 
-        // Note: Commits in PR may not exist in the local repo
         return new DiffSnapshot(baseRevision, new GitRevision(headId), items, patches);
     }
 
@@ -438,6 +481,12 @@ public partial class ViewPullRequestsForm : GitModuleForm
         CancellationToken cancellationToken = _discussionSequence.Next();
         _discussionWB.ItemsSource = new[] { DiscussionRow.Placeholder(_strLoading.Text) };
         _operations.FileAndForget(() => LoadDiscussionAsync(pullRequest, forceReload, cancellationToken));
+    }
+
+    private void LoadDiscussion()
+    {
+        // Framework constraint: Git.hub remains synchronous, so Avalonia runs this operation asynchronously.
+        StartDiscussionLoad(forceReload: false);
     }
 
     private async Task LoadDiscussionAsync(
@@ -460,22 +509,13 @@ public partial class ViewPullRequestsForm : GitModuleForm
                     return result;
                 },
                 cancellationToken);
-            DiscussionRow[] rows = DiscussionHtmlCreator.CreateFor(discussion.Entries)
-                .Select(DiscussionRow.FromPresentation)
-                .ToArray();
-
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             if (!ReferenceEquals(_currentPullRequestInfo, pullRequest))
             {
                 return;
             }
 
-            _currentDiscussion = discussion;
-            _discussionWB.ItemsSource = rows;
-            if (rows.Length > 0)
-            {
-                _discussionWB.ScrollIntoView(rows[^1]);
-            }
+            LoadDiscussion(discussion);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -485,14 +525,33 @@ public partial class ViewPullRequestsForm : GitModuleForm
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!cancellationToken.IsCancellationRequested)
             {
-                _discussionWB.ItemsSource = Array.Empty<DiscussionRow>();
                 MessageBoxes.Show(
                     this,
                     _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message,
                     TranslatedStrings.Error,
                     WinFormsShims.MessageBoxButtons.OK,
                     WinFormsShims.MessageBoxIcon.Error);
+                LoadDiscussion(null);
             }
+        }
+    }
+
+    private void LoadDiscussion(IPullRequestDiscussion? discussion)
+    {
+        _currentDiscussion = discussion;
+        DiscussionRow[] rows = DiscussionHtmlCreator.CreateFor(discussion?.Entries)
+            .Select(DiscussionRow.FromPresentation)
+            .ToArray();
+        _discussionWB.ItemsSource = rows;
+        _discussionWB_DocumentCompleted(this, EventArgs.Empty);
+    }
+
+    private void _discussionWB_DocumentCompleted(object sender, EventArgs e)
+    {
+        object? lastItem = _discussionWB.Items.Cast<object>().LastOrDefault();
+        if (lastItem is not null)
+        {
+            _discussionWB.ScrollIntoView(lastItem);
         }
     }
 
@@ -593,7 +652,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
     }
 
-    private void _fetchBtn_Click(object? sender, EventArgs e)
+    private void _fetchBtn_Click(object sender, EventArgs e)
     {
         if (_currentPullRequestInfo is not { } pullRequest)
         {
@@ -616,7 +675,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         Close();
     }
 
-    private void _addAsRemoteAndFetch_Click(object? sender, EventArgs e)
+    private void _addAsRemoteAndFetch_Click(object sender, EventArgs e)
     {
         if (_currentPullRequestInfo is not { } pullRequest)
         {
@@ -629,17 +688,22 @@ public partial class ViewPullRequestsForm : GitModuleForm
             string remoteName = pullRequest.Owner;
             string remoteUrl = pullRequest.HeadRepo.CloneUrl;
             string remoteRef = pullRequest.HeadRef;
-            HostedRemoteRow? existingRemote = _hostedRemotes.FirstOrDefault(
+            IHostedRemote? existingRemote = _hostedRemotes?.FirstOrDefault(
                 remote => string.Equals(remote.Name, remoteName, StringComparison.Ordinal));
             if (existingRemote is not null)
             {
-                if (existingRemote.Repository is not { } hostedRepository)
+                IHostedRepository hostedRepository;
+                try
+                {
+                    hostedRepository = existingRemote.GetHostedRepository();
+                }
+                catch (Exception ex)
                 {
                     MessageBoxes.Show(
                         this,
                         string.Format(
                             TranslatedStrings.RemoteInError,
-                            existingRemote.Error?.Message ?? _strRemoteIgnore.Text,
+                            ex.Message,
                             existingRemote.DisplayData),
                         _strRemoteIgnore.Text,
                         WinFormsShims.MessageBoxButtons.OK,
@@ -708,7 +772,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private void _fileStatusList_SelectedIndexChanged(object? sender, EventArgs e)
     {
         GitItemStatus? item = _fileStatusList.SelectedItem?.Item;
-        if (item is null || !_diffCache.TryGetValue(item.Name, out string? patch))
+        if (item is null || _diffCache is null || !_diffCache.TryGetValue(item.Name, out string? patch))
         {
             return;
         }
@@ -743,7 +807,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
 
         _currentDiscussion = null;
-        _diffCache = [];
+        _diffCache = null;
         _discussionWB.ItemsSource = Array.Empty<DiscussionRow>();
         _fileStatusList.ClearDiffs();
         _diffViewer.ViewText(string.Empty, string.Empty);
@@ -808,7 +872,12 @@ public partial class ViewPullRequestsForm : GitModuleForm
         header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
     }
 
-    private void ResizeColumnsToFitContent(IReadOnlyList<PullRequestRow> rows)
+    private void ResizeColumnsToFitContent()
+    {
+        ResizeColumns(_pullRequestsList.Items.Cast<PullRequestRow>().ToArray());
+    }
+
+    private void ResizeColumns(IReadOnlyList<PullRequestRow> rows)
     {
         string[] headers =
         [
@@ -842,8 +911,15 @@ public partial class ViewPullRequestsForm : GitModuleForm
         header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
     }
 
-    private static string GetHeaderText(Border header)
-        => (header.Child as TextBlock)?.Text ?? string.Empty;
+    private void _pullRequestsList_Resize(object sender, EventArgs e)
+    {
+        Grid header = (Grid)(columnHeaderId.Parent
+            ?? throw new InvalidOperationException("The pull-request header is not attached to its column grid."));
+        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
+    }
+
+    private static string GetHeaderText(ContentControl header)
+        => header.Content as string ?? string.Empty;
 
     private static Control CreateDiscussionRow(DiscussionRow? row, Avalonia.Controls.INameScope nameScope)
     {
@@ -929,44 +1005,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         };
         Grid.SetColumn(cell, column);
         return cell;
-    }
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        AddHeaderTranslationItem(translation, nameof(columnHeaderHeading), "Heading");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderBy), "By");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderCreated), "Created");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderBranch), "Will be fetched to branch");
-    }
-
-    public override void TranslateItems(ITranslation translation)
-    {
-        base.TranslateItems(translation);
-        TranslateHeader(translation, columnHeaderHeading, nameof(columnHeaderHeading), "Heading");
-        TranslateHeader(translation, columnHeaderBy, nameof(columnHeaderBy), "By");
-        TranslateHeader(translation, columnHeaderCreated, nameof(columnHeaderCreated), "Created");
-        TranslateHeader(translation, columnHeaderBranch, nameof(columnHeaderBranch), "Will be fetched to branch");
-    }
-
-    private static void AddHeaderTranslationItem(ITranslation translation, string fieldName, string text)
-        => translation.AddTranslationItem(nameof(ViewPullRequestsForm), fieldName, "Text", text);
-
-    private static void TranslateHeader(
-        ITranslation translation,
-        Border header,
-        string fieldName,
-        string defaultText)
-    {
-        string? translated = translation.TranslateItem(
-            nameof(ViewPullRequestsForm),
-            fieldName,
-            "Text",
-            () => defaultText);
-        if (!string.IsNullOrEmpty(translated) && header.Child is TextBlock textBlock)
-        {
-            textBlock.Text = translated;
-        }
     }
 
     private IRepositoryHostPlugin GetGitHoster()

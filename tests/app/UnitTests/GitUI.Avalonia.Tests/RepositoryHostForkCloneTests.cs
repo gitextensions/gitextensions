@@ -112,10 +112,10 @@ public sealed class RepositoryHostForkCloneTests
         footer.ColumnDefinitions.Select(column => column.Width.Value).Should().Equal(1, 120, 6, 120, 3);
         Grid.GetColumn(form.FindControl<Button>("cloneBtn")!).Should().Be(1);
         Grid.GetColumn(form.FindControl<Button>("_NO_TRANSLATE_closeBtn")!).Should().Be(3);
-        Grid myRepositoriesHeader = (Grid)form.FindControl<Border>("columnHeaderMyReposName")!.Parent!;
+        Grid myRepositoriesHeader = (Grid)form.FindControl<ContentControl>("columnHeaderMyReposName")!.Parent!;
         myRepositoriesHeader.ColumnDefinitions.Select(column => column.Width.Value)
             .Should().Equal(180, 45, 50, 45);
-        Grid searchHeader = (Grid)form.FindControl<Border>("columnHeaderSearchName")!.Parent!;
+        Grid searchHeader = (Grid)form.FindControl<ContentControl>("columnHeaderSearchName")!.Parent!;
         searchHeader.ColumnDefinitions.Select(column => column.Width.Value)
             .Should().Equal(180, 110, 41, 40);
 
@@ -194,12 +194,12 @@ public sealed class RepositoryHostForkCloneTests
         ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
 
         await accessor.LoadMyRepositoriesAsync().WaitAsync(TimeSpan.FromSeconds(5));
-        Grid myHeader = (Grid)form.FindControl<Border>("columnHeaderMyReposName")!.Parent!;
+        Grid myHeader = (Grid)form.FindControl<ContentControl>("columnHeaderMyReposName")!.Parent!;
         myHeader.ColumnDefinitions[0].Width.Value.Should().BeGreaterThan(180);
 
         accessor.StartSearch("wide", byUser: false);
         await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
-        Grid searchHeader = (Grid)form.FindControl<Border>("columnHeaderSearchName")!.Parent!;
+        Grid searchHeader = (Grid)form.FindControl<ContentControl>("columnHeaderSearchName")!.Parent!;
         searchHeader.ColumnDefinitions[0].Width.Value.Should().BeGreaterThan(180);
         searchHeader.ColumnDefinitions[1].Width.Value.Should().BeGreaterThan(110);
     }
@@ -322,9 +322,11 @@ public sealed class RepositoryHostForkCloneTests
         accessor.CloneEnabled.Should().BeTrue();
 
         accessor.CreateDirectory = "project" + Path.GetInvalidPathChars()[0];
-        accessor.ValidatePaths();
+        (bool destinationInvalid, bool createDirectoryInvalid) = accessor.ValidatePaths();
 
         accessor.CloneEnabled.Should().BeFalse();
+        destinationInvalid.Should().BeFalse();
+        createDirectoryInvalid.Should().BeTrue();
     }
 
     [AvaloniaTest]
@@ -368,6 +370,7 @@ public sealed class RepositoryHostForkCloneTests
         host.GetMyRepos().Returns([repository]);
         using ForkAndCloneForm form = CreateForm(host);
         ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.Destination = Path.GetTempPath();
 
         accessor.StartSearch("project", byUser: false);
         await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
@@ -390,6 +393,7 @@ public sealed class RepositoryHostForkCloneTests
         host.SearchForRepository("project").Returns([repository]);
         using ForkAndCloneForm form = CreateForm(host);
         ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.Destination = Path.GetTempPath();
 
         accessor.StartSearch("project", byUser: false);
         await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));

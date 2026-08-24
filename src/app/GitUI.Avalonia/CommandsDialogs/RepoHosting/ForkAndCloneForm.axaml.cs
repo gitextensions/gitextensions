@@ -8,7 +8,6 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
-using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Compat;
@@ -95,16 +94,44 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         tabControl.SelectionChanged += _tabControl_SelectedIndexChanged;
         destinationTB.TextChanged += _destinationTB_TextChanged;
         createDirTB.TextChanged += _createDirTB_TextChanged;
-        addUpstreamRemoteAsCB.PropertyChanged += _addRemoteAsTB_TextChanged;
+        addUpstreamRemoteAsCB.PropertyChanged += AddUpstreamRemoteAsCB_PropertyChanged;
         ProtocolDropdownList.SelectionChanged += ProtocolSelectionChanged;
         searchTB.GotFocus += _searchTB_Enter;
         searchTB.LostFocus += _searchTB_Leave;
-        destinationTB.LostFocus += _destinationTB_Validating;
-        createDirTB.LostFocus += _createDirTB_Validating;
+        destinationTB.LostFocus += DestinationTB_LostFocus;
+        createDirTB.LostFocus += CreateDirTB_LostFocus;
 
         forkBtn.IsEnabled = false;
         cloneBtn.IsEnabled = false;
         SetProtocolSelectionVisibility(false);
+    }
+
+    private void AddUpstreamRemoteAsCB_PropertyChanged(object? sender, Avalonia.AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == ComboBox.TextProperty)
+        {
+            _addRemoteAsTB_TextChanged(sender ?? addUpstreamRemoteAsCB, EventArgs.Empty);
+        }
+    }
+
+    private void DestinationTB_LostFocus(object? sender, EventArgs e)
+    {
+        System.ComponentModel.CancelEventArgs validatingEvent = new();
+        _destinationTB_Validating(sender ?? destinationTB, validatingEvent);
+        if (validatingEvent.Cancel)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => destinationTB.Focus());
+        }
+    }
+
+    private void CreateDirTB_LostFocus(object? sender, EventArgs e)
+    {
+        System.ComponentModel.CancelEventArgs validatingEvent = new();
+        _createDirTB_Validating(sender ?? createDirTB, validatingEvent);
+        if (validatingEvent.Cancel)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => createDirTB.Focus());
+        }
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -359,7 +386,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void ApplyRepositoryColumnWidths(bool isSearchResult)
     {
-        Border firstHeader = isSearchResult ? columnHeaderSearchName : columnHeaderMyReposName;
+        ContentControl firstHeader = isSearchResult ? columnHeaderSearchName : columnHeaderMyReposName;
         Grid header = (Grid)(firstHeader.Parent
             ?? throw new InvalidOperationException("The repository list header is not attached to its column grid."));
         header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(
@@ -368,23 +395,23 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private string GetHeaderText(bool isSearchResult, int columnIndex)
     {
-        Border[] headers = isSearchResult
+        ContentControl[] headers = isSearchResult
             ? [columnHeaderSearchName, columnHeaderSearchOwner, columnHeaderSearchIsFork, columnHeaderSearchForks]
             : [columnHeaderMyReposName, columnHeaderMyReposIsFork, columnHeaderMyReposForks, columnHeaderMyReposIsPrivate];
-        return (headers[columnIndex].Child as TextBlock)?.Text ?? string.Empty;
+        return headers[columnIndex].Content as string ?? string.Empty;
     }
 
-    private void _searchBtn_Click(object? sender, EventArgs e)
+    private void _searchBtn_Click(object sender, EventArgs e)
     {
         StartSearch(SearchKind.Repository);
     }
 
-    private void _getFromUserBtn_Click(object? sender, EventArgs e)
+    private void _getFromUserBtn_Click(object sender, EventArgs e)
     {
         StartSearch(SearchKind.User);
     }
 
-    private void _searchResultsLV_SelectedIndexChanged(object? sender, EventArgs e)
+    private void _searchResultsLV_SelectedIndexChanged(object sender, EventArgs e)
     {
         IHostedRepository? repository = GetSelectedRepository(searchResultsLV);
         searchResultItemDescription.Text = repository?.Description ?? string.Empty;
@@ -392,7 +419,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         UpdateCloneInfo();
     }
 
-    private void _tabControl_SelectedIndexChanged(object? sender, EventArgs e)
+    private void _tabControl_SelectedIndexChanged(object sender, EventArgs e)
     {
         UpdateCloneInfo();
         if (ReferenceEquals(tabControl.SelectedItem, searchReposPage))
@@ -401,7 +428,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
     }
 
-    private void _forkBtn_Click(object? sender, EventArgs e)
+    private void _forkBtn_Click(object sender, EventArgs e)
     {
         IHostedRepository? repository = GetSelectedRepository(searchResultsLV);
         if (repository is null)
@@ -447,17 +474,17 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
     }
 
-    private void _searchTB_Enter(object? sender, EventArgs e)
+    private void _searchTB_Enter(object sender, EventArgs e)
     {
         AcceptButton = searchBtn;
     }
 
-    private void _searchTB_Leave(object? sender, EventArgs e)
+    private void _searchTB_Leave(object sender, EventArgs e)
     {
         AcceptButton = null;
     }
 
-    private void _browseForCloneToDirbtn_Click(object? sender, EventArgs e)
+    private void _browseForCloneToDirbtn_Click(object sender, EventArgs e)
     {
         // Avalonia uses the current filesystem root because the original C:\ fallback is not portable.
         string initialDirectory = string.IsNullOrEmpty(destinationTB.Text)
@@ -470,7 +497,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
     }
 
-    private void _openGitupPageBtn_Click(object? sender, EventArgs e)
+    private void _openGitupPageBtn_Click(object sender, EventArgs e)
     {
         IHostedRepository? repository = CurrentySelectedGitRepo;
         if (repository is null)
@@ -494,7 +521,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         OsShellUtil.OpenUrlInDefaultBrowser(homepage);
     }
 
-    private void _cloneBtn_Click(object? sender, EventArgs e)
+    private void _cloneBtn_Click(object sender, EventArgs e)
     {
         if (CurrentySelectedGitRepo is { } repository)
         {
@@ -502,43 +529,42 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
     }
 
-    private void _closeBtn_Click(object? sender, EventArgs e)
+    private void _closeBtn_Click(object sender, EventArgs e)
         => DialogResult = WinFormsShims.DialogResult.OK;
 
-    private void _myReposLV_SelectedIndexChanged(object? sender, EventArgs e)
+    private void _myReposLV_SelectedIndexChanged(object sender, EventArgs e)
     {
         UpdateCloneInfo();
     }
 
-    private void _createDirTB_TextChanged(object? sender, EventArgs e)
+    private void _createDirTB_TextChanged(object sender, EventArgs e)
     {
-        UpdateCloneInfo(updateCreateDir: false, updateProtocols: false);
+        UpdateCloneInfo(updateCreateDirTB: false, updateProtocols: false);
     }
 
-    private void _destinationTB_TextChanged(object? sender, EventArgs e)
+    private void _destinationTB_TextChanged(object sender, EventArgs e)
     {
-        UpdateCloneInfo(updateCreateDir: false, updateProtocols: false);
+        UpdateCloneInfo(updateCreateDirTB: false, updateProtocols: false);
     }
 
-    private void _addRemoteAsTB_TextChanged(object? sender, Avalonia.AvaloniaPropertyChangedEventArgs e)
+    private void _addRemoteAsTB_TextChanged(object sender, EventArgs e)
     {
-        if (e.Property == ComboBox.TextProperty)
-        {
-            UpdateCloneInfo(updateCreateDir: false, updateProtocols: false);
-        }
+        UpdateCloneInfo(updateCreateDirTB: false, updateProtocols: false);
     }
 
-    private void _destinationTB_Validating(object? sender, EventArgs e)
+    private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        UpdateCloneInfo(updateCreateDir: false, updateProtocols: false);
+        e.Cancel = destinationTB.Text?.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) is >= 0;
+        UpdateCloneInfo(updateCreateDirTB: false, updateProtocols: false);
     }
 
-    private void _createDirTB_Validating(object? sender, EventArgs e)
+    private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        UpdateCloneInfo(updateCreateDir: false, updateProtocols: false);
+        e.Cancel = createDirTB.Text?.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) is >= 0;
+        UpdateCloneInfo(updateCreateDirTB: false, updateProtocols: false);
     }
 
-    private void Clone(IHostedRepository repository)
+    private void Clone(IHostedRepository repo)
     {
         string? targetDirectory = GetTargetDir();
         if (targetDirectory is null)
@@ -548,7 +574,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         IGitUICommands commands = GetCommands();
         ArgumentString command = Commands.Clone(
-            repository.CloneUrl,
+            repo.CloneUrl,
             targetDirectory,
             commands.Module.GetPathForGitExecution,
             depth: GetDepth());
@@ -561,9 +587,9 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         GitModule module = new(commands.GetRequiredService<IGitExecutorProvider>(), targetDirectory);
         string upstreamName = addUpstreamRemoteAsCB.Text?.Trim() ?? string.Empty;
-        if (upstreamName.Length > 0 && !string.IsNullOrEmpty(repository.ParentUrl))
+        if (upstreamName.Length > 0 && !string.IsNullOrEmpty(repo.ParentUrl))
         {
-            string error = module.AddRemote(upstreamName, repository.ParentUrl);
+            string error = module.AddRemote(upstreamName, repo.ParentUrl);
             if (!string.IsNullOrEmpty(error))
             {
                 MessageBoxes.Show(
@@ -587,7 +613,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     private static IHostedRepository? GetSelectedRepository(ListBox listBox)
         => (listBox.SelectedItem as HostedRepositoryRow)?.Repository;
 
-    private void UpdateCloneInfo(bool updateCreateDir = true, bool updateProtocols = true)
+    private void UpdateCloneInfo(bool updateCreateDirTB = true, bool updateProtocols = true)
     {
         IHostedRepository? repository = CurrentySelectedGitRepo;
         if (repository is null)
@@ -595,7 +621,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             SetProtocolSelectionVisibility(false);
             cloneBtn.IsEnabled = false;
             cloneInfoText.Text = string.Empty;
-            if (updateCreateDir)
+            if (updateCreateDirTB)
             {
                 createDirTB.Text = string.Empty;
             }
@@ -620,7 +646,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
 
         SetProtocolSelectionVisibility(hasProtocols);
-        if (updateCreateDir)
+        if (updateCreateDirTB)
         {
             createDirTB.Text = repository.Name;
             addUpstreamRemoteAsCB.ItemsSource = repository.ParentOwner is null
@@ -635,7 +661,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         SetCloneInfoText(repository);
     }
 
-    private void SetCloneInfoText(IHostedRepository repository)
+    private void SetCloneInfoText(IHostedRepository repo)
     {
         string upstreamName = addUpstreamRemoteAsCB.Text?.Trim() ?? string.Empty;
         string moreInfo = upstreamName.Length == 0
@@ -646,8 +672,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             : _strWillCloneWithPushAccess;
         cloneInfoText.Text = string.Format(
             format.Text,
-            repository.CloneUrl,
-            GetTargetDir(showError: false),
+            repo.CloneUrl,
+            GetTargetDir(),
             moreInfo);
     }
 
@@ -657,7 +683,10 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         ProtocolDropdownList.IsVisible = multipleProtocols;
     }
 
-    private string? GetTargetDir(bool showError = true)
+    private string? GetTargetDir()
+        => TryGetTargetDir(showError: true);
+
+    private string? TryGetTargetDir(bool showError)
     {
         string destination = destinationTB.Text?.Trim() ?? string.Empty;
         if (destination.Length == 0)
@@ -682,7 +711,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     private int? GetDepth()
         => depthUpDown.Value is > 0 ? (int)depthUpDown.Value.Value : null;
 
-    private void ProtocolSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void ProtocolSelectionChanged(object sender, EventArgs e)
     {
         if (CurrentySelectedGitRepo is not { } repository
             || ProtocolDropdownList.SelectedItem is not GitProtocol protocol)
@@ -692,52 +721,6 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         repository.CloneProtocol = protocol;
         SetCloneInfoText(repository);
-    }
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        AddHeaderTranslationItem(translation, nameof(columnHeaderMyReposName), "Name");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderMyReposIsFork), "Is fork");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderMyReposForks), "# Forks");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderMyReposIsPrivate), "Private");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderSearchName), "Name");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderSearchOwner), "Owner");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderSearchIsFork), "Is fork");
-        AddHeaderTranslationItem(translation, nameof(columnHeaderSearchForks), "# Forks");
-    }
-
-    public override void TranslateItems(ITranslation translation)
-    {
-        base.TranslateItems(translation);
-        TranslateHeader(translation, columnHeaderMyReposName, nameof(columnHeaderMyReposName), "Name");
-        TranslateHeader(translation, columnHeaderMyReposIsFork, nameof(columnHeaderMyReposIsFork), "Is fork");
-        TranslateHeader(translation, columnHeaderMyReposForks, nameof(columnHeaderMyReposForks), "# Forks");
-        TranslateHeader(translation, columnHeaderMyReposIsPrivate, nameof(columnHeaderMyReposIsPrivate), "Private");
-        TranslateHeader(translation, columnHeaderSearchName, nameof(columnHeaderSearchName), "Name");
-        TranslateHeader(translation, columnHeaderSearchOwner, nameof(columnHeaderSearchOwner), "Owner");
-        TranslateHeader(translation, columnHeaderSearchIsFork, nameof(columnHeaderSearchIsFork), "Is fork");
-        TranslateHeader(translation, columnHeaderSearchForks, nameof(columnHeaderSearchForks), "# Forks");
-    }
-
-    private static void AddHeaderTranslationItem(ITranslation translation, string fieldName, string text)
-        => translation.AddTranslationItem(nameof(ForkAndCloneForm), fieldName, "Text", text);
-
-    private static void TranslateHeader(
-        ITranslation translation,
-        Border header,
-        string fieldName,
-        string defaultText)
-    {
-        string? translated = translation.TranslateItem(
-            nameof(ForkAndCloneForm),
-            fieldName,
-            "Text",
-            () => defaultText);
-        if (!string.IsNullOrEmpty(translated) && header.Child is TextBlock textBlock)
-        {
-            textBlock.Text = translated;
-        }
     }
 
     private IGitUICommands GetCommands()
@@ -801,7 +784,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         public IReadOnlyList<string> SearchResultNames
             => form.searchResultsLV.Items.Cast<HostedRepositoryRow>().Select(row => row.Name).ToArray();
 
-        public string? TargetDirectory => form.GetTargetDir(showError: false);
+        public string? TargetDirectory => form.TryGetTargetDir(showError: false);
 
         public int? Depth => form.GetDepth();
 
@@ -849,10 +832,13 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         public string? GetTargetDirectoryWithValidation()
             => form.GetTargetDir();
 
-        public void ValidatePaths()
+        public (bool Destination, bool CreateDirectory) ValidatePaths()
         {
-            form._destinationTB_Validating(form.destinationTB, EventArgs.Empty);
-            form._createDirTB_Validating(form.createDirTB, EventArgs.Empty);
+            System.ComponentModel.CancelEventArgs destinationEvent = new();
+            System.ComponentModel.CancelEventArgs createDirectoryEvent = new();
+            form._destinationTB_Validating(form.destinationTB, destinationEvent);
+            form._createDirTB_Validating(form.createDirTB, createDirectoryEvent);
+            return (destinationEvent.Cancel, createDirectoryEvent.Cancel);
         }
     }
 
