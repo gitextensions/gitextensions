@@ -6,12 +6,10 @@
                                  MinWidth="341"
                                  MinHeight="272"
                                  Text="Blame viewer">
-  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollBarVisibility="Auto">
-    <StackPanel Margin="11"
-                Spacing="6">
+  <StackPanel Margin="11"
+              Spacing="6">
       <GroupBox x:Name="groupBoxBlameSettings"
-                Width="372"
+                Width="319"
                 Height="97"
                 Padding="-3"
                 HorizontalAlignment="Left"
@@ -19,18 +17,20 @@
         <Grid x:Name="tableLayoutPanelBlameSettings"
               RowDefinitions="25,25,25">
           <CheckBox x:Name="cbIgnoreWhitespace"
-                    Width="360"
+                    Width="307"
                     Height="19"
                     Margin="3"
                     Content="Ignore whitespace" />
           <settingscontrols:SettingsCheckBox x:Name="cbDetectMoveAndCopyInThisFile"
                                              Grid.Row="1"
+                                             Width="307"
                                              Height="19"
                                              Margin="3"
                                              ManualSectionAnchorName="blame-detect-moved-or-copied-lines"
                                              Text="Detect moved or copied lines within blamed file" />
           <settingscontrols:SettingsCheckBox x:Name="cbDetectMoveAndCopyInAllFiles"
                                              Grid.Row="2"
+                                             Width="307"
                                              Height="19"
                                              Margin="3"
                                              ManualSectionAnchorName="blame-detect-moved-or-copied-lines"
@@ -88,6 +88,5 @@
                     Content="Show author avatar" />
         </Grid>
       </GroupBox>
-    </StackPanel>
-  </ScrollViewer>
+  </StackPanel>
 </settings:SettingsPageWithHeader>
