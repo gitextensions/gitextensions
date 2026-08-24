@@ -344,62 +344,51 @@ public sealed class RepositoryHostPullRequestTests
     }
 
     [AvaloniaTest]
-    public async Task ViewPullRequestsForm_should_post_and_refresh_comments()
+    public async Task ViewPullRequestsForm_should_cancel_discussion_loading_when_the_hosted_repository_clears()
     {
+        TaskCompletionSource loadStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource releaseLoad = new(TaskCreationOptions.RunContinuationsAsynchronously);
         IPullRequestInformation pullRequest = CreatePullRequest();
-        IPullRequestDiscussion discussion = pullRequest.GetDiscussion();
-        using ViewPullRequestsForm form = CreateForm(
-            Substitute.For<IRepositoryHostPlugin>(),
-            Substitute.For<IGitModule>());
-        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
-        accessor.SelectPullRequest(pullRequest);
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
-
-        accessor.Comment = "Looks good";
-        accessor.PostComment();
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
-
-        discussion.Received(1).Post("Looks good");
-        discussion.Received(1).ForceReload();
-        accessor.Comment.Should().BeEmpty();
-
-        accessor.RefreshDiscussion();
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
-        discussion.Received(2).ForceReload();
-    }
-
-    [AvaloniaTest]
-    public async Task ViewPullRequestsForm_should_cancel_discussion_refresh_when_the_hosted_repository_clears()
-    {
-        TaskCompletionSource refreshStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
-        TaskCompletionSource releaseRefresh = new(TaskCreationOptions.RunContinuationsAsynchronously);
-        IPullRequestInformation pullRequest = CreatePullRequest();
-        IPullRequestDiscussion discussion = pullRequest.GetDiscussion();
-        discussion.When(candidate => candidate.ForceReload()).Do(_ =>
+        IPullRequestDiscussion discussion = Substitute.For<IPullRequestDiscussion>();
+        pullRequest.GetDiscussion().Returns(_ =>
         {
-            refreshStarted.TrySetResult();
-            releaseRefresh.Task.GetAwaiter().GetResult();
+            loadStarted.TrySetResult();
+            releaseLoad.Task.GetAwaiter().GetResult();
+            return discussion;
         });
         using ViewPullRequestsForm form = CreateForm(
             Substitute.For<IRepositoryHostPlugin>(),
             Substitute.For<IGitModule>());
         ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
-        accessor.SelectPullRequest(pullRequest);
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
 
-        accessor.RefreshDiscussion();
-        await refreshStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.SelectPullRequest(pullRequest);
+        await loadStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
         accessor.ClearHostedRepositorySelection();
-        releaseRefresh.TrySetResult();
+        releaseLoad.TrySetResult();
         await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
 
         accessor.Discussion.ItemCount.Should().Be(0);
-        accessor.FetchEnabled.Should().BeFalse();
-        accessor.AddAndFetchEnabled.Should().BeFalse();
-        accessor.CloseEnabled.Should().BeFalse();
-        accessor.RefreshEnabled.Should().BeFalse();
-        accessor.PostEnabled.Should().BeFalse();
+        accessor.FetchEnabled.Should().BeTrue();
+        accessor.AddAndFetchEnabled.Should().BeTrue();
+        accessor.CloseEnabled.Should().BeTrue();
+        accessor.RefreshEnabled.Should().BeTrue();
+        accessor.PostEnabled.Should().BeTrue();
         _messageBoxHost.Messages.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public void ViewPullRequestsForm_should_preserve_source_action_defaults_without_a_selection()
+    {
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.FetchEnabled.Should().BeTrue();
+        accessor.AddAndFetchEnabled.Should().BeTrue();
+        accessor.CloseEnabled.Should().BeTrue();
+        accessor.RefreshEnabled.Should().BeTrue();
+        accessor.PostEnabled.Should().BeTrue();
     }
 
     [AvaloniaTest]
@@ -420,29 +409,8 @@ public sealed class RepositoryHostPullRequestTests
 
         accessor.DiffItems.Should().BeEmpty();
         accessor.Discussion.ItemCount.Should().Be(0);
-        accessor.FetchEnabled.Should().BeFalse();
+        accessor.FetchEnabled.Should().BeTrue();
         _messageBoxHost.Messages.Should().BeEmpty();
-    }
-
-    [AvaloniaTest]
-    public async Task ViewPullRequestsForm_should_ignore_an_empty_comment()
-    {
-        IPullRequestInformation pullRequest = CreatePullRequest();
-        IPullRequestDiscussion discussion = pullRequest.GetDiscussion();
-        using ViewPullRequestsForm form = CreateForm(
-            Substitute.For<IRepositoryHostPlugin>(),
-            Substitute.For<IGitModule>());
-        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
-        accessor.SelectPullRequest(pullRequest);
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
-
-        accessor.Comment = "   ";
-        accessor.PostComment();
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
-
-        discussion.DidNotReceive().Post(Arg.Any<string>());
-        accessor.Comment.Should().Be("   ");
-        accessor.PostEnabled.Should().BeTrue();
     }
 
     [AvaloniaTest]
@@ -499,31 +467,6 @@ public sealed class RepositoryHostPullRequestTests
         _messageBoxHost.Messages.Should().ContainSingle()
             .Which.Should().Be("Could not load discussion!" + Environment.NewLine + "discussion failed");
         accessor.Discussion.ItemCount.Should().Be(0);
-    }
-
-    [AvaloniaTest]
-    public async Task ViewPullRequestsForm_should_report_a_post_failure_and_keep_the_comment()
-    {
-        IPullRequestInformation pullRequest = CreatePullRequest();
-        IPullRequestDiscussion discussion = pullRequest.GetDiscussion();
-        discussion.When(candidate => candidate.Post("Keep this comment"))
-            .Do(_ => throw new InvalidOperationException("post failed"));
-        using ViewPullRequestsForm form = CreateForm(
-            Substitute.For<IRepositoryHostPlugin>(),
-            Substitute.For<IGitModule>());
-        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
-        accessor.SelectPullRequest(pullRequest);
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
-
-        accessor.Comment = "Keep this comment";
-        accessor.PostComment();
-        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
-
-        _messageBoxHost.Messages.Should().ContainSingle()
-            .Which.Should().Be("Failed to post discussion item!" + Environment.NewLine + "post failed");
-        accessor.Comment.Should().Be("Keep this comment");
-        accessor.PostEnabled.Should().BeTrue();
-        accessor.RefreshEnabled.Should().BeTrue();
     }
 
     [AvaloniaTest]
