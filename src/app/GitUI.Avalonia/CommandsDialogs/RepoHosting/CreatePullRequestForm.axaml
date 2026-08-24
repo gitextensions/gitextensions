@@ -10,6 +10,7 @@
         Title="Create Pull Request">
   <Grid>
     <TextBlock x:Name="label3"
+               Classes="gitextensions-auto-label"
                Margin="9,15,0,0"
                HorizontalAlignment="Left"
                VerticalAlignment="Top"
@@ -21,6 +22,7 @@
               VerticalContentAlignment="Center" />
 
     <TextBlock x:Name="label4"
+               Classes="gitextensions-auto-label"
                Margin="9,42,0,0"
                HorizontalAlignment="Left"
                VerticalAlignment="Top"
@@ -32,6 +34,7 @@
               VerticalContentAlignment="Center" />
 
     <TextBlock x:Name="label5"
+               Classes="gitextensions-auto-label"
                Margin="9,69,0,0"
                HorizontalAlignment="Left"
                VerticalAlignment="Top"
@@ -52,16 +55,21 @@
       <Grid RowDefinitions="27,*"
             ColumnDefinitions="52,*">
         <TextBlock x:Name="label1"
+                   Classes="gitextensions-auto-label"
+                   Margin="0,4,0,0"
                    HorizontalAlignment="Left"
-                   VerticalAlignment="Center"
+                   VerticalAlignment="Top"
                    Text="Title:" />
         <TextBox x:Name="_titleTB"
                  Grid.Column="1"
-                 Height="21"
+                 Height="23"
+                 Margin="0,1,0,0"
+                 VerticalAlignment="Top"
                  VerticalContentAlignment="Center" />
         <TextBlock x:Name="label2"
                    Grid.Row="1"
-                   Margin="0,4,0,0"
+                   Classes="gitextensions-auto-label"
+                   Margin="0,3,0,0"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Text="Body:" />

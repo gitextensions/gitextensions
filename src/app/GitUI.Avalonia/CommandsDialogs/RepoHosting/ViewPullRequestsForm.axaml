@@ -131,10 +131,14 @@
               RowDefinitions="*,80,33">
           <ListBox x:Name="_discussionWB"
                    Margin="3"
+                   Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+                   Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
                    SelectionMode="Single" />
           <spellChecker:EditNetSpell x:Name="_postCommentText"
                                      Grid.Row="1"
-                                     Margin="2" />
+                                     Margin="2"
+                                     Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
+                                     Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
           <DockPanel x:Name="flowLayoutPanel1"
                      Grid.Row="2"
                      Margin="2"
