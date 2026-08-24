@@ -7,6 +7,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
 using GitExtensions.Plugins.Gource;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.AboutBoxDialog;
@@ -284,6 +285,14 @@ internal static class ComponentFactory
     // different times in isolated workers; every paired state must start from repository HEAD.
     public static void PrepareCaptureState(Control control, IGitUICommands commands)
     {
+        ChecklistSettingsPage? checklist = EnumerateSelfAndDescendants(control)
+            .OfType<ChecklistSettingsPage>()
+            .SingleOrDefault();
+        if (checklist is not null)
+        {
+            SeedChecklist(checklist);
+        }
+
         if (control is FormBlame)
         {
             WaitForBlameContent(control);
@@ -417,6 +426,42 @@ internal static class ComponentFactory
                     "The original revision grid did not retain a stable repository HEAD selection before capture.");
             }
         }
+    }
+
+    // parity-scaffolding: The settings shell must not inherit machine-specific registry, shell-tool, or Git configuration.
+    private static void SeedChecklist(ChecklistSettingsPage checklist)
+    {
+        (string Name, string Message, bool Valid)[] rows =
+        [
+            ("GitFound", "Git 2.52.0 is found on your computer.", true),
+            ("UserNameSet", "A username and an email address are configured.", true),
+            ("MergeTool", "You need to configure merge tool in order to solve merge conflicts.", false),
+            ("DiffTool", "You should configure a diff tool to show file diff in external program.", false),
+            ("ShellExtensionsRegistered", "Shell extensions registered properly.", true),
+            ("GitBinFound", "Linux tools (sh) not found. To solve this problem you can set the correct path in settings.", false),
+            ("GitExtensionsInstall", "Git Extensions is properly registered.", true),
+            ("SshConfig", "Default SSH client, OpenSSH, will be used.", true),
+            ("translationConfig", "There is no language configured for Git Extensions.", false),
+        ];
+        foreach ((string name, string message, bool valid) in rows)
+        {
+            Button status = EnumerateSelfAndDescendants(checklist).OfType<Button>().Single(button => button.Name == name);
+            Button repair = EnumerateSelfAndDescendants(checklist).OfType<Button>().Single(
+                button => button.Name == $"{name}_Fix");
+            status.Text = message;
+            status.Visible = true;
+            status.BackColor = valid ? OtherColors.BrightGreen : OtherColors.BrightRed;
+            status.ForeColor = ColorHelper.GetTextColor(status.BackColor);
+            repair.Visible = !valid;
+        }
+
+        Button gcm = EnumerateSelfAndDescendants(checklist).OfType<Button>().Single(button => button.Name == "GcmDetected");
+        Button gcmFix = EnumerateSelfAndDescendants(checklist).OfType<Button>().Single(button => button.Name == "GcmDetectedFix");
+        gcm.Visible = false;
+        gcmFix.Visible = false;
+        CheckBox checkAtStartup = EnumerateSelfAndDescendants(checklist).OfType<CheckBox>().Single(checkBox => checkBox.Name == "CheckAtStartup");
+        checkAtStartup.Checked = true;
+        checklist.PerformLayout();
     }
 
     internal static bool IsRevisionGridSelectionReady(
