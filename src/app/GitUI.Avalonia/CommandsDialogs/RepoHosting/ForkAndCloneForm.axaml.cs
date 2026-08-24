@@ -197,6 +197,9 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         _operations.FileAndForget(() => LoadMyReposAsync(cancellationToken));
     }
 
+    private const int ResizeOnContent = -1;
+    private const int ResizeOnHeader = -2;
+
     private async Task LoadMyReposAsync(CancellationToken cancellationToken)
     {
         try
@@ -371,7 +374,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     {
         ListBox list = isSearchResult ? searchResultsLV : myReposLV;
         string header = GetHeaderText(isSearchResult, columnIndex);
-        IEnumerable<string?> values = rows.Count == 0
+        int resizeStrategy = rows.Count == 0 ? ResizeOnHeader : ResizeOnContent;
+        IEnumerable<string?> values = resizeStrategy == ResizeOnHeader
             ? [header]
             : rows.Select(row => columnIndex switch
             {
@@ -555,13 +559,11 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
         e.Cancel = destinationTB.Text?.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) is >= 0;
-        UpdateCloneInfo(updateCreateDirTB: false, updateProtocols: false);
     }
 
     private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
         e.Cancel = createDirTB.Text?.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) is >= 0;
-        UpdateCloneInfo(updateCreateDirTB: false, updateProtocols: false);
     }
 
     private void Clone(IHostedRepository repo)
@@ -656,8 +658,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             addUpstreamRemoteAsCB.IsEnabled = repository.ParentOwner is not null;
         }
 
-        cloneBtn.IsEnabled = destinationTB.Text?.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) is not >= 0
-            && createDirTB.Text?.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) is not >= 0;
+        cloneBtn.IsEnabled = true;
         SetCloneInfoText(repository);
     }
 
