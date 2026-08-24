@@ -9,18 +9,29 @@
                          CanResize="True"
                          WindowStartupLocation="CenterScreen"
                          Title="Choose language">
-  <Grid Margin="12"
-        RowDefinitions="Auto,Auto,*"
-        RowSpacing="8">
+  <Grid Width="800"
+        Height="539"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        ColumnDefinitions="12,*,12"
+        RowDefinitions="9,15,9,15,3,*,12">
     <TextBlock x:Name="label1"
-               FontSize="18"
-               FontWeight="SemiBold"
+               Grid.Row="1"
+               Grid.Column="1"
+               Width="126"
+               Height="15"
+               HorizontalAlignment="Left"
                Text="Choose your language" />
     <TextBlock x:Name="label2"
-               Grid.Row="1"
+               Grid.Row="3"
+               Grid.Column="1"
+               Width="338"
+               Height="15"
+               HorizontalAlignment="Left"
                Text="You can change the language at any time in the settings dialog"
                TextWrapping="Wrap" />
     <ListBox x:Name="lvTranslations"
-             Grid.Row="2" />
+             Grid.Row="5"
+             Grid.Column="1" />
   </Grid>
 </gitui:GitExtensionsForm>

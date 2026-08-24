@@ -107,6 +107,28 @@ public sealed class EndToEndCaptureTests
 
     [Test]
     [Apartment(ApartmentState.STA)]
+    public void State_driver_should_drive_the_single_checkbox_inside_a_composite_control()
+    {
+        using Panel composite = new();
+        using CheckBox checkBox = new();
+        composite.Controls.Add(checkBox);
+
+        using (ControlStateDriver.Apply(
+                   composite,
+                   new CaptureStatePlan
+                   {
+                       Id = "checked",
+                       Kind = CaptureStateKind.Checked,
+                   }))
+        {
+            checkBox.Checked.Should().BeTrue();
+        }
+
+        checkBox.Checked.Should().BeFalse();
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
     public void State_driver_should_find_a_dynamic_menu_item_by_name()
     {
         using Form form = new();

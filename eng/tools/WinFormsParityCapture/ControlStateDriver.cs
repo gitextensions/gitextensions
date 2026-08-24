@@ -151,14 +151,37 @@ internal sealed class ControlStateDriver : IDisposable
             return;
         }
 
-        if (target is not CheckBox checkBox)
+        CheckBox? checkBox = target as CheckBox;
+        if (checkBox is null && target is Control composite)
         {
-            throw new CaptureStateUnsupportedException("The checked state requires a CheckBox or RadioButton.");
+            CheckBox[] descendants = EnumerateDescendants(composite).OfType<CheckBox>().Take(2).ToArray();
+            if (descendants.Length == 1)
+            {
+                checkBox = descendants[0];
+            }
+        }
+
+        if (checkBox is null)
+        {
+            throw new CaptureStateUnsupportedException(
+                "The checked state requires a CheckBox, RadioButton, or a composite control with one CheckBox.");
         }
 
         CheckState previous = checkBox.CheckState;
         checkBox.CheckState = checkBox.ThreeState ? CheckState.Indeterminate : CheckState.Checked;
         _restoreActions.Add(() => checkBox.CheckState = previous);
+
+        static IEnumerable<Control> EnumerateDescendants(Control control)
+        {
+            foreach (Control child in control.Controls)
+            {
+                yield return child;
+                foreach (Control descendant in EnumerateDescendants(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
     }
 
     private void Disable(object target)
