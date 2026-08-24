@@ -170,7 +170,7 @@ internal static class CaptureRunner
         try
         {
             using WinFormsBootstrap bootstrap = WinFormsBootstrap.Create(repositoryPath, profile, theme, isolationRoot);
-            using Control root = ComponentFactory.Create(component, bootstrap.Commands);
+            using Control root = ComponentFactory.Create(component, bootstrap.Commands, state);
             PrepareControl(root, bootstrap.Commands, component, monitor, scale, dpiMode);
             PumpUntilReady(root);
             int actualDpi = root.DeviceDpi;
@@ -322,7 +322,7 @@ internal static class CaptureRunner
             bootstrap.ThrowIfThreadException();
             using ControlStateDriver driver = ApplyVerifiedCaptureState(root, bootstrap.Commands, component, state);
             bootstrap.ThrowIfThreadException();
-            using CaptureImageResult image = ImageCapture.Capture(root, driver.Popups);
+            using CaptureImageResult image = ImageCapture.Capture(root, driver.Popups, driver.ComboBoxPopups);
             string relativeDirectory = Path.Combine(Sanitize(componentType), Sanitize(theme.Id), scale.ToString(CultureInfo.InvariantCulture));
             string absoluteDirectory = Path.Combine(outputRoot, relativeDirectory);
             Directory.CreateDirectory(absoluteDirectory);
@@ -340,6 +340,11 @@ internal static class CaptureRunner
             ];
             surfaces.AddRange(driver.Popups.Select((popup, index) =>
                 reader.ReadPopup(popup, index, image.PrimaryScreenBounds.Location)));
+            surfaces.AddRange(driver.ComboBoxPopups.Select((popup, index) =>
+                reader.ReadComboBoxPopup(
+                    popup,
+                    driver.Popups.Count + index,
+                    image.PrimaryScreenBounds.Location)));
 
             string themePath = Path.Combine(AppContext.BaseDirectory, "Themes", theme.File);
             string relativeImagePath = Path.GetRelativePath(outputRoot, imagePath).Replace('\\', '/');
@@ -426,7 +431,7 @@ internal static class CaptureRunner
         CaptureStateNotReadyException? lastException = null;
         for (int attempt = 1; attempt <= maximumAttempts; attempt++)
         {
-            ComponentFactory.PrepareCaptureState(root, commands);
+            ComponentFactory.PrepareCaptureState(root, commands, state);
             ComponentFactory.ApplyTextValues(root, component);
             ControlStateDriver? driver = null;
             try

@@ -350,6 +350,33 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
             return;
         }
 
+        if (target is ComboBox comboBox)
+        {
+            if (comboBox.ItemCount == 0)
+            {
+                throw new AvaloniaCaptureStateUnsupportedException("The ComboBox popup requires a populated control.");
+            }
+
+            bool comboPrevious = comboBox.IsDropDownOpen;
+            comboBox.IsDropDownOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            if (!comboBox.IsDropDownOpen)
+            {
+                throw new AvaloniaCaptureStateUnsupportedException("The requested ComboBox popup declined to open.");
+            }
+
+            TrackExternalTopLevels(comboBox);
+            if (_externalTopLevels.Count == 0 && _popupSurfaceRoots.Count == 0)
+            {
+                comboBox.IsDropDownOpen = comboPrevious;
+                throw new AvaloniaCaptureStateUnsupportedException(
+                    "The ComboBox opened without exposing a rendered popup surface.");
+            }
+
+            _restoreActions.Add(() => comboBox.IsDropDownOpen = comboPrevious);
+            return;
+        }
+
         if (target is ContextMenu contextMenu)
         {
             // parity-scaffolding: Exercise the grid-owned ContextMenu through Avalonia's real popup surface.
@@ -396,7 +423,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         };
         if (menuItem is null)
         {
-            throw new AvaloniaCaptureStateUnsupportedException("The open-menu state requires a Menu or MenuItem.");
+            throw new AvaloniaCaptureStateUnsupportedException("The open-menu state requires a ComboBox, Menu, or MenuItem.");
         }
 
         ContextMenu? owningContextMenu = EnumerateLogicalControls(_root)

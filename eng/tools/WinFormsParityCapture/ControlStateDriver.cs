@@ -9,6 +9,7 @@ internal sealed class ControlStateDriver : IDisposable
 {
     private readonly List<Action> _restoreActions = [];
     private readonly List<ToolStripDropDown> _popups = [];
+    private readonly List<ComboBoxPopup> _comboBoxPopups = [];
     private readonly Control _root;
 
     private ControlStateDriver(Control root)
@@ -18,7 +19,9 @@ internal sealed class ControlStateDriver : IDisposable
 
     public IReadOnlyList<ToolStripDropDown> Popups => _popups;
 
-    public bool RequiresScreenGrab => _popups.Count > 0;
+    public IReadOnlyList<ComboBoxPopup> ComboBoxPopups => _comboBoxPopups;
+
+    public bool RequiresScreenGrab => _popups.Count > 0 || _comboBoxPopups.Count > 0;
 
     public static ControlStateDriver Apply(Control root, CaptureStatePlan state)
     {
@@ -316,6 +319,32 @@ internal sealed class ControlStateDriver : IDisposable
             return;
         }
 
+        if (target is ComboBox comboBox)
+        {
+            if (!comboBox.IsHandleCreated || comboBox.Items.Count == 0)
+            {
+                throw new CaptureStateUnsupportedException("The ComboBox popup requires a created, populated control.");
+            }
+
+            bool previous = comboBox.DroppedDown;
+            comboBox.DroppedDown = true;
+            PumpEvents();
+            if (!comboBox.DroppedDown)
+            {
+                throw new CaptureStateUnsupportedException("The requested ComboBox popup declined to open.");
+            }
+
+            Rectangle bounds = NativeMethods.GetComboBoxListRectangle(comboBox.Handle);
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                throw new CaptureStateUnsupportedException("The native ComboBox popup has no drawable area.");
+            }
+
+            _comboBoxPopups.Add(new ComboBoxPopup(comboBox, bounds));
+            _restoreActions.Add(() => comboBox.DroppedDown = previous);
+            return;
+        }
+
         // parity-scaffolding: Capture the grid-owned ContextMenuStrip through its real popup surface.
         ToolStripDropDown popup = target switch
         {
@@ -442,6 +471,8 @@ internal sealed class ControlStateDriver : IDisposable
         });
     }
 }
+
+internal sealed record ComboBoxPopup(ComboBox Owner, Rectangle Bounds);
 
 internal class CaptureStateUnsupportedException(string message) : Exception(message);
 

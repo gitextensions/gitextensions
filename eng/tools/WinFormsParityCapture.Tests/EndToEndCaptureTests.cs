@@ -189,6 +189,47 @@ public sealed class EndToEndCaptureTests
 
     [Test]
     [Apartment(ApartmentState.STA)]
+    public void State_driver_should_capture_the_native_combo_box_popup()
+    {
+        using Form form = new() { ClientSize = new Size(320, 180) };
+        using ComboBox comboBox = new()
+        {
+            Name = "cbxTarget",
+            DataSource = new[] { "main", "feature/visual-parity" },
+            Location = new Point(20, 20),
+            Width = 220,
+        };
+        form.Controls.Add(comboBox);
+        form.Show();
+
+        using ControlStateDriver driver = ControlStateDriver.Apply(
+            form,
+            new CaptureStatePlan
+            {
+                Id = "combo.open",
+                Kind = CaptureStateKind.MenuOpen,
+                TargetField = comboBox.Name,
+            });
+
+        driver.Popups.Should().BeEmpty();
+        driver.ComboBoxPopups.Should().ContainSingle();
+        ComboBoxPopup popup = driver.ComboBoxPopups.Single();
+        popup.Owner.Should().BeSameAs(comboBox);
+        popup.Bounds.Width.Should().BeGreaterThan(0);
+        popup.Bounds.Height.Should().BeGreaterThan(comboBox.Height);
+        CaptureSurface surface = new ControlTreeReader(form, form.DeviceDpi)
+            .ReadComboBoxPopup(
+                popup,
+                ordinal: 0,
+                primaryScreenOrigin: ImageCapture.GetPrimaryScreenBounds(form).Location);
+        surface.Root.ControlKind.Should().Be("popup");
+        surface.Root.Children.Select(node => node.Text)
+            .Should().Equal("main", "feature/visual-parity");
+        surface.Root.Colors.Background.Should().StartWith("#");
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
     public void State_driver_should_activate_a_hidden_tab_before_focusing_its_control()
     {
         using Form form = new();
