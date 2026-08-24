@@ -6,11 +6,9 @@
                                  MinWidth="650"
                                  MinHeight="438"
                                  Text="Browse repository window">
-  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollBarVisibility="Auto">
-    <Grid x:Name="tlpnlMain"
-          Margin="8"
-          RowDefinitions="165,142,*">
+  <Grid x:Name="tlpnlMain"
+        Margin="8"
+        RowDefinitions="165,142,*">
       <GroupBox x:Name="groupBox1"
                 Margin="3"
                 Padding="2"
@@ -107,6 +105,5 @@
                          Value="1000" />
         </Grid>
       </GroupBox>
-    </Grid>
-  </ScrollViewer>
+  </Grid>
 </settings:SettingsPageWithHeader>

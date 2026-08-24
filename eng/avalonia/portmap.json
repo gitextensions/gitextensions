@@ -2433,7 +2433,7 @@
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
     "status": "functional",
     "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
-    "notes": "Registers the plain-text command and embedded-shell emulation, shared Output history provider/recorder with trace forwarding, reduced hotkey settings loader, cross-platform external-terminal launcher, and the same-named Dashboard repository-list controller; Linux honors the desktop default through xdg-terminal-exec before named fallbacks. Upstream's Windows ShellProvider registration is deliberately replaced by the existing portable ITerminalLauncher boundary."
+    "notes": "Registers the plain-text command and embedded-shell emulation, shared Output history provider/recorder with trace forwarding, reduced hotkey settings loader, the same IShellProvider descriptor boundary used by settings consumers, the cross-platform external-terminal launcher, and the same-named Dashboard repository-list controller. ConEmu and Mintty remain replaced by the portable plain-text/desktop-terminal boundary."
   },
   "src/app/GitUI/MessageBoxes.cs": {
     "twin": "src/app/GitUI.Avalonia/MessageBoxes.cs",
@@ -3164,7 +3164,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/BlameViewerSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML restores the original integer 96-DPI page and outer-group coordinates with every same-named checkbox. P8.6i progress 25 records real 100% light/dark/custom pairs; framework rendering and the measured residual diagnostics remain open."
+    "notes": "Native AXAML restores the original integer 96-DPI page and outer-group coordinates with every same-named checkbox. P8.6i progress 28 removes the non-source scroll host and records real 100% light/dark/custom pairs; higher-scale embedded-page references, exact rendering, and measured residual diagnostics remain open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/CommitDialogSettingsPage.axaml.cs",
@@ -3182,25 +3182,25 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
-    "notes": "Preserves browse, tab, output-history, shell selection, unavailable-shell error, and hotkey-tooltip behavior. The portable ShellOption list and ITerminalLauncher substitute for upstream's Windows ShellProvider at the UI boundary. P8.6i progress 25 adds native-96 geometry and complete requested 100% state capture; exact diagnostics and exhaustive actions remain open."
+    "notes": "Preserves browse, tab, output-history, shell selection, unavailable-shell error, and hotkey-tooltip behavior through the original IShellProvider/IShellDescriptor boundary. Avalonia SelectionChanged/GotFocus adapt the original committed-selection/Enter events. P8.6i progress 28 removes the private ShellOption substitute and uses the registered cross-platform provider; exact diagnostics and exhaustive actions remain open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormBrowseRepoSettingsPage.axaml",
     "status": "functional",
     "basedOn": "2061dd857c3893c1a2657331da6e2bc01f9c1e86",
-    "notes": "Native AXAML restores the original integer 96-DPI main layout and outer General/Tabs group geometry with same-named controls and help affordances. P8.6i progress 25 measures all requested native-100 states in three themes without unsupported cells; exact rendering remains open."
+    "notes": "Native AXAML restores the original integer 96-DPI main layout and outer General/Tabs group geometry with same-named controls and help affordances. P8.6i progress 28 removes the substitute ScrollViewer because the original page does not enable AutoScroll; exact rendering remains open."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.axaml.cs",
     "status": "functional",
     "basedOn": "659a574db848a0e180d414231c90a14d448fc9b5",
-    "notes": "Preserves sorted translation discovery with English first, optional flag images, activation-driven selection, close fallback, and startup/checklist entry points through a native Avalonia list. P8.6i progress 25 corrects one-click selection to the original double-click/Enter ItemActivate contract and covers selection-versus-activation behavior."
+    "notes": "Preserves sorted translation discovery with English first, optional 150x75 flag images, NativeListView-style hover selection and one-click pointer activation, keyboard activation, close fallback, and startup/checklist entry points through a native Avalonia list. P8.6i progress 28 replaces the former vertical substitute with the original three-column large-icon flow."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/FormChooseTranslation.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML restores the original integer native-96 816x578 window, 800x539 client, label, and list coordinates while retaining the resizable contract. P8.6i progress 25 records native-100 light/dark/custom pairs; Avalonia item layout versus WinForms LargeIcon rendering remains measured debt."
+    "notes": "Native AXAML restores the original integer native-96 816x578 window, 800x539 client, label, and list coordinates while retaining the resizable contract. P8.6i progress 28 restores the 190x119 large-icon cells, three-column wrapping, 150x75 image reservation, resolved ControlLightLight form background, and Window/WindowText/WindowFrame list colors; residual exact rendering remains measured debt."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.axaml.cs",
@@ -3212,7 +3212,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native AXAML restores the original integer 96-DPI main layout, outer group geometry, panel1 identity, same-named controls, information icon, checklist, and preview structure. P8.6i progress 25 measures the available native-100 three-theme matrix; exact rendering and exhaustive states remain open."
+    "notes": "Native AXAML restores the original integer 96-DPI main layout, outer group geometry, panel1 identity, same-named controls, information icon, checklist, and preview structure. P8.6i progress 28 removes the non-source scroll host and measures the native-100 three-theme matrix; higher-scale embedded-page references, exact rendering, and exhaustive states remain open."
   },
   "src/app/GitUI/CommitInfo/CommitInfoHeader.cs": {
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfoHeader.axaml.cs",
@@ -3837,14 +3837,16 @@
     "substitute": "Avalonia Button and ContextMenu composition with native keyboard and pointer routing."
   },
   "src/app/GitUI/Shells/BashShell.cs": {
-    "status": "windowsOnly",
-    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
-    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+    "twin": "src/app/GitUI.Avalonia/Shells/BashShell.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves the descriptor name, icon, Git Bash preference, bash/sh fallback, login command line, and change-directory behavior. Linux/macOS resolve suffix-free bash/sh and skip Windows drive-path conversion."
   },
   "src/app/GitUI/Shells/CmdShell.cs": {
-    "status": "windowsOnly",
-    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
-    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+    "twin": "src/app/GitUI.Avalonia/Shells/CmdShell.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves the original cmd descriptor and remains explicitly unavailable when cmd.exe is absent off Windows."
   },
   "src/app/GitUI/Shells/ConEmuControlExtensions.cs": {
     "status": "windowsOnly",
@@ -3852,34 +3854,40 @@
     "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
   },
   "src/app/GitUI/Shells/IShellDescriptor.cs": {
-    "status": "windowsOnly",
-    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
-    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+    "twin": "src/app/GitUI.Avalonia/Shells/IShellDescriptor.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves the complete descriptor contract; only the image property uses Avalonia IImage instead of System.Drawing.Image."
   },
   "src/app/GitUI/Shells/IShellProvider.cs": {
-    "status": "windowsOnly",
-    "justification": "The original provider exposes the Windows Git Bash, cmd.exe, powershell.exe, and ConEmu descriptor set.",
-    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher selects the available platform shell and desktop terminal without exposing Windows-only descriptors."
+    "twin": "src/app/GitUI.Avalonia/Shells/IShellProvider.cs",
+    "status": "functional",
+    "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
+    "notes": "Preserves the original list, lookup, and command-line boundary for settings and future shell consumers."
   },
   "src/app/GitUI/Shells/PowerShellShell.cs": {
-    "status": "windowsOnly",
-    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
-    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+    "twin": "src/app/GitUI.Avalonia/Shells/PowerShellShell.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves the original descriptor while resolving the suffix-free powershell executable on Linux/macOS."
   },
   "src/app/GitUI/Shells/PwshShell.cs": {
-    "status": "windowsOnly",
-    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
-    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+    "twin": "src/app/GitUI.Avalonia/Shells/PwshShell.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves the original descriptor while resolving the suffix-free pwsh executable on Linux/macOS."
   },
   "src/app/GitUI/Shells/ShellDescriptor.cs": {
-    "status": "windowsOnly",
-    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
-    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+    "twin": "src/app/GitUI.Avalonia/Shells/ShellDescriptor.cs",
+    "status": "functional",
+    "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
+    "notes": "Preserves the original descriptor state and adds only ToString returning Name because Avalonia ComboBox has no DisplayMember property."
   },
   "src/app/GitUI/Shells/ShellProvider.cs": {
-    "status": "windowsOnly",
-    "justification": "The original descriptors resolve Windows Git Bash, cmd.exe, powershell.exe, and ConEmu command lines.",
-    "substitute": "PlainTextConsoleShellRunner plus Compat/TerminalLauncher using the platform shell and desktop terminal."
+    "twin": "src/app/GitUI.Avalonia/Shells/ShellProvider.cs",
+    "status": "functional",
+    "basedOn": "f8b5d7d7aa1a62643224dff6b0cb9ec0399c140b",
+    "notes": "Preserves descriptor order and fallback lookup. The portable fallback returns cmd.exe on Windows or the configured SHELL (then /bin/sh) on Unix-like systems rather than referencing Windows-only ConEmuConstants."
   },
   "src/app/GitUI/SortableBindingList.cs": {
     "status": "windowsOnly",

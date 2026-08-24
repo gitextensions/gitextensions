@@ -7,6 +7,7 @@ using GitExtensions.Extensibility.Translations;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using GitUI.Shells;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 
@@ -287,6 +288,86 @@ public sealed class P61SettingsPagesTests
 
     [AvaloniaTest]
     [NonParallelizable]
+    public void Browse_repository_settings_should_use_the_registered_shell_provider_contract()
+    {
+        string originalTerminal = AppSettings.ConEmuTerminal.Value;
+        try
+        {
+            IShellDescriptor bash = CreateShellDescriptor("bash", hasExecutable: true);
+            IShellDescriptor pwsh = CreateShellDescriptor("pwsh", hasExecutable: false);
+            IShellProvider shellProvider = Substitute.For<IShellProvider>();
+            shellProvider.GetShells().Returns([bash, pwsh]);
+            shellProvider.GetShell(Arg.Any<string?>()).Returns(bash);
+            IServiceProvider serviceProvider = Substitute.For<IServiceProvider>();
+            serviceProvider.GetService(typeof(IShellProvider)).Returns(shellProvider);
+
+            AppSettings.ConEmuTerminal.Value = "pwsh";
+            FormBrowseRepoSettingsPage page = new(serviceProvider);
+            page.LoadSettings();
+            FormBrowseRepoSettingsPage.TestAccessor accessor = page.GetTestAccessor();
+
+            accessor.Terminal.Items.Cast<IShellDescriptor>().Should().Equal(bash, pwsh);
+            accessor.Terminal.SelectedItem.Should().BeSameAs(pwsh);
+            accessor.Terminal.SelectedItem = bash;
+            page.SaveSettings();
+            AppSettings.ConEmuTerminal.Value.Should().Be("bash");
+        }
+        finally
+        {
+            AppSettings.ConEmuTerminal.Value = originalTerminal;
+        }
+    }
+
+    [Test]
+    public void Portable_shell_provider_should_preserve_the_original_descriptor_order_and_fallback()
+    {
+        ShellProvider provider = new();
+        IReadOnlyList<IShellDescriptor> shells = provider.GetShells();
+
+        shells.Select(shell => shell.Name).Should().Equal("bash", "cmd", "pwsh", "powershell");
+        foreach (IShellDescriptor shell in shells)
+        {
+            shell.Icon.Should().NotBeNull();
+        }
+
+        provider.GetShell("missing").Should().BeSameAs(shells[0]);
+        provider.GetShell(null).Should().BeSameAs(shells[0]);
+        provider.GetShellCommandLine("cmd").Should().NotBeNullOrWhiteSpace();
+        if (OperatingSystem.IsWindows())
+        {
+            shells[0].ExecutableName.Should().BeOneOf("git-bash.exe", "bash.exe", "sh.exe");
+        }
+        else
+        {
+            shells[0].ExecutableName.Should().BeOneOf("bash", "sh");
+        }
+
+        shells[2].ExecutableName.Should().Be(OperatingSystem.IsWindows() ? "pwsh.exe" : "pwsh");
+    }
+
+    [Test]
+    public void Portable_shell_descriptors_should_emit_platform_native_change_directory_commands()
+    {
+        string path = new DirectoryInfo(Path.GetTempPath()).FullName;
+        string bashCommand = new BashShell().GetChangeDirCommand(path);
+
+        bashCommand.Should().StartWith("cd ");
+        if (OperatingSystem.IsWindows())
+        {
+            bashCommand.Should().NotContain(@":\");
+            new CmdShell().GetChangeDirCommand(path).Should().StartWith("cd /D ");
+        }
+        else
+        {
+            bashCommand.Should().Contain(path);
+        }
+
+        new PwshShell().GetChangeDirCommand(path).Should().StartWith("cd ");
+        new PowerShellShell().GetChangeDirCommand(path).Should().StartWith("cd ");
+    }
+
+    [AvaloniaTest]
+    [NonParallelizable]
     public void Shell_extension_settings_should_roundtrip_three_states_and_preview()
     {
         string originalItems = AppSettings.CascadeShellMenuItems;
@@ -341,8 +422,11 @@ public sealed class P61SettingsPagesTests
             List<ListBoxItem> items = accessor.Translations.Items.OfType<ListBoxItem>().ToList();
             items.Should().NotBeEmpty();
             items[0].Tag.Should().Be("English");
-            StackPanel english = items[0].Content.Should().BeOfType<StackPanel>().Which;
-            english.Children.OfType<Image>().Single().Source.Should().NotBeNull();
+            Grid english = items[0].Content.Should().BeOfType<Grid>().Which;
+            english.Width.Should().Be(190);
+            english.Height.Should().Be(98);
+            english.Children.OfType<Border>().Single().Child.Should().BeOfType<Image>()
+                .Which.Source.Should().NotBeNull();
 
             accessor.Translations.SelectedItem = items[0];
 
@@ -358,13 +442,30 @@ public sealed class P61SettingsPagesTests
     }
 
     [AvaloniaTest]
+    public void Translation_chooser_should_wrap_large_icon_items_in_the_original_three_column_shape()
+    {
+        using FormChooseTranslation form = new();
+        FormChooseTranslation.TestAccessor accessor = form.GetTestAccessor();
+        accessor.LoadTranslations();
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        List<ListBoxItem> items = accessor.Translations.Items.OfType<ListBoxItem>().Take(4).ToList();
+        items.Should().HaveCount(4);
+
+        items[0].Bounds.Size.Should().Be(new Avalonia.Size(190, 119));
+        items[1].Bounds.Y.Should().Be(items[0].Bounds.Y);
+        items[2].Bounds.Y.Should().Be(items[0].Bounds.Y);
+        items[3].Bounds.Y.Should().BeGreaterThan(items[0].Bounds.Y);
+    }
+
+    [AvaloniaTest]
     public void Settings_pages_should_preserve_native_96_dpi_designer_geometry()
     {
         AssertNativeLayout(
             new BlameViewerSettingsPage(),
             341,
             272,
-            ("groupBoxBlameSettings", new Avalonia.Rect(11, 11, 372, 97)),
+            ("groupBoxBlameSettings", new Avalonia.Rect(11, 11, 319, 97)),
             ("groupBoxDisplayResult", new Avalonia.Rect(11, 114, 319, 197)));
         AssertNativeLayout(
             new CommitDialogSettingsPage(),
@@ -485,6 +586,21 @@ public sealed class P61SettingsPagesTests
             : base(EmptyServiceProvider.Instance)
         {
         }
+    }
+
+    private static IShellDescriptor CreateShellDescriptor(string name, bool hasExecutable)
+        => new TestShellDescriptor(name, hasExecutable);
+
+    private sealed class TestShellDescriptor(string name, bool hasExecutable) : IShellDescriptor
+    {
+        public string? ExecutableCommandLine => null;
+        public string ExecutableName => name;
+        public string? ExecutablePath => hasExecutable ? name : null;
+        public bool HasExecutable => hasExecutable;
+        public Avalonia.Media.IImage Icon => null!;
+        public string Name => name;
+        public string GetChangeDirCommand(string path) => string.Empty;
+        public override string ToString() => Name;
     }
 
     private sealed class TestSettingControlBinding(BoolSetting setting) : ISettingControlBinding
