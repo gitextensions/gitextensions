@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
@@ -11,6 +12,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs.RepoHosting;
@@ -189,6 +191,36 @@ public sealed class RepositoryHostForkCloneTests
     }
 
     [AvaloniaTest]
+    public void ForkAndCloneForm_should_project_both_native_list_substitutes_with_source_columns()
+    {
+        using ForkAndCloneForm form = new();
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureSurface surface = new AvaloniaControlTreeReader(form, renderScale: 1)
+            .ReadPrimary(form, new PixelSize(744, 552));
+        CaptureNode[] nodes = Flatten(surface.Root).ToArray();
+        CaptureNode owned = nodes.Single(node => node.FieldName == "myReposLV");
+        CaptureNode search = nodes.Single(node => node.FieldName == "searchResultsLV");
+
+        owned.BorderStyle.Should().Be("Fixed3D");
+        owned.Columns.Select(column => column.FieldName).Should().Equal(
+            "columnHeaderMyReposName",
+            "columnHeaderMyReposIsFork",
+            "columnHeaderMyReposForks",
+            "columnHeaderMyReposIsPrivate");
+        search.Columns.Select(column => column.FieldName).Should().Equal(
+            "columnHeaderSearchName",
+            "columnHeaderSearchOwner",
+            "columnHeaderSearchIsFork",
+            "columnHeaderSearchForks");
+        search.Columns.Select(column => column.WidthDip).Should().Equal(180, 110, 41, 40);
+        search.Columns.Should().OnlyContain(column => column.Visible);
+        nodes.Where(node => node.FieldName?.StartsWith("columnHeader", StringComparison.Ordinal) == true)
+            .Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
     public async Task ForkAndCloneForm_should_load_sort_and_select_owned_repositories()
     {
         IHostedRepository beta = CreateRepository("beta", owner: "me", isFork: false);
@@ -208,6 +240,18 @@ public sealed class RepositoryHostForkCloneTests
         accessor.TargetDirectory.Should().Be(Path.Combine(accessor.Destination, "alpha"));
         accessor.CloneInfo.Should().Contain("https://example.test/alpha.git");
         accessor.CloneInfo.Should().Contain("push access");
+    }
+
+    private static IEnumerable<CaptureNode> Flatten(CaptureNode root)
+    {
+        yield return root;
+        foreach (CaptureNode child in root.Children)
+        {
+            foreach (CaptureNode descendant in Flatten(child))
+            {
+                yield return descendant;
+            }
+        }
     }
 
     private static void AssertCanvasBounds(Control control, double left, double top, double width, double height)
