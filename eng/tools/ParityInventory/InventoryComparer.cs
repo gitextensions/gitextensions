@@ -79,11 +79,13 @@ internal static class InventoryComparer
         List<FunctionalFinding> findings)
     {
         HashSet<string> uniqueOriginalKeys = original.Members
+            .Where(member => !IsGeneratedMarkupField(member))
             .GroupBy(MemberKey, StringComparer.Ordinal)
             .Where(group => group.Count() == 1)
             .Select(group => group.Key)
             .ToHashSet(StringComparer.Ordinal);
         HashSet<string> uniqueTwinKeys = twin.Members
+            .Where(member => !IsGeneratedMarkupField(member))
             .GroupBy(MemberKey, StringComparer.Ordinal)
             .Where(group => group.Count() == 1)
             .Select(group => group.Key)
@@ -233,7 +235,23 @@ internal static class InventoryComparer
 
     private static string MemberKey(MemberEntry item) => $"{item.Kind}:{item.Name}";
 
-    private static string EventKey(EventWireEntry item) => $"{item.Target}.{item.Event}->{item.Handler}";
+    private static bool IsGeneratedMarkupField(MemberEntry item) =>
+        item.Kind == "field" && item.Part.EndsWith(".axaml", StringComparison.Ordinal);
+
+    private static string EventKey(EventWireEntry item) =>
+        $"{item.Target}.{NormalizeEventName(item.Event)}->{item.Handler}";
+
+    private static string NormalizeEventName(string eventName) =>
+        eventName switch
+        {
+            // Framework constraint: these Avalonia events are the direct lifecycle equivalents
+            // of the WinForms events used by ported handlers.
+            "SelectedIndexChanged" or "SelectionChanged" => "selectionChanged",
+            "Resize" or "SizeChanged" => "sizeChanged",
+            "Enter" or "GotFocus" => "focusEntered",
+            "Leave" or "LostFocus" => "focusLeft",
+            _ => eventName
+        };
 
     private static string MenuKey(MenuEntry item) => $"{item.Parent}/{item.Order}:{item.Name}";
 
