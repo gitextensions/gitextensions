@@ -191,6 +191,15 @@ public partial class FormOpenDirectory : GitExtensionsForm
 
         public ComboBox Directory => _form._NO_TRANSLATE_Directory;
         public Button OpenButton => _form.Load;
+        public Button BrowseButton => _form.folderBrowserButton;
+        public Button GoUpButton => _form.folderGoUpButton;
+
+        public void GoUp() => _form.folderGoUpButton_Click(_form.folderGoUpButton, EventArgs.Empty);
+
+        public void UpdateDirectoryState() => _form._NO_TRANSLATE_Directory_TextChanged(_form._NO_TRANSLATE_Directory, EventArgs.Empty);
+
+        public static IReadOnlyList<string> GetDirectories(IGitModule? currentModule, IEnumerable<Repository> repositoryHistory)
+            => FormOpenDirectory.GetDirectories(currentModule, repositoryHistory);
 
         public static IGitModule? OpenGitRepository(IGitExecutorProvider executorProvider, string path, ILocalRepositoryManager localRepositoryManager)
             => FormOpenDirectory.OpenGitRepository(executorProvider, path, localRepositoryManager);
