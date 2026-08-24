@@ -8,55 +8,76 @@
                                  Text="Shell extension">
   <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
-    <StackPanel x:Name="tlpnlMain"
-                Margin="8"
-                Spacing="6">
+    <Grid x:Name="tlpnlMain"
+          Height="315"
+          Margin="8"
+          RowDefinitions="69,508">
       <GroupBox x:Name="gbExplorerIntegration"
+                Margin="3"
+                Padding="2"
                 Header="Windows Explorer integration">
         <StackPanel x:Name="flpnlExplorerIntegration"
-                    Margin="8,4,8,8"
                     Orientation="Horizontal"
-                    Spacing="6">
+                    Spacing="0">
           <Button x:Name="RegisterButton"
+                  Width="132"
+                  Height="25"
+                  Margin="3"
                   Content="_Enable shell extension" />
           <Button x:Name="UnregisterButton"
+                  Width="135"
+                  Height="25"
+                  Margin="3"
                   Content="_Disable shell extension" />
         </StackPanel>
       </GroupBox>
       <GroupBox x:Name="gbCascadingMenu"
+                Grid.Row="1"
+                Margin="3"
+                Padding="2"
                 Header="Cascaded context menu">
         <Grid x:Name="tlpnlCascadingMenu"
-              Margin="8,4,8,8"
-              ColumnDefinitions="Auto,Auto,*"
-              RowDefinitions="Auto,Auto,*"
-              ColumnSpacing="4"
-              RowSpacing="4">
+              ColumnDefinitions="239,82,*"
+              RowDefinitions="25,20,24,401">
           <CheckBox x:Name="cbAlwaysShowAllCommands"
+                    Width="1458"
+                    Height="19"
+                    Margin="3"
                     Grid.ColumnSpan="3"
                     Content="Always show all commands" />
           <TextBlock x:Name="lblMenuEntries"
-                     Grid.Row="1"
+                     Grid.Row="2"
+                     Height="24"
+                     Margin="3,0,0,0"
                      VerticalAlignment="Center"
                      Text="Configuration of items in the context menu" />
           <Image x:Name="menuHelp"
-                 Grid.Row="1"
+                 Grid.Row="2"
                  Grid.Column="1"
                  Width="16"
                  Height="16"
+                 Margin="0,5,3,3"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
                  Cursor="Hand"
                  Source="{x:Static properties:Images.Information}" />
           <TextBlock x:Name="label1"
-                     Grid.Row="1"
+                     Grid.Row="2"
                      Grid.Column="2"
+                     Height="24"
+                     Margin="3,0"
                      VerticalAlignment="Center"
                      Text="Context menu preview:" />
           <ListBox x:Name="_NO_TRANSLATE_chlMenuEntries"
-                   Grid.Row="2"
+                   Grid.Row="3"
                    Grid.ColumnSpan="2"
-                   MinWidth="315"
-                   MinHeight="190" />
-          <Border Grid.Row="2"
+                   Height="382"
+                   Margin="3"
+                   VerticalAlignment="Top" />
+          <Border x:Name="panel1"
+                  Grid.Row="3"
                   Grid.Column="2"
+                  Margin="2"
                   Padding="3">
             <TextBlock x:Name="labelPreview"
                        Text="..."
@@ -64,6 +85,6 @@
           </Border>
         </Grid>
       </GroupBox>
-    </StackPanel>
+    </Grid>
   </ScrollViewer>
 </settings:SettingsPageWithHeader>
