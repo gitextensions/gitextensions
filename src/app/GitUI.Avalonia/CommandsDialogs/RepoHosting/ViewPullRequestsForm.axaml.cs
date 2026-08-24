@@ -194,6 +194,18 @@ public partial class ViewPullRequestsForm : GitModuleForm
         StartPullRequestLoad();
     }
 
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
+    {
+        _fileStatusList.SelectPreviousVisibleItem();
+        _diffViewer.ScrollToBottom();
+    }
+
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
+    {
+        _fileStatusList.SelectNextVisibleItem();
+        _diffViewer.ScrollToTop();
+    }
+
     private async Task LoadPullRequestsAsync(CancellationToken cancellationToken)
     {
         HostedRemoteRow? selectedRemote = null;
@@ -206,7 +218,11 @@ public partial class ViewPullRequestsForm : GitModuleForm
             _pullRequestsList.ItemsSource = Array.Empty<PullRequestRow>();
             ResizeColumnsToFitContent();
             _selectHostedRepoCB.IsEnabled = true;
-            SelectNextHostedRepositoryIfFirstLoad();
+            if (_isFirstLoad)
+            {
+                SelectNextHostedRepository();
+            }
+
             return;
         }
 
@@ -237,7 +253,10 @@ public partial class ViewPullRequestsForm : GitModuleForm
                     TranslatedStrings.Error,
                     WinFormsShims.MessageBoxButtons.OK,
                     WinFormsShims.MessageBoxIcon.Error);
-                SelectNextHostedRepositoryIfFirstLoad();
+                if (_isFirstLoad)
+                {
+                    SelectNextHostedRepository();
+                }
             }
         }
     }
@@ -272,16 +291,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         LoadListView();
     }
 
-    private void LoadListView()
-    {
-        IReadOnlyList<IPullRequestInformation> pullRequests = _pullRequestsInfo
-            ?? throw new InvalidOperationException("Pull request data has not been loaded.");
-        PullRequestRow[] rows = pullRequests.Select(PullRequestRow.FromPullRequest).ToArray();
-        _pullRequestsList.ItemsSource = rows;
-        ResizeColumnsToFitContent();
-        _pullRequestsList.SelectedIndex = rows.Length > 0 ? 0 : -1;
-    }
-
     private void SelectHostedRepositoryForCurrentRemote()
     {
         string currentRemote = _currentRemoteName;
@@ -304,14 +313,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _selectHostedRepoCB.SelectedItem = hostedRemote ?? _hostedRemoteRows.FirstOrDefault();
     }
 
-    private void SelectNextHostedRepositoryIfFirstLoad()
-    {
-        if (_isFirstLoad)
-        {
-            SelectNextHostedRepository();
-        }
-    }
-
     private void SelectNextHostedRepository()
     {
         TrySelectNextHostedRepository();
@@ -330,7 +331,29 @@ public partial class ViewPullRequestsForm : GitModuleForm
         return true;
     }
 
-    private void StartSelectedPullRequestLoad()
+    private void ResetAllAndShowLoadingPullRequests()
+    {
+        ResetDetails();
+        _pullRequestsInfo = null;
+        _pullRequestsList.ItemsSource = new[] { PullRequestRow.Placeholder(_strLoading.Text) };
+    }
+
+    private void LoadListView()
+    {
+        IReadOnlyList<IPullRequestInformation> pullRequests = _pullRequestsInfo
+            ?? throw new InvalidOperationException("Pull request data has not been loaded.");
+        PullRequestRow[] rows = pullRequests.Select(PullRequestRow.FromPullRequest).ToArray();
+        _pullRequestsList.ItemsSource = rows;
+        ResizeColumnsToFitContent();
+        _pullRequestsList.SelectedIndex = rows.Length > 0 ? 0 : -1;
+    }
+
+    private void ResizeColumnsToFitContent()
+    {
+        ResizeColumns(_pullRequestsList.Items.Cast<PullRequestRow>().ToArray());
+    }
+
+    private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
     {
         IPullRequestInformation? previousPullRequest = _currentPullRequestInfo;
         _currentPullRequestInfo = (_pullRequestsList.SelectedItem as PullRequestRow)?.PullRequest;
@@ -352,9 +375,79 @@ public partial class ViewPullRequestsForm : GitModuleForm
         LoadDiscussion();
     }
 
-    private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
+    private void _pullRequestsList_Resize(object sender, EventArgs e)
     {
-        StartSelectedPullRequestLoad();
+        Grid header = (Grid)(columnHeaderId.Parent
+            ?? throw new InvalidOperationException("The pull-request header is not attached to its column grid."));
+        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
+    }
+
+    private void LoadDiscussion()
+    {
+        // TODO make this operation async (requires change to Git.hub submodule)
+        if (_currentPullRequestInfo is not { } pullRequest)
+        {
+            return;
+        }
+
+        CancellationToken cancellationToken = _discussionSequence.Next();
+        _discussionWB.ItemsSource = new[] { DiscussionRow.Placeholder(_strLoading.Text) };
+        _loader.FileAndForget(() => LoadDiscussionAsync(pullRequest, cancellationToken));
+    }
+
+    private async Task LoadDiscussionAsync(
+        IPullRequestInformation pullRequest,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            // The provider API is still synchronous, so keep this operation off the UI thread.
+            IPullRequestDiscussion discussion = await Task.Run(
+                pullRequest.GetDiscussion,
+                cancellationToken);
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            if (!ReferenceEquals(_currentPullRequestInfo, pullRequest))
+            {
+                return;
+            }
+
+            LoadDiscussion(discussion);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                MessageBoxes.Show(
+                    this,
+                    _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message,
+                    TranslatedStrings.Error,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
+                LoadDiscussion(null);
+            }
+        }
+    }
+
+    private void LoadDiscussion(IPullRequestDiscussion? discussion)
+    {
+        DiscussionRow[] rows = DiscussionHtmlCreator.CreateFor(discussion?.Entries)
+            .Select(DiscussionRow.FromPresentation)
+            .ToArray();
+        _discussionWB.ItemsSource = rows;
+        _discussionWB_DocumentCompleted(this, EventArgs.Empty);
+    }
+
+    private void _discussionWB_DocumentCompleted(object sender, EventArgs e)
+    {
+        object? lastItem = _discussionWB.Items.Cast<object>().LastOrDefault();
+        if (lastItem is not null)
+        {
+            _discussionWB.ScrollIntoView(lastItem);
+        }
     }
 
     private async Task LoadDiffPatchAsync(
@@ -462,135 +555,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
 
         return new DiffSnapshot(baseRevision, new GitRevision(headId), items, patches);
-    }
-
-    private void StartDiscussionLoad(bool forceReload)
-    {
-        if (_currentPullRequestInfo is not { } pullRequest)
-        {
-            return;
-        }
-
-        CancellationToken cancellationToken = _discussionSequence.Next();
-        _discussionWB.ItemsSource = new[] { DiscussionRow.Placeholder(_strLoading.Text) };
-        _loader.FileAndForget(() => LoadDiscussionAsync(pullRequest, forceReload, cancellationToken));
-    }
-
-    private void LoadDiscussion()
-    {
-        // TODO make this operation async (requires change to Git.hub submodule)
-        StartDiscussionLoad(forceReload: false);
-    }
-
-    private async Task LoadDiscussionAsync(
-        IPullRequestInformation pullRequest,
-        bool forceReload,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            // The provider API is still synchronous, so keep this operation off the UI thread.
-            IPullRequestDiscussion discussion = await Task.Run(
-                () =>
-                {
-                    IPullRequestDiscussion result = pullRequest.GetDiscussion();
-                    if (forceReload)
-                    {
-                        result.ForceReload();
-                    }
-
-                    return result;
-                },
-                cancellationToken);
-            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            if (!ReferenceEquals(_currentPullRequestInfo, pullRequest))
-            {
-                return;
-            }
-
-            LoadDiscussion(discussion);
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-        }
-        catch (Exception ex)
-        {
-            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                MessageBoxes.Show(
-                    this,
-                    _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message,
-                    TranslatedStrings.Error,
-                    WinFormsShims.MessageBoxButtons.OK,
-                    WinFormsShims.MessageBoxIcon.Error);
-                LoadDiscussion(null);
-            }
-        }
-    }
-
-    private void LoadDiscussion(IPullRequestDiscussion? discussion)
-    {
-        DiscussionRow[] rows = DiscussionHtmlCreator.CreateFor(discussion?.Entries)
-            .Select(DiscussionRow.FromPresentation)
-            .ToArray();
-        _discussionWB.ItemsSource = rows;
-        _discussionWB_DocumentCompleted(this, EventArgs.Empty);
-    }
-
-    private void _discussionWB_DocumentCompleted(object sender, EventArgs e)
-    {
-        object? lastItem = _discussionWB.Items.Cast<object>().LastOrDefault();
-        if (lastItem is not null)
-        {
-            _discussionWB.ScrollIntoView(lastItem);
-        }
-    }
-
-    private void StartClosePullRequest()
-    {
-        if (_currentPullRequestInfo is not { } pullRequest)
-        {
-            return;
-        }
-
-        _closePullRequestBtn.IsEnabled = false;
-        CancellationToken cancellationToken = _pullRequestsSequence.Next();
-        _loader.FileAndForget(() => ClosePullRequestAsync(pullRequest, cancellationToken));
-    }
-
-    private void _closePullRequestBtn_Click(object? sender, EventArgs e)
-    {
-        StartClosePullRequest();
-    }
-
-    private async Task ClosePullRequestAsync(
-        IPullRequestInformation pullRequest,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            await Task.Run(pullRequest.Close, cancellationToken);
-            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            StartPullRequestLoad();
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-        }
-        catch (Exception ex)
-        {
-            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                _closePullRequestBtn.IsEnabled = true;
-                MessageBoxes.Show(
-                    this,
-                    _strFailedToClosePullRequest.Text + Environment.NewLine + ex.Message,
-                    TranslatedStrings.Error,
-                    WinFormsShims.MessageBoxButtons.OK,
-                    WinFormsShims.MessageBoxIcon.Error);
-            }
-        }
     }
 
     private void _fetchBtn_Click(object sender, EventArgs e)
@@ -728,16 +692,45 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
     }
 
-    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
+    private void _closePullRequestBtn_Click(object? sender, EventArgs e)
     {
-        _fileStatusList.SelectPreviousVisibleItem();
-        _diffViewer.ScrollToBottom();
+        if (_currentPullRequestInfo is not { } pullRequest)
+        {
+            return;
+        }
+
+        _closePullRequestBtn.IsEnabled = false;
+        CancellationToken cancellationToken = _pullRequestsSequence.Next();
+        _loader.FileAndForget(() => ClosePullRequestAsync(pullRequest, cancellationToken));
     }
 
-    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
+    private async Task ClosePullRequestAsync(
+        IPullRequestInformation pullRequest,
+        CancellationToken cancellationToken)
     {
-        _fileStatusList.SelectNextVisibleItem();
-        _diffViewer.ScrollToTop();
+        try
+        {
+            await Task.Run(pullRequest.Close, cancellationToken);
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            StartPullRequestLoad();
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                _closePullRequestBtn.IsEnabled = true;
+                MessageBoxes.Show(
+                    this,
+                    _strFailedToClosePullRequest.Text + Environment.NewLine + ex.Message,
+                    TranslatedStrings.Error,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
+            }
+        }
     }
 
     private void ResetDetails(bool clearPullRequest = true)
@@ -751,13 +744,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _discussionWB.ItemsSource = Array.Empty<DiscussionRow>();
         _fileStatusList.ClearDiffs();
         _diffViewer.ViewText(string.Empty, string.Empty);
-    }
-
-    private void ResetAllAndShowLoadingPullRequests()
-    {
-        ResetDetails();
-        _pullRequestsInfo = null;
-        _pullRequestsList.ItemsSource = new[] { PullRequestRow.Placeholder(_strLoading.Text) };
     }
 
     private Control CreatePullRequestRow(PullRequestRow? row, Avalonia.Controls.INameScope nameScope)
@@ -801,11 +787,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
     }
 
-    private void ResizeColumnsToFitContent()
-    {
-        ResizeColumns(_pullRequestsList.Items.Cast<PullRequestRow>().ToArray());
-    }
-
     private void ResizeColumns(IReadOnlyList<PullRequestRow> rows)
     {
         string[] headers =
@@ -835,13 +816,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 additionalWidth: columnIndex == 0 && rows.Count > 0 ? 5 : 0);
         }
 
-        Grid header = (Grid)(columnHeaderId.Parent
-            ?? throw new InvalidOperationException("The pull-request header is not attached to its column grid."));
-        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
-    }
-
-    private void _pullRequestsList_Resize(object sender, EventArgs e)
-    {
         Grid header = (Grid)(columnHeaderId.Parent
             ?? throw new InvalidOperationException("The pull-request header is not attached to its column grid."));
         header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
@@ -986,7 +960,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         public Task InitializeAsync(CancellationToken cancellationToken = default)
             => form.InitializeAsync(cancellationToken);
 
-        public void ClosePullRequest() => form.StartClosePullRequest();
+        public void ClosePullRequest() => form._closePullRequestBtn_Click(form._closePullRequestBtn, EventArgs.Empty);
 
         public void FetchPullRequest() => form._fetchBtn_Click(form._fetchBtn, EventArgs.Empty);
 
@@ -998,7 +972,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             PullRequestRow row = PullRequestRow.FromPullRequest(pullRequest);
             form._pullRequestsList.ItemsSource = new[] { row };
             form._pullRequestsList.SelectedItem = row;
-            form.StartSelectedPullRequestLoad();
+            form._pullRequestsList_SelectedIndexChanged(form._pullRequestsList, EventArgs.Empty);
         }
 
         public void SelectHostedRepository(int index)
@@ -1013,7 +987,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         public void ClearPullRequestSelection()
         {
             form._pullRequestsList.SelectedItem = null;
-            form.StartSelectedPullRequestLoad();
+            form._pullRequestsList_SelectedIndexChanged(form._pullRequestsList, EventArgs.Empty);
         }
 
         public static IReadOnlyList<GitItemStatus> ParseDiffForTesting(
