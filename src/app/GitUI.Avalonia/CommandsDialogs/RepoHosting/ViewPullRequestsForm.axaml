@@ -13,16 +13,20 @@
   <Grid x:Name="splitContainer2"
         RowDefinitions="146,6,*">
     <Grid x:Name="tableLayoutPanel2"
-          RowDefinitions="32,*">
+          RowDefinitions="33,*">
       <StackPanel x:Name="flowLayoutPanel2"
                   Margin="2"
-                  Orientation="Horizontal"
-                  Spacing="16">
+                  Orientation="Horizontal">
         <TextBlock x:Name="_chooseRepo"
+                   Width="106"
+                   Height="15"
+                   Margin="3,0"
                    VerticalAlignment="Center"
                    Text="Choose repository:" />
         <ComboBox x:Name="_selectHostedRepoCB"
                   Width="258"
+                  Height="23"
+                  Margin="3"
                   VerticalContentAlignment="Center" />
       </StackPanel>
 
@@ -72,6 +76,7 @@
 
         <StackPanel x:Name="flowLayoutPanel3"
                     Grid.Column="1"
+                    Width="160"
                     Margin="2">
           <Button x:Name="_fetchBtn"
                   Classes="gitextensions-dialog-action"
@@ -107,34 +112,32 @@
     <TabControl x:Name="tabControl1"
                 Grid.Row="2"
                 Margin="0"
-                Padding="2,0">
+                Padding="0">
       <TabItem x:Name="tabPage1"
                Classes="gitextensions-dialog-tab"
+               Height="28"
+               MinHeight="28"
                Padding="8,2"
                Header="Diffs">
         <Grid x:Name="splitContainer3"
-              Margin="3,0"
-              RowDefinitions="116,6,*">
-          <Border BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
-                  BorderThickness="1">
-            <gitui:FileStatusList x:Name="_fileStatusList" />
-          </Border>
+              Margin="6,2,6,6"
+              RowDefinitions="112,6,*">
+          <gitui:FileStatusList x:Name="_fileStatusList" />
           <GridSplitter Grid.Row="1"
                         ResizeDirection="Rows" />
-          <Border Grid.Row="2"
-                  BorderBrush="{DynamicResource GitExtensionsPaneBorderBrush}"
-                  BorderThickness="1">
-            <editor:FileViewer x:Name="_diffViewer" />
-          </Border>
+          <editor:FileViewer x:Name="_diffViewer"
+                             Grid.Row="2" />
         </Grid>
       </TabItem>
 
       <TabItem x:Name="tabPage2"
                Classes="gitextensions-dialog-tab"
+               Height="28"
+               MinHeight="28"
                Padding="8,2"
                Header="Comments">
         <Grid x:Name="tableLayoutPanel1"
-              Margin="3,0,3,7"
+              Margin="6,2,6,6"
               RowDefinitions="*,80,33">
           <ListBox x:Name="_discussionWB"
                    Margin="3"

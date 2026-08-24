@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs.RepoHosting;
 
 public partial class ViewPullRequestsForm : GitModuleForm
 {
+    #region Translation
     private readonly TranslationString _strFailedToFetchPullData = new("Failed to fetch pull data!");
     private readonly TranslationString _strFailedToLoadDiscussionItem = new("Failed to post discussion item!");
     private readonly TranslationString _strFailedToClosePullRequest = new("Failed to close pull request!");
@@ -34,8 +35,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private readonly TranslationString _strRemoteAlreadyExist = new("ERROR: Remote with name {0} already exists but it points to a different repository!\r\nDetails: Is {1} expected {2}");
     private readonly TranslationString _strCouldNotAddRemote = new("Could not add remote with name {0} and URL {1}");
     private readonly TranslationString _strRemoteIgnore = new("Remote ignored");
-
-    private readonly IRepositoryHostPlugin? _gitHoster;
+    #endregion
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
     private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
@@ -48,7 +48,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private IPullRequestInformation? _currentPullRequestInfo;
     private IPullRequestDiscussion? _currentDiscussion;
     private Dictionary<string, string> _diffCache = [];
+    private readonly IRepositoryHostPlugin _gitHoster = null!;
     private IReadOnlyList<HostedRemoteRow> _hostedRemotes = [];
+    private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
     private readonly double[] _pullRequestColumnWidths = new double[5];
     private bool _isFirstLoad;
 
@@ -107,7 +109,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     private void ViewPullRequestsForm_Load(object sender, EventArgs e)
     {
-        if (_gitHoster is null)
+        if (Design.IsDesignMode)
         {
             return;
         }
@@ -189,8 +191,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         CancellationToken cancellationToken = _pullRequestsSequence.Next();
         _detailsSequence.CancelCurrent();
         _discussionSequence.CancelCurrent();
-        ResetDetails();
-        _pullRequestsList.ItemsSource = new[] { PullRequestRow.Placeholder(_strLoading.Text) };
+        ResetAllAndShowLoadingPullRequests();
         _selectHostedRepoCB.IsEnabled = false;
         _operations.FileAndForget(() => LoadPullRequestsAsync(cancellationToken));
     }
@@ -221,19 +222,10 @@ public partial class ViewPullRequestsForm : GitModuleForm
             IReadOnlyList<IPullRequestInformation> pullRequests = await Task.Run(
                 selectedRemote.Repository.GetPullRequests,
                 cancellationToken);
-            PullRequestRow[] rows = pullRequests.Select(PullRequestRow.FromPullRequest).ToArray();
 
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             _selectHostedRepoCB.IsEnabled = true;
-            if (_isFirstLoad && rows.Length == 0 && SelectNextHostedRepository())
-            {
-                return;
-            }
-
-            _isFirstLoad = false;
-            ResizeColumnsToFitContent(rows);
-            _pullRequestsList.ItemsSource = rows;
-            _pullRequestsList.SelectedIndex = rows.Length > 0 ? 0 : -1;
+            SetPullRequestsData(pullRequests);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -255,6 +247,46 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 SelectNextHostedRepositoryIfFirstLoad();
             }
         }
+    }
+
+    private void SetPullRequestsData(IReadOnlyList<IPullRequestInformation>? infos)
+    {
+        if (_isFirstLoad)
+        {
+            if (infos?.Count is 0 && _hostedRemotes.Count > 0)
+            {
+                if (SelectNextHostedRepository())
+                {
+                    return;
+                }
+
+                // Cross-platform constraint: do not leave the final empty provider permanently in its loading state.
+                _isFirstLoad = false;
+            }
+            else
+            {
+                _isFirstLoad = false;
+            }
+        }
+
+        _pullRequestsInfo = infos;
+        _pullRequestsList.ItemsSource = Array.Empty<PullRequestRow>();
+        if (_pullRequestsInfo is null)
+        {
+            return;
+        }
+
+        LoadListView();
+    }
+
+    private void LoadListView()
+    {
+        IReadOnlyList<IPullRequestInformation> pullRequests = _pullRequestsInfo
+            ?? throw new InvalidOperationException("Pull request data has not been loaded.");
+        PullRequestRow[] rows = pullRequests.Select(PullRequestRow.FromPullRequest).ToArray();
+        ResizeColumnsToFitContent(rows);
+        _pullRequestsList.ItemsSource = rows;
+        _pullRequestsList.SelectedIndex = rows.Length > 0 ? 0 : -1;
     }
 
     private void SelectNextHostedRepositoryIfFirstLoad()
@@ -718,6 +750,13 @@ public partial class ViewPullRequestsForm : GitModuleForm
         SetActionState();
     }
 
+    private void ResetAllAndShowLoadingPullRequests()
+    {
+        ResetDetails();
+        _pullRequestsInfo = null;
+        _pullRequestsList.ItemsSource = new[] { PullRequestRow.Placeholder(_strLoading.Text) };
+    }
+
     private void SetActionState()
     {
         bool hasPullRequest = _currentPullRequestInfo is not null;
@@ -931,7 +970,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     }
 
     private IRepositoryHostPlugin GetGitHoster()
-        => _gitHoster ?? throw new InvalidOperationException($"{nameof(ViewPullRequestsForm)} was constructed incorrectly.");
+        => _gitHoster;
 
     // parity-scaffolding: Exposes repository-host state and actions to the cross-platform parity suite.
     internal TestAccessor GetTestAccessor() => new(this);
