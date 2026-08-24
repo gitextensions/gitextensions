@@ -120,6 +120,17 @@ public sealed partial class ParityScreenshotTests
         GetCaptureSize(typeof(FormContributors)).Should().Be((624, 442));
     }
 
+    [Test]
+    [Category(P02Category)]
+    public void Settings_page_capture_hosts_should_use_native_96_dpi_runtime_dimensions()
+    {
+        GetCaptureSize(typeof(BlameViewerSettingsPage)).Should().Be((341, 272));
+        GetCaptureSize(typeof(CommitDialogSettingsPage)).Should().Be((1014, 950));
+        GetCaptureSize(typeof(FormBrowseRepoSettingsPage)).Should().Be((738, 438));
+        GetCaptureSize(typeof(ShellExtensionSettingsPage)).Should().Be((1502, 331));
+        GetCaptureSize(typeof(FormChooseTranslation)).Should().Be((816, 578));
+    }
+
     [AvaloniaTest]
     [Category(P02Category)]
     public void Avalonia_tree_reader_should_measure_named_controls_from_their_nearest_semantic_owner()
@@ -716,6 +727,31 @@ public sealed partial class ParityScreenshotTests
         applyUnsupported.Should().Throw<AvaloniaCaptureStateUnsupportedException>()
             .WithMessage("*ToggleButton*");
         unsupportedWindow.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
+    public void Avalonia_state_driver_should_drive_the_single_toggle_inside_a_composite_control()
+    {
+        GitUI.UserControls.Settings.SettingsCheckBox composite = new();
+        Window window = new() { Width = 240, Height = 100, Content = composite };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        CheckBox checkBox = composite.GetTestAccessor().CheckBox;
+
+        using (AvaloniaControlStateDriver.Apply(
+                   composite,
+                   new CaptureStatePlan
+                   {
+                       Id = "checked",
+                       Kind = CaptureStateKind.Checked,
+                   }))
+        {
+            checkBox.IsChecked.Should().BeTrue();
+        }
+
+        checkBox.IsChecked.Should().BeFalse();
+        window.Close();
     }
 
     [AvaloniaTest]

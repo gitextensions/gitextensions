@@ -2197,7 +2197,7 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormChooseTranslation))
         {
             // The WinForms full-window PrintWindow surface includes non-client chrome.
-            return (814.5, 577);
+            return (816, 578);
         }
 
         if (viewType == typeof(ColorsSettingsPage))
