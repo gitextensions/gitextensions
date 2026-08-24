@@ -39,7 +39,6 @@
           <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
             <ContentControl x:Name="columnHeaderId"
                             Classes="gitextensions-list-header-cell"
-                            HorizontalContentAlignment="Right"
                             Content="#" />
             <ContentControl x:Name="columnHeaderHeading"
                             Grid.Column="1"

@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel.Design;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -10,6 +13,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs.RepoHosting;
@@ -173,6 +177,73 @@ public sealed class RepositoryHostPullRequestTests
             nameof(ViewPullRequestsForm), "columnHeaderBranch", "Text", "Will be fetched to branch");
         translation.DidNotReceive().AddTranslationItem(
             nameof(ViewPullRequestsForm), "columnHeaderId", Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [AvaloniaTest]
+    public void ViewPullRequestsForm_should_project_the_native_list_substitute_as_one_column_list()
+    {
+        using ViewPullRequestsForm form = new();
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureSurface surface = new AvaloniaControlTreeReader(form, renderScale: 1)
+            .ReadPrimary(form, new PixelSize(754, 511));
+        CaptureNode[] nodes = Flatten(surface.Root).ToArray();
+        CaptureNode list = nodes.Single(node => node.FieldName == "_pullRequestsList");
+
+        list.BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 3, Width = 580, Height = 103 });
+        list.ClientSizeDip.Should().Be(new CaptureSizeF { Width = 576, Height = 99 });
+        list.BorderStyle.Should().Be("Fixed3D");
+        list.Dock.Should().Be("Fill");
+        list.AutoSize.Should().BeFalse();
+        list.TabStop.Should().BeTrue();
+        list.Columns.Select(column => column.FieldName).Should().Equal(
+            "columnHeaderId",
+            "columnHeaderHeading",
+            "columnHeaderBy",
+            "columnHeaderCreated",
+            "columnHeaderBranch");
+        list.Columns.Select(column => column.HeaderText).Should().Equal(
+            "#",
+            "Heading",
+            "By",
+            "Created",
+            "Will be fetched to branch");
+        nodes.Where(node => node.FieldName?.StartsWith("columnHeader", StringComparison.Ordinal) == true)
+            .Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    [TestCaseSource(nameof(NativeListThemeCases))]
+    public void ViewPullRequestsForm_should_use_native_list_chrome(
+        ThemeVariant themeVariant,
+        string header,
+        string selection,
+        string inactiveSelection)
+    {
+        using ViewPullRequestsForm form = new() { RequestedThemeVariant = themeVariant };
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        ListBox list = form.FindControl<ListBox>("_pullRequestsList")!;
+        list.BorderThickness.Should().Be(new Thickness(1, 0, 1, 1));
+        ResolveColor("GitExtensionsNativeListHeaderBackgroundBrush").Should().Be(Color.Parse(header));
+        ResolveColor("GitExtensionsNativeListSelectionBackgroundBrush").Should().Be(Color.Parse(selection));
+        ResolveColor("GitExtensionsNativeListInactiveSelectionBackgroundBrush").Should().Be(Color.Parse(inactiveSelection));
+
+        Color ResolveColor(string key)
+        {
+            form.TryFindResource(key, form.ActualThemeVariant, out object? resource).Should().BeTrue();
+            return resource.Should().BeOfType<SolidColorBrush>().Subject.Color;
+        }
+    }
+
+    private static IEnumerable<TestCaseData> NativeListThemeCases()
+    {
+        yield return new TestCaseData(ThemeVariant.Light, "#FFFFFF", "#CCE8FF", "#D9D9D9")
+            .SetName("ViewPullRequestsForm_should_use_native_list_chrome_light");
+        yield return new TestCaseData(ThemeVariant.Dark, "#191919", "#28445B", "#2B2B2B")
+            .SetName("ViewPullRequestsForm_should_use_native_list_chrome_dark");
     }
 
     [AvaloniaTest]
@@ -750,6 +821,18 @@ public sealed class RepositoryHostPullRequestTests
         pullRequest.GetDiffDataAsync().Returns(Task.FromResult(Diff));
         pullRequest.GetDiscussion().Returns(discussion);
         return pullRequest;
+    }
+
+    private static IEnumerable<CaptureNode> Flatten(CaptureNode root)
+    {
+        yield return root;
+        foreach (CaptureNode child in root.Children)
+        {
+            foreach (CaptureNode descendant in Flatten(child))
+            {
+                yield return descendant;
+            }
+        }
     }
 
     private static WinFormsShims.IMessageBoxHost? TryGetMessageBoxHost()
