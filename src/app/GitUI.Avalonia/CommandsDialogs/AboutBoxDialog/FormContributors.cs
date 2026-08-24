@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using GitUI.Compat;
@@ -35,10 +36,11 @@ public sealed partial class FormContributors : GitExtensionsForm
 
             string[] tabCaptions = [_developers.Text, _translators.Text, _designers.Text];
             TextBox[] textBoxes = new TextBox[tabCaptions.Length];
+            TabItem[] tabPages = new TabItem[tabCaptions.Length];
             for (int i = 0; i < tabCaptions.Length; i++)
             {
                 textBoxes[i] = GetNewTextBox();
-                GetNewTabPage(textBoxes[i], tabCaptions[i]);
+                tabPages[i] = GetNewTabPage(textBoxes[i], tabCaptions[i]);
             }
 
             textBoxes[0].Text = string.Format("{0}:\r\n{1}\r\n\r\n{2}:\r\n{3}",
@@ -59,25 +61,35 @@ public sealed partial class FormContributors : GitExtensionsForm
 
             TextBox GetNewTextBox()
             {
-                return new TextBox
+                TextBox textBox = new()
                 {
-                    BorderThickness = new Avalonia.Thickness(0),
-                    Margin = new Avalonia.Thickness(0),
+                    BorderThickness = new Thickness(0),
+                    Margin = new Thickness(0),
+                    Padding = new Thickness(0),
                     AcceptsReturn = true,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    HorizontalContentAlignment = HorizontalAlignment.Left,
+                    VerticalContentAlignment = VerticalAlignment.Top,
                     IsReadOnly = true,
+                    IsTabStop = false,
                     TextWrapping = Avalonia.Media.TextWrapping.NoWrap,
                 };
+                ScrollViewer.SetHorizontalScrollBarVisibility(textBox, Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled);
+                ScrollViewer.SetVerticalScrollBarVisibility(textBox, Avalonia.Controls.Primitives.ScrollBarVisibility.Visible);
+                return textBox;
             }
 
             TabItem GetNewTabPage(TextBox textBox, string caption)
             {
                 TabItem tabPage = new()
                 {
-                    Margin = new Avalonia.Thickness(0),
-                    Padding = new Avalonia.Thickness(0),
+                    Margin = new Thickness(0),
+                    Padding = new Thickness(0),
                     Header = caption,
                     Content = textBox,
                 };
+                tabPage.Classes.Add("gitextensions-dialog-tab");
                 tabControl.Items.Add(tabPage);
                 return tabPage;
             }
