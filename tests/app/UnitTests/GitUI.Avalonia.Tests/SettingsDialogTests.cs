@@ -2141,6 +2141,59 @@ public sealed class SettingsDialogTests
         binding.SaveCount.Should().Be(1);
     }
 
+    [AvaloniaTest]
+    public void SettingsPageBase_should_search_visible_enabled_text_in_breadth_first_order()
+    {
+        TestSettingsPage page = new()
+        {
+            Content = new StackPanel
+            {
+                Children =
+                {
+                    new TextBlock { Text = " First " },
+                    new Border
+                    {
+                        Child = new StackPanel
+                        {
+                            Children =
+                            {
+                                new TextBlock { Text = "Second" },
+                                new Border
+                                {
+                                    IsVisible = false,
+                                    Child = new TextBlock { Text = "Hidden descendant" },
+                                },
+                            },
+                        },
+                    },
+                    new TextBox { Text = "Third" },
+                },
+            },
+        };
+
+        page.GetSearchKeywords().Should().Equal("First", "Third", "Second");
+        page.GetSearchKeywords().Should().NotContain("Hidden descendant");
+    }
+
+    [AvaloniaTest]
+    public void SettingsPageBase_should_bind_native_combo_through_StringComboBoxAdapter()
+    {
+        ISetting<string> setting = Substitute.For<ISetting<string>>();
+        setting.FullPath.Returns("section.choice");
+        setting.Default.Returns("one");
+        ComboBox comboBox = new() { ItemsSource = new[] { "one", "two", "three" } };
+        TestSettingsPage page = new();
+        page.Settings.SetValue("section.choice", "two");
+        page.Bind(setting, comboBox);
+
+        page.LoadSettings();
+        comboBox.SelectedItem.Should().Be("two");
+
+        comboBox.SelectedItem = "three";
+        page.SaveSettings();
+        page.Settings.GetValue("section.choice").Should().Be("three");
+    }
+
     private sealed class RootGroup : GroupSettingsPage
     {
         public RootGroup()
@@ -2209,7 +2262,11 @@ public sealed class SettingsDialogTests
 
         public bool SettingsLoaded => IsSettingsLoaded;
 
+        public TestSettingsSource Settings => _settings;
+
         public void AttachHost(ISettingsPageHost host) => Init(host);
+
+        public void Bind(ISetting<string> setting, ComboBox comboBox) => AddSettingBinding(setting, comboBox);
 
         protected override SettingsSource GetCurrentSettings()
         {
@@ -2238,10 +2295,14 @@ public sealed class SettingsDialogTests
 
     private sealed class TestSettingsSource : SettingsSource
     {
-        public override string? GetValue(string name) => null;
+        private readonly Dictionary<string, string?> _values = [];
+
+        public override string? GetValue(string name)
+            => _values.GetValueOrDefault(name);
 
         public override void SetValue(string name, string? value)
         {
+            _values[name] = value;
         }
     }
 
