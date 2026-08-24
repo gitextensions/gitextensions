@@ -8,10 +8,37 @@
         MinHeight="420"
         WindowStartupLocation="CenterOwner"
         Title="Remote repository fork and clone">
+  <Window.Styles>
+    <!-- Framework constraint: the content presenter stays at the GroupBox origin so Designer child coordinates remain 1:1 DIPs. -->
+    <Style Selector="HeaderedContentControl.repository-host-clone-group">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Grid>
+            <Border Margin="0,8,0,0"
+                    BorderBrush="#FFDCDCDC"
+                    BorderThickness="1" />
+            <ContentPresenter Margin="7,0,0,0"
+                              Padding="3,0"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Background="{TemplateBinding Background}"
+                              Content="{TemplateBinding Header}"
+                              ContentTemplate="{TemplateBinding HeaderTemplate}" />
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+          </Grid>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+  </Window.Styles>
   <Grid x:Name="tableLayoutPanel2"
         RowDefinitions="*,183,40">
     <TabControl x:Name="tabControl"
-                Margin="3">
+                Margin="3"
+                Padding="0">
       <TabItem x:Name="myReposPage"
                Classes="gitextensions-dialog-tab"
                Header="My repositories">
@@ -151,106 +178,106 @@
 
     <HeaderedContentControl x:Name="cloneSetupGB"
                             Grid.Row="1"
-                            Classes="gitextensions-group-box"
+                            Classes="repository-host-clone-group"
                             Header="Clone"
                             Margin="4">
-      <Grid RowDefinitions="Auto,30,64,30"
-            ColumnDefinitions="195,215,*">
+      <Canvas>
         <TextBlock x:Name="label1"
+                   Canvas.Left="7"
+                   Canvas.Top="16"
+                   Width="104"
+                   Height="15"
                    Text="Destination folder:" />
         <TextBox x:Name="destinationTB"
-                 Grid.Row="1"
-                 Grid.ColumnSpan="2"
+                 Canvas.Left="10"
+                 Canvas.Top="32"
                  Width="294"
-                 Height="21"
-                 Margin="0,2,0,4"
-                 HorizontalAlignment="Left" />
+                 Height="23" />
         <usercontrols:FolderBrowserButton x:Name="browseForCloneToDirbtn"
-                Grid.Row="1"
-                Grid.ColumnSpan="3"
-                Width="102"
-                Height="23"
-                Margin="300,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalContentAlignment="Center" />
+                                          Canvas.Left="310"
+                                          Canvas.Top="32"
+                                          Width="102"
+                                          Height="23"
+                                          VerticalContentAlignment="Center" />
 
         <TextBlock x:Name="createDirectoryLbl"
-                   Grid.Row="2"
-                   Margin="0,-7,0,0"
+                   Canvas.Left="7"
+                   Canvas.Top="55"
+                   Width="94"
+                   Height="15"
                    Text="Create directory:" />
         <TextBlock x:Name="label3"
-                   Grid.Row="2"
-                   Grid.Column="1"
-                   Margin="9,-7,0,0"
+                   Canvas.Left="211"
+                   Canvas.Top="55"
+                   Width="140"
+                   Height="15"
                    Text="Add upstream remote as:" />
         <TextBlock x:Name="ProtocolLabel"
-                   Grid.Row="2"
-                   Grid.Column="2"
+                   Canvas.Left="418"
+                   Canvas.Top="36"
+                   Width="55"
+                   Height="15"
                    Text="Protocol:" />
         <TextBox x:Name="createDirTB"
-                 Grid.Row="2"
+                 Canvas.Left="10"
+                 Canvas.Top="71"
                  Width="183"
-                 Height="21"
-                 Margin="0,9,0,0"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Top" />
+                 Height="23" />
         <ComboBox x:Name="addUpstreamRemoteAsCB"
-                  Grid.Row="2"
-                  Grid.Column="1"
+                  Canvas.Left="212"
+                  Canvas.Top="71"
                   Width="200"
-                  Margin="9,9,0,0"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Top"
+                  Height="23"
                   IsEditable="True" />
         <ComboBox x:Name="ProtocolDropdownList"
-                  Grid.Row="2"
-                  Grid.Column="2"
+                  Canvas.Left="470"
+                  Canvas.Top="32"
                   Width="121"
-                  Margin="0,18,0,22"
-                  HorizontalAlignment="Left" />
+                  Height="23" />
         <TextBlock x:Name="cloneInfoText"
-                   Grid.Row="2"
-                   Grid.ColumnSpan="3"
+                   Canvas.Left="10"
+                   Canvas.Top="97"
+                   Width="719"
                    Height="35"
-                   Margin="2,35,0,0"
-                   VerticalAlignment="Top"
                    TextWrapping="Wrap" />
 
         <TextBlock x:Name="depthLabel"
-                   Grid.Row="3"
-                   Grid.ColumnSpan="3"
-                   Margin="0,-5,0,0"
-                   VerticalAlignment="Top"
+                   Canvas.Left="7"
+                   Canvas.Top="135"
+                   Width="72"
+                   Height="15"
                    Text="Limit Depth:" />
         <NumericUpDown x:Name="depthUpDown"
-                       Grid.Row="3"
-                       Grid.ColumnSpan="3"
+                       Canvas.Left="10"
+                       Canvas.Top="151"
                        Width="100"
-                       Margin="2,14,0,0"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
+                       Height="23"
                        Minimum="0"
                        Maximum="999"
                        Value="0" />
-      </Grid>
+      </Canvas>
     </HeaderedContentControl>
 
-    <StackPanel x:Name="flowLayoutPanel1"
-                Grid.Row="2"
-                Orientation="Horizontal"
-                HorizontalAlignment="Right"
-                Spacing="6"
-                Margin="3">
+    <Grid x:Name="flowLayoutPanel1"
+          Grid.Row="2"
+          ColumnDefinitions="*,120,6,120,3"
+          Margin="3">
       <Button x:Name="cloneBtn"
+              Grid.Column="1"
               Classes="gitextensions-dialog-action"
               Width="120"
               Height="30"
+              Margin="0,3,0,0"
+              VerticalAlignment="Top"
               Content="Clone" />
       <Button x:Name="_NO_TRANSLATE_closeBtn"
+              Grid.Column="3"
               Classes="gitextensions-dialog-action"
               Width="120"
               Height="30"
+              Margin="0,3,0,0"
+              VerticalAlignment="Top"
               Content="Close" />
-    </StackPanel>
+    </Grid>
   </Grid>
 </Window>

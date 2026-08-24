@@ -19,8 +19,7 @@ namespace GitUI.CommandsDialogs.RepoHosting;
 
 public partial class ForkAndCloneForm : GitExtensionsForm
 {
-    private const string UpstreamRemoteName = "upstream";
-
+    #region Translation
     private readonly TranslationString _strLoading = new(" : LOADING : ");
     private readonly TranslationString _strFailedToGetRepos = new("Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu \"Plugins/{0}\".");
     private readonly TranslationString _strWillCloneWithPushAccess = new("Will clone {0} into {1}.\r\nYou will have push access. {2}");
@@ -35,9 +34,12 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     private readonly TranslationString _strSearching = new(" : SEARCHING : ");
     private readonly TranslationString _strSelectOneItem = new("You must select exactly one item");
     private readonly TranslationString _strCloneFolderCanNotBeEmpty = new("Clone folder can not be empty");
+    #endregion
 
-    private readonly IGitUICommands? _commands;
-    private readonly IRepositoryHostPlugin? _gitHoster;
+    private const string UpstreamRemoteName = "upstream";
+
+    private readonly IGitUICommands _commands = null!;
+    private readonly IRepositoryHostPlugin _gitHoster = null!;
     private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
@@ -113,12 +115,12 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void ForkAndCloneForm_Load(object sender, EventArgs e)
     {
-        if (_commands is null || _gitHoster is null)
+        if (Design.IsDesignMode)
         {
             return;
         }
 
-        _operations.FileAndForget(() => InitializeAsync(_lifetimeCancellation.Token));
+        Init();
     }
 
     protected override void OnClosed(EventArgs e)
@@ -131,6 +133,12 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         _searchSequence.Dispose();
         _lifetimeCancellation.Dispose();
         base.OnClosed(e);
+    }
+
+    private void Init()
+    {
+        // Framework constraint: portable settings history is asynchronous, so the source-shaped initializer owns the task boundary.
+        _operations.FileAndForget(() => InitializeAsync(_lifetimeCancellation.Token));
     }
 
     private async Task InitializeAsync(CancellationToken cancellationToken)
@@ -230,15 +238,9 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                     ? GetGitHoster().SearchForRepository(search)
                     : GetGitHoster().GetRepositoriesOfUser(search),
                 cancellationToken);
-            HostedRepositoryRow[] rows = repositories
-                .OrderBy(repository => repository.Name)
-                .Select(HostedRepositoryRow.FromRepository)
-                .ToArray();
 
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            ResizeColumnToFitContent(rows, isSearchResult: true, 0);
-            ResizeColumnToFitContent(rows, isSearchResult: true, 1);
-            searchResultsLV.ItemsSource = rows;
+            HandleSearchResult(repositories);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -322,6 +324,17 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             Grid.SetColumn(cell, column);
             return cell;
         }
+    }
+
+    private void HandleSearchResult(IReadOnlyList<IHostedRepository> repos)
+    {
+        HostedRepositoryRow[] rows = repos
+            .OrderBy(repository => repository.Name)
+            .Select(HostedRepositoryRow.FromRepository)
+            .ToArray();
+        ResizeColumnToFitContent(rows, isSearchResult: true, 0);
+        ResizeColumnToFitContent(rows, isSearchResult: true, 1);
+        searchResultsLV.ItemsSource = rows;
     }
 
     private void ResizeColumnToFitContent(
@@ -466,8 +479,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
 
         string homepage = repository.Homepage;
-        if (!Uri.TryCreate(homepage, UriKind.Absolute, out Uri? uri)
-            || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+        if (string.IsNullOrEmpty(homepage)
+            || (!homepage.StartsWith("http://") && !homepage.StartsWith("https://")))
         {
             MessageBoxes.Show(
                 this,
@@ -662,7 +675,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             return null;
         }
 
-        string directory = createDirTB.Text?.Trim() ?? string.Empty;
+        string directory = createDirTB.Text ?? string.Empty;
         return Path.Combine(destination, directory);
     }
 
@@ -728,10 +741,10 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     }
 
     private IGitUICommands GetCommands()
-        => _commands ?? throw new InvalidOperationException($"{nameof(ForkAndCloneForm)} was constructed incorrectly.");
+        => _commands;
 
     private IRepositoryHostPlugin GetGitHoster()
-        => _gitHoster ?? throw new InvalidOperationException($"{nameof(ForkAndCloneForm)} was constructed incorrectly.");
+        => _gitHoster;
 
     // parity-scaffolding: Exposes repository-host state and actions to the cross-platform parity suite.
     internal TestAccessor GetTestAccessor() => new(this);
