@@ -3,46 +3,43 @@
         xmlns:compat="using:GitUI.Compat"
         xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.BrowseDialog.FormOpenDirectory"
-        Width="615" Height="116"
-        MinWidth="450" MaxWidth="800"
-        MinHeight="116" MaxHeight="116"
+        Width="615" Height="77"
+        MinWidth="434" MaxWidth="784"
+        MinHeight="77" MaxHeight="77"
         WindowStartupLocation="CenterOwner"
         Title="Open local repository">
-  <Grid Margin="9"
-        ColumnDefinitions="Auto,*,Auto"
-        RowDefinitions="Auto,Auto"
-        ColumnSpacing="6"
-        RowSpacing="8">
+  <Grid ColumnDefinitions="85,*,3,26,3,135,3"
+        RowDefinitions="7,25,7,25,*">
     <Label x:Name="label1"
-           Grid.Row="0" Grid.Column="0"
-           VerticalAlignment="Center"
+           Grid.Row="1" Grid.Column="0"
+           Width="51" Height="15"
+           Margin="13,6,0,4"
+           HorizontalAlignment="Left"
            Padding="0"
            Content="_Directory:"
            Target="{Binding #_NO_TRANSLATE_Directory}" />
     <ComboBox x:Name="_NO_TRANSLATE_Directory"
-              Grid.Row="0" Grid.Column="1"
+              Grid.Row="1" Grid.Column="1"
+              Margin="0,2,0,0"
               HorizontalAlignment="Stretch"
               IsEditable="True" />
-    <StackPanel Grid.Row="0" Grid.Column="2"
-                Orientation="Horizontal"
-                Spacing="3">
-      <compat:IconButton x:Name="folderGoUpButton"
-                         Classes="gitextensions-icon-only"
-                         Width="26"
-                         compat:TranslationCompat.ToolTipPropertyName="toolTip1"
-                         ToolTip.Tip="Go to parent directory..."
-                         AutomationProperties.Name="Go to parent directory..."
-                         Icon="{x:Static properties:Images.NavigateUp}" />
-      <compat:IconButton x:Name="folderBrowserButton"
-                         MinWidth="135"
-                         Content="_Browse..."
-                         Icon="{x:Static properties:Images.BrowseFileExplorer}" />
-    </StackPanel>
+    <compat:IconButton x:Name="folderGoUpButton"
+                       Grid.Row="1" Grid.Column="3"
+                       Classes="gitextensions-icon-only"
+                       Width="26" Height="25"
+                       compat:TranslationCompat.ToolTipPropertyName="toolTip1"
+                       ToolTip.Tip="Go to parent directory..."
+                       AutomationProperties.Name="Go to parent directory..."
+                       Icon="{x:Static properties:Images.NavigateUp}" />
+    <compat:IconButton x:Name="folderBrowserButton"
+                       Grid.Row="1" Grid.Column="5"
+                       Width="135" Height="25"
+                       Content="_Browse..."
+                       Icon="{x:Static properties:Images.BrowseFileExplorer}" />
 
     <compat:IconButton x:Name="Load"
-                       Grid.Row="1" Grid.Column="2"
-                       MinWidth="164"
-                       HorizontalAlignment="Right"
+                       Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="3"
+                       Width="164" Height="25"
                        Content="Open"
                        Icon="{x:Static properties:Images.RepoOpen}"
                        IsDefault="True" />

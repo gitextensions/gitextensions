@@ -6,8 +6,10 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
 using GitExtensions.Plugins.Gource;
+using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.CommitDialog;
@@ -28,6 +30,8 @@ internal static class ComponentFactory
 {
     public static Control Create(CaptureComponentPlan component, GitUICommands commands)
     {
+        // parity-scaffolding: The real application initialises this before constructing About/EnvironmentInfo.
+        UserEnvironmentInformation.Initialise("9999999999999999999999999999999999abcdef", isDirty: true);
         Control control = component.TypeName switch
         {
             "GitUI.CommandsDialogs.FormBrowse" => new FormBrowse(commands, new BrowseArguments()),
@@ -49,6 +53,14 @@ internal static class ComponentFactory
             "GitUI.CommandsDialogs.FormDeleteRemoteBranch" => new FormDeleteRemoteBranch(commands, "origin/feature/delete-me"),
             "GitUI.HelperDialogs.FormResetAnotherBranch" => FormResetAnotherBranch.Create(commands, CreateRevision(commands)),
             "GitUI.CommandsDialogs.CommitDialog.FormCommitTemplateSettings" => new FormCommitTemplateSettings(commands),
+            "GitUI.CommandsDialogs.FormAbout" => new FormAbout(),
+            "GitUI.CommandsDialogs.EnvironmentInfo" => new EnvironmentInfo(),
+            "GitUI.CommandsDialogs.FormCommandlineHelp" => new FormCommandlineHelp(),
+            "GitUI.CommandsDialogs.BrowseDialog.FormDonate" => new FormDonate(),
+            "GitUI.CommandsDialogs.BrowseDialog.FormChangeLog" => new FormChangeLog(),
+            "GitUI.CommandsDialogs.BrowseDialog.FormOpenDirectory" =>
+                new FormOpenDirectory(commands.GetRequiredService<IGitExecutorProvider>(), commands.Module),
+            "GitUI.CommandsDialogs.AboutBoxDialog.FormContributors" => new FormContributors(),
             "GitUI.CommandsDialogs.BrowseDialog.FormGitCommandLog" => CreateGitCommandLog(commands),
             "GitUI.CommandsDialogs.BrowseDialog.FormGoToCommit" => new FormGoToCommit(commands),
             "GitUI.CommandsDialogs.FormCheckoutRevision" => CreateCheckoutRevision(commands),
@@ -181,6 +193,9 @@ internal static class ComponentFactory
         CaptureCommandsSource source = new(commands);
         switch (control)
         {
+            case FormAbout formAbout:
+                ((System.Windows.Forms.Timer?)FindFieldValue(formAbout, "thanksTimer"))?.Stop();
+                break;
             case CommitInfo commitInfo:
                 commitInfo.UICommandsSource = source;
                 commitInfo.Revision = CreateRevision(commands);

@@ -3,33 +3,36 @@
              xmlns:compat="using:GitUI.Compat"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.CommandsDialogs.EnvironmentInfo">
-  <Grid RowDefinitions="Auto,Auto,Auto">
+  <Grid Margin="0,4">
+    <Border x:Name="tableLayoutPanel1"
+            Padding="0,8">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock x:Name="environmentIssueInfo"
+                   Grid.Column="0"
+                   Margin="0,0,8,0"
+                   VerticalAlignment="Top"
+                   MinHeight="60"
+                   FontSize="12"
+                   LineHeight="15"
+                   TextWrapping="Wrap" />
+        <compat:IconButton x:Name="copyButton"
+                           Grid.Column="1"
+                           Classes="gitextensions-icon-only"
+                           VerticalAlignment="Top"
+                           Width="25" Height="26"
+                           ToolTip.Tip="Copy environment info"
+                           AutomationProperties.Name="Copy environment info"
+                           Icon="{x:Static properties:Images.CopyToClipboard}" />
+      </Grid>
+    </Border>
+
     <Border x:Name="lblSeparatorTop"
-            Grid.Row="0"
+            Height="2"
+            VerticalAlignment="Top"
             Classes="gitextensions-section-separator" />
-
-    <Grid x:Name="tableLayoutPanel1"
-          Grid.Row="1"
-          Margin="0,8"
-          ColumnDefinitions="*,Auto">
-      <TextBlock x:Name="environmentIssueInfo"
-                 Grid.Column="0"
-                 Margin="0,0,8,0"
-                 VerticalAlignment="Center"
-                 TextWrapping="Wrap" />
-      <compat:IconButton x:Name="copyButton"
-                         Grid.Column="1"
-                         Classes="gitextensions-icon-only"
-                         VerticalAlignment="Top"
-                         Width="25"
-                         MinHeight="26"
-                         ToolTip.Tip="Copy environment info"
-                         AutomationProperties.Name="Copy environment info"
-                         Icon="{x:Static properties:Images.CopyToClipboard}" />
-    </Grid>
-
     <Border x:Name="lblSeparatorBottom"
-            Grid.Row="2"
+            Height="2"
+            VerticalAlignment="Bottom"
             Classes="gitextensions-section-separator" />
   </Grid>
 </UserControl>

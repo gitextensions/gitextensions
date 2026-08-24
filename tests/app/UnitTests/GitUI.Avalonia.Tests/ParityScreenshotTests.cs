@@ -32,6 +32,7 @@ using GitUI;
 using GitUI.Avatars;
 using GitUI.Blame;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.CommitDialog;
@@ -418,6 +419,9 @@ public sealed partial class ParityScreenshotTests
 
     private static Control CreateView(CaptureContext context, Type viewType)
     {
+        // parity-scaffolding: The real application initialises this before constructing About/EnvironmentInfo.
+        UserEnvironmentInformation.Initialise("9999999999999999999999999999999999abcdef", isDirty: true);
+
         if (viewType == typeof(SimplePrompt))
         {
             return new SimplePrompt("Script input", "Branch name", FeatureBranchName);
@@ -512,6 +516,13 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormCommitTemplateSettings))
         {
             return new FormCommitTemplateSettings(context.Commands);
+        }
+
+        if (viewType == typeof(FormOpenDirectory))
+        {
+            return new FormOpenDirectory(
+                context.Commands.GetRequiredService<IGitExecutorProvider>(),
+                context.Commands.Module);
         }
 
         if (viewType == typeof(FormAddToGitIgnore))
@@ -900,6 +911,13 @@ public sealed partial class ParityScreenshotTests
 
     private static void PrepareView(Control root, CaptureContext context)
     {
+        if (root is FormAbout formAbout)
+        {
+            FieldInfo thanksTimer = typeof(FormAbout).GetField("_thanksTimer", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?? throw new InvalidOperationException("FormAbout._thanksTimer could not be found.");
+            ((DispatcherTimer)thanksTimer.GetValue(formAbout)!).Stop();
+        }
+
         if (root is EditNetSpell editNetSpell)
         {
             editNetSpell.Text = $"Describe the Avalonia spell-checking changes.{Environment.NewLine}{Environment.NewLine}This sentnce contains a deliberate misspeling and an overlong commit-message body line for visual verification.";
@@ -1894,6 +1912,41 @@ public sealed partial class ParityScreenshotTests
             return (698, 361);
         }
 
+        if (viewType == typeof(FormAbout))
+        {
+            return (601, 318);
+        }
+
+        if (viewType == typeof(EnvironmentInfo))
+        {
+            return (137, 78);
+        }
+
+        if (viewType == typeof(FormCommandlineHelp))
+        {
+            return (394, 662);
+        }
+
+        if (viewType == typeof(FormDonate))
+        {
+            return (508, 237);
+        }
+
+        if (viewType == typeof(FormChangeLog))
+        {
+            return (849, 411);
+        }
+
+        if (viewType == typeof(FormOpenDirectory))
+        {
+            return (615, 77);
+        }
+
+        if (viewType == typeof(FormContributors))
+        {
+            return (624, 442);
+        }
+
         if (viewType == typeof(FormAddToGitIgnore))
         {
             return (599, 341);
@@ -2187,6 +2240,7 @@ public sealed partial class ParityScreenshotTests
             new("UserControls/WatermarkComboBox.cs", "UserControls/WatermarkComboBox", typeof(WatermarkComboBox).FullName!, typeof(WatermarkComboBox)),
             new("UserControls/CaseSensitiveComboBox.cs", "UserControls/CaseSensitiveComboBox", typeof(CaseSensitiveComboBox).FullName!, typeof(CaseSensitiveComboBox)),
             new("CommandsDialogs/FormSparseWorkingCopy.cs", "CommandsDialogs/FormSparseWorkingCopy", typeof(FormSparseWorkingCopy).FullName!, typeof(FormSparseWorkingCopy)),
+            new("CommandsDialogs/AboutBoxDialog/FormContributors.cs", "CommandsDialogs/AboutBoxDialog/FormContributors", typeof(FormContributors).FullName!, typeof(FormContributors)),
             // parity-scaffolding: Plugin-owned AXAML lives outside GitUI.Avalonia but shares the capture schema and state driver.
             new("../../plugins/Gource/GourceStart.axaml", "../../plugins/Gource/GourceStart", typeof(GourceStart).FullName!, typeof(GourceStart)),
         ];

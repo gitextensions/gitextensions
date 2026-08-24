@@ -3,22 +3,27 @@
         xmlns:compat="using:GitUI.Compat"
         xmlns:properties="using:GitUI.Properties"
         x:Class="GitUI.CommandsDialogs.BrowseDialog.FormDonate"
-        Width="508" Height="266"
+        Width="508" Height="237"
         WindowStartupLocation="CenterOwner"
         Padding="16"
         Title="Donate">
-  <Grid x:Name="tableLayoutPanel" RowDefinitions="*,80">
+  <Grid x:Name="tableLayoutPanel" RowDefinitions="Auto,80,*">
     <TextBlock x:Name="lblText"
                Grid.Row="0"
+               Height="105"
                Margin="10"
+               FontSize="12"
+               LineHeight="15"
                TextWrapping="Wrap"
                compat:TranslationCompat.TranslateText="False" />
-    <Image x:Name="pbxDonate"
-           Grid.Row="1"
-           Margin="12"
-           Cursor="Hand"
-           Stretch="Uniform"
-           StretchDirection="Both"
-           Source="{x:Static properties:Images.DonateBadge}" />
+    <Border x:Name="pbxDonate"
+            Grid.Row="1"
+            Margin="12"
+            MinWidth="90" MinHeight="35"
+            Cursor="Hand">
+      <Image Stretch="Uniform"
+             StretchDirection="Both"
+             Source="{x:Static properties:Images.DonateBadge}" />
+    </Border>
   </Grid>
 </Window>
