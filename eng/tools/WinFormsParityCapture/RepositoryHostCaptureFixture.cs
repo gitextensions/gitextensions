@@ -4,28 +4,68 @@ using GitExtensions.Extensibility.Settings;
 
 namespace WinFormsParityCapture;
 
-// parity-scaffolding: Gives all three repository-host dialogs one deterministic provider model.
-internal static class RepositoryHostCaptureFixture
+// parity-scaffolding: Gives all three repository-host dialogs one deterministic provider model
+// and releases capture-owned provider gates before the form is disposed.
+internal sealed class RepositoryHostCaptureFixture : IDisposable
 {
-    public static IRepositoryHostPlugin Create(IGitUICommands commands)
+    private readonly ManualResetEventSlim _providerGate = new(initialState: false);
+
+    private RepositoryHostCaptureFixture(IGitUICommands commands, string componentType, string stateId)
     {
         ObjectId head = commands.Module.RevParse("HEAD");
         ObjectId parent = commands.Module.RevParse("HEAD~1");
-        HostedRepository mine = new("contributor", "repository", isMine: true, head);
-        HostedRepository target = new("gitextensions", "gitextensions", isMine: false, parent);
+        bool branchesLoading = stateId == "branches.loading";
+        bool pullRequestsLoading = stateId == "pull-requests.loading";
+        HostedRepository mine = new(
+            "contributor",
+            "repository",
+            isMine: true,
+            head,
+            branchesLoading,
+            pullRequestsLoading,
+            _providerGate);
+        HostedRepository target = new(
+            "gitextensions",
+            "gitextensions",
+            isMine: false,
+            parent,
+            branchesLoading,
+            pullRequestsLoading,
+            _providerGate);
         PullRequest pullRequest = new(target, mine, parent, head);
         target.PullRequests = [pullRequest];
-        return new RepositoryHostPlugin(
+        Host = new RepositoryHostPlugin(
             [mine, target],
             [
                 new HostedRemote("origin", target, isOwnedByMe: false),
                 new HostedRemote("contributor", mine, isOwnedByMe: true),
-            ]);
+            ],
+            componentType,
+            stateId,
+            _providerGate);
+    }
+
+    public IRepositoryHostPlugin Host { get; }
+
+    public static RepositoryHostCaptureFixture Create(
+        IGitUICommands commands,
+        string componentType,
+        string stateId)
+        => new(commands, componentType, stateId);
+
+    public void Dispose()
+    {
+        // parity-scaffolding: The released provider worker owns the final Wait return; the isolated
+        // capture process exits immediately afterward, so disposing the gate here would race it.
+        _providerGate.Set();
     }
 
     private sealed class RepositoryHostPlugin(
         IReadOnlyList<IHostedRepository> repositories,
-        IReadOnlyList<IHostedRemote> remotes) : IRepositoryHostPlugin
+        IReadOnlyList<IHostedRemote> remotes,
+        string componentType,
+        string stateId,
+        ManualResetEventSlim providerGate) : IRepositoryHostPlugin
     {
         public Guid Id { get; } = new("A312D913-9DA0-4655-9A80-6C65D55E2A2A");
 
@@ -53,7 +93,20 @@ internal static class RepositoryHostCaptureFixture
             => repositories.Single(repository => repository.Owner == user && repository.Name == repositoryName);
 
         public IReadOnlyList<IHostedRepository> GetMyRepos()
-            => repositories.Where(repository => repository.IsMine).ToArray();
+        {
+            if (componentType.EndsWith("ForkAndCloneForm", StringComparison.Ordinal)
+                && stateId == "initial.loading")
+            {
+                providerGate.Wait();
+            }
+
+            if (stateId == "owned.error")
+            {
+                throw new InvalidOperationException("Deterministic owned repository failure.");
+            }
+
+            return repositories.Where(repository => repository.IsMine).ToArray();
+        }
 
         public void ConfigureContextMenu(ContextMenuStrip contextMenu)
         {
@@ -61,7 +114,27 @@ internal static class RepositoryHostCaptureFixture
 
         public bool GitModuleIsRelevantToMe() => true;
 
-        public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule() => remotes;
+        public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule()
+        {
+            if (stateId == "provider.empty")
+            {
+                return [];
+            }
+
+            if (componentType.EndsWith("ViewPullRequestsForm", StringComparison.Ordinal)
+                && stateId == "initial.loading")
+            {
+                providerGate.Wait();
+            }
+
+            if (componentType.EndsWith("CreatePullRequestForm", StringComparison.Ordinal)
+                && stateId == "initial.loading")
+            {
+                return new BlockingReadOnlyList<IHostedRemote>(remotes, providerGate);
+            }
+
+            return remotes;
+        }
 
         public Task<string?> AddUpstreamRemoteAsync() => Task.FromResult<string?>("upstream");
 
@@ -109,7 +182,10 @@ internal static class RepositoryHostCaptureFixture
         string owner,
         string name,
         bool isMine,
-        ObjectId branchSha) : IHostedRepository
+        ObjectId branchSha,
+        bool blockBranches,
+        bool blockPullRequests,
+        ManualResetEventSlim providerGate) : IHostedRepository
     {
         public string Owner => owner;
 
@@ -140,13 +216,28 @@ internal static class RepositoryHostCaptureFixture
         public IReadOnlyList<IPullRequestInformation> PullRequests { get; set; } = [];
 
         public IReadOnlyList<IHostedBranch> GetBranches()
-            => [new HostedBranch("main", branchSha), new HostedBranch("feature/visual-parity", branchSha)];
+        {
+            if (blockBranches)
+            {
+                providerGate.Wait();
+            }
+
+            return [new HostedBranch("main", branchSha), new HostedBranch("feature/visual-parity", branchSha)];
+        }
 
         public string GetDefaultBranch() => "main";
 
         public IHostedRepository Fork() => this;
 
-        public IReadOnlyList<IPullRequestInformation> GetPullRequests() => PullRequests;
+        public IReadOnlyList<IPullRequestInformation> GetPullRequests()
+        {
+            if (blockPullRequests)
+            {
+                providerGate.Wait();
+            }
+
+            return PullRequests;
+        }
 
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body) => 42;
     }
@@ -252,5 +343,22 @@ internal static class RepositoryHostCaptureFixture
         string sha) : DiscussionEntry(author, created, body), ICommitDiscussionEntry
     {
         public string Sha => sha;
+    }
+
+    private sealed class BlockingReadOnlyList<T>(
+        IReadOnlyList<T> items,
+        ManualResetEventSlim providerGate) : IReadOnlyList<T>
+    {
+        public int Count => items.Count;
+
+        public T this[int index] => items[index];
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            providerGate.Wait();
+            return items.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

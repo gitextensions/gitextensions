@@ -38,6 +38,14 @@ internal sealed class ControlTreeReader
             Root = ReadToolStripItemCollection(popup, $"popup:{ordinal}", primaryScreenOrigin ?? Point.Empty)
         };
 
+    public CaptureSurface ReadComboBoxPopup(ComboBoxPopup popup, int ordinal, Point primaryScreenOrigin) =>
+        new()
+        {
+            Role = $"popup:{ordinal}",
+            ScreenBoundsPx = ToRectangle(popup.Bounds),
+            Root = ReadComboBoxItemCollection(popup, $"popup:{ordinal}", primaryScreenOrigin)
+        };
+
     private static string? ColorToArgb(Color color) =>
         color.IsEmpty
             ? null
@@ -638,6 +646,115 @@ internal sealed class ControlTreeReader
             Expanded = true,
             Columns = [],
             Children = popup.Items.Cast<ToolStripItem>().Select((item, ordinal) => ReadToolStripItem(item, id, ordinal)).ToArray()
+        };
+    }
+
+    private CaptureNode ReadComboBoxItemCollection(ComboBoxPopup popup, string id, Point primaryScreenOrigin)
+    {
+        ComboBox comboBox = popup.Owner;
+        Rectangle bounds = popup.Bounds;
+        Rectangle semanticBounds = new(
+            bounds.X - primaryScreenOrigin.X,
+            bounds.Y - primaryScreenOrigin.Y,
+            bounds.Width,
+            bounds.Height);
+        CaptureColors colors = GetColors(comboBox);
+        CaptureFont font = ReadFont(comboBox.Font);
+        CaptureThicknessPair emptyThickness = CreateThickness(Padding.Empty);
+        int itemHeight = Math.Max(1, comboBox.ItemHeight);
+        CaptureNode[] children = comboBox.Items.Cast<object>()
+            .Select((item, ordinal) => new CaptureNode
+            {
+                Id = $"{id}/item[{ordinal}]",
+                FieldName = null,
+                FieldAliases = [],
+                Name = null,
+                Type = item.GetType().FullName ?? item.GetType().Name,
+                ControlKind = "listItem",
+                BoundsPx = ToRectangle(new Rectangle(0, ordinal * itemHeight, bounds.Width, itemHeight)),
+                BoundsDip = new CaptureRectangleF
+                {
+                    X = 0,
+                    Y = ToDip(ordinal * itemHeight),
+                    Width = ToDip(bounds.Width),
+                    Height = ToDip(itemHeight)
+                },
+                ClientSizePx = new CaptureSize { Width = bounds.Width, Height = itemHeight },
+                ClientSizeDip = new CaptureSizeF { Width = ToDip(bounds.Width), Height = ToDip(itemHeight) },
+                ItemHeightDip = null,
+                Padding = emptyThickness,
+                Margin = emptyThickness,
+                Font = font,
+                Colors = colors,
+                BorderStyle = null,
+                FlatStyle = null,
+                BorderWidthDip = null,
+                CornerRadiusDip = null,
+                Anchor = [],
+                Dock = null,
+                AutoSize = false,
+                Alignment = null,
+                Text = comboBox.GetItemText(item),
+                ToolTip = null,
+                TranslationSource = null,
+                TabIndex = null,
+                TabStop = null,
+                Enabled = comboBox.Enabled,
+                Visible = true,
+                Focused = false,
+                ReadOnly = null,
+                CheckState = null,
+                Selected = ordinal == comboBox.SelectedIndex,
+                Expanded = null,
+                Columns = [],
+                Children = []
+            })
+            .ToArray();
+        return new CaptureNode
+        {
+            Id = id,
+            FieldName = null,
+            FieldAliases = [],
+            Name = null,
+            Type = "System.Windows.Forms.ComboLBox",
+            ControlKind = "popup",
+            BoundsPx = ToRectangle(semanticBounds),
+            BoundsDip = new CaptureRectangleF
+            {
+                X = ToDip(semanticBounds.X),
+                Y = ToDip(semanticBounds.Y),
+                Width = ToDip(bounds.Width),
+                Height = ToDip(bounds.Height)
+            },
+            ClientSizePx = new CaptureSize { Width = bounds.Width, Height = bounds.Height },
+            ClientSizeDip = new CaptureSizeF { Width = ToDip(bounds.Width), Height = ToDip(bounds.Height) },
+            ItemHeightDip = ToDip(itemHeight),
+            Padding = emptyThickness,
+            Margin = emptyThickness,
+            Font = font,
+            Colors = colors,
+            BorderStyle = "FixedSingle",
+            FlatStyle = comboBox.FlatStyle.ToString(),
+            BorderWidthDip = ToDip(1),
+            CornerRadiusDip = null,
+            Anchor = [],
+            Dock = null,
+            AutoSize = false,
+            Alignment = null,
+            Text = null,
+            ToolTip = null,
+            TranslationSource = null,
+            TabIndex = null,
+            TabStop = null,
+            Enabled = comboBox.Enabled,
+            Visible = comboBox.DroppedDown,
+            Focused = comboBox.Focused,
+            ReadOnly = comboBox.DropDownStyle == ComboBoxStyle.DropDownList,
+            CheckState = null,
+            Selected = null,
+            Expanded = true,
+            Columns = [],
+            Children = children
         };
     }
 

@@ -115,8 +115,8 @@ public partial class CreatePullRequestForm : GitModuleForm
     {
         try
         {
-            IReadOnlyList<IHostedRemote> hostedRemotes = await Task.Run(
-                () => _repoHost.GetHostedRemotesForModule(),
+            IHostedRemote[] hostedRemotes = await Task.Run(
+                () => _repoHost.GetHostedRemotesForModule().ToArray(),
                 cancellationToken);
             IHostedRemote[] foreignHostedRemotes = hostedRemotes
                 .Where(remote => !remote.IsOwnedByMe)

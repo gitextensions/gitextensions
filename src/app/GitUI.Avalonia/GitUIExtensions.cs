@@ -20,6 +20,13 @@ public static partial class GitUIExtensions
                 Background = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(
                     AvaloniaThemeResources.ResolveSystemColor(ThemeModule.Settings, System.Drawing.KnownColor.AppWorkspace))),
             };
+
+            if (host is Grid grid)
+            {
+                Grid.SetRowSpan(panel, Math.Max(1, grid.RowDefinitions.Count));
+                Grid.SetColumnSpan(panel, Math.Max(1, grid.ColumnDefinitions.Count));
+            }
+
             host.Children.Add(panel);
         }
     }
