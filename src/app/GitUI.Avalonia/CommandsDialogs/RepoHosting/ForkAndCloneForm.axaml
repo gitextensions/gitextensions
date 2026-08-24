@@ -47,31 +47,24 @@
               Margin="3">
           <Grid RowDefinitions="24,*">
             <Grid ColumnDefinitions="180,45,50,45">
-              <Border x:Name="columnHeaderMyReposName"
-                      Classes="gitextensions-section">
-                <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
-              </Border>
-              <Border x:Name="columnHeaderMyReposIsFork"
-                      Grid.Column="1"
-                      Classes="gitextensions-section">
-                <TextBlock Classes="gitextensions-list-header-text"
-                           Text="Is fork"
-                           TextAlignment="Center" />
-              </Border>
-              <Border x:Name="columnHeaderMyReposForks"
-                      Grid.Column="2"
-                      Classes="gitextensions-section">
-                <TextBlock Classes="gitextensions-list-header-text"
-                           Text="# Forks"
-                           TextAlignment="Right" />
-              </Border>
-              <Border x:Name="columnHeaderMyReposIsPrivate"
-                      Grid.Column="3"
-                      Classes="gitextensions-section">
-                <TextBlock Classes="gitextensions-list-header-text"
-                           Text="Private"
-                           TextAlignment="Center" />
-              </Border>
+              <ContentControl x:Name="columnHeaderMyReposName"
+                              Classes="gitextensions-list-header-cell"
+                              Content="Name" />
+              <ContentControl x:Name="columnHeaderMyReposIsFork"
+                              Grid.Column="1"
+                              Classes="gitextensions-list-header-cell"
+                              HorizontalContentAlignment="Center"
+                              Content="Is fork" />
+              <ContentControl x:Name="columnHeaderMyReposForks"
+                              Grid.Column="2"
+                              Classes="gitextensions-list-header-cell"
+                              HorizontalContentAlignment="Right"
+                              Content="# Forks" />
+              <ContentControl x:Name="columnHeaderMyReposIsPrivate"
+                              Grid.Column="3"
+                              Classes="gitextensions-list-header-cell"
+                              HorizontalContentAlignment="Center"
+                              Content="Private" />
             </Grid>
             <ListBox x:Name="myReposLV"
                      Grid.Row="1"
@@ -117,29 +110,23 @@
                 ColumnDefinitions="3*,2*">
             <Grid RowDefinitions="24,*">
               <Grid ColumnDefinitions="180,110,41,40">
-                <Border x:Name="columnHeaderSearchName"
-                        Classes="gitextensions-section">
-                  <TextBlock Classes="gitextensions-list-header-text" Text="Name" />
-                </Border>
-                <Border x:Name="columnHeaderSearchOwner"
-                        Grid.Column="1"
-                        Classes="gitextensions-section">
-                  <TextBlock Classes="gitextensions-list-header-text" Text="Owner" />
-                </Border>
-                <Border x:Name="columnHeaderSearchIsFork"
-                        Grid.Column="2"
-                        Classes="gitextensions-section">
-                  <TextBlock Classes="gitextensions-list-header-text"
-                             Text="Is fork"
-                             TextAlignment="Center" />
-                </Border>
-                <Border x:Name="columnHeaderSearchForks"
-                        Grid.Column="3"
-                        Classes="gitextensions-section">
-                  <TextBlock Classes="gitextensions-list-header-text"
-                             Text="# Forks"
-                             TextAlignment="Right" />
-                </Border>
+                <ContentControl x:Name="columnHeaderSearchName"
+                                Classes="gitextensions-list-header-cell"
+                                Content="Name" />
+                <ContentControl x:Name="columnHeaderSearchOwner"
+                                Grid.Column="1"
+                                Classes="gitextensions-list-header-cell"
+                                Content="Owner" />
+                <ContentControl x:Name="columnHeaderSearchIsFork"
+                                Grid.Column="2"
+                                Classes="gitextensions-list-header-cell"
+                                HorizontalContentAlignment="Center"
+                                Content="Is fork" />
+                <ContentControl x:Name="columnHeaderSearchForks"
+                                Grid.Column="3"
+                                Classes="gitextensions-list-header-cell"
+                                HorizontalContentAlignment="Right"
+                                Content="# Forks" />
               </Grid>
               <ListBox x:Name="searchResultsLV"
                        Grid.Row="1"

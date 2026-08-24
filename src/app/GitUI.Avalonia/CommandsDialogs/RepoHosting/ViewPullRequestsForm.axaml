@@ -37,36 +37,26 @@
         <Grid Margin="3"
               RowDefinitions="24,*">
           <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
-            <Border x:Name="columnHeaderId"
-                    Classes="gitextensions-section">
-              <TextBlock Classes="gitextensions-list-header-text"
-                         Text="#"
-                         TextAlignment="Right" />
-            </Border>
-            <Border x:Name="columnHeaderHeading"
-                    Grid.Column="1"
-                    Classes="gitextensions-section">
-              <TextBlock Classes="gitextensions-list-header-text"
-                         Text="Heading" />
-            </Border>
-            <Border x:Name="columnHeaderBy"
-                    Grid.Column="2"
-                    Classes="gitextensions-section">
-              <TextBlock Classes="gitextensions-list-header-text"
-                         Text="By" />
-            </Border>
-            <Border x:Name="columnHeaderCreated"
-                    Grid.Column="3"
-                    Classes="gitextensions-section">
-              <TextBlock Classes="gitextensions-list-header-text"
-                         Text="Created" />
-            </Border>
-            <Border x:Name="columnHeaderBranch"
-                    Grid.Column="4"
-                    Classes="gitextensions-section">
-              <TextBlock Classes="gitextensions-list-header-text"
-                         Text="Will be fetched to branch" />
-            </Border>
+            <ContentControl x:Name="columnHeaderId"
+                            Classes="gitextensions-list-header-cell"
+                            HorizontalContentAlignment="Right"
+                            Content="#" />
+            <ContentControl x:Name="columnHeaderHeading"
+                            Grid.Column="1"
+                            Classes="gitextensions-list-header-cell"
+                            Content="Heading" />
+            <ContentControl x:Name="columnHeaderBy"
+                            Grid.Column="2"
+                            Classes="gitextensions-list-header-cell"
+                            Content="By" />
+            <ContentControl x:Name="columnHeaderCreated"
+                            Grid.Column="3"
+                            Classes="gitextensions-list-header-cell"
+                            Content="Created" />
+            <ContentControl x:Name="columnHeaderBranch"
+                            Grid.Column="4"
+                            Classes="gitextensions-list-header-cell"
+                            Content="Will be fetched to branch" />
           </Grid>
           <ListBox x:Name="_pullRequestsList"
                    Grid.Row="1"
