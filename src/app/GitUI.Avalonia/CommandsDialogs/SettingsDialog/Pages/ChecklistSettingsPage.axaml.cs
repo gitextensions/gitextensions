@@ -8,7 +8,9 @@ using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
+using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
+using GitUI.Compat;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -432,14 +434,67 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         string message)
     {
         status.IsVisible = isVisible;
-        repair.IsVisible = isVisible && state != CheckState.Valid;
-        status.Content = message;
-        status.Foreground = state switch
+        if (!isVisible)
         {
-            CheckState.Valid => Brushes.Green,
-            CheckState.NotRecommended => Brushes.Goldenrod,
-            _ => Brushes.OrangeRed,
-        };
+            repair.IsVisible = false;
+            return;
+        }
+
+        switch (state)
+        {
+            case CheckState.Valid:
+                RenderSettingSet(status, repair, message);
+                break;
+            case CheckState.NotRecommended:
+                RenderSettingNotRecommended(status, repair, message);
+                break;
+            default:
+                RenderSettingUnset(status, repair, message);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Renders settings as correctly configured.
+    /// </summary>
+    private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
+    {
+        SetStatusColors(settingButton, GetStatusColor(128, 255, 128));
+        settingButton.Content = text;
+        settingFixButton.IsVisible = false;
+    }
+
+    /// <summary>
+    /// Renders settings as misconfigured.
+    /// </summary>
+    private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
+    {
+        SetStatusColors(settingButton, GetStatusColor(255, 128, 128));
+        settingButton.Content = text;
+        settingFixButton.IsVisible = true;
+    }
+
+    private static void RenderSettingNotRecommended(Button settingButton, Button settingFixButton, string text)
+    {
+        SetStatusColors(settingButton, GetStatusColor(255, 255, 128));
+        settingButton.Content = text;
+        settingFixButton.IsVisible = true;
+    }
+
+    private static void SetStatusColors(Button settingButton, System.Drawing.Color background)
+    {
+        settingButton.Background = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(background));
+        settingButton.Foreground = new SolidColorBrush(
+            AvaloniaThemeResources.ToMediaColor(ColorHelper.GetTextColor(background)));
+    }
+
+    // OtherColors is part of the Windows-only source set; preserve its exact portable color formula here.
+    private static System.Drawing.Color GetStatusColor(int red, int green, int blue)
+    {
+        System.Drawing.Color color = System.Drawing.Color.FromArgb(red, green, blue);
+        return WinFormsShims.Application.SystemColorMode == WinFormsShims.SystemColorMode.Dark
+            ? color.DimColor()
+            : color;
     }
 
     private void GitFound_Click(object? sender, EventArgs e)

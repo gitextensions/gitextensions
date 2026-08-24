@@ -328,7 +328,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormSettings.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Two-column resizable settings layout with the original 200px navigation width, hosted page surface, instant-save notice, and compact dialog actions."
+    "notes": "Native-96 settings-shell geometry preserves the 958x746 client surface, exact 200px navigation column, 8px outer inset, 3px hosted-control margins, 686px tree/page height, 32px instant-save footer, and source-sized right-aligned dialog actions. Dimensions come from the WinForms Designer or native runtime AutoSize results, never scaled captures."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/ISettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/ISettingsPage.cs",
@@ -460,7 +460,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsPageHeader.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Compact translated source-selector row, directional markers, separator, and hosted page surface retain the original control identities."
+    "notes": "Compact translated source-selector row, directional markers, separator, and hosted page surface retain the original control identities. Global-only pages reproduce the native runtime collapse to a 58px header with the 4px separator at y=43 and content beginning at y=62, using the resolved dark-dark theme color."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/GeneralSettingsPage.axaml.cs",
@@ -1102,13 +1102,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Same root replacement, hierarchy, initial/programmatic navigation, selected-page event, AND-keyword search, Enter-key cycling, and page enumeration over native Avalonia TreeViewItems. Like WinForms, an unknown page reference leaves the current selection unchanged. Its standalone construction path explicitly projects WinForms input and automation metadata."
+    "notes": "Same source-shaped root replacement, hierarchy, initial/programmatic navigation, selected-page event, AND-keyword search, highlight reset, parent expansion, Enter-key cycling, and page enumeration over native Avalonia TreeViewItems. Like WinForms, an unknown page reference leaves the current selection unchanged. Avalonia keeps an explicit parent map because TreeViewItem has no WinForms Parent equivalent; the deviation is isolated at traversal."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/SettingsTreeViewUserControl.axaml",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Compact filter and scrollable tree preserve the original 200px navigation surface and reuse the established dotted NativeTreeView-style hierarchy template."
+    "notes": "The 200px navigation surface preserves the Designer's 8px top inset, native 23px search-box runtime height, 8px inter-control gap, and tree origin at y=39 while reusing the dotted NativeTreeView hierarchy template."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/CommonLogic.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/CommonLogic.cs",
@@ -1132,13 +1132,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.axaml.cs",
     "status": "functional",
     "basedOn": "58937dbe78448761e69f47d7170b991c511425ef",
-    "notes": "Complete same-named startup checklist for Git supported/recommended version, identity, merge and diff tools, editor, translation, and the original Windows-only install registration, shell extensions, Linux tools, SSH, and obsolete credential-helper checks. Windows-only rows remain absent on Linux/macOS. Status and Repair controls retain their original identities; Git and Linux-tools discovery preserve the original failure/success prompts and load/save/rescan ordering, configured diff/merge repairs rescan while unconfigured tools navigate to global Git settings, PuTTY discovery preserves its original branch, and startup checking disables only after all applicable checks pass."
+    "notes": "Complete same-named startup checklist for Git supported/recommended version, identity, merge and diff tools, editor, translation, and the original Windows-only install registration, shell extensions, Linux tools, SSH, and obsolete credential-helper checks. Windows-only rows remain absent on Linux/macOS. Status and Repair controls retain their original identities; Git and Linux-tools discovery preserve the original failure/success prompts and load/save/rescan ordering, configured diff/merge repairs rescan while unconfigured tools navigate to global Git settings, PuTTY discovery preserves its original branch, and startup checking disables only after all applicable checks pass. Status rendering now mirrors the original valid, unset, and not-recommended methods with resolved ARGB-equivalent backgrounds and contrast text."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.Designer.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ChecklistSettingsPage.axaml",
     "status": "functional",
     "basedOn": "1cf12ebc43bbc81a9bafe1178d38624be2024011",
-    "notes": "Native scrollable ten-row checklist preserves the original status, repair, startup-check, and rescan control identities and ordering; the five Windows integration rows are hidden off-Windows."
+    "notes": "Native scrollable checklist preserves every original status, repair, startup-check, and rescan identity and ordering; the five Windows integration rows are hidden off-Windows. The group frame, 23px labels, 91px action column, 85x30 repair buttons, 150x30 rescan button, and WinForms AutoSize-derived 25px/30px status rows are reproduced from source and native-96 runtime measurements."
   },
   "src/app/GitUI/CommandsDialogs/SettingsDialog/Pages/SshSettingsPage.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/SshSettingsPage.axaml.cs",

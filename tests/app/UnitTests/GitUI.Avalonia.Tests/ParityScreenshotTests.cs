@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -1415,28 +1416,46 @@ public sealed partial class ParityScreenshotTests
 
     private static void SeedChecklist(ChecklistSettingsPage checklist)
     {
-        (string Name, string Message, bool Repair)[] rows =
+        // parity-scaffolding: Keep registry, shell-tool, and Git configuration identical across paired hosts.
+        (string Name, string Message, bool Valid)[] rows =
         [
-            ("GitFound", "Git 2.52.0 is found on your computer.", false),
-            ("UserNameSet", "A username and an email address are configured.", false),
-            ("MergeTool", "There is a mergetool configured: kdiff3", false),
-            ("DiffTool", "There is a difftool configured: kdiff3", false),
-            ("ShellExtensionsRegistered", "Shell extensions are not installed. Run the installer to install the shell extensions.", false),
-            ("GitBinFound", "Linux tools (sh) found on your computer.", false),
-            ("GitExtensionsInstall", "Git Extensions is properly registered.", false),
-            ("SshConfig", "Default SSH client, OpenSSH, will be used.", false),
-            ("translationConfig", "The configured language is English.", false),
-            ("GcmDetected", "Obsolete git-credential-winstore.exe detected", true),
+            ("GitFound", "Git 2.52.0 is found on your computer.", true),
+            ("UserNameSet", "A username and an email address are configured.", true),
+            ("MergeTool", "You need to configure merge tool in order to solve merge conflicts.", false),
+            ("DiffTool", "You should configure a diff tool to show file diff in external program.", false),
+            ("ShellExtensionsRegistered", "Shell extensions registered properly.", true),
+            ("GitBinFound", "Linux tools (sh) not found. To solve this problem you can set the correct path in settings.", false),
+            ("GitExtensionsInstall", "Git Extensions is properly registered.", true),
+            ("SshConfig", "Default SSH client, OpenSSH, will be used.", true),
+            ("translationConfig", "There is no language configured for Git Extensions.", false),
         ];
-        foreach ((string name, string message, bool repair) in rows)
+        foreach ((string name, string message, bool valid) in rows)
         {
             Button status = GetRequiredControl<Button>(checklist, name);
             Button fix = GetRequiredControl<Button>(
                 checklist,
-                name == "GcmDetected" ? "GcmDetectedFix" : $"{name}_Fix");
+                $"{name}_Fix");
+            System.Drawing.Color background = GetChecklistColor(valid);
             status.Content = message;
             status.IsVisible = true;
-            fix.IsVisible = repair;
+            status.Background = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(background));
+            status.Foreground = new SolidColorBrush(
+                AvaloniaThemeResources.ToMediaColor(ColorHelper.GetTextColor(background)));
+            fix.IsVisible = !valid;
+        }
+
+        GetRequiredControl<Button>(checklist, "GcmDetected").IsVisible = false;
+        GetRequiredControl<Button>(checklist, "GcmDetectedFix").IsVisible = false;
+        GetRequiredControl<CheckBox>(checklist, "CheckAtStartup").IsChecked = true;
+
+        static System.Drawing.Color GetChecklistColor(bool valid)
+        {
+            System.Drawing.Color color = valid
+                ? System.Drawing.Color.FromArgb(128, 255, 128)
+                : System.Drawing.Color.FromArgb(255, 128, 128);
+            return WinFormsShims.Application.SystemColorMode == WinFormsShims.SystemColorMode.Dark
+                ? color.DimColor()
+                : color;
         }
     }
 
@@ -1927,6 +1946,12 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(FormCommitTemplateSettings))
         {
             return (698, 361);
+        }
+
+        if (viewType == typeof(FormSettings))
+        {
+            // parity-scaffolding: WinForms' 966x785 minimum outer window yields this native-96 client.
+            return (958, 746);
         }
 
         if (viewType == typeof(FormAbout))

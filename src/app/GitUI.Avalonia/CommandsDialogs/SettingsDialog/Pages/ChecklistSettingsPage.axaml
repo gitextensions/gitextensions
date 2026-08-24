@@ -1,102 +1,87 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage">
-  <ScrollViewer>
-    <StackPanel Margin="12"
-                Spacing="6">
-      <TextBlock x:Name="label11"
-                 Text="The checklist below validates the basic settings needed for Git Extensions to work properly."
-                 TextWrapping="Wrap"
-                 Margin="0,0,0,8" />
-      <Grid ColumnDefinitions="*,Auto"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-        <Button x:Name="GitFound"
-                Grid.Row="0"
-                HorizontalContentAlignment="Left" />
-        <Button x:Name="GitFound_Fix"
-                Grid.Row="0"
-                Grid.Column="1"
-                Content="Repair" />
-        <Button x:Name="UserNameSet"
-                Grid.Row="1"
-                HorizontalContentAlignment="Left" />
-        <Button x:Name="UserNameSet_Fix"
-                Grid.Row="1"
-                Grid.Column="1"
-                Content="Repair" />
-        <Button x:Name="MergeTool"
-                Grid.Row="2"
-                HorizontalContentAlignment="Left" />
-        <Button x:Name="MergeTool_Fix"
-                Grid.Row="2"
-                Grid.Column="1"
-                Content="Repair" />
-        <Button x:Name="DiffTool"
-                Grid.Row="3"
-                HorizontalContentAlignment="Left" />
-        <Button x:Name="DiffTool_Fix"
-                Grid.Row="3"
-                Grid.Column="1"
-                Content="Repair" />
-        <Button x:Name="ShellExtensionsRegistered"
-                Grid.Row="4"
-                HorizontalContentAlignment="Left"
-                IsVisible="False" />
-        <Button x:Name="ShellExtensionsRegistered_Fix"
-                Grid.Row="4"
-                Grid.Column="1"
-                Content="Repair"
-                IsVisible="False" />
-        <Button x:Name="GitBinFound"
-                Grid.Row="5"
-                HorizontalContentAlignment="Left"
-                IsVisible="False" />
-        <Button x:Name="GitBinFound_Fix"
-                Grid.Row="5"
-                Grid.Column="1"
-                Content="Repair"
-                IsVisible="False" />
-        <Button x:Name="GitExtensionsInstall"
-                Grid.Row="6"
-                HorizontalContentAlignment="Left"
-                IsVisible="False" />
-        <Button x:Name="GitExtensionsInstall_Fix"
-                Grid.Row="6"
-                Grid.Column="1"
-                Content="Repair"
-                IsVisible="False" />
-        <Button x:Name="SshConfig"
-                Grid.Row="7"
-                HorizontalContentAlignment="Left"
-                IsVisible="False" />
-        <Button x:Name="SshConfig_Fix"
-                Grid.Row="7"
-                Grid.Column="1"
-                Content="Repair"
-                IsVisible="False" />
-        <Button x:Name="translationConfig"
-                Grid.Row="8"
-                HorizontalContentAlignment="Left" />
-        <Button x:Name="translationConfig_Fix"
-                Grid.Row="8"
-                Grid.Column="1"
-                Content="Repair" />
-        <Button x:Name="GcmDetected"
-                Grid.Row="9"
-                HorizontalContentAlignment="Left"
-                IsVisible="False" />
-        <Button x:Name="GcmDetectedFix"
-                Grid.Row="9"
-                Grid.Column="1"
-                Content="Repair"
-                IsVisible="False" />
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             x:Class="GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage"
+             MinWidth="680"
+             MinHeight="460"
+             d:DesignWidth="1015"
+             d:DesignHeight="608">
+  <UserControl.Styles>
+    <Style Selector="Button.checklist-status">
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="MinHeight" Value="25" />
+      <Setter Property="MaxHeight" Value="30" />
+      <Setter Property="Padding" Value="6,0" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.checklist-status:pointerover">
+      <Setter Property="Background" Value="#FFC0C0FF" />
+    </Style>
+  </UserControl.Styles>
+  <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+    <HeaderedContentControl x:Name="groupBox1"
+                            Classes="gitextensions-group-box"
+                            Header=""
+                            MinWidth="680"
+                            Padding="0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalAlignment="Top">
+      <Grid Margin="12,11,12,8"
+            RowDefinitions="Auto,36">
+        <Grid x:Name="tableLayoutPanel1"
+              Grid.Row="0"
+              ColumnDefinitions="*,91"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+          <TextBlock x:Name="label11"
+                     Grid.Row="0"
+                     Grid.ColumnSpan="2"
+                     Height="23"
+                     Margin="3,0"
+                     VerticalAlignment="Top"
+                     Text="The checklist below validates the basic settings needed for Git Extensions to work properly."
+                     TextWrapping="Wrap" />
+          <Button x:Name="GitFound" Classes="checklist-status" Grid.Row="1" Margin="3" IsVisible="False" />
+          <Button x:Name="GitFound_Fix" Grid.Row="1" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <Button x:Name="UserNameSet" Classes="checklist-status" Grid.Row="2" Margin="3" IsVisible="False" />
+          <Button x:Name="UserNameSet_Fix" Grid.Row="2" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <Button x:Name="MergeTool" Classes="checklist-status" Grid.Row="3" Margin="3" IsVisible="False" />
+          <Button x:Name="MergeTool_Fix" Grid.Row="3" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <Button x:Name="DiffTool" Classes="checklist-status" Grid.Row="4" Margin="3" IsVisible="False" />
+          <Button x:Name="DiffTool_Fix" Grid.Row="4" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <Button x:Name="ShellExtensionsRegistered" Classes="checklist-status" Grid.Row="5" Margin="3" IsVisible="False" />
+          <Button x:Name="ShellExtensionsRegistered_Fix" Grid.Row="5" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <Button x:Name="GitBinFound" Classes="checklist-status" Grid.Row="6" Margin="3" IsVisible="False" />
+          <Button x:Name="GitBinFound_Fix" Grid.Row="6" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <Button x:Name="GitExtensionsInstall" Classes="checklist-status" Grid.Row="7" Margin="3" IsVisible="False" />
+          <Button x:Name="GitExtensionsInstall_Fix" Grid.Row="7" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <Button x:Name="SshConfig" Classes="checklist-status" Grid.Row="8" Margin="3" IsVisible="False" />
+          <Button x:Name="SshConfig_Fix" Grid.Row="8" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <Button x:Name="translationConfig" Classes="checklist-status" Grid.Row="9" Margin="3" IsVisible="False" />
+          <Button x:Name="translationConfig_Fix" Grid.Row="9" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <Button x:Name="GcmDetected" Classes="checklist-status" Grid.Row="10" Margin="3" IsVisible="False" />
+          <Button x:Name="GcmDetectedFix" Grid.Row="10" Grid.Column="1" Margin="3" Width="85" Height="30" Content="Repair" IsVisible="False" />
+          <CheckBox x:Name="CheckAtStartup"
+                    Grid.Row="11"
+                    Margin="3"
+                    VerticalAlignment="Center"
+                    Content="Check settings at startup (disables automatically if all settings are correct)" />
+        </Grid>
+        <Grid x:Name="flowLayoutPanel1"
+              Grid.Row="1"
+              Height="36">
+          <Button x:Name="Rescan"
+                  Width="150"
+                  Height="30"
+                  Margin="3"
+                  HorizontalAlignment="Right"
+                  Content="Save and rescan" />
+        </Grid>
       </Grid>
-      <CheckBox x:Name="CheckAtStartup"
-                Content="Check settings at startup (disables automatically if all settings are correct)" />
-      <Button x:Name="Rescan"
-              Content="Save and rescan"
-              HorizontalAlignment="Left"
-              Margin="0,6,0,0" />
-    </StackPanel>
+    </HeaderedContentControl>
   </ScrollViewer>
 </UserControl>

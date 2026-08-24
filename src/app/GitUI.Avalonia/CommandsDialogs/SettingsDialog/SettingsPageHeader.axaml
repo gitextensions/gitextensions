@@ -2,21 +2,24 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:ui="using:GitUI"
                       x:Class="GitUI.CommandsDialogs.SettingsDialog.SettingsPageHeader">
-  <Grid RowDefinitions="Auto,*"
+  <Grid RowDefinitions="58,*"
         Margin="0,4,0,0">
-    <StackPanel x:Name="HeaderPanel"
-                Grid.Row="0"
-                Spacing="7"
-                Margin="0,0,0,7">
+    <Grid x:Name="HeaderPanel"
+          Grid.Row="0"
+          RowDefinitions="39,12,7">
       <WrapPanel x:Name="flowLayoutPanel1"
+                 Grid.Row="0"
+                 Height="35"
+                 Margin="3,4,3,0"
                  VerticalAlignment="Center">
         <TextBlock x:Name="label1"
-                   Margin="3,4,6,4"
+                   Margin="3,0"
                    VerticalAlignment="Center"
                    FontWeight="Bold"
                    Text="Settings source:" />
         <StackPanel x:Name="tableLayoutPanel1"
                     Orientation="Horizontal"
+                    Margin="3,0"
                     VerticalAlignment="Center">
           <RadioButton x:Name="EffectiveRB" Margin="3,4" Content="Effective" />
           <TextBlock x:Name="arrowLocal" Margin="3,4" VerticalAlignment="Center" Text="&lt;&lt;" />
@@ -30,9 +33,11 @@
         </StackPanel>
       </WrapPanel>
       <Border x:Name="linePanel"
-              Height="1"
-              Background="{DynamicResource ThemeBorderMidBrush}" />
-    </StackPanel>
+              Grid.Row="1"
+              Height="4"
+              Margin="3,4"
+              Background="{DynamicResource GitExtensionsKnownColorControlDarkDarkBrush}" />
+    </Grid>
     <ContentControl x:Name="settingsPagePanel"
                     Grid.Row="1" />
   </Grid>
