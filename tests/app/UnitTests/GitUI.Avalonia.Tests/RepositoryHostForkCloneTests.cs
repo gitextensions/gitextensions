@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Design;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -91,7 +92,26 @@ public sealed class RepositoryHostForkCloneTests
         browseButton.Icon.Should().NotBeNull();
         form.FindControl<TextBox>("createDirTB")!.Width.Should().Be(183);
         form.FindControl<ComboBox>("addUpstreamRemoteAsCB")!.Width.Should().Be(200);
-        Grid.GetRow(form.FindControl<NumericUpDown>("depthUpDown")!).Should().Be(3);
+        HeaderedContentControl cloneSetup = form.FindControl<HeaderedContentControl>("cloneSetupGB")!;
+        cloneSetup.Classes.Should().Contain("repository-host-clone-group");
+        Canvas cloneLayout = cloneSetup.Content.Should().BeOfType<Canvas>().Subject;
+        cloneLayout.Children.Should().HaveCount(12);
+        AssertCanvasBounds(form.FindControl<TextBlock>("label1")!, 7, 16, 104, 15);
+        AssertCanvasBounds(form.FindControl<TextBox>("destinationTB")!, 10, 32, 294, 23);
+        AssertCanvasBounds(browse, 310, 32, 102, 23);
+        AssertCanvasBounds(form.FindControl<TextBlock>("ProtocolLabel")!, 418, 36, 55, 15);
+        AssertCanvasBounds(form.FindControl<ComboBox>("ProtocolDropdownList")!, 470, 32, 121, 23);
+        AssertCanvasBounds(form.FindControl<TextBlock>("createDirectoryLbl")!, 7, 55, 94, 15);
+        AssertCanvasBounds(form.FindControl<TextBox>("createDirTB")!, 10, 71, 183, 23);
+        AssertCanvasBounds(form.FindControl<TextBlock>("label3")!, 211, 55, 140, 15);
+        AssertCanvasBounds(form.FindControl<ComboBox>("addUpstreamRemoteAsCB")!, 212, 71, 200, 23);
+        AssertCanvasBounds(form.FindControl<TextBlock>("cloneInfoText")!, 10, 97, 719, 35);
+        AssertCanvasBounds(form.FindControl<TextBlock>("depthLabel")!, 7, 135, 72, 15);
+        AssertCanvasBounds(form.FindControl<NumericUpDown>("depthUpDown")!, 10, 151, 100, 23);
+        Grid footer = form.FindControl<Grid>("flowLayoutPanel1")!;
+        footer.ColumnDefinitions.Select(column => column.Width.Value).Should().Equal(1, 120, 6, 120, 3);
+        Grid.GetColumn(form.FindControl<Button>("cloneBtn")!).Should().Be(1);
+        Grid.GetColumn(form.FindControl<Button>("_NO_TRANSLATE_closeBtn")!).Should().Be(3);
         Grid myRepositoriesHeader = (Grid)form.FindControl<Border>("columnHeaderMyReposName")!.Parent!;
         myRepositoriesHeader.ColumnDefinitions.Select(column => column.Width.Value)
             .Should().Equal(180, 45, 50, 45);
@@ -146,6 +166,18 @@ public sealed class RepositoryHostForkCloneTests
         accessor.TargetDirectory.Should().Be(Path.Combine(accessor.Destination, "alpha"));
         accessor.CloneInfo.Should().Contain("https://example.test/alpha.git");
         accessor.CloneInfo.Should().Contain("push access");
+    }
+
+    private static void AssertCanvasBounds(Control control, double left, double top, double width, double height)
+    {
+        Canvas.GetLeft(control).Should().Be(left);
+        Canvas.GetTop(control).Should().Be(top);
+        if (width > 0)
+        {
+            control.Width.Should().Be(width);
+        }
+
+        control.Height.Should().Be(height);
     }
 
     [AvaloniaTest]
@@ -271,6 +303,9 @@ public sealed class RepositoryHostForkCloneTests
 
         accessor.SetDepth(42);
         accessor.Depth.Should().Be(42);
+
+        accessor.CreateDirectory = " project ";
+        accessor.TargetDirectory.Should().Be(Path.Combine(accessor.Destination, " project "));
     }
 
     [AvaloniaTest]

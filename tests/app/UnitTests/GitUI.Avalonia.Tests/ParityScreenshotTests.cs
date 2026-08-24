@@ -2270,6 +2270,7 @@ public sealed partial class ParityScreenshotTests
             .Where(path => !Path.GetRelativePath(viewRoot, path).StartsWith("Styles" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
             .Order(StringComparer.Ordinal)
             .Select(path => CreateDescriptor(viewRoot, path, viewAssembly))
+            .OfType<ViewDescriptor>()
             .ToArray();
 
         // parity-scaffolding: Code-only controls need descriptors so the shared capture plan can render them without product wrappers.
@@ -2290,11 +2291,16 @@ public sealed partial class ParityScreenshotTests
         ];
     }
 
-    private static ViewDescriptor CreateDescriptor(string viewRoot, string path, Assembly viewAssembly)
+    private static ViewDescriptor? CreateDescriptor(string viewRoot, string path, Assembly viewAssembly)
     {
         string axaml = File.ReadAllText(path);
         Match classMatch = ClassNameRegex.Match(axaml);
-        classMatch.Success.Should().BeTrue($"{path} should declare x:Class");
+        if (!classMatch.Success)
+        {
+            // parity-scaffolding: structural Designer twins excluded from AvaloniaXaml have no runtime class to capture.
+            return null;
+        }
+
         string className = classMatch.Groups["className"].Value;
         Type viewType = viewAssembly.GetType(className)
             ?? throw new InvalidOperationException($"The AXAML class {className} could not be resolved.");

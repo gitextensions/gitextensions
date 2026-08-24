@@ -88,7 +88,16 @@ public sealed class RepositoryHostPullRequestTests
 
         StackPanel repositorySelector = form.FindControl<StackPanel>("flowLayoutPanel2")!;
         repositorySelector.Margin.Should().Be(new Avalonia.Thickness(2));
-        repositorySelector.Spacing.Should().Be(16);
+        repositorySelector.Spacing.Should().Be(0);
+        TextBlock chooseRepository = form.FindControl<TextBlock>("_chooseRepo")!;
+        chooseRepository.Width.Should().Be(106);
+        chooseRepository.Height.Should().Be(15);
+        chooseRepository.Margin.Should().Be(new Avalonia.Thickness(3, 0));
+        ComboBox hostedRepository = form.FindControl<ComboBox>("_selectHostedRepoCB")!;
+        hostedRepository.Width.Should().Be(258);
+        hostedRepository.Height.Should().Be(23);
+        hostedRepository.Margin.Should().Be(new Avalonia.Thickness(3));
+        form.FindControl<Grid>("tableLayoutPanel2")!.RowDefinitions[0].Height.Value.Should().Be(33);
         Grid pullRequestLayout = form.FindControl<Grid>("tableLayoutPanel3")!;
         pullRequestLayout.Margin.Should().Be(new Avalonia.Thickness(2));
         pullRequestLayout.ColumnDefinitions[1].Width.IsAuto.Should().BeTrue();
@@ -99,6 +108,7 @@ public sealed class RepositoryHostPullRequestTests
             .Where((_, index) => index != 1)
             .Should().OnlyContain(column => column.Width.IsAbsolute && column.Width.Value > 0);
         StackPanel pullRequestActions = form.FindControl<StackPanel>("flowLayoutPanel3")!;
+        pullRequestActions.Width.Should().Be(160);
         pullRequestActions.Margin.Should().Be(new Avalonia.Thickness(2));
         foreach (string buttonName in new[] { "_fetchBtn", "_addAndFetchBtn", "_closePullRequestBtn" })
         {
@@ -111,13 +121,23 @@ public sealed class RepositoryHostPullRequestTests
 
         TabControl tabControl = form.FindControl<TabControl>("tabControl1")!;
         tabControl.Margin.Should().Be(new Avalonia.Thickness(0));
-        tabControl.Padding.Should().Be(new Avalonia.Thickness(2, 0));
-        form.FindControl<TabItem>("tabPage1")!.Padding.Should().Be(new Avalonia.Thickness(8, 2));
-        form.FindControl<TabItem>("tabPage2")!.Padding.Should().Be(new Avalonia.Thickness(8, 2));
-        form.FindControl<Grid>("splitContainer3")!.Margin.Should().Be(new Avalonia.Thickness(3, 0));
+        tabControl.Padding.Should().Be(new Avalonia.Thickness(0));
+        TabItem diffTab = form.FindControl<TabItem>("tabPage1")!;
+        diffTab.Height.Should().Be(28);
+        diffTab.MinHeight.Should().Be(28);
+        diffTab.Padding.Should().Be(new Avalonia.Thickness(8, 2));
+        TabItem commentsTab = form.FindControl<TabItem>("tabPage2")!;
+        commentsTab.Height.Should().Be(28);
+        commentsTab.MinHeight.Should().Be(28);
+        commentsTab.Padding.Should().Be(new Avalonia.Thickness(8, 2));
+        Grid diffLayout = form.FindControl<Grid>("splitContainer3")!;
+        diffLayout.Margin.Should().Be(new Avalonia.Thickness(6, 2, 6, 6));
+        diffLayout.RowDefinitions[0].Height.Value.Should().Be(112);
+        diffLayout.Children.Should().Contain(form.FindControl<FileStatusList>("_fileStatusList")!);
+        diffLayout.Children.Should().Contain(form.FindControl<GitUI.Editor.FileViewer>("_diffViewer")!);
 
         Grid commentsLayout = form.FindControl<Grid>("tableLayoutPanel1")!;
-        commentsLayout.Margin.Should().Be(new Avalonia.Thickness(3, 0, 3, 7));
+        commentsLayout.Margin.Should().Be(new Avalonia.Thickness(6, 2, 6, 6));
         commentsLayout.RowDefinitions[0].Height.IsStar.Should().BeTrue();
         commentsLayout.RowDefinitions[1].Height.Value.Should().Be(80);
         commentsLayout.RowDefinitions[2].Height.Value.Should().Be(33);
