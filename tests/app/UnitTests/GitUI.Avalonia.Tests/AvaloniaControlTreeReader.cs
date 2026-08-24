@@ -284,6 +284,7 @@ internal sealed class AvaloniaControlTreeReader
         bool isSurfaceRoot = string.IsNullOrEmpty(parentId);
         bool isRevisionGrid = control is RevisionGridControl;
         bool isRevisionGridView = IsRevisionGridView(control);
+        bool isNativeListView = IsNativeListView(control);
         bool isPopupRoot = isSurfaceRoot && IsPopupSurface(control);
         string? fieldName = isSurfaceRoot
             ? null
@@ -296,7 +297,11 @@ internal sealed class AvaloniaControlTreeReader
             ? $"$root:{control.GetType().Name}"
             : fieldName ?? $"$unnamed[{ordinal}]:{control.GetType().Name}";
         string id = string.IsNullOrEmpty(parentId) ? segment : $"{parentId}/{segment}";
-        Rect bounds = boundsOverride ?? GetSemanticBounds(control, semanticParent);
+        bool hasNativeListComposite = TryGetNativeListComposite(control, out Grid? nativeListComposite, out _);
+        Rect bounds = boundsOverride
+            ?? (hasNativeListComposite
+                ? GetSemanticBounds(nativeListComposite!, semanticParent)
+                : GetSemanticBounds(control, semanticParent));
         bool childSubmenusOpen = ancestorSubmenusOpen
             && (control is not MenuItem menuItem || menuItem.IsSubMenuOpen);
         IReadOnlyList<CaptureNode> children = GetCaptureChildren(control)
@@ -331,24 +336,34 @@ internal sealed class AvaloniaControlTreeReader
                 Width = ToDecimal(bounds.Width),
                 Height = ToDecimal(bounds.Height)
             },
-            ClientSizePx = new CaptureSize { Width = ToPixel(bounds.Width), Height = ToPixel(bounds.Height) },
-            ClientSizeDip = new CaptureSizeF { Width = ToDecimal(bounds.Width), Height = ToDecimal(bounds.Height) },
+            ClientSizePx = new CaptureSize
+            {
+                Width = ToPixel(isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
+                Height = ToPixel(isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
+            },
+            ClientSizeDip = new CaptureSizeF
+            {
+                Width = ToDecimal(isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
+                Height = ToDecimal(isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
+            },
             ItemHeightDip = isRevisionGridView
                 ? ReadRevisionGridItemHeight(control)
                 : null,
             Padding = ReadThicknessPair(GetPropertyValue(control, "Padding")),
-            Margin = ReadThicknessPair(control.Margin),
+            Margin = ReadThicknessPair(hasNativeListComposite ? nativeListComposite!.Margin : control.Margin),
             Font = ReadFont(control),
             Colors = ReadColors(control),
             BorderStyle = isRevisionGrid || isRevisionGridView
                 ? "None"
-                : GetPropertyValue(control, "BorderStyle")?.ToString(),
+                : isNativeListView
+                    ? "Fixed3D"
+                    : GetPropertyValue(control, "BorderStyle")?.ToString(),
             FlatStyle = null,
-            BorderWidthDip = isPopupRoot ? null : ReadBorderWidth(control),
+            BorderWidthDip = isPopupRoot || isNativeListView ? null : ReadBorderWidth(control),
             CornerRadiusDip = ReadCornerRadius(control),
-            Anchor = isRevisionGrid || isRevisionGridView ? ["Top", "Left"] : [],
-            Dock = isRevisionGrid ? "None" : isRevisionGridView ? "Fill" : null,
-            AutoSize = isRevisionGrid || isRevisionGridView
+            Anchor = isRevisionGrid || isRevisionGridView || isNativeListView ? ["Top", "Left"] : [],
+            Dock = isRevisionGrid ? "None" : isRevisionGridView || isNativeListView ? "Fill" : null,
+            AutoSize = isRevisionGrid || isRevisionGridView || isNativeListView
                 ? false
                 : control is MenuItem or Separator || isPopupRoot ? true : null,
             Alignment = isRevisionGrid || isRevisionGridView || isPopupRoot
@@ -360,7 +375,7 @@ internal sealed class AvaloniaControlTreeReader
             TabIndex = isRevisionGrid || isRevisionGridView
                 ? 0
                 : control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
-            TabStop = isRevisionGrid || isRevisionGridView
+            TabStop = isRevisionGrid || isRevisionGridView || isNativeListView
                 ? true
                 : control is MenuItem or Separator || isPopupRoot ? null : control.Focusable,
             Enabled = control is Separator ? false : control.IsEffectivelyEnabled,
@@ -430,6 +445,13 @@ internal sealed class AvaloniaControlTreeReader
             return [];
         }
 
+        if (IsNativeListComposite(control, out ListBox? nativeList))
+        {
+            // parity-scaffolding: the native Avalonia substitute separates its header from
+            // recycled rows; emit the one semantic ListView exposed by the WinForms original.
+            return [nativeList!];
+        }
+
         if (control is Label)
         {
             // parity-scaffolding: Label.Content is the WinForms Label.Text value; Avalonia's
@@ -485,6 +507,11 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         if (IsRevisionGridView(control))
+        {
+            return [];
+        }
+
+        if (IsNativeListView(control))
         {
             return [];
         }
@@ -601,6 +628,34 @@ internal sealed class AvaloniaControlTreeReader
                 GridLine = ResolveResourceArgb("GitExtensionsKnownColorWindowBrush")
                            ?? ResolveResourceArgb("GitExtensionsWindowBackgroundBrush"),
                 Additional = additional
+            };
+        }
+
+        if (IsNativeListView(control))
+        {
+            string? background = BrushToArgb(GetPropertyValue(control, "Background"));
+            return new CaptureColors
+            {
+                Foreground = BrushToArgb(GetPropertyValue(control, "Foreground")),
+                Background = background,
+                Border = null,
+                SelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush")
+                                      ?? ResolveResourceArgb("GitExtensionsHighlightForegroundBrush"),
+                SelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush")
+                                      ?? ResolveResourceArgb("GitExtensionsHighlightBackgroundBrush"),
+                InactiveSelectionForeground = ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush")
+                                              ?? ResolveResourceArgb("GitExtensionsHighlightForegroundBrush"),
+                InactiveSelectionBackground = ResolveResourceArgb("GitExtensionsKnownColorInactiveCaptionBrush")
+                                              ?? ResolveResourceArgb("GitExtensionsSystemInactiveSelectionBackgroundBrush"),
+                DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                                     ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+                DisabledBackground = background,
+                GridLine = null,
+                Additional = new SortedDictionary<string, string>(additional, StringComparer.Ordinal)
+                {
+                    ["hotTrack"] = ResolveResourceArgb("GitExtensionsNativeListHotTrackBrush")
+                                   ?? throw new InvalidDataException("The native-list hot-track color did not resolve.")
+                }
             };
         }
 
@@ -831,6 +886,39 @@ internal sealed class AvaloniaControlTreeReader
             return ReadRevisionGridColumns(revisionGrid);
         }
 
+        if (TryGetNativeListComposite(control, out _, out Grid? header))
+        {
+            CaptureColors colors = ReadColors(control);
+            return header!.Children
+                .OfType<ContentControl>()
+                .OrderBy(Grid.GetColumn)
+                .Select((column, index) =>
+                {
+                    ColumnDefinition definition = header.ColumnDefinitions[index];
+                    double widthDip = definition.ActualWidth > 0
+                        ? definition.ActualWidth
+                        : definition.Width.Value;
+                    return new CaptureColumn
+                    {
+                        FieldName = GetFieldNames(column).FirstOrDefault() ?? column.Name,
+                        Name = string.Empty,
+                        Type = "System.Windows.Forms.ColumnHeader",
+                        Index = index,
+                        DisplayIndex = index,
+                        WidthPx = ToPixel(widthDip),
+                        WidthDip = ToDecimal(widthDip),
+                        Visible = widthDip > 0,
+                        Resizable = true,
+                        SortMode = null,
+                        Alignment = column.HorizontalContentAlignment.ToString(),
+                        HeaderText = GetText(column),
+                        HeaderAlignment = column.HorizontalContentAlignment.ToString(),
+                        Colors = colors
+                    };
+                })
+                .ToArray();
+        }
+
         return [];
     }
 
@@ -917,6 +1005,37 @@ internal sealed class AvaloniaControlTreeReader
         control is ListBox { Name: "_gridView" }
         && control.GetLogicalAncestors().OfType<RevisionGridControl>().Any();
 
+    private static bool IsNativeListView(Control control)
+        => control is ListBox list && list.Classes.Contains("gitextensions-native-list-items");
+
+    private static bool IsNativeListComposite(Control control, out ListBox? list)
+    {
+        if (control is not Grid grid)
+        {
+            list = null;
+            return false;
+        }
+
+        list = grid.Children.OfType<ListBox>().SingleOrDefault(IsNativeListView);
+        return list is not null && grid.Children.OfType<Grid>().Any(IsNativeListHeader);
+    }
+
+    private static bool TryGetNativeListComposite(
+        Control control,
+        out Grid? composite,
+        out Grid? header)
+    {
+        composite = control.Parent as Grid;
+        header = composite?.Children.OfType<Grid>().SingleOrDefault(IsNativeListHeader);
+        return IsNativeListView(control) && composite is not null && header is not null;
+    }
+
+    private static bool IsNativeListHeader(Grid grid)
+        => grid.Children.OfType<ContentControl>().Any()
+           && grid.Children
+               .OfType<ContentControl>()
+               .All(header => header.Classes.Contains("gitextensions-list-header-cell"));
+
     private static bool IsPopupPresenter(Control control) =>
         control.GetType().Name == "MenuFlyoutPresenter";
 
@@ -925,6 +1044,11 @@ internal sealed class AvaloniaControlTreeReader
 
     private bool IsFocused(Control control)
     {
+        if (IsNativeListView(control))
+        {
+            return control.IsKeyboardFocusWithin;
+        }
+
         if (!IsRevisionGridView(control))
         {
             return control.IsFocused;

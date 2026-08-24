@@ -120,6 +120,14 @@
 
       <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="GitExtensionsNativeListHeaderBackgroundBrush"
+                           Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListSelectionBackgroundBrush"
+                           Color="#CCE8FF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListInactiveSelectionBackgroundBrush"
+                           Color="#D9D9D9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListHotTrackBrush"
+                           Color="#0066CC" />
           <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
                            Color="#C3C3FF" />
           <SolidColorBrush x:Key="GitExtensionsSelectionPointerOverBackgroundBrush"
@@ -222,6 +230,14 @@
           <SolidColorBrush x:Key="GitExtensionsBlameAge6Brush" Color="#00441B" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="GitExtensionsNativeListHeaderBackgroundBrush"
+                           Color="#191919" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListSelectionBackgroundBrush"
+                           Color="#28445B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListInactiveSelectionBackgroundBrush"
+                           Color="#2B2B2B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeListHotTrackBrush"
+                           Color="#2D5FAF" />
           <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
                            Color="#00009B" />
           <SolidColorBrush x:Key="GitExtensionsSelectionPointerOverBackgroundBrush"
@@ -894,6 +910,7 @@
     <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1,0,1,1" />
     <Setter Property="CornerRadius" Value="0" />
   </Style>
   <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
@@ -911,6 +928,23 @@
             Value="{DynamicResource GitExtensionsInactiveSelectionBackgroundBrush}" />
     <Setter Property="Foreground"
             Value="{DynamicResource GitExtensionsInactiveSelectionForegroundBrush}" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <!-- NativeListView uses the platform Explorer selection rather than the revision-grid AppColor. -->
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeListSelectionBackgroundBrush}" />
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeListSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background"
+            Value="{DynamicResource GitExtensionsNativeListInactiveSelectionBackgroundBrush}" />
+    <Setter Property="Foreground"
+            Value="{DynamicResource GitExtensionsWindowTextBrush}" />
   </Style>
 
   <Style Selector="TreeViewItem">
@@ -1228,7 +1262,7 @@
   </Style>
   <Style Selector="ContentControl.gitextensions-list-header-cell">
     <Setter Property="Padding" Value="6,3" />
-    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeListHeaderBackgroundBrush}" />
     <Setter Property="BorderBrush"
             Value="{DynamicResource GitExtensionsSectionBorderBrush}" />
     <Setter Property="BorderThickness" Value="1" />
