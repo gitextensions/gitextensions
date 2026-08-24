@@ -23,6 +23,7 @@ using GitExtensions.ParityCapture;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -104,6 +105,19 @@ public sealed partial class ParityScreenshotTests
     public void Commit_template_settings_capture_host_should_use_native_96_dpi_runtime_dimensions()
     {
         GetCaptureSize(typeof(FormCommitTemplateSettings)).Should().Be((698, 361));
+    }
+
+    [Test]
+    [Category(P02Category)]
+    public void Help_about_capture_hosts_should_use_native_96_dpi_runtime_dimensions()
+    {
+        GetCaptureSize(typeof(FormAbout)).Should().Be((601, 318));
+        GetCaptureSize(typeof(EnvironmentInfo)).Should().Be((137, 78));
+        GetCaptureSize(typeof(FormCommandlineHelp)).Should().Be((394, 662));
+        GetCaptureSize(typeof(FormDonate)).Should().Be((508, 237));
+        GetCaptureSize(typeof(FormChangeLog)).Should().Be((849, 411));
+        GetCaptureSize(typeof(FormOpenDirectory)).Should().Be((615, 77));
+        GetCaptureSize(typeof(FormContributors)).Should().Be((624, 442));
     }
 
     [AvaloniaTest]
@@ -1433,6 +1447,10 @@ public sealed partial class ParityScreenshotTests
                     break;
                 case TextBox textBox:
                     textBox.Text = text;
+                    break;
+                // parity-scaffolding: Seeds read-only Avalonia text surfaces from the shared capture plan.
+                case TextBlock textBlock:
+                    textBlock.Text = text;
                     break;
                 case ContentControl contentControl:
                     contentControl.Content = text;
