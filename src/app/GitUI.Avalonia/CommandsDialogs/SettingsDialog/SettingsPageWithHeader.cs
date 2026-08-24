@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
@@ -26,6 +26,7 @@ public partial class SettingsPageWithHeader : SettingsPageBase, IGlobalSettingsP
     {
         get
         {
+            // Lazy might be being initialized yet, the EffectiveSettings are current, then return true
             try
             {
                 return _header.Value.ReadOnly;
