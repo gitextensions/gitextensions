@@ -91,6 +91,19 @@ public sealed class RepositoryHostCreatePullRequestTests
         form.FindControl<ComboBox>("_yourBranchesCB").Should().NotBeNull();
         form.FindControl<ComboBox>("_remoteBranchesCB").Should().NotBeNull();
         form.FindControl<GitUI.SpellChecker.EditNetSpell>("_bodyTB").Should().NotBeNull();
+        foreach (string labelName in new[] { "label1", "label2", "label3", "label4", "label5" })
+        {
+            TextBlock label = form.FindControl<TextBlock>(labelName)!;
+            label.Classes.Should().Contain("gitextensions-auto-label");
+            label.Height.Should().Be(15);
+            label.Padding.Should().Be(new Avalonia.Thickness(3, 0));
+        }
+
+        TextBox title = form.FindControl<TextBox>("_titleTB")!;
+        title.Height.Should().Be(23);
+        title.Margin.Should().Be(new Avalonia.Thickness(0, 1, 0, 0));
+        form.FindControl<TextBlock>("label1")!.Margin.Should().Be(new Avalonia.Thickness(0, 4, 0, 0));
+        form.FindControl<TextBlock>("label2")!.Margin.Should().Be(new Avalonia.Thickness(0, 3, 0, 0));
 
         translation.Received(1).AddTranslationItem(
             nameof(CreatePullRequestForm), "$this", "Text", "Create Pull Request");
