@@ -109,9 +109,10 @@ public partial class FormMergeBranch : GitModuleForm
                                                         mergeMessagePath,
                                                         Module.GetPathForGitExecution,
                                                         addLogMessages.Checked ? (int)nbMessages.Value : (int?)null);
-        success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+        success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true, out string commandOutput);
 
-        bool wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
+        bool wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked)
+            || Module.CanContinueAction(commandOutput);
 
         if (success || wasConflict)
         {
