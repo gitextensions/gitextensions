@@ -330,6 +330,7 @@ public sealed class RepositoryHostPullRequestTests
     public async Task ViewPullRequestsForm_should_load_diff_and_native_discussion_rows()
     {
         IPullRequestInformation pullRequest = CreatePullRequest();
+        IPullRequestDiscussion discussion = pullRequest.GetDiscussion();
         using ViewPullRequestsForm form = CreateForm(
             Substitute.For<IRepositoryHostPlugin>(),
             Substitute.For<IGitModule>());
@@ -340,6 +341,7 @@ public sealed class RepositoryHostPullRequestTests
 
         accessor.DiffItems.Should().ContainSingle(item => item.Name == "src/file.txt");
         accessor.Discussion.ItemCount.Should().Be(1);
+        discussion.DidNotReceive().ForceReload();
         pullRequest.HeadRepo.Received().CloneProtocol = GitProtocol.Https;
     }
 
