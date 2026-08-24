@@ -6,12 +6,10 @@
                                  MinWidth="650"
                                  MinHeight="331"
                                  Text="Shell extension">
-  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollBarVisibility="Auto">
-    <Grid x:Name="tlpnlMain"
-          Height="315"
-          Margin="8"
-          RowDefinitions="69,508">
+  <Grid x:Name="tlpnlMain"
+        Height="315"
+        Margin="8"
+        RowDefinitions="69,508">
       <GroupBox x:Name="gbExplorerIntegration"
                 Margin="3"
                 Padding="2"
@@ -85,6 +83,5 @@
           </Border>
         </Grid>
       </GroupBox>
-    </Grid>
-  </ScrollViewer>
+  </Grid>
 </settings:SettingsPageWithHeader>

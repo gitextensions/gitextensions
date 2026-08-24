@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitUI.Hotkey;
+using GitUI.Shells;
 using ResourceManager;
 using ResourceManager.Hotkey;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -21,13 +22,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
 
               Focus the output history and (when displayed as panel) toggle its visibility using the hotkey {0}.
               """);
-    private readonly ShellOption[] _shells =
-    [
-        new("bash", "git-bash.exe", "bash.exe", "sh.exe"),
-        new("cmd", "cmd.exe"),
-        new("pwsh", "pwsh.exe"),
-        new("powershell", "powershell.exe"),
-    ];
+    private readonly IShellProvider _shellProvider;
     private int _cboTerminalPreviousIndex = -1;
 
     public FormBrowseRepoSettingsPage()
@@ -39,10 +34,10 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         : base(serviceProvider)
     {
         InitializeComponent();
-        cboTerminal.ItemsSource = _shells;
         cboTerminal.SelectionChanged += cboTerminal_SelectionChangeCommitted;
         cboTerminal.GotFocus += cboTerminal_Enter;
         InitializeComplete();
+        _shellProvider = serviceProvider.GetService(typeof(IShellProvider)) as IShellProvider ?? new ShellProvider();
         string hotkey = serviceProvider.GetService(typeof(IHotkeySettingsManager)) is IHotkeySettingsManager manager
             ? manager.LoadHotkeys(FormBrowse.HotkeySettingsName)
                 .GetShortcutDisplay(FormBrowse.Command.FocusOutputHistoryAndToggleIfPanel)
@@ -79,10 +74,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
             AppSettings.OutputHistoryPanelVisible.Value = !chkShowOutputHistoryAsTab.Checked && outputHistoryDepth > 0;
         }
 
-        if (cboTerminal.SelectedItem is ShellOption shell)
-        {
-            AppSettings.ConEmuTerminal.Value = shell.Name.ToLowerInvariant();
-        }
+        AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
 
         base.PageToSettings();
     }
@@ -101,9 +93,9 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
             (int)_NO_TRANSLATE_OutputHistoryDepth.Minimum,
             (int)_NO_TRANSLATE_OutputHistoryDepth.Maximum);
 
-        cboTerminal.SelectedItem = _shells.FirstOrDefault(shell =>
-            string.Equals(shell.Name, AppSettings.ConEmuTerminal.Value, StringComparison.InvariantCultureIgnoreCase))
-            ?? _shells[0];
+        cboTerminal.ItemsSource = _shellProvider.GetShells();
+        cboTerminal.SelectedItem = _shellProvider.GetShells().FirstOrDefault(shell =>
+            string.Equals(shell.Name, AppSettings.ConEmuTerminal.Value, StringComparison.InvariantCultureIgnoreCase));
 
         base.SettingsToPage();
     }
@@ -115,7 +107,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
 
     private void cboTerminal_SelectionChangeCommitted(object? sender, SelectionChangedEventArgs e)
     {
-        if (IsLoadingSettings || cboTerminal.SelectedItem is not ShellOption shell)
+        if (IsLoadingSettings || cboTerminal.SelectedItem is not IShellDescriptor shell)
         {
             return;
         }
@@ -147,12 +139,5 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         internal GitUI.UserControls.Settings.SettingsCheckBox ShowRevisionGridTooltip => page.chkShowRevisionGridTooltip;
         internal GitUI.UserControls.Settings.SettingsCheckBox ShowOutputHistoryAsTab => page.chkShowOutputHistoryAsTab;
         internal NumericUpDown OutputHistoryDepth => page._NO_TRANSLATE_OutputHistoryDepth;
-    }
-
-    private sealed record ShellOption(string Name, params string[] ExecutableNames)
-    {
-        internal bool HasExecutable => ExecutableNames.Any(name => PathUtil.TryFindShellPath(name, out _));
-
-        public override string ToString() => Name;
     }
 }
