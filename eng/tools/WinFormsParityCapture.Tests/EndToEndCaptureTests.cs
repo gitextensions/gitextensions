@@ -1,5 +1,6 @@
 ﻿using AwesomeAssertions;
 using GitExtensions.ParityCapture;
+using GitUI.SettingControlBindings;
 using NUnit.Framework;
 
 namespace WinFormsParityCapture.Tests;
@@ -125,6 +126,40 @@ public sealed class EndToEndCaptureTests
         }
 
         checkBox.Checked.Should().BeFalse();
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void Paired_setting_binding_surfaces_should_expose_all_original_controls_and_edge_states()
+    {
+        using SettingControlBindingsCaptureSurface normal = new();
+        using SettingControlBindingsNullCaptureSurface edge = new();
+        string[] names =
+        [
+            "boolControl",
+            "choiceControl",
+            "stringControl",
+            "passwordControl",
+            "numberControl",
+            "numberTextControl",
+            "credentialsControl",
+            "pseudoControl",
+        ];
+
+        names.Should().OnlyContain(name => normal.Controls.Find(name, searchAllChildren: true).Length == 1);
+        normal.Controls.Find("boolControl", searchAllChildren: true).Single().Should().BeOfType<CheckBox>()
+            .Which.Checked.Should().BeTrue();
+        normal.Controls.Find("choiceControl", searchAllChildren: true).Single().Should().BeOfType<ComboBox>()
+            .Which.SelectedItem.Should().Be("two");
+        normal.Controls.Find("numberTextControl", searchAllChildren: true).Single().Text.Should().Be("1.5");
+
+        edge.Controls.Find("boolControl", searchAllChildren: true).Single().Should().BeOfType<CheckBox>()
+            .Which.CheckState.Should().Be(CheckState.Indeterminate);
+        edge.Controls.Find("numberControl", searchAllChildren: true).Single().Should().BeOfType<NumericUpDown>()
+            .Which.Text.Should().BeEmpty();
+        edge.Controls.Find("numberTextControl", searchAllChildren: true).Single().BackColor
+            .Should().Be(GitExtUtils.GitUI.Theming.OtherColors.BrightRed);
+        edge.Controls.Find("credentialsControl", searchAllChildren: true).Single().Enabled.Should().BeFalse();
     }
 
     [Test]

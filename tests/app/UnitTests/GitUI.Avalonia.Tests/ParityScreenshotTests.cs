@@ -49,6 +49,7 @@ using GitUI.Help;
 using GitUI.HelperDialogs;
 using GitUI.LeftPanel;
 using GitUI.ScriptsEngine;
+using GitUI.SettingControlBindings;
 using GitUI.SpellChecker;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -425,6 +426,16 @@ public sealed partial class ParityScreenshotTests
         if (viewType == typeof(SimplePrompt))
         {
             return new SimplePrompt("Script input", "Branch name", FeatureBranchName);
+        }
+
+        if (viewType == typeof(SettingControlBindingsCaptureSurface))
+        {
+            return new SettingControlBindingsCaptureSurface();
+        }
+
+        if (viewType == typeof(SettingControlBindingsNullCaptureSurface))
+        {
+            return new SettingControlBindingsNullCaptureSurface();
         }
 
         if (viewType == typeof(FormFilePrompt))
@@ -1775,6 +1786,12 @@ public sealed partial class ParityScreenshotTests
 
     private static (double Width, double Height) GetCaptureSize(Type viewType)
     {
+        if (viewType == typeof(SettingControlBindingsCaptureSurface)
+            || viewType == typeof(SettingControlBindingsNullCaptureSurface))
+        {
+            return (800, 320);
+        }
+
         if (viewType == typeof(BranchSelector))
         {
             return (325, 54);
@@ -2241,6 +2258,8 @@ public sealed partial class ParityScreenshotTests
             new("UserControls/CaseSensitiveComboBox.cs", "UserControls/CaseSensitiveComboBox", typeof(CaseSensitiveComboBox).FullName!, typeof(CaseSensitiveComboBox)),
             new("CommandsDialogs/FormSparseWorkingCopy.cs", "CommandsDialogs/FormSparseWorkingCopy", typeof(FormSparseWorkingCopy).FullName!, typeof(FormSparseWorkingCopy)),
             new("CommandsDialogs/AboutBoxDialog/FormContributors.cs", "CommandsDialogs/AboutBoxDialog/FormContributors", typeof(FormContributors).FullName!, typeof(FormContributors)),
+            new("SettingControlBindings/SettingControlBindingsCaptureSurface.cs", "SettingControlBindings/SettingControlBindingsCaptureSurface", typeof(SettingControlBindingsCaptureSurface).FullName!, typeof(SettingControlBindingsCaptureSurface)),
+            new("SettingControlBindings/SettingControlBindingsNullCaptureSurface.cs", "SettingControlBindings/SettingControlBindingsNullCaptureSurface", typeof(SettingControlBindingsNullCaptureSurface).FullName!, typeof(SettingControlBindingsNullCaptureSurface)),
             // parity-scaffolding: Plugin-owned AXAML lives outside GitUI.Avalonia but shares the capture schema and state driver.
             new("../../plugins/Gource/GourceStart.axaml", "../../plugins/Gource/GourceStart", typeof(GourceStart).FullName!, typeof(GourceStart)),
         ];
