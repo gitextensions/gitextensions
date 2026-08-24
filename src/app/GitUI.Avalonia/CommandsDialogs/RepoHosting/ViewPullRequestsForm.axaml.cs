@@ -36,23 +36,23 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private readonly TranslationString _strRemoteIgnore = new("Remote ignored");
     #endregion
 
+    private GitProtocol _cloneGitProtocol;
+    private IPullRequestInformation? _currentPullRequestInfo;
+    private Dictionary<string, string>? _diffCache;
+    private readonly IRepositoryHostPlugin _gitHoster = null!;
+    private IReadOnlyList<IHostedRemote>? _hostedRemotes;
+    private bool _isFirstLoad;
+    private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
+
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
-    private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
+    // Framework constraint: TaskManager replaces WinForms AsyncLoader while preserving the source field identity.
+    private readonly TaskManager _loader = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly CancellationTokenSequence _pullRequestsSequence = new();
     private readonly CancellationTokenSequence _detailsSequence = new();
     private readonly CancellationTokenSequence _discussionSequence = new();
     private readonly CancellationTokenSource _lifetimeCancellation = new();
     private string _currentRemoteName = string.Empty;
     private IReadOnlyList<Remote> _moduleRemotes = [];
-
-    private GitProtocol _cloneGitProtocol;
-    private IPullRequestInformation? _currentPullRequestInfo;
-    private IPullRequestDiscussion? _currentDiscussion;
-    private Dictionary<string, string>? _diffCache;
-    private readonly IRepositoryHostPlugin _gitHoster = null!;
-    private IReadOnlyList<IHostedRemote>? _hostedRemotes;
-    private bool _isFirstLoad;
-    private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
     private IReadOnlyList<HostedRemoteRow> _hostedRemoteRows = [];
     private readonly double[] _pullRequestColumnWidths = new double[5];
 
@@ -98,10 +98,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _fetchBtn.Click += _fetchBtn_Click;
         _addAndFetchBtn.Click += _addAsRemoteAndFetch_Click;
         _closePullRequestBtn.Click += _closePullRequestBtn_Click;
-        _refreshCommentsBtn.Click += (_, _) => StartDiscussionRefresh();
-        _postComment.Click += (_, _) => StartPostComment();
-
-        SetActionState();
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -121,17 +117,16 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         // load all hosted repositories.
         // We do this now because we want to do it in the async part.
-        _operations.FileAndForget(() => InitializeAsync(_lifetimeCancellation.Token));
+        _loader.FileAndForget(() => InitializeAsync(_lifetimeCancellation.Token));
     }
 
     protected override void OnClosed(EventArgs e)
     {
-        // Clean up any resources being used.
         _lifetimeCancellation.Cancel();
         _pullRequestsSequence.CancelCurrent();
         _detailsSequence.CancelCurrent();
         _discussionSequence.CancelCurrent();
-        _operations.JoinPendingOperations();
+        _loader.JoinPendingOperations();
         _pullRequestsSequence.Dispose();
         _detailsSequence.Dispose();
         _discussionSequence.Dispose();
@@ -157,7 +152,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 },
                 cancellationToken);
 
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             _currentRemoteName = currentRemote;
             _moduleRemotes = remotes;
             _hostedRemotes = hostedRemotes;
@@ -190,7 +185,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _discussionSequence.CancelCurrent();
         ResetAllAndShowLoadingPullRequests();
         _selectHostedRepoCB.IsEnabled = false;
-        _operations.FileAndForget(() => LoadPullRequestsAsync(cancellationToken));
+        _loader.FileAndForget(() => LoadPullRequestsAsync(cancellationToken));
     }
 
     private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
@@ -202,7 +197,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private async Task LoadPullRequestsAsync(CancellationToken cancellationToken)
     {
         HostedRemoteRow? selectedRemote = null;
-        await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+        await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
         selectedRemote = _selectHostedRepoCB.SelectedItem as HostedRemoteRow;
 
         if (selectedRemote?.Repository is null)
@@ -221,7 +216,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 selectedRemote.Repository.GetPullRequests,
                 cancellationToken);
 
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             _selectHostedRepoCB.IsEnabled = true;
             SetPullRequestsData(pullRequests);
         }
@@ -230,7 +225,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
         catch (Exception ex)
         {
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!cancellationToken.IsCancellationRequested)
             {
                 _selectHostedRepoCB.IsEnabled = true;
@@ -347,8 +342,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _detailsSequence.CancelCurrent();
         _discussionSequence.CancelCurrent();
         ResetDetails(clearPullRequest: false);
-        SetActionState();
-
         if (_currentPullRequestInfo is null)
         {
             return;
@@ -373,7 +366,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             string content = await pullRequest.GetDiffDataAsync().WaitAsync(cancellationToken);
             DiffSnapshot snapshot = ParseDiff(content, pullRequest.BaseSha, pullRequest.HeadSha);
 
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             if (!ReferenceEquals(_currentPullRequestInfo, pullRequest))
             {
                 return;
@@ -387,7 +380,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
         catch (InvalidDataException)
         {
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!cancellationToken.IsCancellationRequested)
             {
                 MessageBoxes.Show(
@@ -400,7 +393,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
         catch (Exception ex)
         {
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!cancellationToken.IsCancellationRequested)
             {
                 MessageBoxes.Show(
@@ -421,7 +414,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
 
         CancellationToken cancellationToken = _detailsSequence.Next();
-        _operations.FileAndForget(() => LoadDiffPatchAsync(pullRequest, cancellationToken));
+        _loader.FileAndForget(() => LoadDiffPatchAsync(pullRequest, cancellationToken));
     }
 
     private void SplitAndLoadDiff(string diffData, string baseSha, string secondSha)
@@ -480,12 +473,12 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         CancellationToken cancellationToken = _discussionSequence.Next();
         _discussionWB.ItemsSource = new[] { DiscussionRow.Placeholder(_strLoading.Text) };
-        _operations.FileAndForget(() => LoadDiscussionAsync(pullRequest, forceReload, cancellationToken));
+        _loader.FileAndForget(() => LoadDiscussionAsync(pullRequest, forceReload, cancellationToken));
     }
 
     private void LoadDiscussion()
     {
-        // Framework constraint: Git.hub remains synchronous, so Avalonia runs this operation asynchronously.
+        // TODO make this operation async (requires change to Git.hub submodule)
         StartDiscussionLoad(forceReload: false);
     }
 
@@ -509,7 +502,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                     return result;
                 },
                 cancellationToken);
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             if (!ReferenceEquals(_currentPullRequestInfo, pullRequest))
             {
                 return;
@@ -522,7 +515,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
         catch (Exception ex)
         {
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!cancellationToken.IsCancellationRequested)
             {
                 MessageBoxes.Show(
@@ -538,7 +531,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     private void LoadDiscussion(IPullRequestDiscussion? discussion)
     {
-        _currentDiscussion = discussion;
         DiscussionRow[] rows = DiscussionHtmlCreator.CreateFor(discussion?.Entries)
             .Select(DiscussionRow.FromPresentation)
             .ToArray();
@@ -555,57 +547,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
     }
 
-    private void StartDiscussionRefresh()
-    {
-        StartDiscussionLoad(forceReload: true);
-    }
-
-    private void StartPostComment()
-    {
-        string comment = _postCommentText.Text.Trim();
-        if (_currentDiscussion is null || comment.Length == 0)
-        {
-            return;
-        }
-
-        CancellationToken cancellationToken = _discussionSequence.Next();
-        _postComment.IsEnabled = false;
-        _refreshCommentsBtn.IsEnabled = false;
-        _operations.FileAndForget(() => PostCommentAsync(_currentDiscussion, comment, cancellationToken));
-    }
-
-    private async Task PostCommentAsync(
-        IPullRequestDiscussion discussion,
-        string comment,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            await Task.Run(() => discussion.Post(comment), cancellationToken);
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            _postCommentText.Text = string.Empty;
-            SetActionState();
-            StartDiscussionLoad(forceReload: true);
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-        }
-        catch (Exception ex)
-        {
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync();
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                SetActionState();
-                MessageBoxes.Show(
-                    this,
-                    _strFailedToLoadDiscussionItem.Text + Environment.NewLine + ex.Message,
-                    TranslatedStrings.Error,
-                    WinFormsShims.MessageBoxButtons.OK,
-                    WinFormsShims.MessageBoxIcon.Error);
-            }
-        }
-    }
-
     private void StartClosePullRequest()
     {
         if (_currentPullRequestInfo is not { } pullRequest)
@@ -615,7 +556,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         _closePullRequestBtn.IsEnabled = false;
         CancellationToken cancellationToken = _pullRequestsSequence.Next();
-        _operations.FileAndForget(() => ClosePullRequestAsync(pullRequest, cancellationToken));
+        _loader.FileAndForget(() => ClosePullRequestAsync(pullRequest, cancellationToken));
     }
 
     private void _closePullRequestBtn_Click(object? sender, EventArgs e)
@@ -630,7 +571,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         try
         {
             await Task.Run(pullRequest.Close, cancellationToken);
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             StartPullRequestLoad();
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -638,7 +579,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
         catch (Exception ex)
         {
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!cancellationToken.IsCancellationRequested)
             {
                 _closePullRequestBtn.IsEnabled = true;
@@ -806,12 +747,10 @@ public partial class ViewPullRequestsForm : GitModuleForm
             _currentPullRequestInfo = null;
         }
 
-        _currentDiscussion = null;
         _diffCache = null;
         _discussionWB.ItemsSource = Array.Empty<DiscussionRow>();
         _fileStatusList.ClearDiffs();
         _diffViewer.ViewText(string.Empty, string.Empty);
-        SetActionState();
     }
 
     private void ResetAllAndShowLoadingPullRequests()
@@ -819,16 +758,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         ResetDetails();
         _pullRequestsInfo = null;
         _pullRequestsList.ItemsSource = new[] { PullRequestRow.Placeholder(_strLoading.Text) };
-    }
-
-    private void SetActionState()
-    {
-        bool hasPullRequest = _currentPullRequestInfo is not null;
-        _fetchBtn.IsEnabled = hasPullRequest;
-        _addAndFetchBtn.IsEnabled = hasPullRequest;
-        _closePullRequestBtn.IsEnabled = hasPullRequest;
-        _refreshCommentsBtn.IsEnabled = hasPullRequest;
-        _postComment.IsEnabled = hasPullRequest;
     }
 
     private Control CreatePullRequestRow(PullRequestRow? row, Avalonia.Controls.INameScope nameScope)
@@ -1033,12 +962,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         // parity-scaffolding: Lets the paired capture wait for the selected patch, not just its file row.
         public string DiffText => form._diffViewer.TextEditor.Text;
 
-        public string Comment
-        {
-            get => form._postCommentText.Text;
-            set => form._postCommentText.Text = value;
-        }
-
         public bool CloseEnabled => form._closePullRequestBtn.IsEnabled;
 
         public bool PostEnabled => form._postComment.IsEnabled;
@@ -1052,25 +975,16 @@ public partial class ViewPullRequestsForm : GitModuleForm
         public Task LoadPullRequestsAsync(CancellationToken cancellationToken = default)
             => form.LoadPullRequestsAsync(cancellationToken);
 
-        public Task LoadDiscussionAsync(bool forceReload, CancellationToken cancellationToken = default)
-            => form._currentPullRequestInfo is { } pullRequest
-                ? form.LoadDiscussionAsync(pullRequest, forceReload, cancellationToken)
-                : Task.CompletedTask;
-
         public Task LoadDiffAsync(CancellationToken cancellationToken = default)
             => form._currentPullRequestInfo is { } pullRequest
                 ? form.LoadDiffPatchAsync(pullRequest, cancellationToken)
                 : Task.CompletedTask;
 
         public Task JoinOperationsAsync(CancellationToken cancellationToken = default)
-            => form._operations.JoinPendingOperationsAsync(cancellationToken);
+            => form._loader.JoinPendingOperationsAsync(cancellationToken);
 
         public Task InitializeAsync(CancellationToken cancellationToken = default)
             => form.InitializeAsync(cancellationToken);
-
-        public void PostComment() => form.StartPostComment();
-
-        public void RefreshDiscussion() => form.StartDiscussionRefresh();
 
         public void ClosePullRequest() => form.StartClosePullRequest();
 

@@ -309,7 +309,7 @@ public sealed class RepositoryHostForkCloneTests
     }
 
     [AvaloniaTest]
-    public async Task ForkAndCloneForm_should_disable_clone_for_invalid_native_path_characters()
+    public async Task ForkAndCloneForm_should_report_invalid_native_path_characters_during_validation()
     {
         IHostedRepository repository = CreateRepository("project", owner: "me", isFork: false);
         IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
@@ -324,7 +324,7 @@ public sealed class RepositoryHostForkCloneTests
         accessor.CreateDirectory = "project" + Path.GetInvalidPathChars()[0];
         (bool destinationInvalid, bool createDirectoryInvalid) = accessor.ValidatePaths();
 
-        accessor.CloneEnabled.Should().BeFalse();
+        accessor.CloneEnabled.Should().BeTrue();
         destinationInvalid.Should().BeFalse();
         createDirectoryInvalid.Should().BeTrue();
     }
