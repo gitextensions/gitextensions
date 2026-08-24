@@ -523,6 +523,11 @@ internal static class SourceInventoryReader
             }
 
             string parent = Normalize(collection.Expression);
+            if (!menuNames.Contains(parent))
+            {
+                continue;
+            }
+
             List<string> children = ExtractCollectionItems(invocation).ToList();
             for (int index = 0; index < children.Count; index++)
             {
@@ -778,7 +783,9 @@ internal static class SourceInventoryReader
             }
 
             string kind = element.Name.LocalName;
-            part.Members.Add(NewMember(part.Path, part.Members.Count, "control", name, "private", kind));
+
+            // AXAML x:Name generates the private field that the WinForms Designer declares explicitly.
+            part.Members.Add(NewMember(part.Path, part.Members.Count, "field", name, "private", $"{kind} {name}"));
             string? translatedProperty = element.Attribute("Header") is not null
                 || element.Attribute("Content") is not null
                 || element.Attribute("Text") is not null
