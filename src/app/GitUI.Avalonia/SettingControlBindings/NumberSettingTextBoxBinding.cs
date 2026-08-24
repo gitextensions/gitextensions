@@ -46,7 +46,7 @@ internal class NumberSettingTextBoxBinding<T> : SettingControlBinding<NumberSett
     {
         string controlValue = control.Text ?? "";
 
-        if (string.IsNullOrEmpty(controlValue) || !TryConvertFromString(controlValue, out object? parsedValue))
+        if (string.IsNullOrEmpty(controlValue) || !PluginSettingControlFactory.TryConvertNumberFromString<T>(controlValue, out object? parsedValue))
         {
             Setting[settings] = null;
             return;
@@ -67,39 +67,8 @@ internal class NumberSettingTextBoxBinding<T> : SettingControlBinding<NumberSett
     {
         if (sender is TextBox textBox)
         {
-            bool isValid = string.IsNullOrEmpty(textBox.Text) || TryConvertFromString(textBox.Text, out _);
+            bool isValid = string.IsNullOrEmpty(textBox.Text) || PluginSettingControlFactory.TryConvertNumberFromString<T>(textBox.Text, out _);
             textBox.Classes.Set("plugin-setting-invalid", !isValid);
         }
-    }
-
-    private static bool TryConvertFromString(string? value, out object? result)
-    {
-        Type type = typeof(T);
-        if (type == typeof(int) && int.TryParse(value, out int intResult))
-        {
-            result = intResult;
-            return true;
-        }
-
-        if (type == typeof(float) && float.TryParse(value, out float floatResult))
-        {
-            result = floatResult;
-            return true;
-        }
-
-        if (type == typeof(double) && double.TryParse(value, out double doubleResult))
-        {
-            result = doubleResult;
-            return true;
-        }
-
-        if (type == typeof(long) && long.TryParse(value, out long longResult))
-        {
-            result = longResult;
-            return true;
-        }
-
-        result = null;
-        return false;
     }
 }

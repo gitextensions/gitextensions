@@ -19,6 +19,7 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommitInfo;
 using GitUI.HelperDialogs;
 using GitUI.LeftPanel;
+using GitUI.SettingControlBindings;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.Settings;
@@ -89,6 +90,10 @@ internal static class ComponentFactory
                 CreateSettingsPage(new FormBrowseRepoSettingsPage(commands)),
             "GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage" =>
                 CreateSettingsPage(new ShellExtensionSettingsPage(commands)),
+            "GitUI.SettingControlBindings.SettingControlBindingsCaptureSurface" =>
+                new SettingControlBindingsCaptureSurface(),
+            "GitUI.SettingControlBindings.SettingControlBindingsNullCaptureSurface" =>
+                new SettingControlBindingsNullCaptureSurface(),
             "GitExtensions.Plugins.Gource.GourceStart" => new GourceStart(string.Empty, null!, string.Empty),
             _ => CreateParameterless(component.TypeName)
         };
