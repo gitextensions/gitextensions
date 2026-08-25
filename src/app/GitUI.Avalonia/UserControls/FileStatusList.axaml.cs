@@ -70,6 +70,15 @@ public partial class FileStatusList : GitModuleControl
     [GeneratedRegex(@"(^|\s)-e(\s|\s+['""])", RegexOptions.ExplicitCapture)]
     private static partial Regex GrepStringRegex { get; }
 
+    // Avalonia uses separate list and tree renderers, so renderer selection stays distinct from the source's revision-group flag.
+    private bool ShowDiffTree
+        => !_isFileTreeMode
+           && GitItemStatusesWithDescription.Count > 0
+           && (_showDiffGroups
+               || DiffListSortService.Instance.DiffListSorting is not (DiffListSortType.FilePathFlat
+                   or DiffListSortType.FileExtensionFlat
+                   or DiffListSortType.FileStatusFlat));
+
     public FileStatusList()
     {
         _diffCalculator = new FileStatusDiffCalculator(() => Module);
@@ -324,7 +333,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public FileStatusItem? SelectedItem => _isFileTreeMode
         ? (tvFiles.SelectedItem as FileTreeNode)?.Item
-        : _showDiffGroups
+        : ShowDiffTree
             ? (tvDiffFiles.SelectedItem as DiffTreeNode)?.Item
             : GetFileStatusItem(lstFiles.SelectedItem);
 
@@ -333,7 +342,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public FileStatusItem? SelectedFileStatusItem => _isFileTreeMode
         ? (tvFiles.SelectedItem as FileTreeNode)?.Item
-        : _showDiffGroups
+        : ShowDiffTree
             ? (tvDiffFiles.SelectedItem as DiffTreeNode)?.Item
             : GetFileStatusItem(lstFiles.SelectedItem);
 
@@ -344,7 +353,7 @@ public partial class FileStatusList : GitModuleControl
     {
         get => _isFileTreeMode
             ? tvFiles.SelectedItems?.OfType<FileTreeNode>().Select(node => node.Item).OfType<FileStatusItem>() ?? []
-            : _showDiffGroups
+            : ShowDiffTree
                 ? tvDiffFiles.SelectedItems?.OfType<DiffTreeNode>().Select(node => node.Item).OfType<FileStatusItem>() ?? []
                 : lstFiles.SelectedItems?.Cast<object>().Select(item => GetFileStatusItem(item)).OfType<FileStatusItem>() ?? [];
         set
@@ -357,7 +366,7 @@ public partial class FileStatusList : GitModuleControl
 
             HashSet<FileStatusItem> selected = [.. value];
             ClearSelected();
-            if (_showDiffGroups)
+            if (ShowDiffTree)
             {
                 foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null && selected.Contains(node.Item)))
                 {
@@ -388,7 +397,7 @@ public partial class FileStatusList : GitModuleControl
     {
         get => _isFileTreeMode
             ? [.. tvFiles.SelectedItems?.OfType<FileTreeNode>().Select(node => node.Item?.Item).OfType<GitItemStatus>() ?? []]
-            : _showDiffGroups
+            : ShowDiffTree
                 ? [.. tvDiffFiles.SelectedItems?.OfType<DiffTreeNode>().Select(node => node.Item?.Item).OfType<GitItemStatus>() ?? []]
                 : [.. lstFiles.SelectedItems?.Cast<object>().Select(GetGitItemStatus).OfType<GitItemStatus>() ?? []];
         set
@@ -401,7 +410,7 @@ public partial class FileStatusList : GitModuleControl
 
             HashSet<GitItemStatus> selected = [.. value];
             ClearSelected();
-            if (_showDiffGroups)
+            if (ShowDiffTree)
             {
                 foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null && selected.Contains(node.Item.Item)))
                 {
@@ -431,7 +440,7 @@ public partial class FileStatusList : GitModuleControl
     public RelativePath? SelectedFolder
         => _isFileTreeMode && tvFiles.SelectedItem is FileTreeNode { IsFolder: true } node
             ? RelativePath.From(node.FullPath)
-            : _showDiffGroups && tvDiffFiles.SelectedItem is DiffTreeNode { FolderPath: not null } diffNode
+            : ShowDiffTree && tvDiffFiles.SelectedItem is DiffTreeNode { FolderPath: not null } diffNode
                 ? diffNode.FolderPath
                 : null;
 
@@ -441,7 +450,7 @@ public partial class FileStatusList : GitModuleControl
     public RelativePath? SelectedRelativePath
         => _isFileTreeMode && tvFiles.SelectedItem is FileTreeNode node
             ? RelativePath.From(node.FullPath)
-            : _showDiffGroups && tvDiffFiles.SelectedItem is DiffTreeNode diffNode
+            : ShowDiffTree && tvDiffFiles.SelectedItem is DiffTreeNode diffNode
                 ? diffNode.Item is not null
                     ? RelativePath.From(diffNode.Item.Item.Name)
                     : diffNode.FolderPath
@@ -570,7 +579,7 @@ public partial class FileStatusList : GitModuleControl
     public bool FilterFilesByNameRegexFocused => cboFilterComboBox.IsKeyboardFocusWithin;
 
     public bool Focused
-        => (_isFileTreeMode ? (Control)tvFiles : _showDiffGroups ? tvDiffFiles : lstFiles).IsKeyboardFocusWithin;
+        => (_isFileTreeMode ? (Control)tvFiles : ShowDiffTree ? tvDiffFiles : lstFiles).IsKeyboardFocusWithin;
 
     public FileStatusItem? FocusedItem
     {
@@ -691,10 +700,16 @@ public partial class FileStatusList : GitModuleControl
     public void SetDiffs(GitRevision? firstRev, GitRevision secondRev, IReadOnlyList<GitItemStatus> items)
     {
         FileStatusListLoading();
-        List<FileStatusEntry> entries = items
-            .Select(item => new FileStatusEntry(new FileStatusItem(firstRev, secondRev, item)))
-            .ToList();
-        SetRevisionEntries(entries);
+        UpdateToolbar([secondRev]);
+        SetDiffs(
+        [
+            new(
+                firstRev: firstRev,
+                secondRev: secondRev,
+                summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev?.ObjectId ?? default(ObjectId)),
+                statuses: items),
+        ],
+        isFileTreeMode: false);
     }
 
     private string? GetDescriptionForRevision(ObjectId objectId)
@@ -802,7 +817,7 @@ public partial class FileStatusList : GitModuleControl
             SelectFirstVisibleItem();
         }
 
-        Control target = _isFileTreeMode ? tvFiles : _showDiffGroups ? tvDiffFiles : lstFiles;
+        Control target = _isFileTreeMode ? tvFiles : ShowDiffTree ? tvDiffFiles : lstFiles;
         if (!target.Focus())
         {
             Dispatcher.UIThread.Post(() => target.Focus());
@@ -827,7 +842,7 @@ public partial class FileStatusList : GitModuleControl
         {
             tvFiles.SelectAll();
         }
-        else if (_showDiffGroups)
+        else if (ShowDiffTree)
         {
             tvDiffFiles.SelectedItems?.Clear();
             foreach (DiffTreeNode node in tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Where(node => node.Item is not null))
@@ -858,9 +873,9 @@ public partial class FileStatusList : GitModuleControl
     /// <returns><c>true</c> if a matching tree node was found.</returns>
     public bool SelectFileOrFolder(RelativePath relativePath, bool firstGroupOnly = false, bool notify = true)
     {
-        if (_showDiffGroups)
+        if (ShowDiffTree)
         {
-            IEnumerable<DiffTreeNode> roots = firstGroupOnly
+            IEnumerable<DiffTreeNode> roots = firstGroupOnly && _showDiffGroups
                 ? tvDiffFiles.Items.Cast<DiffTreeNode>().Take(1)
                 : tvDiffFiles.Items.Cast<DiffTreeNode>();
             DiffTreeNode? diffNode = roots
@@ -916,7 +931,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SelectFirstVisibleItem()
     {
-        if (_showDiffGroups)
+        if (ShowDiffTree)
         {
             // Skip collapsed or empty groups
             DiffTreeNode? first = tvDiffFiles.Items.Cast<DiffTreeNode>()
@@ -956,7 +971,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SelectPreviousVisibleItem()
     {
-        if (_showDiffGroups)
+        if (ShowDiffTree)
         {
             SelectAdjacentDiffFile(-1);
             return;
@@ -987,7 +1002,7 @@ public partial class FileStatusList : GitModuleControl
     /// </summary>
     public void SelectNextVisibleItem()
     {
-        if (_showDiffGroups)
+        if (ShowDiffTree)
         {
             SelectAdjacentDiffFile(1);
             return;
@@ -1123,7 +1138,7 @@ public partial class FileStatusList : GitModuleControl
     private IEnumerable<FileStatusItem> GetVisibleFileStatusItems()
         => _isFileTreeMode
             ? tvFiles.Items.Cast<FileTreeNode>().SelectMany(Flatten).Select(node => node.Item).OfType<FileStatusItem>()
-            : _showDiffGroups
+            : ShowDiffTree
                 ? tvDiffFiles.Items.Cast<DiffTreeNode>().SelectMany(Flatten).Select(node => node.Item).OfType<FileStatusItem>()
                 : lstFiles.Items.Cast<object>().Select(GetFileStatusItem).OfType<FileStatusItem>();
 
@@ -1203,7 +1218,7 @@ public partial class FileStatusList : GitModuleControl
                 {
                     tvFiles.SelectedItem = treeItem;
                 }
-                else if (_showDiffGroups)
+                else if (ShowDiffTree)
                 {
                     tvDiffFiles.SelectedItem = treeItem;
                 }
@@ -1575,7 +1590,7 @@ public partial class FileStatusList : GitModuleControl
                     .OfType<GitItemStatus>(),
             ];
 
-            if (_showDiffGroups)
+            if (ShowDiffTree)
             {
                 tvDiffFiles.ItemsSource = roots;
                 lstFiles.ItemsSource = null;
@@ -1634,7 +1649,7 @@ public partial class FileStatusList : GitModuleControl
 
     private bool SelectFileStatusItem(FileStatusItem item, bool notify)
     {
-        if (_showDiffGroups)
+        if (ShowDiffTree)
         {
             DiffTreeNode? node = tvDiffFiles.Items.Cast<DiffTreeNode>()
                 .SelectMany(Flatten)
@@ -1722,10 +1737,10 @@ public partial class FileStatusList : GitModuleControl
     {
         LoadingFiles.IsVisible = false;
         bool hasItems = _gitItemFilteredStatuses.Count > 0;
-        bool hasGroupRows = _showDiffGroups && tvDiffFiles.ItemCount > 0;
-        NoFiles.IsVisible = !hasItems && !hasGroupRows;
-        lstFiles.IsVisible = hasItems && !_isFileTreeMode && !_showDiffGroups;
-        tvDiffFiles.IsVisible = (hasItems || hasGroupRows) && !_isFileTreeMode && _showDiffGroups;
+        bool hasDiffTreeRows = ShowDiffTree && tvDiffFiles.ItemCount > 0;
+        NoFiles.IsVisible = !hasItems && !hasDiffTreeRows;
+        lstFiles.IsVisible = hasItems && !_isFileTreeMode && !ShowDiffTree;
+        tvDiffFiles.IsVisible = (hasItems || hasDiffTreeRows) && ShowDiffTree;
         tvFiles.IsVisible = hasItems && _isFileTreeMode;
     }
 

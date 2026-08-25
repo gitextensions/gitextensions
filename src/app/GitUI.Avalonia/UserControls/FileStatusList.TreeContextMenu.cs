@@ -96,7 +96,7 @@ partial class FileStatusList
     private IEnumerable<object> GetSelectedTreeNodes()
         => _isFileTreeMode
             ? tvFiles.SelectedItems?.Cast<object>() ?? []
-            : _showDiffGroups
+            : ShowDiffTree
                 ? tvDiffFiles.SelectedItems?.Cast<object>() ?? []
                 : [];
 
