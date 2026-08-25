@@ -6,6 +6,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitUI.Compat;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -66,6 +67,11 @@ public partial class CreatePullRequestForm : GitModuleForm
 
     private void WireControls()
     {
+        // Framework constraint: source AutoSize labels use native TextRenderer preferred widths.
+        WinFormsAutoSizeTextBlock.Attach(label1);
+        WinFormsAutoSizeTextBlock.Attach(label2);
+        WinFormsAutoSizeTextBlock.Attach(label4);
+        WinFormsAutoSizeTextBlock.Attach(label5);
         _pullReqTargetsCB.ItemTemplate = new FuncDataTemplate<IHostedRemote>(
             (remote, _) => new TextBlock { Text = remote?.DisplayData ?? string.Empty },
             supportsRecycling: false);

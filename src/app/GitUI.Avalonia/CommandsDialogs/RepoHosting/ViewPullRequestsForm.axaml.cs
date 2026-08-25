@@ -88,6 +88,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
             CreateDiscussionRow,
             supportsRecycling: false);
         ResizeColumns([]);
+
+        // Framework constraint: WinForms remeasures native header glyphs when the resolved theme changes.
+        ActualThemeVariantChanged += (_, _) => ResizeColumnsToFitContent();
         WinFormsSplitContainerSizer.Attach(splitContainer2, sourceHeight: 511, sourceSplitterDistance: 146);
         WinFormsSplitContainerSizer.Attach(splitContainer3, sourceHeight: 331, sourceSplitterDistance: 116);
 
@@ -756,6 +759,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         return new Grid
         {
             ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1),
+            Margin = new Avalonia.Thickness(0, 0, 4, 0),
             Children =
             {
                 CreateCell(item.Id, 0, TextAlignment.Right),
@@ -792,11 +796,14 @@ public partial class ViewPullRequestsForm : GitModuleForm
                     4 => row.Branch,
                     _ => string.Empty,
                 });
+
+            // Framework constraint: native dark/custom ListView headers reserve two additional text pixels.
             _pullRequestColumnWidths[columnIndex] = WinFormsListViewColumnSizer.MeasureAutoSizedColumn(
                 _pullRequestsList,
                 values,
                 sizeToHeader,
-                firstColumn: columnIndex == 0);
+                firstColumn: columnIndex == 0,
+                headerPadding: ActualThemeVariant == Avalonia.Styling.ThemeVariant.Light ? 12 : 14);
         }
 
         Grid header = (Grid)(columnHeaderId.Parent

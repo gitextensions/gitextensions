@@ -772,7 +772,10 @@ public sealed class ViewConstructionTests
     {
         FileViewer control = new();
         control.ViewPatch("@@ -1,1 +1,1 @@\n-old\n+new\n");
-        control.Should().NotBeNull();
+        control.GetTestAccessor().ContextLinesSeparator.IsVisible.Should().BeTrue();
+
+        control.ViewText("file.txt", "text");
+        control.GetTestAccessor().ContextLinesSeparator.IsVisible.Should().BeFalse();
     }
 
     [AvaloniaTest]
