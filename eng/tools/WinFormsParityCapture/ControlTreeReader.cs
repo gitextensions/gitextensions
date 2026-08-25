@@ -22,13 +22,38 @@ internal sealed class ControlTreeReader
         IndexFields(root);
     }
 
-    public CaptureSurface ReadPrimary(Control root, Rectangle screenBounds) =>
-        new()
+    public CaptureSurface ReadPrimary(Control root, Rectangle screenBounds)
+    {
+        CaptureNode rootNode = ReadControl(root, parentId: string.Empty, ordinal: 0);
+        Rectangle clientScreenBounds = root.RectangleToScreen(root.ClientRectangle);
+        Rectangle clientSurfaceBounds = new(
+            clientScreenBounds.X - screenBounds.X,
+            clientScreenBounds.Y - screenBounds.Y,
+            clientScreenBounds.Width,
+            clientScreenBounds.Height);
+
+        // parity-scaffolding: PrintWindow keeps native non-client chrome in the bitmap, while
+        // the root control tree describes the product client area. Store its surface-relative
+        // inset so the cross-platform comparer can align client pixels without bitmap scaling.
+        rootNode = rootNode with
+        {
+            BoundsPx = ToRectangle(clientSurfaceBounds),
+            BoundsDip = new CaptureRectangleF
+            {
+                X = ToDip(clientSurfaceBounds.X),
+                Y = ToDip(clientSurfaceBounds.Y),
+                Width = ToDip(clientSurfaceBounds.Width),
+                Height = ToDip(clientSurfaceBounds.Height)
+            }
+        };
+
+        return new CaptureSurface
         {
             Role = "primary",
             ScreenBoundsPx = ToRectangle(screenBounds),
-            Root = ReadControl(root, parentId: string.Empty, ordinal: 0)
+            Root = rootNode
         };
+    }
 
     public CaptureSurface ReadPopup(ToolStripDropDown popup, int ordinal, Point? primaryScreenOrigin = null) =>
         new()
