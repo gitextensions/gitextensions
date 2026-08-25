@@ -10,6 +10,17 @@
         MinHeight="420"
         WindowStartupLocation="CenterOwner"
         Title="View Pull Requests">
+  <Window.Styles>
+    <Style Selector="spellChecker|EditNetSpell.repository-host-comment-editor TextBox#TextBox">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
+    </Style>
+    <Style Selector="spellChecker|EditNetSpell.repository-host-comment-editor TextBox#TextBox:pointerover /template/ Border#PART_BorderElement,
+                     spellChecker|EditNetSpell.repository-host-comment-editor TextBox#TextBox:focus /template/ Border#PART_BorderElement,
+                     spellChecker|EditNetSpell.repository-host-comment-editor TextBox#TextBox:disabled /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
+    </Style>
+  </Window.Styles>
   <Grid x:Name="splitContainer2"
         RowDefinitions="146*,6,359*">
     <Grid x:Name="tableLayoutPanel2"
@@ -135,6 +146,7 @@
                    Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
                    SelectionMode="Single" />
           <spellChecker:EditNetSpell x:Name="_postCommentText"
+                                     Classes="repository-host-comment-editor"
                                      Grid.Row="1"
                                      Margin="2"
                                      Background="{DynamicResource GitExtensionsKnownColorControlBrush}"

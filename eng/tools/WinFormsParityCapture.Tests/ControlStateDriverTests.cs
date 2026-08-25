@@ -28,4 +28,30 @@ public sealed class ControlStateDriverTests
 
         form.ClientSize.Should().Be(new Size(240, 140));
     }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    [Category("P8_6i")]
+    public void Apply_should_deliver_hover_to_the_visible_child_under_a_composite_target()
+    {
+        using Form form = new() { ClientSize = new Size(240, 140) };
+        using Panel composite = new() { Name = "composite", Dock = DockStyle.Fill };
+        using Panel child = new() { Dock = DockStyle.Fill };
+        bool childMoved = false;
+        child.MouseMove += (_, _) => childMoved = true;
+        composite.Controls.Add(child);
+        form.Controls.Add(composite);
+        form.Show();
+
+        using ControlStateDriver driver = ControlStateDriver.Apply(
+            form,
+            new CaptureStatePlan
+            {
+                Id = "composite.hover",
+                Kind = CaptureStateKind.Hover,
+                TargetField = composite.Name
+            });
+
+        childMoved.Should().BeTrue();
+    }
 }

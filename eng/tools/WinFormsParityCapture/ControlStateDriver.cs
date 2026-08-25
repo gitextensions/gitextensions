@@ -2,6 +2,7 @@
 
 using GitExtensions.ParityCapture;
 using GitUI.AutoCompletion;
+using GitUI.Editor;
 
 namespace WinFormsParityCapture;
 
@@ -343,8 +344,43 @@ internal sealed class ControlStateDriver : IDisposable
             throw new CaptureStateUnsupportedException("The hover state requires a created Control handle.");
         }
 
-        NativeMethods.SendMouseMessage(control.Handle, NativeMethods.WmMouseMove, Math.Max(1, control.ClientSize.Width / 2), Math.Max(1, control.ClientSize.Height / 2));
-        _restoreActions.Add(() => NativeMethods.SendMouseMessage(control.Handle, NativeMethods.WmMouseLeave, 0, 0));
+        (Control mouseTarget, Point mousePoint) = FindMouseTarget(control);
+        Point originalCursorPosition = NativeMethods.GetCursorPosition();
+        NativeMethods.SetCursorPosition(mouseTarget.PointToScreen(mousePoint));
+        NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseMove, mousePoint.X, mousePoint.Y);
+        _restoreActions.Add(() =>
+        {
+            NativeMethods.SendMouseMessage(mouseTarget.Handle, NativeMethods.WmMouseLeave, 0, 0);
+            NativeMethods.SetCursorPosition(originalCursorPosition);
+        });
+    }
+
+    private static (Control Control, Point Point) FindMouseTarget(Control control)
+    {
+        if (control is FileViewerInternal
+            && FindFieldValue(control, "TextEditor") is object textEditor
+            && textEditor.GetType().GetProperty("ActiveTextAreaControl")?.GetValue(textEditor) is object textAreaControl
+            && textAreaControl.GetType().GetProperty("TextArea")?.GetValue(textAreaControl) is Control textArea)
+        {
+            // parity-scaffolding: This legacy composite republishes mouse events only from the
+            // inner text area, which is the native child window Windows actually hit-tests.
+            return (textArea, new Point(
+                Math.Max(1, textArea.ClientSize.Width / 2),
+                Math.Max(1, textArea.ClientSize.Height / 2)));
+        }
+
+        Control current = control;
+        Point point = new(Math.Max(1, control.ClientSize.Width / 2), Math.Max(1, control.ClientSize.Height / 2));
+        const GetChildAtPointSkip skip = GetChildAtPointSkip.Invisible
+                                         | GetChildAtPointSkip.Disabled
+                                         | GetChildAtPointSkip.Transparent;
+        while (current.GetChildAtPoint(point, skip) is { IsHandleCreated: true } child)
+        {
+            point.Offset(-child.Left, -child.Top);
+            current = child;
+        }
+
+        return (current, point);
     }
 
     private void OpenMenu(object target)
