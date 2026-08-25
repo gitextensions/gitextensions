@@ -81,6 +81,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             supportsRecycling: false);
         ApplyRepositoryColumnWidths(isSearchResult: false);
         ApplyRepositoryColumnWidths(isSearchResult: true);
+        WinFormsTableLayoutSizer.AttachColumns(tableLayoutPanel5, firstColumnPercent: 70, totalPercent: 100);
 
         searchBtn.Click += _searchBtn_Click;
         getFromUserBtn.Click += _getFromUserBtn_Click;
@@ -226,11 +227,12 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             if (!cancellationToken.IsCancellationRequested)
             {
                 myReposLV.ItemsSource = Array.Empty<HostedRepositoryRow>();
-                helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, GetGitHoster().Name)
+                TextBlock helpText = (TextBlock)helpTextLbl.Content!;
+                helpText.Text = string.Format(_strFailedToGetRepos.Text, GetGitHoster().Name)
                     + Environment.NewLine + Environment.NewLine
                     + "Exception: " + ex.Message
                     + Environment.NewLine + Environment.NewLine
-                    + helpTextLbl.Text;
+                    + helpText.Text;
             }
         }
     }
@@ -766,7 +768,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         public string Description => form.searchResultItemDescription.Text ?? string.Empty;
 
-        public string HelpText => form.helpTextLbl.Text ?? string.Empty;
+        public string HelpText => ((TextBlock)form.helpTextLbl.Content!).Text ?? string.Empty;
 
         public bool CloneEnabled => form.cloneBtn.IsEnabled;
 

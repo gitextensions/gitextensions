@@ -112,9 +112,9 @@ public sealed class RepositoryHostPullRequestTests
         pullRequestLayout.ColumnDefinitions[1].Width.IsAuto.Should().BeTrue();
         ((Grid)pullRequestLayout.Children[0]).Margin.Should().Be(new Avalonia.Thickness(3));
         Grid pullRequestHeader = (Grid)form.FindControl<ContentControl>("columnHeaderId")!.Parent!;
-        pullRequestHeader.ColumnDefinitions[1].Width.IsStar.Should().BeTrue();
+        pullRequestHeader.ColumnDefinitions[4].Width.IsStar.Should().BeTrue();
         pullRequestHeader.ColumnDefinitions
-            .Where((_, index) => index != 1)
+            .Where((_, index) => index != 4)
             .Should().OnlyContain(column => column.Width.IsAbsolute && column.Width.Value > 0);
         StackPanel pullRequestActions = form.FindControl<StackPanel>("flowLayoutPanel3")!;
         pullRequestActions.Width.Should().Be(160);
@@ -416,9 +416,9 @@ public sealed class RepositoryHostPullRequestTests
         form.Height = 591;
         Dispatcher.UIThread.RunJobs();
 
-        top.Bounds.Height.Should().BeInRange(168, 169);
-        diff.Bounds.Height.Should().BeInRange(378, 379);
-        files.Bounds.Height.Should().BeInRange(131, 132);
+        top.Bounds.Height.Should().Be(168);
+        diff.Bounds.Height.Should().Be(379);
+        files.Bounds.Height.Should().Be(132);
         form.Close();
     }
 
@@ -530,7 +530,7 @@ public sealed class RepositoryHostPullRequestTests
         using ViewPullRequestsForm form = CreateForm(host, module);
         Grid header = (Grid)form.FindControl<ContentControl>("columnHeaderId")!.Parent!;
         double initialOwnerWidth = header.ColumnDefinitions[2].Width.Value;
-        double initialBranchWidth = header.ColumnDefinitions[4].Width.Value;
+        header.ColumnDefinitions[4].Width.IsStar.Should().BeTrue();
         ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
 
         await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
@@ -538,7 +538,8 @@ public sealed class RepositoryHostPullRequestTests
 
         header.ColumnDefinitions[1].Width.IsStar.Should().BeTrue();
         header.ColumnDefinitions[2].Width.Value.Should().BeGreaterThan(initialOwnerWidth);
-        header.ColumnDefinitions[4].Width.Value.Should().BeLessThan(initialBranchWidth);
+        header.ColumnDefinitions[4].Width.IsAbsolute.Should().BeTrue();
+        header.ColumnDefinitions[4].Width.Value.Should().BeGreaterThan(1);
     }
 
     [AvaloniaTest]

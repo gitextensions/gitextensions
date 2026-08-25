@@ -55,6 +55,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private IReadOnlyList<Remote> _moduleRemotes = [];
     private IReadOnlyList<HostedRemoteRow> _hostedRemoteRows = [];
     private readonly double[] _pullRequestColumnWidths = new double[5];
+    private bool _pullRequestColumnsSizedToContent;
 
     [GeneratedRegex(@"(?:\n|^)diff --git ", RegexOptions.ExplicitCapture)]
     private static partial Regex DiffCommandRegex { get; }
@@ -86,7 +87,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _discussionWB.ItemTemplate = new FuncDataTemplate<DiscussionRow>(
             CreateDiscussionRow,
             supportsRecycling: false);
-        ApplyPullRequestColumnWidths();
+        ResizeColumns([]);
+        WinFormsSplitContainerSizer.Attach(splitContainer2, sourceHeight: 511, sourceSplitterDistance: 146);
+        WinFormsSplitContainerSizer.Attach(splitContainer3, sourceHeight: 331, sourceSplitterDistance: 116);
 
         _selectHostedRepoCB.SelectionChanged += _selectedOwner_SelectedIndexChanged;
         _pullRequestsList.SelectionChanged += _pullRequestsList_SelectedIndexChanged;
@@ -379,7 +382,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         Grid header = (Grid)(columnHeaderId.Parent
             ?? throw new InvalidOperationException("The pull-request header is not attached to its column grid."));
-        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
+        int fillColumn = _pullRequestColumnsSizedToContent ? 1 : 4;
+        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn);
     }
 
     private void LoadDiscussion()
@@ -763,30 +767,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         };
     }
 
-    private void ApplyPullRequestColumnWidths()
-    {
-        // Framework constraint: Grid star sizing replaces the original ListView.Resize handler after column widths are measured.
-        string[] headers =
-        [
-            GetHeaderText(columnHeaderId),
-            GetHeaderText(columnHeaderHeading),
-            GetHeaderText(columnHeaderBy),
-            GetHeaderText(columnHeaderCreated),
-            GetHeaderText(columnHeaderBranch),
-        ];
-
-        for (int columnIndex = 0; columnIndex < _pullRequestColumnWidths.Length; columnIndex++)
-        {
-            _pullRequestColumnWidths[columnIndex] = WinFormsListViewColumnSizer.Measure(
-                _pullRequestsList,
-                [headers[columnIndex]]);
-        }
-
-        Grid header = (Grid)(columnHeaderId.Parent
-            ?? throw new InvalidOperationException("The pull-request header is not attached to its column grid."));
-        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
-    }
-
     private void ResizeColumns(IReadOnlyList<PullRequestRow> rows)
     {
         string[] headers =
@@ -797,9 +777,11 @@ public partial class ViewPullRequestsForm : GitModuleForm
             GetHeaderText(columnHeaderCreated),
             GetHeaderText(columnHeaderBranch),
         ];
+        _pullRequestColumnsSizedToContent = rows.Count > 0;
         for (int columnIndex = 0; columnIndex < _pullRequestColumnWidths.Length; columnIndex++)
         {
-            IEnumerable<string?> values = rows.Count == 0
+            bool sizeToHeader = rows.Count == 0;
+            IEnumerable<string?> values = sizeToHeader
                 ? [headers[columnIndex]]
                 : rows.Select(row => columnIndex switch
                 {
@@ -810,15 +792,17 @@ public partial class ViewPullRequestsForm : GitModuleForm
                     4 => row.Branch,
                     _ => string.Empty,
                 });
-            _pullRequestColumnWidths[columnIndex] = WinFormsListViewColumnSizer.Measure(
+            _pullRequestColumnWidths[columnIndex] = WinFormsListViewColumnSizer.MeasureAutoSizedColumn(
                 _pullRequestsList,
                 values,
-                additionalWidth: columnIndex == 0 && rows.Count > 0 ? 5 : 0);
+                sizeToHeader,
+                firstColumn: columnIndex == 0);
         }
 
         Grid header = (Grid)(columnHeaderId.Parent
             ?? throw new InvalidOperationException("The pull-request header is not attached to its column grid."));
-        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn: 1);
+        int fillColumn = _pullRequestColumnsSizedToContent ? 1 : 4;
+        header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn);
     }
 
     private static string GetHeaderText(ContentControl header)
