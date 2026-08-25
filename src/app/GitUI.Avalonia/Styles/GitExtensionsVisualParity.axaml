@@ -158,6 +158,19 @@
                            Color="#000000" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#FFFFFF" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsTextInputBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#FDFDFD" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonBorderBrush" Color="#D0D0D0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBackgroundBrush" Color="#CCE4F7" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBorderBrush" Color="#005499" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBackgroundBrush" Color="#F9F9F9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBorderBrush" Color="#E9E9E9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledForegroundBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#D9D9D9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabSelectedBackgroundBrush" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#F0F0F0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabPageBackgroundBrush" Color="Transparent" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#FDFDFD" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBorderBrush" Color="#808080" />
@@ -268,6 +281,19 @@
                            Color="#F0F0F0" />
           <SolidColorBrush x:Key="GitExtensionsWindowBackgroundBrush" Color="#323232" />
           <SolidColorBrush x:Key="GitExtensionsCommitEditorBackgroundBrush" Color="#2E2E2E" />
+          <SolidColorBrush x:Key="GitExtensionsTextInputBackgroundBrush" Color="#2E2E2E" />
+          <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#333333" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonBorderBrush" Color="#9B9B9B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBackgroundBrush" Color="#666666" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBorderBrush" Color="#A0A0A0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBackgroundBrush" Color="#333333" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBorderBrush" Color="#373737" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledForegroundBrush" Color="#CCCCCC" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabBorderBrush" Color="#4A4A4A" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabSelectedBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabUnselectedBackgroundBrush" Color="#202020" />
+          <SolidColorBrush x:Key="GitExtensionsNativeTabPageBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsControlBackgroundBrush" Color="#202020" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBackgroundBrush" Color="#2F2F2F" />
           <SolidColorBrush x:Key="GitExtensionsMenuRenderedBorderBrush" Color="#6B6B6B" />
@@ -370,7 +396,7 @@
     <Setter Property="Padding" Value="3,1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
-    <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsTextInputBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
     <Setter Property="CornerRadius" Value="0" />
     <Setter Property="SelectionBrush" Value="{DynamicResource GitExtensionsSelectionBackgroundBrush}" />
@@ -698,6 +724,55 @@
     <Setter Property="Padding" Value="8,2" />
     <Setter Property="CornerRadius" Value="0" />
   </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs">
+    <Setter Property="Focusable" Value="True" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <ItemsPresenter x:Name="PART_ItemsPresenter"
+                          DockPanel.Dock="Top"
+                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+          <Grid>
+            <Border Margin="3,2,3,3"
+                    BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                    BorderThickness="1"
+                    Background="{DynamicResource GitExtensionsNativeTabPageBackgroundBrush}" />
+            <ContentPresenter x:Name="PART_SelectedContentHost2"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+            <ContentPresenter x:Name="PART_SelectedContentHost"
+                              Content="{TemplateBinding SelectedContent}"
+                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+          </Grid>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs TabItem.gitextensions-dialog-tab">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTabPageBackgroundBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border x:Name="PART_LayoutRoot"
+                Margin="0,2,0,0"
+                Padding="{TemplateBinding Padding}"
+                BorderBrush="{DynamicResource GitExtensionsNativeTabBorderBrush}"
+                BorderThickness="1,1,1,0"
+                Background="{DynamicResource GitExtensionsNativeTabUnselectedBackgroundBrush}">
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            RecognizesAccessKey="True" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="TabControl.gitextensions-native-tabs TabItem.gitextensions-dialog-tab:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTabSelectedBackgroundBrush}" />
+  </Style>
   <Style Selector="Button.gitextensions-toolbar-button,
                    ToggleButton.gitextensions-toolbar-button,
                    compat|IconButton.gitextensions-toolbar-button,
@@ -802,7 +877,8 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Grid RowDefinitions="Auto,*" ColumnDefinitions="8,Auto,*">
-          <Border Grid.Column="0"
+          <Border x:Name="PART_GroupBoxHeaderLeft"
+                  Grid.Column="0"
                   Height="1"
                   VerticalAlignment="Center"
                   Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
@@ -812,7 +888,8 @@
                             Content="{TemplateBinding Header}"
                             ContentTemplate="{TemplateBinding HeaderTemplate}"
                             VerticalContentAlignment="Center" />
-          <Border Grid.Column="2"
+          <Border x:Name="PART_GroupBoxHeaderRight"
+                  Grid.Column="2"
                   Height="1"
                   VerticalAlignment="Center"
                   Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
@@ -912,6 +989,15 @@
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
     <Setter Property="BorderThickness" Value="1,0,1,1" />
     <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="HeaderedContentControl.gitextensions-native-group-border /template/ Border#PART_GroupBoxHeaderLeft">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeGroupBoxBorderBrush}" />
+  </Style>
+  <Style Selector="HeaderedContentControl.gitextensions-native-group-border /template/ Border#PART_GroupBoxHeaderRight">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeGroupBoxBorderBrush}" />
+  </Style>
+  <Style Selector="HeaderedContentControl.gitextensions-native-group-border /template/ Border#PART_GroupBoxFrame">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeGroupBoxBorderBrush}" />
   </Style>
   <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background"
@@ -1104,6 +1190,35 @@
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border x:Name="PART_NativeButtonChrome"
+                Padding="{TemplateBinding Padding}"
+                Background="{DynamicResource GitExtensionsNativeButtonBackgroundBrush}"
+                BorderBrush="{DynamicResource GitExtensionsNativeButtonBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+          <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:pressed /template/ Border#PART_NativeButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonPressedBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeButtonPressedBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:disabled /template/ Border#PART_NativeButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonDisabledBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeButtonDisabledBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsNativeButtonDisabledForegroundBrush}" />
   </Style>
   <Style Selector="Button:pointerover">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlPointerOverBackgroundBrush}" />

@@ -37,6 +37,7 @@
   <Grid x:Name="tableLayoutPanel2"
         RowDefinitions="*,183,40">
     <TabControl x:Name="tabControl"
+                Classes="gitextensions-native-tabs"
                 Margin="3"
                 Padding="0">
       <TabItem x:Name="myReposPage"
@@ -100,7 +101,7 @@
                      MinHeight="0"
                      VerticalAlignment="Top" />
             <Button x:Name="searchBtn"
-                    Classes="gitextensions-dialog-action"
+                    Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                     Width="93"
                     Height="23"
                     Margin="3"
@@ -113,7 +114,7 @@
                        VerticalAlignment="Top"
                        Text="or" />
             <Button x:Name="getFromUserBtn"
-                    Classes="gitextensions-dialog-action"
+                    Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                     Width="124"
                     Height="23"
                     Margin="3"
@@ -171,7 +172,7 @@
                        TextWrapping="Wrap" />
               <Button x:Name="openGitupPageBtn"
                       Grid.Row="2"
-                      Classes="gitextensions-dialog-action"
+                      Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                       Width="116"
                       Height="23"
                       Margin="3"
@@ -183,7 +184,7 @@
 
           <Button x:Name="forkBtn"
                   Grid.Row="2"
-                  Classes="gitextensions-dialog-action"
+                  Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                   Width="150"
                   Height="23"
                   Margin="3"
@@ -282,7 +283,7 @@
           Margin="3">
       <Button x:Name="cloneBtn"
               Grid.Column="1"
-              Classes="gitextensions-dialog-action"
+              Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
               Width="120"
               Height="30"
               Margin="0,3,0,0"
@@ -290,7 +291,7 @@
               Content="Clone" />
       <Button x:Name="_NO_TRANSLATE_closeBtn"
               Grid.Column="3"
-              Classes="gitextensions-dialog-action"
+              Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
               Width="120"
               Height="30"
               Margin="0,3,0,0"

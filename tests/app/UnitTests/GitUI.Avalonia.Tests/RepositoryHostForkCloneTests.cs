@@ -79,7 +79,9 @@ public sealed class RepositoryHostForkCloneTests
 
         form.Width.Should().Be(744);
         form.Height.Should().Be(552);
-        form.FindControl<TabControl>("tabControl")!.ItemCount.Should().Be(2);
+        TabControl tabControl = form.FindControl<TabControl>("tabControl")!;
+        tabControl.ItemCount.Should().Be(2);
+        tabControl.Classes.Should().Contain("gitextensions-native-tabs");
         form.FindControl<ListBox>("myReposLV").Should().NotBeNull();
         form.FindControl<ListBox>("searchResultsLV").Should().NotBeNull();
         form.FindControl<NumericUpDown>("depthUpDown")!.Maximum.Should().Be(999);
@@ -92,6 +94,7 @@ public sealed class RepositoryHostForkCloneTests
         IconButton browseButton = browse.FindControl<IconButton>("buttonBrowse")!;
         browseButton.Content.Should().Be("_Browse...");
         browseButton.Icon.Should().NotBeNull();
+        browseButton.Classes.Should().Contain("gitextensions-native-dialog-action");
         form.FindControl<TextBox>("createDirTB")!.Width.Should().Be(183);
         form.FindControl<ComboBox>("addUpstreamRemoteAsCB")!.Width.Should().Be(200);
         HeaderedContentControl cloneSetup = form.FindControl<HeaderedContentControl>("cloneSetupGB")!;
@@ -162,6 +165,18 @@ public sealed class RepositoryHostForkCloneTests
         fork.Width.Should().Be(150);
         fork.Height.Should().Be(23);
         fork.Margin.Should().Be(new Avalonia.Thickness(3));
+        foreach (string buttonName in new[]
+                 {
+                     "searchBtn",
+                     "getFromUserBtn",
+                     "openGitupPageBtn",
+                     "forkBtn",
+                     "cloneBtn",
+                     "_NO_TRANSLATE_closeBtn"
+                 })
+        {
+            form.FindControl<Button>(buttonName)!.Classes.Should().Contain("gitextensions-native-dialog-action");
+        }
 
         translation.Received(1).AddTranslationItem(
             nameof(ForkAndCloneForm), "$this", "Text", "Remote repository fork and clone");
@@ -218,6 +233,50 @@ public sealed class RepositoryHostForkCloneTests
         search.Columns.Should().OnlyContain(column => column.Visible);
         nodes.Where(node => node.FieldName?.StartsWith("columnHeader", StringComparison.Ordinal) == true)
             .Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public void ForkAndCloneForm_should_project_native_tab_pages_and_hidden_descendants()
+    {
+        using ForkAndCloneForm form = new();
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureNode[] initialNodes = ReadNodes();
+        CaptureNode tabs = initialNodes.Single(node => node.FieldName == "tabControl");
+        CaptureNode ownedPage = initialNodes.Single(node => node.FieldName == "myReposPage");
+        CaptureNode searchPage = initialNodes.Single(node => node.FieldName == "searchReposPage");
+        CaptureNode ownedLayout = initialNodes.Single(node => node.FieldName == "tableLayoutPanel5");
+
+        tabs.BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 3, Width = 738, Height = 323 });
+        tabs.Dock.Should().Be("Fill");
+        tabs.TabStop.Should().BeTrue();
+        ownedPage.BoundsDip.Should().Be(new CaptureRectangleF { X = 4, Y = 30, Width = 730, Height = 289 });
+        ownedPage.Padding.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 0, Right = 0, Bottom = 0 });
+        ownedPage.Visible.Should().BeTrue();
+        ownedLayout.BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 3, Width = 724, Height = 283 });
+        searchPage.Visible.Should().BeFalse();
+        Flatten(searchPage).Should().OnlyContain(node => node.Visible != true);
+
+        TabControl tabControl = form.FindControl<TabControl>("tabControl")!;
+        tabControl.SelectedItem = form.FindControl<TabItem>("searchReposPage");
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureNode[] searchNodes = ReadNodes();
+        CaptureNode nowHiddenOwnedPage = searchNodes.Single(node => node.FieldName == "myReposPage");
+        CaptureNode selectedSearchPage = searchNodes.Single(node => node.FieldName == "searchReposPage");
+        nowHiddenOwnedPage.Visible.Should().BeFalse();
+        Flatten(nowHiddenOwnedPage).Should().OnlyContain(node => node.Visible != true);
+        selectedSearchPage.Visible.Should().BeTrue();
+        selectedSearchPage.BoundsDip.Should().Be(new CaptureRectangleF { X = 4, Y = 30, Width = 730, Height = 289 });
+
+        form.Close();
+
+        CaptureNode[] ReadNodes()
+            => Flatten(
+                    new AvaloniaControlTreeReader(form, renderScale: 1)
+                        .ReadPrimary(form, new PixelSize(744, 552)).Root)
+                .ToArray();
     }
 
     [AvaloniaTest]

@@ -41,6 +41,7 @@ public sealed class RepositoryHostPullRequestTests
         """;
 
     private ServiceContainer _serviceContainer = null!;
+    private string _originalApplicationExecutablePath = null!;
     private StubMessageBoxHost _messageBoxHost = null!;
     private WinFormsShims.IMessageBoxHost? _originalMessageBoxHost;
 
@@ -49,6 +50,9 @@ public sealed class RepositoryHostPullRequestTests
     {
         AvaloniaSynchronizationContext.InstallIfNeeded();
         ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+        AppSettings.TestAccessor settingsAccessor = AppSettings.GetTestAccessor();
+        _originalApplicationExecutablePath = settingsAccessor.ApplicationExecutablePath;
+        settingsAccessor.ApplicationExecutablePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "GitExtensions.Avalonia.exe");
 
         _serviceContainer = new ServiceContainer();
         GitExtUtils.ServiceContainerRegistry.RegisterServices(_serviceContainer);
@@ -71,6 +75,7 @@ public sealed class RepositoryHostPullRequestTests
     public void TearDown()
     {
         WinFormsShims.ShimHost.MessageBoxHost = _originalMessageBoxHost ?? new StubMessageBoxHost();
+        AppSettings.GetTestAccessor().ApplicationExecutablePath = _originalApplicationExecutablePath;
         _serviceContainer.Dispose();
     }
 
@@ -124,6 +129,7 @@ public sealed class RepositoryHostPullRequestTests
         }
 
         TabControl tabControl = form.FindControl<TabControl>("tabControl1")!;
+        tabControl.Classes.Should().Contain("gitextensions-native-tabs");
         tabControl.Margin.Should().Be(new Avalonia.Thickness(0));
         tabControl.Padding.Should().Be(new Avalonia.Thickness(0));
         TabItem diffTab = form.FindControl<TabItem>("tabPage1")!;
@@ -160,6 +166,17 @@ public sealed class RepositoryHostPullRequestTests
         postComment.Height.Should().Be(23);
         postComment.Margin.Should().Be(new Avalonia.Thickness(3));
         DockPanel.GetDock(postComment).Should().Be(Dock.Right);
+        foreach (string buttonName in new[]
+                 {
+                     "_fetchBtn",
+                     "_addAndFetchBtn",
+                     "_closePullRequestBtn",
+                     "_refreshCommentsBtn",
+                     "_postComment"
+                 })
+        {
+            form.FindControl<Button>(buttonName)!.Classes.Should().Contain("gitextensions-native-dialog-action");
+        }
 
         translation.Received(1).AddTranslationItem(
             nameof(ViewPullRequestsForm), "$this", "Text", "View Pull Requests");
@@ -182,7 +199,9 @@ public sealed class RepositoryHostPullRequestTests
     [AvaloniaTest]
     public void ViewPullRequestsForm_should_project_the_native_list_substitute_as_one_column_list()
     {
-        using ViewPullRequestsForm form = new();
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
         form.Show();
         Dispatcher.UIThread.RunJobs();
 
@@ -211,6 +230,51 @@ public sealed class RepositoryHostPullRequestTests
             "Will be fetched to branch");
         nodes.Where(node => node.FieldName?.StartsWith("columnHeader", StringComparison.Ordinal) == true)
             .Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public void ViewPullRequestsForm_should_project_native_tab_pages_and_hidden_descendants()
+    {
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureNode[] initialNodes = ReadNodes();
+        CaptureNode tabs = initialNodes.Single(node => node.FieldName == "tabControl1");
+        CaptureNode diffPage = initialNodes.Single(node => node.FieldName == "tabPage1");
+        CaptureNode commentsPage = initialNodes.Single(node => node.FieldName == "tabPage2");
+        CaptureNode diffLayout = initialNodes.Single(node => node.FieldName == "splitContainer3");
+
+        tabs.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 0, Width = 754, Height = 359 });
+        tabs.Dock.Should().Be("Fill");
+        tabs.TabStop.Should().BeTrue();
+        diffPage.BoundsDip.Should().Be(new CaptureRectangleF { X = 4, Y = 30, Width = 746, Height = 325 });
+        diffPage.Visible.Should().BeTrue();
+        diffLayout.BoundsDip.Should().Be(new CaptureRectangleF { X = 2, Y = 2, Width = 742, Height = 321 });
+        commentsPage.Visible.Should().BeFalse();
+        Flatten(commentsPage).Should().OnlyContain(node => node.Visible != true);
+
+        TabControl tabControl = form.FindControl<TabControl>("tabControl1")!;
+        tabControl.SelectedItem = form.FindControl<TabItem>("tabPage2");
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureNode[] commentNodes = ReadNodes();
+        CaptureNode nowHiddenDiffPage = commentNodes.Single(node => node.FieldName == "tabPage1");
+        CaptureNode selectedCommentsPage = commentNodes.Single(node => node.FieldName == "tabPage2");
+        nowHiddenDiffPage.Visible.Should().BeFalse();
+        Flatten(nowHiddenDiffPage).Should().OnlyContain(node => node.Visible != true);
+        selectedCommentsPage.Visible.Should().BeTrue();
+        selectedCommentsPage.BoundsDip.Should().Be(new CaptureRectangleF { X = 4, Y = 30, Width = 746, Height = 325 });
+
+        form.Close();
+
+        CaptureNode[] ReadNodes()
+            => Flatten(
+                    new AvaloniaControlTreeReader(form, renderScale: 1)
+                        .ReadPrimary(form, new PixelSize(754, 511)).Root)
+                .ToArray();
     }
 
     [AvaloniaTest]

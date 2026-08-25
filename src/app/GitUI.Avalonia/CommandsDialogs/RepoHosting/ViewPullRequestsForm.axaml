@@ -68,7 +68,7 @@
                     Width="160"
                     Margin="2">
           <Button x:Name="_fetchBtn"
-                  Classes="gitextensions-dialog-action"
+                  Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                   Width="155"
                   Height="29"
                   MinHeight="0"
@@ -76,7 +76,7 @@
                   HorizontalAlignment="Left"
                   Content="Fetch to pr/ branch" />
           <Button x:Name="_addAndFetchBtn"
-                  Classes="gitextensions-dialog-action"
+                  Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                   Width="155"
                   Height="29"
                   MinHeight="0"
@@ -84,7 +84,7 @@
                   HorizontalAlignment="Left"
                   Content="Add remote and fetch" />
           <Button x:Name="_closePullRequestBtn"
-                  Classes="gitextensions-dialog-action"
+                  Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                   Width="155"
                   Height="29"
                   MinHeight="0"
@@ -100,6 +100,7 @@
 
     <TabControl x:Name="tabControl1"
                 Grid.Row="2"
+                Classes="gitextensions-native-tabs"
                 Margin="0"
                 Padding="0">
       <TabItem x:Name="tabPage1"
@@ -143,7 +144,7 @@
                      Margin="2"
                      LastChildFill="False">
             <Button x:Name="_refreshCommentsBtn"
-                    Classes="gitextensions-dialog-action"
+                    Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                     Width="100"
                     Height="23"
                     MinHeight="0"
@@ -151,7 +152,7 @@
                     DockPanel.Dock="Right"
                     Content="Refresh" />
             <Button x:Name="_postComment"
-                    Classes="gitextensions-dialog-action-primary"
+                    Classes="gitextensions-dialog-action-primary gitextensions-native-dialog-action"
                     Width="131"
                     Height="23"
                     MinHeight="0"
