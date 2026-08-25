@@ -128,9 +128,10 @@ internal sealed class AvaloniaControlTreeReader
         control switch
         {
             Window => "window",
-            _ when IsFileStatusToolbar(control) => "toolStrip",
-            _ when IsFileStatusToolbarItem(control) => "menuItem",
+            _ when IsSemanticToolStrip(control) => "toolStrip",
+            _ when IsSemanticToolStripItem(control) => "menuItem",
             _ when IsFileStatusListView(control) => "tree",
+            _ when IsRepositoryHostSplit(control) => "split",
             ToggleButton => "button",
             Button => "button",
             TextBox => "text",
@@ -308,10 +309,13 @@ internal sealed class AvaloniaControlTreeReader
         bool isNativeTabPage = IsNativeTabPage(control);
         bool isNativeButton = IsNativeButton(control);
         bool isFileStatusToolbar = IsFileStatusToolbar(control);
-        bool isFileStatusToolbarItem = IsFileStatusToolbarItem(control);
+        bool isFileViewerToolbar = IsFileViewerToolbar(control);
+        bool isSemanticToolStrip = isFileStatusToolbar || isFileViewerToolbar;
+        bool isSemanticToolStripItem = IsSemanticToolStripItem(control);
         bool isFileStatusListView = IsFileStatusListView(control);
         bool isFileStatusSplitter = IsFileStatusSplitter(control);
-        bool isToolStripItem = isFileStatusToolbarItem || control is MenuItem or Separator;
+        bool isFileViewerTextEditor = IsFileViewerTextEditor(control);
+        bool isToolStripItem = isSemanticToolStripItem || control is MenuItem or Separator;
         Control semanticStateControl = IsFileStatusListView(control)
             ? GetActiveFileStatusListView(control) ?? control
             : control;
@@ -333,10 +337,11 @@ internal sealed class AvaloniaControlTreeReader
             ?? (hasNativeListComposite
                 ? GetSemanticBounds(nativeListComposite!, semanticParent)
                 : GetSemanticBounds(semanticStateControl, semanticParent));
-        bool childSemanticVisible = ancestorSemanticVisible
+        bool semanticVisible = IsSemanticallyVisible(control, semanticStateControl) && ancestorSemanticVisible;
+        bool childSemanticVisible = semanticVisible
             && (control is not MenuItem menuItem || menuItem.IsSubMenuOpen)
             && (control is not TabItem tabItem || !isNativeTabPage || tabItem.IsSelected);
-        IReadOnlyList<CaptureNode> children = GetCaptureChildren(control)
+        IReadOnlyList<CaptureNode> children = GetSemanticChildren(control)
             .Select((child, childOrdinal) => ReadControl(
                 child,
                 id,
@@ -382,8 +387,8 @@ internal sealed class AvaloniaControlTreeReader
                 ? ReadRevisionGridItemHeight(control)
                 : null,
             Padding = ReadThicknessPair(designerLayout?.Padding
-                ?? (isFileStatusToolbar ? new Thickness(0, 0, 1, 0) : (Thickness?)null)
-                ?? (isFileStatusToolbarItem || control is Separator || isFileStatusListView || isFileStatusSplitter ? default(Thickness) : (Thickness?)null)
+                ?? (isSemanticToolStrip ? new Thickness(0, 0, 1, 0) : (Thickness?)null)
+                ?? (isSemanticToolStripItem || control is Separator || isFileStatusListView || isFileStatusSplitter ? default(Thickness) : (Thickness?)null)
                 ?? (control is MenuItem ? new Thickness(0, 1, 0, 1) : (Thickness?)null)
                 ?? (_projectDesignerLayout
                     ? GetDefaultDesignerPadding(control)
@@ -391,9 +396,13 @@ internal sealed class AvaloniaControlTreeReader
                         ? default(Thickness)
                         : GetPropertyValue(control, "Padding"))),
             Margin = ReadThicknessPair(designerLayout?.Margin
-                ?? (isFileStatusToolbar || isFileStatusListView ? default(Thickness) : (Thickness?)null)
-                ?? (isFileStatusToolbarItem
-                    ? control is Separator ? default(Thickness) : new Thickness(0, 1, 0, 2)
+                ?? (isSemanticToolStrip || isFileStatusListView ? default(Thickness) : (Thickness?)null)
+                ?? (isSemanticToolStripItem
+                    ? control is Separator
+                        ? default(Thickness)
+                        : control.Name == "encodingToolStripComboBox"
+                            ? new Thickness(1, 0)
+                            : new Thickness(0, 1, 0, 2)
                     : (Thickness?)null)
                 ?? (control is MenuItem or Separator ? default(Thickness) : (Thickness?)null)
                 ?? (isFileStatusSplitter ? new Thickness(3, 0) : (Thickness?)null)
@@ -402,10 +411,17 @@ internal sealed class AvaloniaControlTreeReader
                     : isNativeButton
                         ? new Thickness(3)
                         : hasNativeListComposite ? nativeListComposite!.Margin : control.Margin)),
-            Font = ReadFont(IsDetachedMenuItem(control) ? _root : control),
-            Colors = ReadColors(semanticStateControl),
+            Font = ReadFont(IsDetachedMenuItem(control) || isSemanticToolStrip || isSemanticToolStripItem ? _root : control),
+            Colors = isSemanticToolStrip
+                ? ReadToolStripColors(control, isItem: false, transparentBackground: isFileStatusToolbar)
+                : isSemanticToolStripItem
+                    ? ReadToolStripColors(control, isItem: true, transparentBackground: IsFileStatusToolbarItem(control))
+                    : isFileViewerTextEditor
+                        ? ReadFileViewerTextEditorColors()
+                        : ReadColors(semanticStateControl),
             BorderStyle = designerLayout?.BorderStyle
                 ?? (isFileStatusListView || isFileStatusSplitter ? "None" : null)
+                ?? (isFileViewerTextEditor ? "None" : null)
                 ?? (_projectDesignerLayout
                     ? GetDefaultDesignerBorderStyle(control)
                     : isRevisionGrid || isRevisionGridView || isNativeTabPage
@@ -414,13 +430,16 @@ internal sealed class AvaloniaControlTreeReader
                     ? "Fixed3D"
                     : GetPropertyValue(control, "BorderStyle")?.ToString()),
             FlatStyle = designerLayout?.FlatStyle
+                ?? (control.Name == "encodingToolStripComboBox" && isSemanticToolStripItem ? "Flat" : null)
                 ?? (isNativeButton ? (IsDarkTheme() ? "Flat" : "Standard") : null),
             BorderWidthDip = isPopupRoot || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
+                || isSemanticToolStrip || isSemanticToolStripItem || isFileViewerTextEditor
                 ? null
                 : ReadBorderWidth(control),
             CornerRadiusDip = ReadCornerRadius(control),
             Anchor = designerLayout?.Anchor
                 ?? (isFileStatusToolbar || isFileStatusSplitter ? new[] { "Top", "Left" } : null)
+                ?? (isFileViewerToolbar ? new[] { "Top", "Right" } : null)
                 ?? (isToolStripItem ? [] : (string[]?)null)
                 ?? (isFileStatusListView ? new[] { "Top", "Bottom", "Left", "Right" } : null)
                 ?? (_projectDesignerLayout
@@ -433,6 +452,8 @@ internal sealed class AvaloniaControlTreeReader
                     ? null
                     : isFileStatusToolbar || isFileStatusSplitter
                         ? "Top"
+                        : isFileViewerToolbar
+                            ? "None"
                         : isFileStatusListView
                             ? "None"
                             : _projectDesignerLayout
@@ -441,7 +462,7 @@ internal sealed class AvaloniaControlTreeReader
                                     ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
                                     : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
             AutoSize = designerLayout?.AutoSize
-                ?? (isFileStatusToolbar || isToolStripItem ? true : (bool?)null)
+                ?? (isSemanticToolStrip || isToolStripItem ? true : (bool?)null)
                 ?? (isFileStatusListView || isFileStatusSplitter ? false : (bool?)null)
                 ?? (_projectDesignerLayout
                     ? GetDefaultDesignerAutoSize(control)
@@ -459,27 +480,27 @@ internal sealed class AvaloniaControlTreeReader
                 ? null
                 : control is MenuItem or Separator ? "MiddleCenter" : GetAlignment(control)),
             Text = GetText(control),
-            ToolTip = ToolTip.GetTip(control)?.ToString(),
+            ToolTip = GetToolTip(control),
             TranslationSource = fieldName,
-            TabIndex = isFileStatusToolbar ? 0
+            TabIndex = isSemanticToolStrip ? 0
                 : isFileStatusListView ? 9
                 : isFileStatusSplitter ? 8
                 : isRevisionGrid || isRevisionGridView
                 ? 0
-                : isFileStatusToolbarItem || control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
-            TabStop = isFileStatusToolbar || isFileStatusSplitter
+                : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
+            TabStop = isSemanticToolStrip || isFileStatusSplitter
                 ? false
                 : isNativeTabPage
                 ? false
                 : isFileStatusListView || isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl
                 ? true
-                : isFileStatusToolbarItem || control is MenuItem or Separator || isPopupRoot ? null : control.Focusable,
+                : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot ? null : control.Focusable,
             Enabled = control is Separator ? false : semanticStateControl.IsEffectivelyEnabled,
             Visible = isNativeTabPage
                 ? ((TabItem)control).IsSelected && ancestorSemanticVisible
-                : IsSemanticallyVisible(control, semanticStateControl) && ancestorSemanticVisible,
+                : semanticVisible,
             Focused = isPopupRoot ? false : IsFocused(semanticStateControl),
-            ReadOnly = isRevisionGridView ? true : GetNullableBoolProperty(control, "IsReadOnly"),
+            ReadOnly = isRevisionGridView ? true : isFileViewerTextEditor ? null : GetNullableBoolProperty(control, "IsReadOnly"),
             CheckState = control switch
             {
                 MenuItem checkedMenuItem => checkedMenuItem.IsChecked ? "Checked" : "Unchecked",
@@ -491,8 +512,14 @@ internal sealed class AvaloniaControlTreeReader
                 },
                 _ => null
             },
-            Selected = GetSelected(control),
-            Expanded = isRevisionGrid || isRevisionGridView ? false : isPopupRoot ? true : GetExpanded(control),
+            Selected = isSemanticToolStripItem && control is not Separator ? false : GetSelected(control),
+            Expanded = isRevisionGrid || isRevisionGridView
+                ? false
+                : isPopupRoot
+                    ? true
+                    : isSemanticToolStripItem && GetPropertyValue(control, "Flyout") is not null
+                        ? false
+                        : GetExpanded(control),
             Columns = ReadColumns(control),
             Children = children
         };
@@ -723,6 +750,28 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         return children;
+    }
+
+    private IEnumerable<Control> GetSemanticChildren(Control control)
+        => GetCaptureChildren(control).SelectMany(ExpandSemanticChild);
+
+    private IEnumerable<Control> ExpandSemanticChild(Control child)
+    {
+        if (IsSemanticLayoutWrapper(child))
+        {
+            // parity-scaffolding: Avalonia needs layout owners around source controls that
+            // WinForms positions directly. Flatten those owners without hiding their content.
+            return GetCaptureChildren(child).SelectMany(ExpandSemanticChild);
+        }
+
+        if (IsRendererOnlyControl(child))
+        {
+            // parity-scaffolding: these controls paint a source control or implement framework
+            // layout; they are not independently named controls in the WinForms product tree.
+            return [];
+        }
+
+        return [child];
     }
 
     private static bool IsSearchResultOverlay(Control control)
@@ -1220,6 +1269,44 @@ internal sealed class AvaloniaControlTreeReader
     private static bool IsFileStatusToolbarItem(Control control)
         => control.Parent is StackPanel toolbar && IsFileStatusToolbar(toolbar);
 
+    private static bool IsFileViewerToolbar(Control control)
+        => control is Border { Name: "fileviewerToolbar" }
+           && control.GetLogicalAncestors().Any(ancestor => ancestor.GetType().FullName == "GitUI.Editor.FileViewer");
+
+    private static bool IsFileViewerToolbarItem(Control control)
+        => control.Parent is StackPanel stackPanel
+           && stackPanel.Parent is Control toolbar
+           && IsFileViewerToolbar(toolbar);
+
+    private static bool IsSemanticToolStrip(Control control)
+        => IsFileStatusToolbar(control) || IsFileViewerToolbar(control);
+
+    private static bool IsSemanticToolStripItem(Control control)
+        => IsFileStatusToolbarItem(control) || IsFileViewerToolbarItem(control);
+
+    private static bool IsFileViewerTextEditor(Control control)
+        => control.Name == "TextEditor"
+           && control.GetLogicalAncestors().Any(ancestor => ancestor.GetType().FullName == "GitUI.Editor.FileViewerInternal");
+
+    private static bool IsRepositoryHostSplit(Control control)
+        => control is Grid { Name: "splitContainer2" or "splitContainer3" }
+           && (control.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm"
+               || control.GetLogicalAncestors().Any(
+                   ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm"));
+
+    private static bool IsSemanticLayoutWrapper(Control control)
+        => control.Name == "FindInCommitFilesGitGrepPanel"
+           || (control is StackPanel
+               && control.Parent is Control parent
+               && IsFileViewerToolbar(parent));
+
+    private static bool IsRendererOnlyControl(Control control)
+        => control.Name == "ImagePreview"
+           || control.GetType().FullName == "GitUI.SpellChecker.SpellCheckAdorner"
+           || (control is GridSplitter
+               && control.Parent is Control parent
+               && IsRepositoryHostSplit(parent));
+
     private static bool IsFileStatusListView(Control control)
         => control.Name == "FileStatusListView"
            && control.GetLogicalAncestors().OfType<FileStatusList>().Any();
@@ -1249,6 +1336,60 @@ internal sealed class AvaloniaControlTreeReader
 
         return semanticStateControl.IsVisible;
     }
+
+    private CaptureColors ReadToolStripColors(Control control, bool isItem, bool transparentBackground)
+    {
+        string? background = transparentBackground
+            ? "#00FFFFFF"
+            : ResolveResourceArgb("GitExtensionsKnownColorControlBrush")
+              ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
+        string? foreground = control is Separator
+            ? ResolveResourceArgb("GitExtensionsKnownColorControlDarkBrush")
+            : control.Name == "encodingToolStripComboBox"
+                ? ResolveResourceArgb("GitExtensionsKnownColorMenuTextBrush")
+                : ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                  ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush");
+        return new CaptureColors
+        {
+            Foreground = foreground,
+            Background = background,
+            Border = null,
+            SelectionForeground = isItem ? ResolveResourceArgb("GitExtensionsKnownColorHighlightTextBrush") : null,
+            SelectionBackground = isItem ? ResolveResourceArgb("GitExtensionsKnownColorHighlightBrush") : null,
+            InactiveSelectionForeground = isItem ? ResolveResourceArgb("GitExtensionsKnownColorMenuTextBrush") : null,
+            InactiveSelectionBackground = isItem ? ResolveResourceArgb("GitExtensionsKnownColorMenuBrush") : null,
+            DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                                 ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+            DisabledBackground = background,
+            GridLine = null,
+            Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        };
+    }
+
+    private CaptureColors ReadFileViewerTextEditorColors()
+        => new()
+        {
+            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush"),
+            Background = "#00FFFFFF",
+            Border = null,
+            SelectionForeground = null,
+            SelectionBackground = null,
+            InactiveSelectionForeground = null,
+            InactiveSelectionBackground = null,
+            DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush"),
+            DisabledBackground = "#00FFFFFF",
+            GridLine = null,
+            Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        };
+
+    private static string? GetToolTip(Control control)
+        => ToolTip.GetTip(control) switch
+        {
+            TextBlock textBlock => textBlock.Text,
+            string text => text,
+            object value => value.ToString(),
+            null => null
+        };
 
     private static bool IsDetachedMenuItem(Control control)
         => control is MenuItem or Separator && TopLevel.GetTopLevel(control) is null;

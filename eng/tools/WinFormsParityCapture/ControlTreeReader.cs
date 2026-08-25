@@ -456,6 +456,25 @@ internal sealed class ControlTreeReader
                 continue;
             }
 
+            if (control is SplitContainer && child is SplitterPanel)
+            {
+                // parity-scaffolding: SplitterPanel is WinForms layout infrastructure, not a
+                // product field. Emit the controls it owns directly beneath the semantic split.
+                foreach (Control panelChild in child.Controls)
+                {
+                    children.Add(ReadControl(panelChild, id, childOrdinal++));
+                }
+
+                continue;
+            }
+
+            if (control.GetType().FullName == "ICSharpCode.TextEditor.TextEditorControl")
+            {
+                // parity-scaffolding: the editor's scrollbars and text-area panels are private
+                // implementation controls from the external library, not Git Extensions fields.
+                continue;
+            }
+
             children.Add(ReadControl(child, id, childOrdinal++));
         }
 
