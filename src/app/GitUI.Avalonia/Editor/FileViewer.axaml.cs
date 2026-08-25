@@ -1226,6 +1226,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         previousChangeButton.IsVisible = isPartialTextView;
         increaseNumberOfLines.IsVisible = isPartialFlexibleView;
         decreaseNumberOfLines.IsVisible = isPartialFlexibleView;
+        toolStripSeparator4.IsVisible = isPartialFlexibleView;
         showEntireFileButton.IsVisible = isPartialFlexibleView;
         ignoreWhitespaceAtEol.IsVisible = diffCanBeModified || viewMode == ViewMode.Difftastic;
         ignoreWhiteSpaces.IsVisible = diffCanBeModified;
@@ -2982,6 +2983,8 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         public ComboBox EncodingToolStripComboBox => _control.encodingToolStripComboBox;
 
         public Border FileViewerToolbar => _control.fileviewerToolbar;
+
+        public Separator ContextLinesSeparator => _control.toolStripSeparator4;
 
         public MenuItem ShowNonprintingCharactersMenuItem => _control.showNonprintableCharactersToolStripMenuItem;
 

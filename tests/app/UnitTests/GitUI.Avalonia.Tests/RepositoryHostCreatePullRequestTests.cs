@@ -109,6 +109,21 @@ public sealed class RepositoryHostCreatePullRequestTests
         title.Margin.Should().Be(new Avalonia.Thickness(0, 1, 0, 0));
         form.FindControl<TextBlock>("label1")!.Margin.Should().Be(new Avalonia.Thickness(0, 4, 0, 0));
         form.FindControl<TextBlock>("label2")!.Margin.Should().Be(new Avalonia.Thickness(0, 3, 0, 0));
+        double titleLabelWidth = form.FindControl<TextBlock>("label1")!.Width;
+        double bodyLabelWidth = form.FindControl<TextBlock>("label2")!.Width;
+        double yourBranchLabelWidth = form.FindControl<TextBlock>("label4")!.Width;
+        double targetBranchLabelWidth = form.FindControl<TextBlock>("label5")!.Width;
+        if (OperatingSystem.IsWindows())
+        {
+            (titleLabelWidth, bodyLabelWidth, yourBranchLabelWidth, targetBranchLabelWidth)
+                .Should().Be((33, 37, 74, 83));
+        }
+        else
+        {
+            titleLabelWidth.Should().BePositive().And.BeLessThan(bodyLabelWidth);
+            bodyLabelWidth.Should().BeLessThan(yourBranchLabelWidth);
+            yourBranchLabelWidth.Should().BeLessThan(targetBranchLabelWidth);
+        }
 
         translation.Received(1).AddTranslationItem(
             nameof(CreatePullRequestForm), "$this", "Text", "Create Pull Request");

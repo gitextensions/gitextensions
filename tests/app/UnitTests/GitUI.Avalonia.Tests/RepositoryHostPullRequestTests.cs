@@ -112,6 +112,7 @@ public sealed class RepositoryHostPullRequestTests
         pullRequestLayout.ColumnDefinitions[1].Width.IsAuto.Should().BeTrue();
         ((Grid)pullRequestLayout.Children[0]).Margin.Should().Be(new Avalonia.Thickness(3));
         Grid pullRequestHeader = (Grid)form.FindControl<ContentControl>("columnHeaderId")!.Parent!;
+        pullRequestHeader.Margin.Should().Be(new Avalonia.Thickness(0, 0, 4, 0));
         pullRequestHeader.ColumnDefinitions[4].Width.IsStar.Should().BeTrue();
         pullRequestHeader.ColumnDefinitions
             .Where((_, index) => index != 4)
@@ -247,6 +248,15 @@ public sealed class RepositoryHostPullRequestTests
         Dispatcher.UIThread.RunJobs();
 
         FileStatusList files = form.FindControl<FileStatusList>("_fileStatusList")!;
+        GitItemStatus worktree = new("tracked.txt")
+        {
+            IsChanged = true,
+            IsTracked = true,
+            Staged = StagedStatus.WorkTree,
+        };
+        files.SetDiffs([worktree]);
+        Dispatcher.UIThread.RunJobs();
+
         StackPanel toolbarControl = files.FindControl<StackPanel>("Toolbar")!;
         TextBlock splitterControl = files.FindControl<TextBlock>("lblSplitter")!;
         ComboBox filterControl = files.FindControl<ComboBox>("cboFilterComboBox")!;
