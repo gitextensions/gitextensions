@@ -132,6 +132,34 @@ internal static class AvaloniaThemeResources
         DrawingColor menu = ResolveSystemColor(settings, KnownColor.Menu);
         DrawingColor menuText = ResolveSystemColor(settings, KnownColor.MenuText);
         DrawingColor commitEditorBackground = isDark ? controlLight : window;
+        DrawingColor textInputBackground = isDark ? controlLight : window;
+        DrawingColor nativeGroupBoxBorder = DrawingColor.FromArgb(220, 220, 220);
+        DrawingColor nativeButtonBackground = isDark
+            ? DrawingColor.FromArgb(51, 51, 51)
+            : DrawingColor.FromArgb(253, 253, 253);
+        DrawingColor nativeButtonBorder = isDark
+            ? DrawingColor.FromArgb(155, 155, 155)
+            : DrawingColor.FromArgb(208, 208, 208);
+        DrawingColor nativeButtonPressedBackground = isDark
+            ? DrawingColor.FromArgb(102, 102, 102)
+            : DrawingColor.FromArgb(204, 228, 247);
+        DrawingColor nativeButtonPressedBorder = isDark
+            ? DrawingColor.FromArgb(160, 160, 160)
+            : DrawingColor.FromArgb(0, 84, 153);
+        DrawingColor nativeButtonDisabledBackground = isDark
+            ? DrawingColor.FromArgb(51, 51, 51)
+            : DrawingColor.FromArgb(249, 249, 249);
+        DrawingColor nativeButtonDisabledBorder = isDark
+            ? DrawingColor.FromArgb(55, 55, 55)
+            : DrawingColor.FromArgb(233, 233, 233);
+        DrawingColor nativeButtonDisabledForeground = isDark
+            ? DrawingColor.FromArgb(204, 204, 204)
+            : DrawingColor.FromArgb(160, 160, 160);
+        DrawingColor nativeTabBorder = isDark
+            ? DrawingColor.FromArgb(74, 74, 74)
+            : DrawingColor.FromArgb(217, 217, 217);
+        DrawingColor nativeTabSelectedBackground = isDark ? control : window;
+        DrawingColor nativeTabPageBackground = isDark ? control : DrawingColor.Transparent;
         DrawingColor highlight = ResolveSystemColor(settings, KnownColor.Highlight);
         DrawingColor highlightText = ResolveSystemColor(settings, KnownColor.HighlightText);
         DrawingColor inactiveSelection = ResolveSystemColor(settings, KnownColor.InactiveCaption);
@@ -211,6 +239,19 @@ internal static class AvaloniaThemeResources
         SetBrush(resources, "GitExtensionsWindowTextBrush", windowText);
         SetBrush(resources, "GitExtensionsWindowBackgroundBrush", window);
         SetBrush(resources, "GitExtensionsCommitEditorBackgroundBrush", commitEditorBackground);
+        SetBrush(resources, "GitExtensionsTextInputBackgroundBrush", textInputBackground);
+        SetBrush(resources, "GitExtensionsNativeGroupBoxBorderBrush", nativeGroupBoxBorder);
+        SetBrush(resources, "GitExtensionsNativeButtonBackgroundBrush", nativeButtonBackground);
+        SetBrush(resources, "GitExtensionsNativeButtonBorderBrush", nativeButtonBorder);
+        SetBrush(resources, "GitExtensionsNativeButtonPressedBackgroundBrush", nativeButtonPressedBackground);
+        SetBrush(resources, "GitExtensionsNativeButtonPressedBorderBrush", nativeButtonPressedBorder);
+        SetBrush(resources, "GitExtensionsNativeButtonDisabledBackgroundBrush", nativeButtonDisabledBackground);
+        SetBrush(resources, "GitExtensionsNativeButtonDisabledBorderBrush", nativeButtonDisabledBorder);
+        SetBrush(resources, "GitExtensionsNativeButtonDisabledForegroundBrush", nativeButtonDisabledForeground);
+        SetBrush(resources, "GitExtensionsNativeTabBorderBrush", nativeTabBorder);
+        SetBrush(resources, "GitExtensionsNativeTabSelectedBackgroundBrush", nativeTabSelectedBackground);
+        SetBrush(resources, "GitExtensionsNativeTabUnselectedBackgroundBrush", control);
+        SetBrush(resources, "GitExtensionsNativeTabPageBackgroundBrush", nativeTabPageBackground);
         SetBrush(resources, "GitExtensionsCommitMessageBackgroundBrush", commitMessageBackground);
         SetBrush(resources, "GitExtensionsControlBackgroundBrush", control);
         SetBrush(resources, "GitExtensionsControlForegroundBrush", controlText);

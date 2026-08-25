@@ -46,7 +46,7 @@
               VerticalContentAlignment="Center" />
 
     <HeaderedContentControl x:Name="groupBox1"
-                            Classes="gitextensions-group-box"
+                            Classes="gitextensions-group-box gitextensions-native-group-border"
                             Margin="12,100,8,48"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
@@ -80,7 +80,7 @@
     </HeaderedContentControl>
 
     <Button x:Name="_createBtn"
-            Classes="gitextensions-dialog-action-primary"
+            Classes="gitextensions-dialog-action-primary gitextensions-native-dialog-action"
             Margin="0,0,8,9"
             Width="112"
             Height="33"
