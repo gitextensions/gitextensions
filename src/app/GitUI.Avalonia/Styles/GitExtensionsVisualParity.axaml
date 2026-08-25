@@ -618,6 +618,17 @@
     <Setter Property="MinWidth" Value="0" />
     <Setter Property="Padding" Value="3,1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsTextInputBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="NumericUpDown:pointerover, NumericUpDown:focus">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+  </Style>
+  <Style Selector="NumericUpDown:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
   </Style>
   <Style Selector="NumericUpDown /template/ ButtonSpinner#PART_Spinner">
     <Setter Property="Theme" Value="{StaticResource GitExtensionsCompactButtonSpinnerTheme}" />

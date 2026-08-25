@@ -322,6 +322,8 @@ internal sealed class AvaloniaControlTreeReader
         bool isSourceLabelSubstitute = IsSourceLabelSubstitute(control);
         bool isWatermarkComboBox = IsFileStatusWatermarkComboBox(control);
         bool isSourceTransparentContainer = IsSourceTransparentContainer(control);
+        bool isRepositoryHostDiscussion = IsRepositoryHostDiscussion(control);
+        bool hasWinFormsTextBoxClientInset = control is TextBox && !isSpellCheckTextBox;
         bool isToolStripItem = isSemanticToolStripItem || control is MenuItem or Separator;
         Control semanticStateControl = IsFileStatusListView(control)
             ? GetActiveFileStatusListView(control) ?? control
@@ -365,7 +367,7 @@ internal sealed class AvaloniaControlTreeReader
             FieldAliases = fieldNames.Skip(1).ToArray(),
             Name = string.IsNullOrEmpty(control.Name) ? null : control.Name,
             Type = control.GetType().FullName ?? control.GetType().Name,
-            ControlKind = GetControlKind(control),
+            ControlKind = isRepositoryHostDiscussion ? "control" : GetControlKind(control),
             BoundsPx = new CaptureRectangle
             {
                 X = ToPixel(bounds.X),
@@ -382,13 +384,13 @@ internal sealed class AvaloniaControlTreeReader
             },
             ClientSizePx = new CaptureSize
             {
-                Width = ToPixel(isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
-                Height = ToPixel(isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
+                Width = ToPixel(isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Width - 4) : bounds.Width),
+                Height = ToPixel(isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Height - 4) : bounds.Height)
             },
             ClientSizeDip = new CaptureSizeF
             {
-                Width = ToDecimal(isNativeListView ? Math.Max(0, bounds.Width - 4) : bounds.Width),
-                Height = ToDecimal(isNativeListView ? Math.Max(0, bounds.Height - 4) : bounds.Height)
+                Width = ToDecimal(isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Width - 4) : bounds.Width),
+                Height = ToDecimal(isNativeListView || hasWinFormsTextBoxClientInset ? Math.Max(0, bounds.Height - 4) : bounds.Height)
             },
             ItemHeightDip = isRevisionGridView
                 ? ReadRevisionGridItemHeight(control)
@@ -449,6 +451,7 @@ internal sealed class AvaloniaControlTreeReader
                                                 : ReadColors(semanticStateControl),
             BorderStyle = designerLayout?.BorderStyle
                 ?? (isFileStatusListView || isFileStatusSplitter ? "None" : null)
+                ?? (isRepositoryHostDiscussion ? "None" : null)
                 ?? (isSpellCheckAutoComplete ? "FixedSingle" : null)
                 ?? (isSpellCheckTextBox || isSourceLabelSubstitute || isSourceTransparentContainer || isFileViewerInternal ? "None" : null)
                 ?? (isFileViewerTextEditor ? "None" : null)
@@ -468,6 +471,7 @@ internal sealed class AvaloniaControlTreeReader
             BorderWidthDip = isPopupRoot || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
                 || isSemanticToolStrip || isSemanticToolStripItem || isFileViewerTextEditor
                 || isSpellCheckAutoComplete || isSpellCheckTextBox || isSourceLabelSubstitute || isWatermarkComboBox
+                || isRepositoryHostDiscussion
                 ? null
                 : ReadBorderWidth(control),
             CornerRadiusDip = isSourceLabelSubstitute ? null : ReadCornerRadius(control),
@@ -517,13 +521,16 @@ internal sealed class AvaloniaControlTreeReader
             Text = GetText(control),
             ToolTip = GetToolTip(control),
             TranslationSource = fieldName,
-            TabIndex = isSemanticToolStrip ? 0
+            TabIndex = isSurfaceRoot && !isPopupRoot ? 0
+                : isSemanticToolStrip ? 0
                 : isFileStatusListView ? 9
                 : isFileStatusSplitter ? 8
                 : isRevisionGrid || isRevisionGridView
                 ? 0
                 : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
-            TabStop = isSpellCheckAutoComplete || isFileViewerInternal || isFileViewerTextEditor || IsSourceTabStopContainer(control)
+            TabStop = isSurfaceRoot && !isPopupRoot
+                ? true
+                : isSpellCheckAutoComplete || isFileViewerInternal || isFileViewerTextEditor || IsSourceTabStopContainer(control)
                 ? true
                 : isSemanticToolStrip || isFileStatusSplitter
                 ? false
@@ -531,7 +538,9 @@ internal sealed class AvaloniaControlTreeReader
                 ? false
                 : isFileStatusListView || isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl
                 ? true
-                : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot ? null : control.Focusable,
+                : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot
+                    ? null
+                    : control.Focusable && KeyboardNavigation.GetIsTabStop(control),
             Enabled = control is Separator ? false : semanticStateControl.IsEffectivelyEnabled,
             Visible = isNativeTabPage
                 ? ((TabItem)control).IsSelected && ancestorSemanticVisible
@@ -682,6 +691,13 @@ internal sealed class AvaloniaControlTreeReader
 
     private IEnumerable<Control> GetCaptureChildren(Control control)
     {
+        if (IsRepositoryHostDiscussion(control))
+        {
+            // parity-scaffolding: WinForms exposes the read-only WebBrowser as one semantic
+            // control; Avalonia's native row renderer is internal presentation, not product UI.
+            return [];
+        }
+
         if (control is RevisionGridControl)
         {
             // parity-scaffolding: The Avalonia twin uses layout/recycling controls around its
@@ -1394,6 +1410,11 @@ internal sealed class AvaloniaControlTreeReader
         => control.Name == "FileStatusListView"
            && control.GetLogicalAncestors().OfType<FileStatusList>().Any();
 
+    private static bool IsRepositoryHostDiscussion(Control control)
+        => control is ListBox { Name: "_discussionWB" }
+           && control.GetLogicalAncestors().Any(
+               ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm");
+
     private static bool IsFileStatusSplitter(Control control)
         => control is TextBlock { Name: "lblSplitter" }
            && control.GetLogicalAncestors().OfType<FileStatusList>().Any();
@@ -1431,7 +1452,8 @@ internal sealed class AvaloniaControlTreeReader
             : control.Name == "encodingToolStripComboBox"
                 ? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
                   ?? ResolveResourceArgb("GitExtensionsWindowTextBrush")
-                : ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                : BrushToArgb(GetPropertyValue(control, "Foreground"))
+                  ?? ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
                   ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush");
         return new CaptureColors
         {
@@ -1625,21 +1647,23 @@ internal sealed class AvaloniaControlTreeReader
 
     private bool IsFocused(Control control)
     {
-        if (IsNativeListView(control))
+        if (IsRevisionGridView(control))
+        {
+            // parity-scaffolding: Avalonia moves keyboard focus into an owned ContextMenu, while
+            // WinForms keeps the owning grid focused; emit the equivalent owner-focused state.
+            return control.IsKeyboardFocusWithin
+                   || control.ContextMenu?.IsOpen == true
+                   || _root.GetLogicalDescendants().OfType<ContextMenu>().Any(menu => menu.IsOpen);
+        }
+
+        if (IsNativeListView(control)
+            || control is ComboBox or ListBox or TreeView
+            || control.GetType().FullName == "GitUI.SpellChecker.EditNetSpell")
         {
             return control.IsKeyboardFocusWithin;
         }
 
-        if (!IsRevisionGridView(control))
-        {
-            return control.IsFocused;
-        }
-
-        // parity-scaffolding: Avalonia moves keyboard focus into an owned ContextMenu, while
-        // WinForms keeps the owning grid focused; emit the equivalent owner-focused state.
-        return control.IsKeyboardFocusWithin
-               || control.ContextMenu?.IsOpen == true
-               || _root.GetLogicalDescendants().OfType<ContextMenu>().Any(menu => menu.IsOpen);
+        return control.IsFocused;
     }
 
     private static bool IsOverlayPopupHost(Control control) =>

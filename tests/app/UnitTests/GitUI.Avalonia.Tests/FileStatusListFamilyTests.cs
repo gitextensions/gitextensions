@@ -1,10 +1,12 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
@@ -164,6 +166,7 @@ public sealed class FileStatusListFamilyTests
     {
         FileStatusList control = new();
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+        control.TranslateItems(Substitute.For<ITranslation>());
 
         accessor.Toolbar.Children.Should().NotBeEmpty();
         control.FindControl<MenuItem>("tsmiUpdateSubmodule").Should().NotBeNull();
@@ -172,6 +175,20 @@ public sealed class FileStatusListFamilyTests
         control.FindControl<MenuItem>("tsmiSaveAs").Should().NotBeNull();
         control.FindControl<MenuItem>("tsmiSkipWorktree").Should().NotBeNull();
         control.FindControl<MenuItem>("tsmiStopTracking").Should().NotBeNull();
+        ToolTip.GetTip(control.FindControl<Control>("btnSettings")!).Should().Be("Settings");
+        AssertFilterButton("btnUnequalChange", "#FFFF0000");
+        AssertFilterButton("btnOnlyB", "#FFBD7CFF");
+        AssertFilterButton("btnOnlyA", "#FFA8A800");
+        AssertFilterButton("btnSameChange", "#FF00A800");
+
+        return;
+
+        void AssertFilterButton(string name, string color)
+        {
+            ToggleButton button = control.FindControl<ToggleButton>(name)!;
+            button.Width.Should().Be(23);
+            button.Foreground.Should().BeAssignableTo<ISolidColorBrush>().Which.Color.Should().Be(Color.Parse(color));
+        }
     }
 
     [AvaloniaTest]
