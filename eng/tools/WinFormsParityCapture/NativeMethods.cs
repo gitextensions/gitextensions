@@ -69,6 +69,24 @@ internal static partial class NativeMethods
 
     internal static void FocusWindow(IntPtr handle) => SetFocus(handle);
 
+    internal static Point GetCursorPosition()
+    {
+        if (!GetCursorPos(out NativePoint point))
+        {
+            throw new InvalidOperationException("GetCursorPos failed.");
+        }
+
+        return new Point(point.X, point.Y);
+    }
+
+    internal static void SetCursorPosition(Point point)
+    {
+        if (!SetCursorPos(point.X, point.Y))
+        {
+            throw new InvalidOperationException("SetCursorPos failed.");
+        }
+    }
+
     internal static void SendDpiChanged(IntPtr handle, int dpi, Rectangle suggestedBounds)
     {
         NativeRectangle rectangle = new()
@@ -140,6 +158,14 @@ internal static partial class NativeMethods
     [LibraryImport("user32.dll")]
     private static partial IntPtr SetFocus(IntPtr window);
 
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool GetCursorPos(out NativePoint point);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool SetCursorPos(int x, int y);
+
     [LibraryImport("user32.dll", EntryPoint = "SendMessageW")]
     private static partial IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
 
@@ -172,6 +198,13 @@ internal static partial class NativeMethods
         public NativeRectangle Monitor;
         public NativeRectangle Work;
         public uint Flags;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativePoint
+    {
+        public int X;
+        public int Y;
     }
 
     [StructLayout(LayoutKind.Sequential)]

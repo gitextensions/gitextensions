@@ -57,6 +57,40 @@ public sealed class ControlTreeReaderTests
     }
 
     [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_record_the_form_client_inset_relative_to_the_full_window_surface()
+    {
+        using Form form = new()
+        {
+            StartPosition = FormStartPosition.Manual,
+            Location = new Point(40, 50),
+            ClientSize = new Size(200, 100)
+        };
+        form.Show();
+        Application.DoEvents();
+        Rectangle windowBounds = form.Bounds;
+        Rectangle clientBounds = form.RectangleToScreen(form.ClientRectangle);
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureSurface surface = reader.ReadPrimary(form, windowBounds);
+
+        surface.ScreenBoundsPx.Should().Be(new CaptureRectangle
+        {
+            X = windowBounds.X,
+            Y = windowBounds.Y,
+            Width = windowBounds.Width,
+            Height = windowBounds.Height
+        });
+        surface.Root.BoundsPx.Should().Be(new CaptureRectangle
+        {
+            X = clientBounds.X - windowBounds.X,
+            Y = clientBounds.Y - windowBounds.Y,
+            Width = 200,
+            Height = 100
+        });
+    }
+
+    [Test]
     public void ReadPrimary_should_record_resolved_data_grid_item_height()
     {
         using Form form = new();

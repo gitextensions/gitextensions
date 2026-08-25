@@ -268,6 +268,7 @@ public sealed class RepositoryHostPullRequestTests
             .ToArray();
         CaptureNode toolbar = nodes.Single(node => node.FieldName == "Toolbar");
         CaptureNode list = nodes.Single(node => node.FieldName == "FileStatusListView");
+        CaptureNode filter = nodes.Single(node => node.FieldName == "cboFilterComboBox");
         CaptureNode asTree = nodes.Single(node => node.FieldName == "btnAsTree");
         CaptureNode closedDropDownItem = nodes.Single(node => node.FieldName == "tsmiGroupByFilePathTree");
 
@@ -276,6 +277,14 @@ public sealed class RepositoryHostPullRequestTests
         list.ControlKind.Should().Be("tree");
         list.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 50, Width = 742, Height = 62 });
         list.Visible.Should().BeTrue();
+        list.Colors.Background.Should().Be("#FFFFFFFF");
+        list.Colors.SelectionBackground.Should().Be("#FF0078D7");
+        list.Colors.InactiveSelectionBackground.Should().Be("#FFBFCDDB");
+        list.Colors.Additional["hotTrack"].Should().Be("#FF0066CC");
+        filter.Font!.Style.Should().Equal("Italic");
+        filter.Colors.Foreground.Should().Be("#FF6D6D6D");
+        filter.Colors.Border.Should().BeNull();
+        filter.FlatStyle.Should().BeNull();
         asTree.ControlKind.Should().Be("menuItem");
         asTree.Margin!.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 1, Right = 0, Bottom = 2 });
         closedDropDownItem.ControlKind.Should().Be("menuItem");
@@ -303,6 +312,7 @@ public sealed class RepositoryHostPullRequestTests
             .ToArray();
         CaptureNode toolbarNode = hiddenNodes.Single(node => node.FieldName == "fileviewerToolbar");
         CaptureNode nextNode = hiddenNodes.Single(node => node.FieldName == "nextChangeButton");
+        CaptureNode internalNode = hiddenNodes.Single(node => node.FieldName == "internalFileViewer");
         CaptureNode editorNode = hiddenNodes.Single(node => node.FieldName == "TextEditor");
 
         toolbarNode.ControlKind.Should().Be("toolStrip");
@@ -315,7 +325,12 @@ public sealed class RepositoryHostPullRequestTests
         nextNode.ToolTip.Should().Be("Next change");
         nextNode.Visible.Should().BeFalse();
         toolbarNode.Children.Should().OnlyContain(node => node.Visible == false);
+        internalNode.BorderStyle.Should().Be("None");
+        internalNode.TabStop.Should().BeTrue();
         editorNode.Children.Should().BeEmpty();
+        editorNode.BorderStyle.Should().Be("None");
+        editorNode.TabStop.Should().BeTrue();
+        editorNode.ReadOnly.Should().BeNull();
         hiddenNodes.Single(node => node.FieldName == "splitContainer2").ControlKind.Should().Be("split");
         hiddenNodes.Single(node => node.FieldName == "splitContainer3").ControlKind.Should().Be("split");
         hiddenNodes.Should().NotContain(
