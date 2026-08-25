@@ -99,20 +99,23 @@ public sealed class RepositoryHostForkCloneTests
         form.FindControl<ComboBox>("addUpstreamRemoteAsCB")!.Width.Should().Be(200);
         HeaderedContentControl cloneSetup = form.FindControl<HeaderedContentControl>("cloneSetupGB")!;
         cloneSetup.Classes.Should().Contain("repository-host-clone-group");
-        Canvas cloneLayout = cloneSetup.Content.Should().BeOfType<Canvas>().Subject;
+        Grid cloneLayout = cloneSetup.Content.Should().BeOfType<Grid>().Subject;
         cloneLayout.Children.Should().HaveCount(12);
-        AssertCanvasBounds(form.FindControl<TextBlock>("label1")!, 7, 16, 104, 15);
-        AssertCanvasBounds(form.FindControl<TextBox>("destinationTB")!, 10, 32, 294, 23);
-        AssertCanvasBounds(browse, 310, 32, 102, 23);
-        AssertCanvasBounds(form.FindControl<TextBlock>("ProtocolLabel")!, 418, 36, 55, 15);
-        AssertCanvasBounds(form.FindControl<ComboBox>("ProtocolDropdownList")!, 470, 32, 121, 23);
-        AssertCanvasBounds(form.FindControl<TextBlock>("createDirectoryLbl")!, 7, 55, 94, 15);
-        AssertCanvasBounds(form.FindControl<TextBox>("createDirTB")!, 10, 71, 183, 23);
-        AssertCanvasBounds(form.FindControl<TextBlock>("label3")!, 211, 55, 140, 15);
-        AssertCanvasBounds(form.FindControl<ComboBox>("addUpstreamRemoteAsCB")!, 212, 71, 200, 23);
-        AssertCanvasBounds(form.FindControl<TextBlock>("cloneInfoText")!, 10, 97, 719, 35);
-        AssertCanvasBounds(form.FindControl<TextBlock>("depthLabel")!, 7, 135, 72, 15);
-        AssertCanvasBounds(form.FindControl<NumericUpDown>("depthUpDown")!, 10, 151, 100, 23);
+        AssertGridBounds(form.FindControl<TextBlock>("label1")!, 7, 16, 104, 15);
+        AssertGridBounds(form.FindControl<TextBox>("destinationTB")!, 10, 32, 294, 23);
+        AssertGridBounds(browse, 310, 32, 102, 23);
+        AssertGridBounds(form.FindControl<TextBlock>("ProtocolLabel")!, 418, 36, 55, 15);
+        AssertGridBounds(form.FindControl<ComboBox>("ProtocolDropdownList")!, 470, 32, 121, 23);
+        AssertGridBounds(form.FindControl<TextBlock>("createDirectoryLbl")!, 7, 55, 94, 15);
+        AssertGridBounds(form.FindControl<TextBox>("createDirTB")!, 10, 71, 183, 23);
+        AssertGridBounds(form.FindControl<TextBlock>("label3")!, 211, 55, 140, 15);
+        AssertGridBounds(form.FindControl<ComboBox>("addUpstreamRemoteAsCB")!, 212, 71, 200, 23);
+        TextBlock cloneInfo = form.FindControl<TextBlock>("cloneInfoText")!;
+        cloneInfo.Margin.Should().Be(new Avalonia.Thickness(10, 97, 7, 0));
+        cloneInfo.Height.Should().Be(35);
+        cloneInfo.HorizontalAlignment.Should().Be(Avalonia.Layout.HorizontalAlignment.Stretch);
+        AssertGridBounds(form.FindControl<TextBlock>("depthLabel")!, 7, 135, 72, 15);
+        AssertGridBounds(form.FindControl<NumericUpDown>("depthUpDown")!, 10, 151, 100, 23);
         Grid footer = form.FindControl<Grid>("flowLayoutPanel1")!;
         footer.ColumnDefinitions.Select(column => column.Width.Value).Should().Equal(1, 120, 6, 120, 3);
         Grid.GetColumn(form.FindControl<Button>("cloneBtn")!).Should().Be(1);
@@ -252,7 +255,7 @@ public sealed class RepositoryHostForkCloneTests
         tabs.Dock.Should().Be("Fill");
         tabs.TabStop.Should().BeTrue();
         ownedPage.BoundsDip.Should().Be(new CaptureRectangleF { X = 4, Y = 30, Width = 730, Height = 289 });
-        ownedPage.Padding.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 0, Right = 0, Bottom = 0 });
+        ownedPage.Padding.Dip.Should().Be(new CaptureThicknessF { Left = 3, Top = 3, Right = 3, Bottom = 3 });
         ownedPage.Visible.Should().BeTrue();
         ownedLayout.BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 3, Width = 724, Height = 283 });
         searchPage.Visible.Should().BeFalse();
@@ -277,6 +280,22 @@ public sealed class RepositoryHostForkCloneTests
                     new AvaloniaControlTreeReader(form, renderScale: 1)
                         .ReadPrimary(form, new PixelSize(744, 552)).Root)
                 .ToArray();
+    }
+
+    [AvaloniaTest]
+    public void ForkAndCloneForm_should_anchor_clone_information_to_both_horizontal_edges()
+    {
+        using ForkAndCloneForm form = new();
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        TextBlock cloneInfo = form.FindControl<TextBlock>("cloneInfoText")!;
+
+        cloneInfo.Bounds.Width.Should().Be(719);
+        form.Width = 844;
+        Dispatcher.UIThread.RunJobs();
+
+        cloneInfo.Bounds.Width.Should().Be(819);
+        form.Close();
     }
 
     [AvaloniaTest]
@@ -313,10 +332,11 @@ public sealed class RepositoryHostForkCloneTests
         }
     }
 
-    private static void AssertCanvasBounds(Control control, double left, double top, double width, double height)
+    private static void AssertGridBounds(Control control, double left, double top, double width, double height)
     {
-        Canvas.GetLeft(control).Should().Be(left);
-        Canvas.GetTop(control).Should().Be(top);
+        control.Margin.Should().Be(new Avalonia.Thickness(left, top, 0, 0));
+        control.HorizontalAlignment.Should().Be(Avalonia.Layout.HorizontalAlignment.Left);
+        control.VerticalAlignment.Should().Be(Avalonia.Layout.VerticalAlignment.Top);
         if (width > 0)
         {
             control.Width.Should().Be(width);

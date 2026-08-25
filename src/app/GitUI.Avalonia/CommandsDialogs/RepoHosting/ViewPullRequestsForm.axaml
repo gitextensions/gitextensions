@@ -11,7 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="View Pull Requests">
   <Grid x:Name="splitContainer2"
-        RowDefinitions="146,6,*">
+        RowDefinitions="146*,6,359*">
     <Grid x:Name="tableLayoutPanel2"
           RowDefinitions="33,*">
       <StackPanel x:Name="flowLayoutPanel2"
@@ -111,7 +111,7 @@
                Header="Diffs">
         <Grid x:Name="splitContainer3"
               Margin="6,2,6,6"
-              RowDefinitions="112,6,*">
+              RowDefinitions="112*,6,203*">
           <gitui:FileStatusList x:Name="_fileStatusList" />
           <GridSplitter Grid.Row="1"
                         ResizeDirection="Rows" />

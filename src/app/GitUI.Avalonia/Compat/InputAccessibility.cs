@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -17,6 +18,19 @@ internal readonly record struct InputControlMetadata(
     int? TabIndex,
     bool? IsTabStop,
     string? AccessibleName);
+
+// parity-scaffolding: Preserves Designer layout semantics in cross-framework capture trees;
+// rendered bounds and colors remain measured from the native Avalonia controls.
+internal readonly record struct DesignerLayoutMetadata(
+    string FieldName,
+    IReadOnlyList<string>? Anchor,
+    string? Dock,
+    bool? AutoSize,
+    Thickness? Margin,
+    Thickness? Padding,
+    string? Alignment,
+    string? BorderStyle,
+    string? FlatStyle);
 
 internal static class InputAccessibility
 {
