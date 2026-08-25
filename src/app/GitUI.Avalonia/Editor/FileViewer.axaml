@@ -4,6 +4,21 @@
              xmlns:editor="using:GitUI.Editor"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.Editor.FileViewer">
+  <UserControl.Styles>
+    <Style Selector="Button.fileviewer-toolbar-button">
+      <Setter Property="Width" Value="23" />
+      <Setter Property="Height" Value="22" />
+      <Setter Property="MinWidth" Value="23" />
+      <Setter Property="MinHeight" Value="22" />
+      <Setter Property="Margin" Value="0,1,0,2" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="Separator.fileviewer-toolbar-separator">
+      <Setter Property="Width" Value="6" />
+      <Setter Property="Height" Value="25" />
+      <Setter Property="Margin" Value="0" />
+    </Style>
+  </UserControl.Styles>
   <Grid>
     <editor:FileViewerInternal x:Name="internalFileViewer">
       <editor:FileViewerInternal.ContextMenu>
@@ -129,54 +144,60 @@
                      Content="This file is over 5 MB. Click to show preview" />
 
     <Border x:Name="fileviewerToolbar"
+            Height="25"
+            Padding="0,0,3,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Margin="0,0,40,0"
             IsVisible="False"
-            Background="{DynamicResource ThemeBackgroundBrush}">
+            Background="{DynamicResource GitExtensionsKnownColorControlBrush}">
       <StackPanel Orientation="Horizontal">
         <compat:IconButton x:Name="nextChangeButton"
-                           Classes="gitextensions-toolbar-button image-only"
+                           Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.ArrowDown}" />
         <compat:IconButton x:Name="previousChangeButton"
-                           Classes="gitextensions-toolbar-button image-only"
+                           Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.ArrowUp}" />
-        <Separator Width="1" Margin="2,3" />
+        <Separator x:Name="toolStripSeparator3"
+                   Classes="fileviewer-toolbar-separator" />
         <compat:IconButton x:Name="increaseNumberOfLines"
-                           Classes="gitextensions-toolbar-button image-only"
+                           Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.NumberOfLinesIncrease}" />
         <compat:IconButton x:Name="decreaseNumberOfLines"
-                           Classes="gitextensions-toolbar-button image-only"
+                           Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.NumberOfLinesDecrease}" />
-        <Separator Width="1" Margin="2,3" />
+        <Separator x:Name="toolStripSeparator4"
+                   Classes="fileviewer-toolbar-separator" />
         <compat:IconButton x:Name="showEntireFileButton"
-                           Classes="gitextensions-toolbar-button image-only"
+                           Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.ShowEntireFile}" />
         <Button x:Name="showNonPrintChars"
-                Classes="gitextensions-toolbar-button">
+                Classes="gitextensions-toolbar-button fileviewer-toolbar-button">
           <Image Classes="gitextensions-icon-16"
                  Source="{x:Static properties:Images.ShowWhitespace}" />
         </Button>
         <Button x:Name="showSyntaxHighlighting"
-                Classes="gitextensions-toolbar-button">
+                Classes="gitextensions-toolbar-button fileviewer-toolbar-button">
           <Image Classes="gitextensions-icon-16"
                  Source="/Resources/Icons/SyntaxHighlighting.png" />
         </Button>
         <compat:IconButton x:Name="ignoreWhitespaceAtEol"
-                           Classes="gitextensions-toolbar-button image-only"
+                           Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.WhitespaceIgnoreEol}" />
         <compat:IconButton x:Name="ignoreWhiteSpaces"
-                           Classes="gitextensions-toolbar-button image-only"
+                           Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.WhitespaceIgnore}" />
         <compat:IconButton x:Name="ignoreAllWhitespaces"
-                           Classes="gitextensions-toolbar-button image-only"
+                           Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.WhitespaceIgnoreAll}" />
         <ComboBox x:Name="encodingToolStripComboBox"
                   Classes="gitextensions-toolbar-input"
                   Width="140"
-                  Height="23" />
+                  Height="25"
+                  MinHeight="25"
+                  Margin="1,0" />
         <compat:IconButton x:Name="settingsButton"
-                           Classes="gitextensions-toolbar-button image-only"
+                           Classes="gitextensions-toolbar-button image-only fileviewer-toolbar-button"
                            Icon="{x:Static properties:Images.Settings}" />
       </StackPanel>
     </Border>

@@ -288,6 +288,59 @@ public sealed class RepositoryHostPullRequestTests
     }
 
     [AvaloniaTest]
+    public void ViewPullRequestsForm_should_preserve_the_embedded_file_viewer_toolbar_and_semantic_tree()
+    {
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        GitUI.Editor.FileViewer viewer = form.FindControl<GitUI.Editor.FileViewer>("_diffViewer")!;
+        CaptureNode[] hiddenNodes = Flatten(
+                new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize(754, 511)).Root)
+            .ToArray();
+        CaptureNode toolbarNode = hiddenNodes.Single(node => node.FieldName == "fileviewerToolbar");
+        CaptureNode nextNode = hiddenNodes.Single(node => node.FieldName == "nextChangeButton");
+        CaptureNode editorNode = hiddenNodes.Single(node => node.FieldName == "TextEditor");
+
+        toolbarNode.ControlKind.Should().Be("toolStrip");
+        toolbarNode.Anchor.Should().Equal("Top", "Right");
+        toolbarNode.Dock.Should().Be("None");
+        toolbarNode.AutoSize.Should().BeTrue();
+        toolbarNode.TabIndex.Should().Be(0);
+        toolbarNode.TabStop.Should().BeFalse();
+        nextNode.ControlKind.Should().Be("menuItem");
+        nextNode.ToolTip.Should().Be("Next change");
+        nextNode.Visible.Should().BeFalse();
+        toolbarNode.Children.Should().OnlyContain(node => node.Visible == false);
+        editorNode.Children.Should().BeEmpty();
+        hiddenNodes.Single(node => node.FieldName == "splitContainer2").ControlKind.Should().Be("split");
+        hiddenNodes.Single(node => node.FieldName == "splitContainer3").ControlKind.Should().Be("split");
+        hiddenNodes.Should().NotContain(
+            node => node.Name == "FindInCommitFilesGitGrepPanel" || node.Name == "ImagePreview");
+        hiddenNodes.Should().NotContain(node => node.Type == "GitUI.SpellChecker.SpellCheckAdorner");
+
+        GitUI.Editor.FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+        accessor.FileViewerToolbar.IsVisible = true;
+        Dispatcher.UIThread.RunJobs();
+
+        BoundsInViewer(accessor.FileViewerToolbar).Should().Be(new Rect(292, 0, 410, 25));
+        BoundsInToolbar(viewer.FindControl<Control>("nextChangeButton")!).Should().Be(new Rect(0, 1, 23, 22));
+        BoundsInToolbar(viewer.FindControl<Control>("previousChangeButton")!).Should().Be(new Rect(23, 1, 23, 22));
+        BoundsInToolbar(viewer.FindControl<Separator>("toolStripSeparator3")!).Should().Be(new Rect(46, 0, 6, 25));
+        BoundsInToolbar(viewer.FindControl<ComboBox>("encodingToolStripComboBox")!).Should().Be(new Rect(243, 0, 140, 25));
+        BoundsInToolbar(viewer.FindControl<Control>("settingsButton")!).Should().Be(new Rect(384, 1, 23, 22));
+
+        Rect BoundsInViewer(Control control)
+            => new(control.TranslatePoint(default, viewer)!.Value, control.Bounds.Size);
+
+        Rect BoundsInToolbar(Control control)
+            => new(control.TranslatePoint(default, accessor.FileViewerToolbar)!.Value, control.Bounds.Size);
+    }
+
+    [AvaloniaTest]
     public void ViewPullRequestsForm_should_project_native_tab_pages_and_hidden_descendants()
     {
         using ViewPullRequestsForm form = CreateForm(
