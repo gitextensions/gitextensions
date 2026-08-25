@@ -81,6 +81,14 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     private void WireControls()
     {
+        if (TryGetUICommands(out _))
+        {
+            // Framework constraint: WinForms GitModuleControls discover their containing form;
+            // Avalonia embedded controls receive the same command source explicitly.
+            _fileStatusList.UICommandsSource = this;
+            _diffViewer.UICommandsSource = this;
+        }
+
         _pullRequestsList.ItemTemplate = new FuncDataTemplate<PullRequestRow>(
             CreatePullRequestRow,
             supportsRecycling: false);
