@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using GitExtensions.Extensibility.Plugins;
 using GitExtensions.ParityCapture;
 using GitUI;
 using GitUI.Compat;
@@ -59,7 +60,7 @@ internal sealed class AvaloniaControlTreeReader
                 semanticRoot,
                 parentId: string.Empty,
                 ordinal: 0,
-                ancestorSubmenusOpen: true,
+                ancestorSemanticVisible: true,
                 semanticParent: null,
                 boundsOverride: rootBoundsOverride)
         };
@@ -160,6 +161,13 @@ internal sealed class AvaloniaControlTreeReader
         if (IsOverlayPopupHost(control) || control is ContextMenu || IsPopupPresenter(control))
         {
             return null;
+        }
+
+        if (control is ComboBox { SelectedItem: IHostedRemote hostedRemote })
+        {
+            // parity-scaffolding: WinForms captures the DisplayMember text, not the selected
+            // object's diagnostic ToString value; mirror the product ItemTemplate contract.
+            return hostedRemote.DisplayData;
         }
 
         object? content = GetPropertyValue(control, "Content");
@@ -276,7 +284,7 @@ internal sealed class AvaloniaControlTreeReader
         Control control,
         string parentId,
         int ordinal,
-        bool ancestorSubmenusOpen,
+        bool ancestorSemanticVisible,
         Control? semanticParent,
         Rect? boundsOverride)
     {
@@ -285,6 +293,9 @@ internal sealed class AvaloniaControlTreeReader
         bool isRevisionGrid = control is RevisionGridControl;
         bool isRevisionGridView = IsRevisionGridView(control);
         bool isNativeListView = IsNativeListView(control);
+        bool isNativeTabControl = IsNativeTabControl(control);
+        bool isNativeTabPage = IsNativeTabPage(control);
+        bool isNativeButton = IsNativeButton(control);
         bool isPopupRoot = isSurfaceRoot && IsPopupSurface(control);
         string? fieldName = isSurfaceRoot
             ? null
@@ -302,14 +313,15 @@ internal sealed class AvaloniaControlTreeReader
             ?? (hasNativeListComposite
                 ? GetSemanticBounds(nativeListComposite!, semanticParent)
                 : GetSemanticBounds(control, semanticParent));
-        bool childSubmenusOpen = ancestorSubmenusOpen
-            && (control is not MenuItem menuItem || menuItem.IsSubMenuOpen);
+        bool childSemanticVisible = ancestorSemanticVisible
+            && (control is not MenuItem menuItem || menuItem.IsSubMenuOpen)
+            && (control is not TabItem tabItem || !isNativeTabPage || tabItem.IsSelected);
         IReadOnlyList<CaptureNode> children = GetCaptureChildren(control)
             .Select((child, childOrdinal) => ReadControl(
                 child,
                 id,
                 childOrdinal,
-                childSubmenusOpen,
+                childSemanticVisible,
                 childSemanticParent,
                 boundsOverride: null))
             .ToArray();
@@ -349,24 +361,36 @@ internal sealed class AvaloniaControlTreeReader
             ItemHeightDip = isRevisionGridView
                 ? ReadRevisionGridItemHeight(control)
                 : null,
-            Padding = ReadThicknessPair(GetPropertyValue(control, "Padding")),
-            Margin = ReadThicknessPair(hasNativeListComposite ? nativeListComposite!.Margin : control.Margin),
+            Padding = ReadThicknessPair(isNativeTabPage || isNativeButton
+                ? default(Thickness)
+                : GetPropertyValue(control, "Padding")),
+            Margin = ReadThicknessPair(isNativeButton
+                ? new Thickness(3)
+                : hasNativeListComposite ? nativeListComposite!.Margin : control.Margin),
             Font = ReadFont(control),
             Colors = ReadColors(control),
-            BorderStyle = isRevisionGrid || isRevisionGridView
+            BorderStyle = isRevisionGrid || isRevisionGridView || isNativeTabPage
                 ? "None"
                 : isNativeListView
                     ? "Fixed3D"
                     : GetPropertyValue(control, "BorderStyle")?.ToString(),
-            FlatStyle = null,
-            BorderWidthDip = isPopupRoot || isNativeListView ? null : ReadBorderWidth(control),
+            FlatStyle = isNativeButton ? (IsDarkTheme() ? "Flat" : "Standard") : null,
+            BorderWidthDip = isPopupRoot || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
+                ? null
+                : ReadBorderWidth(control),
             CornerRadiusDip = ReadCornerRadius(control),
-            Anchor = isRevisionGrid || isRevisionGridView || isNativeListView ? ["Top", "Left"] : [],
-            Dock = isRevisionGrid ? "None" : isRevisionGridView || isNativeListView ? "Fill" : null,
-            AutoSize = isRevisionGrid || isRevisionGridView || isNativeListView
+            Anchor = isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage
+                ? ["Top", "Left"]
+                : [],
+            Dock = isRevisionGrid || isNativeTabPage || isNativeButton
+                ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
+                : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null,
+            AutoSize = isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
                 ? false
                 : control is MenuItem or Separator || isPopupRoot ? true : null,
-            Alignment = isRevisionGrid || isRevisionGridView || isPopupRoot
+            Alignment = isNativeButton
+                ? "MiddleCenter"
+                : isRevisionGrid || isRevisionGridView || isNativeTabControl || isNativeTabPage || isPopupRoot
                 ? null
                 : control is MenuItem or Separator ? "MiddleCenter" : GetAlignment(control),
             Text = GetText(control),
@@ -375,11 +399,15 @@ internal sealed class AvaloniaControlTreeReader
             TabIndex = isRevisionGrid || isRevisionGridView
                 ? 0
                 : control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
-            TabStop = isRevisionGrid || isRevisionGridView || isNativeListView
+            TabStop = isNativeTabPage
+                ? false
+                : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl
                 ? true
                 : control is MenuItem or Separator || isPopupRoot ? null : control.Focusable,
             Enabled = control is Separator ? false : control.IsEffectivelyEnabled,
-            Visible = control.IsVisible && ancestorSubmenusOpen,
+            Visible = isNativeTabPage
+                ? ((TabItem)control).IsSelected && ancestorSemanticVisible
+                : control.IsVisible && ancestorSemanticVisible,
             Focused = isPopupRoot ? false : IsFocused(control),
             ReadOnly = isRevisionGridView ? true : GetNullableBoolProperty(control, "IsReadOnly"),
             CheckState = control switch
@@ -402,6 +430,36 @@ internal sealed class AvaloniaControlTreeReader
 
     private static Rect GetSemanticBounds(Control control, Control? semanticParent)
     {
+        if (IsNativeTabPage(control)
+            && control.GetLogicalAncestors().OfType<TabControl>().FirstOrDefault() is { } owner)
+        {
+            // parity-scaffolding: WinForms TabPage.Bounds is the native display rectangle,
+            // while Avalonia's TabItem.Bounds describes only the clickable header.
+            return new Rect(
+                4,
+                30,
+                Math.Max(0, owner.Bounds.Width - 8),
+                Math.Max(0, owner.Bounds.Height - 34));
+        }
+
+        if (semanticParent is TabItem && IsNativeTabPage(semanticParent)
+            && semanticParent.GetLogicalAncestors().OfType<TabControl>().FirstOrDefault() is { } tabOwner
+            && control.TranslatePoint(default, tabOwner) is Point pageChildOrigin)
+        {
+            // parity-scaffolding: Product content is rendered through Avalonia's selected-content
+            // presenter; report it relative to the emitted WinForms-shaped TabPage client.
+            return new Rect(pageChildOrigin.X - 4, pageChildOrigin.Y - 30, control.Bounds.Width, control.Bounds.Height);
+        }
+
+        if (IsNativeTabControl(control)
+            && semanticParent is Grid { Name: "splitContainer2" }
+            && Grid.GetRow(control) > 0)
+        {
+            // parity-scaffolding: the Avalonia Grid row is the WinForms SplitterPanel2 owner,
+            // which is intentionally suppressed from the semantic tree.
+            return new Rect(0, 0, control.Bounds.Width, control.Bounds.Height);
+        }
+
         if (semanticParent is null
             || control.TranslatePoint(default, semanticParent) is not Point origin)
         {
@@ -412,6 +470,9 @@ internal sealed class AvaloniaControlTreeReader
         // wrappers. Report their position in the emitted semantic parent, like ToolStripItem.Bounds.
         return new Rect(origin, control.Bounds.Size);
     }
+
+    private bool IsDarkTheme()
+        => _root.ActualThemeVariant == Avalonia.Styling.ThemeVariant.Dark;
 
     private decimal? ReadRevisionGridItemHeight(Control control)
         => control.GetVisualDescendants()
@@ -659,6 +720,30 @@ internal sealed class AvaloniaControlTreeReader
             };
         }
 
+        if (IsNativeButton(control))
+        {
+            // parity-scaffolding: WinForms visual styles paint native button state without
+            // changing the Button's semantic Control/ControlText color properties.
+            string? background = ResolveResourceArgb("GitExtensionsKnownColorControlBrush")
+                                 ?? ResolveResourceArgb("GitExtensionsControlBackgroundBrush");
+            return new CaptureColors
+            {
+                Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                             ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
+                Background = background,
+                Border = null,
+                SelectionForeground = null,
+                SelectionBackground = null,
+                InactiveSelectionForeground = null,
+                InactiveSelectionBackground = null,
+                DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                                     ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+                DisabledBackground = background,
+                GridLine = null,
+                Additional = additional
+            };
+        }
+
         if (control is ContextMenu || IsPopupPresenter(control) || IsOverlayPopupHost(control))
         {
             string? background = BrushToArgb(GetPropertyValue(control, "Background"))
@@ -704,7 +789,7 @@ internal sealed class AvaloniaControlTreeReader
             Foreground = BrushToArgb(GetPropertyValue(control, "Foreground"))
                          ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
             Background = ResolveEffectiveBackground(control),
-            Border = BrushToArgb(GetPropertyValue(control, "BorderBrush")),
+            Border = IsNativeButton(control) ? null : BrushToArgb(GetPropertyValue(control, "BorderBrush")),
             SelectionForeground = BrushToArgb(
                 GetPropertyValue(control, "SelectionForegroundBrush")
                 ?? GetPropertyValue(control, "SelectionForeground")),
@@ -1007,6 +1092,18 @@ internal sealed class AvaloniaControlTreeReader
 
     private static bool IsNativeListView(Control control)
         => control is ListBox list && list.Classes.Contains("gitextensions-native-list-items");
+
+    private static bool IsNativeTabControl(Control control)
+        => control is TabControl tabControl && tabControl.Classes.Contains("gitextensions-native-tabs");
+
+    private static bool IsNativeTabPage(Control control)
+        => control is TabItem tabItem
+           && tabItem.GetLogicalAncestors()
+               .OfType<TabControl>()
+               .Any(IsNativeTabControl);
+
+    private static bool IsNativeButton(Control control)
+        => control is Button button && button.Classes.Contains("gitextensions-native-dialog-action");
 
     private static bool IsNativeListComposite(Control control, out ListBox? list)
     {

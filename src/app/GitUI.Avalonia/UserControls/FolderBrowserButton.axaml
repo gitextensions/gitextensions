@@ -4,6 +4,7 @@
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.UserControls.FolderBrowserButton">
   <compat:IconButton x:Name="buttonBrowse"
+                     Classes="gitextensions-native-dialog-action"
                      Icon="{x:Static properties:Images.BrowseFileExplorer}"
                      Content="_Browse..."
                      Padding="4,0"
