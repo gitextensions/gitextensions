@@ -152,7 +152,6 @@ public sealed class RepositoryHostCreatePullRequestTests
         string inputBackground,
         string buttonBackground,
         string buttonBorder,
-        string controlBackground,
         string flatStyle)
     {
         using CreatePullRequestForm form = CreateForm(CreateFixture(), chooseRemote: null, chooseBranch: null);
@@ -174,8 +173,7 @@ public sealed class RepositoryHostCreatePullRequestTests
                 .ReadPrimary(form, new PixelSize(546, 323)).Root)];
         CaptureNode node = nodes.Single(candidate => candidate.FieldName == "_createBtn");
         CaptureNode targetRepository = nodes.Single(candidate => candidate.FieldName == "_pullReqTargetsCB");
-        Color expectedControlBackground = Color.Parse(controlBackground);
-
+        CaptureNode body = nodes.Single(candidate => candidate.FieldName == "_bodyTB");
         title.Background.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(inputBackground));
         group.Classes.Should().Contain("gitextensions-native-group-border");
         groupFrame.BorderBrush.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse("#DCDCDC"));
@@ -190,12 +188,15 @@ public sealed class RepositoryHostCreatePullRequestTests
         node.Dock.Should().Be("None");
         node.AutoSize.Should().BeFalse();
         node.Alignment.Should().Be("MiddleCenter");
-        node.Colors.Background.Should().Be(CaptureJson.FormatArgb(
-            expectedControlBackground.A,
-            expectedControlBackground.R,
-            expectedControlBackground.G,
-            expectedControlBackground.B));
+        node.Colors.Background.Should().Be(themeVariant == ThemeVariant.Dark ? "#FF202020" : "#FFF0F0F0");
         node.Colors.Border.Should().BeNull();
+        targetRepository.Selected.Should().BeFalse();
+        targetRepository.BorderWidthDip.Should().BeNull();
+        body.TabStop.Should().BeTrue();
+        nodes.Where(candidate => candidate != nodes[0]
+                                 && candidate.FieldName is null
+                                 && candidate.Name is null)
+            .Should().BeEmpty("unnamed Avalonia layout panels are not WinForms product controls");
         targetRepository.Text.Should().Be("project/repository");
 
         form.Close();
@@ -203,9 +204,9 @@ public sealed class RepositoryHostCreatePullRequestTests
 
     private static IEnumerable<TestCaseData> NativeChromeThemeCases()
     {
-        yield return new TestCaseData(ThemeVariant.Light, "#FFFFFF", "#FDFDFD", "#D0D0D0", "#F0F0F0", "Standard")
+        yield return new TestCaseData(ThemeVariant.Light, "#FFFFFF", "#FDFDFD", "#D0D0D0", "Standard")
             .SetName("CreatePullRequestForm_should_use_native_input_group_and_button_chrome_light");
-        yield return new TestCaseData(ThemeVariant.Dark, "#2E2E2E", "#333333", "#9B9B9B", "#202020", "Flat")
+        yield return new TestCaseData(ThemeVariant.Dark, "#2E2E2E", "#333333", "#9B9B9B", "Flat")
             .SetName("CreatePullRequestForm_should_use_native_input_group_and_button_chrome_dark");
     }
 
