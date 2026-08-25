@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -44,7 +45,53 @@ public sealed class InputAccessibilityTests
                 Path.Combine(repositoryRoot, "src", "plugins", "Gource")),
         ]));
         WinFormsInputMetadata.ByType.Should().HaveCount(142);
-        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1476);
+        WinFormsInputMetadata.ByType.Values.Sum(controls => controls.Count).Should().Be(1485);
+    }
+
+    [Test]
+    public void Generated_layout_metadata_should_preserve_repository_host_and_embedded_editor_semantics()
+    {
+        IReadOnlyList<DesignerLayoutMetadata> create = WinFormsInputMetadata.LayoutByType[
+            "GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm"];
+        IReadOnlyList<DesignerLayoutMetadata> editor = WinFormsInputMetadata.LayoutByType[
+            "GitUI.SpellChecker.EditNetSpell"];
+
+        DesignerLayoutMetadata body = create.Single(item => item.FieldName == "_bodyTB");
+        body.Anchor.Should().Equal("Top", "Bottom", "Left", "Right");
+        body.Margin.Should().Be(new Thickness(3, 4, 3, 4));
+
+        DesignerLayoutMetadata textBox = editor.Single(item => item.FieldName == "TextBox");
+        textBox.Dock.Should().Be("Fill");
+        textBox.Margin.Should().Be(new Thickness(0));
+        textBox.BorderStyle.Should().Be("None");
+    }
+
+    [AvaloniaTest]
+    public void Capture_state_size_should_resize_and_restore_the_client_surface()
+    {
+        Window window = new() { Width = 240, Height = 140 };
+        window.Show();
+        try
+        {
+            CaptureStatePlan state = new()
+            {
+                Id = "resized",
+                Kind = CaptureStateKind.Normal,
+                WidthDip = 340,
+                HeightDip = 220
+            };
+
+            using (AvaloniaControlStateDriver.Apply(window, state))
+            {
+                window.Bounds.Size.Should().Be(new Size(340, 220));
+            }
+
+            window.Bounds.Size.Should().Be(new Size(240, 140));
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]

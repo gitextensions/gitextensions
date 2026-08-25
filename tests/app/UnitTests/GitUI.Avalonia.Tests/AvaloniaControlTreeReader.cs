@@ -18,7 +18,9 @@ namespace GitExtensionsTests;
 internal sealed class AvaloniaControlTreeReader
 {
     private readonly Dictionary<object, List<string>> _fieldNames = new(ReferenceEqualityComparer.Instance);
+    private readonly Dictionary<object, string> _fieldOwnerTypes = new(ReferenceEqualityComparer.Instance);
     private readonly PixelPoint _primaryScreenOrigin;
+    private readonly bool _projectDesignerLayout;
     private readonly double _renderScale;
     private readonly Control _root;
 
@@ -27,6 +29,10 @@ internal sealed class AvaloniaControlTreeReader
         _root = root;
         _renderScale = renderScale;
         _primaryScreenOrigin = primaryScreenOrigin ?? default;
+        _projectDesignerLayout = root.GetType().FullName is
+            "GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm"
+            or "GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm"
+            or "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm";
         IndexFields(root);
     }
 
@@ -260,6 +266,8 @@ internal sealed class AvaloniaControlTreeReader
                     {
                         names.Add(field.Name);
                     }
+
+                    _fieldOwnerTypes.TryAdd(value, type.FullName ?? type.Name);
                 }
             }
         }
@@ -308,6 +316,7 @@ internal sealed class AvaloniaControlTreeReader
             ? $"$root:{control.GetType().Name}"
             : fieldName ?? $"$unnamed[{ordinal}]:{control.GetType().Name}";
         string id = string.IsNullOrEmpty(parentId) ? segment : $"{parentId}/{segment}";
+        DesignerLayoutMetadata? designerLayout = GetDesignerLayout(control, fieldName);
         bool hasNativeListComposite = TryGetNativeListComposite(control, out Grid? nativeListComposite, out _);
         Rect bounds = boundsOverride
             ?? (hasNativeListComposite
@@ -361,38 +370,60 @@ internal sealed class AvaloniaControlTreeReader
             ItemHeightDip = isRevisionGridView
                 ? ReadRevisionGridItemHeight(control)
                 : null,
-            Padding = ReadThicknessPair(isNativeTabPage || isNativeButton
-                ? default(Thickness)
-                : GetPropertyValue(control, "Padding")),
-            Margin = ReadThicknessPair(isNativeButton
-                ? new Thickness(3)
-                : hasNativeListComposite ? nativeListComposite!.Margin : control.Margin),
+            Padding = ReadThicknessPair(designerLayout?.Padding
+                ?? (_projectDesignerLayout
+                    ? GetDefaultDesignerPadding(control)
+                    : isNativeTabPage || isNativeButton
+                        ? default(Thickness)
+                        : GetPropertyValue(control, "Padding"))),
+            Margin = ReadThicknessPair(designerLayout?.Margin
+                ?? (_projectDesignerLayout
+                    ? GetDefaultDesignerMargin(control)
+                    : isNativeButton
+                        ? new Thickness(3)
+                        : hasNativeListComposite ? nativeListComposite!.Margin : control.Margin)),
             Font = ReadFont(control),
             Colors = ReadColors(control),
-            BorderStyle = isRevisionGrid || isRevisionGridView || isNativeTabPage
+            BorderStyle = designerLayout?.BorderStyle
+                ?? (_projectDesignerLayout
+                    ? GetDefaultDesignerBorderStyle(control)
+                    : isRevisionGrid || isRevisionGridView || isNativeTabPage
                 ? "None"
                 : isNativeListView
                     ? "Fixed3D"
-                    : GetPropertyValue(control, "BorderStyle")?.ToString(),
-            FlatStyle = isNativeButton ? (IsDarkTheme() ? "Flat" : "Standard") : null,
+                    : GetPropertyValue(control, "BorderStyle")?.ToString()),
+            FlatStyle = designerLayout?.FlatStyle
+                ?? (isNativeButton ? (IsDarkTheme() ? "Flat" : "Standard") : null),
             BorderWidthDip = isPopupRoot || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
                 ? null
                 : ReadBorderWidth(control),
             CornerRadiusDip = ReadCornerRadius(control),
-            Anchor = isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage
+            Anchor = designerLayout?.Anchor
+                ?? (_projectDesignerLayout
+                    ? ["Top", "Left"]
+                    : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage
                 ? ["Top", "Left"]
-                : [],
-            Dock = isRevisionGrid || isNativeTabPage || isNativeButton
+                : []),
+            Dock = designerLayout?.Dock
+                ?? (_projectDesignerLayout
+                    ? "None"
+                    : isRevisionGrid || isNativeTabPage || isNativeButton
                 ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
-                : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null,
-            AutoSize = isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
+                : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
+            AutoSize = designerLayout?.AutoSize
+                ?? (_projectDesignerLayout
+                    ? GetDefaultDesignerAutoSize(control)
+                    : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
                 ? false
-                : control is MenuItem or Separator || isPopupRoot ? true : null,
-            Alignment = isNativeButton
+                : control is MenuItem or Separator || isPopupRoot ? true : null),
+            Alignment = designerLayout?.Alignment
+                ?? (_projectDesignerLayout
+                    ? GetDefaultDesignerAlignment(control)
+                    : isNativeButton
                 ? "MiddleCenter"
                 : isRevisionGrid || isRevisionGridView || isNativeTabControl || isNativeTabPage || isPopupRoot
                 ? null
-                : control is MenuItem or Separator ? "MiddleCenter" : GetAlignment(control),
+                : control is MenuItem or Separator ? "MiddleCenter" : GetAlignment(control)),
             Text = GetText(control),
             ToolTip = ToolTip.GetTip(control)?.ToString(),
             TranslationSource = fieldName,
@@ -427,6 +458,51 @@ internal sealed class AvaloniaControlTreeReader
             Children = children
         };
     }
+
+    private DesignerLayoutMetadata? GetDesignerLayout(Control control, string? fieldName)
+    {
+        if (!_projectDesignerLayout || fieldName is null)
+        {
+            return null;
+        }
+
+        string ownerType = _fieldOwnerTypes.GetValueOrDefault(control)
+            ?? _root.GetType().FullName
+            ?? _root.GetType().Name;
+        return WinFormsInputMetadata.LayoutByType.TryGetValue(ownerType, out IReadOnlyList<DesignerLayoutMetadata>? controls)
+            ? controls.FirstOrDefault(item => item.FieldName == fieldName) is { FieldName: not null } metadata
+                ? metadata
+                : null
+            : null;
+    }
+
+    private static Thickness GetDefaultDesignerMargin(Control control)
+        => control is TextBlock or Label ? new Thickness(3, 0) : new Thickness(3);
+
+    private static Thickness GetDefaultDesignerPadding(Control control)
+        => control is HeaderedContentControl ? new Thickness(3) : default;
+
+    private static bool GetDefaultDesignerAutoSize(Control control)
+        => control is TextBox;
+
+    private static string? GetDefaultDesignerAlignment(Control control)
+        => control switch
+        {
+            Button => "MiddleCenter",
+            TextBlock or Label => "TopLeft",
+            TextBox => "Left",
+            _ => null
+        };
+
+    private static string? GetDefaultDesignerBorderStyle(Control control)
+        => control switch
+        {
+            TextBox or NumericUpDown => "Fixed3D",
+            ListBox => "Fixed3D",
+            TextBlock or Label => "None",
+            _ when control.GetType().FullName == "GitUI.SpellChecker.EditNetSpell" => "None",
+            _ => null
+        };
 
     private static Rect GetSemanticBounds(Control control, Control? semanticParent)
     {

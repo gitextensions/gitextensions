@@ -39,6 +39,7 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
         TopLevel topLevel = TopLevel.GetTopLevel(root)
             ?? throw new AvaloniaCaptureStateUnsupportedException("The control is not attached to a headless top level.");
         AvaloniaControlStateDriver driver = new(root, topLevel);
+        driver.ApplyRequestedSize(state);
         object? target = state.TargetField is null ? root : FindFieldValue(root, state.TargetField);
         if (target is null)
         {
@@ -78,6 +79,25 @@ internal sealed class AvaloniaControlStateDriver : IDisposable
 
         Dispatcher.UIThread.RunJobs();
         return driver;
+    }
+
+    private void ApplyRequestedSize(CaptureStatePlan state)
+    {
+        if (state.WidthDip is not int width || state.HeightDip is not int height)
+        {
+            return;
+        }
+
+        double originalWidth = _root.Width;
+        double originalHeight = _root.Height;
+        _root.Width = width;
+        _root.Height = height;
+        Dispatcher.UIThread.RunJobs();
+        _restoreActions.Add(() =>
+        {
+            _root.Width = originalWidth;
+            _root.Height = originalHeight;
+        });
     }
 
     // parity-scaffolding: The original FileStatusList has one FileStatusListView while the

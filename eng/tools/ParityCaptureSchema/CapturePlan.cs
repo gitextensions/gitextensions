@@ -39,9 +39,13 @@ public sealed record CapturePlan
         if (plan.Scales.Count == 0
             || plan.Scales.Any(scale => scale is not (100 or 125 or 150 or 200))
             || plan.Themes.Count == 0
-            || plan.Components.Count == 0)
+            || plan.Components.Count == 0
+            || plan.Components.SelectMany(component => component.States).Any(
+                state => state.WidthDip.HasValue != state.HeightDip.HasValue
+                         || state.WidthDip is <= 0
+                         || state.HeightDip is <= 0))
         {
-            throw new InvalidDataException("The capture plan does not define a supported scale, theme, and component matrix.");
+            throw new InvalidDataException("The capture plan does not define a supported scale, theme, component, and state-size matrix.");
         }
 
         return plan;
@@ -85,6 +89,16 @@ public sealed record CaptureStatePlan
     public required CaptureStateKind Kind { get; init; }
 
     public string? TargetField { get; init; }
+
+    /// <summary>
+    ///  Gets an optional 96-DPI client width applied before the requested interaction state.
+    /// </summary>
+    public int? WidthDip { get; init; }
+
+    /// <summary>
+    ///  Gets an optional 96-DPI client height applied before the requested interaction state.
+    /// </summary>
+    public int? HeightDip { get; init; }
 }
 
 /// <summary>

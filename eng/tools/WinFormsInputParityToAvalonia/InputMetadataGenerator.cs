@@ -37,8 +37,13 @@ public static partial class InputMetadataGenerator
                 }
 
                 XDocument axaml = XDocument.Load(axamlPath);
-                string className = (string?)axaml.Root?.Attribute(XamlNamespace + "Class")
-                    ?? throw new InvalidDataException($"AXAML view '{relativePath}' has no x:Class.");
+                string? className = (string?)axaml.Root?.Attribute(XamlNamespace + "Class");
+                if (className is null)
+                {
+                    // Abstract layout shells have matching Designer paths but no generated view class.
+                    continue;
+                }
+
                 HashSet<string> controlNames = axaml.Root!.DescendantsAndSelf()
                     .Select(element => (string?)element.Attribute(XamlNamespace + "Name"))
                     .Where(name => !string.IsNullOrWhiteSpace(name))
@@ -69,6 +74,32 @@ public static partial class InputMetadataGenerator
                         case "AccessibleName":
                             metadata.AccessibleName = UnescapeString(value);
                             break;
+                        case "Anchor":
+                            metadata.Anchor = ParseEnumFlags(value, "AnchorStyles.");
+                            break;
+                        case "Dock":
+                            metadata.Dock = ParseEnum(value, "DockStyle.");
+                            break;
+                        case "AutoSize":
+                            metadata.AutoSize = bool.Parse(value);
+                            break;
+                        case "Margin":
+                            metadata.Margin = ParsePadding(value);
+                            break;
+                        case "Padding":
+                            metadata.Padding = ParsePadding(value);
+                            break;
+                        case "TextAlign":
+                            metadata.Alignment = ParseEnum(value, value.Contains("ContentAlignment.", StringComparison.Ordinal)
+                                ? "ContentAlignment."
+                                : "HorizontalAlignment.");
+                            break;
+                        case "BorderStyle":
+                            metadata.BorderStyle = ParseEnum(value, "BorderStyle.");
+                            break;
+                        case "FlatStyle":
+                            metadata.FlatStyle = ParseEnum(value, "FlatStyle.");
+                            break;
                     }
                 }
 
@@ -81,9 +112,23 @@ public static partial class InputMetadataGenerator
                         pair.Value.IsTabStop,
                         pair.Value.AccessibleName))
                     .ToArray();
-                if (projected.Length > 0)
+                LayoutControlMetadata[] layout = controls
+                    .Where(pair => pair.Value.HasLayoutValue)
+                    .OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                    .Select(pair => new LayoutControlMetadata(
+                        pair.Key,
+                        pair.Value.Anchor,
+                        pair.Value.Dock,
+                        pair.Value.AutoSize,
+                        pair.Value.Margin,
+                        pair.Value.Padding,
+                        pair.Value.Alignment,
+                        pair.Value.BorderStyle,
+                        pair.Value.FlatStyle))
+                    .ToArray();
+                if (projected.Length > 0 || layout.Length > 0)
                 {
-                    views.Add(new ViewMetadata(className, projected));
+                    views.Add(new ViewMetadata(className, projected, layout));
                 }
             }
         }
@@ -115,7 +160,7 @@ public static partial class InputMetadataGenerator
         AppendLine("    internal static IReadOnlyDictionary<string, IReadOnlyList<InputControlMetadata>> ByType { get; } =");
         AppendLine("        new Dictionary<string, IReadOnlyList<InputControlMetadata>>(StringComparer.Ordinal)");
         AppendLine("        {");
-        foreach (ViewMetadata view in views.OrderBy(view => view.ClassName, StringComparer.Ordinal))
+        foreach (ViewMetadata view in views.Where(view => view.Controls.Count > 0).OrderBy(view => view.ClassName, StringComparer.Ordinal))
         {
             AppendLine($"            [\"{EscapeString(view.ClassName)}\"] =");
             AppendLine("            [");
@@ -127,6 +172,33 @@ public static partial class InputMetadataGenerator
                     ? "null"
                     : $"\"{EscapeString(control.AccessibleName)}\"";
                 AppendLine($"                new(\"{EscapeString(control.FieldName)}\", {tabIndex}, {isTabStop}, {accessibleName}),");
+            }
+
+            AppendLine("            ],");
+        }
+
+        AppendLine("        };");
+        AppendLine();
+        AppendLine("    internal static IReadOnlyDictionary<string, IReadOnlyList<DesignerLayoutMetadata>> LayoutByType { get; } =");
+        AppendLine("        new Dictionary<string, IReadOnlyList<DesignerLayoutMetadata>>(StringComparer.Ordinal)");
+        AppendLine("        {");
+        foreach (ViewMetadata view in views.Where(view => view.Layout.Count > 0).OrderBy(view => view.ClassName, StringComparer.Ordinal))
+        {
+            AppendLine($"            [\"{EscapeString(view.ClassName)}\"] =");
+            AppendLine("            [");
+            foreach (LayoutControlMetadata control in view.Layout)
+            {
+                string anchor = control.Anchor is null
+                    ? "null"
+                    : $"[{string.Join(", ", control.Anchor.Select(value => $"\"{EscapeString(value)}\""))}]";
+                string dock = ToNullableString(control.Dock);
+                string autoSize = control.AutoSize?.ToString().ToLowerInvariant() ?? "null";
+                string margin = ToNullableThickness(control.Margin);
+                string padding = ToNullableThickness(control.Padding);
+                string alignment = ToNullableString(control.Alignment);
+                string borderStyle = ToNullableString(control.BorderStyle);
+                string flatStyle = ToNullableString(control.FlatStyle);
+                AppendLine($"                new(\"{EscapeString(control.FieldName)}\", {anchor}, {dock}, {autoSize}, {margin}, {padding}, {alignment}, {borderStyle}, {flatStyle}),");
             }
 
             AppendLine("            ],");
@@ -159,8 +231,54 @@ public static partial class InputMetadataGenerator
             .Replace("\r", "\\r", StringComparison.Ordinal)
             .Replace("\n", "\\n", StringComparison.Ordinal);
 
-    [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\.(?<property>TabIndex|TabStop|AccessibleName)\\s*=\\s*(?<value>.+);\\s*$", RegexOptions.CultureInvariant)]
+    private static string ParseEnum(string value, string prefix)
+    {
+        if (!value.StartsWith(prefix, StringComparison.Ordinal))
+        {
+            throw new InvalidDataException($"Unsupported Designer enum value: {value}");
+        }
+
+        return value[prefix.Length..];
+    }
+
+    private static IReadOnlyList<string> ParseEnumFlags(string value, string prefix)
+        => value.Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(part => ParseEnum(part, prefix))
+            .ToArray();
+
+    private static ThicknessValue? ParsePadding(string value)
+    {
+        Match match = PaddingRegex().Match(value);
+        if (!match.Success)
+        {
+            // TabControl.Padding is a Point controlling tab-header spacing, not Control.Padding.
+            return null;
+        }
+
+        int[] values = match.Groups["value"].Captures
+            .Select(capture => int.Parse(capture.Value, System.Globalization.CultureInfo.InvariantCulture))
+            .ToArray();
+        return values.Length switch
+        {
+            1 => new ThicknessValue(values[0], values[0], values[0], values[0]),
+            4 => new ThicknessValue(values[0], values[1], values[2], values[3]),
+            _ => throw new InvalidDataException($"Unsupported Designer Padding arity: {value}")
+        };
+    }
+
+    private static string ToNullableString(string? value)
+        => value is null ? "null" : $"\"{EscapeString(value)}\"";
+
+    private static string ToNullableThickness(ThicknessValue? value)
+        => value is null
+            ? "null"
+            : $"new Avalonia.Thickness({value.Left}, {value.Top}, {value.Right}, {value.Bottom})";
+
+    [GeneratedRegex("^\\s*(?:this\\.)?(?<field>[A-Za-z_][A-Za-z0-9_]*)\\.(?<property>TabIndex|TabStop|AccessibleName|Anchor|Dock|AutoSize|Margin|Padding|TextAlign|BorderStyle|FlatStyle)\\s*=\\s*(?<value>.+);\\s*$", RegexOptions.CultureInvariant)]
     private static partial Regex AssignmentRegex();
+
+    [GeneratedRegex("^new Padding\\((?:(?<value>-?[0-9]+)\\s*,?\\s*)+\\)$", RegexOptions.CultureInvariant)]
+    private static partial Regex PaddingRegex();
 
     private sealed class MutableControlMetadata
     {
@@ -170,10 +288,51 @@ public static partial class InputMetadataGenerator
 
         public string? AccessibleName { get; set; }
 
+        public IReadOnlyList<string>? Anchor { get; set; }
+
+        public string? Dock { get; set; }
+
+        public bool? AutoSize { get; set; }
+
+        public ThicknessValue? Margin { get; set; }
+
+        public ThicknessValue? Padding { get; set; }
+
+        public string? Alignment { get; set; }
+
+        public string? BorderStyle { get; set; }
+
+        public string? FlatStyle { get; set; }
+
         public bool HasValue => TabIndex is not null || IsTabStop is not null || AccessibleName is not null;
+
+        public bool HasLayoutValue => Anchor is not null
+            || Dock is not null
+            || AutoSize is not null
+            || Margin is not null
+            || Padding is not null
+            || Alignment is not null
+            || BorderStyle is not null
+            || FlatStyle is not null;
     }
 
-    private sealed record ViewMetadata(string ClassName, IReadOnlyList<ControlMetadata> Controls);
+    private sealed record ViewMetadata(
+        string ClassName,
+        IReadOnlyList<ControlMetadata> Controls,
+        IReadOnlyList<LayoutControlMetadata> Layout);
 
     private sealed record ControlMetadata(string FieldName, int? TabIndex, bool? IsTabStop, string? AccessibleName);
+
+    private sealed record LayoutControlMetadata(
+        string FieldName,
+        IReadOnlyList<string>? Anchor,
+        string? Dock,
+        bool? AutoSize,
+        ThicknessValue? Margin,
+        ThicknessValue? Padding,
+        string? Alignment,
+        string? BorderStyle,
+        string? FlatStyle);
+
+    private sealed record ThicknessValue(int Left, int Top, int Right, int Bottom);
 }

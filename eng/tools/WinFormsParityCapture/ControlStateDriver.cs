@@ -26,6 +26,7 @@ internal sealed class ControlStateDriver : IDisposable
     public static ControlStateDriver Apply(Control root, CaptureStatePlan state)
     {
         ControlStateDriver driver = new(root);
+        driver.ApplyRequestedSize(state);
         object? target = state.TargetField is null ? root : FindFieldValue(root, state.TargetField);
         if (target is null)
         {
@@ -63,6 +64,41 @@ internal sealed class ControlStateDriver : IDisposable
 
         PumpEvents();
         return driver;
+    }
+
+    private void ApplyRequestedSize(CaptureStatePlan state)
+    {
+        if (state.WidthDip is not int widthDip || state.HeightDip is not int heightDip)
+        {
+            return;
+        }
+
+        Size originalSize = _root is Form originalForm ? originalForm.ClientSize : _root.Size;
+        int dpi = _root.DeviceDpi;
+        Size requestedSize = new(
+            (int)Math.Round(widthDip * dpi / 96d, MidpointRounding.AwayFromZero),
+            (int)Math.Round(heightDip * dpi / 96d, MidpointRounding.AwayFromZero));
+        if (_root is Form form)
+        {
+            form.ClientSize = requestedSize;
+        }
+        else
+        {
+            _root.Size = requestedSize;
+        }
+
+        PumpEvents();
+        _restoreActions.Add(() =>
+        {
+            if (_root is Form restoredForm)
+            {
+                restoredForm.ClientSize = originalSize;
+            }
+            else
+            {
+                _root.Size = originalSize;
+            }
+        });
     }
 
     public void Dispose()
