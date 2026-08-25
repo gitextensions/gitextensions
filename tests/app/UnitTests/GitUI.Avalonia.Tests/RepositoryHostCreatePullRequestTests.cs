@@ -1,7 +1,11 @@
 ﻿using System.ComponentModel.Design;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
@@ -10,6 +14,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Translations;
+using GitExtensions.ParityCapture;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -123,6 +128,70 @@ public sealed class RepositoryHostCreatePullRequestTests
             nameof(CreatePullRequestForm), "label5", "Text", "Target branch:");
         translation.Received(1).AddTranslationItem(
             nameof(CreatePullRequestForm), "_strFailedToLoadTemplate", "Text", "Failed to load PR template from file.");
+    }
+
+    [AvaloniaTest]
+    [TestCaseSource(nameof(NativeChromeThemeCases))]
+    public void CreatePullRequestForm_should_use_native_input_group_and_button_chrome(
+        ThemeVariant themeVariant,
+        string inputBackground,
+        string buttonBackground,
+        string buttonBorder,
+        string controlBackground,
+        string flatStyle)
+    {
+        using CreatePullRequestForm form = CreateForm(CreateFixture(), chooseRemote: null, chooseBranch: null);
+        form.RequestedThemeVariant = themeVariant;
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        TextBox title = form.FindControl<TextBox>("_titleTB")!;
+        HeaderedContentControl group = form.FindControl<HeaderedContentControl>("groupBox1")!;
+        Button create = form.FindControl<Button>("_createBtn")!;
+        Border groupFrame = group.GetVisualDescendants()
+            .OfType<Border>()
+            .Single(border => border.Name == "PART_GroupBoxFrame");
+        Border chrome = create.GetVisualDescendants()
+            .OfType<Border>()
+            .Single(border => border.Name == "PART_NativeButtonChrome");
+        CaptureNode[] nodes = [.. Flatten(
+            new AvaloniaControlTreeReader(form, renderScale: 1)
+                .ReadPrimary(form, new PixelSize(546, 323)).Root)];
+        CaptureNode node = nodes.Single(candidate => candidate.FieldName == "_createBtn");
+        CaptureNode targetRepository = nodes.Single(candidate => candidate.FieldName == "_pullReqTargetsCB");
+        Color expectedControlBackground = Color.Parse(controlBackground);
+
+        title.Background.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(inputBackground));
+        group.Classes.Should().Contain("gitextensions-native-group-border");
+        groupFrame.BorderBrush.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse("#DCDCDC"));
+        create.Classes.Should().Contain("gitextensions-native-dialog-action");
+        chrome.Background.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(buttonBackground));
+        chrome.BorderBrush.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(buttonBorder));
+        chrome.CornerRadius.Should().Be(new CornerRadius(4));
+        node.FlatStyle.Should().Be(flatStyle);
+        node.Padding.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 0, Right = 0, Bottom = 0 });
+        node.Margin.Dip.Should().Be(new CaptureThicknessF { Left = 3, Top = 3, Right = 3, Bottom = 3 });
+        node.BorderWidthDip.Should().BeNull();
+        node.Dock.Should().Be("None");
+        node.AutoSize.Should().BeFalse();
+        node.Alignment.Should().Be("MiddleCenter");
+        node.Colors.Background.Should().Be(CaptureJson.FormatArgb(
+            expectedControlBackground.A,
+            expectedControlBackground.R,
+            expectedControlBackground.G,
+            expectedControlBackground.B));
+        node.Colors.Border.Should().BeNull();
+        targetRepository.Text.Should().Be("project/repository");
+
+        form.Close();
+    }
+
+    private static IEnumerable<TestCaseData> NativeChromeThemeCases()
+    {
+        yield return new TestCaseData(ThemeVariant.Light, "#FFFFFF", "#FDFDFD", "#D0D0D0", "#F0F0F0", "Standard")
+            .SetName("CreatePullRequestForm_should_use_native_input_group_and_button_chrome_light");
+        yield return new TestCaseData(ThemeVariant.Dark, "#2E2E2E", "#333333", "#9B9B9B", "#202020", "Flat")
+            .SetName("CreatePullRequestForm_should_use_native_input_group_and_button_chrome_dark");
     }
 
     [AvaloniaTest]
@@ -577,6 +646,18 @@ public sealed class RepositoryHostCreatePullRequestTests
         remote.IsOwnedByMe.Returns(isOwnedByMe);
         remote.GetHostedRepository().Returns(repository);
         return remote;
+    }
+
+    private static IEnumerable<CaptureNode> Flatten(CaptureNode root)
+    {
+        yield return root;
+        foreach (CaptureNode child in root.Children)
+        {
+            foreach (CaptureNode descendant in Flatten(child))
+            {
+                yield return descendant;
+            }
+        }
     }
 
     private sealed record PullRequestFixture(
