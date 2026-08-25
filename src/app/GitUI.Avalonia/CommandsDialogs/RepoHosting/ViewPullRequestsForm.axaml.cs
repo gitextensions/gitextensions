@@ -864,7 +864,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 BorderThickness = new Avalonia.Thickness(0, 0, 0, 1),
                 Child = headingContent,
             };
-            heading[!Border.BackgroundProperty] = new DynamicResourceExtension("GitExtensionsControlPointerOverBackgroundBrush");
+            heading[!Border.BackgroundProperty] = new DynamicResourceExtension("GitExtensionsKnownColorControlLightBrush");
             heading[!Border.BorderBrushProperty] = new DynamicResourceExtension("GitExtensionsControlForegroundBrush");
             content.Children.Add(heading);
         }
@@ -877,9 +877,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         return new Border
         {
-            BorderBrush = Brushes.Transparent,
-            BorderThickness = new Avalonia.Thickness(0, 0, 0, 1),
-            Padding = new Avalonia.Thickness(6),
+            BorderThickness = new Avalonia.Thickness(0),
+            Padding = new Avalonia.Thickness(0),
             Child = content,
         };
     }

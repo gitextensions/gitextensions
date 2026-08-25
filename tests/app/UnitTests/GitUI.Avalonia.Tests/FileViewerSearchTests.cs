@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Threading;
 using AvaloniaEdit.Document;
 using GitCommands;
@@ -303,6 +304,35 @@ public sealed class FileViewerSearchTests
 
         viewer.TextEditor.SelectedText.Should().Be("target");
         form.Close();
+    }
+
+    [AvaloniaTest]
+    public void FileViewer_should_publish_configured_shortcuts_in_menus_and_toolbar_tooltips()
+    {
+        IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
+        loader.LoadHotkeys(FileViewer.HotkeySettingsName).Returns(
+        [
+            new HotkeyCommand((int)FileViewer.Command.Find, nameof(FileViewer.Command.Find))
+            {
+                KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.F,
+            },
+            new HotkeyCommand((int)FileViewer.Command.NextChange, nameof(FileViewer.Command.NextChange))
+            {
+                KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.Down,
+            },
+        ]);
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.GetService(typeof(IHotkeySettingsLoader)).Returns(loader);
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+        FileViewer viewer = new() { UICommandsSource = source };
+        ToolTip.SetTip(viewer.GetTestAccessor().NextChangeButton, "Next change");
+
+        viewer.ReloadHotkeys();
+
+        FileViewer.TestAccessor accessor = viewer.GetTestAccessor();
+        accessor.FindMenuItem.InputGesture.Should().Be(new KeyGesture(Key.F, KeyModifiers.Control));
+        ToolTip.GetTip(accessor.NextChangeButton).Should().Be("Next change\u00A0(Ctrl+Down)");
     }
 
     [AvaloniaTest]

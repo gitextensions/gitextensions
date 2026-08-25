@@ -212,6 +212,7 @@ public partial class FileStatusList : GitModuleControl
     {
         base.TranslateItems(translation);
         tsmiCopyPaths.TranslateControlItems(translation);
+        ToolTip.SetTip(btnSettings, btnSettings.Content);
     }
 
     // Wire up events to respond to Settings changes
