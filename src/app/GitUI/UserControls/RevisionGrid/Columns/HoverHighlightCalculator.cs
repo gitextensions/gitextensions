@@ -1,6 +1,5 @@
 ﻿using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Graph;
-using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
@@ -10,13 +9,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 /// </summary>
 internal sealed class HoverHighlightCalculator : IDisposable
 {
-    private const int DebounceMs = 100;
+    private const int _debounceMs = 100;
 
     private readonly RevisionGraph _revisionGraph;
     private readonly Func<VisibleRowRange> _getCachedVisibleRange;
     private readonly CancellationTokenSequence _sequence = new();
-
-    private IReadOnlySet<ObjectId>? _highlightedIds;
 
     public HoverHighlightCalculator(RevisionGraph revisionGraph, Func<VisibleRowRange> getCachedVisibleRange)
     {
@@ -27,7 +24,7 @@ internal sealed class HoverHighlightCalculator : IDisposable
     /// <summary>
     ///  The current set of highlighted commit IDs, or <see langword="null"/> if none are highlighted.
     /// </summary>
-    public IReadOnlySet<ObjectId>? HighlightedIds => _highlightedIds;
+    public IReadOnlySet<ObjectId>? HighlightedIds { get; private set; }
 
     /// <summary>
     ///  <see langword="true"/> if the highlight changed since the last call to <see cref="ConsumeIsDirty"/>.
@@ -49,14 +46,14 @@ internal sealed class HoverHighlightCalculator : IDisposable
     /// </summary>
     public void Clear()
     {
-        _highlightedIds = null;
+        HighlightedIds = null;
         IsDirty = true;
     }
 
     /// <summary>
     ///  Updates the hover highlight to show only the ancestry of the
     ///  <paramref name="gitRef"/> and tracked remote or the tracking local.
-    ///  Debounces by <see cref="DebounceMs"/> ms before computing,
+    ///  Debounces by <see cref="_debounceMs"/> ms before computing,
     ///  cancelling any prior pending computation when called again.
     ///  Set <see langword="null"/> to clear hover highlighting.
     /// </summary>
@@ -67,7 +64,7 @@ internal sealed class HoverHighlightCalculator : IDisposable
     public async Task SetAsync(IGitRef? gitRef, int rowIndex = -1)
     {
         CancellationToken cancellationToken = _sequence.Next();
-        await Task.Delay(DebounceMs, cancellationToken);
+        await Task.Delay(_debounceMs, cancellationToken);
         Compute(gitRef, rowIndex, cancellationToken);
     }
 
@@ -75,13 +72,7 @@ internal sealed class HoverHighlightCalculator : IDisposable
     {
         if (gitRef is null || rowIndex < 0)
         {
-            if (_highlightedIds is null)
-            {
-                return;
-            }
-
-            _highlightedIds = null;
-            IsDirty = true;
+            Clear();
             return;
         }
 
@@ -90,20 +81,24 @@ internal sealed class HoverHighlightCalculator : IDisposable
             return;
         }
 
-        VisibleRowRange cachedVisibleRange = _getCachedVisibleRange();
+        VisibleRowRange visibleRange = _getCachedVisibleRange();
         HashSet<ObjectId> ancestorIds = [];
 
         // Build the set of currently visible ObjectIds below current row (and some parents/children).
-        RevisionGraphRevision? hoveredRevision = _revisionGraph.GetNodeForRow(rowIndex);
-        Validates.NotNull(hoveredRevision);
-        int visibleTo = Math.Max(cachedVisibleRange.Count - 1, cachedVisibleRange.FromIndex + cachedVisibleRange.Count - 1);
-        HashSet<ObjectId> visibleIds = new(capacity: 50 + (2 * cachedVisibleRange.Count));
+        if (_revisionGraph.GetNodeForRow(rowIndex) is not { } hoveredRevision)
+        {
+            throw new OperationCanceledException();
+        }
+
+        int maxChildrenAbove = Math.Max(50, visibleRange.Count);
+        HashSet<ObjectId> visibleIds = new(capacity: maxChildrenAbove + (2 * visibleRange.Count));
 
         // Add visible ids and their parents, find if a tracked branch is in the set
         AddIdAndParents(_revisionGraph, rowIndex, visibleIds);
         bool checkOtherRefs = gitRef.IsRemote || !string.IsNullOrEmpty(gitRef.MergeWith);
 
         RevisionGraphRevision? belowRev = null;
+        int visibleTo = visibleRange.FromIndex + visibleRange.Count - 1;
         for (int row = rowIndex + 1; row <= visibleTo; row++)
         {
             RevisionGraphRevision rev = AddIdAndParents(_revisionGraph, row, visibleIds);
@@ -122,7 +117,7 @@ internal sealed class HoverHighlightCalculator : IDisposable
         else if (checkOtherRefs)
         {
             // Rows above rowIndex are only needed for the upward search
-            int searchFrom = Math.Max(0, cachedVisibleRange.FromIndex - Math.Max(50, cachedVisibleRange.Count));
+            int searchFrom = Math.Max(0, visibleRange.FromIndex - maxChildrenAbove);
             for (int row = rowIndex - 1; row >= searchFrom; row--)
             {
                 RevisionGraphRevision rev = AddIdAndParents(_revisionGraph, row, visibleIds);
@@ -136,9 +131,9 @@ internal sealed class HoverHighlightCalculator : IDisposable
 
         IReadOnlySet<ObjectId>? highlightedIds = ancestorIds.Count > 0 ? ancestorIds : null;
 
-        if (HighlightIdsSameValues(_highlightedIds, highlightedIds))
+        if (HighlightIdsSameValues(HighlightedIds, highlightedIds))
         {
-            return;
+            throw new OperationCanceledException();
         }
 
         if (cancellationToken.IsCancellationRequested)
@@ -146,7 +141,7 @@ internal sealed class HoverHighlightCalculator : IDisposable
             return;
         }
 
-        _highlightedIds = highlightedIds;
+        HighlightedIds = highlightedIds;
         IsDirty = true;
 
         return;
@@ -154,14 +149,17 @@ internal sealed class HoverHighlightCalculator : IDisposable
         static RevisionGraphRevision AddIdAndParents(RevisionGraph revisionGraph, int row, HashSet<ObjectId> visibleIds)
         {
             RevisionGraphRevision? rev = revisionGraph.GetNodeForRow(row);
-            Validates.NotNull(rev);
+            if (rev is null)
+            {
+                throw new OperationCanceledException();
+            }
+
             visibleIds.Add(rev.Objectid);
 
             // A segment whose Child is above the visible area still crosses visible rows and must
             // be highlighted. Include the Parent endpoint of every segment leaving below so that
             // WalkAncestors can reach them without storing all ancestors.
-            IRevisionGraphRow? graphRow = revisionGraph.GetSegmentsForRow(row);
-            if (graphRow is null)
+            if (revisionGraph.GetSegmentsForRow(row) is not { } graphRow)
             {
                 return rev;
             }
@@ -177,13 +175,11 @@ internal sealed class HoverHighlightCalculator : IDisposable
         static bool IsInBranchGroup(IGitRef r, IGitRef gitRef)
             => gitRef.IsTrackingRemote(r)
             || r.IsTrackingRemote(gitRef)
-
-            // Match NestledRef with grid remote/local
-            || (gitRef.ObjectId.IsZero && gitRef.CompleteName == r.CompleteName);
+            || (gitRef is NestledVirtualRef && gitRef.CompleteName == r.CompleteName);
 
         static void WalkAncestors(RevisionGraphRevision revision, HashSet<ObjectId> result, IReadOnlySet<ObjectId> visibleIds)
         {
-            Stack<RevisionGraphRevision> stack = new();
+            Stack<RevisionGraphRevision> stack = [];
             HashSet<ObjectId> visited = [];
             stack.Push(revision);
             while (stack.Count > 0)
@@ -240,7 +236,7 @@ internal sealed class HoverHighlightCalculator : IDisposable
             _calculator = calculator;
         }
 
-        internal IReadOnlySet<ObjectId>? HighlightedIds => _calculator._highlightedIds;
+        internal IReadOnlySet<ObjectId>? HighlightedIds => _calculator.HighlightedIds;
 
         internal bool IsDirty => _calculator.IsDirty;
 

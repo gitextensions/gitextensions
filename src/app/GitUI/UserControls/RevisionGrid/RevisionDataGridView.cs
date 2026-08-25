@@ -861,7 +861,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     /// </summary>
     public void RequestRedrawWithoutClear()
     {
-        if (_redrawMode < RedrawMode.RedrawWithClear)
+        if (_redrawMode < RedrawMode.RedrawOnly)
         {
             _redrawMode = RedrawMode.RedrawOnly;
         }

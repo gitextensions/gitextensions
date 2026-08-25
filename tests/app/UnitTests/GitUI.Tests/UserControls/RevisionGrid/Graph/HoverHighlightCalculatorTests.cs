@@ -8,7 +8,7 @@ using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph;
 
-public class HoverHighlightComputerTests
+public class HoverHighlightCalculatorTests
 {
     private const int _rowHeight = 42;
 
