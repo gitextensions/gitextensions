@@ -95,6 +95,10 @@ public sealed class RepositoryHostForkCloneTests
         browseButton.Content.Should().Be("_Browse...");
         browseButton.Icon.Should().NotBeNull();
         browseButton.Classes.Should().Contain("gitextensions-native-dialog-action");
+        browseButton.MinWidth.Should().Be(100);
+        browseButton.MinHeight.Should().Be(25);
+        browseButton.Height.Should().Be(25);
+        browseButton.VerticalAlignment.Should().Be(Avalonia.Layout.VerticalAlignment.Top);
         form.FindControl<TextBox>("createDirTB")!.Width.Should().Be(183);
         form.FindControl<ComboBox>("addUpstreamRemoteAsCB")!.Width.Should().Be(200);
         HeaderedContentControl cloneSetup = form.FindControl<HeaderedContentControl>("cloneSetupGB")!;

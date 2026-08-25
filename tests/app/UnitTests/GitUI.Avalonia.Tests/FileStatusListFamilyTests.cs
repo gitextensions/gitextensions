@@ -175,6 +175,29 @@ public sealed class FileStatusListFamilyTests
     }
 
     [AvaloniaTest]
+    public void FileStatusList_should_collapse_the_filter_row_only_for_the_empty_state()
+    {
+        FileStatusList control = new();
+        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+
+        control.Clear();
+
+        accessor.NoFilesLabel.IsVisible.Should().BeTrue();
+        accessor.FilterRow.IsVisible.Should().BeFalse();
+
+        GitItemStatus worktree = new("tracked.txt")
+        {
+            IsChanged = true,
+            IsTracked = true,
+            Staged = StagedStatus.WorkTree,
+        };
+        control.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.WorkTreeId), [worktree]);
+
+        accessor.NoFilesLabel.IsVisible.Should().BeFalse();
+        accessor.FilterRow.IsVisible.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
     public void FileStatusList_context_menu_should_restore_dynamic_entries_state_and_action_routes()
     {
         FileStatusList control = new();
