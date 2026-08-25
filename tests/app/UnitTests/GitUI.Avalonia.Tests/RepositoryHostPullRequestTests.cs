@@ -142,7 +142,11 @@ public sealed class RepositoryHostPullRequestTests
         commentsTab.Padding.Should().Be(new Avalonia.Thickness(8, 2));
         Grid diffLayout = form.FindControl<Grid>("splitContainer3")!;
         diffLayout.Margin.Should().Be(new Avalonia.Thickness(6, 2, 6, 6));
+        diffLayout.RowDefinitions[0].Height.IsStar.Should().BeTrue();
         diffLayout.RowDefinitions[0].Height.Value.Should().Be(112);
+        diffLayout.RowDefinitions[1].Height.Value.Should().Be(6);
+        diffLayout.RowDefinitions[2].Height.IsStar.Should().BeTrue();
+        diffLayout.RowDefinitions[2].Height.Value.Should().Be(203);
         diffLayout.Children.Should().Contain(form.FindControl<FileStatusList>("_fileStatusList")!);
         diffLayout.Children.Should().Contain(form.FindControl<GitUI.Editor.FileViewer>("_diffViewer")!);
 
@@ -213,7 +217,8 @@ public sealed class RepositoryHostPullRequestTests
         list.BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 3, Width = 580, Height = 103 });
         list.ClientSizeDip.Should().Be(new CaptureSizeF { Width = 576, Height = 99 });
         list.BorderStyle.Should().Be("Fixed3D");
-        list.Dock.Should().Be("Fill");
+        list.Anchor.Should().Equal("Top", "Bottom", "Left", "Right");
+        list.Dock.Should().Be("None");
         list.AutoSize.Should().BeFalse();
         list.TabStop.Should().BeTrue();
         list.Columns.Select(column => column.FieldName).Should().Equal(
@@ -275,6 +280,28 @@ public sealed class RepositoryHostPullRequestTests
                     new AvaloniaControlTreeReader(form, renderScale: 1)
                         .ReadPrimary(form, new PixelSize(754, 511)).Root)
                 .ToArray();
+    }
+
+    [AvaloniaTest]
+    public void ViewPullRequestsForm_should_resize_both_source_split_containers_proportionally()
+    {
+        using ViewPullRequestsForm form = new();
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        Grid top = form.FindControl<Grid>("tableLayoutPanel2")!;
+        Grid diff = form.FindControl<Grid>("splitContainer3")!;
+        FileStatusList files = form.FindControl<FileStatusList>("_fileStatusList")!;
+
+        top.Bounds.Height.Should().Be(146);
+        files.Bounds.Height.Should().Be(112);
+        form.Width = 854;
+        form.Height = 591;
+        Dispatcher.UIThread.RunJobs();
+
+        top.Bounds.Height.Should().BeInRange(168, 169);
+        diff.Bounds.Height.Should().BeInRange(378, 379);
+        files.Bounds.Height.Should().BeInRange(131, 132);
+        form.Close();
     }
 
     [AvaloniaTest]

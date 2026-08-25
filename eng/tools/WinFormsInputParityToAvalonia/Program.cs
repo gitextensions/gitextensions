@@ -3,13 +3,13 @@ using WinFormsInputParityToAvalonia;
 if (args.Length == 0 || args[0] is "-h" or "--help")
 {
     Console.Error.WriteLine("""
-        Generates the Avalonia input metadata projection from matching WinForms Designer files.
+        Generates the Avalonia input and capture-layout metadata projection from matching WinForms Designer files.
 
         Usage:
           WinFormsInputParityToAvalonia <WinFormsRoot> <AvaloniaRoot> [<WinFormsRoot> <AvaloniaRoot> ...] -o <WinFormsInputMetadata.g.cs>
 
-        Output includes TabIndex, explicit TabStop, and explicit AccessibleName values for
-        controls whose original field and same-named AXAML control both exist.
+        Output includes input/accessibility values plus explicit layout semantics for controls
+        whose original field and same-named AXAML control both exist.
         """);
     return 1;
 }
