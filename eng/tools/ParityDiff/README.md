@@ -7,10 +7,13 @@ resolved colors are compared before pixels.
 
 The tool writes deterministic `findings.json` and a human-readable `report.md`. It records
 unavailable or unsupported captures and their manifest notes explicitly; it never treats them
-as successful comparisons. Image comparison uses global luminance SSIM over the union canvas,
-plus declared per-pixel and maximum-channel-delta budgets. Tolerance values live in
-`parity-diff.json`, with deliberate per-component overrides. Resolved colors always have zero
-tolerance.
+as successful comparisons. The WinForms capture keeps its complete `PrintWindow` bitmap,
+including native non-client chrome, and its primary surface root records the client-area inset.
+Image comparison aligns and crops each primary surface to that declared client rectangle without
+scaling either bitmap; popup surfaces are cropped from the union canvas and compared separately.
+It then uses global luminance SSIM plus declared per-pixel and maximum-channel-delta budgets.
+Tolerance values live in `parity-diff.json`, with deliberate per-component overrides. Resolved
+colors always have zero tolerance.
 
 Repeated control field identities are reported as `control.duplicateIdentity` findings instead
 of aborting the comparison. Repeated controls are paired in stable control-tree order, and an

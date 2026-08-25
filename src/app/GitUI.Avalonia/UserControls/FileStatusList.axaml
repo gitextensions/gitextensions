@@ -4,8 +4,7 @@
               xmlns:menus="using:GitUI.CommandsDialogs.Menus"
              xmlns:properties="using:GitUI.Properties"
              xmlns:userControls="using:GitUI.UserControls"
-             x:Class="GitUI.FileStatusList"
-             Background="{DynamicResource GitExtensionsControlBackgroundBrush}">
+             x:Class="GitUI.FileStatusList">
   <UserControl.Styles>
     <Style Selector="Button.gitextensions-toolbar-button.filestatus-toolbar-item, ToggleButton.gitextensions-toolbar-button.filestatus-toolbar-item, compat|IconSplitButton.gitextensions-toolbar-button.filestatus-toolbar-item, compat|IconDropDownButton.gitextensions-toolbar-button.filestatus-toolbar-item">
       <Setter Property="Height" Value="22" />
@@ -175,15 +174,15 @@
         </compat:IconDropDownButton.Flyout>
       </compat:IconDropDownButton>
     </StackPanel>
-    <TextBlock x:Name="lblSplitter" DockPanel.Dock="Top" Height="2" Background="#00FFFFFF" />
+    <TextBlock x:Name="lblSplitter" DockPanel.Dock="Top" Height="2" MinHeight="2" Background="#00FFFFFF" />
     <Grid DockPanel.Dock="Top" Height="23">
-      <userControls:WatermarkComboBox x:Name="cboFilterComboBox" HorizontalAlignment="Stretch" MinHeight="23" Padding="4,1" FontWeight="Bold" Watermark="Filter files using a regular expression..." />
+      <userControls:WatermarkComboBox x:Name="cboFilterComboBox" HorizontalAlignment="Stretch" MinHeight="23" Padding="4,1" Watermark="Filter files using a regular expression..." />
       <Button x:Name="DeleteFilterButton" Classes="gitextensions-icon-only filestatus-filter-delete" Width="18" Height="23" Margin="0,0,18,0" HorizontalAlignment="Right" Focusable="False" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="/Resources/Icons/DeleteText.png" />
       </Button>
     </Grid>
     <Grid x:Name="FindInCommitFilesGitGrepPanel" DockPanel.Dock="Top" Height="23" IsVisible="False">
-      <userControls:WatermarkComboBox x:Name="cboFindInCommitFilesGitGrep" HorizontalAlignment="Stretch" FontWeight="Bold" Watermark="Find in commit files using git-grep regular expression..." />
+      <userControls:WatermarkComboBox x:Name="cboFindInCommitFilesGitGrep" HorizontalAlignment="Stretch" Watermark="Find in commit files using git-grep regular expression..." />
       <Button x:Name="DeleteSearchButton" Classes="gitextensions-icon-only filestatus-filter-delete" Width="18" Height="23" Margin="0,0,18,0" HorizontalAlignment="Right" Focusable="False" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="/Resources/Icons/DeleteText.png" />
       </Button>
@@ -191,12 +190,12 @@
     <Grid>
       <TextBlock x:Name="LoadingFiles" Padding="2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}" Foreground="{DynamicResource GitExtensionsDisabledForegroundBrush}" FontStyle="Italic" Text="Loading data..." IsVisible="False" IsHitTestVisible="False" />
       <TextBlock x:Name="NoFiles" Padding="2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}" Foreground="{DynamicResource GitExtensionsDisabledForegroundBrush}" FontStyle="Italic" Text="No changes" IsHitTestVisible="False" />
-      <ListBox x:Name="FileStatusListView" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" IsVisible="False" />
-      <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" />
-      <TreeView x:Name="tvDiffFiles" Classes="gitextensions-native-tree" IsVisible="False" Focusable="True" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" x:CompileBindings="False">
+      <ListBox x:Name="FileStatusListView" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" IsVisible="False" />
+      <ListBox x:Name="lstFiles" SelectionMode="Single" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" />
+      <TreeView x:Name="tvDiffFiles" Classes="gitextensions-native-tree" IsVisible="False" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" x:CompileBindings="False">
         <TreeView.Styles><Style Selector="TreeViewItem"><Setter Property="IsExpanded" Value="{Binding IsExpanded}" /></Style></TreeView.Styles>
       </TreeView>
-      <TreeView x:Name="tvFiles" Classes="gitextensions-native-tree" IsVisible="False" Focusable="True" Background="{DynamicResource GitExtensionsWindowBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" x:CompileBindings="False">
+      <TreeView x:Name="tvFiles" Classes="gitextensions-native-tree" IsVisible="False" Focusable="True" Background="{DynamicResource GitExtensionsPanelBackgroundBrush}" Foreground="{DynamicResource GitExtensionsWindowTextBrush}" x:CompileBindings="False">
         <TreeView.Styles><Style Selector="TreeViewItem"><Setter Property="IsExpanded" Value="{Binding IsExpanded}" /></Style></TreeView.Styles>
       </TreeView>
     </Grid>

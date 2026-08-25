@@ -242,7 +242,13 @@ internal static class CaptureComparer
                 continue;
             }
 
-            CompareNode(referenceSurface.Root, candidateSurface.Root, $"{path}/root", tolerance, findings);
+            CompareNode(
+                referenceSurface.Root,
+                candidateSurface.Root,
+                $"{path}/root",
+                tolerance,
+                findings,
+                compareBoundsOrigin: !referenceSurface.Role.Equals("primary", StringComparison.Ordinal));
             CompareFieldNodes(referenceSurface.Root, candidateSurface.Root, path, tolerance, findings);
             CompareAnonymousChildren(referenceSurface.Root, candidateSurface.Root, $"{path}/root", tolerance, findings);
             CompareFocusOrder(referenceSurface.Root, candidateSurface.Root, path, findings);
@@ -472,11 +478,41 @@ internal static class CaptureComparer
             .Where(surface => !surface.Role.Equals("primary", StringComparison.Ordinal))
             .OrderBy(surface => surface.Role, StringComparer.Ordinal)
             .ToArray();
+        CaptureRectangle referenceCanvas = GetCanvasBounds(referenceDocument.Surfaces);
+        CaptureRectangle candidateCanvas = GetCanvasBounds(candidateDocument.Surfaces);
+        List<PixelMetrics> surfaceMetrics = [];
+        CaptureSurface referencePrimary = referenceDocument.Surfaces.Single(
+            surface => surface.Role.Equals("primary", StringComparison.Ordinal));
+        CaptureSurface candidatePrimary = candidateDocument.Surfaces.Single(
+            surface => surface.Role.Equals("primary", StringComparison.Ordinal));
+        bool hasMatchedPopup = referencePopups.Any(
+            referencePopup => candidatePopups.Any(candidatePopup => candidatePopup.Role == referencePopup.Role));
+        if (TryCropPrimaryClient(reference, referencePrimary, referenceCanvas, out PngImage referenceClient)
+            && TryCropPrimaryClient(candidate, candidatePrimary, candidateCanvas, out PngImage candidateClient))
+        {
+            surfaceMetrics.Add(CompareImagePair(
+                referenceClient,
+                candidateClient,
+                tolerance,
+                "$image/surface[primary-client]",
+                findings));
+        }
+        else if (!hasMatchedPopup)
+        {
+            return CompareImagePair(reference, candidate, tolerance, "$image", findings);
+        }
+        else
+        {
+            surfaceMetrics.Add(CompareImagePair(
+                CropSurface(reference, referencePrimary, referenceCanvas),
+                CropSurface(candidate, candidatePrimary, candidateCanvas),
+                tolerance,
+                "$image/surface[primary]",
+                findings));
+        }
+
         if (referencePopups.Length > 0 && candidatePopups.Length > 0)
         {
-            CaptureRectangle referenceCanvas = GetCanvasBounds(referenceDocument.Surfaces);
-            CaptureRectangle candidateCanvas = GetCanvasBounds(candidateDocument.Surfaces);
-            List<PixelMetrics> surfaceMetrics = [];
             Dictionary<string, CaptureSurface> candidateByRole = candidatePopups
                 .ToDictionary(surface => surface.Role, StringComparer.Ordinal);
             foreach (CaptureSurface referenceSurface in referencePopups)
@@ -495,14 +531,11 @@ internal static class CaptureComparer
                     $"$image/surface[{referenceSurface.Role}]",
                     findings));
             }
-
-            if (surfaceMetrics.Count > 0)
-            {
-                return AggregatePixelMetrics(surfaceMetrics);
-            }
         }
 
-        return CompareImagePair(reference, candidate, tolerance, "$image", findings);
+        return surfaceMetrics.Count == 1
+            ? surfaceMetrics[0]
+            : AggregatePixelMetrics(surfaceMetrics);
     }
 
     private static void CompareAnonymousChildren(
@@ -649,6 +682,30 @@ internal static class CaptureComparer
             surface.ScreenBoundsPx.Width,
             surface.ScreenBoundsPx.Height);
 
+    private static bool TryCropPrimaryClient(
+        PngImage image,
+        CaptureSurface surface,
+        CaptureRectangle canvas,
+        out PngImage client)
+    {
+        CaptureRectangle bounds = surface.Root.BoundsPx;
+        int x = surface.ScreenBoundsPx.X - canvas.X + bounds.X;
+        int y = surface.ScreenBoundsPx.Y - canvas.Y + bounds.Y;
+        if (bounds.Width <= 0
+            || bounds.Height <= 0
+            || x < 0
+            || y < 0
+            || x + bounds.Width > image.Width
+            || y + bounds.Height > image.Height)
+        {
+            client = null!;
+            return false;
+        }
+
+        client = image.Crop(x, y, bounds.Width, bounds.Height);
+        return true;
+    }
+
     private static CaptureRectangle GetCanvasBounds(IReadOnlyList<CaptureSurface> surfaces)
     {
         int left = surfaces.Min(surface => surface.ScreenBoundsPx.X);
@@ -685,12 +742,19 @@ internal static class CaptureComparer
         CaptureNode candidate,
         string path,
         DiffTolerance tolerance,
-        ICollection<ParityFinding> findings)
+        ICollection<ParityFinding> findings,
+        bool compareBoundsOrigin = true)
     {
         CompareValue(reference.ControlKind, candidate.ControlKind, ControlCategory, "control.kind", path, findings);
         if (reference.Visible != false && candidate.Visible != false)
         {
-            CompareRectangle(reference.BoundsDip, candidate.BoundsDip, $"{path}/boundsDip", tolerance.GeometryDip, findings);
+            CompareRectangle(
+                reference.BoundsDip,
+                candidate.BoundsDip,
+                $"{path}/boundsDip",
+                tolerance.GeometryDip,
+                findings,
+                compareBoundsOrigin);
             CompareSize(reference.ClientSizeDip, candidate.ClientSizeDip, $"{path}/clientSizeDip", tolerance.GeometryDip, findings);
             CompareDecimal(reference.ItemHeightDip, candidate.ItemHeightDip, tolerance.GeometryDip, GeometryCategory, "geometry.itemHeightDip", path, findings);
             CompareThickness(reference.Padding.Dip, candidate.Padding.Dip, $"{path}/paddingDip", tolerance.GeometryDip, findings);
@@ -752,10 +816,15 @@ internal static class CaptureComparer
         CaptureRectangleF candidate,
         string path,
         decimal tolerance,
-        ICollection<ParityFinding> findings)
+        ICollection<ParityFinding> findings,
+        bool compareOrigin = true)
     {
-        CompareDecimal(reference.X, candidate.X, tolerance, GeometryCategory, "geometry.x", path, findings);
-        CompareDecimal(reference.Y, candidate.Y, tolerance, GeometryCategory, "geometry.y", path, findings);
+        if (compareOrigin)
+        {
+            CompareDecimal(reference.X, candidate.X, tolerance, GeometryCategory, "geometry.x", path, findings);
+            CompareDecimal(reference.Y, candidate.Y, tolerance, GeometryCategory, "geometry.y", path, findings);
+        }
+
         CompareDecimal(reference.Width, candidate.Width, tolerance, GeometryCategory, "geometry.width", path, findings);
         CompareDecimal(reference.Height, candidate.Height, tolerance, GeometryCategory, "geometry.height", path, findings);
     }

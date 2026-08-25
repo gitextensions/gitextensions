@@ -670,6 +670,12 @@ internal static class ComponentFactory
     // replaced HEAD after preparation or if the real opening handlers did not finish.
     public static void VerifyCaptureState(Control control, IGitUICommands commands, CaptureStatePlan state)
     {
+        if (state.Id == "viewer-toolbar.hover"
+            && FindFieldValue(control, "fileviewerToolbar") is not ToolStrip { Visible: true })
+        {
+            throw new CaptureStateNotReadyException("The original file-viewer toolbar did not become visible through its mouse-move route.");
+        }
+
         RevisionGridControl? revisionGrid = control as RevisionGridControl;
         if (revisionGrid is null && control is FormLog)
         {
