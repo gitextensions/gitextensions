@@ -129,7 +129,11 @@ public sealed class RepositoryHostForkCloneTests
         Grid myRepositoriesLayout = form.FindControl<Grid>("tableLayoutPanel5")!;
         myRepositoriesLayout.Margin.Should().Be(new Avalonia.Thickness(7, 4, 7, 7));
         ((Grid)myRepositoriesLayout.Children[0]).Margin.Should().Be(new Avalonia.Thickness(3));
-        form.FindControl<TextBlock>("helpTextLbl")!.Margin.Should().Be(new Avalonia.Thickness(3, 0));
+        Label helpText = form.FindControl<Label>("helpTextLbl")!;
+        helpText.Margin.Should().Be(new Avalonia.Thickness(3, 0));
+        helpText.Padding.Should().Be(new Avalonia.Thickness(0));
+        helpText.HorizontalContentAlignment.Should().Be(Avalonia.Layout.HorizontalAlignment.Stretch);
+        helpText.VerticalContentAlignment.Should().Be(Avalonia.Layout.VerticalAlignment.Stretch);
 
         Grid searchLayout = form.FindControl<Grid>("tableLayoutPanel1")!;
         searchLayout.Margin.Should().Be(new Avalonia.Thickness(7, 4, 7, 7));
@@ -250,6 +254,7 @@ public sealed class RepositoryHostForkCloneTests
         CaptureNode ownedPage = initialNodes.Single(node => node.FieldName == "myReposPage");
         CaptureNode searchPage = initialNodes.Single(node => node.FieldName == "searchReposPage");
         CaptureNode ownedLayout = initialNodes.Single(node => node.FieldName == "tableLayoutPanel5");
+        CaptureNode helpText = initialNodes.Single(node => node.FieldName == "helpTextLbl");
 
         tabs.BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 3, Width = 738, Height = 323 });
         tabs.Dock.Should().Be("Fill");
@@ -258,6 +263,10 @@ public sealed class RepositoryHostForkCloneTests
         ownedPage.Padding.Dip.Should().Be(new CaptureThicknessF { Left = 3, Top = 3, Right = 3, Bottom = 3 });
         ownedPage.Visible.Should().BeTrue();
         ownedLayout.BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 3, Width = 724, Height = 283 });
+        helpText.BoundsDip.Should().Be(new CaptureRectangleF { X = 509, Y = 0, Width = 212, Height = 283 });
+        Grid ownedGrid = form.FindControl<Grid>("tableLayoutPanel5")!;
+        ownedGrid.ColumnDefinitions[0].Width.IsAbsolute.Should().BeTrue();
+        ownedGrid.ColumnDefinitions[1].Width.IsStar.Should().BeTrue();
         searchPage.Visible.Should().BeFalse();
         Flatten(searchPage).Should().OnlyContain(node => node.Visible != true);
 
