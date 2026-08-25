@@ -201,6 +201,7 @@ public sealed class HotkeyTests
 
             IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(FileViewer.HotkeySettingsName);
 
+            hotkeys.Should().HaveCount(20);
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FileViewer.Command.Find
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.F));
@@ -213,6 +214,12 @@ public sealed class HotkeyTests
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FileViewer.Command.GoToLine
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.G));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FileViewer.Command.NextChange
+                && command.KeyData == (WinFormsShims.Keys.Alt | WinFormsShims.Keys.Down));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FileViewer.Command.IgnoreAllWhitespace
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.W));
         }
         finally
         {

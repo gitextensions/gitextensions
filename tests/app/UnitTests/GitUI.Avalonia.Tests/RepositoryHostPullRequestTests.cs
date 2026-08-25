@@ -219,6 +219,9 @@ public sealed class RepositoryHostPullRequestTests
             .ReadPrimary(form, new PixelSize(754, 511));
         CaptureNode[] nodes = Flatten(surface.Root).ToArray();
         CaptureNode list = nodes.Single(node => node.FieldName == "_pullRequestsList");
+        CaptureNode fetch = nodes.Single(node => node.FieldName == "_fetchBtn");
+        CaptureNode commentsPage = nodes.Single(node => node.FieldName == "tabPage2");
+        CaptureNode commentsLayout = nodes.Single(node => node.FieldName == "tableLayoutPanel1");
 
         list.BoundsDip.Should().Be(new CaptureRectangleF { X = 3, Y = 3, Width = 580, Height = 103 });
         list.ClientSizeDip.Should().Be(new CaptureSizeF { Width = 576, Height = 99 });
@@ -227,6 +230,10 @@ public sealed class RepositoryHostPullRequestTests
         list.Dock.Should().Be("None");
         list.AutoSize.Should().BeFalse();
         list.TabStop.Should().BeTrue();
+        fetch.Colors.Background.Should().Be("#FFF0F0F0");
+        commentsPage.BorderStyle.Should().Be("None");
+        commentsLayout.BorderStyle.Should().Be("None");
+        commentsLayout.Font.Should().NotBeNull();
         list.Columns.Select(column => column.FieldName).Should().Equal(
             "columnHeaderId",
             "columnHeaderHeading",

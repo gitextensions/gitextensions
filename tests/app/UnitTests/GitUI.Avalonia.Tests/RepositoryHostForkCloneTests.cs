@@ -228,6 +228,9 @@ public sealed class RepositoryHostForkCloneTests
         CaptureNode[] nodes = Flatten(surface.Root).ToArray();
         CaptureNode owned = nodes.Single(node => node.FieldName == "myReposLV");
         CaptureNode search = nodes.Single(node => node.FieldName == "searchResultsLV");
+        CaptureNode depth = nodes.Single(node => node.FieldName == "depthUpDown");
+        CaptureNode browse = nodes.Single(node => node.FieldName == "browseForCloneToDirbtn");
+        CaptureNode layout = nodes.Single(node => node.FieldName == "tableLayoutPanel2");
 
         owned.BorderStyle.Should().Be("Fixed3D");
         owned.Columns.Select(column => column.FieldName).Should().Equal(
@@ -242,8 +245,18 @@ public sealed class RepositoryHostForkCloneTests
             "columnHeaderSearchForks");
         search.Columns.Select(column => column.WidthDip).Should().Equal(180, 110, 41, 40);
         search.Columns.Should().OnlyContain(column => column.Visible);
+        depth.TabStop.Should().BeTrue();
+        depth.BorderWidthDip.Should().BeNull();
+        browse.TabStop.Should().BeTrue();
+        browse.BorderStyle.Should().Be("None");
+        layout.BorderStyle.Should().Be("None");
+        layout.Font.Should().NotBeNull();
         nodes.Where(node => node.FieldName?.StartsWith("columnHeader", StringComparison.Ordinal) == true)
             .Should().BeEmpty();
+        nodes.Where(node => node != surface.Root
+                            && node.FieldName is null
+                            && node.Name is null)
+            .Should().BeEmpty("unnamed Avalonia layout panels are not WinForms product controls");
     }
 
     [AvaloniaTest]
