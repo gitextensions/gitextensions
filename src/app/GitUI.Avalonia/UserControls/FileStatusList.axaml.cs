@@ -2506,7 +2506,7 @@ public partial class FileStatusList : GitModuleControl
         internal MenuItem ShowDiffForAllParentsMenuItem => control.tsmiShowDiffForAllParents;
         internal MenuItem ToolbarMenuItem => control.tsmiToolbar;
         internal Grid FindInFilesPanel => control.FindInCommitFilesGitGrepPanel;
-        internal Separator Splitter => control.lblSplitter;
+        internal TextBlock Splitter => control.lblSplitter;
 
         internal bool UpdateContextMenu()
         {
