@@ -73,13 +73,17 @@
                      Classes="gitextensions-native-list-items"
                      SelectionMode="Single" />
           </Grid>
-          <TextBlock x:Name="helpTextLbl"
-                     Grid.Column="1"
-                     Margin="3,0"
-                     VerticalAlignment="Center"
-                     TextAlignment="Center"
-                     TextWrapping="Wrap"
-                     Text="If you want to fork a repository owned by somebody else, go to the Search for repositories tab." />
+          <Label x:Name="helpTextLbl"
+                 Grid.Column="1"
+                 Margin="3,0"
+                 Padding="0"
+                 HorizontalContentAlignment="Stretch"
+                 VerticalContentAlignment="Stretch">
+            <TextBlock VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       Text="If you want to fork a repository owned by somebody else, go to the Search for repositories tab." />
+          </Label>
         </Grid>
       </TabItem>
 
