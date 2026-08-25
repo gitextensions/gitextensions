@@ -24,9 +24,9 @@
     </ProjectReference>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
-    <!-- The original single-target project receives GitCommands through its interface
-         references. The guarded two-target graph needs an explicit matching flavor. -->
+  <ItemGroup>
+    <!-- GitImpact uses GitCommands types directly, so both build flavors declare the
+         dependency instead of relying on a prior build's transitive reference state. -->
     <ProjectReference Include="..\..\..\app\GitCommands\GitCommands.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
       <Private>false</Private>

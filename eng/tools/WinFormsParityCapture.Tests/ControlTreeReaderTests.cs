@@ -115,6 +115,45 @@ public sealed class ControlTreeReaderTests
     }
 
     [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_flatten_framework_splitter_panels()
+    {
+        using Form form = new();
+        using SplitContainer split = new() { Name = "splitContainer" };
+        using Label first = new() { Name = "first", Text = "First" };
+        using Label second = new() { Name = "second", Text = "Second" };
+        split.Panel1.Controls.Add(first);
+        split.Panel2.Controls.Add(second);
+        form.Controls.Add(split);
+        form.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode splitNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        splitNode.ControlKind.Should().Be("split");
+        splitNode.Children.Select(node => node.Name).Should().Equal("first", "second");
+        splitNode.Children.Should().NotContain(node => node.Type.Contains("SplitterPanel", StringComparison.Ordinal));
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_stop_at_the_external_text_editor_boundary()
+    {
+        using Form form = new();
+        using ICSharpCode.TextEditor.TextEditorControl editor = new() { Name = "TextEditor" };
+        form.Controls.Add(editor);
+        form.CreateControl();
+        editor.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode editorNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        editorNode.Name.Should().Be("TextEditor");
+        editorNode.Children.Should().BeEmpty(
+            "external text-area panels and scrollbars are renderer implementation details");
+    }
+
+    [Test]
     [Category("P1_7")]
     public void ReadPrimary_should_emit_framework_neutral_resolved_color_roles()
     {
