@@ -9777,12 +9777,12 @@
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml",
       "complete": false,
       "axes": {
-        "structural": { "status": "gap", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/inventory/windows/ViewPullRequestsForm.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/inventory/linux/ViewPullRequestsForm.json"], "platforms": [], "findingCount": 157, "note": "The fresh byte-identical Windows/Linux inventory remains at 157 findings with no member-order findings. Generated AXAML and native list/browser/async/structured-command adaptations remain; exact structural identity is not claimed." },
-        "functional": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/inventory/windows/ViewPullRequestsForm.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/tests/linux/focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Source-shaped selection, loading, diff, discussion, resize, fetch, add-remote, close, cancellation, and error behavior passes on Windows and Linux. Focused resize coverage verifies both source-proportional split regions and capture-size restoration; refresh and post remain unwired exactly as in the source, and exhaustive live interaction remains open." },
-        "visual": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/winforms/manifest.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/avalonia/manifest.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/diff/findings.json"], "platforms": ["windows"], "findingCount": 22815, "note": "Thirty-three genuine-native-100 light/dark/custom pairs add an explicit 854x591 resize state. Source-authored Designer semantics are projected deliberately and both split regions now preserve the original proportional resize behavior; unsuppressed diagnostics fall from 23,495 to 22,815. The remaining one-pixel proportional rounding, embedded FileStatusList debt, other scales, and exact closure remain open." },
-        "themingAndColor": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/diff/findings.json"], "platforms": ["windows"], "findingCount": 7719, "note": "All eleven native-100 states compare resolved light, dark, and custom ARGB values. The additional resize state leaves 7,719 explicit color diagnostics; other scales and exact color closure remain open." },
-        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/diff/findings.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/tests/linux/focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1554, "note": "The paired matrix now includes requested client resizing and restoration alongside initial/empty/loading, popup, focus, hover, pressed, disabled, scrolling, cancellation, error, close, and Git actions. It retains 1,554 state diagnostics; exhaustive keyboard, persistence, and live provider states remain open." },
-        "platform": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh Windows, native Wayland, nested X11, and Wayland-only Flatpak runtime gates pass and their screenshots were inspected; Flatpak retains --filesystem=host. Apple Silicon, P9.7 IDE preview, and exhaustive component platform parity remain open." }
+        "structural": { "status": "gap", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/inventory/ViewPullRequestsForm.functional-findings.json"], "platforms": [], "findingCount": 157, "note": "The fresh cross-platform inventory remains at 157 findings with no member-order findings. Generated AXAML and native list/browser/async/structured-command adaptations remain; exact structural identity is not claimed." },
+        "functional": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/inventory/ViewPullRequestsForm.functional-findings.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/linux/gate.log"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Source-shaped repository-host behavior plus the embedded FileStatusList toolbar/group visibility and exact 96-DPI layout assertions pass on Windows and Linux. Refresh and post remain unwired exactly as in the source, and exhaustive live interaction remains open." },
+        "visual": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/winforms/manifest.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/avalonia/manifest.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json"], "platforms": ["windows"], "findingCount": 16461, "note": "Thirty-three genuine-native-100 light/dark/custom pairs now preserve the embedded FileStatusList's 25/2/23-DIP sequence and integer ToolStrip bounds. Its three Avalonia renderer controls project as the one source FileStatusListView, and 31 real closed drop-down fields are no longer reported missing; unsuppressed diagnostics fall from 22,815 to 16,461. Closed-popup geometry, editor internals, remaining colors/metrics, other scales, and exact closure remain open." },
+        "themingAndColor": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json"], "platforms": ["windows"], "findingCount": 7686, "note": "All eleven native-100 states compare resolved light, dark, and custom ARGB values. The matrix retains 7,686 explicit color diagnostics; other scales and exact color closure remain open." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/linux/gate.log"], "platforms": ["windows", "linux"], "findingCount": 1542, "note": "The paired matrix now records closed ToolStrip drop-down items as explicitly invisible and retains the requested resize/loading/popup/focus/hover/pressed/disabled states. It has 1,542 state diagnostics; exhaustive keyboard, persistence, popup-open, and live provider states remain open." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh Windows, exclusive Wayland, exclusive X11, and Wayland-only Flatpak runtime gates pass and their screenshots were inspected; Flatpak retains --filesystem=host. Apple Silicon, P9.7 IDE preview, and exhaustive component platform parity remain open." }
       }
     },
     {
@@ -9790,12 +9790,12 @@
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/RepoHosting/ViewPullRequestsForm.axaml.cs",
       "complete": false,
       "axes": {
-        "structural": { "status": "gap", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/inventory/windows/ViewPullRequestsForm.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/inventory/linux/ViewPullRequestsForm.json"], "platforms": [], "findingCount": 157, "note": "The fresh byte-identical Windows/Linux inventory remains at 157 findings with no member-order findings. Generated AXAML and native list/browser/async/structured-command adaptations remain; exact structural identity is not claimed." },
-        "functional": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/inventory/windows/ViewPullRequestsForm.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/tests/linux/focused.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Source-shaped selection, loading, diff, discussion, resize, fetch, add-remote, close, cancellation, and error behavior passes on Windows and Linux. Focused resize coverage verifies both source-proportional split regions and capture-size restoration; refresh and post remain unwired exactly as in the source, and exhaustive live interaction remains open." },
-        "visual": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/winforms/manifest.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/avalonia/manifest.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/diff/findings.json"], "platforms": ["windows"], "findingCount": 22815, "note": "Thirty-three genuine-native-100 light/dark/custom pairs add an explicit 854x591 resize state. Source-authored Designer semantics are projected deliberately and both split regions now preserve the original proportional resize behavior; unsuppressed diagnostics fall from 23,495 to 22,815. The remaining one-pixel proportional rounding, embedded FileStatusList debt, other scales, and exact closure remain open." },
-        "themingAndColor": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/diff/findings.json"], "platforms": ["windows"], "findingCount": 7719, "note": "All eleven native-100 states compare resolved light, dark, and custom ARGB values. The additional resize state leaves 7,719 explicit color diagnostics; other scales and exact color closure remain open." },
-        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/diff/findings.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/tests/linux/focused.trx"], "platforms": ["windows", "linux"], "findingCount": 1554, "note": "The paired matrix now includes requested client resizing and restoration alongside initial/empty/loading, popup, focus, hover, pressed, disabled, scrolling, cancellation, error, close, and Git actions. It retains 1,554 state diagnostics; exhaustive keyboard, persistence, and live provider states remain open." },
-        "platform": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f7fe5610631a5485b78895566692b5357f1a2c83", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-layout-semantics-39/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh Windows, native Wayland, nested X11, and Wayland-only Flatpak runtime gates pass and their screenshots were inspected; Flatpak retains --filesystem=host. Apple Silicon, P9.7 IDE preview, and exhaustive component platform parity remain open." }
+        "structural": { "status": "gap", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/inventory/ViewPullRequestsForm.functional-findings.json"], "platforms": [], "findingCount": 157, "note": "The fresh cross-platform inventory remains at 157 findings with no member-order findings. Generated AXAML and native list/browser/async/structured-command adaptations remain; exact structural identity is not claimed." },
+        "functional": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/inventory/ViewPullRequestsForm.functional-findings.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/linux/gate.log"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Source-shaped repository-host behavior plus the embedded FileStatusList toolbar/group visibility and exact 96-DPI layout assertions pass on Windows and Linux. Refresh and post remain unwired exactly as in the source, and exhaustive live interaction remains open." },
+        "visual": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/winforms/manifest.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/avalonia/manifest.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json"], "platforms": ["windows"], "findingCount": 16461, "note": "Thirty-three genuine-native-100 light/dark/custom pairs now preserve the embedded FileStatusList's 25/2/23-DIP sequence and integer ToolStrip bounds. Its three Avalonia renderer controls project as the one source FileStatusListView, and 31 real closed drop-down fields are no longer reported missing; unsuppressed diagnostics fall from 22,815 to 16,461. Closed-popup geometry, editor internals, remaining colors/metrics, other scales, and exact closure remain open." },
+        "themingAndColor": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json"], "platforms": ["windows"], "findingCount": 7686, "note": "All eleven native-100 states compare resolved light, dark, and custom ARGB values. The matrix retains 7,686 explicit color diagnostics; other scales and exact color closure remain open." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/linux/gate.log"], "platforms": ["windows", "linux"], "findingCount": 1542, "note": "The paired matrix now records closed ToolStrip drop-down items as explicitly invisible and retains the requested resize/loading/popup/focus/hover/pressed/disabled states. It has 1,542 state diagnostics; exhaustive keyboard, persistence, popup-open, and live provider states remain open." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-25", "commit": "f0684adb489495a95426570e1e928056174bac07", "evidence": ["eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh Windows, exclusive Wayland, exclusive X11, and Wayland-only Flatpak runtime gates pass and their screenshots were inspected; Flatpak retains --filesystem=host. Apple Silicon, P9.7 IDE preview, and exhaustive component platform parity remain open." }
       }
     },
     {
@@ -29597,64 +29597,72 @@
         },
         "functional": {
           "status": "verified",
-          "verifiedOn": "2026-08-11",
-          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
+          "verifiedOn": "2026-08-25",
+          "commit": "f0684adb489495a95426570e1e928056174bac07",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c3.json",
-            "eng/avalonia/parity-evidence/P8.6c/c3/inventory-classification.json"
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/linux/gate.log"
           ],
-          "platforms": [],
+          "platforms": [
+            "windows",
+            "linux"
+          ],
           "findingCount": 0,
-          "note": "The complete family inventory remains visible and is disjointly classified. P8.6c.3 closes the retained pointer, submodule, icon, color, and state behavior through tested Avalonia framework adaptations; no product-functional finding remains in the classification."
+          "note": "The original splitter/filter order, has-groups toolbar visibility, list identity, and existing FileStatusList behaviors pass focused Windows and Linux tests; no product-functional regression is introduced."
         },
         "visual": {
           "status": "gap",
-          "verifiedOn": "2026-08-11",
-          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
+          "verifiedOn": "2026-08-25",
+          "commit": "f0684adb489495a95426570e1e928056174bac07",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c3/diff-core-125-final/",
-            "eng/avalonia/parity-evidence/P8.6c/c3/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/winforms/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/avalonia/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6384,
-          "note": "Fresh native-125% paired evidence verifies the toolbar/tree/selection corrections and reduces different pixels from about 11% to 7-8%. Exact native-DPI rendering and surrounding consumer layouts remain open under their recorded owners."
+          "findingCount": 16461,
+          "note": "Thirty-three native-100 ViewPullRequestsForm pairs verify the embedded 25/2/23-DIP toolbar, splitter, and filter sequence plus integer ToolStrip geometry. The count is the containing form's unsuppressed total, not a standalone FileStatusList count; exact popup, color, editor, other-scale, and consumer closure remain open."
         },
         "themingAndColor": {
           "status": "gap",
-          "verifiedOn": "2026-08-11",
-          "commit": "eccc43f41a328c1f3392708c445fbb7c4c83133c",
+          "verifiedOn": "2026-08-25",
+          "commit": "f0684adb489495a95426570e1e928056174bac07",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c3/diff-core-125-final/",
-            "eng/avalonia/parity-evidence/P8.6c/c3/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json"
           ],
           "platforms": [
             "windows"
           ],
-          "findingCount": 6384,
-          "note": "Valid/invalid filter colors and focused FileStatusList selection now resolve through the same original semantic color boundary in light, dark, and custom themes. The axis remains open until all remaining visual diagnostics and native-DPI states close."
+          "findingCount": 7686,
+          "note": "The containing View form compares all embedded FileStatusList colors as resolved ARGB in light, dark, and custom themes and retains 7,686 host-wide color findings. The axis remains open until the component's remaining exact color and native-DPI states close."
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "verifiedOn": "2026-08-25",
+          "commit": "f0684adb489495a95426570e1e928056174bac07",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/paired-winforms-shared-125/",
-            "eng/avalonia/parity-evidence/P8.6c/paired-avalonia-shared-fixed2-125/"
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/linux/gate.log"
           ],
           "platforms": [
-            "windows"
+            "windows",
+            "linux"
           ],
-          "findingCount": 0,
-          "note": "The 156-request shared-repository matrix now covers the standalone control plus Commit, Stash, revision Diff, and File tree in light, dark, and custom themes. Eighty-one WinForms states paired; 75 unavailable native-DPI requests and the exhaustive live interaction walk remain explicit debt."
+          "findingCount": 1542,
+          "note": "Closed drop-down items are represented as explicitly invisible, group/refresh separator state follows the original, and the containing form's requested state matrix remains fully captured. The count is host-wide; exhaustive popup-open, keyboard, persistence, other-consumer, and native-DPI states remain explicit debt."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-10",
-          "commit": "ef641bd148fa664d37486830bf1857d9e6288f0a",
+          "verifiedOn": "2026-08-25",
+          "commit": "f0684adb489495a95426570e1e928056174bac07",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c1/"
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -29663,7 +29671,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Windows, native Wayland, X11, and Wayland-only Flatpak are exercised by the tranche gates; native-DPI hardware coverage and macOS remain open."
+          "note": "Fresh Windows, exclusive Wayland, exclusive X11, and Wayland-only Flatpak smokes pass with inspected screenshots; Flatpak retains --filesystem=host. Native-DPI hardware coverage, exhaustive component interaction, and Apple Silicon remain open."
         }
       }
     },
@@ -30154,17 +30162,19 @@
           "note": "P8.6c.2c classifies the complete family inventory without suppression. Named AXAML controls, MenuItem/Header, native events, and partial placement are documented representation differences; 21 product-facing draw/layout/icon/state members remain P8.6c.3 debt."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "status": "verified",
+          "verifiedOn": "2026-08-25",
+          "commit": "f0684adb489495a95426570e1e928056174bac07",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/linux/gate.log"
           ],
-          "platforms": [],
-          "findingCount": 50,
-          "note": "P8.6c.2c restores the selection-filter contract and completes the core source review. Remaining real findings concern toolbar/list rendering and interaction states and are assigned to P8.6c.3."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 0,
+          "note": "All original toolbar routes remain tested, and the has-groups rule now drives collapse, refresh, and tree separators in the same order as the source."
         },
         "visual": {
           "status": "notApplicable",
@@ -30186,25 +30196,29 @@
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-10",
-          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
+          "verifiedOn": "2026-08-25",
+          "commit": "f0684adb489495a95426570e1e928056174bac07",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c2a/avalonia-125/",
-            "eng/avalonia/parity-evidence/P8.6c/c2a/manual-review.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2a/previewer.json"
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/diff/findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/tests/linux/gate.log"
           ],
           "platforms": [
-            "windows"
+            "windows",
+            "linux"
           ],
-          "findingCount": 0,
-          "note": "Focused tests and the three-theme settings-menu capture cover restored git-grep routing, toolbar visibility persistence, and settings opening; the complete interaction matrix remains P8.6c.3."
+          "findingCount": 1542,
+          "note": "Focused tests and the three-theme containing-form matrix cover restored group/separator state, git-grep routing, toolbar visibility persistence, and closed drop-down identity. The finding count is host-wide; popup-open and exhaustive interaction closure remain open."
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-10",
-          "commit": "fa91ed5077f805f64372f78c1f154cb221d3470a",
+          "verifiedOn": "2026-08-25",
+          "commit": "f0684adb489495a95426570e1e928056174bac07",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/c2a/"
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/repository-host-file-status-semantics-40/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -30213,7 +30227,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Build, focused tests, and isolated runtime smokes passed on Windows, native Wayland, X11, and Wayland-only Flatpak; exhaustive component review and macOS remain open."
+          "note": "Fresh builds, focused tests, and inspected isolated runtime smokes pass on Windows, exclusive Wayland, exclusive X11, and Wayland-only Flatpak with --filesystem=host; exhaustive toolbar interaction and Apple Silicon remain open."
         }
       }
     },
