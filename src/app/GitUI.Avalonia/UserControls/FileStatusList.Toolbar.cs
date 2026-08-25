@@ -297,8 +297,10 @@ partial class FileStatusList
         btnOnlyB.IsVisible = filterByDiffStatus;
         btnOnlyA.IsVisible = filterByDiffStatus;
         btnSameChange.IsVisible = filterByDiffStatus;
-        btnCollapseGroups.IsVisible = _showDiffGroups;
+        bool hasGroups = CanUseFindInCommitFilesGitGrep || _showDiffGroups;
+        btnCollapseGroups.IsVisible = hasGroups;
         sepRefresh.IsVisible = btnCollapseGroups.IsVisible && btnRefresh.IsVisible;
+        sepAsTree.IsVisible = btnCollapseGroups.IsVisible || btnRefresh.IsVisible;
 
         bool findInFilesGitGrepVisible = CanUseFindInCommitFilesGitGrep;
         btnFindInFilesGitGrep.IsVisible = findInFilesGitGrepVisible;

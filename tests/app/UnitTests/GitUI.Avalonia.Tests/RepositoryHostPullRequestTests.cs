@@ -238,6 +238,56 @@ public sealed class RepositoryHostPullRequestTests
     }
 
     [AvaloniaTest]
+    public void ViewPullRequestsForm_should_preserve_the_embedded_file_status_list_layout_and_semantic_tree()
+    {
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        FileStatusList files = form.FindControl<FileStatusList>("_fileStatusList")!;
+        StackPanel toolbarControl = files.FindControl<StackPanel>("Toolbar")!;
+        TextBlock splitterControl = files.FindControl<TextBlock>("lblSplitter")!;
+        ComboBox filterControl = files.FindControl<ComboBox>("cboFilterComboBox")!;
+        ListBox activeListControl = files.FindControl<ListBox>("lstFiles")!;
+        BoundsInFiles(toolbarControl).Should().Be(new Rect(0, 0, 742, 25));
+        BoundsInFiles(splitterControl).Should().Be(new Rect(0, 25, 742, 2));
+        BoundsInFiles(filterControl).Should().Be(new Rect(0, 27, 742, 23));
+        BoundsInFiles(activeListControl).Should().Be(new Rect(0, 50, 742, 62));
+
+        Control asTreeButton = files.FindControl<Control>("btnAsTree")!;
+        asTreeButton.Bounds.Should().Be(new Rect(0, 1, 32, 22));
+        files.FindControl<Separator>("sepAsTree")!.IsVisible.Should().BeFalse();
+        files.FindControl<Separator>("sepGroupBy")!.Bounds.Should().Be(new Rect(32, 0, 6, 25));
+        files.FindControl<Control>("btnByPath")!.Bounds.Should().Be(new Rect(38, 1, 23, 22));
+
+        CaptureNode[] nodes = Flatten(
+                new AvaloniaControlTreeReader(form, renderScale: 1)
+                    .ReadPrimary(form, new PixelSize(754, 511)).Root)
+            .ToArray();
+        CaptureNode toolbar = nodes.Single(node => node.FieldName == "Toolbar");
+        CaptureNode list = nodes.Single(node => node.FieldName == "FileStatusListView");
+        CaptureNode asTree = nodes.Single(node => node.FieldName == "btnAsTree");
+        CaptureNode closedDropDownItem = nodes.Single(node => node.FieldName == "tsmiGroupByFilePathTree");
+
+        toolbar.ControlKind.Should().Be("toolStrip");
+        toolbar.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 0, Width = 742, Height = 25 });
+        list.ControlKind.Should().Be("tree");
+        list.BoundsDip.Should().Be(new CaptureRectangleF { X = 0, Y = 50, Width = 742, Height = 62 });
+        list.Visible.Should().BeTrue();
+        asTree.ControlKind.Should().Be("menuItem");
+        asTree.Margin!.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 1, Right = 0, Bottom = 2 });
+        closedDropDownItem.ControlKind.Should().Be("menuItem");
+        closedDropDownItem.Visible.Should().BeFalse();
+        nodes.Where(node => node.FieldName is "lstFiles" or "tvDiffFiles" or "tvFiles")
+            .Should().BeEmpty();
+
+        Rect BoundsInFiles(Control control)
+            => new(control.TranslatePoint(default, files)!.Value, control.Bounds.Size);
+    }
+
+    [AvaloniaTest]
     public void ViewPullRequestsForm_should_project_native_tab_pages_and_hidden_descendants()
     {
         using ViewPullRequestsForm form = CreateForm(

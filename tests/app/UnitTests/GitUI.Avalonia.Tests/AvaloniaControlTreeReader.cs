@@ -128,6 +128,9 @@ internal sealed class AvaloniaControlTreeReader
         control switch
         {
             Window => "window",
+            _ when IsFileStatusToolbar(control) => "toolStrip",
+            _ when IsFileStatusToolbarItem(control) => "menuItem",
+            _ when IsFileStatusListView(control) => "tree",
             ToggleButton => "button",
             Button => "button",
             TextBox => "text",
@@ -304,6 +307,14 @@ internal sealed class AvaloniaControlTreeReader
         bool isNativeTabControl = IsNativeTabControl(control);
         bool isNativeTabPage = IsNativeTabPage(control);
         bool isNativeButton = IsNativeButton(control);
+        bool isFileStatusToolbar = IsFileStatusToolbar(control);
+        bool isFileStatusToolbarItem = IsFileStatusToolbarItem(control);
+        bool isFileStatusListView = IsFileStatusListView(control);
+        bool isFileStatusSplitter = IsFileStatusSplitter(control);
+        bool isToolStripItem = isFileStatusToolbarItem || control is MenuItem or Separator;
+        Control semanticStateControl = IsFileStatusListView(control)
+            ? GetActiveFileStatusListView(control) ?? control
+            : control;
         bool isPopupRoot = isSurfaceRoot && IsPopupSurface(control);
         string? fieldName = isSurfaceRoot
             ? null
@@ -321,7 +332,7 @@ internal sealed class AvaloniaControlTreeReader
         Rect bounds = boundsOverride
             ?? (hasNativeListComposite
                 ? GetSemanticBounds(nativeListComposite!, semanticParent)
-                : GetSemanticBounds(control, semanticParent));
+                : GetSemanticBounds(semanticStateControl, semanticParent));
         bool childSemanticVisible = ancestorSemanticVisible
             && (control is not MenuItem menuItem || menuItem.IsSubMenuOpen)
             && (control is not TabItem tabItem || !isNativeTabPage || tabItem.IsSelected);
@@ -371,20 +382,30 @@ internal sealed class AvaloniaControlTreeReader
                 ? ReadRevisionGridItemHeight(control)
                 : null,
             Padding = ReadThicknessPair(designerLayout?.Padding
+                ?? (isFileStatusToolbar ? new Thickness(0, 0, 1, 0) : (Thickness?)null)
+                ?? (isFileStatusToolbarItem || control is Separator || isFileStatusListView || isFileStatusSplitter ? default(Thickness) : (Thickness?)null)
+                ?? (control is MenuItem ? new Thickness(0, 1, 0, 1) : (Thickness?)null)
                 ?? (_projectDesignerLayout
                     ? GetDefaultDesignerPadding(control)
                     : isNativeTabPage || isNativeButton
                         ? default(Thickness)
                         : GetPropertyValue(control, "Padding"))),
             Margin = ReadThicknessPair(designerLayout?.Margin
+                ?? (isFileStatusToolbar || isFileStatusListView ? default(Thickness) : (Thickness?)null)
+                ?? (isFileStatusToolbarItem
+                    ? control is Separator ? default(Thickness) : new Thickness(0, 1, 0, 2)
+                    : (Thickness?)null)
+                ?? (control is MenuItem or Separator ? default(Thickness) : (Thickness?)null)
+                ?? (isFileStatusSplitter ? new Thickness(3, 0) : (Thickness?)null)
                 ?? (_projectDesignerLayout
                     ? GetDefaultDesignerMargin(control)
                     : isNativeButton
                         ? new Thickness(3)
                         : hasNativeListComposite ? nativeListComposite!.Margin : control.Margin)),
-            Font = ReadFont(control),
-            Colors = ReadColors(control),
+            Font = ReadFont(IsDetachedMenuItem(control) ? _root : control),
+            Colors = ReadColors(semanticStateControl),
             BorderStyle = designerLayout?.BorderStyle
+                ?? (isFileStatusListView || isFileStatusSplitter ? "None" : null)
                 ?? (_projectDesignerLayout
                     ? GetDefaultDesignerBorderStyle(control)
                     : isRevisionGrid || isRevisionGridView || isNativeTabPage
@@ -399,24 +420,37 @@ internal sealed class AvaloniaControlTreeReader
                 : ReadBorderWidth(control),
             CornerRadiusDip = ReadCornerRadius(control),
             Anchor = designerLayout?.Anchor
+                ?? (isFileStatusToolbar || isFileStatusSplitter ? new[] { "Top", "Left" } : null)
+                ?? (isToolStripItem ? [] : (string[]?)null)
+                ?? (isFileStatusListView ? new[] { "Top", "Bottom", "Left", "Right" } : null)
                 ?? (_projectDesignerLayout
                     ? ["Top", "Left"]
                     : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage
                 ? ["Top", "Left"]
                 : []),
             Dock = designerLayout?.Dock
-                ?? (_projectDesignerLayout
-                    ? "None"
-                    : isRevisionGrid || isNativeTabPage || isNativeButton
-                ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
-                : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
+                ?? (isToolStripItem
+                    ? null
+                    : isFileStatusToolbar || isFileStatusSplitter
+                        ? "Top"
+                        : isFileStatusListView
+                            ? "None"
+                            : _projectDesignerLayout
+                                ? "None"
+                                : isRevisionGrid || isNativeTabPage || isNativeButton
+                                    ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
+                                    : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
             AutoSize = designerLayout?.AutoSize
+                ?? (isFileStatusToolbar || isToolStripItem ? true : (bool?)null)
+                ?? (isFileStatusListView || isFileStatusSplitter ? false : (bool?)null)
                 ?? (_projectDesignerLayout
                     ? GetDefaultDesignerAutoSize(control)
                     : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
                 ? false
                 : control is MenuItem or Separator || isPopupRoot ? true : null),
             Alignment = designerLayout?.Alignment
+                ?? (isToolStripItem ? "MiddleCenter" : null)
+                ?? (isFileStatusSplitter ? "TopLeft" : null)
                 ?? (_projectDesignerLayout
                     ? GetDefaultDesignerAlignment(control)
                     : isNativeButton
@@ -427,19 +461,24 @@ internal sealed class AvaloniaControlTreeReader
             Text = GetText(control),
             ToolTip = ToolTip.GetTip(control)?.ToString(),
             TranslationSource = fieldName,
-            TabIndex = isRevisionGrid || isRevisionGridView
+            TabIndex = isFileStatusToolbar ? 0
+                : isFileStatusListView ? 9
+                : isFileStatusSplitter ? 8
+                : isRevisionGrid || isRevisionGridView
                 ? 0
-                : control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
-            TabStop = isNativeTabPage
+                : isFileStatusToolbarItem || control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
+            TabStop = isFileStatusToolbar || isFileStatusSplitter
                 ? false
-                : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl
+                : isNativeTabPage
+                ? false
+                : isFileStatusListView || isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl
                 ? true
-                : control is MenuItem or Separator || isPopupRoot ? null : control.Focusable,
-            Enabled = control is Separator ? false : control.IsEffectivelyEnabled,
+                : isFileStatusToolbarItem || control is MenuItem or Separator || isPopupRoot ? null : control.Focusable,
+            Enabled = control is Separator ? false : semanticStateControl.IsEffectivelyEnabled,
             Visible = isNativeTabPage
                 ? ((TabItem)control).IsSelected && ancestorSemanticVisible
-                : control.IsVisible && ancestorSemanticVisible,
-            Focused = isPopupRoot ? false : IsFocused(control),
+                : IsSemanticallyVisible(control, semanticStateControl) && ancestorSemanticVisible,
+            Focused = isPopupRoot ? false : IsFocused(semanticStateControl),
             ReadOnly = isRevisionGridView ? true : GetNullableBoolProperty(control, "IsReadOnly"),
             CheckState = control switch
             {
@@ -577,6 +616,13 @@ internal sealed class AvaloniaControlTreeReader
             return menuItem.Items.OfType<Control>();
         }
 
+        if (GetPropertyValue(control, "Flyout") is MenuFlyout menuFlyout)
+        {
+            // parity-scaffolding: ToolStrip drop-down items remain children of their owning
+            // item while closed; Avalonia stores the equivalent controls in a detached Flyout.
+            return menuFlyout.Items.OfType<Control>();
+        }
+
         if (control is Separator)
         {
             return [];
@@ -662,7 +708,8 @@ internal sealed class AvaloniaControlTreeReader
             .OfType<Control>()
             .Where(child => child.TemplatedParent is null
                             && child.GetType().Name != "TopLevelHost")
-            .Where(child => !IsSearchResultOverlay(child));
+            .Where(child => !IsSearchResultOverlay(child))
+            .Where(child => !IsFileStatusAlternateView(child));
 
         if (ReferenceEquals(control, _root) && control is Window)
         {
@@ -1165,6 +1212,46 @@ internal sealed class AvaloniaControlTreeReader
     private static bool IsRevisionGridView(Control control) =>
         control is ListBox { Name: "_gridView" }
         && control.GetLogicalAncestors().OfType<RevisionGridControl>().Any();
+
+    private static bool IsFileStatusToolbar(Control control)
+        => control is StackPanel { Name: "Toolbar" }
+           && control.GetLogicalAncestors().OfType<FileStatusList>().Any();
+
+    private static bool IsFileStatusToolbarItem(Control control)
+        => control.Parent is StackPanel toolbar && IsFileStatusToolbar(toolbar);
+
+    private static bool IsFileStatusListView(Control control)
+        => control.Name == "FileStatusListView"
+           && control.GetLogicalAncestors().OfType<FileStatusList>().Any();
+
+    private static bool IsFileStatusSplitter(Control control)
+        => control is TextBlock { Name: "lblSplitter" }
+           && control.GetLogicalAncestors().OfType<FileStatusList>().Any();
+
+    private static bool IsFileStatusAlternateView(Control control)
+        => control.Name is "lstFiles" or "tvDiffFiles" or "tvFiles"
+           && control.GetLogicalAncestors().OfType<FileStatusList>().Any();
+
+    private static Control? GetActiveFileStatusListView(Control control)
+        => control.GetLogicalAncestors()
+            .OfType<FileStatusList>()
+            .FirstOrDefault()?
+            .GetLogicalDescendants()
+            .OfType<Control>()
+            .FirstOrDefault(candidate => IsFileStatusAlternateView(candidate) && candidate.IsVisible);
+
+    private static bool IsSemanticallyVisible(Control control, Control semanticStateControl)
+    {
+        if (control is MenuItem or Separator && TopLevel.GetTopLevel(control) is null)
+        {
+            return false;
+        }
+
+        return semanticStateControl.IsVisible;
+    }
+
+    private static bool IsDetachedMenuItem(Control control)
+        => control is MenuItem or Separator && TopLevel.GetTopLevel(control) is null;
 
     private static bool IsNativeListView(Control control)
         => control is ListBox list && list.Classes.Contains("gitextensions-native-list-items");

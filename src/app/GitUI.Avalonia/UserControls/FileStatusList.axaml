@@ -7,9 +7,16 @@
              x:Class="GitUI.FileStatusList"
              Background="{DynamicResource GitExtensionsControlBackgroundBrush}">
   <UserControl.Styles>
-    <Style Selector="Control.filestatus-toolbar-item">
+    <Style Selector="Button.gitextensions-toolbar-button.filestatus-toolbar-item, ToggleButton.gitextensions-toolbar-button.filestatus-toolbar-item, compat|IconSplitButton.gitextensions-toolbar-button.filestatus-toolbar-item, compat|IconDropDownButton.gitextensions-toolbar-button.filestatus-toolbar-item">
       <Setter Property="Height" Value="22" />
       <Setter Property="MinHeight" Value="22" />
+      <Setter Property="Margin" Value="0,1,0,2" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <Style Selector="Separator.gitextensions-toolbar-separator.filestatus-toolbar-separator">
+      <Setter Property="Width" Value="6" />
+      <Setter Property="Height" Value="25" />
+      <Setter Property="Margin" Value="0" />
     </Style>
     <Style Selector="Button.filestatus-filter-delete">
       <Setter Property="MinWidth" Value="0" />
@@ -91,15 +98,15 @@
   </UserControl.ContextMenu>
   <DockPanel>
     <StackPanel x:Name="Toolbar" DockPanel.Dock="Top" Orientation="Horizontal" Height="25" Background="{DynamicResource GitExtensionsControlBackgroundBrush}">
-      <Button x:Name="btnCollapseGroups" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" ToolTip.Tip="Collapse all groups, otherwise expand the selected group" IsVisible="False">
+      <Button x:Name="btnCollapseGroups" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" Height="22" MinHeight="22" Margin="0,1,0,2" ToolTip.Tip="Collapse all groups, otherwise expand the selected group" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CollapseAll}" />
       </Button>
-      <Separator x:Name="sepRefresh" Classes="gitextensions-toolbar-separator" IsVisible="False" />
-      <Button x:Name="btnRefresh" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" ToolTip.Tip="Refresh artificial commit" IsVisible="False">
+      <Separator x:Name="sepRefresh" Classes="gitextensions-toolbar-separator filestatus-toolbar-separator" IsVisible="False" />
+      <Button x:Name="btnRefresh" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" Height="22" MinHeight="22" Margin="0,1,0,2" ToolTip.Tip="Refresh artificial commit" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" />
       </Button>
-      <Separator x:Name="sepAsTree" Classes="gitextensions-toolbar-separator" />
-      <compat:IconSplitButton x:Name="btnAsTree" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="32" Icon="{x:Static properties:Images.FileTree}" ToolTip.Tip="Toggle flat list / tree">
+      <Separator x:Name="sepAsTree" Classes="gitextensions-toolbar-separator filestatus-toolbar-separator" />
+      <compat:IconSplitButton x:Name="btnAsTree" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="32" Height="22" MinHeight="22" Margin="0,1,0,2" Icon="{x:Static properties:Images.FileTree}" ToolTip.Tip="Toggle flat list / tree">
         <compat:IconSplitButton.Flyout>
           <MenuFlyout>
             <MenuItem x:Name="tsmiGroupByFilePathTree" Header="Group by file _path - tree" />
@@ -114,23 +121,23 @@
           </MenuFlyout>
         </compat:IconSplitButton.Flyout>
       </compat:IconSplitButton>
-      <Separator x:Name="sepGroupBy" Classes="gitextensions-toolbar-separator" />
-      <ToggleButton x:Name="btnByPath" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" IsChecked="True" ToolTip.Tip="Group by file path">
+      <Separator x:Name="sepGroupBy" Classes="gitextensions-toolbar-separator filestatus-toolbar-separator" />
+      <ToggleButton x:Name="btnByPath" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" Height="22" MinHeight="22" Margin="0,1,0,2" IsChecked="True" ToolTip.Tip="Group by file path">
         <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.FolderClosed}" />
       </ToggleButton>
-      <ToggleButton x:Name="btnByExtension" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" ToolTip.Tip="Group by file type (extension)">
+      <ToggleButton x:Name="btnByExtension" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" Height="22" MinHeight="22" Margin="0,1,0,2" ToolTip.Tip="Group by file type (extension)">
         <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.File}" />
       </ToggleButton>
-      <ToggleButton x:Name="btnByStatus" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" ToolTip.Tip="Group by diff status">
+      <ToggleButton x:Name="btnByStatus" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="23" Height="22" MinHeight="22" Margin="0,1,0,2" ToolTip.Tip="Group by diff status">
         <Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.FileStatusModified}" />
       </ToggleButton>
-      <Separator x:Name="sepFilter" Classes="gitextensions-toolbar-separator" IsVisible="False" />
-      <ToggleButton x:Name="btnUnequalChange" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button filestatus-toolbar-item" Content="!" IsChecked="True" IsVisible="False" ToolTip.Tip="Show files with different changes" />
-      <ToggleButton x:Name="btnOnlyB" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button filestatus-toolbar-item" Content="B" IsChecked="True" IsVisible="False" ToolTip.Tip="Show files changed in B only" />
-      <ToggleButton x:Name="btnOnlyA" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button filestatus-toolbar-item" Content="A" IsChecked="True" IsVisible="False" ToolTip.Tip="Show files changed in A only" />
-      <ToggleButton x:Name="btnSameChange" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button filestatus-toolbar-item" Content="=" IsChecked="True" IsVisible="False" ToolTip.Tip="Show files changed equally" />
-      <Separator x:Name="sepOptions" Classes="gitextensions-toolbar-separator" IsVisible="False" />
-      <compat:IconSplitButton x:Name="btnFindInFilesGitGrep" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="32" Icon="{x:Static properties:Images.ViewFile}" IsVisible="False" ToolTip.Tip="Toggle 'Find in commit files using git-grep'">
+      <Separator x:Name="sepFilter" Classes="gitextensions-toolbar-separator filestatus-toolbar-separator" IsVisible="False" />
+      <ToggleButton x:Name="btnUnequalChange" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button filestatus-toolbar-item" Height="22" MinHeight="22" Margin="0,1,0,2" Content="!" IsChecked="True" IsVisible="False" ToolTip.Tip="Show files with different changes" />
+      <ToggleButton x:Name="btnOnlyB" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button filestatus-toolbar-item" Height="22" MinHeight="22" Margin="0,1,0,2" Content="B" IsChecked="True" IsVisible="False" ToolTip.Tip="Show files changed in B only" />
+      <ToggleButton x:Name="btnOnlyA" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button filestatus-toolbar-item" Height="22" MinHeight="22" Margin="0,1,0,2" Content="A" IsChecked="True" IsVisible="False" ToolTip.Tip="Show files changed in A only" />
+      <ToggleButton x:Name="btnSameChange" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button filestatus-toolbar-item" Height="22" MinHeight="22" Margin="0,1,0,2" Content="=" IsChecked="True" IsVisible="False" ToolTip.Tip="Show files changed equally" />
+      <Separator x:Name="sepOptions" Classes="gitextensions-toolbar-separator filestatus-toolbar-separator" IsVisible="False" />
+      <compat:IconSplitButton x:Name="btnFindInFilesGitGrep" compat:TranslationCompat.UseToolTipText="True" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="32" Height="22" MinHeight="22" Margin="0,1,0,2" Icon="{x:Static properties:Images.ViewFile}" IsVisible="False" ToolTip.Tip="Toggle 'Find in commit files using git-grep'">
         <compat:IconSplitButton.Flyout>
           <MenuFlyout>
             <MenuItem x:Name="tsmiFindUsingMatchCase" Header="Match _case" ToggleType="CheckBox" />
@@ -148,8 +155,8 @@
           </MenuFlyout>
         </compat:IconSplitButton.Flyout>
       </compat:IconSplitButton>
-      <Separator x:Name="sepSettings" Classes="gitextensions-toolbar-separator" />
-      <compat:IconDropDownButton x:Name="btnSettings" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="29" Icon="{x:Static properties:Images.Settings}" Content="Settings">
+      <Separator x:Name="sepSettings" Classes="gitextensions-toolbar-separator filestatus-toolbar-separator" />
+      <compat:IconDropDownButton x:Name="btnSettings" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="29" Height="22" MinHeight="22" Margin="0,1,0,2" Icon="{x:Static properties:Images.Settings}" Content="Settings">
         <compat:IconDropDownButton.Flyout>
           <MenuFlyout>
             <MenuItem x:Name="tsmiShowIgnoredFiles" Header="Show _ignored files" ToggleType="CheckBox" IsVisible="False" />
@@ -168,13 +175,13 @@
         </compat:IconDropDownButton.Flyout>
       </compat:IconDropDownButton>
     </StackPanel>
+    <TextBlock x:Name="lblSplitter" DockPanel.Dock="Top" Height="2" Background="#00FFFFFF" />
     <Grid DockPanel.Dock="Top" Height="23">
       <userControls:WatermarkComboBox x:Name="cboFilterComboBox" HorizontalAlignment="Stretch" MinHeight="23" Padding="4,1" FontWeight="Bold" Watermark="Filter files using a regular expression..." />
       <Button x:Name="DeleteFilterButton" Classes="gitextensions-icon-only filestatus-filter-delete" Width="18" Height="23" Margin="0,0,18,0" HorizontalAlignment="Right" Focusable="False" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="/Resources/Icons/DeleteText.png" />
       </Button>
     </Grid>
-    <Separator x:Name="lblSplitter" DockPanel.Dock="Top" Height="2" Margin="0" />
     <Grid x:Name="FindInCommitFilesGitGrepPanel" DockPanel.Dock="Top" Height="23" IsVisible="False">
       <userControls:WatermarkComboBox x:Name="cboFindInCommitFilesGitGrep" HorizontalAlignment="Stretch" FontWeight="Bold" Watermark="Find in commit files using git-grep regular expression..." />
       <Button x:Name="DeleteSearchButton" Classes="gitextensions-icon-only filestatus-filter-delete" Width="18" Height="23" Margin="0,0,18,0" HorizontalAlignment="Right" Focusable="False" IsVisible="False">
