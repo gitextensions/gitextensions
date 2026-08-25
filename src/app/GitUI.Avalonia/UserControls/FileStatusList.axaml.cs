@@ -154,6 +154,7 @@ public partial class FileStatusList : GitModuleControl
         PointerReleased += FileStatusListView_MouseUp;
         WireToolbar();
         WireContextMenu();
+        WinFormsAutoSizeTextBlock.Attach(NoFiles, includePadding: true);
         AttachedToLogicalTree += (_, _) =>
         {
             if (!_isSortSubscriptionActive)
@@ -185,6 +186,7 @@ public partial class FileStatusList : GitModuleControl
         };
 
         InitializeComplete();
+        UpdateEmptyState();
 
         MenuItem CreateOpenSubmoduleMenuItem()
         {
@@ -520,6 +522,8 @@ public partial class FileStatusList : GitModuleControl
             cboFindInCommitFilesGitGrep.Text = string.Empty;
             FindInCommitFilesGitGrep();
         }
+
+        UpdateEmptyState();
 
         // Avalonia adjusts sizes automatically when visibility changes.
     }
@@ -1738,7 +1742,14 @@ public partial class FileStatusList : GitModuleControl
         LoadingFiles.IsVisible = false;
         bool hasItems = _gitItemFilteredStatuses.Count > 0;
         bool hasDiffTreeRows = ShowDiffTree && tvDiffFiles.ItemCount > 0;
-        NoFiles.IsVisible = !hasItems && !hasDiffTreeRows;
+        bool showNoFiles = !hasItems && !hasDiffTreeRows;
+        bool showFilesFilter = !showNoFiles || FindInCommitFilesGitGrepActive;
+
+        // Framework constraint: collapsing the Avalonia host row reproduces WinForms Control.Visible layout.
+        ((Control)(cboFilterComboBox.Parent
+            ?? throw new InvalidOperationException("The file filter is not attached to its layout row."))).IsVisible = showFilesFilter;
+        cboFilterComboBox.IsVisible = showFilesFilter;
+        NoFiles.IsVisible = showNoFiles;
         lstFiles.IsVisible = hasItems && !_isFileTreeMode && !ShowDiffTree;
         tvDiffFiles.IsVisible = (hasItems || hasDiffTreeRows) && ShowDiffTree;
         tvFiles.IsVisible = hasItems && _isFileTreeMode;
@@ -2476,6 +2487,7 @@ public partial class FileStatusList : GitModuleControl
     internal readonly struct TestAccessor(FileStatusList control)
     {
         internal WatermarkComboBox FilterComboBox => control.cboFilterComboBox;
+        internal Control FilterRow => (Control)control.cboFilterComboBox.Parent!;
         internal TextBlock NoFilesLabel => control.NoFiles;
         internal ListBox List => control.lstFiles;
         internal TreeView DiffTree => control.tvDiffFiles;

@@ -47,7 +47,9 @@
             ColumnDefinitions="*,Auto">
         <Grid Margin="3"
               RowDefinitions="24,*">
-          <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+          <!-- Framework constraint: the native ListView client is four DIPs narrower than its outer bounds. -->
+          <Grid Margin="0,0,4,0"
+                ColumnDefinitions="Auto,*,Auto,Auto,Auto">
             <ContentControl x:Name="columnHeaderId"
                             Classes="gitextensions-list-header-cell"
                             Content="#" />
