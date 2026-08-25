@@ -197,9 +197,9 @@ public sealed class FileStatusListTests
         {
             window.Show();
             Dispatcher.UIThread.RunJobs();
-            accessor.List.SelectedItems!.Clear();
-            accessor.List.SelectedItems.Add(accessor.List.Items[0]!);
-            accessor.List.SelectedItems.Add(accessor.List.Items[1]!);
+            accessor.DiffTree.SelectedItems!.Clear();
+            accessor.DiffTree.SelectedItems.Add(accessor.DiffTree.Items[0]!);
+            accessor.DiffTree.SelectedItems.Add(accessor.DiffTree.Items[1]!);
 
             control.SelectedGitItems.Should().Equal(first, second);
             accessor.UpdateContextMenu();
@@ -247,22 +247,68 @@ public sealed class FileStatusListTests
     }
 
     [AvaloniaTest]
-    public void FileStatusList_should_promote_a_single_ordinary_group_and_keep_its_summary_out_of_file_rows()
+    public void FileStatusList_should_render_a_single_ordinary_group_as_the_configured_path_tree_without_a_summary_row()
     {
-        FileStatusList control = new();
-        GitRevision revision = new(ObjectId.Random());
-        GitItemStatus item = new("src/only.cs") { IsChanged = true, IsTracked = true };
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+            FileStatusList control = new();
+            GitRevision revision = new(ObjectId.Random());
+            GitItemStatus item = new("src/only.cs") { IsChanged = true, IsTracked = true };
 
-        control.SetDiffs(
-            [new FileStatusWithDescription(null, revision, "Diff with parent", [item])],
-            isFileTreeMode: false);
+            control.SetDiffs(
+                [new FileStatusWithDescription(null, revision, "Diff with parent", [item])],
+                isFileTreeMode: false);
 
-        FileStatusList.TestAccessor accessor = control.GetTestAccessor();
-        accessor.DiffTree.IsVisible.Should().BeFalse();
-        accessor.List.IsVisible.Should().BeTrue();
-        accessor.List.ItemCount.Should().Be(1);
-        accessor.List.Items.Cast<object>().Single().Should().NotBeOfType<FileStatusList.DiffTreeNode>();
-        control.SelectedGitItem.Should().Be(item);
+            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+            accessor.DiffTree.IsVisible.Should().BeTrue();
+            accessor.List.IsVisible.Should().BeFalse();
+            FileStatusList.DiffTreeNode root = accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>().Single();
+            root.Text.Should().Be("src");
+            root.IsGroupHeader.Should().BeFalse();
+            root.Children.Should().ContainSingle().Which.Text.Should().Be("only.cs");
+            root.Children.Single().Item?.Item.Should().BeSameAs(item);
+            control.SelectedGitItem.Should().Be(item);
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
+    }
+
+    [AvaloniaTest]
+    public void FileStatusList_revision_overload_should_preserve_source_summary_and_path_grouping_pipeline()
+    {
+        DiffListSortType originalSort = DiffListSortService.Instance.DiffListSorting;
+        try
+        {
+            DiffListSortService.Instance.DiffListSorting = DiffListSortType.FilePath;
+            FileStatusList control = new();
+            GitRevision first = new(ObjectId.Random());
+            GitRevision second = new(ObjectId.Random());
+            GitItemStatus item = new("src/App.cs") { IsChanged = true, IsTracked = true };
+
+            control.SetDiffs(first, second, [item]);
+
+            FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+            accessor.DiffTree.IsVisible.Should().BeTrue();
+            accessor.List.IsVisible.Should().BeFalse();
+            FileStatusList.DiffTreeNode root = accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>().Single();
+            root.Text.Should().Be("src");
+            root.Children.Should().ContainSingle().Which.Text.Should().Be("App.cs");
+            root.Children.Single().Item?.FirstRevision.Should().BeSameAs(first);
+            root.Children.Single().Item?.SecondRevision.Should().BeSameAs(second);
+            root.Children.Single().IsGroupHeader.Should().BeFalse();
+            control.SelectFileOrFolder(RelativePath.From("src")).Should().BeTrue();
+            control.SelectedFolder.Should().Be(RelativePath.From("src"));
+            control.SelectFileOrFolder(RelativePath.From("src/App.cs")).Should().BeTrue();
+            control.SelectedGitItem.Should().BeSameAs(item);
+        }
+        finally
+        {
+            DiffListSortService.Instance.DiffListSorting = originalSort;
+        }
     }
 
     [AvaloniaTest]
