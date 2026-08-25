@@ -161,6 +161,27 @@ public sealed partial class ParityScreenshotTests
 
     [AvaloniaTest]
     [Category(P02Category)]
+    public void Avalonia_tree_reader_should_emit_source_root_and_text_client_semantics()
+    {
+        TextBox editor = new() { Name = "txtValue", Width = 100, Height = 23 };
+        Window window = new() { Width = 320, Height = 160, Content = editor };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        CaptureSurface surface = new AvaloniaControlTreeReader(window, renderScale: 1)
+            .ReadPrimary(window, new PixelSize(320, 160));
+        CaptureNode editorNode = surface.Root.Children.Should().ContainSingle().Subject;
+
+        surface.Root.TabIndex.Should().Be(0);
+        surface.Root.TabStop.Should().BeTrue();
+        editorNode.FieldName.Should().Be(editor.Name);
+        editorNode.ClientSizeDip.Should().Be(new CaptureSizeF { Width = 96, Height = 19 });
+        editorNode.ClientSizePx.Should().Be(new CaptureSize { Width = 96, Height = 19 });
+        window.Close();
+    }
+
+    [AvaloniaTest]
+    [Category(P02Category)]
     public void Avalonia_tree_reader_should_emit_label_and_group_text_without_template_children()
     {
         Label label = new() { Name = "lblValue", Content = "_Value" };

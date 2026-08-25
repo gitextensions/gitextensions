@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using GitExtUtils;
 using ResourceManager.Hotkey;
@@ -41,6 +42,18 @@ public class GitExtensionsControl : TranslatedControl
     public string GetShortcutKeyDisplayString<T>(T commandCode)
         where T : struct, Enum
         => _hotkeys.GetShortcutDisplay(commandCode);
+
+    protected void UpdateTooltipWithShortcut<T>(Control control, T commandCode)
+        where T : struct, Enum
+    {
+        string text = ToolTip.GetTip(control) switch
+        {
+            TextBlock textBlock => textBlock.Text ?? string.Empty,
+            string value => value,
+            _ => string.Empty,
+        };
+        ToolTip.SetTip(control, text.UpdateSuffix(_hotkeys.GetShortcutToolTip(commandCode)));
+    }
 
     protected virtual bool ExecuteCommand(int command)
     {

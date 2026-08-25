@@ -20,6 +20,21 @@
                      spellChecker|EditNetSpell.repository-host-comment-editor TextBox#TextBox:disabled /template/ Border#PART_BorderElement">
       <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
     </Style>
+    <Style Selector="ListBox.repository-host-discussion">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="ListBox.repository-host-discussion ListBoxItem">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Margin" Value="0,0,0,12" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Focusable" Value="False" />
+    </Style>
+    <Style Selector="ListBox.repository-host-discussion ListBoxItem:pointerover,
+                     ListBox.repository-host-discussion ListBoxItem:selected">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
+    </Style>
   </Window.Styles>
   <Grid x:Name="splitContainer2"
         RowDefinitions="146*,6,359*">
@@ -143,7 +158,9 @@
               Margin="6,2,6,6"
               RowDefinitions="*,80,33">
           <ListBox x:Name="_discussionWB"
+                   Classes="repository-host-discussion"
                    Margin="3"
+                   Focusable="True"
                    Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                    Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}"
                    SelectionMode="Single" />

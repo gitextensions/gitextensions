@@ -27,6 +27,7 @@ using GitUI.Editor.Diff;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using ResourceManager.Hotkey;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Editor;
@@ -1521,7 +1522,34 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         }
 
         LoadHotkeys(HotkeySettingsName);
+        stageSelectedLinesToolStripMenuItem.InputGesture = GetGesture(Command.StageLines);
+        unstageSelectedLinesToolStripMenuItem.InputGesture = GetGesture(Command.UnstageLines);
+        resetSelectedLinesToolStripMenuItem.InputGesture = GetGesture(Command.ResetLines);
+        ignoreAllWhitespaceChangesToolStripMenuItem.InputGesture = GetGesture(Command.IgnoreAllWhitespace);
+        increaseNumberOfLinesToolStripMenuItem.InputGesture = GetGesture(Command.IncreaseNumberOfVisibleLines);
+        decreaseNumberOfLinesToolStripMenuItem.InputGesture = GetGesture(Command.DecreaseNumberOfVisibleLines);
+        showEntireFileToolStripMenuItem.InputGesture = GetGesture(Command.ShowEntireFile);
+        showSyntaxHighlightingToolStripMenuItem.InputGesture = GetGesture(Command.ShowSyntaxHighlighting);
+        showGitWordColoringToolStripMenuItem.InputGesture = GetGesture(Command.ShowGitWordColoring);
+        showDifftasticToolStripMenuItem.InputGesture = GetGesture(Command.ShowDifftastic);
+        treatAllFilesAsTextToolStripMenuItem.InputGesture = GetGesture(Command.TreatFileAsText);
+        findToolStripMenuItem.InputGesture = GetGesture(Command.Find);
+        replaceToolStripMenuItem.InputGesture = GetGesture(Command.Replace);
+        goToLineToolStripMenuItem.InputGesture = GetGesture(Command.GoToLine);
+
+        UpdateTooltipWithShortcut(nextChangeButton, Command.NextChange);
+        UpdateTooltipWithShortcut(previousChangeButton, Command.PreviousChange);
+        UpdateTooltipWithShortcut(increaseNumberOfLines, Command.IncreaseNumberOfVisibleLines);
+        UpdateTooltipWithShortcut(decreaseNumberOfLines, Command.DecreaseNumberOfVisibleLines);
+        UpdateTooltipWithShortcut(showEntireFileButton, Command.ShowEntireFile);
+        UpdateTooltipWithShortcut(showSyntaxHighlighting, Command.ShowSyntaxHighlighting);
+        UpdateTooltipWithShortcut(ignoreAllWhitespaces, Command.IgnoreAllWhitespace);
         _hotkeysLoaded = true;
+
+        return;
+
+        KeyGesture? GetGesture(Command command)
+            => KeysMapper.ToKeyGesture(Hotkeys.GetShortcutKey(command));
     }
 
     private void SetDiffText(string text, DiffHighlightService highlightService, bool showLeftColumn)
@@ -3009,6 +3037,10 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         public MenuItem AutomaticContinuousScrollMenuItem => _control.automaticContinuousScrollToolStripMenuItem;
 
         public Button SettingsButton => _control.settingsButton;
+
+        public Button NextChangeButton => _control.nextChangeButton;
+
+        public MenuItem FindMenuItem => _control.findToolStripMenuItem;
 
         public int VRulerPosition => _control.VRulerPosition;
 

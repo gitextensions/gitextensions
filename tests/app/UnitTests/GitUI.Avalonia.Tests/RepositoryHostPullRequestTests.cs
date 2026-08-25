@@ -156,7 +156,12 @@ public sealed class RepositoryHostPullRequestTests
         commentsLayout.RowDefinitions[0].Height.IsStar.Should().BeTrue();
         commentsLayout.RowDefinitions[1].Height.Value.Should().Be(80);
         commentsLayout.RowDefinitions[2].Height.Value.Should().Be(33);
-        form.FindControl<ListBox>("_discussionWB")!.Margin.Should().Be(new Avalonia.Thickness(3));
+        ListBox discussion = form.FindControl<ListBox>("_discussionWB")!;
+        discussion.Margin.Should().Be(new Avalonia.Thickness(3));
+        discussion.Classes.Should().Contain("repository-host-discussion");
+        discussion.Focusable.Should().BeTrue();
+        discussion.BorderThickness.Should().Be(new Avalonia.Thickness(0));
+        discussion.Padding.Should().Be(new Avalonia.Thickness(0));
         form.FindControl<GitUI.SpellChecker.EditNetSpell>("_postCommentText")!.Margin.Should().Be(new Avalonia.Thickness(2));
         DockPanel commentActions = form.FindControl<DockPanel>("flowLayoutPanel1")!;
         commentActions.Margin.Should().Be(new Avalonia.Thickness(2));
@@ -396,10 +401,15 @@ public sealed class RepositoryHostPullRequestTests
         CaptureNode[] commentNodes = ReadNodes();
         CaptureNode nowHiddenDiffPage = commentNodes.Single(node => node.FieldName == "tabPage1");
         CaptureNode selectedCommentsPage = commentNodes.Single(node => node.FieldName == "tabPage2");
+        CaptureNode discussion = commentNodes.Single(node => node.FieldName == "_discussionWB");
         nowHiddenDiffPage.Visible.Should().BeFalse();
         Flatten(nowHiddenDiffPage).Should().OnlyContain(node => node.Visible != true);
         selectedCommentsPage.Visible.Should().BeTrue();
         selectedCommentsPage.BoundsDip.Should().Be(new CaptureRectangleF { X = 4, Y = 30, Width = 746, Height = 325 });
+        discussion.ControlKind.Should().Be("control");
+        discussion.BorderStyle.Should().Be("None");
+        discussion.BorderWidthDip.Should().BeNull();
+        discussion.Children.Should().BeEmpty();
 
         form.Close();
 
