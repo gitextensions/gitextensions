@@ -37,6 +37,7 @@ using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
+using SourceControls = GitUI.Compat.WinFormsControls;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -525,6 +526,27 @@ public sealed class FormBrowseTests
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "deleteIndexLockToolStripMenuItem", "Text", "&Delete index.lock");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "editLocalGitConfigToolStripMenuItem", "Text", "&Edit .git/config");
         translation.Received(1).AddTranslationItem(nameof(FormBrowse), "repoSettingsToolStripMenuItem", "Text", "Rep&ository settings...");
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void FormBrowse_and_RevisionGrid_should_preserve_source_control_identities_on_native_Avalonia_controls()
+    {
+        using FormBrowse form = new();
+
+        form.FindControl<SourceControls.MenuStripEx>("mainMenuStrip").Should().NotBeNull();
+        form.FindControl<SourceControls.ToolStripMenuItem>("repositoryToolStripMenuItem").Should().NotBeNull();
+        form.FindControl<SourceControls.ToolStripContainer>("toolPanel").Should().NotBeNull();
+        form.FindControl<SourceControls.SplitContainer>("RightSplitContainer").Should().NotBeNull();
+        form.FindControl<SourceControls.SplitContainer>("RevisionsSplitContainer").Should().NotBeNull();
+        form.FindControl<SourceControls.Panel>("RevisionGridContainer").Should().NotBeNull();
+        form.FindControl<SourceControls.TabPage>("CommitInfoTabPage").Should().NotBeNull();
+        form.FindControl<SourceControls.TabPage>("DiffTabPage").Should().NotBeNull();
+        form.FindControl<SourceControls.TabPage>("TreeTabPage").Should().NotBeNull();
+        form.FindControl<SourceControls.TabPage>("GpgInfoTabPage").Should().NotBeNull();
+        form.RevisionGrid.FindControl<SourceControls.ContextMenuStrip>("mainContextMenu").Should().NotBeNull();
+        form.RevisionGrid.FindControl<SourceControls.ToolStripMenuItem>("commitToolStripMenuItem").Should().NotBeNull();
+        form.RevisionGrid.FindControl<SourceControls.ToolStripSeparator>("sepCommit").Should().NotBeNull();
     }
 
     [AvaloniaTest]

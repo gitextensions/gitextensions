@@ -35,6 +35,7 @@ using Microsoft.VisualStudio.Threading;
 
 using ResourceManager;
 using ResourceManager.Hotkey;
+using Keys = GitExtensions.Shims.WinForms.Keys;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
@@ -554,7 +555,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
-    private void fileToolStripMenuItem_RecentRepositoriesCleared(object? sender, EventArgs e)
+    private void fileToolStripMenuItem_RecentRepositoriesCleared(object sender, EventArgs e)
     {
         dashboard.RefreshContent();
     }
@@ -664,7 +665,7 @@ public sealed partial class FormBrowse : GitModuleForm
             (_, args) => SetWorkingDir(args.GitModule.WorkingDir));
     }
 
-    private void _viewPullRequestsToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
         {
@@ -672,7 +673,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
-    private void _createPullRequestToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
         {
@@ -680,7 +681,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
-    private void _addUpstreamRemoteToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void _addUpstreamRemoteToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
         {
@@ -688,8 +689,7 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
-    private bool TryGetRepositoryHost(
-        [NotNullWhen(returnValue: true)] out IRepositoryHostPlugin? repoHost)
+    private bool TryGetRepositoryHost([NotNullWhen(returnValue: true)] out IRepositoryHostPlugin? repoHost)
     {
         repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
         if (repoHost is not null)
@@ -714,7 +714,7 @@ public sealed partial class FormBrowse : GitModuleForm
             () => operation(_loadOperations.JoinableTaskFactory, cancellationToken));
     }
 
-    private void PluginSettingsToolStripMenuItemClick(object? sender, EventArgs e)
+    private void PluginSettingsToolStripMenuItemClick(object sender, EventArgs e)
         => UICommands.StartPluginSettingsDialog(this);
 
     public void SetWorkingDir(string? path, ObjectId selectedId = default, ObjectId firstId = default)
@@ -804,7 +804,7 @@ public sealed partial class FormBrowse : GitModuleForm
         RefreshWorkspaceLayout(selectCommitInfoTab: false);
     }
 
-    private void CommitInfoPositionClick(object? sender, EventArgs e)
+    private void CommitInfoPositionClick(object sender, EventArgs e)
     {
         CommitInfoPosition[] positions = Enum.GetValues<CommitInfoPosition>();
         int next = ((int)AppSettings.CommitInfoPosition + 1) % positions.Length;
@@ -1077,12 +1077,12 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
-    private void ManageRemoteRepositoriesToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ManageRemoteRepositoriesToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartRemotesDialog(this);
     }
 
-    private void ManageSubmodulesToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ManageSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartSubmodulesDialog(this);
         UpdateSubmodulesStructure();
@@ -1094,23 +1094,23 @@ public sealed partial class FormBrowse : GitModuleForm
         UpdateSubmodulesStructure();
     }
 
-    private void SynchronizeAllSubmodulesToolStripMenuItemClick(object? sender, EventArgs e)
+    private void SynchronizeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartSyncSubmodulesDialog(this);
         UpdateSubmodulesStructure();
     }
 
-    private void CompressGitDatabaseToolStripMenuItemClick(object? sender, EventArgs e)
+    private void CompressGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
     {
         FormProcess.ReadDialog(this, UICommands, arguments: "gc", Module.WorkingDir, input: null, useDialogSettings: true);
     }
 
-    private void recoverLostObjectsToolStripMenuItemClick(object? sender, EventArgs e)
+    private void recoverLostObjectsToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartVerifyDatabaseDialog(this);
     }
 
-    private void deleteIndexLockToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void deleteIndexLockToolStripMenuItem_Click(object sender, EventArgs e)
     {
         try
         {
@@ -1127,13 +1127,13 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
-    private void EditLocalGitConfigToolStripMenuItemClick(object? sender, EventArgs e)
+    private void EditLocalGitConfigToolStripMenuItemClick(object sender, EventArgs e)
     {
         string fileName = Path.Combine(Module.ResolveGitInternalPath("config"));
         UICommands.StartFileEditorDialog(fileName, showWarning: true);
     }
 
-    private void RepoSettingsToolStripMenuItemClick(object? sender, EventArgs e)
+    private void RepoSettingsToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartRepoSettingsDialog(this);
     }
@@ -1435,7 +1435,7 @@ public sealed partial class FormBrowse : GitModuleForm
         });
     }
 
-    private void RefreshToolStripMenuItemClick(object? sender, EventArgs e)
+    private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.RepoChangedNotifier.Notify();
         RefreshGitStatusMonitor();
@@ -1484,21 +1484,25 @@ public sealed partial class FormBrowse : GitModuleForm
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
         _loadOperations.FileAndForget(async () =>
         {
-            await TaskScheduler.Default;
-            IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData =
-                _aheadBehindDataProvider.GetData(branchName);
-            await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData = await Task.Run(
+                () => _aheadBehindDataProvider.GetData(branchName),
+                cancellationToken);
+            await Dispatcher.UIThread.InvokeAsync(
+                () =>
+                {
+                    if (!ReferenceEquals(module, Module)
+                        || !string.Equals(branchName, Module.GetSelectedBranch(), StringComparison.Ordinal))
+                    {
+                        return;
+                    }
 
-            if (!ReferenceEquals(module, Module)
-                || !string.Equals(branchName, Module.GetSelectedBranch(), StringComparison.Ordinal))
-            {
-                return;
-            }
-
-            toolStripButtonPush.DisplayAheadBehindInformation(
-                aheadBehindData,
-                branchName,
-                GetShortcutKeyTooltipString(Command.Push));
+                    toolStripButtonPush.DisplayAheadBehindInformation(
+                        aheadBehindData,
+                        branchName,
+                        GetShortcutKeyTooltipString(Command.Push));
+                },
+                DispatcherPriority.Normal,
+                cancellationToken);
         });
     }
 
@@ -1564,12 +1568,12 @@ public sealed partial class FormBrowse : GitModuleForm
             hasWorkingTree;
     }
 
-    private void CommitToolStripMenuItemClick(object? sender, EventArgs e)
+    private void CommitToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartCommitDialog(this);
     }
 
-    private void undoLastCommitToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
     {
         bool confirmed = MessageBoxes.ConfirmSuppressible(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, AppSettings.DontConfirmUndoLastCommit, icon: TaskDialogIcon.Warning);
 
@@ -1589,24 +1593,24 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartPushDialog(this, pushOnShow: false);
     }
 
-    private void ResetToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
     {
         UICommands.StartResetChangesDialog(this, Module.GetWorkTreeFiles(), onlyWorkTree: false);
         RefreshGitStatusMonitor();
         revisionDiff.RefreshArtificial();
     }
 
-    private void RunMergetoolToolStripMenuItemClick(object? sender, EventArgs e)
+    private void RunMergetoolToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartResolveConflictsDialog(this);
     }
 
-    private void CreateBranchToolStripMenuItemClick(object? sender, EventArgs e)
+    private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartCreateBranchDialog(this, RevisionGrid.SelectedRevision?.ObjectId ?? default);
     }
 
-    private void DeleteBranchToolStripMenuItemClick(object? sender, EventArgs e)
+    private void DeleteBranchToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartDeleteBranchDialog(this, string.Empty);
     }
@@ -1616,7 +1620,7 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartPullDialog(this);
     }
 
-    private void ToolStripButtonPullClick(object? sender, EventArgs e)
+    private void ToolStripButtonPullClick(object sender, EventArgs e)
     {
         GitPullAction action = AppSettings.DefaultPullAction == GitPullAction.None
             ? AppSettings.FormPullAction
@@ -1624,45 +1628,45 @@ public sealed partial class FormBrowse : GitModuleForm
         DoPull(action, isSilent: AppSettings.DefaultPullAction != GitPullAction.None);
     }
 
-    private void DoPull(GitPullAction action, bool isSilent)
+    private void DoPull(GitPullAction pullAction, bool isSilent)
     {
         if (isSilent)
         {
-            UICommands.StartPullDialogAndPullImmediately(this, pullAction: action);
+            UICommands.StartPullDialogAndPullImmediately(this, pullAction: pullAction);
         }
         else
         {
-            UICommands.StartPullDialog(this, pullAction: action);
+            UICommands.StartPullDialog(this, pullAction: pullAction);
         }
     }
 
-    private void StashToolStripMenuItemClick(object? sender, EventArgs e)
+    private void StashToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartStashDialog(this);
     }
 
-    private void toolStripMenuItemReflog_Click(object? sender, EventArgs e)
+    private void toolStripMenuItemReflog_Click(object sender, EventArgs e)
     {
         using FormReflog formReflog = new(UICommands);
         formReflog.ShowDialog(this);
     }
 
-    private void PatchToolStripMenuItemClick(object? sender, EventArgs e)
+    private void PatchToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartViewPatchDialog(this);
     }
 
-    private void FileExplorerToolStripMenuItemClick(object? sender, EventArgs e)
+    private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
     {
         OsShellUtil.OpenWithFileExplorer(Module.WorkingDir);
     }
 
-    private void MergeBranchToolStripMenuItemClick(object? sender, EventArgs e)
+    private void MergeBranchToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartMergeBranchDialog(this, branch: null);
     }
 
-    private void RebaseToolStripMenuItemClick(object? sender, EventArgs e)
+    private void RebaseToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (RevisionGrid.SelectedRevision is not { IsArtificial: false } revision)
         {
@@ -1672,23 +1676,23 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartRebaseDialog(this, revision.ObjectId.ToString());
     }
 
-    private void TagToolStripMenuItemClick(object? sender, EventArgs e)
+    private void TagToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartCreateTagDialog(this, RevisionGrid.SelectedRevision);
     }
 
-    private void DeleteTagToolStripMenuItemClick(object? sender, EventArgs e)
+    private void DeleteTagToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartDeleteTagDialog(this, null);
     }
 
-    private void CherryPickToolStripMenuItemClick(object? sender, EventArgs e)
+    private void CherryPickToolStripMenuItemClick(object sender, EventArgs e)
     {
         IReadOnlyList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
         UICommands.StartCherryPickDialog(this, revisions);
     }
 
-    private void ArchiveToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
     {
         IReadOnlyList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
         if (revisions.Count is (< 1 or > 2))
@@ -1702,7 +1706,7 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
     }
 
-    private void ApplyPatchToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ApplyPatchToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartApplyPatchDialog(this);
     }
@@ -1901,7 +1905,7 @@ public sealed partial class FormBrowse : GitModuleForm
         return base.GetScriptOptionsProvider();
     }
 
-    private void OnShowSettingsClick(object? sender, EventArgs e)
+    private void OnShowSettingsClick(object sender, EventArgs e)
     {
         string translation = AppSettings.Translation;
         CommitInfoPosition commitInfoPosition = AppSettings.CommitInfoPosition;
@@ -1911,7 +1915,7 @@ public sealed partial class FormBrowse : GitModuleForm
         HandleSettingsChanged(translation, commitInfoPosition);
     }
 
-    private void toolsToolStripMenuItem_SettingsChanged(object? sender, SettingsChangedEventArgs e)
+    private void toolsToolStripMenuItem_SettingsChanged(object sender, Menus.SettingsChangedEventArgs e)
     {
         HandleSettingsChanged(e.OldTranslation, e.OldCommitInfoPosition);
     }
@@ -1990,7 +1994,7 @@ public sealed partial class FormBrowse : GitModuleForm
         CommitInfoTabControl.SelectedItem = tabs[(selectedIndex + offset + tabs.Length) % tabs.Length];
     }
 
-    public override bool ProcessHotkey(WinFormsShims.Keys keyData)
+    public override bool ProcessHotkey(Keys keyData)
     {
         // Avalonia resolves menu access keys after the window key handler; preserve WinForms menu precedence.
         string? gesture = KeysMapper.ToKeyGesture(keyData)?.ToString();
