@@ -230,6 +230,7 @@ public sealed class RepositoryHostForkCloneTests
         CaptureNode search = nodes.Single(node => node.FieldName == "searchResultsLV");
         CaptureNode depth = nodes.Single(node => node.FieldName == "depthUpDown");
         CaptureNode browse = nodes.Single(node => node.FieldName == "browseForCloneToDirbtn");
+        CaptureNode tabs = nodes.Single(node => node.FieldName == "tabControl");
         CaptureNode layout = nodes.Single(node => node.FieldName == "tableLayoutPanel2");
 
         owned.BorderStyle.Should().Be("Fixed3D");
@@ -249,6 +250,7 @@ public sealed class RepositoryHostForkCloneTests
         depth.BorderWidthDip.Should().BeNull();
         browse.TabStop.Should().BeTrue();
         browse.BorderStyle.Should().Be("None");
+        tabs.Focused.Should().BeTrue();
         layout.BorderStyle.Should().Be("None");
         layout.Font.Should().NotBeNull();
         nodes.Where(node => node.FieldName?.StartsWith("columnHeader", StringComparison.Ordinal) == true)

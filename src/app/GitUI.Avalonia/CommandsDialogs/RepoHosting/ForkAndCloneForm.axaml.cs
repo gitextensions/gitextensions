@@ -102,7 +102,6 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         destinationTB.LostFocus += DestinationTB_LostFocus;
         createDirTB.LostFocus += CreateDirTB_LostFocus;
 
-        forkBtn.IsEnabled = false;
         cloneBtn.IsEnabled = false;
         SetProtocolSelectionVisibility(false);
     }
@@ -139,6 +138,9 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     {
         base.OnRuntimeLoad(e);
         ForkAndCloneForm_Load(this, e);
+
+        // Framework constraint: WinForms activates the first eligible control by tab order.
+        tabControl.Focus();
     }
 
     private void ForkAndCloneForm_Load(object sender, EventArgs e)
