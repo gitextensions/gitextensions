@@ -1,5 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
+using Avalonia.Threading;
 
 namespace GitUI.Compat.WinFormsControls;
 
@@ -102,6 +104,18 @@ public class ToolStripContainer : WrapPanel
 public class ToolStripDropDownItem : MenuItem
 {
     protected override Type StyleKeyOverride => typeof(MenuItem);
+
+    protected override void OnSubmenuOpened(RoutedEventArgs e)
+    {
+        base.OnSubmenuOpened(e);
+
+        // Framework constraint: Avalonia measures each popup from its own template. WinForms
+        // instead gives every item the widest ToolStrip text-and-shortcut layout when it opens.
+        WinFormsToolStripMenuSizer.Apply(this);
+        Dispatcher.UIThread.Post(
+            () => WinFormsToolStripMenuSizer.Apply(this),
+            DispatcherPriority.Loaded);
+    }
 }
 
 /// <summary>
