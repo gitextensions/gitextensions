@@ -418,6 +418,10 @@ public sealed class RepositoryHostPullRequestTests
         CaptureNode nowHiddenDiffPage = commentNodes.Single(node => node.FieldName == "tabPage1");
         CaptureNode selectedCommentsPage = commentNodes.Single(node => node.FieldName == "tabPage2");
         CaptureNode discussion = commentNodes.Single(node => node.FieldName == "_discussionWB");
+        commentNodes.Single(node => node.FieldName == "_diffViewer").Colors.Foreground.Should().Be("#FF000000");
+        commentNodes.Single(node => node.FieldName == "_fileStatusList").Colors.Foreground.Should().Be("#FF000000");
+        commentNodes.Single(node => node.FieldName == "lblSplitter").Colors.Foreground.Should().Be("#FF000000");
+        commentNodes.Single(node => node.FieldName == "internalFileViewer").Colors.Foreground.Should().Be("#FF000000");
         nowHiddenDiffPage.Visible.Should().BeFalse();
         Flatten(nowHiddenDiffPage).Should().OnlyContain(node => node.Visible != true);
         selectedCommentsPage.Visible.Should().BeTrue();
