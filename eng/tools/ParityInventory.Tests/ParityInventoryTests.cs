@@ -354,6 +354,42 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_recognize_named_content_control_with_text_block_content_as_a_translation_key()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Designer.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private Label helpTextLbl;
+                private void InitializeComponent()
+                {
+                    helpTextLbl.Text = "Translated help";
+                }
+            }
+            """);
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml", """
+            <UserControl xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         x:Class="Sample.Widget">
+              <Label x:Name="helpTextLbl">
+                <TextBlock Text="Translated help" />
+              </Label>
+            </UserControl>
+            """);
+        fixture.WriteEnglish("helpTextLbl.Text");
+
+        InventoryReport report = fixture.Run();
+
+        report.Twin.TranslationKeys.Should().ContainSingle(item =>
+            item.Key == "helpTextLbl.Text" && item.InEnglishCatalog);
+        report.Findings.Should().NotContain(item =>
+            item.Code == "translation.key.missing" && item.Path == "translation.key/helpTextLbl.Text");
+    }
+
+    [Test]
     public void Run_should_not_report_a_shared_upstream_catalog_omission_as_port_debt()
     {
         const string code = """

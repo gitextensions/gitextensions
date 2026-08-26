@@ -786,9 +786,14 @@ internal static class SourceInventoryReader
 
             // AXAML x:Name generates the private field that the WinForms Designer declares explicitly.
             part.Members.Add(NewMember(part.Path, part.Members.Count, "field", name, "private", $"{kind} {name}"));
+            XElement[] contentChildren = element.Elements().Take(2).ToArray();
+            bool hasNestedTextContent = contentChildren.Length == 1
+                && contentChildren[0].Name.LocalName == "TextBlock"
+                && contentChildren[0].Attribute("Text") is not null;
             string? translatedProperty = element.Attribute("Header") is not null
                 || element.Attribute("Content") is not null
                 || element.Attribute("Text") is not null
+                || hasNestedTextContent
                     ? "Text"
                     : element.Attribute("Watermark") is not null ? "Watermark" : null;
             if (translatedProperty is not null)
