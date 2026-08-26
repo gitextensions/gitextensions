@@ -142,6 +142,7 @@ internal sealed class AvaloniaControlTreeReader
             ListBox => "list",
             ContextMenu => "popup",
             _ when IsPopupPresenter(control) => "popup",
+            ListBoxItem when IsComboBoxPopupItem(control) => "listItem",
             Menu => "menu",
             MenuItem => "menuItem",
             Separator => "menuItem",
@@ -179,6 +180,13 @@ internal sealed class AvaloniaControlTreeReader
             // parity-scaffolding: WinForms captures the DisplayMember text, not the selected
             // object's diagnostic ToString value; mirror the product ItemTemplate contract.
             return hostedRemote.DisplayData;
+        }
+
+        if (control is ListBoxItem { Content: IHostedRemote popupRemote })
+        {
+            // parity-scaffolding: the open ComboBox surface exposes the same display member
+            // text as WinForms' native list, rather than the model's diagnostic ToString().
+            return popupRemote.DisplayData;
         }
 
         object? content = GetPropertyValue(control, "Content");
@@ -326,6 +334,8 @@ internal sealed class AvaloniaControlTreeReader
         bool isSourceLabelSubstitute = IsSourceLabelSubstitute(control);
         bool isWatermarkComboBox = IsFileStatusWatermarkComboBox(control);
         bool isSourceTransparentContainer = IsSourceTransparentContainer(control);
+        bool hasSourceTransparentColors = HasSourceTransparentColors(control);
+        bool hasSourceLightTransparentColors = HasSourceLightTransparentColors(control);
         bool isRepositoryHostDiscussion = IsRepositoryHostDiscussion(control);
         bool hasWinFormsTextBoxClientInset = control is TextBox && !isSpellCheckTextBox;
         bool isToolStripItem = isSemanticToolStripItem || control is MenuItem or Separator;
@@ -333,6 +343,8 @@ internal sealed class AvaloniaControlTreeReader
             ? GetActiveFileStatusListView(control) ?? control
             : control;
         bool isPopupRoot = isSurfaceRoot && IsPopupSurface(control);
+        bool isComboBoxPopup = isPopupRoot && IsComboBoxPopup(control);
+        bool isComboBoxPopupItem = IsComboBoxPopupItem(control);
         string? fieldName = isSurfaceRoot
             ? null
             : fieldNames.FirstOrDefault()
@@ -343,6 +355,8 @@ internal sealed class AvaloniaControlTreeReader
             : semanticParent;
         string segment = isSurfaceRoot
             ? $"$root:{control.GetType().Name}"
+            : isComboBoxPopupItem
+                ? $"item[{ordinal}]"
             : fieldName ?? $"$unnamed[{ordinal}]:{control.GetType().Name}";
         string id = string.IsNullOrEmpty(parentId) ? segment : $"{parentId}/{segment}";
         DesignerLayoutMetadata? designerLayout = GetDesignerLayout(control, fieldName);
@@ -371,7 +385,9 @@ internal sealed class AvaloniaControlTreeReader
             FieldName = fieldName,
             FieldAliases = fieldNames.Skip(1).ToArray(),
             Name = string.IsNullOrEmpty(control.Name) ? null : control.Name,
-            Type = control.GetType().FullName ?? control.GetType().Name,
+            Type = isComboBoxPopupItem && control is ListBoxItem { Content: { } popupItem }
+                ? popupItem.GetType().FullName ?? popupItem.GetType().Name
+                : control.GetType().FullName ?? control.GetType().Name,
             ControlKind = isRepositoryHostDiscussion ? "control" : GetControlKind(control),
             BoundsPx = new CaptureRectangle
             {
@@ -400,7 +416,9 @@ internal sealed class AvaloniaControlTreeReader
             ItemHeightDip = isRevisionGridView
                 ? ReadRevisionGridItemHeight(control)
                 : null,
-            Padding = ReadThicknessPair(designerLayout?.Padding
+            Padding = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem
+                ? default(Thickness)
+                : designerLayout?.Padding
                 ?? (isSemanticToolStrip ? new Thickness(0, 0, 1, 0) : (Thickness?)null)
                 ?? (isSemanticToolStripItem || control is Separator || isFileStatusListView || isFileStatusSplitter ? default(Thickness) : (Thickness?)null)
                 ?? (control is MenuItem ? new Thickness(0, 1, 0, 1) : (Thickness?)null)
@@ -409,7 +427,9 @@ internal sealed class AvaloniaControlTreeReader
                     : isNativeTabPage || isNativeButton
                         ? default(Thickness)
                         : GetPropertyValue(control, "Padding"))),
-            Margin = ReadThicknessPair(designerLayout?.Margin
+            Margin = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem
+                ? default(Thickness)
+                : designerLayout?.Margin
                 ?? (isSemanticToolStrip || isFileStatusListView ? default(Thickness) : (Thickness?)null)
                 ?? (isSemanticToolStripItem
                     ? control is Separator
@@ -425,7 +445,7 @@ internal sealed class AvaloniaControlTreeReader
                     : isNativeButton
                         ? new Thickness(3)
                         : hasNativeListComposite ? nativeListComposite!.Margin : control.Margin)),
-            Font = (isWatermarkComboBox && string.IsNullOrEmpty(GetText(control))
+            Font = (control.Name == "cboFilterComboBox" && isWatermarkComboBox && string.IsNullOrEmpty(GetText(control))
                 ? ReadFont(control) is { } watermarkFont
                     ? watermarkFont with { Style = ["Italic"] }
                     : null
@@ -438,30 +458,42 @@ internal sealed class AvaloniaControlTreeReader
                 // WinForms controls inherit a concrete Font even when the Avalonia layout
                 // counterpart is a non-templated Panel without font properties of its own.
                 ?? (fieldName is not null ? ReadFont(_root) : null),
-            Colors = isSemanticToolStrip
-                ? ReadToolStripColors(control, isItem: false, transparentBackground: isFileStatusToolbar)
-                : isSemanticToolStripItem
-                    ? ReadToolStripColors(control, isItem: true, transparentBackground: IsFileStatusToolbarItem(control))
-                    : isFileStatusListView
-                        ? ReadFileStatusListViewColors(semanticStateControl)
-                        : isWatermarkComboBox
-                            ? ReadFileStatusWatermarkColors(control)
-                            : isSpellCheckAutoComplete
-                                ? ReadNativeSelectionColors(control, "GitExtensionsWindowBackgroundBrush")
-                                : isSpellCheckTextBox
-                                    ? ReadSpellCheckTextBoxColors(control)
-                                    : isSourceLabelSubstitute
-                                        ? ReadSourceLabelSubstituteColors(control)
-                                        : isProjectDesignerControl && control is TextBlock or Label or TabItem
-                                            ? ReadSourceDesignerColors(control)
-                                        : isSourceTransparentContainer
-                                            ? ReadTransparentContainerColors(control)
-                                            : isFileViewerTextEditor
-                                                ? ReadFileViewerTextEditorColors()
-                                                : ReadColors(semanticStateControl),
-            BorderStyle = designerLayout?.BorderStyle
+            Colors = isComboBoxPopup || isComboBoxPopupItem
+                ? ReadComboBoxPopupColors()
+                : isSemanticToolStrip
+                    ? ReadToolStripColors(control, isItem: false, transparentBackground: isFileStatusToolbar)
+                    : isSemanticToolStripItem
+                        ? ReadToolStripColors(control, isItem: true, transparentBackground: IsTransparentFileStatusToolbarItem(control))
+                        : isFileStatusListView
+                            ? ReadFileStatusListViewColors(semanticStateControl)
+                            : isWatermarkComboBox
+                                ? control.Name == "cboFilterComboBox"
+                                    ? ReadFileStatusWatermarkColors(control)
+                                    : ReadSourceInputColors(control)
+                                : isRepositoryHostDiscussion
+                                    ? ReadRepositoryHostDiscussionColors(control)
+                                    : isSpellCheckAutoComplete
+                                        ? ReadNativeSelectionColors(control, "GitExtensionsWindowBackgroundBrush")
+                                        : isSpellCheckTextBox
+                                            ? ReadSpellCheckTextBoxColors(control)
+                                            : isSourceLabelSubstitute
+                                                ? ReadSourceLabelSubstituteColors(control)
+                                                : isProjectDesignerControl && control is TextBox or ComboBox or NumericUpDown
+                                                    ? ReadSourceInputColors(control)
+                                                    : hasSourceTransparentColors
+                                                        ? ReadTransparentContainerColors(control)
+                                                        : hasSourceLightTransparentColors
+                                                            ? ReadLightTransparentColors(control)
+                                                            : isProjectDesignerControl && control is TextBlock or Label or TabItem
+                                                                ? ReadSourceDesignerColors(control)
+                                                                : isFileViewerTextEditor
+                                                                    ? ReadFileViewerTextEditorColors()
+                                                                    : ReadColors(semanticStateControl),
+            BorderStyle = isSemanticToolStrip || isSemanticToolStripItem || isRepositoryHostDiscussion || isComboBoxPopupItem
+                ? null
+                : designerLayout?.BorderStyle
                 ?? (isFileStatusListView || isFileStatusSplitter ? "None" : null)
-                ?? (isRepositoryHostDiscussion ? "None" : null)
+                ?? (_projectDesignerLayout && control is Image ? "None" : null)
                 ?? (isPopupRoot ? "FixedSingle" : null)
                 ?? (isSpellCheckAutoComplete ? "FixedSingle" : null)
                 ?? (isSpellCheckTextBox || isSourceLabelSubstitute || isSourceTransparentContainer || isFileViewerInternal ? "None" : null)
@@ -473,22 +505,24 @@ internal sealed class AvaloniaControlTreeReader
                 : isNativeListView
                     ? "Fixed3D"
                     : GetPropertyValue(control, "BorderStyle")?.ToString()),
-            FlatStyle = isWatermarkComboBox
+            FlatStyle = isComboBoxPopup
+                ? "Standard"
+                : isWatermarkComboBox || isSemanticToolStripItem || isSourceLabelSubstitute
                 ? null
                 : designerLayout?.FlatStyle
-                  ?? (control.Name == "encodingToolStripComboBox" && isSemanticToolStripItem ? "Flat" : null)
-                  ?? (isSourceLabelSubstitute ? "Flat" : null)
                   ?? (isNativeButton ? (IsDarkTheme() ? "Flat" : "Standard") : null),
             // WinForms exposes the native BorderStyle but not a numeric border width for
             // Designer controls. Pixel evidence still retains the rendered border itself.
-            BorderWidthDip = isProjectDesignerControl || isPopupRoot || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
+            BorderWidthDip = isComboBoxPopup
+                ? 1
+                : isProjectDesignerControl || isPopupRoot || isComboBoxPopupItem || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
                 || isSemanticToolStrip || isSemanticToolStripItem || isFileViewerTextEditor
                 || isSpellCheckAutoComplete || isSpellCheckTextBox || isSourceLabelSubstitute || isWatermarkComboBox
                 || isRepositoryHostDiscussion
                 ? null
                 : ReadBorderWidth(control),
-            CornerRadiusDip = isSourceLabelSubstitute ? null : ReadCornerRadius(control),
-            Anchor = designerLayout?.Anchor
+            CornerRadiusDip = isSourceLabelSubstitute || isComboBoxPopupItem ? null : ReadCornerRadius(control),
+            Anchor = isComboBoxPopup || isComboBoxPopupItem ? [] : designerLayout?.Anchor
                 ?? (isFileStatusToolbar || isFileStatusSplitter ? new[] { "Top", "Left" } : null)
                 ?? (isFileViewerToolbar ? new[] { "Top", "Right" } : null)
                 ?? (isToolStripItem ? [] : (string[]?)null)
@@ -498,7 +532,7 @@ internal sealed class AvaloniaControlTreeReader
                     : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage
                 ? ["Top", "Left"]
                 : []),
-            Dock = designerLayout?.Dock
+            Dock = isComboBoxPopup || isComboBoxPopupItem ? null : designerLayout?.Dock
                 ?? (isToolStripItem
                     ? null
                     : isFileStatusToolbar || isFileStatusSplitter
@@ -512,7 +546,7 @@ internal sealed class AvaloniaControlTreeReader
                                 : isRevisionGrid || isNativeTabPage || isNativeButton
                                     ? isNativeButton && control.Name == "buttonBrowse" ? "Fill" : "None"
                                     : isRevisionGridView || isNativeListView || isNativeTabControl ? "Fill" : null),
-            AutoSize = designerLayout?.AutoSize
+            AutoSize = isComboBoxPopupItem ? false : designerLayout?.AutoSize
                 ?? (isSemanticToolStrip || isToolStripItem ? true : (bool?)null)
                 ?? (isFileStatusListView || isFileStatusSplitter || isSpellCheckTextBox ? false : (bool?)null)
                 ?? (_projectDesignerLayout
@@ -520,7 +554,7 @@ internal sealed class AvaloniaControlTreeReader
                     : isRevisionGrid || isRevisionGridView || isNativeListView || isNativeTabControl || isNativeTabPage || isNativeButton
                 ? false
                 : control is MenuItem or Separator || isPopupRoot ? true : null),
-            Alignment = designerLayout?.Alignment
+            Alignment = isComboBoxPopupItem || isSpellCheckTextBox ? null : designerLayout?.Alignment
                 ?? (isSourceLabelSubstitute ? "TopLeft" : null)
                 ?? (isToolStripItem ? "MiddleCenter" : null)
                 ?? (isFileStatusSplitter ? "TopLeft" : null)
@@ -534,14 +568,16 @@ internal sealed class AvaloniaControlTreeReader
             Text = GetText(control),
             ToolTip = GetToolTip(control),
             TranslationSource = fieldName,
-            TabIndex = isSurfaceRoot && !isPopupRoot ? 0
+            TabIndex = isComboBoxPopupItem ? null
+                : isSurfaceRoot && !isPopupRoot ? 0
                 : isSemanticToolStrip ? 0
                 : isFileStatusListView ? 9
                 : isFileStatusSplitter ? 8
                 : isRevisionGrid || isRevisionGridView
                 ? 0
                 : isSemanticToolStripItem || control is MenuItem or Separator || isPopupRoot ? null : KeyboardNavigation.GetTabIndex(control),
-            TabStop = isSurfaceRoot && !isPopupRoot
+            TabStop = isComboBoxPopupItem ? null
+                : isSurfaceRoot && !isPopupRoot
                 ? true
                 : isSpellCheckAutoComplete || isFileViewerInternal || isFileViewerTextEditor || IsSourceTabStopContainer(control)
                 ? true
@@ -558,7 +594,7 @@ internal sealed class AvaloniaControlTreeReader
             Visible = isNativeTabPage
                 ? ((TabItem)control).IsSelected && ancestorSemanticVisible
                 : semanticVisible,
-            Focused = isPopupRoot ? false : IsFocused(semanticStateControl),
+            Focused = isPopupRoot || isComboBoxPopupItem ? false : IsFocused(semanticStateControl),
             ReadOnly = isRevisionGridView
                 ? true
                 : isFileViewerTextEditor || control.Name == "_diffViewer"
@@ -629,7 +665,7 @@ internal sealed class AvaloniaControlTreeReader
         {
             Button => "MiddleCenter",
             TextBlock or Label => "TopLeft",
-            TextBox => "Left",
+            TextBox or NumericUpDown => "Left",
             _ => null
         };
 
@@ -646,6 +682,17 @@ internal sealed class AvaloniaControlTreeReader
 
     private static Rect GetSemanticBounds(Control control, Control? semanticParent)
     {
+        if (IsComboBoxPopupItem(control)
+            && semanticParent is not null
+            && control.TranslatePoint(default, semanticParent) is Point itemOrigin
+            && semanticParent.GetVisualDescendants().OfType<ListBoxItem>().FirstOrDefault() is { } firstItem
+            && firstItem.TranslatePoint(default, semanticParent) is Point firstItemOrigin)
+        {
+            // parity-scaffolding: ComboLBox item bounds span its complete one-pixel-bordered
+            // popup client. Avalonia positions the container inside renderer padding.
+            return new Rect(0, itemOrigin.Y - firstItemOrigin.Y, semanticParent.Bounds.Width, control.Bounds.Height);
+        }
+
         if (IsNativeTabPage(control)
             && control.GetLogicalAncestors().OfType<TabControl>().FirstOrDefault() is { } owner)
         {
@@ -801,7 +848,7 @@ internal sealed class AvaloniaControlTreeReader
         {
             return control.GetVisualDescendants()
                 .OfType<Control>()
-                .Where(child => child is MenuItem or Separator)
+                .Where(child => child is MenuItem or Separator or ListBoxItem)
                 .Where(child => !child.GetVisualAncestors().TakeWhile(ancestor => !ReferenceEquals(ancestor, control)).OfType<MenuItem>().Any());
         }
 
@@ -815,7 +862,7 @@ internal sealed class AvaloniaControlTreeReader
             return [];
         }
 
-        if (control is Button or TextBox or ComboBox)
+        if (control is Button or TextBox or ComboBox or NumericUpDown or ListBoxItem)
         {
             return [];
         }
@@ -902,7 +949,8 @@ internal sealed class AvaloniaControlTreeReader
         if (control is MenuItem or Separator)
         {
             string? foreground = control is Separator
-                ? BrushToArgb(GetPropertyValue(control, "Foreground"))
+                ? ResolveResourceArgb("GitExtensionsKnownColorControlDarkBrush")
+                  ?? ResolveResourceArgb("GitExtensionsControlBorderBrush")
                 : ResolveResourceArgb("GitExtensionsControlForegroundBrush")
                   ?? BrushToArgb(GetPropertyValue(control, "Foreground"));
             string? background = ResolveResourceArgb("GitExtensionsControlBackgroundBrush")
@@ -1358,6 +1406,10 @@ internal sealed class AvaloniaControlTreeReader
     private static bool IsFileStatusToolbarItem(Control control)
         => control.Parent is StackPanel toolbar && IsFileStatusToolbar(toolbar);
 
+    private static bool IsTransparentFileStatusToolbarItem(Control control)
+        => IsFileStatusToolbarItem(control)
+           && control.Name is not ("btnCollapseGroups" or "sepRefresh" or "btnRefresh");
+
     private static bool IsFileViewerToolbar(Control control)
         => control is Border { Name: "fileviewerToolbar" }
            && control.GetLogicalAncestors().Any(ancestor => ancestor.GetType().FullName == "GitUI.Editor.FileViewer");
@@ -1399,9 +1451,21 @@ internal sealed class AvaloniaControlTreeReader
     private static bool IsSourceTransparentContainer(Control control)
         => control.GetLogicalAncestors().Any(
                ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm")
-           && (control.Name?.StartsWith("tableLayoutPanel", StringComparison.Ordinal) == true
-               || control.Name?.StartsWith("flowLayoutPanel", StringComparison.Ordinal) == true
-               || control.Name is "splitContainer2" or "splitContainer3" or "_fileStatusList" or "_diffViewer");
+           && control.Name is "tableLayoutPanel2" or "tableLayoutPanel3"
+               or "flowLayoutPanel2" or "flowLayoutPanel3"
+               or "splitContainer2" or "splitContainer3" or "_fileStatusList" or "_diffViewer";
+
+    private static bool HasSourceTransparentColors(Control control)
+        => IsSourceTransparentContainer(control)
+           || (control.GetLogicalAncestors().Any(
+                   ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm")
+               && control.Name is "_fetchBtn" or "_addAndFetchBtn" or "_closePullRequestBtn"
+                   or "_chooseRepo" or "internalFileViewer");
+
+    private static bool HasSourceLightTransparentColors(Control control)
+        => control.GetLogicalAncestors().Any(
+               ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm")
+           && control.Name is "_refreshCommentsBtn" or "_postComment" or "_postCommentText";
 
     private static bool IsSourceTabStopContainer(Control control)
         => (IsSourceTransparentContainer(control)
@@ -1467,8 +1531,20 @@ internal sealed class AvaloniaControlTreeReader
             return false;
         }
 
-        return semanticStateControl.IsVisible;
+        // parity-scaffolding: flattened Avalonia layout owners still participate in source
+        // visibility. A hidden WinForms control cannot become visible merely because its
+        // unnamed/Grid wrapper was omitted from the semantic tree.
+        return semanticStateControl.IsVisible
+               && control.GetLogicalAncestors().OfType<Control>().All(ancestor => ancestor.IsVisible);
     }
+
+    private static bool IsComboBoxPopup(Control control)
+        => control.GetVisualDescendants().OfType<ListBoxItem>().Any();
+
+    private static bool IsComboBoxPopupItem(Control control)
+        => control is ListBoxItem
+           && control.GetVisualAncestors().OfType<Control>().Any(
+               ancestor => IsPopupPresenter(ancestor) || IsOverlayPopupHost(ancestor));
 
     private CaptureColors ReadToolStripColors(Control control, bool isItem, bool transparentBackground)
     {
@@ -1482,8 +1558,7 @@ internal sealed class AvaloniaControlTreeReader
             : control.Name == "encodingToolStripComboBox"
                 ? ResolveResourceArgb("GitExtensionsMenuForegroundBrush")
                   ?? ResolveResourceArgb("GitExtensionsWindowTextBrush")
-                : BrushToArgb(GetPropertyValue(control, "Foreground"))
-                  ?? ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                : ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
                   ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush");
         return new CaptureColors
         {
@@ -1596,6 +1671,45 @@ internal sealed class AvaloniaControlTreeReader
         };
     }
 
+    private CaptureColors ReadRepositoryHostDiscussionColors(Control control)
+        => ReadColors(control) with { Border = null };
+
+    private CaptureColors ReadSourceInputColors(Control control)
+    {
+        CaptureColors colors = ReadColors(control);
+        return colors with
+        {
+            Border = null,
+            SelectionForeground = null,
+            SelectionBackground = null,
+            InactiveSelectionForeground = null,
+            InactiveSelectionBackground = null,
+            Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        };
+    }
+
+    private CaptureColors ReadComboBoxPopupColors()
+    {
+        string? background = ResolveResourceArgb("GitExtensionsKnownColorWindowBrush")
+                             ?? ResolveResourceArgb("GitExtensionsWindowBackgroundBrush");
+        return new CaptureColors
+        {
+            Foreground = ResolveResourceArgb("GitExtensionsKnownColorWindowTextBrush")
+                         ?? ResolveResourceArgb("GitExtensionsWindowTextBrush"),
+            Background = background,
+            Border = null,
+            SelectionForeground = null,
+            SelectionBackground = null,
+            InactiveSelectionForeground = null,
+            InactiveSelectionBackground = null,
+            DisabledForeground = ResolveResourceArgb("GitExtensionsKnownColorGrayTextBrush")
+                                 ?? ResolveResourceArgb("GitExtensionsDisabledForegroundBrush"),
+            DisabledBackground = background,
+            GridLine = null,
+            Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
+        };
+    }
+
     private CaptureColors ReadTransparentContainerColors(Control control)
     {
         CaptureColors colors = ReadColors(control);
@@ -1605,6 +1719,18 @@ internal sealed class AvaloniaControlTreeReader
             Border = null,
             DisabledBackground = "#00FFFFFF"
         };
+    }
+
+    private CaptureColors ReadLightTransparentColors(Control control)
+    {
+        CaptureColors colors = ReadColors(control);
+        return IsDarkTheme()
+            ? colors
+            : colors with
+            {
+                Background = "#00FFFFFF",
+                DisabledBackground = "#00FFFFFF"
+            };
     }
 
     private static bool ReadFileStatusListViewExpanded(Control control)
@@ -1700,8 +1826,7 @@ internal sealed class AvaloniaControlTreeReader
         }
 
         if (IsNativeListView(control)
-            || control is ComboBox or ListBox or TreeView
-            || control.GetType().FullName == "GitUI.SpellChecker.EditNetSpell")
+            || control is ComboBox or ListBox or TreeView)
         {
             return control.IsKeyboardFocusWithin;
         }

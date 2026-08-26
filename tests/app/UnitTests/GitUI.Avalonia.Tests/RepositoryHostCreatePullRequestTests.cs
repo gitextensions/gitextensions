@@ -173,6 +173,7 @@ public sealed class RepositoryHostCreatePullRequestTests
                 .ReadPrimary(form, new PixelSize(546, 323)).Root)];
         CaptureNode node = nodes.Single(candidate => candidate.FieldName == "_createBtn");
         CaptureNode targetRepository = nodes.Single(candidate => candidate.FieldName == "_pullReqTargetsCB");
+        CaptureNode sourceBranch = nodes.Single(candidate => candidate.FieldName == "_yourBranchesCB");
         CaptureNode body = nodes.Single(candidate => candidate.FieldName == "_bodyTB");
         title.Background.Should().BeOfType<SolidColorBrush>().Which.Color.Should().Be(Color.Parse(inputBackground));
         group.Classes.Should().Contain("gitextensions-native-group-border");
@@ -198,6 +199,7 @@ public sealed class RepositoryHostCreatePullRequestTests
                                  && candidate.Name is null)
             .Should().BeEmpty("unnamed Avalonia layout panels are not WinForms product controls");
         targetRepository.Text.Should().Be("project/repository");
+        sourceBranch.Focused.Should().BeTrue();
 
         form.Close();
     }

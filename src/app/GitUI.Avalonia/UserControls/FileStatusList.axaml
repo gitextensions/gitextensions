@@ -182,7 +182,7 @@
       </Button>
     </Grid>
     <Grid x:Name="FindInCommitFilesGitGrepPanel" DockPanel.Dock="Top" Height="23" IsVisible="False">
-      <userControls:WatermarkComboBox x:Name="cboFindInCommitFilesGitGrep" HorizontalAlignment="Stretch" Watermark="Find in commit files using git-grep regular expression..." />
+      <userControls:WatermarkComboBox x:Name="cboFindInCommitFilesGitGrep" HorizontalAlignment="Stretch" FontWeight="Bold" Watermark="Find in commit files using git-grep regular expression..." />
       <Button x:Name="DeleteSearchButton" Classes="gitextensions-icon-only filestatus-filter-delete" Width="18" Height="23" Margin="0,0,18,0" HorizontalAlignment="Right" Focusable="False" IsVisible="False">
         <Image Classes="gitextensions-icon-16" Source="/Resources/Icons/DeleteText.png" />
       </Button>

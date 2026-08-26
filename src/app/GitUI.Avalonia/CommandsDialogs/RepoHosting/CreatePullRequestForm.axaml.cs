@@ -86,6 +86,9 @@ public partial class CreatePullRequestForm : GitModuleForm
     {
         base.OnRuntimeLoad(e);
         CreatePullRequestForm_Load(this, e);
+
+        // Framework constraint: WinForms activates the first eligible control by tab order.
+        _yourBranchesCB.Focus();
     }
 
     protected override void OnClosed(EventArgs e)
