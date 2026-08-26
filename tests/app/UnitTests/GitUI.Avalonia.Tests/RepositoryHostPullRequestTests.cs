@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Design;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Headless.NUnit;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -664,6 +665,43 @@ public sealed class RepositoryHostPullRequestTests
         accessor.Discussion.ItemCount.Should().Be(1);
         discussion.DidNotReceive().ForceReload();
         pullRequest.HeadRepo.Received().CloneProtocol = GitProtocol.Https;
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_scroll_the_native_discussion_to_the_document_end()
+    {
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        IPullRequestDiscussion discussion = pullRequest.GetDiscussion();
+        IDiscussionEntry secondEntry = Substitute.For<IDiscussionEntry>();
+        secondEntry.Author.Returns("Reviewer");
+        secondEntry.Created.Returns(new DateTime(2026, 7, 27, 13, 0, 0, DateTimeKind.Utc));
+        secondEntry.Body.Returns("Ready for review.");
+        discussion.Entries.Returns([.. discussion.Entries, secondEntry]);
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        form.Show();
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.SelectPullRequest(pullRequest);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        form.FindControl<TabControl>("tabControl1")!.SelectedIndex = 1;
+        Dispatcher.UIThread.RunJobs();
+
+        ScrollViewer scrollViewer = accessor.Discussion
+            .GetVisualDescendants()
+            .OfType<ScrollViewer>()
+            .Single();
+        ItemsPresenter itemsPresenter = accessor.Discussion
+            .GetVisualDescendants()
+            .OfType<ItemsPresenter>()
+            .Single();
+        ListBoxItem lastContainer = accessor.Discussion.ContainerFromIndex(1) as ListBoxItem
+            ?? throw new AssertionException("The second discussion row was not materialized.");
+        itemsPresenter.MinHeight.Should().BeGreaterThanOrEqualTo(
+            scrollViewer.Viewport.Height + lastContainer.Margin.Bottom);
+        scrollViewer.Offset.Y.Should().BeGreaterThan(0);
+        scrollViewer.Offset.Y.Should().Be(scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
     }
 
     [AvaloniaTest]

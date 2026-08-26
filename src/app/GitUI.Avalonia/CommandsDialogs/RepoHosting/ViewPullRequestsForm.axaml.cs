@@ -1,9 +1,12 @@
 ﻿using System.Text.RegularExpressions;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Remotes;
@@ -104,6 +107,16 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         _selectHostedRepoCB.SelectionChanged += _selectedOwner_SelectedIndexChanged;
         _pullRequestsList.SelectionChanged += _pullRequestsList_SelectedIndexChanged;
+
+        // Framework constraint: the source end-scroll runs after WebBrowser.DocumentCompleted;
+        // an Avalonia list can finish loading before its hidden tab is materialized, so re-run it when shown.
+        tabControl1.SelectionChanged += (_, _) =>
+        {
+            if (tabControl1.SelectedItem == tabPage2 && _discussionWB.ItemCount > 0)
+            {
+                _discussionWB_DocumentCompleted(_discussionWB, EventArgs.Empty);
+            }
+        };
         _pullRequestsList.SizeChanged += _pullRequestsList_Resize;
         _fileStatusList.SelectedIndexChanged += _fileStatusList_SelectedIndexChanged;
         _diffViewer.ExtraDiffArgumentsChanged += _fileStatusList_SelectedIndexChanged;
@@ -470,10 +483,38 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private void _discussionWB_DocumentCompleted(object sender, EventArgs e)
     {
         object? lastItem = _discussionWB.Items.Cast<object>().LastOrDefault();
-        if (lastItem is not null)
+        if (lastItem is null)
         {
-            _discussionWB.ScrollIntoView(lastItem);
+            return;
         }
+
+        _discussionWB.ScrollIntoView(lastItem);
+        Dispatcher.UIThread.Post(
+            () =>
+            {
+                ScrollViewer? scrollViewer = _discussionWB
+                    .GetVisualDescendants()
+                    .OfType<ScrollViewer>()
+                    .FirstOrDefault();
+                ItemsPresenter? itemsPresenter = _discussionWB
+                    .GetVisualDescendants()
+                    .OfType<ItemsPresenter>()
+                    .FirstOrDefault();
+                ListBoxItem? lastContainer = _discussionWB.ContainerFromIndex(_discussionWB.ItemCount - 1) as ListBoxItem;
+                if (scrollViewer is null || itemsPresenter is null || lastContainer is null)
+                {
+                    return;
+                }
+
+                // Framework constraint: the source WebBrowser scrolls its body rectangle to the
+                // end, including the final CSS entry margin. Preserve that trailing scroll range
+                // even when Avalonia's items are shorter than the discussion viewport.
+                itemsPresenter.MinHeight = Math.Max(
+                    itemsPresenter.MinHeight,
+                    scrollViewer.Viewport.Height + lastContainer.Margin.Bottom);
+                scrollViewer.Offset = new Avalonia.Vector(scrollViewer.Offset.X, scrollViewer.Extent.Height);
+            },
+            DispatcherPriority.Loaded);
     }
 
     private async Task LoadDiffPatchAsync(

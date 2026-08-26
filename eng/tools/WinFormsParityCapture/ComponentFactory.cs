@@ -553,6 +553,8 @@ internal static class ComponentFactory
         {
             ComboBox providers = RequireField<ComboBox>("_selectHostedRepoCB");
             ListView pullRequests = RequireField<ListView>("_pullRequestsList");
+            FileStatusList files = RequireField<FileStatusList>("_fileStatusList");
+            GitUI.Editor.FileViewer viewer = RequireField<GitUI.Editor.FileViewer>("_diffViewer");
             if (state.Id == "initial.loading")
             {
                 WaitUntil(
@@ -592,8 +594,13 @@ internal static class ComponentFactory
                 () => providers.Items.Count > 0
                       && providers.Enabled
                       && pullRequests.Items.Count > 0
-                      && pullRequests.Items[0].Tag is not null,
-                "The View Pull Requests provider state did not settle.");
+                      && pullRequests.Items[0].Tag is not null
+                      && files.GitItemStatuses.Count > 0
+                      && !string.IsNullOrWhiteSpace(viewer.GetText()),
+                "The View Pull Requests provider and visible diff state did not settle.",
+                () => $"providers={providers.Items.Count}/{providers.Enabled}, "
+                      + $"pullRequests={pullRequests.Items.Count}, files={files.GitItemStatuses.Count}, "
+                      + $"viewerText={viewer.GetText().Length}");
         }
 
         T RequireField<T>(string fieldName) where T : class
@@ -670,6 +677,47 @@ internal static class ComponentFactory
     // replaced HEAD after preparation or if the real opening handlers did not finish.
     public static void VerifyCaptureState(Control control, IGitUICommands commands, CaptureStatePlan state)
     {
+        if (control is ViewPullRequestsForm && state.Id == "discussion.focused")
+        {
+            WebBrowser discussion = (WebBrowser?)FindFieldValue(control, "_discussionWB")
+                ?? throw new CaptureStateUnsupportedException(
+                    "The original View Pull Requests form did not expose its discussion browser.");
+            ListView pullRequests = (ListView?)FindFieldValue(control, "_pullRequestsList")
+                ?? throw new CaptureStateUnsupportedException(
+                    "The original View Pull Requests form did not expose its pull-request list.");
+
+            // parity-scaffolding: The native WebBrowser does not create its child window until
+            // the Comments tab is displayed. Re-drive the form's real selection event after that
+            // point so the product assigns its discussion HTML to the live browser handle.
+            if (!IsDiscussionBrowserReady(discussion) && pullRequests.Items.Count > 0)
+            {
+                pullRequests.Items[0].Selected = false;
+                Application.DoEvents();
+                pullRequests.Items[0].Selected = true;
+                Application.DoEvents();
+            }
+
+            DateTime deadline = DateTime.UtcNow.AddSeconds(15);
+            while (!IsDiscussionBrowserReady(discussion) && DateTime.UtcNow < deadline)
+            {
+                Application.DoEvents();
+                Thread.Sleep(10);
+            }
+
+            if (!IsDiscussionBrowserReady(discussion))
+            {
+                string bodyText = discussion.Document?.Body?.InnerText ?? string.Empty;
+                throw new CaptureStateNotReadyException(
+                    "The original discussion browser did not render its expected native content "
+                    + $"(visible={discussion.Visible}, readyState={discussion.ReadyState}, "
+                    + $"documentTextLength={discussion.DocumentText?.Length ?? 0}, "
+                    + $"bodyTextLength={bodyText.Length}, bodyText='{Abbreviate(bodyText, 160)}').");
+            }
+
+            discussion.Select();
+            Application.DoEvents();
+        }
+
         if (state.Id == "viewer-toolbar.hover"
             && FindFieldValue(control, "fileviewerToolbar") is not ToolStrip { Visible: true })
         {
@@ -752,6 +800,21 @@ internal static class ComponentFactory
             => (ToolStripMenuItem?)FindFieldValue(revisionGrid, fieldName)
                ?? throw new CaptureStateUnsupportedException(
                    $"The original revision grid did not expose menu item '{fieldName}'.");
+    }
+
+    internal static bool IsDiscussionBrowserReady(WebBrowser browser)
+        => browser.Visible
+           && browser.ReadyState == WebBrowserReadyState.Complete
+           && browser.Document?.Body?.InnerText?.Contains(
+               "The native discussion surface preserves multiline text.",
+               StringComparison.Ordinal) is true;
+
+    private static string Abbreviate(string value, int maximumLength)
+    {
+        string singleLine = value.Replace('\r', ' ').Replace('\n', ' ').Trim();
+        return singleLine.Length <= maximumLength
+            ? singleLine
+            : $"{singleLine[..maximumLength]}...";
     }
 
     internal static bool IsRevisionGridHeadContextMenuReady(
