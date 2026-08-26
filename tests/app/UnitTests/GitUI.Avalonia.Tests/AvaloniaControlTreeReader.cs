@@ -702,7 +702,7 @@ internal sealed class AvaloniaControlTreeReader
         {
             TextBox or NumericUpDown => "Fixed3D",
             ListBox => "Fixed3D",
-            Panel or TabItem or Image or TextBlock or Label => "None",
+            Panel or Decorator or TabItem or Image or TextBlock or Label => "None",
             _ when control.Name == "browseForCloneToDirbtn" => "None",
             _ when control.GetType().FullName == "GitUI.SpellChecker.EditNetSpell" => "None",
             _ => null

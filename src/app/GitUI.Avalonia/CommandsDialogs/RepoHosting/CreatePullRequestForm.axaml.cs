@@ -31,8 +31,8 @@ public partial class CreatePullRequestForm : GitModuleForm
     private string? _prevTitle;
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
-    // Framework constraint: TaskManager replaces WinForms AsyncLoader while preserving the source field identity.
-    private readonly TaskManager _remoteLoader = GitUI.Compat.DesignTimeTaskManager.Create();
+    // Framework constraint: the native AsyncLoader twin owns TaskManager-backed execution.
+    private readonly AsyncLoader _remoteLoader = new();
     private readonly CancellationTokenSequence _targetBranchesSequence = new();
     private readonly CancellationTokenSequence _sourceBranchesSequence = new();
     private readonly CancellationTokenSequence _titleSequence = new();
