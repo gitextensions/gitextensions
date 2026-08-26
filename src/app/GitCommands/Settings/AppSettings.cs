@@ -392,7 +392,7 @@ public static partial class AppSettings
     // Currently not configurable in UI (Set manually in settings file)
     public static string WslGitCommand
     {
-        get => GetString(nameof(WslGitCommand), "git");
+        get => GetString(nameof(WslGitCommand), "noglob git");
     }
 
     public static bool StashKeepIndex
