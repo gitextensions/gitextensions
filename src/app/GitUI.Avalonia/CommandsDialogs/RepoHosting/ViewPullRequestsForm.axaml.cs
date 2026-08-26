@@ -175,7 +175,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             (IHostedRemote[] hostedRemotes, HostedRemoteRow[] hostedRemoteRows) = await Task.Run(
                 () =>
                 {
-                    IHostedRemote[] remotesForModule = GetGitHoster().GetHostedRemotesForModule().ToArray();
+                    IHostedRemote[] remotesForModule = _gitHoster.GetHostedRemotesForModule().ToArray();
                     return (
                         remotesForModule,
                         remotesForModule.Select(HostedRemoteRow.Create).ToArray());
@@ -224,8 +224,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
     }
 
-    private void StartPullRequestLoad()
+    private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
     {
+        // if fails to load this remote, select the next one
         CancellationToken cancellationToken = _pullRequestsSequence.Next();
         _detailsSequence.CancelCurrent();
         _discussionSequence.CancelCurrent();
@@ -240,12 +241,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
 
         _loader.FileAndForget(() => LoadPullRequestsAsync(cancellationToken));
-    }
-
-    private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        // if fails to load this remote, select the next one
-        StartPullRequestLoad();
     }
 
     private void FileViewer_TopScrollReached(object? sender, EventArgs e)
@@ -357,20 +352,21 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     private void SelectNextHostedRepository()
     {
-        TrySelectNextHostedRepository();
-    }
-
-    private bool TrySelectNextHostedRepository()
-    {
-        int nextIndex = _selectHostedRepoCB.SelectedIndex + 1;
-        if (nextIndex < 0 || nextIndex >= _hostedRemoteRows.Count)
+        if (_selectHostedRepoCB.ItemCount == 0)
         {
-            _isFirstLoad = false;
-            return false;
+            return;
         }
 
-        _selectHostedRepoCB.SelectedIndex = nextIndex;
-        return true;
+        int i = _selectHostedRepoCB.SelectedIndex + 1;
+        if (i >= _selectHostedRepoCB.ItemCount)
+        {
+            return;
+        }
+
+        _selectHostedRepoCB.SelectedIndex = i;
+
+        // Framework constraint: Avalonia raises SelectionChanged synchronously for the index assignment,
+        // so the source's explicit second handler call would start duplicate provider work.
     }
 
     private void ResetAllAndShowLoadingPullRequests()
@@ -787,7 +783,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         {
             await Task.Run(pullRequest.Close, cancellationToken);
             await _loader.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            StartPullRequestLoad();
+            _selectedOwner_SelectedIndexChanged(this, EventArgs.Empty);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -968,9 +964,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         return cell;
     }
 
-    private IRepositoryHostPlugin GetGitHoster()
-        => _gitHoster;
-
     // parity-scaffolding: Exposes repository-host state and actions to the cross-platform parity suite.
     internal TestAccessor GetTestAccessor() => new(this);
 
@@ -998,6 +991,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 .ToArray();
 
         public bool HostedRepositorySelectionEnabled => form._selectHostedRepoCB.IsEnabled;
+
+        public bool IsFirstLoad => form._isFirstLoad;
 
         // parity-scaffolding: Lets the paired capture wait for the selected patch, not just its file row.
         public string DiffText => form._diffViewer.TextEditor.Text;

@@ -98,43 +98,15 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         tabControl.SelectionChanged += _tabControl_SelectedIndexChanged;
         destinationTB.TextChanged += _destinationTB_TextChanged;
         createDirTB.TextChanged += _createDirTB_TextChanged;
-        addUpstreamRemoteAsCB.PropertyChanged += AddUpstreamRemoteAsCB_PropertyChanged;
+        addUpstreamRemoteAsCB.TextChanged += _addRemoteAsTB_TextChanged;
         ProtocolDropdownList.SelectionChanged += ProtocolSelectionChanged;
         searchTB.GotFocus += _searchTB_Enter;
         searchTB.LostFocus += _searchTB_Leave;
-        destinationTB.LostFocus += DestinationTB_LostFocus;
-        createDirTB.LostFocus += CreateDirTB_LostFocus;
+        destinationTB.Validating += _destinationTB_Validating;
+        createDirTB.Validating += _createDirTB_Validating;
 
         cloneBtn.IsEnabled = false;
         SetProtocolSelectionVisibility(false);
-    }
-
-    private void AddUpstreamRemoteAsCB_PropertyChanged(object? sender, Avalonia.AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.Property == ComboBox.TextProperty)
-        {
-            _addRemoteAsTB_TextChanged(sender ?? addUpstreamRemoteAsCB, EventArgs.Empty);
-        }
-    }
-
-    private void DestinationTB_LostFocus(object? sender, EventArgs e)
-    {
-        System.ComponentModel.CancelEventArgs validatingEvent = new();
-        _destinationTB_Validating(sender ?? destinationTB, validatingEvent);
-        if (validatingEvent.Cancel)
-        {
-            Avalonia.Threading.Dispatcher.UIThread.Post(() => destinationTB.Focus());
-        }
-    }
-
-    private void CreateDirTB_LostFocus(object? sender, EventArgs e)
-    {
-        System.ComponentModel.CancelEventArgs validatingEvent = new();
-        _createDirTB_Validating(sender ?? createDirTB, validatingEvent);
-        if (validatingEvent.Cancel)
-        {
-            Avalonia.Threading.Dispatcher.UIThread.Post(() => createDirTB.Focus());
-        }
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -191,7 +163,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
         destinationTB.Text = destination ?? string.Empty;
-        Title = $"{GetGitHoster().Name}: {Title}";
+        Title = $"{_gitHoster.Name}: {Title}";
         UpdateCloneInfo();
         UpdateMyRepos();
     }
@@ -211,7 +183,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         try
         {
             IReadOnlyList<IHostedRepository> repositories = await Task.Run(
-                GetGitHoster().GetMyRepos,
+                _gitHoster.GetMyRepos,
                 cancellationToken);
             HostedRepositoryRow[] rows = repositories
                 .OrderBy(repository => repository.Name)
@@ -235,7 +207,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             {
                 myReposLV.ItemsSource = Array.Empty<HostedRepositoryRow>();
                 TextBlock helpText = (TextBlock)helpTextLbl.Content!;
-                helpText.Text = string.Format(_strFailedToGetRepos.Text, GetGitHoster().Name)
+                helpText.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Name)
                     + Environment.NewLine + Environment.NewLine
                     + "Exception: " + ex.Message
                     + Environment.NewLine + Environment.NewLine
@@ -277,7 +249,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         CancellationToken cancellationToken = _searchSequence.Next();
         PrepareSearch(sender, e);
-        _operations.FileAndForget(() => SearchAsync(search, SearchKind.Repository, cancellationToken));
+        _operations.FileAndForget(() => SearchAsync(search, byUser: false, cancellationToken));
     }
 
     private void _getFromUserBtn_Click(object sender, EventArgs e)
@@ -290,7 +262,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         CancellationToken cancellationToken = _searchSequence.Next();
         PrepareSearch(sender, e);
-        _operations.FileAndForget(() => SearchAsync(search.Trim(), SearchKind.User, cancellationToken));
+        _operations.FileAndForget(() => SearchAsync(search.Trim(), byUser: true, cancellationToken));
     }
 
     private void PrepareSearch(object sender, EventArgs e)
@@ -301,14 +273,14 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         searchResultsLV.ItemsSource = new[] { HostedRepositoryRow.Placeholder(_strSearching.Text) };
     }
 
-    private async Task SearchAsync(string search, SearchKind searchKind, CancellationToken cancellationToken)
+    private async Task SearchAsync(string search, bool byUser, CancellationToken cancellationToken)
     {
         try
         {
             IReadOnlyList<IHostedRepository> repositories = await Task.Run(
-                () => searchKind == SearchKind.Repository
-                    ? GetGitHoster().SearchForRepository(search)
-                    : GetGitHoster().GetRepositoriesOfUser(search),
+                () => byUser
+                    ? _gitHoster.GetRepositoriesOfUser(search)
+                    : _gitHoster.SearchForRepository(search),
                 cancellationToken);
 
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
@@ -323,11 +295,11 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!cancellationToken.IsCancellationRequested)
             {
-                string message = searchKind == SearchKind.Repository
-                    ? _strSearchFailed.Text
-                    : ex.Message.Contains("404", StringComparison.Ordinal)
+                string message = byUser
+                    ? ex.Message.Contains("404", StringComparison.Ordinal)
                         ? _strUserNotFound.Text
-                        : _strCouldNotFetchReposOfUser.Text;
+                        : _strCouldNotFetchReposOfUser.Text
+                    : _strSearchFailed.Text;
                 MessageBoxes.Show(
                     this,
                     message + (message == _strUserNotFound.Text ? string.Empty : Environment.NewLine + ex.Message),
@@ -425,7 +397,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void _forkBtn_Click(object sender, EventArgs e)
     {
-        IHostedRepository? repository = GetSelectedRepository(searchResultsLV);
+        IHostedRepository? repository = (searchResultsLV.SelectedItem as HostedRepositoryRow)?.Repository;
         if (repository is null)
         {
             MessageBoxes.Show(
@@ -482,7 +454,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     private void _searchResultsLV_SelectedIndexChanged(object sender, EventArgs e)
     {
         UpdateCloneInfo();
-        IHostedRepository? repository = GetSelectedRepository(searchResultsLV);
+        IHostedRepository? repository = (searchResultsLV.SelectedItem as HostedRepositoryRow)?.Repository;
         if (repository is null)
         {
             forkBtn.IsEnabled = false;
@@ -580,7 +552,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             return;
         }
 
-        IGitUICommands commands = GetCommands();
+        IGitUICommands commands = _commands;
         ArgumentString command = Commands.Clone(
             repo.CloneUrl,
             targetDirectory,
@@ -615,11 +587,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private IHostedRepository? CurrentySelectedGitRepo
         => ReferenceEquals(tabControl.SelectedItem, searchReposPage)
-            ? GetSelectedRepository(searchResultsLV)
-            : GetSelectedRepository(myReposLV);
-
-    private static IHostedRepository? GetSelectedRepository(ListBox listBox)
-        => (listBox.SelectedItem as HostedRepositoryRow)?.Repository;
+            ? (searchResultsLV.SelectedItem as HostedRepositoryRow)?.Repository
+            : (myReposLV.SelectedItem as HostedRepositoryRow)?.Repository;
 
     private void UpdateCloneInfo(bool updateCreateDirTB = true, bool updateProtocols = true)
     {
@@ -687,23 +656,16 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     }
 
     private string? GetTargetDir()
-        => TryGetTargetDir(showError: true);
-
-    private string? TryGetTargetDir(bool showError)
     {
         string destination = destinationTB.Text?.Trim() ?? string.Empty;
         if (destination.Length == 0)
         {
-            if (showError)
-            {
-                MessageBoxes.Show(
-                    this,
-                    _strCloneFolderCanNotBeEmpty.Text,
-                    TranslatedStrings.Error,
-                    WinFormsShims.MessageBoxButtons.OK,
-                    WinFormsShims.MessageBoxIcon.Error);
-            }
-
+            MessageBoxes.Show(
+                this,
+                _strCloneFolderCanNotBeEmpty.Text,
+                TranslatedStrings.Error,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error);
             return null;
         }
 
@@ -735,12 +697,6 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         repository.CloneProtocol = protocol;
         SetCloneInfoText(repository);
     }
-
-    private IGitUICommands GetCommands()
-        => _commands;
-
-    private IRepositoryHostPlugin GetGitHoster()
-        => _gitHoster;
 
     // parity-scaffolding: Exposes repository-host state and actions to the cross-platform parity suite.
     internal TestAccessor GetTestAccessor() => new(this);
@@ -797,7 +753,16 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         public IReadOnlyList<string> SearchResultNames
             => form.searchResultsLV.Items.Cast<HostedRepositoryRow>().Select(row => row.Name).ToArray();
 
-        public string? TargetDirectory => form.TryGetTargetDir(showError: false);
+        public string? TargetDirectory
+        {
+            get
+            {
+                string destination = form.destinationTB.Text?.Trim() ?? string.Empty;
+                return destination.Length == 0
+                    ? null
+                    : Path.Combine(destination, form.createDirTB.Text ?? string.Empty);
+            }
+        }
 
         public int? Depth => form.GetDepth();
 
@@ -815,7 +780,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             => form.LoadMyReposAsync(cancellationToken);
 
         public Task SearchAsync(string search, bool byUser, CancellationToken cancellationToken = default)
-            => form.SearchAsync(search, byUser ? SearchKind.User : SearchKind.Repository, cancellationToken);
+            => form.SearchAsync(search, byUser, cancellationToken);
 
         public Task JoinOperationsAsync(CancellationToken cancellationToken = default)
             => form._operations.JoinPendingOperationsAsync(cancellationToken);
@@ -853,12 +818,6 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             form._createDirTB_Validating(form.createDirTB, createDirectoryEvent);
             return (destinationEvent.Cancel, createDirectoryEvent.Cancel);
         }
-    }
-
-    private enum SearchKind
-    {
-        Repository,
-        User,
     }
 
     private sealed record HostedRepositoryRow(
