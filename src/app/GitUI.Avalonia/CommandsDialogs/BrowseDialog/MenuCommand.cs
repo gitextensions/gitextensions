@@ -67,6 +67,7 @@ internal sealed class MenuCommand
             // Avalonia requires the toggle role explicitly; ToolStripMenuItem renders Checked without one.
             ToggleType = menuCommand.IsCheckedFunc is null ? MenuItemToggleType.None : MenuItemToggleType.CheckBox,
         };
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(toolStripMenuItem, menuCommand.ShortcutKeyDisplayString);
         if (menuCommand.IsCheckedFunc is not null)
         {
             toolStripMenuItem.Classes.Add("gitextensions-menu-command-toggle");
@@ -190,6 +191,7 @@ internal sealed class MenuCommand
         foreach (MenuItem item in _registeredMenuItems)
         {
             item.InputGesture = ParseShortcut(ShortcutKeyDisplayString);
+            WinFormsToolStripMenuSizer.SetShortcutDisplayString(item, ShortcutKeyDisplayString);
         }
     }
 

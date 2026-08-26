@@ -4,6 +4,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -282,7 +283,7 @@ public sealed class VisualParityTests
                 form.commandsToolStripMenuItem.IsSubMenuOpen = true;
                 Dispatcher.UIThread.RunJobs();
                 visibleMenuItems.Select(item => item.Bounds).Should().Equal(closedMenuItemBounds);
-                form.commitToolStripMenuItem.Bounds.Height.Should().Be(21);
+                form.commitToolStripMenuItem.Bounds.Height.Should().Be(22);
                 ItemsPresenter menuItemsPresenter = form.commitToolStripMenuItem
                     .GetVisualAncestors()
                     .OfType<ItemsPresenter>()
@@ -483,7 +484,7 @@ public sealed class VisualParityTests
             separatorMenu.Open(target);
             Dispatcher.UIThread.RunJobs();
             contextSeparator.Height.Should().Be(6);
-            contextSeparator.Margin.Should().Be(new Thickness(0));
+            contextSeparator.Margin.Should().Be(new Thickness(2, 0, 1, 0));
             contextSeparator.Foreground.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBorderBrush"));
             contextSeparator.Background.Should().Be(GetThemeResource<IBrush>(Application.Current!, "GitExtensionsControlBackgroundBrush"));
             AssertRenderedSeparatorPalette(contextSeparator);
@@ -527,6 +528,48 @@ public sealed class VisualParityTests
         }
         finally
         {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    [Category("P8.6h.3b.2b.2b.2b.5")]
+    public void ToolStrip_submenu_should_measure_and_render_the_complete_shortcut_display()
+    {
+        MenuItem child = new()
+        {
+            Header = "Highlight selected branch (until refresh)",
+            InputGesture = new KeyGesture(Key.B, KeyModifiers.Control | KeyModifiers.Shift),
+        };
+        WinFormsToolStripMenuSizer.SetShortcutDisplayString(child, "Ctrl+Shift+B, Alt+LButton");
+        GitUI.Compat.WinFormsControls.ToolStripDropDownItem owner = new()
+        {
+            Header = "View",
+            Items = { child },
+        };
+        Window window = new()
+        {
+            Width = 640,
+            Height = 240,
+            Content = new Menu { Items = { owner } },
+        };
+        window.Show();
+        try
+        {
+            owner.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+
+            child.Width.Should().BeGreaterThan(0);
+            TextBlock inputGesture = child.GetVisualDescendants()
+                .OfType<TextBlock>()
+                .Single(textBlock => textBlock.Name == "PART_InputGestureText");
+            inputGesture.Text.Should().Be("Ctrl+Shift+B, Alt+LButton");
+            inputGesture.Margin.Should().Be(new Thickness(7, 0, 0, 0));
+        }
+        finally
+        {
+            owner.IsSubMenuOpen = false;
+            Dispatcher.UIThread.RunJobs();
             window.Close();
         }
     }
@@ -1264,9 +1307,9 @@ public sealed class VisualParityTests
         double topInset = itemPosition.Y;
         double bottomInset = popupSurface.Bounds.Height - itemPosition.Y - item.Bounds.Height;
 
-        item.Bounds.Height.Should().Be(21);
-        topInset.Should().BeLessThanOrEqualTo(1);
-        bottomInset.Should().BeLessThanOrEqualTo(1);
+        item.Bounds.Height.Should().Be(22);
+        topInset.Should().BeLessThanOrEqualTo(2);
+        bottomInset.Should().BeLessThanOrEqualTo(2);
     }
 
     private static Border GetMenuLayoutRoot(MenuItem item)

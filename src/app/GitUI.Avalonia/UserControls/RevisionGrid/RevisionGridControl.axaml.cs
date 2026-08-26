@@ -32,6 +32,7 @@ using Microsoft;
 using ResourceManager;
 using ResourceManager.Hotkey;
 using ToolStripDropDownItem = GitUI.Compat.WinFormsControls.ToolStripDropDownItem;
+using ToolStripSeparator = GitUI.Compat.WinFormsControls.ToolStripSeparator;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
@@ -1089,6 +1090,27 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
                         branch,
                         () => commands.StartDeleteBranchDialog(GetOwner(), branch.Name));
                 }
+            }
+        }
+
+        bool firstRemoteBranchForDelete = true;
+        foreach (IGitRef branch in allBranches)
+        {
+            if (branch.IsRemote)
+            {
+                if (firstRemoteBranchForDelete)
+                {
+                    firstRemoteBranchForDelete = false;
+                    if (deleteBranchToolStripMenuItem.Items.Count > 0)
+                    {
+                        deleteBranchToolStripMenuItem.Items.Add(new ToolStripSeparator());
+                    }
+                }
+
+                AddRefMenuItem(
+                    deleteBranchToolStripMenuItem,
+                    branch,
+                    () => commands.StartDeleteRemoteBranchDialog(GetOwner(), branch.Name));
             }
         }
 
