@@ -454,6 +454,18 @@
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsDisabledForegroundBrush}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
   </Style>
+  <Style Selector="ComboBoxItem">
+    <!-- WinForms ComboBox defaults to the 15px text-metric item height at 96 DPI. -->
+    <Setter Property="Height" Value="15" />
+    <Setter Property="MinHeight" Value="15" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="3,0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ComboBox /template/ ListBox">
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
   <Style Selector="ComboBox.gitextensions-toolbar-input">
     <!-- Fluent's default 5/7px padding and 32px arrow column are touch metrics. Keep the
          editor vertically symmetric and use the compact ToolStripComboBox arrow segment. -->

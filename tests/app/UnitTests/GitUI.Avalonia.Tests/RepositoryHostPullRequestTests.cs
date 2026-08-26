@@ -230,7 +230,8 @@ public sealed class RepositoryHostPullRequestTests
         list.Dock.Should().Be("None");
         list.AutoSize.Should().BeFalse();
         list.TabStop.Should().BeTrue();
-        fetch.Colors.Background.Should().Be("#FFF0F0F0");
+        fetch.Colors.Background.Should().Be("#00FFFFFF");
+        fetch.Focused.Should().BeTrue();
         commentsPage.BorderStyle.Should().Be("None");
         commentsLayout.BorderStyle.Should().Be("None");
         commentsLayout.Font.Should().NotBeNull();
@@ -291,6 +292,7 @@ public sealed class RepositoryHostPullRequestTests
         CaptureNode toolbar = nodes.Single(node => node.FieldName == "Toolbar");
         CaptureNode list = nodes.Single(node => node.FieldName == "FileStatusListView");
         CaptureNode filter = nodes.Single(node => node.FieldName == "cboFilterComboBox");
+        CaptureNode gitGrep = nodes.Single(node => node.FieldName == "cboFindInCommitFilesGitGrep");
         CaptureNode asTree = nodes.Single(node => node.FieldName == "btnAsTree");
         CaptureNode closedDropDownItem = nodes.Single(node => node.FieldName == "tsmiGroupByFilePathTree");
 
@@ -307,7 +309,12 @@ public sealed class RepositoryHostPullRequestTests
         filter.Colors.Foreground.Should().Be("#FF6D6D6D");
         filter.Colors.Border.Should().BeNull();
         filter.FlatStyle.Should().BeNull();
+        gitGrep.Visible.Should().BeFalse();
+        gitGrep.Font!.Style.Should().Equal("Bold");
+        gitGrep.Colors.Border.Should().BeNull();
+        gitGrep.FlatStyle.Should().BeNull();
         asTree.ControlKind.Should().Be("menuItem");
+        asTree.Colors.Background.Should().Be("#00FFFFFF");
         asTree.Margin!.Dip.Should().Be(new CaptureThicknessF { Left = 0, Top = 1, Right = 0, Bottom = 2 });
         closedDropDownItem.ControlKind.Should().Be("menuItem");
         closedDropDownItem.Visible.Should().BeFalse();
@@ -414,7 +421,7 @@ public sealed class RepositoryHostPullRequestTests
         selectedCommentsPage.Visible.Should().BeTrue();
         selectedCommentsPage.BoundsDip.Should().Be(new CaptureRectangleF { X = 4, Y = 30, Width = 746, Height = 325 });
         discussion.ControlKind.Should().Be("control");
-        discussion.BorderStyle.Should().Be("None");
+        discussion.BorderStyle.Should().BeNull();
         discussion.BorderWidthDip.Should().BeNull();
         discussion.Children.Should().BeEmpty();
 

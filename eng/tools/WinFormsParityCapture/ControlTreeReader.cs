@@ -151,9 +151,9 @@ internal sealed class ControlTreeReader
         }
         else if (control is ListView or TreeView or ListBox)
         {
-            selectionForeground = ColorToArgb(SystemColors.HighlightText);
-            selectionBackground = ColorToArgb(SystemColors.Highlight);
-            additional["hotTrack"] = ColorToArgb(SystemColors.HotTrack)!;
+            selectionForeground = ColorToArgb(ResolveSystemColor(KnownColor.HighlightText));
+            selectionBackground = ColorToArgb(ResolveSystemColor(KnownColor.Highlight));
+            additional["hotTrack"] = ColorToArgb(ResolveSystemColor(KnownColor.HotTrack))!;
         }
         else if (control is ButtonBase button && !button.FlatAppearance.BorderColor.IsEmpty)
         {
@@ -173,8 +173,10 @@ internal sealed class ControlTreeReader
             SelectionForeground = selectionForeground,
             SelectionBackground = selectionBackground,
             InactiveSelectionForeground = selectionForeground,
-            InactiveSelectionBackground = selectionBackground is null ? null : ColorToArgb(SystemColors.InactiveCaption),
-            DisabledForeground = ColorToArgb(SystemColors.GrayText),
+            InactiveSelectionBackground = selectionBackground is null
+                ? null
+                : ColorToArgb(ResolveSystemColor(KnownColor.InactiveCaption)),
+            DisabledForeground = ColorToArgb(ResolveSystemColor(KnownColor.GrayText)),
             DisabledBackground = ColorToArgb(resolvedBackground),
             GridLine = gridLine,
             Additional = additional
@@ -232,37 +234,111 @@ internal sealed class ControlTreeReader
 
     private static Color ResolveSystemColor(KnownColor name)
     {
-        Color color = ThemeModule.Settings.Theme.GetColor(name);
+        bool isDark = ThemeModule.Settings.Theme.SystemColorMode == SystemColorMode.Dark;
+        Color color = ThemeModule.Settings.Theme.Id == ThemeId.DefaultLight
+            ? Color.Empty
+            : ThemeModule.Settings.Theme.GetColor(name);
         if (!color.IsEmpty)
         {
             return color;
         }
 
-        if (ThemeModule.Settings.Theme.SystemColorMode == SystemColorMode.Dark
-            && TryGetDarkSystemColor(name, out color))
+        if (isDark && TryGetDarkSystemColor(name, out color))
         {
             return color;
         }
 
         color = ThemeModule.Settings.InvariantTheme.GetColor(name);
-        return color.IsEmpty ? Color.FromKnownColor(name) : color;
+        if (!color.IsEmpty)
+        {
+            return color;
+        }
+
+        // Keep the reference tree independent of the live Windows accent palette and use
+        // the same invariant.css fallbacks published by the Avalonia theme boundary.
+        return TryGetLightSystemColor(name, out color) ? color : Color.FromKnownColor(name);
+    }
+
+    private static bool TryGetLightSystemColor(KnownColor name, out Color color)
+    {
+        string? value = name switch
+        {
+            KnownColor.ActiveBorder => "#B4B4B4",
+            KnownColor.ActiveCaption => "#99B4D1",
+            KnownColor.ActiveCaptionText => "#000000",
+            KnownColor.AppWorkspace => "#ABABAB",
+            KnownColor.ButtonFace => "#F0F0F0",
+            KnownColor.ButtonHighlight => "#FFFFFF",
+            KnownColor.ButtonShadow => "#A0A0A0",
+            KnownColor.Control => "#F0F0F0",
+            KnownColor.ControlDark => "#A0A0A0",
+            KnownColor.ControlDarkDark => "#696969",
+            KnownColor.ControlLight => "#E3E3E3",
+            KnownColor.ControlLightLight => "#FFFFFF",
+            KnownColor.ControlText => "#000000",
+            KnownColor.Desktop => "#000000",
+            KnownColor.GradientActiveCaption => "#B9D1EA",
+            KnownColor.GradientInactiveCaption => "#D7E4F2",
+            KnownColor.GrayText => "#6D6D6D",
+            KnownColor.Highlight => "#0078D7",
+            KnownColor.HighlightText => "#FFFFFF",
+            KnownColor.HotTrack => "#0066CC",
+            KnownColor.InactiveBorder => "#F4F7FC",
+            KnownColor.InactiveCaption => "#BFCDDB",
+            KnownColor.InactiveCaptionText => "#000000",
+            KnownColor.Info => "#FFFFE1",
+            KnownColor.InfoText => "#000000",
+            KnownColor.Menu => "#F0F0F0",
+            KnownColor.MenuBar => "#F0F0F0",
+            KnownColor.MenuHighlight => "#0078D7",
+            KnownColor.MenuText => "#000000",
+            KnownColor.ScrollBar => "#C8C8C8",
+            KnownColor.Window => "#FFFFFF",
+            KnownColor.WindowFrame => "#646464",
+            KnownColor.WindowText => "#000000",
+            _ => null,
+        };
+
+        color = value is null ? Color.Empty : ColorTranslator.FromHtml(value);
+        return !color.IsEmpty;
     }
 
     private static bool TryGetDarkSystemColor(KnownColor name, out Color color)
     {
         string? value = name switch
         {
+            KnownColor.ActiveBorder => "#464646",
+            KnownColor.ActiveCaption => "#3C5F78",
+            KnownColor.ActiveCaptionText => "#FFFFFF",
+            KnownColor.AppWorkspace => "#3C3C3C",
+            KnownColor.ButtonFace => "#202020",
+            KnownColor.ButtonHighlight => "#101010",
+            KnownColor.ButtonShadow => "#464646",
             KnownColor.Control => "#202020",
             KnownColor.ControlDark => "#4A4A4A",
+            KnownColor.ControlDarkDark => "#5A5A5A",
+            KnownColor.ControlLight => "#2E2E2E",
+            KnownColor.ControlLightLight => "#1F1F1F",
             KnownColor.ControlText => "#FFFFFF",
+            KnownColor.Desktop => "#101010",
+            KnownColor.GradientActiveCaption => "#416482",
+            KnownColor.GradientInactiveCaption => "#557396",
             KnownColor.GrayText => "#969696",
             KnownColor.Highlight => "#2864B4",
             KnownColor.HighlightText => "#000000",
+            KnownColor.HotTrack => "#2D5FAF",
+            KnownColor.InactiveBorder => "#3C3F41",
             KnownColor.InactiveCaption => "#374B5A",
             KnownColor.InactiveCaptionText => "#BEBEBE",
             KnownColor.Info => "#50503C",
             KnownColor.InfoText => "#BEBEBE",
+            KnownColor.Menu => "#373737",
+            KnownColor.MenuBar => "#373737",
+            KnownColor.MenuHighlight => "#2A80D2",
+            KnownColor.MenuText => "#F0F0F0",
+            KnownColor.ScrollBar => "#505050",
             KnownColor.Window => "#323232",
+            KnownColor.WindowFrame => "#282828",
             KnownColor.WindowText => "#F0F0F0",
             _ => null,
         };
@@ -281,7 +357,9 @@ internal sealed class ControlTreeReader
                 return color;
             }
 
-            return Color.FromKnownColor(name);
+            return TryGetLightSystemColor(name, out Color lightColor)
+                ? lightColor
+                : Color.FromKnownColor(name);
         }
     }
 
@@ -294,8 +372,8 @@ internal sealed class ControlTreeReader
             SelectionForeground = ColorToArgb(style.SelectionForeColor),
             SelectionBackground = ColorToArgb(style.SelectionBackColor),
             InactiveSelectionForeground = ColorToArgb(style.SelectionForeColor),
-            InactiveSelectionBackground = ColorToArgb(SystemColors.InactiveCaption),
-            DisabledForeground = ColorToArgb(SystemColors.GrayText),
+            InactiveSelectionBackground = ColorToArgb(ResolveSystemColor(KnownColor.InactiveCaption)),
+            DisabledForeground = ColorToArgb(ResolveSystemColor(KnownColor.GrayText)),
             DisabledBackground = ColorToArgb(style.BackColor),
             GridLine = null,
             Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
@@ -307,11 +385,11 @@ internal sealed class ControlTreeReader
             Foreground = ColorToArgb(item.ForeColor),
             Background = ColorToArgb(item.BackColor),
             Border = null,
-            SelectionForeground = ColorToArgb(SystemColors.HighlightText),
-            SelectionBackground = ColorToArgb(SystemColors.Highlight),
-            InactiveSelectionForeground = ColorToArgb(SystemColors.MenuText),
-            InactiveSelectionBackground = ColorToArgb(SystemColors.Menu),
-            DisabledForeground = ColorToArgb(SystemColors.GrayText),
+            SelectionForeground = ColorToArgb(ResolveSystemColor(KnownColor.HighlightText)),
+            SelectionBackground = ColorToArgb(ResolveSystemColor(KnownColor.Highlight)),
+            InactiveSelectionForeground = ColorToArgb(ResolveSystemColor(KnownColor.MenuText)),
+            InactiveSelectionBackground = ColorToArgb(ResolveSystemColor(KnownColor.Menu)),
+            DisabledForeground = ColorToArgb(ResolveSystemColor(KnownColor.GrayText)),
             DisabledBackground = ColorToArgb(item.BackColor),
             GridLine = null,
             Additional = new SortedDictionary<string, string>(StringComparer.Ordinal)
@@ -478,6 +556,14 @@ internal sealed class ControlTreeReader
         {
             if (control is DataGridView && IsGeneratedDataGridViewChild(child))
             {
+                continue;
+            }
+
+            if (control is NumericUpDown or ToolStrip)
+            {
+                // parity-scaffolding: NumericUpDown's native edit/spin controls and a
+                // ToolStripControlHost's owned Control are WinForms renderer internals. The
+                // product exposes the composite owner or semantic ToolStripItem, not both.
                 continue;
             }
 
