@@ -31,6 +31,7 @@ using Microsoft;
 
 using ResourceManager;
 using ResourceManager.Hotkey;
+using ToolStripDropDownItem = GitUI.Compat.WinFormsControls.ToolStripDropDownItem;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
@@ -497,10 +498,10 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
             _lastPathFilter);
     }
 
-    internal bool TryGetSuperProjectInfo([System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out SuperProjectInfo? superProjectInfo)
+    internal bool TryGetSuperProjectInfo([System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out SuperProjectInfo? spi)
     {
-        superProjectInfo = _superprojectCurrentCheckout;
-        return superProjectInfo is not null;
+        spi = _superprojectCurrentCheckout;
+        return spi is not null;
     }
 
     internal bool GoToRelatedRef(IGitRef gitRef)
@@ -1150,7 +1151,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         parent.Items.Add(item);
     }
 
-    private void CreateNewBranchToolStripMenuItemClick(object? sender, EventArgs e)
+    private void CreateNewBranchToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (SelectedRevision is GitRevision revision)
         {
@@ -1158,7 +1159,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void CreateTagToolStripMenuItemClick(object? sender, EventArgs e)
+    private void CreateTagToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (SelectedRevision is GitRevision revision)
         {
@@ -1166,7 +1167,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void CheckoutRevisionToolStripMenuItemClick(object? sender, EventArgs e)
+    private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (SelectedRevision is GitRevision revision)
         {
@@ -1174,7 +1175,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void ArchiveRevisionToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
     {
         IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
         if (selectedRevisions.Count is (< 1 or > 2))
@@ -1188,7 +1189,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         UICommands.StartArchiveDialog(GetOwner(), mainRevision, diffRevision);
     }
 
-    private void RevertCommitToolStripMenuItemClick(object? sender, EventArgs e)
+    private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
     {
         IReadOnlyList<GitRevision> revisions = GetSelectedRevisions(SortDirection.Ascending);
         foreach (GitRevision revision in revisions)
@@ -1197,13 +1198,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void CherryPickCommitToolStripMenuItemClick(object? sender, EventArgs e)
+    private void CherryPickCommitToolStripMenuItemClick(object sender, EventArgs e)
     {
         IReadOnlyList<GitRevision> revisions = GetSelectedRevisions(SortDirection.Descending);
         UICommands.StartCherryPickDialog(GetOwner(), revisions);
     }
 
-    private void ResetCurrentBranchToHereToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (SelectedRevision is not GitRevision revision)
         {
@@ -1217,7 +1218,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         });
     }
 
-    private void ResetAnotherBranchToHereToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ResetAnotherBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (SelectedRevision is not GitRevision revision)
         {
@@ -1231,7 +1232,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         });
     }
 
-    private void ResetChangesToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ResetChangesToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartResetChangesDialog(
             GetOwner(),
@@ -1240,7 +1241,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ArtificialChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private void CommitToolStripMenuItemClick(object? sender, EventArgs e)
+    private void CommitToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartCommitDialog(GetOwner());
     }
@@ -1257,13 +1258,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ReloadCurrentView();
     }
 
-    private void StopBisectToolStripMenuItemClick(object? sender, EventArgs e)
+    private void StopBisectToolStripMenuItemClick(object sender, EventArgs e)
     {
         FormProcess.ShowDialog(GetOwner(), UICommands, arguments: Commands.StopBisect(), Module.WorkingDir, input: null, useDialogSettings: true);
         ReloadCurrentView();
     }
 
-    private void FixupCommitToolStripMenuItemClick(object? sender, EventArgs e)
+    private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (SelectedRevision is GitRevision revision)
         {
@@ -1271,7 +1272,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void SquashCommitToolStripMenuItemClick(object? sender, EventArgs e)
+    private void SquashCommitToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (SelectedRevision is GitRevision revision)
         {
@@ -1279,7 +1280,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void AmendCommitToolStripMenuItemClick(object? sender, EventArgs e)
+    private void AmendCommitToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (SelectedRevision is GitRevision revision)
         {
@@ -1287,12 +1288,12 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void editCommitToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void editCommitToolStripMenuItem_Click(object sender, EventArgs e)
     {
         LaunchRebase("e");
     }
 
-    private void rewordCommitToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void rewordCommitToolStripMenuItem_Click(object sender, EventArgs e)
     {
         LaunchRebase("r");
     }
@@ -1360,7 +1361,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void ApplyStashToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ApplyStashToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (SelectedRevision is GitRevision revision)
         {
@@ -1369,7 +1370,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void PopStashToolStripMenuItemClick(object? sender, EventArgs e)
+    private void PopStashToolStripMenuItemClick(object sender, EventArgs e)
     {
         string? stashName = SelectedRevision?.ReflogSelector;
         if (!string.IsNullOrEmpty(stashName))
@@ -1379,7 +1380,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void DropStashToolStripMenuItemClick(object? sender, EventArgs e)
+    private void DropStashToolStripMenuItemClick(object sender, EventArgs e)
     {
         string? stashName = SelectedRevision?.ReflogSelector;
         if (string.IsNullOrEmpty(stashName))
@@ -1415,7 +1416,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ReloadCurrentView();
     }
 
-    private void RebaseOnToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
+    private void RebaseOnToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
     {
         IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
         rebaseToolStripMenuItem.IsEnabled
@@ -1759,7 +1760,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         diffForm.Show();
     }
 
-    private void CompareToBranchToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
     {
         GitRevision? headCommit = SelectedRevision;
         if (headCommit is null)
@@ -1782,7 +1783,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void CompareWithCurrentBranchToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
     {
         string currentBranch = Module.GetSelectedBranch();
         if (string.IsNullOrWhiteSpace(currentBranch) || CurrentCheckout.IsZero)
@@ -1800,13 +1801,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ShowFormDiff(baseCommit.ObjectId, CurrentCheckout, baseCommit.Subject, currentBranch);
     }
 
-    private void selectAsBaseToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
     {
         _baseCommitToCompare = SelectedRevision;
         compareToBaseToolStripMenuItem.IsEnabled = _baseCommitToCompare is not null;
     }
 
-    private void compareToBaseToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void compareToBaseToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (_baseCommitToCompare is null)
         {
@@ -1823,7 +1824,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ShowFormDiff(_baseCommitToCompare.ObjectId, headCommit.ObjectId, _baseCommitToCompare.Subject, headCommit.Subject);
     }
 
-    private void compareToWorkingDirectoryMenuItem_Click(object? sender, EventArgs e)
+    private void compareToWorkingDirectoryMenuItem_Click(object sender, EventArgs e)
     {
         GitRevision? baseCommit = SelectedRevision;
         if (baseCommit is null)
@@ -1840,7 +1841,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ShowFormDiff(baseCommit.ObjectId, ObjectId.WorkTreeId, baseCommit.Subject, "Working directory");
     }
 
-    private void compareSelectedCommitsMenuItem_Click(object? sender, EventArgs e)
+    private void compareSelectedCommitsMenuItem_Click(object sender, EventArgs e)
     {
         (ObjectId firstId, GitRevision? selected) = GetFirstAndSelected();
 
@@ -2419,7 +2420,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, MenuItem targetItem)
+    private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetItem)
     {
         targetItem.Items.Clear();
         foreach (MenuCommand menuCommand in menuCommands)
