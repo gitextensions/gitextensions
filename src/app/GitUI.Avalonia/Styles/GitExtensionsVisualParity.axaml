@@ -1361,6 +1361,8 @@
     <Setter Property="CornerRadius" Value="0" />
   </Style>
   <Style Selector="Button.gitextensions-native-dialog-action">
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="PART_NativeButtonChrome"
