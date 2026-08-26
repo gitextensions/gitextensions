@@ -47,7 +47,7 @@
         <Setter Property="Template">
           <ControlTemplate>
             <DataValidationErrors>
-              <Grid ColumnDefinitions="*,32">
+              <Grid ColumnDefinitions="*,18">
                 <Border x:Name="Background"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
@@ -108,20 +108,20 @@
                 </TextBox>
                 <Border x:Name="DropDownOverlay"
                         Grid.Column="1"
-                        Width="30"
+                        Width="17"
                         Margin="0,1,1,1"
                         HorizontalAlignment="Right"
                         Background="Transparent"
                         IsVisible="False" />
                 <PathIcon x:Name="DropDownGlyph"
                           Grid.Column="1"
-                          Width="12"
-                          Height="12"
-                          Margin="0,0,10,0"
+                          Width="7"
+                          Height="4"
+                          Margin="0,0,5,0"
                           HorizontalAlignment="Right"
                           VerticalAlignment="Center"
                           Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"
-                          Foreground="{DynamicResource ComboBoxDropDownGlyphForeground}"
+                          Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                           IsHitTestVisible="False"
                           UseLayoutRounding="False" />
                 <Popup x:Name="PART_Popup"
@@ -135,8 +135,8 @@
                   <Border x:Name="PopupBorder"
                           Padding="0"
                           HorizontalAlignment="Stretch"
-                          Background="{DynamicResource ComboBoxDropDownBackground}"
-                          BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
+                          Background="{DynamicResource GitExtensionsWindowBackgroundBrush}"
+                          BorderBrush="{DynamicResource GitExtensionsWindowTextBrush}"
                           BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
                           CornerRadius="0">
                     <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
@@ -279,6 +279,8 @@
           <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#FDFDFD" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBorderBrush" Color="#D0D0D0" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBackgroundBrush" Color="#E0EEF9" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBorderBrush" Color="#0F80D6" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBackgroundBrush" Color="#CCE4F7" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBorderBrush" Color="#005499" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBackgroundBrush" Color="#F9F9F9" />
@@ -402,6 +404,8 @@
           <SolidColorBrush x:Key="GitExtensionsNativeGroupBoxBorderBrush" Color="#DCDCDC" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBackgroundBrush" Color="#333333" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonBorderBrush" Color="#9B9B9B" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBackgroundBrush" Color="#454545" />
+          <SolidColorBrush x:Key="GitExtensionsNativeButtonPointerOverBorderBrush" Color="#919191" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBackgroundBrush" Color="#666666" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonPressedBorderBrush" Color="#A0A0A0" />
           <SolidColorBrush x:Key="GitExtensionsNativeButtonDisabledBackgroundBrush" Color="#333333" />
@@ -579,6 +583,18 @@
     <Setter Property="Margin" Value="0" />
     <Setter Property="Padding" Value="3,0" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ComboBoxItem:pointerover,
+                   ComboBoxItem:selected,
+                   ComboBoxItem:selected:pointerover">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
+  </Style>
+  <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                   ComboBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter,
+                   ComboBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsHighlightForegroundBrush}" />
   </Style>
   <Style Selector="ComboBox /template/ ListBox">
     <Setter Property="Margin" Value="0" />
@@ -892,6 +908,7 @@
   </Style>
   <Style Selector="TabControl.gitextensions-native-tabs TabItem.gitextensions-dialog-tab">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeTabPageBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
     <Setter Property="Template">
       <ControlTemplate>
         <Border x:Name="PART_LayoutRoot"
@@ -1123,9 +1140,11 @@
     <Setter Property="MinHeight" Value="20" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
   </Style>
   <Style Selector="ListBox.gitextensions-native-list-items">
     <Setter Property="Focusable" Value="True" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
@@ -1167,6 +1186,14 @@
   <Style Selector="ListBox.gitextensions-native-list-items ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background"
             Value="{DynamicResource GitExtensionsNativeListSelectionBackgroundBrush}" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items ListBoxItem:pointerover:not(:selected) /template/ ContentPresenter#PART_ContentPresenter">
+    <!-- Native ListView does not paint Fluent's full-row hover fill unless hot tracking is enabled. -->
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="ListBox.gitextensions-native-list-items:focus-within ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
   </Style>
   <Style Selector="ListBox.gitextensions-native-list-items:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background"
@@ -1350,6 +1377,13 @@
         </Border>
       </ControlTemplate>
     </Setter>
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:pointerover /template/ Border#PART_NativeButtonChrome">
+    <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonPointerOverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeButtonPointerOverBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:focus /template/ Border#PART_NativeButtonChrome">
+    <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsHighlightBackgroundBrush}" />
   </Style>
   <Style Selector="Button.gitextensions-native-dialog-action:pressed /template/ Border#PART_NativeButtonChrome">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonPressedBackgroundBrush}" />
