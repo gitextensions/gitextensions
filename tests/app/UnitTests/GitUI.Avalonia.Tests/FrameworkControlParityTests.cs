@@ -161,7 +161,23 @@ public sealed class FrameworkControlParityTests
         Window window = Show(ThemeVariant.Light, button);
         try
         {
+            Border chrome = Find<Border>(button, "PART_NativeButtonChrome");
             Point normalOrigin = button.TranslatePoint(default, window)!.Value;
+            using (AvaloniaControlStateDriver.Apply(
+                       window,
+                       new CaptureStatePlan { Id = "hover", Kind = CaptureStateKind.Hover, TargetField = "btnNative" }))
+            {
+                GetColor(chrome.Background).Should().Be(
+                    GetResourceColor("GitExtensionsNativeButtonPointerOverBackgroundBrush", ThemeVariant.Light));
+                GetColor(chrome.BorderBrush).Should().Be(
+                    GetResourceColor("GitExtensionsNativeButtonPointerOverBorderBrush", ThemeVariant.Light));
+            }
+
+            button.Focus().Should().BeTrue();
+            Dispatcher.UIThread.RunJobs();
+            GetColor(chrome.BorderBrush).Should().Be(
+                GetResourceColor("GitExtensionsHighlightBackgroundBrush", ThemeVariant.Light));
+
             using (AvaloniaControlStateDriver.Apply(
                        window,
                        new CaptureStatePlan { Id = "pressed", Kind = CaptureStateKind.Pressed, TargetField = "btnNative" }))
@@ -169,6 +185,83 @@ public sealed class FrameworkControlParityTests
                 Dispatcher.UIThread.RunJobs();
                 button.TranslatePoint(default, window).Should().Be(normalOrigin);
             }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Native_combo_box_should_use_desktop_arrow_and_popup_selection_chrome()
+    {
+        ComboBox comboBox = new()
+        {
+            Width = 200,
+            Height = 23,
+            ItemsSource = new[] { "first", "second" },
+            SelectedIndex = 0,
+        };
+        Window window = Show(ThemeVariant.Light, comboBox);
+        try
+        {
+            Border overlay = Find<Border>(comboBox, "DropDownOverlay");
+            PathIcon glyph = Find<PathIcon>(comboBox, "DropDownGlyph");
+            overlay.Width.Should().Be(17);
+            glyph.Width.Should().Be(7);
+            glyph.Height.Should().Be(4);
+
+            comboBox.IsDropDownOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            ComboBoxItem selected = comboBox.ContainerFromIndex(0) as ComboBoxItem
+                ?? throw new AssertionException("The selected ComboBox row was not materialized.");
+            ContentPresenter selectedPresenter = selected.GetVisualDescendants().OfType<ContentPresenter>().Single();
+            Popup popup = Find<Popup>(comboBox, "PART_Popup");
+            Border popupBorder = popup.Child as Border
+                ?? throw new AssertionException("The ComboBox popup border was not materialized.");
+            popupBorder.Name.Should().Be("PopupBorder");
+            GetColor(popupBorder.Background).Should().Be(
+                GetResourceColor("GitExtensionsWindowBackgroundBrush", ThemeVariant.Light));
+            GetColor(popupBorder.BorderBrush).Should().Be(
+                GetResourceColor("GitExtensionsWindowTextBrush", ThemeVariant.Light));
+            GetColor(selected.Background).Should().Be(
+                GetResourceColor("GitExtensionsHighlightBackgroundBrush", ThemeVariant.Light));
+            GetColor(selected.Foreground).Should().Be(
+                GetResourceColor("GitExtensionsHighlightForegroundBrush", ThemeVariant.Light));
+            GetColor(selectedPresenter.Background).Should().Be(
+                GetResourceColor("GitExtensionsHighlightBackgroundBrush", ThemeVariant.Light));
+            GetColor(selectedPresenter.Foreground).Should().Be(
+                GetResourceColor("GitExtensionsHighlightForegroundBrush", ThemeVariant.Light));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void Native_list_should_keep_focus_on_the_selected_row_without_a_container_frame()
+    {
+        ListBox list = new()
+        {
+            Classes = { "gitextensions-native-list-items" },
+            ItemsSource = new[] { "selected" },
+            SelectedIndex = 0,
+        };
+        Window window = Show(ThemeVariant.Light, list);
+        try
+        {
+            ListBoxItem item = list.ContainerFromIndex(0) as ListBoxItem
+                ?? throw new AssertionException("The selected native-list row was not materialized.");
+            list.Focus().Should().BeTrue();
+            Dispatcher.UIThread.RunJobs();
+            ContentPresenter presenter = item.GetVisualDescendants().OfType<ContentPresenter>().Single();
+
+            list.FocusAdorner.Should().BeNull();
+            item.FocusAdorner.Should().BeNull();
+            presenter.BorderThickness.Should().Be(new Thickness(1));
+            GetColor(presenter.BorderBrush).Should().Be(
+                GetResourceColor("GitExtensionsHighlightBackgroundBrush", ThemeVariant.Light));
         }
         finally
         {
