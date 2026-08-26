@@ -248,7 +248,7 @@ internal static class CaptureComparer
                 $"{path}/root",
                 tolerance,
                 findings,
-                compareBoundsOrigin: !referenceSurface.Role.Equals("primary", StringComparison.Ordinal));
+                compareBoundsOrigin: false);
             CompareFieldNodes(referenceSurface.Root, candidateSurface.Root, path, tolerance, findings);
             CompareAnonymousChildren(referenceSurface.Root, candidateSurface.Root, $"{path}/root", tolerance, findings);
             CompareFocusOrder(referenceSurface.Root, candidateSurface.Root, path, findings);

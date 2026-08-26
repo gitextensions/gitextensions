@@ -11,14 +11,9 @@
         WindowStartupLocation="CenterOwner"
         Title="View Pull Requests">
   <Window.Styles>
-    <Style Selector="spellChecker|EditNetSpell.repository-host-comment-editor TextBox#TextBox">
-      <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
-      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
-    </Style>
-    <Style Selector="spellChecker|EditNetSpell.repository-host-comment-editor TextBox#TextBox:pointerover /template/ Border#PART_BorderElement,
-                     spellChecker|EditNetSpell.repository-host-comment-editor TextBox#TextBox:focus /template/ Border#PART_BorderElement,
-                     spellChecker|EditNetSpell.repository-host-comment-editor TextBox#TextBox:disabled /template/ Border#PART_BorderElement">
-      <Setter Property="Background" Value="{DynamicResource GitExtensionsKnownColorControlBrush}" />
+    <Style Selector="ComboBox#_selectHostedRepoCB:disabled">
+      <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
     </Style>
     <Style Selector="ListBox.repository-host-discussion">
       <Setter Property="Padding" Value="0" />

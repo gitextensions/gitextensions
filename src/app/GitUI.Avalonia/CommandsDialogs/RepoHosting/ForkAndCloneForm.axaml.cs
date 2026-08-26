@@ -82,6 +82,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         ApplyRepositoryColumnWidths(isSearchResult: false);
         ApplyRepositoryColumnWidths(isSearchResult: true);
         WinFormsTableLayoutSizer.AttachColumns(tableLayoutPanel5, firstColumnPercent: 70, totalPercent: 100);
+        WinFormsTableLayoutSizer.AttachColumns(tableLayoutPanel3, firstColumnPercent: 60, totalPercent: 100);
 
         searchBtn.Click += _searchBtn_Click;
         getFromUserBtn.Click += _getFromUserBtn_Click;

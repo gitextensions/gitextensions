@@ -13,8 +13,6 @@ public sealed class LoadingControl : UserControl
         MinHeight = 32;
         _waitSpinner = new WaitSpinner
         {
-            Width = 32,
-            Height = 32,
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
         };
