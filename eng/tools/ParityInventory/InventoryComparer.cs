@@ -5,27 +5,30 @@ internal static class InventoryComparer
 {
     public static InventoryComparison Compare(SourceInventory original, SourceInventory twin)
     {
+        FrameworkComparisonInputs frameworkInputs = FrameworkDeviationClassifier.Classify(original, twin);
+        SourceInventory comparableOriginal = frameworkInputs.Original;
+        SourceInventory comparableTwin = frameworkInputs.Twin;
         List<FunctionalFinding> findings = [];
-        CompareParts(original, twin, findings);
-        CompareSet(original.Members, twin.Members, MemberKey, "members", "member", findings);
-        CompareMemberDetails(original, twin, findings);
-        CompareMemberOrder(original, twin, findings);
-        CompareSet(original.EventWiring, twin.EventWiring, EventKey, "events", "event.wiring", findings);
-        CompareSet(original.EventHandlers, twin.EventHandlers, value => value, "events", "event.handler", findings);
-        CompareSet(original.Menus, twin.Menus, MenuKey, "menus", "menu.item", findings);
-        CompareSet(original.HotkeyCommandIds, twin.HotkeyCommandIds, value => value, "hotkeys", "hotkey.command", findings);
-        CompareSet(original.Settings, twin.Settings, SettingKey, "settings", "setting", findings);
-        CompareSet(original.TranslationStrings, twin.TranslationStrings, item => item.Name,
+        CompareParts(comparableOriginal, comparableTwin, findings);
+        CompareSet(comparableOriginal.Members, comparableTwin.Members, MemberKey, "members", "member", findings);
+        CompareMemberDetails(comparableOriginal, comparableTwin, findings);
+        CompareMemberOrder(comparableOriginal, comparableTwin, findings);
+        CompareSet(comparableOriginal.EventWiring, comparableTwin.EventWiring, EventKey, "events", "event.wiring", findings);
+        CompareSet(comparableOriginal.EventHandlers, comparableTwin.EventHandlers, value => value, "events", "event.handler", findings);
+        CompareSet(comparableOriginal.Menus, comparableTwin.Menus, MenuKey, "menus", "menu.item", findings);
+        CompareSet(comparableOriginal.HotkeyCommandIds, comparableTwin.HotkeyCommandIds, value => value, "hotkeys", "hotkey.command", findings);
+        CompareSet(comparableOriginal.Settings, comparableTwin.Settings, SettingKey, "settings", "setting", findings);
+        CompareSet(comparableOriginal.TranslationStrings, comparableTwin.TranslationStrings, item => item.Name,
             "translations", "translation.string", findings);
-        CompareSet(original.TranslationKeys, twin.TranslationKeys, item => item.Key,
+        CompareSet(comparableOriginal.TranslationKeys, comparableTwin.TranslationKeys, item => item.Key,
             "translations", "translation.key", findings);
-        InventoryComparison commentComparison = CommentInventoryComparer.Compare(original, twin);
+        InventoryComparison commentComparison = CommentInventoryComparer.Compare(comparableOriginal, comparableTwin);
         findings.AddRange(commentComparison.Findings);
 
-        HashSet<string> originalTranslationKeys = original.TranslationKeys
+        HashSet<string> originalTranslationKeys = comparableOriginal.TranslationKeys
             .Select(item => item.Key)
             .ToHashSet(StringComparer.Ordinal);
-        foreach (TranslationKeyEntry entry in twin.TranslationKeys.Where(item =>
+        foreach (TranslationKeyEntry entry in comparableTwin.TranslationKeys.Where(item =>
                      !item.InEnglishCatalog && !originalTranslationKeys.Contains(item.Key)))
         {
             findings.Add(NewFinding(
@@ -46,7 +49,8 @@ internal static class InventoryComparer
                 .ThenBy(finding => finding.OriginalValue, StringComparer.Ordinal)
                 .ThenBy(finding => finding.TwinValue, StringComparer.Ordinal)
                 .ToArray(),
-            AdaptedComments = commentComparison.AdaptedComments
+            AdaptedComments = commentComparison.AdaptedComments,
+            AcceptedFrameworkDeviations = frameworkInputs.Deviations
         };
     }
 

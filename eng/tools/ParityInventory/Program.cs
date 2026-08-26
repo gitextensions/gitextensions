@@ -22,7 +22,8 @@ internal static class Program
                 Console.WriteLine(
                     $"Assessed {sweep.Summary.MappingCount} mappings and {sweep.Summary.AnalyzedTypeCount} types; "
                     + $"wrote {sweep.Summary.FindingCount} findings and recorded "
-                    + $"{sweep.Summary.AdaptedCommentCount} adapted comments at "
+                    + $"{sweep.Summary.AdaptedCommentCount} adapted comments plus "
+                    + $"{sweep.Summary.AcceptedFrameworkDeviationCount} accepted framework deviations at "
                     + $"{Path.GetFullPath(sweep.OutputFile)}.");
                 return 0;
             }
@@ -32,7 +33,8 @@ internal static class Program
             Console.WriteLine(
                 $"Compared {report.Original.Parts.Count} original and {report.Twin.Parts.Count} twin parts; "
                 + $"wrote {report.Summary.FindingCount} findings and recorded "
-                + $"{report.Summary.AdaptedCommentCount} adapted comments at "
+                + $"{report.Summary.AdaptedCommentCount} adapted comments plus "
+                + $"{report.Summary.AcceptedFrameworkDeviationCount} accepted framework deviations at "
                 + $"{Path.GetFullPath(options.OutputFile)}.");
             return 0;
         }

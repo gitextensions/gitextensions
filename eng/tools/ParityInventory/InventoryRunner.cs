@@ -38,10 +38,12 @@ internal static class InventoryRunner
                     .GroupBy(finding => finding.Category, StringComparer.Ordinal)
                     .OrderBy(group => group.Key, StringComparer.Ordinal)
                     .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal),
-                AdaptedCommentCount = comparison.AdaptedComments.Count
+                AdaptedCommentCount = comparison.AdaptedComments.Count,
+                AcceptedFrameworkDeviationCount = comparison.AcceptedFrameworkDeviations.Count
             },
             Findings = findings,
-            AdaptedComments = comparison.AdaptedComments
+            AdaptedComments = comparison.AdaptedComments,
+            AcceptedFrameworkDeviations = comparison.AcceptedFrameworkDeviations
         };
 
         string output = Path.GetFullPath(options.OutputFile);

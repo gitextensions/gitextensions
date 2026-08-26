@@ -13,7 +13,7 @@ dotnet run --project eng/tools/ParityInventory -- compare `
   --output eng/avalonia/parity-evidence/P0.4/functional-findings.json
 ```
 
-The report schema version is `2`. It contains:
+The report schema version is `3`. It contains:
 
 - deterministic original and twin inventories: source partials, members and lexical order,
   event handlers/wiring, menu trees, hotkey command IDs, settings reads/writes,
@@ -31,6 +31,12 @@ The report schema version is `2`. It contains:
   alignment prevents one deletion from producing a cascade of false changes;
 - a separate `adaptedComments` collection for conservative WinForms-to-Avalonia framework-name
   substitutions. Adaptations remain visible evidence but do not count as parity gaps;
+- a separate `acceptedFrameworkDeviations` collection for individually identified shell facts
+  supplied by compiled AXAML or `Window.OnClosed`: the WinForms `components` container,
+  generated `InitializeComponent`, the `Dispose(bool)` lifecycle boundary, and only the exact
+  Designer-generated summary/separator/control-name comments. Each entry retains its original
+  path/value, twin part, and rationale. A handwritten TODO, NOTE, HACK, issue link, or any other
+  comment inside `InitializeComponent` remains a finding;
 - explicit `partial.missing` findings that name both the original partial and expected twin
   path.
 
