@@ -15,16 +15,16 @@ internal static class CommentInventoryComparer
             .ToArray();
         Dictionary<CommentGroupKey, IndexedComment[]> originalGroups = originalComments
             .GroupBy(comment => new CommentGroupKey(
-                GetComparablePart(comment.Entry.Part),
-                comment.Entry.Anchor,
+                GetComparablePart(comment.Entry),
+                GetComparableAnchor(comment.Entry.Anchor),
                 comment.Entry.Placement))
             .ToDictionary(
                 group => group.Key,
                 group => group.OrderBy(comment => comment.Entry.Order).ToArray());
         Dictionary<CommentGroupKey, IndexedComment[]> twinGroups = twinComments
             .GroupBy(comment => new CommentGroupKey(
-                GetComparablePart(comment.Entry.Part),
-                comment.Entry.Anchor,
+                GetComparablePart(comment.Entry),
+                GetComparableAnchor(comment.Entry.Anchor),
                 comment.Entry.Placement))
             .ToDictionary(
                 group => group.Key,
@@ -108,7 +108,8 @@ internal static class CommentInventoryComparer
             AdaptedComments = adaptations
                 .OrderBy(adaptation => adaptation.Path, StringComparer.Ordinal)
                 .ThenBy(adaptation => adaptation.OriginalText, StringComparer.Ordinal)
-                .ToArray()
+                .ToArray(),
+            AcceptedFrameworkDeviations = []
         };
     }
 
@@ -188,9 +189,19 @@ internal static class CommentInventoryComparer
 
     private static AlignmentKind Classify(CommentEntry original, CommentEntry twin)
     {
-        if (original.Kind == twin.Kind && original.Text == twin.Text)
+        if (original.Kind == twin.Kind
+            && original.Text == twin.Text
+            && original.Anchor == twin.Anchor)
         {
             return AlignmentKind.Exact;
+        }
+
+        if (original.Kind == twin.Kind
+            && GetComparableAnchor(original.Anchor) == "method:<closed-lifecycle>()"
+            && GetComparableAnchor(twin.Anchor) == "method:<closed-lifecycle>()"
+            && NormalizeLifecycleComment(original.Text) == NormalizeLifecycleComment(twin.Text))
+        {
+            return AlignmentKind.Adapted;
         }
 
         return original.Kind == twin.Kind
@@ -241,6 +252,13 @@ internal static class CommentInventoryComparer
             RegexOptions.CultureInvariant);
     }
 
+    private static string NormalizeLifecycleComment(string text) =>
+        Regex.Replace(
+            text,
+            "<param name=\"(?:disposing|e)\">.*?</param>",
+            "<lifecycle-param>",
+            RegexOptions.CultureInvariant);
+
     private static CommentAdaptation NewAdaptation(CommentEntry original, CommentEntry twin) =>
         new()
         {
@@ -289,10 +307,31 @@ internal static class CommentInventoryComparer
     private static string GetPath(CommentEntry comment) =>
         $"comment/{comment.Part}/{comment.Anchor}/{comment.Placement}/{comment.Order}";
 
-    private static string GetComparablePart(string part) =>
-        part.EndsWith(".axaml.cs", StringComparison.Ordinal)
+    private static string GetComparablePart(CommentEntry comment)
+    {
+        string part = comment.Part;
+        if (GetComparableAnchor(comment.Anchor) == "method:<closed-lifecycle>()")
+        {
+            if (part.EndsWith(".Designer.cs", StringComparison.Ordinal))
+            {
+                return $"{part[..^".Designer.cs".Length]}.cs";
+            }
+
+            if (part.EndsWith(".axaml.cs", StringComparison.Ordinal))
+            {
+                return $"{part[..^".axaml.cs".Length]}.cs";
+            }
+        }
+
+        return part.EndsWith(".axaml.cs", StringComparison.Ordinal)
             ? $"{part[..^".axaml.cs".Length]}.cs"
             : part;
+    }
+
+    private static string GetComparableAnchor(string anchor) =>
+        anchor is "method:Dispose(bool disposing)" or "method:OnClosed(EventArgs e)"
+            ? "method:<closed-lifecycle>()"
+            : anchor;
 
     private enum AlignmentKind
     {

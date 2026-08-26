@@ -5,7 +5,7 @@ namespace GitExtensions.ParityInventory;
 // parity-scaffolding: Supplies the stable interchange contract consumed by later parity tooling.
 internal sealed record InventoryReport
 {
-    public const int CurrentSchemaVersion = 2;
+    public const int CurrentSchemaVersion = 3;
 
     public required int SchemaVersion { get; init; }
 
@@ -20,6 +20,8 @@ internal sealed record InventoryReport
     public required IReadOnlyList<FunctionalFinding> Findings { get; init; }
 
     public required IReadOnlyList<CommentAdaptation> AdaptedComments { get; init; }
+
+    public required IReadOnlyList<AcceptedFrameworkDeviation> AcceptedFrameworkDeviations { get; init; }
 }
 
 // parity-scaffolding: Describes one side of a source-level parity comparison.
@@ -165,12 +167,36 @@ internal sealed record CommentAdaptation
     public required string TwinText { get; init; }
 }
 
+// parity-scaffolding: Records one source fact represented by framework-generated AXAML/lifecycle code.
+internal sealed record AcceptedFrameworkDeviation
+{
+    public required string Category { get; init; }
+
+    public required string Code { get; init; }
+
+    public required string Path { get; init; }
+
+    public required string OriginalPart { get; init; }
+
+    public required string TwinPart { get; init; }
+
+    public required string Rationale { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? OriginalValue { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? TwinValue { get; init; }
+}
+
 // parity-scaffolding: Carries both parity gaps and legitimate comment adaptations.
 internal sealed record InventoryComparison
 {
     public required IReadOnlyList<FunctionalFinding> Findings { get; init; }
 
     public required IReadOnlyList<CommentAdaptation> AdaptedComments { get; init; }
+
+    public required IReadOnlyList<AcceptedFrameworkDeviation> AcceptedFrameworkDeviations { get; init; }
 }
 
 // parity-scaffolding: Summarizes a deterministic inventory comparison.
@@ -181,6 +207,8 @@ internal sealed record InventorySummary
     public required IReadOnlyDictionary<string, int> FindingsByCategory { get; init; }
 
     public required int AdaptedCommentCount { get; init; }
+
+    public required int AcceptedFrameworkDeviationCount { get; init; }
 }
 
 // parity-scaffolding: Describes one concrete functional gap between original and twin.
