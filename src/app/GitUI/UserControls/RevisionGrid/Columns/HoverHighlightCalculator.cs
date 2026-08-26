@@ -95,7 +95,11 @@ internal sealed class HoverHighlightCalculator : IDisposable
 
         // Add visible ids and their parents, find if a tracked branch is in the set
         AddIdAndParents(_revisionGraph, rowIndex, visibleIds);
-        bool checkOtherRefs = gitRef.IsRemote || !string.IsNullOrEmpty(gitRef.MergeWith);
+
+        bool checkOtherRefs = gitRef is NestledVirtualRef nestledRef
+            ? !nestledRef.TrackingBranchIsGone
+            : (gitRef.IsRemote || (gitRef.IsHead && !string.IsNullOrEmpty(gitRef.MergeWith)))
+                && !hoveredRevision.GitRevision?.Refs.Any(r => IsInBranchGroup(r, gitRef)) is true;
 
         RevisionGraphRevision? belowRev = null;
         int visibleTo = visibleRange.FromIndex + visibleRange.Count - 1;
@@ -175,7 +179,7 @@ internal sealed class HoverHighlightCalculator : IDisposable
         static bool IsInBranchGroup(IGitRef r, IGitRef gitRef)
             => gitRef.IsTrackingRemote(r)
             || r.IsTrackingRemote(gitRef)
-            || (gitRef is NestledVirtualRef && gitRef.CompleteName == r.CompleteName);
+            || (gitRef is NestledVirtualRef { TrackingBranchIsGone: false } && gitRef.CompleteName == r.CompleteName);
 
         static void WalkAncestors(RevisionGraphRevision revision, HashSet<ObjectId> result, IReadOnlySet<ObjectId> visibleIds)
         {
