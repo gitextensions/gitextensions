@@ -262,6 +262,29 @@ public sealed class EndToEndCaptureTests
 
     [Test]
     [Apartment(ApartmentState.STA)]
+    public void Image_capture_should_use_a_screen_grab_only_for_a_visible_native_browser()
+    {
+        using Form form = new();
+        using TabControl tabs = new() { Dock = DockStyle.Fill };
+        using TabPage first = new("First");
+        using TabPage second = new("Second");
+        using WebBrowser browser = new() { Dock = DockStyle.Fill };
+        second.Controls.Add(browser);
+        tabs.TabPages.Add(first);
+        tabs.TabPages.Add(second);
+        form.Controls.Add(tabs);
+        form.Show();
+
+        ImageCapture.RequiresScreenGrab(form).Should().BeFalse();
+
+        tabs.SelectedTab = second;
+        Application.DoEvents();
+
+        ImageCapture.RequiresScreenGrab(form).Should().BeTrue();
+    }
+
+    [Test]
+    [Apartment(ApartmentState.STA)]
     public void State_driver_should_reject_a_context_menu_that_declines_to_open()
     {
         using CancelingContextMenuForm form = new();

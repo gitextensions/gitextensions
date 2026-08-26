@@ -11,7 +11,7 @@ internal static class ImageCapture
         IReadOnlyList<ToolStripDropDown> popups,
         IReadOnlyList<ComboBoxPopup> comboBoxPopups)
     {
-        if (popups.Count > 0 || comboBoxPopups.Count > 0)
+        if (popups.Count > 0 || comboBoxPopups.Count > 0 || RequiresScreenGrab(root))
         {
             return CaptureScreen(root, popups, comboBoxPopups);
         }
@@ -169,6 +169,23 @@ internal static class ImageCapture
         root is Form form
             ? NativeMethods.GetWindowRectangle(form.Handle)
             : root.RectangleToScreen(root.ClientRectangle);
+
+    // Native WebBrowser content is rendered by its own child window and PrintWindow can return
+    // the containing form with that region silently blank. Capture the real visible desktop pixels.
+    internal static bool RequiresScreenGrab(Control root)
+        => EnumerateSelfAndDescendants(root).Any(control => control is WebBrowser && control.Visible);
+
+    private static IEnumerable<Control> EnumerateSelfAndDescendants(Control control)
+    {
+        yield return control;
+        foreach (Control child in control.Controls)
+        {
+            foreach (Control descendant in EnumerateSelfAndDescendants(child))
+            {
+                yield return descendant;
+            }
+        }
+    }
 
     private static void EnsureRenderedContent(Bitmap bitmap, string method)
     {
