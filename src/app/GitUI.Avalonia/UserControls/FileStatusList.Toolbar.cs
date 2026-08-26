@@ -66,7 +66,6 @@ partial class FileStatusList
         ((MenuFlyout)btnAsTree.Flyout!).Opening += (_, _) => UpdateToolbar();
         ((MenuFlyout)btnFindInFilesGitGrep.Flyout!).Opening += FindInFilesGitGrep_DropDownOpening;
         ((MenuFlyout)btnSettings.Flyout!).Opening += Settings_DropDownOpening;
-        UpdateToolbar();
 
         static void SetSortTag(MenuItem item, DiffListSortType sortType)
             => item.Tag = sortType;

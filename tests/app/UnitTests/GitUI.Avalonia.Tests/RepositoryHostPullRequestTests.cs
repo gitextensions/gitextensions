@@ -220,6 +220,7 @@ public sealed class RepositoryHostPullRequestTests
         CaptureNode[] nodes = Flatten(surface.Root).ToArray();
         CaptureNode list = nodes.Single(node => node.FieldName == "_pullRequestsList");
         CaptureNode fetch = nodes.Single(node => node.FieldName == "_fetchBtn");
+        CaptureNode hostedRepository = nodes.Single(node => node.FieldName == "_selectHostedRepoCB");
         CaptureNode commentsPage = nodes.Single(node => node.FieldName == "tabPage2");
         CaptureNode commentsLayout = nodes.Single(node => node.FieldName == "tableLayoutPanel1");
 
@@ -231,7 +232,8 @@ public sealed class RepositoryHostPullRequestTests
         list.AutoSize.Should().BeFalse();
         list.TabStop.Should().BeTrue();
         fetch.Colors.Background.Should().Be("#00FFFFFF");
-        fetch.Focused.Should().BeTrue();
+        hostedRepository.Focused.Should().BeTrue();
+        fetch.Focused.Should().BeFalse();
         commentsPage.BorderStyle.Should().Be("None");
         commentsLayout.BorderStyle.Should().Be("None");
         commentsLayout.Font.Should().NotBeNull();

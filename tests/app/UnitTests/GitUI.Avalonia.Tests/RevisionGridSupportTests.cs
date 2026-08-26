@@ -90,6 +90,27 @@ public sealed class RevisionGridSupportTests
         loading.IsAnimating.Should().BeFalse();
     }
 
+    [AvaloniaTest]
+    public void Loading_control_should_stretch_its_spinner_through_the_source_fill_layout()
+    {
+        LoadingControl loading = new();
+        Window window = new()
+        {
+            Width = 546,
+            Height = 323,
+            Content = loading,
+        };
+
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        WaitSpinner spinner = loading.Content.Should().BeOfType<WaitSpinner>().Subject;
+        spinner.Bounds.Size.Should().Be(loading.Bounds.Size);
+        spinner.Bounds.Width.Should().BeGreaterThan(32);
+        spinner.Bounds.Height.Should().BeGreaterThan(32);
+        window.Close();
+    }
+
     [Test]
     public void Navigation_history_should_walk_backward_forward_and_clear_forward_on_push()
     {
