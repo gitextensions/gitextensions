@@ -2572,6 +2572,8 @@ public sealed partial class ParityScreenshotTests
             ForkAndCloneForm.TestAccessor accessor = forkAndCloneForm.GetTestAccessor();
             accessor.SelectMyRepository(0);
             Dispatcher.UIThread.RunJobs();
+            forkAndCloneForm.FindControl<ListBox>("myReposLV")!.Focus();
+            Dispatcher.UIThread.RunJobs();
             accessor.CloneEnabled.Should().BeTrue();
             if (state.Id == "protocol.open")
             {

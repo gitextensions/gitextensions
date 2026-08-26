@@ -35,6 +35,7 @@
              BorderBrush="Transparent"
              BorderThickness="0"
              FocusAdorner="{x:Null}"
+             Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
              HorizontalContentAlignment="Left"
              Padding="0"
              ScrollViewer.HorizontalScrollBarVisibility="Auto"

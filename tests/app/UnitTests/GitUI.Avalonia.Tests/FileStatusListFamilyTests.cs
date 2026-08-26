@@ -201,6 +201,10 @@ public sealed class FileStatusListFamilyTests
 
         accessor.NoFilesLabel.IsVisible.Should().BeTrue();
         accessor.FilterRow.IsVisible.Should().BeFalse();
+        accessor.List.IsVisible.Should().BeTrue("the WinForms list remains beneath the empty-state label");
+        accessor.RefreshButton.IsEnabled.Should().BeFalse();
+        control.FindControl<MenuItem>("tsmiShowSkipWorktreeFiles")!.IsEnabled.Should().BeFalse();
+        control.FindControl<MenuItem>("tsmiShowUntrackedFiles")!.IsEnabled.Should().BeFalse();
 
         GitItemStatus worktree = new("tracked.txt")
         {
@@ -506,6 +510,7 @@ public sealed class FileStatusListFamilyTests
             AppSettings.SetBool(settingsKey, false);
             FileStatusList control = new();
             FileStatusList.TestAccessor accessor = control.GetTestAccessor();
+            accessor.UpdateToolbar();
             int buttonIndex = accessor.Toolbar.Children.IndexOf(accessor.ByPathButton);
             MenuItem visibilityItem = (MenuItem)accessor.ToolbarMenuItem.Items[buttonIndex]!;
 

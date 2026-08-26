@@ -1007,6 +1007,7 @@
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
   </Style>
   <Style Selector="ListBox.gitextensions-native-list-items">
+    <Setter Property="Focusable" Value="True" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsWindowBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsWindowTextBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsControlBorderBrush}" />

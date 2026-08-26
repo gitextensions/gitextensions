@@ -103,6 +103,7 @@
                      Height="23"
                      Margin="3"
                      MinHeight="0"
+                     Foreground="{DynamicResource GitExtensionsWindowTextBrush}"
                      VerticalAlignment="Top" />
             <Button x:Name="searchBtn"
                     Classes="gitextensions-dialog-action gitextensions-native-dialog-action"

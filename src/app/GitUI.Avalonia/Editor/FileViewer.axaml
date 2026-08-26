@@ -127,7 +127,7 @@
 
     <Border x:Name="PictureBox"
             IsVisible="False"
-            Background="{DynamicResource ThemeBackgroundBrush}">
+            Background="{DynamicResource GitExtensionsKnownColorControlLightLightBrush}">
       <Image x:Name="ImagePreview"
              HorizontalAlignment="Center"
              VerticalAlignment="Center"
