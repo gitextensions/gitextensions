@@ -148,6 +148,35 @@ public sealed class FrameworkControlParityTests
     }
 
     [AvaloniaTest]
+    public void Native_dialog_button_should_not_scale_its_source_bounds_when_pressed()
+    {
+        Button button = new()
+        {
+            Name = "btnNative",
+            Classes = { "gitextensions-native-dialog-action" },
+            Content = "Action",
+            Width = 100,
+            Height = 30,
+        };
+        Window window = Show(ThemeVariant.Light, button);
+        try
+        {
+            Point normalOrigin = button.TranslatePoint(default, window)!.Value;
+            using (AvaloniaControlStateDriver.Apply(
+                       window,
+                       new CaptureStatePlan { Id = "pressed", Kind = CaptureStateKind.Pressed, TargetField = "btnNative" }))
+            {
+                Dispatcher.UIThread.RunJobs();
+                button.TranslatePoint(default, window).Should().Be(normalOrigin);
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void Scrollbars_splitters_and_tooltips_should_use_desktop_chrome_metrics()
     {
         ScrollBar vertical = new() { Orientation = Avalonia.Layout.Orientation.Vertical };

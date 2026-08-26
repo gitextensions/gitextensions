@@ -1537,19 +1537,23 @@ internal sealed class AvaloniaControlTreeReader
         => (control.Name is "cboFilterComboBox" or "cboFindInCommitFilesGitGrep")
            && control.GetLogicalAncestors().Any(ancestor => ancestor.GetType().FullName == "GitUI.FileStatusList");
 
-    private static bool IsSourceTransparentContainer(Control control)
-        => control.GetLogicalAncestors().Any(
-               ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm")
+    private bool IsSourceTransparentContainer(Control control)
+        => IsViewPullRequestsTree(control)
            && control.Name is "tableLayoutPanel2" or "tableLayoutPanel3"
                or "flowLayoutPanel2" or "flowLayoutPanel3"
-               or "splitContainer2" or "splitContainer3" or "_fileStatusList" or "_diffViewer";
+               or "splitContainer2" or "splitContainer3" or "_fileStatusList" or "_diffViewer"
+               or "lblSplitter";
 
-    private static bool HasSourceTransparentColors(Control control)
+    private bool HasSourceTransparentColors(Control control)
         => IsSourceTransparentContainer(control)
-           || (control.GetLogicalAncestors().Any(
-                   ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm")
+           || (IsViewPullRequestsTree(control)
                && control.Name is "_fetchBtn" or "_addAndFetchBtn" or "_closePullRequestBtn"
                    or "_chooseRepo" or "internalFileViewer");
+
+    private bool IsViewPullRequestsTree(Control control)
+        => _root.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm"
+           || control.GetLogicalAncestors().Any(
+               ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm");
 
     private static bool HasSourceLightTransparentColors(Control control)
         => (control.GetLogicalAncestors().Any(
@@ -1559,7 +1563,7 @@ internal sealed class AvaloniaControlTreeReader
                    ancestor => ancestor.GetType().FullName == "GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm")
                && control.Name is "searchBtn" or "getFromUserBtn" or "forkBtn" or "openGitupPageBtn");
 
-    private static bool IsSourceTabStopContainer(Control control)
+    private bool IsSourceTabStopContainer(Control control)
         => (IsSourceTransparentContainer(control)
             && (control.Name is "splitContainer2" or "splitContainer3" or "_fileStatusList" or "_diffViewer"))
            // Composite Avalonia controls delegate focus to their inner editor/button. Preserve
@@ -1827,6 +1831,8 @@ internal sealed class AvaloniaControlTreeReader
         CaptureColors colors = ReadColors(control);
         return colors with
         {
+            Foreground = ResolveResourceArgb("GitExtensionsKnownColorControlTextBrush")
+                         ?? ResolveResourceArgb("GitExtensionsControlForegroundBrush"),
             Background = "#00FFFFFF",
             Border = null,
             DisabledBackground = "#00FFFFFF"

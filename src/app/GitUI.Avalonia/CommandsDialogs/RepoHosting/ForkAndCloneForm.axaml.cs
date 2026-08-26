@@ -83,6 +83,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         ApplyRepositoryColumnWidths(isSearchResult: true);
         WinFormsTableLayoutSizer.AttachColumns(tableLayoutPanel5, firstColumnPercent: 70, totalPercent: 100);
         WinFormsTableLayoutSizer.AttachColumns(tableLayoutPanel3, firstColumnPercent: 60, totalPercent: 100);
+        WinFormsAutoSizeTextBlock.Attach(orLbl);
+        WinFormsAutoSizeTextBlock.Attach(descriptionLbl);
 
         searchBtn.Click += _searchBtn_Click;
         getFromUserBtn.Click += _getFromUserBtn_Click;
@@ -219,6 +221,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             ResizeColumnToFitContent(rows, isSearchResult: false, 0);
             myReposLV.ItemsSource = rows;
+            myReposLV.SelectedIndex = -1;
             UpdateCloneInfo();
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
