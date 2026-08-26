@@ -118,6 +118,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         base.OnRuntimeLoad(e);
         ViewPullRequestsForm_Load(this, e);
+
+        // Framework constraint: WinForms activates the first eligible control by tab order.
+        _fetchBtn.Focus();
     }
 
     private void ViewPullRequestsForm_Load(object sender, EventArgs e)

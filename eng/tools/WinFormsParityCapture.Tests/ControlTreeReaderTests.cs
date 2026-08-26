@@ -188,6 +188,44 @@ public sealed class ControlTreeReaderTests
     }
 
     [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_stop_at_the_numeric_up_down_semantic_boundary()
+    {
+        using Form form = new();
+        using NumericUpDown numeric = new() { Name = "depthUpDown" };
+        form.Controls.Add(numeric);
+        form.CreateControl();
+        numeric.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode numericNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        numericNode.Name.Should().Be("depthUpDown");
+        numericNode.Children.Should().BeEmpty(
+            "the native edit and spin buttons render the one product NumericUpDown");
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_emit_a_tool_strip_control_host_once_as_its_semantic_item()
+    {
+        using Form form = new();
+        using ToolStrip toolStrip = new() { Name = "Toolbar" };
+        using ToolStripComboBox combo = new() { Name = "encodingToolStripComboBox" };
+        toolStrip.Items.Add(combo);
+        form.Controls.Add(toolStrip);
+        form.CreateControl();
+        toolStrip.CreateControl();
+        ControlTreeReader reader = new(form, dpi: 96);
+
+        CaptureNode toolbarNode = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Children.Single();
+
+        toolbarNode.Children.Should().ContainSingle();
+        toolbarNode.Children.Single().Type.Should().Be(typeof(ToolStripComboBox).FullName);
+        toolbarNode.Children.Single().Name.Should().Be("encodingToolStripComboBox");
+    }
+
+    [Test]
     [Category("P1_7")]
     public void ReadPrimary_should_emit_framework_neutral_resolved_color_roles()
     {
@@ -224,6 +262,14 @@ public sealed class ControlTreeReaderTests
             .Should().Be(Color.FromArgb(240, 240, 240));
         ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.Info, isDark: true)
             .Should().Be(Color.FromArgb(80, 80, 60));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.Menu, isDark: true)
+            .Should().Be(Color.FromArgb(55, 55, 55));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.MenuText, isDark: true)
+            .Should().Be(Color.FromArgb(240, 240, 240));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.HotTrack, isDark: true)
+            .Should().Be(Color.FromArgb(45, 95, 175));
+        ControlTreeReader.TestAccessor.ResolveSystemColor(KnownColor.Highlight, isDark: false)
+            .Should().Be(Color.FromArgb(0, 120, 215));
     }
 
     [Test]
