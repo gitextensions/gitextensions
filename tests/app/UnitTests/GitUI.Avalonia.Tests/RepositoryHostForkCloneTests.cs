@@ -212,6 +212,9 @@ public sealed class RepositoryHostForkCloneTests
         translation.Received(1).AddTranslationItem(
             nameof(ForkAndCloneForm), "columnHeaderSearchForks", "Text", "# Forks");
         translation.Received(1).AddTranslationItem(
+            nameof(ForkAndCloneForm), "helpTextLbl", "Text",
+            "If you want to fork a repository owned by somebody else, go to the Search for repositories tab.");
+        translation.Received(1).AddTranslationItem(
             nameof(ForkAndCloneForm), "_strWillCloneInfo", "Text",
             "Will clone {0} into {1}.\r\nYou can not push unless you are a collaborator. {2}");
     }
@@ -471,6 +474,57 @@ public sealed class RepositoryHostForkCloneTests
     }
 
     [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_keep_get_from_user_available_during_repository_search()
+    {
+        TaskCompletionSource searchStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource releaseSearch = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.SearchForRepository("pending").Returns(_ =>
+        {
+            searchStarted.TrySetResult();
+            releaseSearch.Task.GetAwaiter().GetResult();
+            return Array.Empty<IHostedRepository>();
+        });
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.StartSearch("pending", byUser: false);
+        await searchStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.SearchEnabled.Should().BeFalse();
+        accessor.GetFromUserEnabled.Should().BeTrue();
+
+        releaseSearch.TrySetResult();
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.SearchEnabled.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
+    public async Task ForkAndCloneForm_should_retain_searching_row_and_description_on_source_failure_states()
+    {
+        IHostedRepository repository = CreateRepository("project", owner: "other", isFork: false);
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.SearchForRepository("project").Returns([repository]);
+        host.SearchForRepository("failure").Returns(_ => throw new InvalidOperationException("search failed"));
+        using ForkAndCloneForm form = CreateForm(host);
+        ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
+        accessor.Destination = Path.GetTempPath();
+
+        await accessor.SearchAsync("project", byUser: false).WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.SelectSearchResult(0);
+        accessor.Description.Should().Be("project description");
+
+        accessor.StartSearch("failure", byUser: false);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.SearchResultNames.Should().Equal(" : SEARCHING : ");
+        accessor.Description.Should().Be("project description");
+        accessor.ForkEnabled.Should().BeFalse();
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("Search failed!" + Environment.NewLine + "search failed");
+    }
+
+    [AvaloniaTest]
     public async Task ForkAndCloneForm_should_report_owned_repository_load_failure_in_the_help_text()
     {
         IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
@@ -600,13 +654,14 @@ public sealed class RepositoryHostForkCloneTests
     }
 
     [AvaloniaTest]
-    public async Task ForkAndCloneForm_should_report_a_fork_failure_and_restore_the_action()
+    public async Task ForkAndCloneForm_should_report_a_fork_failure_and_reload_owned_repositories()
     {
         IHostedRepository repository = CreateRepository("project", owner: "other", isFork: false);
         repository.When(candidate => candidate.Fork())
             .Do(_ => throw new InvalidOperationException("provider failed"));
         IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
         host.SearchForRepository("project").Returns([repository]);
+        host.GetMyRepos().Returns([]);
         using ForkAndCloneForm form = CreateForm(host);
         ForkAndCloneForm.TestAccessor accessor = form.GetTestAccessor();
         accessor.Destination = Path.GetTempPath();
@@ -619,7 +674,8 @@ public sealed class RepositoryHostForkCloneTests
 
         _messageBoxHost.Messages.Should().ContainSingle()
             .Which.Should().Be("Failed to fork:" + Environment.NewLine + "provider failed");
-        accessor.ForkEnabled.Should().BeTrue();
+        accessor.IsMyRepositoriesTabSelected.Should().BeTrue();
+        host.Received(1).GetMyRepos();
     }
 
     [AvaloniaTest]
