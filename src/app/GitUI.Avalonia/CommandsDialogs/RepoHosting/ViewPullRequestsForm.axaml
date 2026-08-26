@@ -3,6 +3,8 @@
         xmlns:editor="using:GitUI.Editor"
         xmlns:gitui="using:GitUI"
         xmlns:spellChecker="using:GitUI.SpellChecker"
+        xmlns:usercontrols="using:GitUI.UserControls"
+        xmlns:winformsControls="using:GitUI.Compat.WinFormsControls"
         x:Class="GitUI.CommandsDialogs.RepoHosting.ViewPullRequestsForm"
         Width="754"
         Height="511"
@@ -31,27 +33,28 @@
       <Setter Property="Foreground" Value="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
     </Style>
   </Window.Styles>
-  <Grid x:Name="splitContainer2"
+  <winformsControls:SplitContainer x:Name="splitContainer2"
         RowDefinitions="146*,6,359*">
-    <Grid x:Name="tableLayoutPanel2"
+    <winformsControls:TableLayoutPanel x:Name="tableLayoutPanel2"
           RowDefinitions="33,*">
-      <StackPanel x:Name="flowLayoutPanel2"
-                  Margin="2"
-                  Orientation="Horizontal">
-        <TextBlock x:Name="_chooseRepo"
-                   Width="106"
-                   Height="15"
-                   Margin="3,0"
-                   VerticalAlignment="Center"
-                   Text="Choose repository:" />
-        <ComboBox x:Name="_selectHostedRepoCB"
-                  Width="258"
-                  Height="23"
-                  Margin="3"
-                  VerticalContentAlignment="Center" />
-      </StackPanel>
+      <winformsControls:FlowLayoutPanel x:Name="flowLayoutPanel2"
+                                        Margin="2">
+        <StackPanel Orientation="Horizontal">
+          <winformsControls:Label x:Name="_chooseRepo"
+                                  Width="106"
+                                  Height="15"
+                                  Margin="3,0"
+                                  VerticalAlignment="Center"
+                                  Text="Choose repository:" />
+          <ComboBox x:Name="_selectHostedRepoCB"
+                    Width="258"
+                    Height="23"
+                    Margin="3"
+                    VerticalContentAlignment="Center" />
+        </StackPanel>
+      </winformsControls:FlowLayoutPanel>
 
-      <Grid x:Name="tableLayoutPanel3"
+      <winformsControls:TableLayoutPanel x:Name="tableLayoutPanel3"
             Grid.Row="1"
             Margin="2"
             ColumnDefinitions="*,Auto">
@@ -60,37 +63,38 @@
           <!-- Framework constraint: the native ListView client is four DIPs narrower than its outer bounds. -->
           <Grid Margin="0,0,4,0"
                 ColumnDefinitions="Auto,*,Auto,Auto,Auto">
-            <ContentControl x:Name="columnHeaderId"
+            <winformsControls:ColumnHeader x:Name="columnHeaderId"
                             Classes="gitextensions-list-header-cell"
                             Content="#" />
-            <ContentControl x:Name="columnHeaderHeading"
+            <winformsControls:ColumnHeader x:Name="columnHeaderHeading"
                             Grid.Column="1"
                             Classes="gitextensions-list-header-cell"
                             Content="Heading" />
-            <ContentControl x:Name="columnHeaderBy"
+            <winformsControls:ColumnHeader x:Name="columnHeaderBy"
                             Grid.Column="2"
                             Classes="gitextensions-list-header-cell"
                             Content="By" />
-            <ContentControl x:Name="columnHeaderCreated"
+            <winformsControls:ColumnHeader x:Name="columnHeaderCreated"
                             Grid.Column="3"
                             Classes="gitextensions-list-header-cell"
                             Content="Created" />
-            <ContentControl x:Name="columnHeaderBranch"
+            <winformsControls:ColumnHeader x:Name="columnHeaderBranch"
                             Grid.Column="4"
                             Classes="gitextensions-list-header-cell"
                             Content="Will be fetched to branch" />
           </Grid>
-          <ListBox x:Name="_pullRequestsList"
+          <usercontrols:NativeListView x:Name="_pullRequestsList"
                    Grid.Row="1"
                    Classes="gitextensions-native-list-items"
                    SelectionMode="Single" />
         </Grid>
 
-        <StackPanel x:Name="flowLayoutPanel3"
-                    Grid.Column="1"
-                    Width="160"
-                    Margin="2">
-          <Button x:Name="_fetchBtn"
+        <winformsControls:FlowLayoutPanel x:Name="flowLayoutPanel3"
+                                          Grid.Column="1"
+                                          Width="160"
+                                          Margin="2">
+          <StackPanel>
+            <Button x:Name="_fetchBtn"
                   Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                   Width="155"
                   Height="29"
@@ -98,7 +102,7 @@
                   Margin="3"
                   HorizontalAlignment="Left"
                   Content="Fetch to pr/ branch" />
-          <Button x:Name="_addAndFetchBtn"
+            <Button x:Name="_addAndFetchBtn"
                   Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                   Width="155"
                   Height="29"
@@ -106,7 +110,7 @@
                   Margin="3"
                   HorizontalAlignment="Left"
                   Content="Add remote and fetch" />
-          <Button x:Name="_closePullRequestBtn"
+            <Button x:Name="_closePullRequestBtn"
                   Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                   Width="155"
                   Height="29"
@@ -114,9 +118,10 @@
                   Margin="3"
                   HorizontalAlignment="Left"
                   Content="Close pull request" />
-        </StackPanel>
-      </Grid>
-    </Grid>
+          </StackPanel>
+        </winformsControls:FlowLayoutPanel>
+      </winformsControls:TableLayoutPanel>
+    </winformsControls:TableLayoutPanel>
 
     <GridSplitter Grid.Row="1"
                   ResizeDirection="Rows" />
@@ -126,13 +131,13 @@
                 Classes="gitextensions-native-tabs"
                 Margin="0"
                 Padding="0">
-      <TabItem x:Name="tabPage1"
+      <winformsControls:TabPage x:Name="tabPage1"
                Classes="gitextensions-dialog-tab"
                Height="28"
                MinHeight="28"
                Padding="8,2"
                Header="Diffs">
-        <Grid x:Name="splitContainer3"
+        <winformsControls:SplitContainer x:Name="splitContainer3"
               Margin="6,2,6,6"
               RowDefinitions="112*,6,203*">
           <gitui:FileStatusList x:Name="_fileStatusList" />
@@ -140,19 +145,19 @@
                         ResizeDirection="Rows" />
           <editor:FileViewer x:Name="_diffViewer"
                              Grid.Row="2" />
-        </Grid>
-      </TabItem>
+        </winformsControls:SplitContainer>
+      </winformsControls:TabPage>
 
-      <TabItem x:Name="tabPage2"
+      <winformsControls:TabPage x:Name="tabPage2"
                Classes="gitextensions-dialog-tab"
                Height="28"
                MinHeight="28"
                Padding="8,2"
                Header="Comments">
-        <Grid x:Name="tableLayoutPanel1"
+        <winformsControls:TableLayoutPanel x:Name="tableLayoutPanel1"
               Margin="6,2,6,6"
               RowDefinitions="*,80,33">
-          <ListBox x:Name="_discussionWB"
+          <usercontrols:WebBrowserControl x:Name="_discussionWB"
                    Classes="repository-host-discussion"
                    Margin="3"
                    Focusable="True"
@@ -165,11 +170,11 @@
                                      Margin="2"
                                      Background="{DynamicResource GitExtensionsKnownColorControlBrush}"
                                      Foreground="{DynamicResource GitExtensionsKnownColorControlTextBrush}" />
-          <DockPanel x:Name="flowLayoutPanel1"
-                     Grid.Row="2"
-                     Margin="2"
-                     LastChildFill="False">
-            <Button x:Name="_refreshCommentsBtn"
+          <winformsControls:FlowLayoutPanel x:Name="flowLayoutPanel1"
+                                            Grid.Row="2"
+                                            Margin="2">
+            <DockPanel LastChildFill="False">
+              <Button x:Name="_refreshCommentsBtn"
                     Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                     Width="100"
                     Height="23"
@@ -177,7 +182,7 @@
                     Margin="3"
                     DockPanel.Dock="Right"
                     Content="Refresh" />
-            <Button x:Name="_postComment"
+              <Button x:Name="_postComment"
                     Classes="gitextensions-dialog-action-primary gitextensions-native-dialog-action"
                     Width="131"
                     Height="23"
@@ -185,9 +190,10 @@
                     Margin="3"
                     DockPanel.Dock="Right"
                     Content="Post comment" />
-          </DockPanel>
-        </Grid>
-      </TabItem>
+            </DockPanel>
+          </winformsControls:FlowLayoutPanel>
+        </winformsControls:TableLayoutPanel>
+      </winformsControls:TabPage>
     </TabControl>
-  </Grid>
+  </winformsControls:SplitContainer>
 </Window>

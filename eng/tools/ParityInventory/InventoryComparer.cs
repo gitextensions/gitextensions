@@ -162,7 +162,7 @@ internal static class InventoryComparer
                     twinMember.Accessibility));
             }
 
-            if (!string.Equals(originalMember.Signature, twinMember.Signature, StringComparison.Ordinal))
+            if (!MemberSignaturesMatch(originalMember, twinMember))
             {
                 findings.Add(NewFinding(
                     "members",
@@ -237,6 +237,35 @@ internal static class InventoryComparer
 
     private static bool IsGeneratedMarkupField(MemberEntry item) =>
         item.Kind == "field" && item.Part.EndsWith(".axaml", StringComparison.Ordinal);
+
+    private static bool MemberSignaturesMatch(MemberEntry original, MemberEntry twin)
+    {
+        if (string.Equals(original.Signature, twin.Signature, StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        // AXAML stores the CLR namespace in an xmlns declaration, while XElement.LocalName only
+        // exposes the control type. Compare the same local type identity for generated fields.
+        return IsGeneratedMarkupField(twin)
+            && string.Equals(
+                UnqualifyFieldType(original.Signature),
+                UnqualifyFieldType(twin.Signature),
+                StringComparison.Ordinal);
+    }
+
+    private static string UnqualifyFieldType(string signature)
+    {
+        int separator = signature.LastIndexOf(' ');
+        if (separator < 0)
+        {
+            return signature;
+        }
+
+        string type = signature[..separator];
+        int namespaceSeparator = type.LastIndexOf('.');
+        return $"{type[(namespaceSeparator + 1)..]}{signature[separator..]}";
+    }
 
     private static string EventKey(EventWireEntry item) =>
         $"{item.Target}.{NormalizeEventName(item.Event)}->{item.Handler}";

@@ -17,6 +17,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager;
@@ -48,8 +49,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
-    // Framework constraint: TaskManager replaces WinForms AsyncLoader while preserving the source field identity.
-    private readonly TaskManager _loader = GitUI.Compat.DesignTimeTaskManager.Create();
+    // Framework constraint: the native AsyncLoader twin owns TaskManager-backed execution.
+    private readonly AsyncLoader _loader = new();
     private readonly CancellationTokenSequence _pullRequestsSequence = new();
     private readonly CancellationTokenSequence _detailsSequence = new();
     private readonly CancellationTokenSequence _discussionSequence = new();
@@ -110,12 +111,16 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         // Framework constraint: the source end-scroll runs after WebBrowser.DocumentCompleted;
         // an Avalonia list can finish loading before its hidden tab is materialized, so re-run it when shown.
-        tabControl1.SelectionChanged += (_, _) =>
+        _discussionWB.ObserveVisibility(tabControl1, tabPage2);
+        _loader.LoadingError += (sender, ex) =>
         {
-            if (tabControl1.SelectedItem == tabPage2 && _discussionWB.ItemCount > 0)
-            {
-                _discussionWB_DocumentCompleted(_discussionWB, EventArgs.Empty);
-            }
+            MessageBoxes.Show(
+                this,
+                ex.Exception.ToString(),
+                TranslatedStrings.Error,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error);
+            this.UnMask();
         };
         _pullRequestsList.SizeChanged += _pullRequestsList_Resize;
         _fileStatusList.SelectedIndexChanged += _fileStatusList_SelectedIndexChanged;
@@ -142,6 +147,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
         {
             return;
         }
+
+        _discussionWB.DocumentCompleted += _discussionWB_DocumentCompleted;
 
         this.Mask();
 
@@ -481,10 +488,10 @@ public partial class ViewPullRequestsForm : GitModuleForm
             .Select(DiscussionRow.FromPresentation)
             .ToArray();
         _discussionWB.ItemsSource = rows;
-        _discussionWB_DocumentCompleted(this, EventArgs.Empty);
+        _discussionWB.NotifyDocumentCompleted();
     }
 
-    private void _discussionWB_DocumentCompleted(object sender, EventArgs e)
+    private void _discussionWB_DocumentCompleted(object? sender, WebBrowserDocumentCompletedEventArgs e)
     {
         object? lastItem = _discussionWB.Items.Cast<object>().LastOrDefault();
         if (lastItem is null)

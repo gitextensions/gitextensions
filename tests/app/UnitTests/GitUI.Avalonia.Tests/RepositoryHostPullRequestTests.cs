@@ -21,6 +21,7 @@ using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.UserControls.RevisionGrid;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using FlowLayoutPanel = GitUI.Compat.WinFormsControls.FlowLayoutPanel;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -96,8 +97,9 @@ public sealed class RepositoryHostPullRequestTests
         form.FindControl<GitUI.Editor.FileViewer>("_diffViewer").Should().NotBeNull();
         form.FindControl<GitUI.SpellChecker.EditNetSpell>("_postCommentText").Should().NotBeNull();
 
-        StackPanel repositorySelector = form.FindControl<StackPanel>("flowLayoutPanel2")!;
-        repositorySelector.Margin.Should().Be(new Avalonia.Thickness(2));
+        FlowLayoutPanel repositorySelectorPanel = form.FindControl<FlowLayoutPanel>("flowLayoutPanel2")!;
+        repositorySelectorPanel.Margin.Should().Be(new Avalonia.Thickness(2));
+        StackPanel repositorySelector = repositorySelectorPanel.Child.Should().BeOfType<StackPanel>().Subject;
         repositorySelector.Spacing.Should().Be(0);
         TextBlock chooseRepository = form.FindControl<TextBlock>("_chooseRepo")!;
         chooseRepository.Width.Should().Be(106);
@@ -118,9 +120,10 @@ public sealed class RepositoryHostPullRequestTests
         pullRequestHeader.ColumnDefinitions
             .Where((_, index) => index != 4)
             .Should().OnlyContain(column => column.Width.IsAbsolute && column.Width.Value > 0);
-        StackPanel pullRequestActions = form.FindControl<StackPanel>("flowLayoutPanel3")!;
-        pullRequestActions.Width.Should().Be(160);
-        pullRequestActions.Margin.Should().Be(new Avalonia.Thickness(2));
+        FlowLayoutPanel pullRequestActionsPanel = form.FindControl<FlowLayoutPanel>("flowLayoutPanel3")!;
+        pullRequestActionsPanel.Width.Should().Be(160);
+        pullRequestActionsPanel.Margin.Should().Be(new Avalonia.Thickness(2));
+        StackPanel pullRequestActions = pullRequestActionsPanel.Child.Should().BeOfType<StackPanel>().Subject;
         foreach (string buttonName in new[] { "_fetchBtn", "_addAndFetchBtn", "_closePullRequestBtn" })
         {
             Button button = form.FindControl<Button>(buttonName)!;
@@ -164,8 +167,9 @@ public sealed class RepositoryHostPullRequestTests
         discussion.BorderThickness.Should().Be(new Avalonia.Thickness(0));
         discussion.Padding.Should().Be(new Avalonia.Thickness(0));
         form.FindControl<GitUI.SpellChecker.EditNetSpell>("_postCommentText")!.Margin.Should().Be(new Avalonia.Thickness(2));
-        DockPanel commentActions = form.FindControl<DockPanel>("flowLayoutPanel1")!;
-        commentActions.Margin.Should().Be(new Avalonia.Thickness(2));
+        FlowLayoutPanel commentActionsPanel = form.FindControl<FlowLayoutPanel>("flowLayoutPanel1")!;
+        commentActionsPanel.Margin.Should().Be(new Avalonia.Thickness(2));
+        DockPanel commentActions = commentActionsPanel.Child.Should().BeOfType<DockPanel>().Subject;
         commentActions.LastChildFill.Should().BeFalse();
         Button refreshComments = form.FindControl<Button>("_refreshCommentsBtn")!;
         refreshComments.Width.Should().Be(100);
@@ -205,6 +209,26 @@ public sealed class RepositoryHostPullRequestTests
             nameof(ViewPullRequestsForm), "columnHeaderBranch", "Text", "Will be fetched to branch");
         translation.DidNotReceive().AddTranslationItem(
             nameof(ViewPullRequestsForm), "columnHeaderId", Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [AvaloniaTest]
+    public async Task AsyncLoader_should_raise_the_source_loading_error_event_on_the_ui_thread()
+    {
+        GitUI.CommandsDialogs.RepoHosting.AsyncLoader loader = new();
+        InvalidOperationException expected = new("provider failed");
+        Exception? observed = null;
+        bool raisedOnMainThread = false;
+        loader.LoadingError += (_, args) =>
+        {
+            observed = args.Exception;
+            raisedOnMainThread = loader.JoinableTaskFactory.Context.IsOnMainThread;
+        };
+
+        loader.FileAndForget(() => Task.FromException(expected));
+        await loader.JoinPendingOperationsAsync(CancellationToken.None);
+
+        observed.Should().BeSameAs(expected);
+        raisedOnMainThread.Should().BeTrue();
     }
 
     [AvaloniaTest]

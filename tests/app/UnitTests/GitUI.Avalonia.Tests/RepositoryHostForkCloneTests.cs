@@ -20,6 +20,7 @@ using GitUI.Compat;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using FlowLayoutPanel = GitUI.Compat.WinFormsControls.FlowLayoutPanel;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
@@ -120,7 +121,9 @@ public sealed class RepositoryHostForkCloneTests
         cloneInfo.HorizontalAlignment.Should().Be(Avalonia.Layout.HorizontalAlignment.Stretch);
         AssertGridBounds(form.FindControl<TextBlock>("depthLabel")!, 7, 135, 72, 15);
         AssertGridBounds(form.FindControl<NumericUpDown>("depthUpDown")!, 10, 151, 100, 23);
-        Grid footer = form.FindControl<Grid>("flowLayoutPanel1")!;
+        FlowLayoutPanel footerPanel = form.FindControl<FlowLayoutPanel>("flowLayoutPanel1")!;
+        footerPanel.Margin.Should().Be(new Avalonia.Thickness(3));
+        Grid footer = footerPanel.Child.Should().BeOfType<Grid>().Subject;
         footer.ColumnDefinitions.Select(column => column.Width.Value).Should().Equal(1, 120, 6, 120, 3);
         Grid.GetColumn(form.FindControl<Button>("cloneBtn")!).Should().Be(1);
         Grid.GetColumn(form.FindControl<Button>("_NO_TRANSLATE_closeBtn")!).Should().Be(3);
@@ -144,9 +147,10 @@ public sealed class RepositoryHostForkCloneTests
         searchLayout.RowDefinitions[0].Height.IsAuto.Should().BeTrue();
         searchLayout.RowDefinitions[1].Height.IsStar.Should().BeTrue();
         searchLayout.RowDefinitions[2].Height.IsAuto.Should().BeTrue();
-        StackPanel searchActions = form.FindControl<StackPanel>("flowLayoutPanel2")!;
-        searchActions.Height.Should().Be(35);
-        searchActions.Margin.Should().Be(new Avalonia.Thickness(3));
+        FlowLayoutPanel searchPanel = form.FindControl<FlowLayoutPanel>("flowLayoutPanel2")!;
+        searchPanel.Height.Should().Be(35);
+        searchPanel.Margin.Should().Be(new Avalonia.Thickness(3));
+        StackPanel searchActions = searchPanel.Child.Should().BeOfType<StackPanel>().Subject;
         searchActions.Spacing.Should().Be(0);
         foreach (string fieldName in new[] { "searchTB", "searchBtn", "getFromUserBtn" })
         {
