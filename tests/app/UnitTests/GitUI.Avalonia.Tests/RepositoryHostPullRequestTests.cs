@@ -557,6 +557,28 @@ public sealed class RepositoryHostPullRequestTests
     }
 
     [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_report_initial_provider_failure_and_remove_the_mask()
+    {
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetHostedRemotesForModule()
+            .Returns(_ => throw new InvalidOperationException("host discovery failed"));
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetCurrentRemote().Returns("origin");
+        module.GetRemotesAsync().Returns([]);
+        using ViewPullRequestsForm form = CreateForm(host, module);
+
+        form.Show();
+        Dispatcher.UIThread.RunJobs();
+        await form.GetTestAccessor().JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        Dispatcher.UIThread.RunJobs();
+
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Contain("host discovery failed");
+        form.GetVisualDescendants().OfType<LoadingControl>().Should().BeEmpty();
+        form.Close();
+    }
+
+    [AvaloniaTest]
     public async Task ViewPullRequestsForm_should_size_non_title_columns_to_their_content()
     {
         IPullRequestInformation pullRequest = CreatePullRequest();
@@ -646,6 +668,30 @@ public sealed class RepositoryHostPullRequestTests
         accessor.HostedRepositories.SelectedIndex.Should().Be(1);
         accessor.PullRequestTitles.Should().Equal("Current pull request");
         _messageBoxHost.Messages.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_retain_source_loading_state_when_pull_request_loading_fails()
+    {
+        IHostedRepository repository = Substitute.For<IHostedRepository>();
+        repository.GetPullRequests().Returns(_ => throw new InvalidOperationException("pull request load failed"));
+        IHostedRemote remote = CreateRemote("origin", repository);
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetHostedRemotesForModule().Returns([remote]);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetCurrentRemote().Returns("origin");
+        module.GetRemotesAsync().Returns([]);
+        using ViewPullRequestsForm form = CreateForm(host, module);
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.HostedRepositorySelectionEnabled.Should().BeFalse();
+        accessor.PullRequestDisplayTitles.Should().Equal(" : LOADING : ");
+        accessor.HostedRepositories.SelectedIndex.Should().Be(0);
+        _messageBoxHost.Messages.Should().ContainSingle()
+            .Which.Should().Be("Failed to fetch pull data!" + Environment.NewLine + "pull request load failed");
     }
 
     [AvaloniaTest]
@@ -772,6 +818,26 @@ public sealed class RepositoryHostPullRequestTests
         accessor.Discussion.ItemCount.Should().Be(0);
         accessor.FetchEnabled.Should().BeTrue();
         _messageBoxHost.Messages.Should().BeEmpty();
+    }
+
+    [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_preserve_loaded_file_rows_when_selection_clears()
+    {
+        IPullRequestInformation pullRequest = CreatePullRequest();
+        using ViewPullRequestsForm form = CreateForm(
+            Substitute.For<IRepositoryHostPlugin>(),
+            Substitute.For<IGitModule>());
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        accessor.SelectPullRequest(pullRequest);
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        accessor.DiffItems.Should().ContainSingle();
+
+        accessor.ClearPullRequestSelection();
+
+        accessor.DiffItems.Should().ContainSingle(item => item.Name == "src/file.txt");
+        accessor.Discussion.ItemCount.Should().Be(0);
+        accessor.DiffText.Should().BeEmpty();
     }
 
     [AvaloniaTest]

@@ -226,6 +226,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
+            return;
         }
         catch (Exception ex)
         {
@@ -294,11 +295,10 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void PrepareSearch(object sender, EventArgs e)
     {
+        searchResultsLV.ItemsSource = Array.Empty<HostedRepositoryRow>();
+        _searchResultsLV_SelectedIndexChanged(sender, e);
         searchBtn.IsEnabled = false;
-        getFromUserBtn.IsEnabled = false;
-        searchResultsLV.SelectedItem = null;
         searchResultsLV.ItemsSource = new[] { HostedRepositoryRow.Placeholder(_strSearching.Text) };
-        UpdateCloneInfo();
     }
 
     private async Task SearchAsync(string search, SearchKind searchKind, CancellationToken cancellationToken)
@@ -334,7 +334,6 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                     TranslatedStrings.Error,
                     WinFormsShims.MessageBoxButtons.OK,
                     WinFormsShims.MessageBoxIcon.Error);
-                searchResultsLV.ItemsSource = Array.Empty<HostedRepositoryRow>();
             }
         }
         finally
@@ -343,8 +342,6 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             if (!cancellationToken.IsCancellationRequested)
             {
                 searchBtn.IsEnabled = true;
-                getFromUserBtn.IsEnabled = true;
-                UpdateCloneInfo();
             }
         }
     }
@@ -440,7 +437,6 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             return;
         }
 
-        forkBtn.IsEnabled = false;
         _operations.FileAndForget(() => ForkAsync(repository, _lifetimeCancellation.Token));
     }
 
@@ -449,12 +445,10 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         try
         {
             await Task.Run(repository.Fork, cancellationToken);
-            await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            tabControl.SelectedItem = myReposPage;
-            UpdateMyRepos();
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
+            return;
         }
         catch (Exception ex)
         {
@@ -467,9 +461,12 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                     TranslatedStrings.Error,
                     WinFormsShims.MessageBoxButtons.OK,
                     WinFormsShims.MessageBoxIcon.Error);
-                forkBtn.IsEnabled = true;
             }
         }
+
+        await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+        tabControl.SelectedItem = myReposPage;
+        UpdateMyRepos();
     }
 
     private void _searchTB_Enter(object sender, EventArgs e)
@@ -484,10 +481,16 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void _searchResultsLV_SelectedIndexChanged(object sender, EventArgs e)
     {
-        IHostedRepository? repository = GetSelectedRepository(searchResultsLV);
-        searchResultItemDescription.Text = repository?.Description ?? string.Empty;
-        forkBtn.IsEnabled = repository is not null;
         UpdateCloneInfo();
+        IHostedRepository? repository = GetSelectedRepository(searchResultsLV);
+        if (repository is null)
+        {
+            forkBtn.IsEnabled = false;
+            return;
+        }
+
+        forkBtn.IsEnabled = true;
+        searchResultItemDescription.Text = repository.Description;
     }
 
     private void _browseForCloneToDirbtn_Click(object sender, EventArgs e)
@@ -626,11 +629,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             SetProtocolSelectionVisibility(false);
             cloneBtn.IsEnabled = false;
             cloneInfoText.Text = string.Empty;
-            if (updateCreateDirTB)
-            {
-                createDirTB.Text = string.Empty;
-            }
-
+            createDirTB.Text = string.Empty;
             return;
         }
 

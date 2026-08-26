@@ -202,6 +202,22 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
             SelectHostedRepositoryForCurrentRemote();
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                MessageBoxes.Show(
+                    this,
+                    ex.ToString(),
+                    TranslatedStrings.Error,
+                    WinFormsShims.MessageBoxButtons.OK,
+                    WinFormsShims.MessageBoxIcon.Error);
+            }
+        }
         finally
         {
             await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(this.UnMask);
@@ -282,19 +298,12 @@ public partial class ViewPullRequestsForm : GitModuleForm
             await _loader.JoinableTaskFactory.SwitchToMainThreadAsync();
             if (!cancellationToken.IsCancellationRequested)
             {
-                _selectHostedRepoCB.IsEnabled = true;
-                _pullRequestsList.ItemsSource = Array.Empty<PullRequestRow>();
-                ResizeColumnsToFitContent();
                 MessageBoxes.Show(
                     this,
                     _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message,
                     TranslatedStrings.Error,
                     WinFormsShims.MessageBoxButtons.OK,
                     WinFormsShims.MessageBoxIcon.Error);
-                if (_isFirstLoad)
-                {
-                    SelectNextHostedRepository();
-                }
             }
         }
     }
@@ -305,13 +314,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
         {
             if (infos?.Count is 0 && _hostedRemoteRows.Count > 0)
             {
-                if (TrySelectNextHostedRepository())
-                {
-                    return;
-                }
-
-                // Cross-platform constraint: do not leave the final empty provider permanently in its loading state.
-                _isFirstLoad = false;
+                SelectNextHostedRepository();
+                return;
             }
             else
             {
@@ -395,6 +399,15 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         IPullRequestInformation? previousPullRequest = _currentPullRequestInfo;
         _currentPullRequestInfo = (_pullRequestsList.SelectedItem as PullRequestRow)?.PullRequest;
+        if (_currentPullRequestInfo is null)
+        {
+            _detailsSequence.CancelCurrent();
+            _discussionSequence.CancelCurrent();
+            _discussionWB.ItemsSource = Array.Empty<DiscussionRow>();
+            _diffViewer.ViewText(string.Empty, string.Empty);
+            return;
+        }
+
         if (ReferenceEquals(previousPullRequest, _currentPullRequestInfo))
         {
             return;
@@ -403,11 +416,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _detailsSequence.CancelCurrent();
         _discussionSequence.CancelCurrent();
         ResetDetails(clearPullRequest: false);
-        if (_currentPullRequestInfo is null)
-        {
-            return;
-        }
-
         _currentPullRequestInfo.HeadRepo.CloneProtocol = _cloneGitProtocol;
         LoadDiffPatch();
         LoadDiscussion();
@@ -982,6 +990,14 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 .Where(row => row.PullRequest is not null)
                 .Select(row => row.Title)
                 .ToArray();
+
+        public IReadOnlyList<string> PullRequestDisplayTitles
+            => form._pullRequestsList.Items
+                .Cast<PullRequestRow>()
+                .Select(row => row.Title)
+                .ToArray();
+
+        public bool HostedRepositorySelectionEnabled => form._selectHostedRepoCB.IsEnabled;
 
         // parity-scaffolding: Lets the paired capture wait for the selected patch, not just its file row.
         public string DiffText => form._diffViewer.TextEditor.Text;
