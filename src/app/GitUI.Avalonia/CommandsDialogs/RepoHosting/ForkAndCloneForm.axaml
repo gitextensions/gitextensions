@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:winformsEvents="using:GitUI.Compat.WinFormsEvents"
         xmlns:usercontrols="using:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm"
         Width="744"
@@ -213,7 +214,7 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Text="Destination folder:" />
-        <TextBox x:Name="destinationTB"
+        <winformsEvents:TextBox x:Name="destinationTB"
                  Margin="10,32,0,0"
                  Width="294"
                  Height="23"
@@ -248,13 +249,13 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Text="Protocol:" />
-        <TextBox x:Name="createDirTB"
+        <winformsEvents:TextBox x:Name="createDirTB"
                  Margin="10,71,0,0"
                  Width="183"
                  Height="23"
                  HorizontalAlignment="Left"
                  VerticalAlignment="Top" />
-        <ComboBox x:Name="addUpstreamRemoteAsCB"
+        <winformsEvents:ComboBox x:Name="addUpstreamRemoteAsCB"
                   Margin="212,71,0,0"
                   Width="200"
                   Height="23"

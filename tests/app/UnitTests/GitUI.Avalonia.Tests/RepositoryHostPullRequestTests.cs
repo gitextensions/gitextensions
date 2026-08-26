@@ -634,6 +634,27 @@ public sealed class RepositoryHostPullRequestTests
     }
 
     [AvaloniaTest]
+    public async Task ViewPullRequestsForm_should_retain_the_source_first_load_state_at_the_final_empty_remote()
+    {
+        IHostedRemote emptyRemote = CreateRemote("origin", CreateRepository());
+        IRepositoryHostPlugin host = Substitute.For<IRepositoryHostPlugin>();
+        host.GetHostedRemotesForModule().Returns([emptyRemote]);
+        IGitModule module = Substitute.For<IGitModule>();
+        module.GetCurrentRemote().Returns("origin");
+        module.GetRemotesAsync().Returns([]);
+        using ViewPullRequestsForm form = CreateForm(host, module);
+        ViewPullRequestsForm.TestAccessor accessor = form.GetTestAccessor();
+
+        await accessor.InitializeAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        await accessor.JoinOperationsAsync().WaitAsync(TimeSpan.FromSeconds(5));
+
+        accessor.HostedRepositories.SelectedIndex.Should().Be(0);
+        accessor.HostedRepositorySelectionEnabled.Should().BeTrue();
+        accessor.PullRequestDisplayTitles.Should().Equal(" : LOADING : ");
+        accessor.IsFirstLoad.Should().BeTrue();
+    }
+
+    [AvaloniaTest]
     public async Task ViewPullRequestsForm_should_discard_a_superseded_remote_load()
     {
         TaskCompletionSource firstLoadStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
