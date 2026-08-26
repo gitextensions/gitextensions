@@ -642,6 +642,7 @@ public partial class FileStatusList : GitModuleControl
     public void SetDiffs(IReadOnlyList<GitRevision> revisions)
     {
         FileStatusListLoading();
+        UpdateToolbar(revisions);
         _enableDisablingShowDiffForAllParents = true;
         _diffCalculator.SetDiff(revisions, headId: default, allowMultiDiff: false);
         IReadOnlyList<FileStatusWithDescription> groups = _diffCalculator.Calculate(
@@ -798,6 +799,7 @@ public partial class FileStatusList : GitModuleControl
 
     public void Clear()
     {
+        UpdateToolbar([]);
         _allListItems = [];
         GitItemStatusesWithDescription = [];
         _allTreeItems = [];
@@ -1751,9 +1753,9 @@ public partial class FileStatusList : GitModuleControl
             ?? throw new InvalidOperationException("The file filter is not attached to its layout row."))).IsVisible = showFilesFilter;
         cboFilterComboBox.IsVisible = showFilesFilter;
         NoFiles.IsVisible = showNoFiles;
-        lstFiles.IsVisible = hasItems && !_isFileTreeMode && !ShowDiffTree;
-        tvDiffFiles.IsVisible = (hasItems || hasDiffTreeRows) && ShowDiffTree;
-        tvFiles.IsVisible = hasItems && _isFileTreeMode;
+        lstFiles.IsVisible = !_isFileTreeMode && !ShowDiffTree;
+        tvDiffFiles.IsVisible = ShowDiffTree;
+        tvFiles.IsVisible = _isFileTreeMode;
     }
 
     private void FileStatusListLoading()

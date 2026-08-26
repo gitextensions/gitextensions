@@ -10,7 +10,7 @@ namespace GitUI.Compat;
 /// </summary>
 internal static class WinFormsListViewColumnSizer
 {
-    private const double HorizontalCellPadding = 10;
+    private const double HorizontalCellPadding = 11;
 
     private const double HeaderPadding = 12;
     private const double ContentPadding = 14;

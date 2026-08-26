@@ -244,6 +244,7 @@ public sealed class RepositoryHostForkCloneTests
             "columnHeaderSearchOwner",
             "columnHeaderSearchIsFork",
             "columnHeaderSearchForks");
+        owned.Columns.Select(column => column.WidthDip).Should().Equal(180, 45, 50, 45);
         search.Columns.Select(column => column.WidthDip).Should().Equal(180, 110, 41, 40);
         search.Columns.Should().OnlyContain(column => column.Visible);
         depth.TabStop.Should().BeTrue();
@@ -251,6 +252,7 @@ public sealed class RepositoryHostForkCloneTests
         browse.TabStop.Should().BeTrue();
         browse.BorderStyle.Should().Be("None");
         tabs.Focused.Should().BeTrue();
+        owned.Focused.Should().BeFalse();
         layout.BorderStyle.Should().Be("None");
         layout.Font.Should().NotBeNull();
         nodes.Where(node => node.FieldName?.StartsWith("columnHeader", StringComparison.Ordinal) == true)
@@ -285,7 +287,8 @@ public sealed class RepositoryHostForkCloneTests
         helpText.BoundsDip.Should().Be(new CaptureRectangleF { X = 509, Y = 0, Width = 212, Height = 283 });
         Grid ownedGrid = form.FindControl<Grid>("tableLayoutPanel5")!;
         ownedGrid.ColumnDefinitions[0].Width.IsAbsolute.Should().BeTrue();
-        ownedGrid.ColumnDefinitions[1].Width.IsStar.Should().BeTrue();
+        ownedGrid.ColumnDefinitions[1].Width.IsAbsolute.Should().BeTrue();
+        ownedGrid.ColumnDefinitions.Select(column => column.Width.Value).Should().Equal(506, 218);
         searchPage.Visible.Should().BeFalse();
         Flatten(searchPage).Should().OnlyContain(node => node.Visible != true);
 

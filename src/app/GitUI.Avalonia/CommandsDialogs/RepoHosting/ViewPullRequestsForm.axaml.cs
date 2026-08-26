@@ -120,7 +120,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         ViewPullRequestsForm_Load(this, e);
 
         // Framework constraint: WinForms activates the first eligible control by tab order.
-        _fetchBtn.Focus();
+        _selectHostedRepoCB.Focus();
     }
 
     private void ViewPullRequestsForm_Load(object sender, EventArgs e)
@@ -201,7 +201,15 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _detailsSequence.CancelCurrent();
         _discussionSequence.CancelCurrent();
         ResetAllAndShowLoadingPullRequests();
+        bool transferFocus = _selectHostedRepoCB.IsKeyboardFocusWithin;
         _selectHostedRepoCB.IsEnabled = false;
+        if (transferFocus)
+        {
+            // Framework constraint: WinForms transfers focus to the next eligible control
+            // when the active repository selector is disabled for the asynchronous load.
+            _fetchBtn.Focus();
+        }
+
         _loader.FileAndForget(() => LoadPullRequestsAsync(cancellationToken));
     }
 

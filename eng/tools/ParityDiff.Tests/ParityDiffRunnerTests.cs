@@ -319,18 +319,26 @@ public sealed class ParityDiffRunnerTests
     public void Run_should_compare_popup_surface_pixels_independently_of_aggregate_canvas_placement()
     {
         using ParityDiffFixture fixture = new();
-        CaptureDocument reference = AddPopupSurface(
-            fixture.CreateDocument("light"),
-            imageWidth: 3,
-            imageHeight: 2,
-            primaryScreenBounds: new CaptureRectangle { X = 10, Y = 20, Width = 2, Height = 2 },
-            popupScreenBounds: new CaptureRectangle { X = 12, Y = 20, Width = 1, Height = 1 });
-        CaptureDocument candidate = AddPopupSurface(
-            fixture.CreateDocument("light"),
-            imageWidth: 2,
-            imageHeight: 2,
-            primaryScreenBounds: new CaptureRectangle { X = 0, Y = 0, Width = 2, Height = 2 },
-            popupScreenBounds: new CaptureRectangle { X = 1, Y = 0, Width = 1, Height = 1 });
+        CaptureDocument reference = WithSurfaceRootOrigin(
+            AddPopupSurface(
+                fixture.CreateDocument("light"),
+                imageWidth: 3,
+                imageHeight: 2,
+                primaryScreenBounds: new CaptureRectangle { X = 10, Y = 20, Width = 2, Height = 2 },
+                popupScreenBounds: new CaptureRectangle { X = 12, Y = 20, Width = 1, Height = 1 }),
+            "popup:0",
+            x: 8,
+            y: 31);
+        CaptureDocument candidate = WithSurfaceRootOrigin(
+            AddPopupSurface(
+                fixture.CreateDocument("light"),
+                imageWidth: 2,
+                imageHeight: 2,
+                primaryScreenBounds: new CaptureRectangle { X = 0, Y = 0, Width = 2, Height = 2 },
+                popupScreenBounds: new CaptureRectangle { X = 1, Y = 0, Width = 1, Height = 1 }),
+            "popup:0",
+            x: 0,
+            y: 0);
         fixture.WriteCaptureSet("reference", [reference]);
         fixture.WriteCaptureSet("candidate", [candidate]);
 
@@ -462,6 +470,23 @@ public sealed class ParityDiffRunnerTests
         CaptureSurface[] surfaces = document.Surfaces
             .Select(surface => surface.Role == "primary"
                 ? surface with { Root = surface.Root with { BoundsPx = rootBounds } }
+                : surface)
+            .ToArray();
+        return document with { Surfaces = surfaces };
+    }
+
+    private static CaptureDocument WithSurfaceRootOrigin(CaptureDocument document, string role, int x, int y)
+    {
+        CaptureSurface[] surfaces = document.Surfaces
+            .Select(surface => surface.Role == role
+                ? surface with
+                {
+                    Root = surface.Root with
+                    {
+                        BoundsPx = surface.Root.BoundsPx with { X = x, Y = y },
+                        BoundsDip = surface.Root.BoundsDip with { X = x, Y = y },
+                    }
+                }
                 : surface)
             .ToArray();
         return document with { Surfaces = surfaces };

@@ -16,9 +16,10 @@ internal static class WinFormsTableLayoutSizer
                 return;
             }
 
-            double firstColumnWidth = Math.Floor(e.NewSize.Width * firstColumnPercent / totalPercent);
+            double availableWidth = Math.Floor(e.NewSize.Width);
+            double firstColumnWidth = Math.Floor(availableWidth * firstColumnPercent / totalPercent);
             grid.ColumnDefinitions[0].Width = new GridLength(firstColumnWidth);
-            grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
+            grid.ColumnDefinitions[1].Width = new GridLength(availableWidth - firstColumnWidth);
         };
     }
 }
