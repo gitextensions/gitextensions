@@ -656,10 +656,13 @@ public sealed partial class ParityScreenshotTests
             comboBox.IsDropDownOpen.Should().BeTrue();
             (comboDriver.PopupSurfaceRoots.Count + comboDriver.ExternalTopLevels.Count).Should().BeGreaterThan(0);
             Control popupRoot = comboDriver.PopupSurfaceRoots.Should().ContainSingle().Subject;
+            popupRoot.Bounds.Height.Should().Be(32);
             CaptureNode popupNode = new AvaloniaControlTreeReader(comboWindow, renderScale: 1)
                 .ReadSurface(popupRoot, "popup:0", new PixelRect(0, 0, 220, 32))
                 .Root;
             popupNode.BorderWidthDip.Should().Be(1);
+            popupNode.BoundsDip.Height.Should().Be(32);
+            popupNode.ClientSizeDip.Height.Should().Be(32);
             popupNode.Anchor.Should().BeEmpty();
             popupNode.Dock.Should().BeNull();
             popupNode.Children.Should().HaveCount(2);
