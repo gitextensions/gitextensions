@@ -157,6 +157,10 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _loader.FileAndForget(() => InitializeAsync(_lifetimeCancellation.Token));
     }
 
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="e">The window-closed event data.</param>
     protected override void OnClosed(EventArgs e)
     {
         _lifetimeCancellation.Cancel();
