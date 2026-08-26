@@ -342,6 +342,8 @@ public sealed class RepositoryHostForkCloneTests
 
         await accessor.LoadMyRepositoriesAsync().WaitAsync(TimeSpan.FromSeconds(5));
         accessor.MyRepositoryNames.Should().Equal("alpha", "beta");
+        accessor.CloneEnabled.Should().BeFalse();
+        accessor.CreateDirectory.Should().BeEmpty();
 
         accessor.SelectMyRepository(0);
         accessor.CloneEnabled.Should().BeTrue();

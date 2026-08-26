@@ -38,6 +38,123 @@
 
       <compat:WinFormsFocusAdornerTemplate x:Key="GitExtensionsFocusAdorner" />
 
+      <!-- Avalonia popup descendants live in a detached visual root, so an outer style cannot
+           override the Fluent dropdown content margin. Preserve the framework template and
+           change only the popup measurements and chrome that differ from native WinForms. -->
+      <ControlTheme x:Key="GitExtensionsNativeComboBoxTheme"
+                    TargetType="ComboBox"
+                    BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="Template">
+          <ControlTemplate>
+            <DataValidationErrors>
+              <Grid ColumnDefinitions="*,32">
+                <Border x:Name="Background"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        MinWidth="{DynamicResource ComboBoxThemeMinWidth}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}" />
+                <Border x:Name="HighlightBackground"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Background="{DynamicResource ComboBoxBackgroundUnfocused}"
+                        BorderBrush="{DynamicResource ComboBoxBackgroundBorderBrushUnfocused}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        IsVisible="False" />
+                <TextBlock x:Name="PlaceholderTextBlock"
+                           Grid.Column="0"
+                           Margin="{TemplateBinding Padding}"
+                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                           Foreground="{TemplateBinding PlaceholderForeground}"
+                           Opacity="{DynamicResource TextControlPlaceholderOpacity}"
+                           Text="{TemplateBinding PlaceholderText}">
+                  <TextBlock.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                      <Binding Path="SelectionBoxItem"
+                               RelativeSource="{RelativeSource TemplatedParent}"
+                               Converter="{x:Static ObjectConverters.IsNull}" />
+                      <Binding Path="!IsEditable" RelativeSource="{RelativeSource TemplatedParent}" />
+                    </MultiBinding>
+                  </TextBlock.IsVisible>
+                </TextBlock>
+                <ContentControl x:Name="ContentPresenter"
+                                Grid.Column="0"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
+                <TextBox x:Name="PART_EditableTextBox"
+                         Grid.Column="0"
+                         Padding="{TemplateBinding Padding}"
+                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                         Foreground="{TemplateBinding Foreground}"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         IsVisible="{TemplateBinding IsEditable}"
+                         PlaceholderText="{TemplateBinding PlaceholderText}"
+                         Text="{TemplateBinding Text, Mode=TwoWay}">
+                  <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+                    <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                  </TextBox.Resources>
+                </TextBox>
+                <Border x:Name="DropDownOverlay"
+                        Grid.Column="1"
+                        Width="30"
+                        Margin="0,1,1,1"
+                        HorizontalAlignment="Right"
+                        Background="Transparent"
+                        IsVisible="False" />
+                <PathIcon x:Name="DropDownGlyph"
+                          Grid.Column="1"
+                          Width="12"
+                          Height="12"
+                          Margin="0,0,10,0"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Center"
+                          Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"
+                          Foreground="{DynamicResource ComboBoxDropDownGlyphForeground}"
+                          IsHitTestVisible="False"
+                          UseLayoutRounding="False" />
+                <Popup x:Name="PART_Popup"
+                       MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                       MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                       InheritsTransform="True"
+                       IsLightDismissEnabled="True"
+                       IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+                       PlacementTarget="Background"
+                       WindowManagerAddShadowHint="False">
+                  <Border x:Name="PopupBorder"
+                          Padding="0"
+                          HorizontalAlignment="Stretch"
+                          Background="{DynamicResource ComboBoxDropDownBackground}"
+                          BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
+                          BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                          CornerRadius="0">
+                    <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                  IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
+                                  IsScrollChainingEnabled="False">
+                      <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                      Margin="0"
+                                      ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </ScrollViewer>
+                  </Border>
+                </Popup>
+              </Grid>
+            </DataValidationErrors>
+          </ControlTemplate>
+        </Setter>
+      </ControlTheme>
+
       <!-- WinForms MenuStrip is a compact desktop control: 24px bar, 20px top-level
            items, and 22px dropdown rows. Fluent's defaults are intentionally roomier. -->
       <x:Double x:Key="MenuBarHeight">24</x:Double>
@@ -439,6 +556,7 @@
     <Setter Property="BorderThickness" Value="0" />
   </Style>
   <Style Selector="ComboBox">
+    <Setter Property="Theme" Value="{StaticResource GitExtensionsNativeComboBoxTheme}" />
     <Setter Property="MinHeight" Value="23" />
     <Setter Property="Padding" Value="4,1,0,1" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -1236,6 +1354,10 @@
   <Style Selector="Button.gitextensions-native-dialog-action:pressed /template/ Border#PART_NativeButtonChrome">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonPressedBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource GitExtensionsNativeButtonPressedBorderBrush}" />
+  </Style>
+  <Style Selector="Button.gitextensions-native-dialog-action:pressed">
+    <!-- WinForms changes native button chrome without scaling the control's source bounds. -->
+    <Setter Property="RenderTransform" Value="none" />
   </Style>
   <Style Selector="Button.gitextensions-native-dialog-action:disabled /template/ Border#PART_NativeButtonChrome">
     <Setter Property="Background" Value="{DynamicResource GitExtensionsNativeButtonDisabledBackgroundBrush}" />
