@@ -12,6 +12,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Compat;
 using ResourceManager;
+using ColumnHeader = GitUI.Compat.WinFormsControls.ColumnHeader;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs.RepoHosting;
@@ -81,6 +82,9 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             supportsRecycling: false);
         ApplyRepositoryColumnWidths(isSearchResult: false);
         ApplyRepositoryColumnWidths(isSearchResult: true);
+        ConfigureColumnSizing(columnHeaderMyReposName, myReposLV, isSearchResult: false, columnIndex: 0);
+        ConfigureColumnSizing(columnHeaderSearchName, searchResultsLV, isSearchResult: true, columnIndex: 0);
+        ConfigureColumnSizing(columnHeaderSearchOwner, searchResultsLV, isSearchResult: true, columnIndex: 1);
         WinFormsTableLayoutSizer.AttachColumns(tableLayoutPanel5, firstColumnPercent: 70, totalPercent: 100);
         WinFormsTableLayoutSizer.AttachColumns(tableLayoutPanel3, firstColumnPercent: 60, totalPercent: 100);
         WinFormsAutoSizeTextBlock.Attach(orLbl);
@@ -107,6 +111,31 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
         cloneBtn.IsEnabled = false;
         SetProtocolSelectionVisibility(false);
+
+        void ConfigureColumnSizing(
+            ColumnHeader column,
+            ListBox list,
+            bool isSearchResult,
+            int columnIndex)
+        {
+            column.ResizeToFitContentAction = () =>
+            {
+                HostedRepositoryRow[] rows = list.ItemsSource?.OfType<HostedRepositoryRow>().ToArray() ?? [];
+                string header = GetHeaderText(isSearchResult, columnIndex);
+                int resizeStrategy = rows.Length == 0 ? ResizeOnHeader : ResizeOnContent;
+                IEnumerable<string?> values = resizeStrategy == ResizeOnHeader
+                    ? [header]
+                    : rows.Select(row => columnIndex switch
+                    {
+                        0 => row.Name,
+                        1 when isSearchResult => row.Owner,
+                        _ => string.Empty,
+                    });
+                double[] widths = isSearchResult ? _searchResultColumnWidths : _myRepositoryColumnWidths;
+                widths[columnIndex] = WinFormsListViewColumnSizer.Measure(list, values);
+                ApplyRepositoryColumnWidths(isSearchResult);
+            };
+        }
     }
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -191,8 +220,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                 .ToArray();
 
             await _operations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            ResizeColumnToFitContent(rows, isSearchResult: false, 0);
             myReposLV.ItemsSource = rows;
+            ResizeColumnToFitContent(columnHeaderMyReposName);
             myReposLV.SelectedIndex = -1;
             UpdateCloneInfo();
         }
@@ -216,26 +245,8 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
     }
 
-    private void ResizeColumnToFitContent(
-        IReadOnlyList<HostedRepositoryRow> rows,
-        bool isSearchResult,
-        int columnIndex)
-    {
-        ListBox list = isSearchResult ? searchResultsLV : myReposLV;
-        string header = GetHeaderText(isSearchResult, columnIndex);
-        int resizeStrategy = rows.Count == 0 ? ResizeOnHeader : ResizeOnContent;
-        IEnumerable<string?> values = resizeStrategy == ResizeOnHeader
-            ? [header]
-            : rows.Select(row => columnIndex switch
-            {
-                0 => row.Name,
-                1 when isSearchResult => row.Owner,
-                _ => string.Empty,
-            });
-        double[] widths = isSearchResult ? _searchResultColumnWidths : _myRepositoryColumnWidths;
-        widths[columnIndex] = WinFormsListViewColumnSizer.Measure(list, values);
-        ApplyRepositoryColumnWidths(isSearchResult);
-    }
+    private static void ResizeColumnToFitContent(ColumnHeader column)
+        => column.ResizeToFitContent();
 
     #region GUI Handlers
 
@@ -373,9 +384,9 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             .OrderBy(repository => repository.Name)
             .Select(HostedRepositoryRow.FromRepository)
             .ToArray();
-        ResizeColumnToFitContent(rows, isSearchResult: true, 0);
-        ResizeColumnToFitContent(rows, isSearchResult: true, 1);
         searchResultsLV.ItemsSource = rows;
+        ResizeColumnToFitContent(columnHeaderSearchName);
+        ResizeColumnToFitContent(columnHeaderSearchOwner);
     }
 
     private void ApplyRepositoryColumnWidths(bool isSearchResult)

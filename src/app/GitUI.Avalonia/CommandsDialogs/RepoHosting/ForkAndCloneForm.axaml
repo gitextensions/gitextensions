@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:winformsControls="using:GitUI.Compat.WinFormsControls"
         xmlns:winformsEvents="using:GitUI.Compat.WinFormsEvents"
         xmlns:usercontrols="using:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.RepoHosting.ForkAndCloneForm"
@@ -35,41 +36,41 @@
       </Setter>
     </Style>
   </Window.Styles>
-  <Grid x:Name="tableLayoutPanel2"
+  <winformsControls:TableLayoutPanel x:Name="tableLayoutPanel2"
         RowDefinitions="*,183,40">
     <TabControl x:Name="tabControl"
                 Classes="gitextensions-native-tabs"
                 Margin="3"
                 Padding="0">
-      <TabItem x:Name="myReposPage"
+      <winformsControls:TabPage x:Name="myReposPage"
                Classes="gitextensions-dialog-tab"
                Header="My repositories">
-        <Grid x:Name="tableLayoutPanel5"
+        <winformsControls:TableLayoutPanel x:Name="tableLayoutPanel5"
               ColumnDefinitions="7*,3*"
               Margin="7,4,7,7">
           <Grid RowDefinitions="24,*"
                 Margin="3">
             <Grid ColumnDefinitions="180,45,50,45">
-              <ContentControl x:Name="columnHeaderMyReposName"
+              <winformsControls:ColumnHeader x:Name="columnHeaderMyReposName"
                               Classes="gitextensions-list-header-cell"
                               Content="Name" />
-              <ContentControl x:Name="columnHeaderMyReposIsFork"
+              <winformsControls:ColumnHeader x:Name="columnHeaderMyReposIsFork"
                               Grid.Column="1"
                               Classes="gitextensions-list-header-cell"
                               HorizontalContentAlignment="Center"
                               Content="Is fork" />
-              <ContentControl x:Name="columnHeaderMyReposForks"
+              <winformsControls:ColumnHeader x:Name="columnHeaderMyReposForks"
                               Grid.Column="2"
                               Classes="gitextensions-list-header-cell"
                               HorizontalContentAlignment="Right"
                               Content="# Forks" />
-              <ContentControl x:Name="columnHeaderMyReposIsPrivate"
+              <winformsControls:ColumnHeader x:Name="columnHeaderMyReposIsPrivate"
                               Grid.Column="3"
                               Classes="gitextensions-list-header-cell"
                               HorizontalContentAlignment="Center"
                               Content="Private" />
             </Grid>
-            <ListBox x:Name="myReposLV"
+            <usercontrols:NativeListView x:Name="myReposLV"
                      Grid.Row="1"
                      Classes="gitextensions-native-list-items"
                      SelectionMode="Single" />
@@ -85,20 +86,20 @@
                        TextWrapping="Wrap"
                        Text="If you want to fork a repository owned by somebody else, go to the Search for repositories tab." />
           </Label>
-        </Grid>
-      </TabItem>
+        </winformsControls:TableLayoutPanel>
+      </winformsControls:TabPage>
 
-      <TabItem x:Name="searchReposPage"
+      <winformsControls:TabPage x:Name="searchReposPage"
                Classes="gitextensions-dialog-tab"
                Header="Search for repositories">
-        <Grid x:Name="tableLayoutPanel1"
+        <winformsControls:TableLayoutPanel x:Name="tableLayoutPanel1"
               RowDefinitions="Auto,*,Auto"
               Margin="7,4,7,7">
-          <StackPanel x:Name="flowLayoutPanel2"
-                      Height="35"
-                      Margin="3"
-                      Orientation="Horizontal"
-                      Spacing="0">
+          <winformsControls:FlowLayoutPanel x:Name="flowLayoutPanel2"
+                                            Height="35"
+                                            Margin="3">
+            <StackPanel Orientation="Horizontal"
+                        Spacing="0">
             <TextBox x:Name="searchTB"
                      Width="198"
                      Height="23"
@@ -114,11 +115,11 @@
                     MinHeight="0"
                     VerticalAlignment="Top"
                     Content="Search" />
-            <TextBlock x:Name="orLbl"
-                       Classes="gitextensions-auto-label"
-                       Margin="3,0"
-                       VerticalAlignment="Top"
-                       Text="or" />
+              <winformsControls:Label x:Name="orLbl"
+                                      Classes="gitextensions-auto-label"
+                                      Margin="3,0"
+                                      VerticalAlignment="Top"
+                                      Text="or" />
             <Button x:Name="getFromUserBtn"
                     Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
                     Width="124"
@@ -127,48 +128,49 @@
                     MinHeight="0"
                     VerticalAlignment="Top"
                     Content="Get from user" />
-          </StackPanel>
+            </StackPanel>
+          </winformsControls:FlowLayoutPanel>
 
-          <Grid x:Name="tableLayoutPanel3"
+          <winformsControls:TableLayoutPanel x:Name="tableLayoutPanel3"
                 Grid.Row="1"
                 ColumnDefinitions="3*,2*"
                 Margin="3">
             <Grid RowDefinitions="24,*"
                   Margin="3">
               <Grid ColumnDefinitions="180,110,41,40">
-                <ContentControl x:Name="columnHeaderSearchName"
+                <winformsControls:ColumnHeader x:Name="columnHeaderSearchName"
                                 Classes="gitextensions-list-header-cell"
                                 Content="Name" />
-                <ContentControl x:Name="columnHeaderSearchOwner"
+                <winformsControls:ColumnHeader x:Name="columnHeaderSearchOwner"
                                 Grid.Column="1"
                                 Classes="gitextensions-list-header-cell"
                                 Content="Owner" />
-                <ContentControl x:Name="columnHeaderSearchIsFork"
+                <winformsControls:ColumnHeader x:Name="columnHeaderSearchIsFork"
                                 Grid.Column="2"
                                 Classes="gitextensions-list-header-cell"
                                 HorizontalContentAlignment="Center"
                                 Content="Is fork" />
-                <ContentControl x:Name="columnHeaderSearchForks"
+                <winformsControls:ColumnHeader x:Name="columnHeaderSearchForks"
                                 Grid.Column="3"
                                 Classes="gitextensions-list-header-cell"
                                 HorizontalContentAlignment="Right"
                                 Content="# Forks" />
               </Grid>
-              <ListBox x:Name="searchResultsLV"
+              <usercontrols:NativeListView x:Name="searchResultsLV"
                        Grid.Row="1"
                        Classes="gitextensions-native-list-items"
                        SelectionMode="Single" />
             </Grid>
 
-            <Grid x:Name="tableLayoutPanel4"
+            <winformsControls:TableLayoutPanel x:Name="tableLayoutPanel4"
                   Grid.Column="1"
                   RowDefinitions="Auto,*,Auto"
                   Margin="3">
-              <TextBlock x:Name="descriptionLbl"
-                         Classes="gitextensions-auto-label"
-                         Margin="3,0"
-                         HorizontalAlignment="Left"
-                         Text="Description:" />
+              <winformsControls:Label x:Name="descriptionLbl"
+                                      Classes="gitextensions-auto-label"
+                                      Margin="3,0"
+                                      HorizontalAlignment="Left"
+                                      Text="Description:" />
               <TextBox x:Name="searchResultItemDescription"
                        Grid.Row="1"
                        Margin="3"
@@ -185,8 +187,8 @@
                       MinHeight="0"
                       HorizontalAlignment="Left"
                       Content="Open github page" />
-            </Grid>
-          </Grid>
+            </winformsControls:TableLayoutPanel>
+          </winformsControls:TableLayoutPanel>
 
           <Button x:Name="forkBtn"
                   Grid.Row="2"
@@ -197,17 +199,17 @@
                   MinHeight="0"
                   HorizontalAlignment="Left"
                   Content="Fork!" />
-        </Grid>
-      </TabItem>
+        </winformsControls:TableLayoutPanel>
+      </winformsControls:TabPage>
     </TabControl>
 
-    <HeaderedContentControl x:Name="cloneSetupGB"
+    <winformsControls:GroupBox x:Name="cloneSetupGB"
                             Grid.Row="1"
                             Classes="repository-host-clone-group"
                             Header="Clone"
                             Margin="4">
       <Grid>
-        <TextBlock x:Name="label1"
+        <winformsControls:Label x:Name="label1"
                    Margin="7,16,0,0"
                    Width="104"
                    Height="15"
@@ -228,21 +230,21 @@
                                           VerticalAlignment="Top"
                                           VerticalContentAlignment="Center" />
 
-        <TextBlock x:Name="createDirectoryLbl"
+        <winformsControls:Label x:Name="createDirectoryLbl"
                    Margin="7,55,0,0"
                    Width="94"
                    Height="15"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Text="Create directory:" />
-        <TextBlock x:Name="label3"
+        <winformsControls:Label x:Name="label3"
                    Margin="211,55,0,0"
                    Width="140"
                    Height="15"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Text="Add upstream remote as:" />
-        <TextBlock x:Name="ProtocolLabel"
+        <winformsControls:Label x:Name="ProtocolLabel"
                    Margin="418,36,0,0"
                    Width="55"
                    Height="15"
@@ -268,14 +270,14 @@
                   Height="23"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Top" />
-        <TextBlock x:Name="cloneInfoText"
+        <winformsControls:Label x:Name="cloneInfoText"
                    Margin="10,97,7,0"
                    Height="35"
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"
                    TextWrapping="Wrap" />
 
-        <TextBlock x:Name="depthLabel"
+        <winformsControls:Label x:Name="depthLabel"
                    Margin="7,135,0,0"
                    Width="72"
                    Height="15"
@@ -292,28 +294,29 @@
                        Maximum="999"
                        Value="0" />
       </Grid>
-    </HeaderedContentControl>
+    </winformsControls:GroupBox>
 
-    <Grid x:Name="flowLayoutPanel1"
-          Grid.Row="2"
-          ColumnDefinitions="*,120,6,120,3"
-          Margin="3">
-      <Button x:Name="cloneBtn"
-              Grid.Column="1"
-              Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
-              Width="120"
-              Height="30"
-              Margin="0,3,0,0"
-              VerticalAlignment="Top"
-              Content="Clone" />
-      <Button x:Name="_NO_TRANSLATE_closeBtn"
-              Grid.Column="3"
-              Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
-              Width="120"
-              Height="30"
-              Margin="0,3,0,0"
-              VerticalAlignment="Top"
-              Content="Close" />
-    </Grid>
-  </Grid>
+    <winformsControls:FlowLayoutPanel x:Name="flowLayoutPanel1"
+                                      Grid.Row="2"
+                                      Margin="3">
+      <Grid ColumnDefinitions="*,120,6,120,3">
+        <Button x:Name="cloneBtn"
+                Grid.Column="1"
+                Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
+                Width="120"
+                Height="30"
+                Margin="0,3,0,0"
+                VerticalAlignment="Top"
+                Content="Clone" />
+        <Button x:Name="_NO_TRANSLATE_closeBtn"
+                Grid.Column="3"
+                Classes="gitextensions-dialog-action gitextensions-native-dialog-action"
+                Width="120"
+                Height="30"
+                Margin="0,3,0,0"
+                VerticalAlignment="Top"
+                Content="Close" />
+      </Grid>
+    </winformsControls:FlowLayoutPanel>
+  </winformsControls:TableLayoutPanel>
 </Window>

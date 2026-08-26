@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:spellChecker="using:GitUI.SpellChecker"
+        xmlns:winformsControls="using:GitUI.Compat.WinFormsControls"
         x:Class="GitUI.CommandsDialogs.RepoHosting.CreatePullRequestForm"
         Width="546"
         Height="323"
@@ -9,7 +10,7 @@
         WindowStartupLocation="CenterOwner"
         Title="Create Pull Request">
   <Grid>
-    <TextBlock x:Name="label3"
+    <winformsControls:Label x:Name="label3"
                Classes="gitextensions-auto-label"
                Margin="9,15,0,0"
                HorizontalAlignment="Left"
@@ -21,7 +22,7 @@
               VerticalAlignment="Top"
               VerticalContentAlignment="Center" />
 
-    <TextBlock x:Name="label4"
+    <winformsControls:Label x:Name="label4"
                Classes="gitextensions-auto-label"
                Margin="9,42,0,0"
                HorizontalAlignment="Left"
@@ -33,7 +34,7 @@
               VerticalAlignment="Top"
               VerticalContentAlignment="Center" />
 
-    <TextBlock x:Name="label5"
+    <winformsControls:Label x:Name="label5"
                Classes="gitextensions-auto-label"
                Margin="9,69,0,0"
                HorizontalAlignment="Left"
@@ -45,7 +46,7 @@
               VerticalAlignment="Top"
               VerticalContentAlignment="Center" />
 
-    <HeaderedContentControl x:Name="groupBox1"
+    <winformsControls:GroupBox x:Name="groupBox1"
                             Classes="gitextensions-group-box gitextensions-native-group-border"
                             Margin="12,100,8,48"
                             HorizontalAlignment="Stretch"
@@ -54,7 +55,7 @@
                             Header="Pull request data">
       <Grid RowDefinitions="27,*"
             ColumnDefinitions="52,*">
-        <TextBlock x:Name="label1"
+        <winformsControls:Label x:Name="label1"
                    Classes="gitextensions-auto-label"
                    Margin="0,4,0,0"
                    HorizontalAlignment="Left"
@@ -66,7 +67,7 @@
                  Margin="0,1,0,0"
                  VerticalAlignment="Top"
                  VerticalContentAlignment="Center" />
-        <TextBlock x:Name="label2"
+        <winformsControls:Label x:Name="label2"
                    Grid.Row="1"
                    Classes="gitextensions-auto-label"
                    Margin="0,3,0,0"
@@ -77,7 +78,7 @@
                                    Grid.Row="1"
                                    Grid.Column="1" />
       </Grid>
-    </HeaderedContentControl>
+    </winformsControls:GroupBox>
 
     <Button x:Name="_createBtn"
             Classes="gitextensions-dialog-action-primary gitextensions-native-dialog-action"
