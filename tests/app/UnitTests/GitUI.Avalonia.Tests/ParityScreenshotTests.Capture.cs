@@ -1065,9 +1065,10 @@ public sealed partial class ParityScreenshotTests
         window.Height = height;
         window.SizeToContent = SizeToContent.Manual;
         window.RequestedThemeVariant = Application.Current?.RequestedThemeVariant;
-        if (descriptor.ViewType == typeof(RevisionGridControl)
+        bool requiresExtendedPopupViewport = descriptor.ViewType == typeof(RevisionGridControl)
             && state.Kind == CaptureStateKind.MenuOpen
-            && state.TargetField == "viewToolStripMenuItem")
+            && state.TargetField == "viewToolStripMenuItem";
+        if (requiresExtendedPopupViewport)
         {
             // parity-scaffolding: Size the headless screen before Show; its overlay cannot grow
             // after realization, while the real desktop submenu is taller than the component.
@@ -1075,6 +1076,7 @@ public sealed partial class ParityScreenshotTests
             view.Height = height;
             view.HorizontalAlignment = HorizontalAlignment.Left;
             view.VerticalAlignment = VerticalAlignment.Top;
+            window.Width = 1200;
             window.Height = 900;
         }
 
@@ -1084,8 +1086,8 @@ public sealed partial class ParityScreenshotTests
             window.Show();
             // parity-scaffolding: A form may restore its persisted bounds during OnOpened;
             // the paired plan's declared size remains authoritative for every state.
-            window.Width = width;
-            window.Height = height;
+            window.Width = requiresExtendedPopupViewport ? 1200 : width;
+            window.Height = requiresExtendedPopupViewport ? 900 : height;
             window.SetRenderScaling(renderScale);
             if (!isWindow)
             {

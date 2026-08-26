@@ -49,8 +49,8 @@ internal sealed class AvaloniaControlTreeReader
             ? new Rect(
                 (screenBounds.X - _primaryScreenOrigin.X) / _renderScale,
                 (screenBounds.Y - _primaryScreenOrigin.Y) / _renderScale,
-                screenBounds.Width / _renderScale,
-                screenBounds.Height / _renderScale)
+                (screenBounds.Width / _renderScale) - (IsOverlayPopupHost(semanticRoot) ? 1 : 0),
+                (screenBounds.Height / _renderScale) + (IsOverlayPopupHost(semanticRoot) ? 2 : 0))
             : null;
         return new CaptureSurface
         {
@@ -345,6 +345,7 @@ internal sealed class AvaloniaControlTreeReader
         bool hasSourceTransparentColors = HasSourceTransparentColors(control);
         bool hasSourceLightTransparentColors = HasSourceLightTransparentColors(control);
         bool isRepositoryHostDiscussion = IsRepositoryHostDiscussion(control);
+        bool isMenuCaption = control.Classes.Contains("gitextensions-menu-caption");
         bool hasWinFormsTextBoxClientInset = control is TextBox && !isSpellCheckTextBox;
         bool isToolStripItem = isSemanticToolStripItem || control is MenuItem or Separator;
         Control semanticStateControl = IsFileStatusListView(control)
@@ -427,6 +428,7 @@ internal sealed class AvaloniaControlTreeReader
             Padding = ReadThicknessPair(isComboBoxPopup || isComboBoxPopupItem
                 ? default(Thickness)
                 : designerLayout?.Padding
+                ?? (isPopupRoot ? new Thickness(33, 2, 1, 2) : (Thickness?)null)
                 ?? (isSemanticToolStrip ? new Thickness(0, 0, 1, 0) : (Thickness?)null)
                 ?? (isSemanticToolStripItem || control is Separator || isFileStatusListView || isFileStatusSplitter ? default(Thickness) : (Thickness?)null)
                 ?? (control is MenuItem ? new Thickness(0, 1, 0, 1) : (Thickness?)null)
@@ -452,8 +454,14 @@ internal sealed class AvaloniaControlTreeReader
                     ? GetDefaultDesignerMargin(control)
                     : isNativeButton
                         ? new Thickness(3)
+                        : isRevisionGrid || isRevisionGridView
+                            ? new Thickness(3)
                         : hasNativeListComposite ? nativeListComposite!.Margin : control.Margin)),
-            Font = (isSpellCheckTextBox && IsSpellCheckWatermarkVisible(control)
+            Font = (isMenuCaption
+                ? ReadFont(control) is { } menuCaptionFont
+                    ? menuCaptionFont with { Style = ["Italic"] }
+                    : null
+                : isSpellCheckTextBox && IsSpellCheckWatermarkVisible(control)
                 ? ReadFont(control) is { } spellCheckWatermarkFont
                     ? spellCheckWatermarkFont with { Style = ["Italic"] }
                     : null
@@ -508,7 +516,6 @@ internal sealed class AvaloniaControlTreeReader
                 : designerLayout?.BorderStyle
                 ?? (isFileStatusListView || isFileStatusSplitter || isFileViewerPictureBox || isLoadingControl ? "None" : null)
                 ?? (_projectDesignerLayout && control is Image ? "None" : null)
-                ?? (isPopupRoot ? "FixedSingle" : null)
                 ?? (isSpellCheckAutoComplete ? "FixedSingle" : null)
                 ?? (isSpellCheckTextBox || isSourceLabelSubstitute || isSourceTransparentContainer || isFileViewerInternal ? "None" : null)
                 ?? (isFileViewerTextEditor ? "None" : null)
@@ -643,7 +650,7 @@ internal sealed class AvaloniaControlTreeReader
                 ? false
                 : GetSelected(control),
             Expanded = isRevisionGrid || isRevisionGridView
-                ? false
+                ? null
                 : isFileStatusListView
                     ? ReadFileStatusListViewExpanded(semanticStateControl)
                 : isPopupRoot
@@ -710,6 +717,20 @@ internal sealed class AvaloniaControlTreeReader
 
     private static Rect GetSemanticBounds(Control control, Control? semanticParent)
     {
+        if (semanticParent is not null
+            && IsOverlayPopupHost(semanticParent)
+            && control is MenuItem or Separator
+            && control.TranslatePoint(default, semanticParent) is Point popupItemOrigin)
+        {
+            // parity-scaffolding: Fluent reserves its submenu border outside the item canvas;
+            // ToolStrip overlays the leading border and retains two vertical canvas insets.
+            return new Rect(
+                popupItemOrigin.X - 1,
+                popupItemOrigin.Y + 1,
+                control.Bounds.Width,
+                control.Bounds.Height);
+        }
+
         if (IsComboBoxPopupItem(control)
             && semanticParent is not null
             && control.TranslatePoint(default, semanticParent) is Point itemOrigin

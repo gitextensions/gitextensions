@@ -1956,6 +1956,7 @@ public sealed class FormBrowseTests
     {
         GitModule module = CreateRepositoryWithInitialCommit();
         module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" });
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("update-ref") { "refs/remotes/origin/main", "HEAD" });
         ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
@@ -2073,14 +2074,17 @@ public sealed class FormBrowseTests
                 .Single(item => item.Header?.ToString() == "feature");
             MenuItem renameFeature = renameBranch.Items.Cast<MenuItem>()
                 .Single(item => item.Header?.ToString() == "feature");
-            MenuItem deleteFeature = deleteBranch.Items.Cast<MenuItem>()
+            MenuItem deleteFeature = deleteBranch.Items.OfType<MenuItem>()
                 .Single(item => item.Header?.ToString() == "feature");
+            MenuItem deleteRemoteMain = deleteBranch.Items.OfType<MenuItem>()
+                .Single(item => item.Header?.ToString() == "origin/main");
 
             checkoutFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             pushFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             mergeFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             renameFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             deleteFeature.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            deleteRemoteMain.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             createBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             createTag.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             archiveRevision.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
@@ -2094,6 +2098,7 @@ public sealed class FormBrowseTests
             commands.Received(1).StartMergeBranchDialog(form, "feature");
             commands.Received(1).StartRenameDialog(form, "feature");
             commands.Received(1).StartDeleteBranchDialog(form, "feature");
+            commands.Received(1).StartDeleteRemoteBranchDialog(form, "origin/main");
             commands.Received(1).StartCreateBranchDialog(form, selectedObjectId);
             commands.Received(1).StartCreateTagDialog(
                 form,
