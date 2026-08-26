@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.NUnit;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -162,6 +163,11 @@ public sealed class FrameworkControlParityTests
         try
         {
             Border chrome = Find<Border>(button, "PART_NativeButtonChrome");
+            ContentPresenter presenter = chrome.GetVisualDescendants().OfType<ContentPresenter>().Single();
+            button.HorizontalContentAlignment.Should().Be(HorizontalAlignment.Center);
+            button.VerticalContentAlignment.Should().Be(VerticalAlignment.Center);
+            presenter.HorizontalAlignment.Should().Be(HorizontalAlignment.Center);
+            presenter.VerticalAlignment.Should().Be(VerticalAlignment.Center);
             Point normalOrigin = button.TranslatePoint(default, window)!.Value;
             using (AvaloniaControlStateDriver.Apply(
                        window,
