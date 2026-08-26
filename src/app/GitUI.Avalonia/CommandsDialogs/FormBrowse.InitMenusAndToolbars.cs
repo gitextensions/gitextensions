@@ -9,6 +9,7 @@ using GitUI.Compat;
 using GitUI.Properties;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
+using Brush = Avalonia.Media.IBrush;
 
 namespace GitUI.CommandsDialogs;
 
@@ -243,9 +244,7 @@ partial class FormBrowse
         defaultPullFetchAllToolStripMenuItem.IsVisible = hasMultipleRemotes;
     }
 
-    private Avalonia.Media.IBrush UpdateCommitButtonAndGetBrush(
-        IReadOnlyList<GitItemStatus>? status,
-        bool showCount)
+    private Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
     {
         RepoStateVisualiser repoStateVisualiser = new();
         (Avalonia.Media.IImage image, Avalonia.Media.IBrush brush) = repoStateVisualiser.Invoke(status);

@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "d210eb209a335568dbae7ff0d26bd2cc3f4c6228",
+  "analyzedCommit": "159741aa5093b520ec734fd755b218d921fbc79c",
   "axisOrder": [
     "structural",
     "functional",
@@ -4820,16 +4820,19 @@
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-16",
-          "commit": "1a7bb5c077ca36b4cfecd818e99d5a7bd93ead9a",
+          "verifiedOn": "2026-08-26",
+          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b16/accepted/inventory/FormBrowse.json",
             "eng/avalonia/parity-evidence/PR-feedback/focus-mnemonics/preview/windows/previewability.json",
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/smoke.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/inventory/windows/FormBrowse.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/tests/linux/form-browse.trx"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
-          "findingCount": 1507,
-          "note": "Reviewer-feedback coverage verifies that the initial loaded revision list owns keyboard focus, the filter receives focus only when explicitly requested, and the existing FocusRevisionGrid command returns focus to the native inner list. Generated top-level and context-menu AccessText presenters keep access-key underlines visible regardless of the platform keyboard-cue preference. The remaining whole-FormBrowse inventory findings and exhaustive behavior audit stay open for P8.6h."
+          "findingCount": 1224,
+          "note": "Reviewer-feedback coverage verifies that the initial loaded revision list owns keyboard focus, the filter receives focus only when explicitly requested, and the existing FocusRevisionGrid command returns focus to the native inner list. Generated top-level and context-menu AccessText presenters keep access-key underlines visible regardless of the platform keyboard-cue preference. The source-shape sweep restores native source-named menu, toolbar-container, split-container, tab-page, and repository-grid host identities, 59 exact nonnullable event-handler signatures, and cancellable ahead/behind publication before the Push label is updated on the UI dispatcher. The current whole-FormBrowse inventory is 1,224 findings and the exhaustive behavior audit stays open for P8.6h."
         },
         "visual": {
           "status": "unverified",
@@ -4851,8 +4854,8 @@
         },
         "behavioralState": {
           "status": "partial",
-          "verifiedOn": "2026-08-16",
-          "commit": "1a7bb5c077ca36b4cfecd818e99d5a7bd93ead9a",
+          "verifiedOn": "2026-08-26",
+          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
           "evidence": [
             "eng/avalonia/parity-evidence/PR-feedback/focus-mnemonics/preview/windows/previewability.json",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/window.png",
@@ -4865,17 +4868,21 @@
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-16",
-          "commit": "1a7bb5c077ca36b4cfecd818e99d5a7bd93ead9a",
+          "verifiedOn": "2026-08-26",
+          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
           "evidence": [
             "eng/avalonia/parity-evidence/PR-feedback/focus-mnemonics/runtime/windows/smoke.json",
             "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
             "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Fresh Windows, native Wayland, nested X11, and confined Wayland Flatpak smokes pass; the Linux screenshots visibly retain menu mnemonic underlines and initial revision-list focus. macOS and the exhaustive platform state matrix remain open."
+          "note": "Fresh Windows, native Wayland, nested X11, and confined Wayland Flatpak smokes pass; the Linux screenshots visibly retain menu mnemonic underlines and initial revision-list focus. The current runtime screenshots were inspected after the source-shape sweep; Flatpak stayed Wayland-only with --filesystem=host. macOS and the exhaustive platform state matrix remain open."
         }
       }
     },
@@ -20902,8 +20909,8 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-17",
-          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "verifiedOn": "2026-08-26",
+          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
           "evidence": [
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/HotkeySettingsManager.json"
           ],
@@ -34506,23 +34513,26 @@
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-17",
-          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "verifiedOn": "2026-08-26",
+          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
           "evidence": [
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/RevisionGridControl.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b15/accepted/avalonia/manifest.json",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/windows/focused.trx",
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/tests/linux/focused.trx",
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/smoke.json"
+            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/inventory/windows/RevisionGridControl.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/tests/linux/revision-grid.trx"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
-          "findingCount": 1088,
-          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. Final-order replacement retains the primary and multi-selection by revision identity, scrolls the primary row into view, and restores focus only when the grid owned it before Avalonia reset the collection. Modifier-only or unsupported input no longer reaches its first unassigned command. The fresh scoped inventory records 1088 structural/functional source-shape findings, including the deliberate Avalonia focus-lifecycle member, and the broader exhaustive behavior audit remains open."
+          "findingCount": 921,
+          "note": "The grid publishes the final scored RevisionGraph order, including stash, worktree and index rows, and its context menu retains the original disabled current-branch delete row and hides the empty script host. The capture readers expose the native grid and popup through stable DataGridView/MenuItem semantics without framework template artifacts. Recycled rows resolve the original selected, authored, alternating and panel-background precedence at the row boundary. Reload carries a pending focus request through the loading page and focuses the native ListBox once it is displayed; the owning FormBrowse focus command targets that inner list directly. Final-order replacement retains the primary and multi-selection by revision identity, scrolls the primary row into view, and restores focus only when the grid owned it before Avalonia reset the collection. Modifier-only or unsupported input no longer reaches its first unassigned command. The source-shape sweep maps the actual native popup tree to the original ContextMenuStrip, ToolStripMenuItem, and ToolStripSeparator identities and restores the source handler signatures. The fresh scoped inventory records 921 structural/functional source-shape findings, including deliberate Avalonia focus-lifecycle members, and the broader exhaustive behavior audit remains open."
         },
         "visual": {
           "status": "partial",
-          "verifiedOn": "2026-08-20",
-          "commit": "8e4f01c0ceb570655bcdfcdae97898729ff1bb9a",
+          "verifiedOn": "2026-08-26",
+          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/diff-final/findings.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/winforms/manifest.json",
@@ -34533,16 +34543,19 @@
             "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/preview/rendered.png",
             "eng/avalonia/parity-evidence/P8.6i/dimensional-provenance-11/winforms-native100-accepted/manifest.json",
             "eng/avalonia/parity-evidence/P8.6i/dimensional-provenance-11/avalonia-native100/manifest.json",
-            "eng/avalonia/parity-evidence/P8.6i/dimensional-provenance-11/diff-native100/findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/dimensional-provenance-11/diff-native100/findings.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/winforms-100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/avalonia-100/manifest.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/diff-100/findings.json"
           ],
           "platforms": ["windows"],
-          "findingCount": 311,
-          "note": "A fresh native-100% matrix compares three normal theme states and the light View-menu state after replacing capture-normalized menu, border, separator, and avatar metrics with source-derived values. Two WinForms dark/custom View-menu requests are explicitly unsupported because popup screen bounds could not be reconciled; no partial image was accepted. The report retains 311 aggregate diagnostics across four compared and two unavailable requests. Prior native-125% evidence remains valid; copy-menu capture, native 150/200%, exhaustive live states, and exact closure remain open."
+          "findingCount": 1134,
+          "note": "A fresh same-repository native-100% matrix compares 16 normal, focused, disabled, context-menu, copy-menu, and View-menu states across light/dark/custom after the source-shape sweep. Two WinForms dark/custom View-menu requests are explicitly unsupported because popup screen bounds could not be reconciled; no partial image was accepted. The report retains 1,134 aggregate diagnostics: 990 geometry, 76 image, 35 state, 21 font, 7 layout, 3 control, and 2 unavailable-capture findings. Prior native-125% evidence remains valid; native 150/200%, exhaustive live states, and exact closure remain open."
         },
         "themingAndColor": {
           "status": "partial",
-          "verifiedOn": "2026-08-19",
-          "commit": "8236d962440c08ab9d3fc5175c9460259182db96",
+          "verifiedOn": "2026-08-26",
+          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
           "evidence": [
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/winforms/manifest.json",
             "eng/avalonia/parity-evidence/P8.6h/h3b2b2b2b17/accepted/avalonia-final/manifest.json",
@@ -34576,17 +34589,21 @@
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-19",
-          "commit": "8236d962440c08ab9d3fc5175c9460259182db96",
+          "verifiedOn": "2026-08-26",
+          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
           "evidence": [
             "eng/avalonia/parity-evidence/P0.6/windows/smoke.json",
             "eng/avalonia/parity-evidence/P0.6/wayland/smoke.json",
             "eng/avalonia/parity-evidence/P0.6/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P0.6/flatpak/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6h/revision-grid-source-sweep-18/runtime/flatpak/smoke.json"
           ],
           "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Fresh runtime smokes pass and final screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. The first combined Wayland attempt showed only the Weston desktop and was discarded; the successful Wayland-only retry visibly contains the application. Focused menu, framework-control, graph-golden, and previewability tests pass on Windows and native-ext4 Linux. Native DPI beyond 125%, exhaustive component states, and macOS remain open."
+          "note": "Fresh runtime smokes pass and final screenshots were inspected on Windows, native Wayland, nested X11, and confined Wayland Flatpak with --filesystem=host and no X11 fallback. The current focused browse/grid suite passes 77/77 on Windows and, after splitting the process to avoid a recurring WSL VM restart, 32/32 + 44/44 + 1/1 on native-ext4 Linux. Native DPI beyond 125%, exhaustive component states, and macOS remain open."
         }
       }
     },
