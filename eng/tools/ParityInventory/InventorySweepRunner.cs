@@ -88,7 +88,8 @@ internal static class InventorySweepRunner
                     TwinPartCount = twin.Parts.Count,
                     FindingCount = findings.Count,
                     FindingsByCategory = report.Summary.FindingsByCategory,
-                    AdaptedCommentCount = comparison.AdaptedComments.Count
+                    AdaptedCommentCount = comparison.AdaptedComments.Count,
+                    AcceptedFrameworkDeviationCount = comparison.AcceptedFrameworkDeviations.Count
                 });
             }
             catch (InvalidDataException)
@@ -141,7 +142,8 @@ internal static class InventorySweepRunner
                 FindingsByCategory = allFindings.GroupBy(finding => finding.Category, StringComparer.Ordinal)
                     .OrderBy(group => group.Key, StringComparer.Ordinal)
                     .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal),
-                AdaptedCommentCount = reports.Values.Sum(report => report.AdaptedComments.Count)
+                AdaptedCommentCount = reports.Values.Sum(report => report.AdaptedComments.Count),
+                AcceptedFrameworkDeviationCount = reports.Values.Sum(report => report.AcceptedFrameworkDeviations.Count)
             },
             Mappings = mappingResults.OrderBy(mapping => mapping.Source, StringComparer.Ordinal).ToArray(),
             Types = typeResults.Values.OrderBy(type => type.TypeName, StringComparer.Ordinal).ToArray(),
@@ -202,10 +204,12 @@ internal static class InventorySweepRunner
                 FindingsByCategory = comparison.Findings.GroupBy(finding => finding.Category, StringComparer.Ordinal)
                     .OrderBy(group => group.Key, StringComparer.Ordinal)
                     .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal),
-                AdaptedCommentCount = comparison.AdaptedComments.Count
+                AdaptedCommentCount = comparison.AdaptedComments.Count,
+                AcceptedFrameworkDeviationCount = comparison.AcceptedFrameworkDeviations.Count
             },
             Findings = comparison.Findings,
-            AdaptedComments = comparison.AdaptedComments
+            AdaptedComments = comparison.AdaptedComments,
+            AcceptedFrameworkDeviations = comparison.AcceptedFrameworkDeviations
         };
 
     private static SourceInventory ApplyMappedTwinPaths(
