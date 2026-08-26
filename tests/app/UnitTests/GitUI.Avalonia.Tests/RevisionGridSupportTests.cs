@@ -482,7 +482,12 @@ public sealed class RevisionGridSupportTests
     {
         RevisionGridControl control = new();
 
-        control.ViewMenuItem.Items.OfType<MenuItem>().Should().OnlyContain(item => item.MinWidth == 0);
+        control.ViewMenuItem.Items.OfType<MenuItem>().Should().OnlyContain(item => double.IsNaN(item.Width));
+        control.ViewMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.SubmenuOpenedEvent));
+        double measuredWidth = control.ViewMenuItem.Items.OfType<MenuItem>().Select(item => item.Width).Distinct().Single();
+
+        measuredWidth.Should().BeGreaterThan(0);
+        control.ViewMenuItem.Items.OfType<MenuItem>().Should().OnlyContain(item => item.Width == measuredWidth);
         control.ViewMenuItem.Items.OfType<Separator>().Should().OnlyContain(separator => double.IsNaN(separator.Width));
     }
 
@@ -509,10 +514,10 @@ public sealed class RevisionGridSupportTests
         item.Items[3].Should().BeOfType<MenuItem>().Which.Header.Should().Be(TranslatedStrings.Tags);
         item.Items[4].Should().BeOfType<MenuItem>().Which.Header.Should().Be("_2:   tag1");
         item.Items[6].Should().BeOfType<MenuItem>().Which.Header!.ToString().Should().StartWith("_Commit hash");
+        item.Items.OfType<MenuItem>().Select(menuItem => menuItem.Width).Distinct().Should().ContainSingle();
         item.Items.OfType<MenuItem>().Should().OnlyContain(
-            menuItem => menuItem.Padding == new Avalonia.Thickness(4, 1, 18, 1));
-        item.Items.OfType<Separator>().Should().OnlyContain(
-            separator => separator.Margin == new Avalonia.Thickness(2, 0, 1, 0));
+            menuItem => menuItem.Padding.Left == 0 && menuItem.Padding.Right == 0);
+        item.Items.OfType<Separator>().Should().OnlyContain(separator => separator.Margin == default);
     }
 
     [AvaloniaTest]

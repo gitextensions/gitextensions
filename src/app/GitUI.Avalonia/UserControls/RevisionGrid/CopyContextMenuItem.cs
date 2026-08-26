@@ -10,7 +10,7 @@ using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid;
 
-public sealed class CopyContextMenuItem : MenuItem
+public sealed class CopyContextMenuItem : GitUI.Compat.WinFormsControls.ToolStripMenuItem
 {
     private readonly TranslationString _copyToClipboardText = new("&Copy to clipboard");
     private Func<IEnumerable<string>, IEnumerable<string>> _filterRefsFunc = refs => refs;
@@ -77,10 +77,6 @@ public sealed class CopyContextMenuItem : MenuItem
         {
             Header = EscapeHeader(displayText.TrimEnd(Delimiters.LineFeedAndCarriageReturn)),
             Icon = CreateIcon(image),
-
-            // Avalonia measures submenu text more narrowly than ToolStrip; retain the original
-            // icon-leading and trailing desktop whitespace without constraining longer labels.
-            Padding = new Thickness(4, 1, 18, 1),
         };
 
         item.Click += delegate
@@ -135,7 +131,6 @@ public sealed class CopyContextMenuItem : MenuItem
             MenuItem caption = new()
             {
                 Header = TranslatedStrings.Branches,
-                Padding = new Thickness(4, 1, 18, 1),
             };
             MenuUtil.SetAsCaptionMenuItem(caption, this);
             Items.Add(caption);
@@ -145,7 +140,7 @@ public sealed class CopyContextMenuItem : MenuItem
                 AddItem(name, textToCopy: name, Images.Branch.AdaptLightness(), hotkey: null);
             }
 
-            Items.Add(new Separator { Margin = new Thickness(2, 0, 1, 0) });
+            Items.Add(new Separator());
         }
 
         // Add items for tags
@@ -154,7 +149,6 @@ public sealed class CopyContextMenuItem : MenuItem
             MenuItem caption = new()
             {
                 Header = TranslatedStrings.Tags,
-                Padding = new Thickness(4, 1, 18, 1),
             };
             MenuUtil.SetAsCaptionMenuItem(caption, this);
             Items.Add(caption);
@@ -164,7 +158,7 @@ public sealed class CopyContextMenuItem : MenuItem
                 AddItem(name, textToCopy: name, Images.Tag, hotkey: null);
             }
 
-            Items.Add(new Separator { Margin = new Thickness(2, 0, 1, 0) });
+            Items.Add(new Separator());
         }
 
         // Add other items
@@ -182,6 +176,10 @@ public sealed class CopyContextMenuItem : MenuItem
             AddItem(ResourceManager.TranslatedStrings.GetAuthorDate(count), r => r.AuthorDate.ToString(), Images.Date, 'T');
             AddItem(ResourceManager.TranslatedStrings.GetCommitDate(count), r => r.CommitDate.ToString(), Images.Date, 'D');
         }
+
+        // Framework constraint: WinForms ResumeLayout recalculates one shared dropdown width
+        // after the dynamic items exist; the Avalonia counterpart applies that same calculation.
+        WinFormsToolStripMenuSizer.Apply(this);
     }
 
     private string PrependItemNumber(string name)

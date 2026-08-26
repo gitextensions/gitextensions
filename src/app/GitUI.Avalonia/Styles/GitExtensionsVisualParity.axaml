@@ -160,6 +160,7 @@
       <x:Double x:Key="MenuBarHeight">24</x:Double>
       <Thickness x:Key="MenuBarItemPadding">7,0</Thickness>
       <Thickness x:Key="MenuFlyoutItemThemePaddingNarrow">8,1</Thickness>
+      <Thickness x:Key="MenuInputGestureTextMargin">7,0,0,0</Thickness>
       <Thickness x:Key="MenuFlyoutScrollerMargin">0</Thickness>
       <x:Double x:Key="MenuFlyoutThemeMinHeight">0</x:Double>
       <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
@@ -1301,7 +1302,7 @@
   </Style>
 
   <Style Selector="MenuItem">
-    <Setter Property="MinHeight" Value="21" />
+    <Setter Property="MinHeight" Value="22" />
     <Setter Property="Padding" Value="0,1" />
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
     <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
@@ -1324,7 +1325,7 @@
   </Style>
   <Style Selector="ContextMenu Separator">
     <Setter Property="Height" Value="6" />
-    <Setter Property="Margin" Value="0" />
+    <Setter Property="Margin" Value="2,0,1,0" />
     <Setter Property="Foreground" Value="{DynamicResource GitExtensionsControlBorderBrush}" />
     <Setter Property="Background" Value="{DynamicResource GitExtensionsControlBackgroundBrush}" />
     <Setter Property="Template">
@@ -1472,6 +1473,11 @@
   </Style>
   <Style Selector="ContextMenu /template/ ItemsPresenter#PART_ItemsPresenter">
     <Setter Property="Margin" Value="0" />
+  </Style>
+  <Style Selector="ContextMenu.gitextensions-revision-context-menu /template/ ItemsPresenter#PART_ItemsPresenter">
+    <!-- ToolStrip paints its one-pixel border over the item canvas instead of reserving a
+         separate leading/top layout inset. -->
+    <Setter Property="Margin" Value="-1,1,0,1" />
   </Style>
   <Style Selector="MenuFlyoutPresenter">
     <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
