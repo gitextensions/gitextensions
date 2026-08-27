@@ -58,6 +58,16 @@ public sealed partial class GeneralSettingsPage : SettingsPageWithHeader
     public static SettingsPageReference GetPageReference()
         => new SettingsPageReferenceByType(typeof(GeneralSettingsPage));
 
+    private void SetSubmoduleStatus()
+    {
+        chkShowSubmoduleStatusInBrowse.IsEnabled =
+            chkShowGitStatusInToolbar.IsChecked == true || chkShowGitStatusForArtificialCommits.IsChecked == true;
+        if (!chkShowSubmoduleStatusInBrowse.IsEnabled)
+        {
+            chkShowSubmoduleStatusInBrowse.IsChecked = false;
+        }
+    }
+
     protected override void SettingsToPage()
     {
         chkCheckForUncommittedChangesInCheckoutBranch.IsChecked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
@@ -90,6 +100,17 @@ public sealed partial class GeneralSettingsPage : SettingsPageWithHeader
         base.SettingsToPage();
     }
 
+    private void WireEvents()
+    {
+        chkShowGitStatusInToolbar.IsCheckedChanged += (_, _) => SetSubmoduleStatus();
+        chkShowGitStatusForArtificialCommits.IsCheckedChanged += (_, _) => SetSubmoduleStatus();
+        lblCommitsLimit.IsCheckedChanged += (_, _) =>
+            _NO_TRANSLATE_MaxCommits.IsEnabled = lblCommitsLimit.IsChecked == true;
+        btnDefaultDestinationBrowse.Click += DefaultCloneDestinationBrowseClick;
+        llblTelemetryPrivacyLink.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(
+            "https://github.com/gitextensions/gitextensions/blob/master/setup/assets/PrivacyPolicy.md");
+    }
+
     protected override void PageToSettings()
     {
         AppSettings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.IsChecked == true;
@@ -113,27 +134,6 @@ public sealed partial class GeneralSettingsPage : SettingsPageWithHeader
         AppSettings.TelemetryEnabled = chkTelemetry.IsChecked == true;
 
         base.PageToSettings();
-    }
-
-    private void WireEvents()
-    {
-        chkShowGitStatusInToolbar.IsCheckedChanged += (_, _) => SetSubmoduleStatus();
-        chkShowGitStatusForArtificialCommits.IsCheckedChanged += (_, _) => SetSubmoduleStatus();
-        lblCommitsLimit.IsCheckedChanged += (_, _) =>
-            _NO_TRANSLATE_MaxCommits.IsEnabled = lblCommitsLimit.IsChecked == true;
-        btnDefaultDestinationBrowse.Click += DefaultCloneDestinationBrowseClick;
-        llblTelemetryPrivacyLink.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(
-            "https://github.com/gitextensions/gitextensions/blob/master/setup/assets/PrivacyPolicy.md");
-    }
-
-    private void SetSubmoduleStatus()
-    {
-        chkShowSubmoduleStatusInBrowse.IsEnabled =
-            chkShowGitStatusInToolbar.IsChecked == true || chkShowGitStatusForArtificialCommits.IsChecked == true;
-        if (!chkShowSubmoduleStatusInBrowse.IsEnabled)
-        {
-            chkShowSubmoduleStatusInBrowse.IsChecked = false;
-        }
     }
 
     private void DefaultCloneDestinationBrowseClick(object? sender, RoutedEventArgs e)

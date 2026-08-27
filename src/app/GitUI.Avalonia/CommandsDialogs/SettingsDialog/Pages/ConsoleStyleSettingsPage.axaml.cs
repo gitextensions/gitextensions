@@ -14,12 +14,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
 {
+#pragma warning disable SX1309 // Preserve the original designer field name for port parity.
+    private readonly FontDialog consoleFontDialog = new();
     private readonly TranslationString _defaultThemeDisplayName = new("Default");
     private readonly TranslationString _consoleDefaultFontText = new("Console Default");
 
     private WinFormsShims.Font? _consoleFont;
-#pragma warning disable SX1309 // Preserve the original designer field name for port parity.
-    private readonly FontDialog consoleFontDialog = new();
 #pragma warning restore SX1309
 
     public ConsoleStyleSettingsPage()
@@ -45,9 +45,6 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
         WireEvents();
         InitializeComplete();
     }
-
-    public static SettingsPageReference GetPageReference()
-        => new SettingsPageReferenceByType(typeof(ConsoleStyleSettingsPage));
 
     protected override void SettingsToPage()
     {
@@ -77,6 +74,9 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
 
         base.PageToSettings();
     }
+
+    public static SettingsPageReference GetPageReference()
+        => new SettingsPageReferenceByType(typeof(ConsoleStyleSettingsPage));
 
     private void WireEvents()
     {

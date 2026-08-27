@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -19,9 +19,9 @@ namespace GitUI.CommandsDialogs.Menus;
 internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, ITranslate
 {
     private const string TranslationCategory = nameof(FormBrowse);
+    private static readonly TranslationString _noWorkingFolderText = new("No working directory");
 
     private static readonly TranslationString _configureWorkingDirMenu = new("Co&nfigure this menu...");
-    private static readonly TranslationString _noWorkingFolderText = new("No working directory");
     private static readonly TranslationString _repositorySearchPlaceholder = new("Search repositories...");
     private static readonly TranslationString _toolTip = new("""
         Change working directory

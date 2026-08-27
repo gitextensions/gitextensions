@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -61,10 +61,10 @@ public sealed partial class FilterToolBar : TranslatedControl
 
     private readonly List<string> _revisionFilters;
     private Func<IGitModule>? _getModule;
-    private Func<RefsFilter, IReadOnlyList<IGitRef>>? _getRefs;
     private IRevisionGridFilter? _revisionGridFilter;
     private bool _isApplyingFilter;
     private bool _filterBeingChanged;
+    private Func<RefsFilter, IReadOnlyList<IGitRef>>? _getRefs;
     private bool _updatingSuggestions;
     private string _advancedFilterToolTip = string.Empty;
     private string? _tslblRevisionFilterToolTip;
@@ -111,150 +111,11 @@ public sealed partial class FilterToolBar : TranslatedControl
     private IRevisionGridFilter RevisionGridFilter
         => _revisionGridFilter ?? throw new InvalidOperationException($"{nameof(Bind)} is not called.");
 
-    public void Bind(Func<IGitModule> getModule, IRevisionGridFilter revisionGridFilter)
-    {
-        ArgumentNullException.ThrowIfNull(getModule);
-        ArgumentNullException.ThrowIfNull(revisionGridFilter);
-        if (_revisionGridFilter is not null)
-        {
-            throw new InvalidOperationException($"{nameof(Bind)} must be invoked only once.");
-        }
-
-        _getModule = getModule;
-        _revisionGridFilter = revisionGridFilter;
-        revisionGridFilter.FilterChanged += RevisionGridFilterChanged;
-    }
-
-    public void ClearQuickFilters()
-    {
-        tscboBranchFilter.Text = string.Empty;
-        tstxtRevisionFilter.Text = string.Empty;
-    }
-
-    /// <summary>
-    ///  Sets the branches filter without checking that the supplied refs exist.
-    /// </summary>
-    public void SetBranchFilter(string? filter)
-    {
-        tscboBranchFilter.Text = filter;
-        ApplyCustomBranchFilter(checkBranch: false);
-    }
-
-    public void RefreshRevisionFunction(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-    {
-        _getRefs = getRefs ?? throw new ArgumentNullException(nameof(getRefs));
-        tscboBranchFilter.ItemsSource = Array.Empty<string>();
-    }
-
-    /// <summary>
-    /// Sets and applies the text revision filter, matching the WinForms toolbar contract.
-    /// </summary>
-    public void SetRevisionFilter(string? filter)
-    {
-        if (string.IsNullOrEmpty(tstxtRevisionFilter.Text) && string.IsNullOrEmpty(filter))
-        {
-            return;
-        }
-
-        tstxtRevisionFilter.Text = filter;
-        ApplyRevisionFilter();
-    }
-
-    /// <summary>Alternates focus between the revision and branch quick filters.</summary>
-    public void SetFocus()
-    {
-        if (tstxtRevisionFilter.IsFocused)
-        {
-            tscboBranchFilter.Focus();
-        }
-        else
-        {
-            tstxtRevisionFilter.Focus();
-        }
-    }
-
-    internal void RefreshBrowseDialogShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
-    {
-        _tslblRevisionFilterToolTip ??= ToolTip.GetTip(tslblRevisionFilter)?.ToString() ?? string.Empty;
-        ToolTip.SetTip(
-            tslblRevisionFilter,
-            _tslblRevisionFilterToolTip.UpdateSuffix(hotkeys.GetShortcutToolTip(FormBrowse.Command.FocusFilter)));
-    }
-
-    internal void RefreshRevisionGridShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
-    {
-        ToolTip.SetTip(
-            tsbShowReflog,
-            TranslatedStrings.ShowReflogTooltip.UpdateSuffix(
-                hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowReflogReferences)));
-        ToolTip.SetTip(
-            tsmiShowOnlyFirstParent,
-            TranslatedStrings.ShowOnlyFirstParent.UpdateSuffix(
-                hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowCurrentBranchOnly)));
-
-        SetInputGesture(tsmiShowBranchesAll, hotkeys, RevisionGridControl.Command.ShowAllBranches);
-        SetInputGesture(tsmiShowBranchesFiltered, hotkeys, RevisionGridControl.Command.ShowFilteredBranches);
-        SetInputGesture(tsmiShowBranchesCurrent, hotkeys, RevisionGridControl.Command.ShowCurrentBranchOnly);
-        SetInputGesture(tsmiResetPathFilters, hotkeys, RevisionGridControl.Command.ResetRevisionPathFilter);
-        SetInputGesture(tsmiResetAllFilters, hotkeys, RevisionGridControl.Command.ResetRevisionFilter);
-        SetInputGesture(tsmiAdvancedFilter, hotkeys, RevisionGridControl.Command.RevisionFilter);
-    }
-
-    private static void SetInputGesture(
-        MenuItem menuItem,
-        IReadOnlyList<HotkeyCommand> hotkeys,
-        RevisionGridControl.Command command)
-    {
-        WinFormsShims.Keys keys = hotkeys.FirstOrDefault(hotkey => hotkey.CommandCode == (int)command)?.KeyData
-            ?? WinFormsShims.Keys.None;
-        menuItem.InputGesture = KeysMapper.ToKeyGesture(keys);
-    }
-
-    private IGitModule GetModule()
-    {
-        if (_getModule is null)
-        {
-            throw new InvalidOperationException($"{nameof(Bind)} is not called.");
-        }
-
-        return _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-    }
-
     private void ApplyPresetBranchesFilter(Action filterAction)
     {
         _filterBeingChanged = true;
         filterAction();
         _filterBeingChanged = false;
-    }
-
-    private void BranchFilterKeyUp(object? sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            ApplyCustomBranchFilter();
-        }
-    }
-
-    private void RevisionFilterKeyUp(object? sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            ApplyRevisionFilter();
-        }
-    }
-
-    private void BranchFilterPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.Property != ComboBox.TextProperty || _isApplyingFilter || _updatingSuggestions)
-        {
-            return;
-        }
-
-        _filterBeingChanged = true;
-        if (tscboBranchFilter.IsDropDownOpen)
-        {
-            UpdateBranchFilterItems();
-        }
     }
 
     private void ApplyCustomBranchFilter(bool checkBranch = true)
@@ -299,28 +160,6 @@ public sealed partial class FilterToolBar : TranslatedControl
         }
     }
 
-    private bool IsValidBranchFilter(string branch, IReadOnlyList<IGitRef> refs)
-    {
-        bool isExpression = branch.StartsWith("--", StringComparison.Ordinal)
-                            || branch.Contains("..", StringComparison.Ordinal)
-                            || branch.IndexOfAny(Delimiters.WildcardBranchSearchValues) >= 0;
-        if (isExpression || refs.Any(gitRef => gitRef.LocalName == branch))
-        {
-            return true;
-        }
-
-        string gitRef = branch.StartsWith('^') ? branch[1..] : branch;
-        return !GetModule().RevParse(gitRef).IsZero;
-    }
-
-    private void ApplyRevisionFilterIfPopulated()
-    {
-        if (!string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
-        {
-            ApplyRevisionFilter();
-        }
-    }
-
     private void ApplyRevisionFilter()
     {
         if (_isApplyingFilter)
@@ -344,8 +183,117 @@ public sealed partial class FilterToolBar : TranslatedControl
         }
     }
 
-    private IReadOnlyList<IGitRef> GetRefs(RefsFilter filter)
-        => _getRefs?.Invoke(filter) ?? GetModule().GetRefs(filter);
+    public void Bind(Func<IGitModule> getModule, IRevisionGridFilter revisionGridFilter)
+    {
+        ArgumentNullException.ThrowIfNull(getModule);
+        ArgumentNullException.ThrowIfNull(revisionGridFilter);
+        if (_revisionGridFilter is not null)
+        {
+            throw new InvalidOperationException($"{nameof(Bind)} must be invoked only once.");
+        }
+
+        _getModule = getModule;
+        _revisionGridFilter = revisionGridFilter;
+        revisionGridFilter.FilterChanged += RevisionGridFilterChanged;
+    }
+
+    public void ClearQuickFilters()
+    {
+        tscboBranchFilter.Text = string.Empty;
+        tstxtRevisionFilter.Text = string.Empty;
+    }
+
+    private IGitModule GetModule()
+    {
+        if (_getModule is null)
+        {
+            throw new InvalidOperationException($"{nameof(Bind)} is not called.");
+        }
+
+        return _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+    }
+
+    /// <summary>
+    ///  Sets the branches filter without checking that the supplied refs exist.
+    /// </summary>
+    public void SetBranchFilter(string? filter)
+    {
+        tscboBranchFilter.Text = filter;
+        ApplyCustomBranchFilter(checkBranch: false);
+    }
+
+    /// <summary>Alternates focus between the revision and branch quick filters.</summary>
+    public void SetFocus()
+    {
+        if (tstxtRevisionFilter.IsFocused)
+        {
+            tscboBranchFilter.Focus();
+        }
+        else
+        {
+            tstxtRevisionFilter.Focus();
+        }
+    }
+
+    private static void SetInputGesture(
+        MenuItem menuItem,
+        IReadOnlyList<HotkeyCommand> hotkeys,
+        RevisionGridControl.Command command)
+    {
+        WinFormsShims.Keys keys = hotkeys.FirstOrDefault(hotkey => hotkey.CommandCode == (int)command)?.KeyData
+            ?? WinFormsShims.Keys.None;
+        menuItem.InputGesture = KeysMapper.ToKeyGesture(keys);
+    }
+
+    /// <summary>
+    /// Sets and applies the text revision filter, matching the WinForms toolbar contract.
+    /// </summary>
+    public void SetRevisionFilter(string? filter)
+    {
+        if (string.IsNullOrEmpty(tstxtRevisionFilter.Text) && string.IsNullOrEmpty(filter))
+        {
+            return;
+        }
+
+        tstxtRevisionFilter.Text = filter;
+        ApplyRevisionFilter();
+    }
+
+    public void RefreshRevisionFunction(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    {
+        _getRefs = getRefs ?? throw new ArgumentNullException(nameof(getRefs));
+        tscboBranchFilter.ItemsSource = Array.Empty<string>();
+    }
+
+    private void BranchFilterKeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            ApplyCustomBranchFilter();
+        }
+    }
+
+    private void RevisionFilterKeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            ApplyRevisionFilter();
+        }
+    }
+
+    private void BranchFilterPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property != ComboBox.TextProperty || _isApplyingFilter || _updatingSuggestions)
+        {
+            return;
+        }
+
+        _filterBeingChanged = true;
+        if (tscboBranchFilter.IsDropDownOpen)
+        {
+            UpdateBranchFilterItems();
+        }
+    }
 
     private void UpdateBranchFilterItems()
     {
@@ -381,6 +329,46 @@ public sealed partial class FilterToolBar : TranslatedControl
             _updatingSuggestions = false;
         }
     }
+
+    private bool IsValidBranchFilter(string branch, IReadOnlyList<IGitRef> refs)
+    {
+        bool isExpression = branch.StartsWith("--", StringComparison.Ordinal)
+                            || branch.Contains("..", StringComparison.Ordinal)
+                            || branch.IndexOfAny(Delimiters.WildcardBranchSearchValues) >= 0;
+        if (isExpression || refs.Any(gitRef => gitRef.LocalName == branch))
+        {
+            return true;
+        }
+
+        string gitRef = branch.StartsWith('^') ? branch[1..] : branch;
+        return !GetModule().RevParse(gitRef).IsZero;
+    }
+
+    private void ApplyRevisionFilterIfPopulated()
+    {
+        if (!string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
+        {
+            ApplyRevisionFilter();
+        }
+    }
+
+    private void tsbtnAdvancedFilter_ButtonClick(object? sender, EventArgs e)
+    {
+        if (!tsmiResetAllFilters.IsEnabled)
+        {
+            RevisionGridFilter.ShowRevisionFilterDialog();
+        }
+        else
+        {
+            tsbtnAdvancedFilter.Flyout?.ShowAt(tsbtnAdvancedFilter);
+        }
+    }
+
+    private IReadOnlyList<IGitRef> GetRefs(RefsFilter filter)
+        => _getRefs?.Invoke(filter) ?? GetModule().GetRefs(filter);
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
 
     private void ShowInvalidReference(string branch)
     {
@@ -494,16 +482,12 @@ public sealed partial class FilterToolBar : TranslatedControl
         ToolTip.SetTip(tssbtnShowBranches, ToolTip.GetTip(source));
     }
 
-    private void tsbtnAdvancedFilter_ButtonClick(object? sender, EventArgs e)
+    internal void RefreshBrowseDialogShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
     {
-        if (!tsmiResetAllFilters.IsEnabled)
-        {
-            RevisionGridFilter.ShowRevisionFilterDialog();
-        }
-        else
-        {
-            tsbtnAdvancedFilter.Flyout?.ShowAt(tsbtnAdvancedFilter);
-        }
+        _tslblRevisionFilterToolTip ??= ToolTip.GetTip(tslblRevisionFilter)?.ToString() ?? string.Empty;
+        ToolTip.SetTip(
+            tslblRevisionFilter,
+            _tslblRevisionFilterToolTip.UpdateSuffix(hotkeys.GetShortcutToolTip(FormBrowse.Command.FocusFilter)));
     }
 
     public override void AddTranslationItems(ITranslation translation)
@@ -544,8 +528,24 @@ public sealed partial class FilterToolBar : TranslatedControl
         }
     }
 
-    internal TestAccessor GetTestAccessor()
-        => new(this);
+    internal void RefreshRevisionGridShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
+    {
+        ToolTip.SetTip(
+            tsbShowReflog,
+            TranslatedStrings.ShowReflogTooltip.UpdateSuffix(
+                hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowReflogReferences)));
+        ToolTip.SetTip(
+            tsmiShowOnlyFirstParent,
+            TranslatedStrings.ShowOnlyFirstParent.UpdateSuffix(
+                hotkeys.GetShortcutToolTip(RevisionGridControl.Command.ShowCurrentBranchOnly)));
+
+        SetInputGesture(tsmiShowBranchesAll, hotkeys, RevisionGridControl.Command.ShowAllBranches);
+        SetInputGesture(tsmiShowBranchesFiltered, hotkeys, RevisionGridControl.Command.ShowFilteredBranches);
+        SetInputGesture(tsmiShowBranchesCurrent, hotkeys, RevisionGridControl.Command.ShowCurrentBranchOnly);
+        SetInputGesture(tsmiResetPathFilters, hotkeys, RevisionGridControl.Command.ResetRevisionPathFilter);
+        SetInputGesture(tsmiResetAllFilters, hotkeys, RevisionGridControl.Command.ResetRevisionFilter);
+        SetInputGesture(tsmiAdvancedFilter, hotkeys, RevisionGridControl.Command.RevisionFilter);
+    }
 
     internal readonly struct TestAccessor
     {

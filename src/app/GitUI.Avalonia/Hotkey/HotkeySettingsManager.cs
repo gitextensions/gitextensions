@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
 using GitUI.CommandsDialogs;
@@ -54,13 +54,6 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
     }
 
     public bool IsUniqueKey(WinFormsShims.Keys keyData) => _usedKeys.Contains(keyData);
-
-    public IReadOnlyList<HotkeyCommand> LoadHotkeys(string hotkeySettingsName)
-    {
-        HotkeySettings? settings = LoadSettings()
-            .FirstOrDefault(candidate => candidate.Name == hotkeySettingsName);
-        return settings?.Commands ?? [];
-    }
 
     public IReadOnlyList<HotkeySettings> LoadSettings()
     {
@@ -128,6 +121,9 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
         }
     }
 
+    public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
+        => CreateDefaultSettingsCore(_scriptsManager);
+
     private static Dictionary<string, HotkeyCommand> CreateCommandLookup(IEnumerable<HotkeySettings> settings)
     {
         Dictionary<string, HotkeyCommand> commands = [];
@@ -168,8 +164,12 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
     private static string CalcDictionaryKey(string settingName, int commandCode)
         => settingName + ":" + commandCode;
 
-    public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
-        => CreateDefaultSettingsCore(_scriptsManager);
+    public IReadOnlyList<HotkeyCommand> LoadHotkeys(string hotkeySettingsName)
+    {
+        HotkeySettings? settings = LoadSettings()
+            .FirstOrDefault(candidate => candidate.Name == hotkeySettingsName);
+        return settings?.Commands ?? [];
+    }
 
     internal static IReadOnlyList<HotkeySettings> CreateDefaultSettingsCore(IScriptsManager? scriptsManager)
     {

@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
+  "analyzedCommit": "499883514178c69e62960876fa0668e7e2ed011d",
   "axisOrder": [
     "structural",
     "functional",
@@ -806,14 +806,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Avatars.AvatarService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Avatars.AvatarService.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 13,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 14,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 14 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -1261,14 +1262,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Avatars.GravatarProvider.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Avatars.GravatarProvider.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 24,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 10,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 10 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -1654,14 +1656,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Avatars.InitialsAvatarProvider.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Avatars.InitialsAvatarProvider.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 34,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 15,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 15 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -1979,14 +1982,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.BuildServerIntegration.BuildServerWatcher.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.BuildServerIntegration.BuildServerWatcher.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 50,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 31,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 31 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -2109,14 +2113,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.BrowseDialog.DashboardControl.Dashboard.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 47,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 58,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 58 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -3093,14 +3098,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.BrowseDialog.FormRecentReposSettings.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.BrowseDialog.FormRecentReposSettings.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 116,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 95,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 95 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -3223,14 +3229,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.BrowseDialog.FormUpdates.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.BrowseDialog.FormUpdates.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 73,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 56,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 56 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -3353,14 +3360,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.BrowseDialog.GitStatusMonitor.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.BrowseDialog.GitStatusMonitor.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 81,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 87,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 87 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -3898,14 +3906,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.BuildReportTabPageExtension.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.BuildReportTabPageExtension.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 33,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 29,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 29 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -4807,14 +4816,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-11",
-          "commit": "a03e46d51d91b7635020463adbbcac5e1c45ed2c",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6e/e1/functional-findings.after.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 563,
-          "note": "The current inventory retains framework, partial-file, and member representation differences; P8.6h owns whole-FormBrowse structural closure."
+          "findingCount": 701,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 701 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -5353,14 +5363,17 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.CommitKindExtensions.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.CommitKindExtensions.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormCommit.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormCommit.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 379,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 352,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 352 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "verified",
@@ -6102,14 +6115,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormFileHistory.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormFileHistory.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 172,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 132,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 132 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -7226,14 +7240,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormPull.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormPull.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 184,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 151,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 151 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -7291,14 +7306,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormPush.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormPush.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 218,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 212,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 212 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -7356,14 +7372,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormRebase.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormRebase.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 140,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 89,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 89 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -7421,14 +7438,17 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormReflog.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormReflog.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.RefLine.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.RefLine.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 91,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 66,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 66 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -7746,14 +7766,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormResolveConflicts.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormResolveConflicts.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 253,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 69,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 69 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -8054,14 +8075,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormStash.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormStash.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 83,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 69,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 69 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -8249,14 +8271,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 165,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 153,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 153 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -9082,14 +9105,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.Menus.HelpToolStripMenuItem.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.Menus.HelpToolStripMenuItem.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 35,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 24,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 24 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -9537,14 +9561,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.Menus.WorkingDirectoryToolStripSplitButton.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.Menus.WorkingDirectoryToolStripSplitButton.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 61,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 86,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 86 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -9953,14 +9978,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.RevisionDiffControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.RevisionDiffControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 86,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 120,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 120 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -10682,14 +10708,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.CheckSettingsLogic.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.CheckSettingsLogic.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 20,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 12,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 12 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -10747,14 +10774,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.CommonLogic.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.CommonLogic.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 17,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 6,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 6 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -11072,14 +11100,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.FormAvailableEncodings.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.FormAvailableEncodings.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 45,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 34,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 34 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -11267,14 +11296,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.GroupSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.GroupSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 13,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 2,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 2 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -11397,14 +11427,17 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.ISettingsPageHost.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.ISettingsPageHost.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.SettingsPageHostMock.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.SettingsPageHostMock.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 2,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 3,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 3 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -11657,14 +11690,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.AppearanceFontsSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.AppearanceFontsSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 61,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 28,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 28 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -11787,14 +11821,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.AppearanceSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.AppearanceSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 97,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 64,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 64 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -12079,14 +12114,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-24",
-          "commit": "44be19077fcf09f3eafadb9c15b50d8bad1ccd99",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/settings-shell-27/final/inventory/ChecklistSettingsPage"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.ChecklistSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 202,
-          "note": "The refreshed inventory reports 202 source/comment/member findings; exact structural closure remains open in P8.6i."
+          "findingCount": 49,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 49 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "partial",
@@ -12631,14 +12667,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.ConsoleStyleSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.ConsoleStyleSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 34,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 15,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 15 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -13021,14 +13058,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.DiffViewerSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.DiffViewerSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 63,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 26,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 26 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -13151,14 +13189,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.FormFixHome.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.FormFixHome.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 48,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 57,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 57 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -13281,14 +13320,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.GeneralSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.GeneralSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 78,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 33,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 33 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -13541,14 +13581,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 114,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 80,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 80 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -14126,14 +14167,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.RevisionLinksSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.RevisionLinksSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 147,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 100,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 100 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -14321,14 +14363,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.ScriptsSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.ScriptsSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 96,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 128,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 128 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -14451,14 +14494,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.SortingSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.SortingSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 50,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 29,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 29 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -14581,14 +14625,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.SshSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.SshSettingsPage.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 54,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 41,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 41 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -16402,14 +16447,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.WorktreeDialog.FormCreateWorktree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.WorktreeDialog.FormCreateWorktree.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 47,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 27,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 27 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -17144,14 +17190,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Editor.BlameAuthorMargin.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Editor.BlameAuthorMargin.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 64,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 56,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 56 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -17474,14 +17521,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Editor.Diff.DiffHighlightService.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Editor.Diff.DiffHighlightService.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 45,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 10,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 10 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -18896,14 +18944,23 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.FindAndReplaceForm.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.FindAndReplaceForm.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Globals.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Globals.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.HighlightGroup.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.HighlightGroup.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.TextEditorSearcher.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.TextEditorSearcher.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.TextRange.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.TextRange.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 116,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 87,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 87 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -19286,14 +19343,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Editor.GitHighlightingStrategyBase.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Editor.GitHighlightingStrategyBase.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 29,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 11,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 11 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -19939,14 +19997,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.GitModuleControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.GitModuleControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 30,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 17,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 17 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -20004,14 +20063,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.GitModuleForm.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.GitModuleForm.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 32,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 20,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 20 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -20069,14 +20129,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.GitUICommands.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.GitUICommands.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 241,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 93,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 93 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -20914,14 +20975,17 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-26",
-          "commit": "159741aa5093b520ec734fd755b218d921fbc79c",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/HotkeySettingsManager.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Hotkey.HotkeySettingsManager.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Hotkey.HotkeySettingsManager.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Hotkey.IHotkeySettingsManager.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Hotkey.IHotkeySettingsManager.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 21,
-          "note": "The current source inventory retains 21 classified source-shape findings; restoring current defaults does not claim structural parity."
+          "findingCount": 17,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 17 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "partial",
@@ -21244,14 +21308,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.BaseRevisionNode.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.BaseRevisionNode.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 27,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 15,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 15 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -22414,14 +22479,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.LocalBranchNode.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.LocalBranchNode.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 22,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 6,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 6 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -22544,14 +22610,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.Node.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.Node.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 35,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 16,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 16 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -22804,14 +22871,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.RemoteBranchNode.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.RemoteBranchNode.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 29,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 3,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 3 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -22999,14 +23067,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.RemoteRepoNode.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.RemoteRepoNode.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 31,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 11,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 11 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -23259,14 +23328,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 234,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 396,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 396 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -23324,14 +23394,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.StashNode.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.StashNode.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 19,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 5,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 5 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -23584,14 +23655,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.SubmoduleTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.SubmoduleTree.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 47,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 75,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 75 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -23649,14 +23721,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.TagNode.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.TagNode.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 17,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 3,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 3 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -23909,14 +23982,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.LeftPanel.WorktreeTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.LeftPanel.WorktreeTree.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 20,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 19,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 19 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -23974,14 +24048,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.MessageBoxes.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.MessageBoxes.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 95,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 33,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 33 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -24701,14 +24776,17 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.IRepositoryCurrentBranchNameCache.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.IRepositoryCurrentBranchNameCache.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.RepositoryCurrentBranchNameCache.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.RepositoryCurrentBranchNameCache.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 15,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 8,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 8 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -27397,14 +27475,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.SpellChecker.EditNetSpell.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.SpellChecker.EditNetSpell.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 144,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 151,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 151 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "verified",
@@ -28514,14 +28593,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.AvatarControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.AvatarControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 34,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 28,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 28 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -28579,14 +28659,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Blame.BlameControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Blame.BlameControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 106,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 77,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 77 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -28644,14 +28725,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-21",
-          "commit": "65219315bbf009c79d57e1599137a5c355d7358f",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/branch-operations-22/inventory-final/BranchComboBox.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.BranchComboBox.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.BranchComboBox.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 14,
-          "note": "The refreshed inventory retains 14 member-shape findings after restoring the original native-96 child geometry."
+          "findingCount": 10,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 10 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -30579,14 +30661,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.UserControls.FilterToolBar.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.UserControls.FilterToolBar.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 122,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 178,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 178 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -30791,14 +30874,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.UserControls.GotoUserManualControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.UserControls.GotoUserManualControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 22,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 12,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 12 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -30856,14 +30940,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.Help.HelpImageDisplayUserControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.Help.HelpImageDisplayUserControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 46,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 56,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 56 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -31551,14 +31636,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.PatchGrid.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.PatchGrid.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 43,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 35,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 35 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -31681,14 +31767,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.UserControls.RemotesComboboxControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.UserControls.RemotesComboboxControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 16,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 8,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 8 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -32145,14 +32232,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.UserControls.RevisionGrid.Columns.ColumnProvider.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.UserControls.RevisionGrid.Columns.ColumnProvider.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 25,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 16,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 16 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -32210,14 +32298,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.UserControls.RevisionGrid.Columns.CommitIdColumnProvider.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.UserControls.RevisionGrid.Columns.CommitIdColumnProvider.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 22,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 16,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 16 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -32340,15 +32429,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-13",
-          "commit": "5cc38246d3de096766f895cb7d73b0412fa93b9e",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/MessageColumnProvider.json",
-            "eng/avalonia/parity-evidence/P8.6h/h3b2b2/final/inventory-classification.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.UserControls.RevisionGrid.Columns.MessageColumnProvider.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 84,
-          "note": "P8.6h.3b.2b.2a classifies all 84 findings as the explicit native Avalonia virtualized-cell representation of the original DataGridView/GDI painting boundary. They remain structural gaps rather than being suppressed or misreported as product behavior gaps."
+          "findingCount": 77,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 77 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "partial",
@@ -33729,14 +33818,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.UserControls.RevisionGrid.Graph.RevisionGraphLaneColor.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.UserControls.RevisionGrid.Graph.RevisionGraphLaneColor.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 21,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 10,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 10 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -35869,14 +35959,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-17",
-          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/GitExtensionsControl.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/ResourceManager.GitExtensionsControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/ResourceManager.GitExtensionsControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 26,
-          "note": "The current source inventory retains 26 classified source-shape findings; this narrow input correction does not claim structural parity."
+          "findingCount": 23,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 23 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "partial",
@@ -35939,14 +36030,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-17",
-          "commit": "9dbe923f2a0f6410e9cde62b6abd9f108a1e9ab3",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/PR-feedback/unmapped-shortcuts/inventory/GitExtensionsFormBase.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/ResourceManager.GitExtensionsFormBase.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/ResourceManager.GitExtensionsFormBase.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 43,
-          "note": "The current source inventory retains 43 classified source-shape findings; this narrow input correction does not claim structural parity."
+          "findingCount": 45,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 45 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "partial",
@@ -37835,14 +37927,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitExtensions.Plugins.ReleaseNotesGenerator.ReleaseNotesGeneratorForm.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitExtensions.Plugins.ReleaseNotesGenerator.ReleaseNotesGeneratorForm.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 88,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 38,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 38 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -38095,14 +38188,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitExtensions.Plugins.GitImpact.ImpactControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitExtensions.Plugins.GitImpact.ImpactControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 76,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 71,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 71 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -38355,14 +38449,15 @@
       "axes": {
         "structural": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records zero ordinary findings for this mapping; the existing axis status is retained because declaration placement alone does not close unexercised parity axes."
         },
         "functional": {
           "status": "unverified",
@@ -38420,14 +38515,15 @@
       "axes": {
         "structural": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records zero ordinary findings for this mapping; the existing axis status is retained because declaration placement alone does not close unexercised parity axes."
         },
         "functional": {
           "status": "unverified",
@@ -38485,14 +38581,15 @@
       "axes": {
         "structural": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records zero ordinary findings for this mapping; the existing axis status is retained because declaration placement alone does not close unexercised parity axes."
         },
         "functional": {
           "status": "unverified",
@@ -38550,14 +38647,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitExtensions.Plugins.GitStatistics.PieChart.PieChart3D.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitExtensions.Plugins.GitStatistics.PieChart.PieChart3D.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 94,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 150,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 150 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -38615,14 +38713,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 57,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 52,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 52 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
         },
         "functional": {
           "status": "gap",
@@ -38680,14 +38779,15 @@
       "axes": {
         "structural": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records zero ordinary findings for this mapping; the existing axis status is retained because declaration placement alone does not close unexercised parity axes."
         },
         "functional": {
           "status": "unverified",
@@ -38745,14 +38845,15 @@
       "axes": {
         "structural": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/functional-findings.json"
           ],
           "platforms": [],
           "findingCount": 0,
-          "note": "This mapping could not be represented by the class-oriented P0.4 inventory."
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records zero ordinary findings for this mapping; the existing axis status is retained because declaration placement alone does not close unexercised parity axes."
         },
         "functional": {
           "status": "unverified",
@@ -40036,7 +40137,18 @@
       "twin": "src/app/GitUI.Avalonia/CommandsDialogs/SettingsDialog/Pages/ShellExtensionSettingsPage.axaml.cs",
       "complete": false,
       "axes": {
-        "structural": { "status": "gap", "verifiedOn": "2026-08-24", "commit": "d210eb209a335568dbae7ff0d26bd2cc3f4c6228", "evidence": ["eng/avalonia/parity-evidence/P8.6i/settings-pages-28/inventory/ShellExtensionSettingsPage.functional-findings.json"], "platforms": [], "findingCount": 100, "note": "The refreshed inventory retains 100 exact source/member/comment findings." },
+        "structural": {
+          "status": "gap",
+          "verifiedOn": "2026-08-27",
+          "commit": "499883514178c69e62960876fa0668e7e2ed011d",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/windows/types/GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-64/sweep/linux/types/GitUI.CommandsDialogs.SettingsDialog.Pages.ShellExtensionSettingsPage.functional-findings.json"
+          ],
+          "platforms": [],
+          "findingCount": 30,
+          "note": "P8.6i progress 64 restores exact common-member order for every safely movable declaration in this twin. The byte-identical Windows/Linux schema-v4 inventory records 30 ordinary findings for this mapping; cross-part or preprocessor-guarded order and every other reported structural difference remain open."
+        },
         "functional": { "status": "partial", "verifiedOn": "2026-08-24", "commit": "d210eb209a335568dbae7ff0d26bd2cc3f4c6228", "evidence": ["eng/avalonia/parity-evidence/P8.6i/settings-pages-28/inventory/ShellExtensionSettingsPage.functional-findings.json", "eng/avalonia/parity-evidence/P8.6i/settings-pages-28/tests/windows/focused.trx", "eng/avalonia/parity-evidence/P8.6i/settings-pages-28/tests/linux/focused.trx"], "platforms": ["windows", "linux"], "findingCount": 100, "note": "Focused behavior and source-authored native-96 geometry pass without the substitute scroll host; remaining inventory and exhaustive shell-extension actions stay open." },
         "visual": { "status": "partial", "verifiedOn": "2026-08-24", "commit": "d210eb209a335568dbae7ff0d26bd2cc3f4c6228", "evidence": ["eng/avalonia/parity-evidence/P8.6i/settings-pages-28/final/winforms", "eng/avalonia/parity-evidence/P8.6i/settings-pages-28/final/avalonia-refresh", "eng/avalonia/parity-evidence/P8.6i/settings-pages-28/final/diff-refresh/findings.json"], "platforms": ["windows"], "findingCount": 2099, "note": "All 12 native-100 states are paired across three themes; 36 higher-scale embedded-page references are explicitly unsupported and 2099 diagnostics remain open." },
         "themingAndColor": { "status": "partial", "verifiedOn": "2026-08-24", "commit": "d210eb209a335568dbae7ff0d26bd2cc3f4c6228", "evidence": ["eng/avalonia/parity-evidence/P8.6i/settings-pages-28/final/diff-refresh/findings.json"], "platforms": ["windows"], "findingCount": 434, "note": "Resolved light, dark, and custom colors are recorded exactly; 434 color diagnostics remain open." },

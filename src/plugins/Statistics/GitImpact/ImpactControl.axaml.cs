@@ -15,17 +15,41 @@ namespace GitExtensions.Plugins.GitImpact;
 
 public partial class ImpactControl : UserControl, IDisposable
 {
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        ImpactLoader? impactLoader;
+        lock (_dataLock)
+        {
+            impactLoader = _impactLoader;
+            _impactLoader = null;
+        }
+
+        impactLoader?.Dispose();
+        lock (_dataLock)
+        {
+            _brushes.Clear();
+            ClearPaths();
+        }
+    }
+
     private const double BlockWidth = 60;
+
     private const double BlockHalfWidth = BlockWidth / 2;
     private const double TransitionWidth = 50;
     private const double TransitionHalfWidth = TransitionWidth / 2;
     private const double LinesFontSize = 10 * 96d / 72d;
-    private const double WeekFontSize = 8 * 96d / 72d;
     private const double ScrollBarHeight = 16;
     private const double WheelScrollDistance = 120;
     private const double DarkBackgroundLuminanceThreshold = 0.35;
     private const double DarkAuthorLuminanceThreshold = 0.25;
     private const double DarkAuthorLighteningFactor = 0.35;
+    private const double WeekFontSize = 8 * 96d / 72d;
 
     private readonly Lock _dataLock = new();
 
@@ -49,15 +73,15 @@ public partial class ImpactControl : UserControl, IDisposable
     // The changed-lines-labels for each author
     private readonly Dictionary<string, List<(AvaloniaPoint point, string changeCount)>> _lineLabels = [];
 
-    // The week-labels
-    private readonly List<(AvaloniaPoint point, string date)> _weekLabels = [];
-
     private readonly AvaloniaFontFamily _fontFamily = new("Arial");
     private bool _disposed;
 
-    public string SelectedAuthor { get; private set; } = string.Empty;
+    // The week-labels
+    private readonly List<(AvaloniaPoint point, string date)> _weekLabels = [];
 
     public event EventHandler? Invalidated;
+
+    public string SelectedAuthor { get; private set; } = string.Empty;
 
     public ImpactControl()
     {
@@ -97,11 +121,6 @@ public partial class ImpactControl : UserControl, IDisposable
         }
     }
 
-    public void Stop()
-    {
-        _impactLoader?.Stop();
-    }
-
     private void ImpactControl_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         _scrollBar.Value = Math.Min(
@@ -111,6 +130,11 @@ public partial class ImpactControl : UserControl, IDisposable
         // Redraw when we've scrolled
         InvalidateVisual();
         e.Handled = true;
+    }
+
+    public void Stop()
+    {
+        _impactLoader?.Stop();
     }
 
     private void OnImpactUpdate(IList<ImpactLoader.Commit> commits)
@@ -197,21 +221,6 @@ public partial class ImpactControl : UserControl, IDisposable
     }
 
     private double GetGraphWidth() => Math.Max(0, (_impact.Count * (BlockWidth + TransitionWidth)) - TransitionWidth);
-
-    private void UpdateScrollbar()
-    {
-        double rightValue = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - _scrollBar.Value);
-
-        _scrollBar.Minimum = 0;
-        _scrollBar.Maximum = Math.Max(0, GetGraphWidth() - Bounds.Width) * 1.1;
-        _scrollBar.SmallChange = _scrollBar.Maximum / 22;
-        _scrollBar.LargeChange = _scrollBar.Maximum / 11;
-
-        _scrollBar.Value = Math.Clamp(
-            _scrollBar.Maximum - _scrollBar.LargeChange - rightValue,
-            _scrollBar.Minimum,
-            _scrollBar.Maximum);
-    }
 
     public override void Render(DrawingContext context)
     {
@@ -305,6 +314,77 @@ public partial class ImpactControl : UserControl, IDisposable
         UpdatePathsAndLabels();
         UpdateScrollbar();
         InvalidateVisual();
+    }
+
+    private void UpdateScrollbar()
+    {
+        double rightValue = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - _scrollBar.Value);
+
+        _scrollBar.Minimum = 0;
+        _scrollBar.Maximum = Math.Max(0, GetGraphWidth() - Bounds.Width) * 1.1;
+        _scrollBar.SmallChange = _scrollBar.Maximum / 22;
+        _scrollBar.LargeChange = _scrollBar.Maximum / 11;
+
+        _scrollBar.Value = Math.Clamp(
+            _scrollBar.Maximum - _scrollBar.LargeChange - rightValue,
+            _scrollBar.Minimum,
+            _scrollBar.Maximum);
+    }
+
+    private static StreamGeometry CreateAuthorPath(List<(Rect rectangle, int changeCount)> points)
+    {
+        StreamGeometry authorPath = new();
+        using StreamGeometryContext path = authorPath.Open();
+
+        (Rect firstRect, int _) = points[0];
+
+        // Left border
+        path.BeginFigure(new AvaloniaPoint(firstRect.Left, firstRect.Bottom), isFilled: true);
+        path.LineTo(new AvaloniaPoint(firstRect.Left, firstRect.Top));
+
+        // Top borders
+        for (int i = 0; i < points.Count; i++)
+        {
+            (Rect rectangle, int _) = points[i];
+
+            path.LineTo(new AvaloniaPoint(rectangle.Right, rectangle.Top));
+
+            if (i < points.Count - 1)
+            {
+                (Rect nextRect, int _) = points[i + 1];
+
+                path.CubicBezierTo(
+                    new AvaloniaPoint(rectangle.Right + TransitionHalfWidth, rectangle.Top),
+                    new AvaloniaPoint(rectangle.Right + TransitionHalfWidth, nextRect.Top),
+                    new AvaloniaPoint(nextRect.Left, nextRect.Top));
+            }
+        }
+
+        (Rect lastRect, int _) = points[^1];
+
+        // Right border
+        path.LineTo(new AvaloniaPoint(lastRect.Right, lastRect.Bottom));
+
+        // Bottom borders
+        for (int i = points.Count - 1; i >= 0; i--)
+        {
+            (Rect rectangle, int _) = points[i];
+
+            path.LineTo(new AvaloniaPoint(rectangle.Left, rectangle.Bottom));
+
+            if (i > 0)
+            {
+                (Rect previousRect, int _) = points[i - 1];
+
+                path.CubicBezierTo(
+                    new AvaloniaPoint(rectangle.Left - TransitionHalfWidth, rectangle.Bottom),
+                    new AvaloniaPoint(rectangle.Left - TransitionHalfWidth, previousRect.Bottom),
+                    new AvaloniaPoint(previousRect.Right, previousRect.Bottom));
+            }
+        }
+
+        path.EndFigure(isClosed: true);
+        return authorPath;
     }
 
     private void UpdatePathsAndLabels()
@@ -432,62 +512,6 @@ public partial class ImpactControl : UserControl, IDisposable
         }
     }
 
-    private static StreamGeometry CreateAuthorPath(List<(Rect rectangle, int changeCount)> points)
-    {
-        StreamGeometry authorPath = new();
-        using StreamGeometryContext path = authorPath.Open();
-
-        (Rect firstRect, int _) = points[0];
-
-        // Left border
-        path.BeginFigure(new AvaloniaPoint(firstRect.Left, firstRect.Bottom), isFilled: true);
-        path.LineTo(new AvaloniaPoint(firstRect.Left, firstRect.Top));
-
-        // Top borders
-        for (int i = 0; i < points.Count; i++)
-        {
-            (Rect rectangle, int _) = points[i];
-
-            path.LineTo(new AvaloniaPoint(rectangle.Right, rectangle.Top));
-
-            if (i < points.Count - 1)
-            {
-                (Rect nextRect, int _) = points[i + 1];
-
-                path.CubicBezierTo(
-                    new AvaloniaPoint(rectangle.Right + TransitionHalfWidth, rectangle.Top),
-                    new AvaloniaPoint(rectangle.Right + TransitionHalfWidth, nextRect.Top),
-                    new AvaloniaPoint(nextRect.Left, nextRect.Top));
-            }
-        }
-
-        (Rect lastRect, int _) = points[^1];
-
-        // Right border
-        path.LineTo(new AvaloniaPoint(lastRect.Right, lastRect.Bottom));
-
-        // Bottom borders
-        for (int i = points.Count - 1; i >= 0; i--)
-        {
-            (Rect rectangle, int _) = points[i];
-
-            path.LineTo(new AvaloniaPoint(rectangle.Left, rectangle.Bottom));
-
-            if (i > 0)
-            {
-                (Rect previousRect, int _) = points[i - 1];
-
-                path.CubicBezierTo(
-                    new AvaloniaPoint(rectangle.Left - TransitionHalfWidth, rectangle.Bottom),
-                    new AvaloniaPoint(rectangle.Left - TransitionHalfWidth, previousRect.Bottom),
-                    new AvaloniaPoint(previousRect.Right, previousRect.Bottom));
-            }
-        }
-
-        path.EndFigure(isClosed: true);
-        return authorPath;
-    }
-
     /// <summary>
     /// Determines if the given coordinates are belonging to any author.
     /// </summary>
@@ -543,6 +567,12 @@ public partial class ImpactControl : UserControl, IDisposable
     [Browsable(false)]
     public List<string> Authors => _authorStack;
 
+    public void Invalidate()
+    {
+        InvalidateVisual();
+        Invalidated?.Invoke(this, EventArgs.Empty);
+    }
+
     public ImpactLoader.DataPoint GetAuthorInfo(string author)
     {
         lock (_dataLock)
@@ -553,35 +583,6 @@ public partial class ImpactControl : UserControl, IDisposable
             }
 
             return new ImpactLoader.DataPoint(0, 0, 0);
-        }
-    }
-
-    public void Invalidate()
-    {
-        InvalidateVisual();
-        Invalidated?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void Dispose()
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        _disposed = true;
-        ImpactLoader? impactLoader;
-        lock (_dataLock)
-        {
-            impactLoader = _impactLoader;
-            _impactLoader = null;
-        }
-
-        impactLoader?.Dispose();
-        lock (_dataLock)
-        {
-            _brushes.Clear();
-            ClearPaths();
         }
     }
 

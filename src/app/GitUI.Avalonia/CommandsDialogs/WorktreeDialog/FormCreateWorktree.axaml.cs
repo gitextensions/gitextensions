@@ -131,11 +131,6 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         }
     }
 
-    private void btnCreateWorktree_Click(object? sender, EventArgs e)
-    {
-        CreateWorktree();
-    }
-
     private void txtNewBranchName_Leave(object? sender, EventArgs e)
     {
         NormaliseNewBranchName();
@@ -152,6 +147,11 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         int caretPosition = txtNewBranchName.CaretIndex;
         txtNewBranchName.Text = _branchNameNormaliser.Normalise(branchName, _gitBranchNameOptions);
         txtNewBranchName.CaretIndex = caretPosition;
+    }
+
+    private void btnCreateWorktree_Click(object? sender, EventArgs e)
+    {
+        CreateWorktree();
     }
 
     private void CreateWorktree()

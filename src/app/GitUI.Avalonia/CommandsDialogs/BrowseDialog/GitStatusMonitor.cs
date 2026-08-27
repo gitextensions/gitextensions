@@ -18,24 +18,34 @@ public sealed class GitStatusMonitor : IDisposable
     private const int PeriodicUpdateInterval = 5 * 60 * 1000;
     private const int PeriodicUpdateIntervalWSL = 60 * 1000;
     private const int MaxConsecutiveErrors = 3;
+    private bool _commandIsRunningAndNotCancelled;
+    private int _consecutiveErrorCount;
 
     private readonly FileSystemWatcher _workTreeWatcher = new();
     private readonly FileSystemWatcher _gitDirWatcher = new();
     private readonly DispatcherTimer _timerRefresh;
-    private readonly Lock _statusSequenceLock = new();
-    private readonly CancellationTokenSequence _statusSequence = new();
     private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
-    private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
-    private readonly Func<bool> _isMinimized;
-    private bool _commandIsRunningAndNotCancelled;
-    private int _consecutiveErrorCount;
-    private GitStatusMonitorState _currentStatus;
-    private bool _disposed;
     private bool _isFirstPostRepoChanged;
     private string? _gitPath;
-    private int _nextEarliestTime;
-    private int _nextUpdateTime;
     private string? _submodulesPath;
+    private readonly Lock _statusSequenceLock = new();
+    private readonly CancellationTokenSequence _statusSequence = new();
+    private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
+    private readonly Func<bool> _isMinimized;
+    private bool _disposed;
+    private int _nextUpdateTime;
+    private int _nextEarliestTime;
+    private GitStatusMonitorState _currentStatus;
+
+    public bool Active
+    {
+        get => CurrentStatus != GitStatusMonitorState.Stopped;
+        set => CurrentStatus = value ? GitStatusMonitorState.Running : GitStatusMonitorState.Stopped;
+    }
+
+    public event EventHandler<GitStatusMonitorStateEventArgs>? GitStatusMonitorStateChanged;
+
+    public event EventHandler<GitWorkingDirectoryStatusEventArgs?>? GitWorkingDirectoryStatusChanged;
 
     public GitStatusMonitor(IGitUICommandsSource commandsSource, Func<bool> isMinimized)
     {
@@ -69,16 +79,6 @@ public sealed class GitStatusMonitor : IDisposable
         _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => commandsSource.UICommands.Module);
     }
 
-    public bool Active
-    {
-        get => CurrentStatus != GitStatusMonitorState.Stopped;
-        set => CurrentStatus = value ? GitStatusMonitorState.Running : GitStatusMonitorState.Stopped;
-    }
-
-    public event EventHandler<GitStatusMonitorStateEventArgs>? GitStatusMonitorStateChanged;
-
-    public event EventHandler<GitWorkingDirectoryStatusEventArgs?>? GitWorkingDirectoryStatusChanged;
-
     public void InvalidateGitWorkingDirectoryStatus()
     {
         GitWorkingDirectoryStatusChanged?.Invoke(this, null);
@@ -110,6 +110,26 @@ public sealed class GitStatusMonitor : IDisposable
         _workTreeWatcher.Dispose();
         _gitDirWatcher.Dispose();
         _statusSequence.Dispose();
+    }
+
+    private void EnableRaisingEvents()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        try
+        {
+            _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
+            _gitDirWatcher.EnableRaisingEvents = Directory.Exists(_gitDirWatcher.Path)
+                && !IsSameOrDescendantPath(_gitDirWatcher.Path, _workTreeWatcher.Path);
+        }
+        catch
+        {
+            _workTreeWatcher.EnableRaisingEvents = false;
+            _gitDirWatcher.EnableRaisingEvents = false;
+        }
     }
 
     private GitStatusMonitorState CurrentStatus
@@ -187,26 +207,6 @@ public sealed class GitStatusMonitor : IDisposable
     private IGitModule? Module => UICommandsSource?.UICommands.Module;
 
     private IGitUICommandsSource? UICommandsSource { get; set; }
-
-    private void EnableRaisingEvents()
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        try
-        {
-            _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
-            _gitDirWatcher.EnableRaisingEvents = Directory.Exists(_gitDirWatcher.Path)
-                && !IsSameOrDescendantPath(_gitDirWatcher.Path, _workTreeWatcher.Path);
-        }
-        catch
-        {
-            _workTreeWatcher.EnableRaisingEvents = false;
-            _gitDirWatcher.EnableRaisingEvents = false;
-        }
-    }
 
     private void GitDirChanged(object? sender, FileSystemEventArgs e)
     {
@@ -299,42 +299,6 @@ public sealed class GitStatusMonitor : IDisposable
                 && !relativePath.StartsWith($"..{Path.AltDirectorySeparatorChar}", StringComparison.Ordinal));
     }
 
-    private void ScheduleNextInteractiveTime(int delay = InteractiveUpdateDelay)
-    {
-        lock (_statusSequenceLock)
-        {
-            _statusSequence.CancelCurrent();
-            _commandIsRunningAndNotCancelled = false;
-
-            if (_disposed)
-            {
-                return;
-            }
-
-            int ticks = Environment.TickCount;
-            _nextEarliestTime = ticks + MinUpdateInterval;
-            int currentDelay = _nextUpdateTime - ticks;
-            if (delay < currentDelay)
-            {
-                _nextUpdateTime = ticks + delay;
-            }
-        }
-    }
-
-    private void ScheduleNextUpdateTime(int delay)
-    {
-        lock (_statusSequenceLock)
-        {
-            int ticks = Environment.TickCount;
-            int currentDelay = _nextUpdateTime - ticks;
-            int minimumDelay = Math.Max(delay, _nextEarliestTime - ticks);
-            if (minimumDelay < currentDelay)
-            {
-                _nextUpdateTime = ticks + minimumDelay;
-            }
-        }
-    }
-
     private void StartWatchingChanges(string workTreePath, string gitDirPath)
     {
         try
@@ -368,11 +332,6 @@ public sealed class GitStatusMonitor : IDisposable
         {
             CurrentStatus = GitStatusMonitorState.Stopped;
         }
-    }
-
-    private void TimerRefreshTick(object? sender, EventArgs e)
-    {
-        Update();
     }
 
     private void Update()
@@ -506,6 +465,47 @@ public sealed class GitStatusMonitor : IDisposable
                 }
             }
         });
+    }
+
+    private void ScheduleNextUpdateTime(int delay)
+    {
+        lock (_statusSequenceLock)
+        {
+            int ticks = Environment.TickCount;
+            int currentDelay = _nextUpdateTime - ticks;
+            int minimumDelay = Math.Max(delay, _nextEarliestTime - ticks);
+            if (minimumDelay < currentDelay)
+            {
+                _nextUpdateTime = ticks + minimumDelay;
+            }
+        }
+    }
+
+    private void TimerRefreshTick(object? sender, EventArgs e)
+    {
+        Update();
+    }
+
+    private void ScheduleNextInteractiveTime(int delay = InteractiveUpdateDelay)
+    {
+        lock (_statusSequenceLock)
+        {
+            _statusSequence.CancelCurrent();
+            _commandIsRunningAndNotCancelled = false;
+
+            if (_disposed)
+            {
+                return;
+            }
+
+            int ticks = Environment.TickCount;
+            _nextEarliestTime = ticks + MinUpdateInterval;
+            int currentDelay = _nextUpdateTime - ticks;
+            if (delay < currentDelay)
+            {
+                _nextUpdateTime = ticks + delay;
+            }
+        }
     }
 
     private void WorkTreeChanged(object? sender, FileSystemEventArgs e)

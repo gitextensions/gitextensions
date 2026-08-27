@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
@@ -75,42 +75,11 @@ public partial class PatchGrid : GitModuleControl
         TranslateHeader(translation, nameof(CommitHash), CommitHash, "Commit hash");
     }
 
-    public void Initialize()
+    private void DisplayPatches(IReadOnlyList<PatchFile> patchFiles)
     {
-        UpdateState(IsManagingRebase);
-        DisplayPatches(GetPatches());
-    }
-
-    public void RefreshGrid()
-    {
-        Validates.NotNull(PatchFiles);
-        IReadOnlyList<PatchFile> currentPatches = PatchFiles!;
-
-        IReadOnlyList<PatchFile> updatedPatches = GetPatches();
-        for (int i = 0; i < Math.Min(updatedPatches.Count, currentPatches.Count); i++)
-        {
-            updatedPatches[i].IsSkipped = currentPatches[i].IsSkipped;
-        }
-
-        DisplayPatches(updatedPatches);
-    }
-
-    public void SelectCurrentlyApplyingPatch()
-    {
-        PatchFile? applyingPatch = PatchFiles?.FirstOrDefault(patchFile => patchFile.IsNext);
-        if (applyingPatch is null)
-        {
-            return;
-        }
-
-        Patches.SelectedItem = applyingPatch;
-        Patches.ScrollIntoView(applyingPatch);
-    }
-
-    public void SetSkipped(IList<PatchFile> skipped)
-    {
-        ArgumentNullException.ThrowIfNull(skipped);
-        _skipped = skipped;
+        PatchFiles = patchFiles;
+        Patches.ItemsSource = patchFiles.ToArray();
+        SelectCurrentlyApplyingPatch();
     }
 
     private IReadOnlyList<PatchFile> GetInteractiveRebasePatchFiles()
@@ -194,13 +163,6 @@ public partial class PatchGrid : GitModuleControl
                 : [];
     }
 
-    private void DisplayPatches(IReadOnlyList<PatchFile> patchFiles)
-    {
-        PatchFiles = patchFiles;
-        Patches.ItemsSource = patchFiles.ToArray();
-        SelectCurrentlyApplyingPatch();
-    }
-
     private IReadOnlyList<PatchFile> GetPatches()
     {
         string rebaseTodoFilePath = $"{Module.GetRebaseDir()}git-rebase-todo";
@@ -258,6 +220,44 @@ public partial class PatchGrid : GitModuleControl
         }
 
         return patchFiles;
+    }
+
+    public void Initialize()
+    {
+        UpdateState(IsManagingRebase);
+        DisplayPatches(GetPatches());
+    }
+
+    public void RefreshGrid()
+    {
+        Validates.NotNull(PatchFiles);
+        IReadOnlyList<PatchFile> currentPatches = PatchFiles!;
+
+        IReadOnlyList<PatchFile> updatedPatches = GetPatches();
+        for (int i = 0; i < Math.Min(updatedPatches.Count, currentPatches.Count); i++)
+        {
+            updatedPatches[i].IsSkipped = currentPatches[i].IsSkipped;
+        }
+
+        DisplayPatches(updatedPatches);
+    }
+
+    public void SelectCurrentlyApplyingPatch()
+    {
+        PatchFile? applyingPatch = PatchFiles?.FirstOrDefault(patchFile => patchFile.IsNext);
+        if (applyingPatch is null)
+        {
+            return;
+        }
+
+        Patches.SelectedItem = applyingPatch;
+        Patches.ScrollIntoView(applyingPatch);
+    }
+
+    public void SetSkipped(IList<PatchFile> skipped)
+    {
+        ArgumentNullException.ThrowIfNull(skipped);
+        _skipped = skipped;
     }
 
     private static void PopulatePatchHeaders(PatchFile patchFile)

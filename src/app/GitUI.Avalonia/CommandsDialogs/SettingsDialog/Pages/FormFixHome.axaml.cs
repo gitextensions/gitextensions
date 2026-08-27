@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using GitCommands;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -32,123 +32,6 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
             _NO_TRANSLATE_portableHomeDescription.IsVisible = true;
             userprofileHome.IsVisible = false;
         }
-    }
-
-    public void ShowIfUserWant()
-    {
-        if (MessageBoxes.Show(
-                string.Format(_gitGlobalConfigNotFound.Text, Environment.GetEnvironmentVariable("HOME")),
-                _gitGlobalConfigNotFoundCaption.Text,
-                WinFormsShims.MessageBoxButtons.YesNo,
-                WinFormsShims.MessageBoxIcon.Error) == WinFormsShims.DialogResult.Yes)
-        {
-            ShowDialog(owner: null);
-        }
-    }
-
-    public static void CheckHomePath()
-    {
-        EnvironmentConfiguration.SetEnvironmentVariables();
-        if (IsFixHome())
-        {
-            using FormFixHome form = new();
-            form.ShowIfUserWant();
-        }
-    }
-
-    protected override void OnRuntimeLoad(EventArgs e)
-    {
-        base.OnRuntimeLoad(e);
-        LoadSettings();
-
-        defaultHome.Content = $"{defaultHome.Content} ({EnvironmentConfiguration.GetDefaultHomeDir()})";
-        if (OperatingSystem.IsWindows())
-        {
-            userprofileHome.Content = $"{userprofileHome.Content} ({Environment.GetEnvironmentVariable("USERPROFILE")})";
-        }
-    }
-
-    private void WireEvents()
-    {
-        defaultHome.IsCheckedChanged += (_, _) => UpdateOtherHomeState();
-        userprofileHome.IsCheckedChanged += (_, _) => UpdateOtherHomeState();
-        otherHome.IsCheckedChanged += (_, _) => UpdateOtherHomeState();
-        otherHomeBrowse.Click += otherHomeBrowse_Click;
-        ok.Click += ok_Click;
-    }
-
-    private void LoadSettings()
-    {
-        if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
-        {
-            otherHome.IsChecked = true;
-            otherHomeDir.Text = AppSettings.CustomHomeDir;
-        }
-        else if (OperatingSystem.IsWindows() && AppSettings.UserProfileHomeDir)
-        {
-            userprofileHome.IsChecked = true;
-        }
-        else
-        {
-            defaultHome.IsChecked = true;
-        }
-
-        UpdateOtherHomeState();
-    }
-
-    private bool ApplySettings()
-    {
-        if (otherHome.IsChecked == true)
-        {
-            if (string.IsNullOrWhiteSpace(otherHomeDir.Text))
-            {
-                MessageBoxes.ShowError(this, _noHomeDirectorySpecified.Text);
-                return false;
-            }
-
-            AppSettings.CustomHomeDir = otherHomeDir.Text;
-        }
-        else
-        {
-            AppSettings.CustomHomeDir = string.Empty;
-        }
-
-        AppSettings.UserProfileHomeDir = OperatingSystem.IsWindows() && userprofileHome.IsChecked == true;
-        EnvironmentConfiguration.SetEnvironmentVariables();
-        string home = EnvironmentConfiguration.GetHomeDir();
-        if (string.IsNullOrEmpty(home) || !Directory.Exists(home))
-        {
-            MessageBoxes.ShowError(this, string.Format(_homeNotAccessible.Text, home));
-            return false;
-        }
-
-        return true;
-    }
-
-    private void ok_Click(object? sender, EventArgs e)
-    {
-        if (ApplySettings())
-        {
-            DialogResult = WinFormsShims.DialogResult.OK;
-            Close();
-        }
-    }
-
-    private void otherHomeBrowse_Click(object? sender, EventArgs e)
-    {
-        WinFormsShims.IWin32Window owner = (TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window)!;
-        string? userSelectedPath = OsShellUtil.PickFolder(owner, otherHomeDir.Text);
-        if (userSelectedPath is not null)
-        {
-            otherHomeDir.Text = userSelectedPath;
-        }
-    }
-
-    private void UpdateOtherHomeState()
-    {
-        bool enabled = otherHome.IsChecked == true;
-        otherHomeDir.IsEnabled = enabled;
-        otherHomeBrowse.IsEnabled = enabled;
     }
 
     private static bool HasGlobalGitConfig(string? path)
@@ -202,6 +85,123 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
         catch
         {
             return true;
+        }
+    }
+
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+        LoadSettings();
+
+        defaultHome.Content = $"{defaultHome.Content} ({EnvironmentConfiguration.GetDefaultHomeDir()})";
+        if (OperatingSystem.IsWindows())
+        {
+            userprofileHome.Content = $"{userprofileHome.Content} ({Environment.GetEnvironmentVariable("USERPROFILE")})";
+        }
+    }
+
+    private void WireEvents()
+    {
+        defaultHome.IsCheckedChanged += (_, _) => UpdateOtherHomeState();
+        userprofileHome.IsCheckedChanged += (_, _) => UpdateOtherHomeState();
+        otherHome.IsCheckedChanged += (_, _) => UpdateOtherHomeState();
+        otherHomeBrowse.Click += otherHomeBrowse_Click;
+        ok.Click += ok_Click;
+    }
+
+    public void ShowIfUserWant()
+    {
+        if (MessageBoxes.Show(
+                string.Format(_gitGlobalConfigNotFound.Text, Environment.GetEnvironmentVariable("HOME")),
+                _gitGlobalConfigNotFoundCaption.Text,
+                WinFormsShims.MessageBoxButtons.YesNo,
+                WinFormsShims.MessageBoxIcon.Error) == WinFormsShims.DialogResult.Yes)
+        {
+            ShowDialog(owner: null);
+        }
+    }
+
+    private bool ApplySettings()
+    {
+        if (otherHome.IsChecked == true)
+        {
+            if (string.IsNullOrWhiteSpace(otherHomeDir.Text))
+            {
+                MessageBoxes.ShowError(this, _noHomeDirectorySpecified.Text);
+                return false;
+            }
+
+            AppSettings.CustomHomeDir = otherHomeDir.Text;
+        }
+        else
+        {
+            AppSettings.CustomHomeDir = string.Empty;
+        }
+
+        AppSettings.UserProfileHomeDir = OperatingSystem.IsWindows() && userprofileHome.IsChecked == true;
+        EnvironmentConfiguration.SetEnvironmentVariables();
+        string home = EnvironmentConfiguration.GetHomeDir();
+        if (string.IsNullOrEmpty(home) || !Directory.Exists(home))
+        {
+            MessageBoxes.ShowError(this, string.Format(_homeNotAccessible.Text, home));
+            return false;
+        }
+
+        return true;
+    }
+
+    public static void CheckHomePath()
+    {
+        EnvironmentConfiguration.SetEnvironmentVariables();
+        if (IsFixHome())
+        {
+            using FormFixHome form = new();
+            form.ShowIfUserWant();
+        }
+    }
+
+    private void LoadSettings()
+    {
+        if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
+        {
+            otherHome.IsChecked = true;
+            otherHomeDir.Text = AppSettings.CustomHomeDir;
+        }
+        else if (OperatingSystem.IsWindows() && AppSettings.UserProfileHomeDir)
+        {
+            userprofileHome.IsChecked = true;
+        }
+        else
+        {
+            defaultHome.IsChecked = true;
+        }
+
+        UpdateOtherHomeState();
+    }
+
+    private void UpdateOtherHomeState()
+    {
+        bool enabled = otherHome.IsChecked == true;
+        otherHomeDir.IsEnabled = enabled;
+        otherHomeBrowse.IsEnabled = enabled;
+    }
+
+    private void ok_Click(object? sender, EventArgs e)
+    {
+        if (ApplySettings())
+        {
+            DialogResult = WinFormsShims.DialogResult.OK;
+            Close();
+        }
+    }
+
+    private void otherHomeBrowse_Click(object? sender, EventArgs e)
+    {
+        WinFormsShims.IWin32Window owner = (TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window)!;
+        string? userSelectedPath = OsShellUtil.PickFolder(owner, otherHomeDir.Text);
+        if (userSelectedPath is not null)
+        {
+            otherHomeDir.Text = userSelectedPath;
         }
     }
 

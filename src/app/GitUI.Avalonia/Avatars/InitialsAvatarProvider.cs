@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -17,11 +17,9 @@ namespace GitUI.Avatars;
 /// </summary>
 public class InitialsAvatarProvider : IAvatarProvider
 {
-    private static readonly char[] _emailInitialSeparator = ['.', '-', '_'];
-
     private int _unkownCounter;
+    private static readonly char[] _emailInitialSeparator = ['.', '-', '_'];
     private FontFamily? _fontFamily;
-    private readonly (IBrush foregroundBrush, Avalonia.Media.Color backgroundColor)[] _avatarColors;
 
     public InitialsAvatarProvider()
     {
@@ -45,6 +43,20 @@ public class InitialsAvatarProvider : IAvatarProvider
 
     public bool PerformsIo => false;
 
+    private static int GetDeterministicHashCode(string str)
+    {
+        unchecked
+        {
+            int hash = 23;
+            foreach (char c in str)
+            {
+                hash = (hash * 31) + c;
+            }
+
+            return Math.Abs(hash);
+        }
+    }
+
     protected internal (string initials, int hashCode) GetInitialsAndColorIndex(string email, string? name)
     {
         (string? selectedName, char[]? separator) = NameSelector(name, email);
@@ -59,24 +71,20 @@ public class InitialsAvatarProvider : IAvatarProvider
         return (initials, GetDeterministicHashCode(email) % _avatarColors.Length);
     }
 
-    public void UpdateFontsSettings()
+    private static (string? name, char[]? separator) NameSelector(string? name, string? email)
     {
-        string fontFamilyName = AppSettings.Font.FontFamily.Name;
-        _fontFamily = new FontFamily(fontFamilyName);
-    }
-
-    private static int GetDeterministicHashCode(string str)
-    {
-        unchecked
+        if (!string.IsNullOrWhiteSpace(name))
         {
-            int hash = 23;
-            foreach (char c in str)
-            {
-                hash = (hash * 31) + c;
-            }
-
-            return Math.Abs(hash);
+            return (name.Trim(), null);
         }
+
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            string withoutDomain = email.LazySplit('@').First().TrimStart();
+            return (withoutDomain, _emailInitialSeparator);
+        }
+
+        return (null, null);
     }
 
     private static string GetInitialsFromNames(string[]? possibleNames)
@@ -128,6 +136,8 @@ public class InitialsAvatarProvider : IAvatarProvider
         return $"{name[0]}{names[^1][0]}".ToUpper();
     }
 
+    private readonly (IBrush foregroundBrush, Avalonia.Media.Color backgroundColor)[] _avatarColors;
+
     private static (IBrush foregroundBrush, Avalonia.Media.Color backgroundColor) GetAvatarDrawingMaterial(string colorCode)
     {
         DrawingColor drawingBackground;
@@ -173,22 +183,6 @@ public class InitialsAvatarProvider : IAvatarProvider
         }
     }
 
-    private static (string? name, char[]? separator) NameSelector(string? name, string? email)
-    {
-        if (!string.IsNullOrWhiteSpace(name))
-        {
-            return (name.Trim(), null);
-        }
-
-        if (!string.IsNullOrWhiteSpace(email))
-        {
-            string withoutDomain = email.LazySplit('@').First().TrimStart();
-            return (withoutDomain, _emailInitialSeparator);
-        }
-
-        return (null, null);
-    }
-
     private byte[] DrawText(string? text, IBrush foreColor, Avalonia.Media.Color backColor, int avatarSize)
     {
         Validates.NotNull(_fontFamily);
@@ -220,5 +214,11 @@ public class InitialsAvatarProvider : IAvatarProvider
                 new Typeface(_fontFamily),
                 fontSize,
                 foreColor);
+    }
+
+    public void UpdateFontsSettings()
+    {
+        string fontFamilyName = AppSettings.Font.FontFamily.Name;
+        _fontFamily = new FontFamily(fontFamilyName);
     }
 }

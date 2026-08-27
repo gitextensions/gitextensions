@@ -9,15 +9,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
 {
-    private WinFormsShims.Font? _diffFont;
-    private WinFormsShims.Font? _applicationFont;
-    private WinFormsShims.Font? _commitFont;
-    private WinFormsShims.Font? _monospaceFont;
 #pragma warning disable SX1309 // Preserve the original designer field names for port parity.
     private readonly FontDialog diffFontDialog = new() { FixedPitchOnly = true };
     private readonly FontDialog applicationDialog = new();
     private readonly FontDialog monospaceFontDialog = new();
     private readonly FontDialog commitFontDialog = new();
+    private WinFormsShims.Font? _diffFont;
+    private WinFormsShims.Font? _applicationFont;
+    private WinFormsShims.Font? _commitFont;
+    private WinFormsShims.Font? _monospaceFont;
 #pragma warning restore SX1309
 
     public AppearanceFontsSettingsPage()

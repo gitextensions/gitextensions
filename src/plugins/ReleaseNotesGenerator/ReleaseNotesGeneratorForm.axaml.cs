@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -22,12 +22,12 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
     private readonly TranslationString _caption = new("Invalid input");
 
     private const string MostRecentHint = "most recent changes are listed on top";
-    private readonly IGitLogLineParser _gitLogLineParser = new GitLogLineParser();
     private readonly GitUIEventArgs? _gitUiCommands;
+    private IEnumerable<LogLine> _lastGeneratedLogLines = [];
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
     private readonly TaskManager _operations = GitUI.Compat.DesignTimeTaskManager.Create();
-    private IEnumerable<LogLine> _lastGeneratedLogLines = [];
+    private readonly IGitLogLineParser _gitLogLineParser = new GitLogLineParser();
 
     public ReleaseNotesGeneratorForm()
     {

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -35,9 +35,11 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     private readonly IRevisionGridInfo _revisionGridInfo;
     private readonly Func<IGitModule> _module;
     private readonly IRepoNameExtractor _repoNameExtractor;
-    private readonly Lock _observerLock = new();
     private IDisposable? _buildStatusCancellationToken;
     private IBuildServerAdapter? _buildServerAdapter;
+    private readonly Lock _observerLock = new();
+
+    internal BuildStatusColumnProvider ColumnProvider { get; }
 
     public BuildServerWatcher(RevisionGridControl revisionGrid, IRevisionGridInfo revisionGridInfo, Func<IGitModule> module)
     {
@@ -49,8 +51,6 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         _repoNameExtractor = new RepoNameExtractor(_module);
         ColumnProvider = new BuildStatusColumnProvider(OpenBuildReport);
     }
-
-    internal BuildStatusColumnProvider ColumnProvider { get; }
 
     public async Task LaunchBuildServerInfoFetchOperationAsync()
     {
@@ -176,14 +176,18 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         return projectNames;
     }
 
-    public void OnRepositoryChanged()
-        => _buildServerAdapter?.OnRepositoryChanged();
-
-    public void Dispose()
+    private async Task<IBuildServerCredentials?> ShowBuildServerCredentialsFormAsync(
+        string buildServerUniqueKey,
+        IBuildServerCredentials buildServerCredentials)
     {
-        CancelBuildStatusFetchOperation();
-        _buildServerAdapter?.Dispose();
-        _launchCancellation.Dispose();
+        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+        using FormBuildServerCredentials form = new(buildServerUniqueKey)
+        {
+            BuildServerCredentials = buildServerCredentials,
+        };
+        WinFormsShims.IWin32Window? owner = Avalonia.Controls.TopLevel.GetTopLevel(_revisionGrid) as WinFormsShims.IWin32Window;
+        return form.ShowDialog(owner) == DialogResult.OK ? form.BuildServerCredentials : null;
     }
 
     internal void OnBuildInfoUpdate(BuildInfo buildInfo)
@@ -213,20 +217,6 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         {
             _revisionGrid.RefreshRealizedRows();
         }
-    }
-
-    private async Task<IBuildServerCredentials?> ShowBuildServerCredentialsFormAsync(
-        string buildServerUniqueKey,
-        IBuildServerCredentials buildServerCredentials)
-    {
-        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-        using FormBuildServerCredentials form = new(buildServerUniqueKey)
-        {
-            BuildServerCredentials = buildServerCredentials,
-        };
-        WinFormsShims.IWin32Window? owner = Avalonia.Controls.TopLevel.GetTopLevel(_revisionGrid) as WinFormsShims.IWin32Window;
-        return form.ShowDialog(owner) == DialogResult.OK ? form.BuildServerCredentials : null;
     }
 
     private async Task<IBuildServerAdapter?> GetBuildServerAdapterAsync()
@@ -359,6 +349,16 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         return remoteUrls;
     }
+
+    public void Dispose()
+    {
+        CancelBuildStatusFetchOperation();
+        _buildServerAdapter?.Dispose();
+        _launchCancellation.Dispose();
+    }
+
+    public void OnRepositoryChanged()
+        => _buildServerAdapter?.OnRepositoryChanged();
 
     private void OpenBuildReport(GitRevision revision)
         => OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus?.Url);

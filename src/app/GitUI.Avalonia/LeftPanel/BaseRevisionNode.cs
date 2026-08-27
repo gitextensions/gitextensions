@@ -13,15 +13,7 @@ internal abstract class BaseRevisionNode : Node
         ObjectId = gitRef?.ObjectId ?? default;
     }
 
-    public string FullPath { get; }
-
     public string Name => GetName(FullPath);
-
-    public IGitRef? GitRef { get; }
-
-    public ObjectId ObjectId { get; protected init; }
-
-    public override string SearchText => FullPath;
 
     protected string ParentPath
     {
@@ -31,6 +23,14 @@ internal abstract class BaseRevisionNode : Node
             return separator < 0 ? string.Empty : FullPath[..separator];
         }
     }
+
+    public IGitRef? GitRef { get; }
+
+    public string FullPath { get; }
+
+    public override string SearchText => FullPath;
+
+    public ObjectId ObjectId { get; protected init; }
 
     public bool Rebase()
         => UICommands.StartRebaseDialog(Owner, FullPath);
