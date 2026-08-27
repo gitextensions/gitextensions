@@ -13,7 +13,12 @@ internal sealed class RepositoryHostCaptureFixture : IDisposable
     private RepositoryHostCaptureFixture(IGitUICommands commands, string componentType, string stateId)
     {
         ObjectId head = commands.Module.RevParse("HEAD");
-        ObjectId parent = commands.Module.RevParse("HEAD~1");
+        if (head.IsZero)
+        {
+            throw new InvalidOperationException("The repository-host capture fixture requires a repository with at least one commit.");
+        }
+
+        ObjectId parent = ResolveBaseRevision(head, commands.Module.RevParse("HEAD~1"));
         bool branchesLoading = stateId == "branches.loading";
         bool pullRequestsLoading = stateId == "pull-requests.loading";
         HostedRepository mine = new(
@@ -52,6 +57,9 @@ internal sealed class RepositoryHostCaptureFixture : IDisposable
         string componentType,
         string stateId)
         => new(commands, componentType, stateId);
+
+    internal static ObjectId ResolveBaseRevision(ObjectId head, ObjectId parent)
+        => parent.IsZero ? head : parent;
 
     public void Dispose()
     {
