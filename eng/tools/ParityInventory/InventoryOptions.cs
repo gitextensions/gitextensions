@@ -13,6 +13,8 @@ internal sealed record InventoryOptions
 
     public required string OutputFile { get; init; }
 
+    public string? FrameworkAdaptationsFile { get; init; }
+
     public static InventoryOptions Parse(string[] args)
     {
         if (args.Length == 0 || args[0] is "-h" or "--help")
@@ -38,13 +40,15 @@ internal sealed record InventoryOptions
             TwinRoot = Require(values, "--twin-root"),
             TypeName = Require(values, "--type"),
             TranslationsFile = Require(values, "--translations"),
-            OutputFile = Require(values, "--output")
+            OutputFile = Require(values, "--output"),
+            FrameworkAdaptationsFile = values.GetValueOrDefault("--framework-adaptations")
         };
     }
 
     private const string Usage =
         "Usage: ParityInventory compare --original-root <path> --twin-root <path> "
-        + "--type <namespace.class> --translations <English.xlf> --output <functional-findings.json>";
+        + "--type <namespace.class> --translations <English.xlf> --output <functional-findings.json> "
+        + "[--framework-adaptations <reviewed-framework-adaptations.json>]";
 
     private static string Require(IReadOnlyDictionary<string, string> values, string name) =>
         values.TryGetValue(name, out string? value) && !string.IsNullOrWhiteSpace(value)

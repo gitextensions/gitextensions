@@ -24,6 +24,9 @@ internal static class InventoryRunner
             englishKeys,
             isTwin: true);
         InventoryComparison comparison = InventoryComparer.Compare(original, twin);
+        ReviewedFrameworkDeviationManifest manifest = ReviewedFrameworkDeviationManifest.Read(
+            options.FrameworkAdaptationsFile);
+        comparison = manifest.Apply(options.TypeName, twin, comparison);
         IReadOnlyList<FunctionalFinding> findings = comparison.Findings;
         InventoryReport report = new()
         {
