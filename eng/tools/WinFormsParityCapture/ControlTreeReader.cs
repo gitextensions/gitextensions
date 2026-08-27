@@ -11,15 +11,58 @@ namespace WinFormsParityCapture;
 internal sealed class ControlTreeReader
 {
     private readonly Dictionary<object, List<string>> _fieldNames = new(ReferenceEqualityComparer.Instance);
+    private readonly IReadOnlyDictionary<object, FontBaseline> _fontBaselines;
     private readonly List<ToolTip> _toolTips = [];
     private readonly decimal _dipFactor;
     private readonly Control _root;
 
-    public ControlTreeReader(Control root, int dpi)
+    public ControlTreeReader(
+        Control root,
+        int dpi,
+        IReadOnlyDictionary<object, FontBaseline>? fontBaselines = null)
     {
         _root = root;
         _dipFactor = 96m / dpi;
+        _fontBaselines = fontBaselines
+            ?? new Dictionary<object, FontBaseline>(ReferenceEqualityComparer.Instance);
         IndexFields(root);
+    }
+
+    internal static IReadOnlyDictionary<object, FontBaseline> CaptureFontBaselines(Control root)
+    {
+        Dictionary<object, FontBaseline> baselines = new(ReferenceEqualityComparer.Instance);
+
+        void IndexToolStripItem(ToolStripItem item)
+        {
+            baselines[item] = FontBaseline.From(item.Font);
+            if (item is ToolStripDropDownItem dropDownItem)
+            {
+                foreach (ToolStripItem child in dropDownItem.DropDownItems)
+                {
+                    IndexToolStripItem(child);
+                }
+            }
+        }
+
+        void IndexControl(Control control)
+        {
+            baselines[control] = FontBaseline.From(control.Font);
+            if (control is ToolStrip toolStrip)
+            {
+                foreach (ToolStripItem item in toolStrip.Items)
+                {
+                    IndexToolStripItem(item);
+                }
+            }
+
+            foreach (Control child in control.Controls)
+            {
+                IndexControl(child);
+            }
+        }
+
+        IndexControl(root);
+        return baselines;
     }
 
     public CaptureSurface ReadPrimary(Control root, Rectangle screenBounds)
@@ -622,7 +665,7 @@ internal sealed class ControlTreeReader
                 : null,
             Padding = CreateThickness(control.Padding),
             Margin = CreateThickness(control.Margin),
-            Font = ReadFont(control.Font),
+            Font = ReadFont(control, control.Font),
             Colors = GetColors(control),
             BorderStyle = GetPropertyValue(control, "BorderStyle"),
             FlatStyle = control is ButtonBase button ? button.FlatStyle.ToString() : null,
@@ -656,20 +699,46 @@ internal sealed class ControlTreeReader
     private static bool IsGeneratedDataGridViewChild(Control child) =>
         string.IsNullOrEmpty(child.Name) && child is HScrollBar or VScrollBar or Label;
 
-    private CaptureFont ReadFont(Font font)
+    private CaptureFont ReadFont(object owner, Font font)
     {
-        float sizePoints = font.Unit == GraphicsUnit.Point
+        decimal sizePoints = (decimal)(font.Unit == GraphicsUnit.Point
             ? font.Size
-            : font.SizeInPoints;
+            : font.SizeInPoints);
+        decimal normalizationFactor = IsDpiScaledFont(owner, font, sizePoints)
+            ? _dipFactor
+            : 1m;
         return new CaptureFont
         {
             Family = font.FontFamily.Name,
-            EmSize = decimal.Round((decimal)font.Size, 4),
+            EmSize = decimal.Round((decimal)font.Size * normalizationFactor, 4),
             Unit = font.Unit.ToString(),
-            SizePoints = decimal.Round((decimal)sizePoints, 4),
-            SizeDip = decimal.Round((decimal)sizePoints * 96m / 72m, 4),
+            SizePoints = decimal.Round(sizePoints * normalizationFactor, 4),
+            SizeDip = decimal.Round(sizePoints * normalizationFactor * 96m / 72m, 4),
             Style = GetStyles(font.Style)
         };
+    }
+
+    private bool IsDpiScaledFont(object owner, Font font, decimal sizePoints)
+    {
+        if (_dipFactor == 1m)
+        {
+            return false;
+        }
+
+        if (!_fontBaselines.TryGetValue(owner, out FontBaseline baseline))
+        {
+            // Some native composites create inherited children only after their handle exists.
+            // Their effective Font is the root's scaled Font, but they could not be indexed
+            // before WM_DPICHANGED. Reuse the root baseline only for that exact inherited font.
+            if (!font.Equals(_root.Font) || !_fontBaselines.TryGetValue(_root, out baseline))
+            {
+                return false;
+            }
+        }
+
+        decimal scaleFactor = 1m / _dipFactor;
+        return Math.Abs((decimal)font.Size - (baseline.EmSize * scaleFactor)) <= 0.01m
+            && Math.Abs(sizePoints - (baseline.SizePoints * scaleFactor)) <= 0.01m;
     }
 
     private CaptureNode ReadToolStripItem(ToolStripItem item, string parentId, int ordinal)
@@ -697,7 +766,7 @@ internal sealed class ControlTreeReader
             ClientSizeDip = new CaptureSizeF { Width = ToDip(bounds.Width), Height = ToDip(bounds.Height) },
             Padding = CreateThickness(item.Padding),
             Margin = CreateThickness(item.Margin),
-            Font = ReadFont(item.Font),
+            Font = ReadFont(item, item.Font),
             Colors = GetColors(item),
             BorderStyle = null,
             FlatStyle = null,
@@ -752,7 +821,9 @@ internal sealed class ControlTreeReader
             ClientSizeDip = new CaptureSizeF { Width = ToDip(bounds.Width), Height = ToDip(bounds.Height) },
             Padding = CreateThickness(popup.Padding),
             Margin = CreateThickness(popup.Margin),
-            Font = ReadFont(popup.Font),
+            Font = ReadFont(
+                popup is ToolStripDropDown { OwnerItem: not null } dropDown ? dropDown.OwnerItem : popup,
+                popup.Font),
             Colors = GetColors(popup),
             BorderStyle = null,
             FlatStyle = null,
@@ -789,7 +860,7 @@ internal sealed class ControlTreeReader
             bounds.Width,
             bounds.Height);
         CaptureColors colors = GetColors(comboBox);
-        CaptureFont font = ReadFont(comboBox.Font);
+        CaptureFont font = ReadFont(comboBox, comboBox.Font);
         CaptureThicknessPair emptyThickness = CreateThickness(Padding.Empty);
         int itemHeight = Math.Max(1, comboBox.ItemHeight);
         CaptureNode[] children = comboBox.Items.Cast<object>()
@@ -889,6 +960,14 @@ internal sealed class ControlTreeReader
     }
 
     private decimal ToDip(int value) => decimal.Round(value * _dipFactor, 4);
+
+    internal readonly record struct FontBaseline(decimal EmSize, decimal SizePoints)
+    {
+        public static FontBaseline From(Font font) =>
+            new(
+                (decimal)font.Size,
+                (decimal)(font.Unit == GraphicsUnit.Point ? font.Size : font.SizeInPoints));
+    }
 
     private static bool? GetNullableBoolProperty(object value, string name)
     {

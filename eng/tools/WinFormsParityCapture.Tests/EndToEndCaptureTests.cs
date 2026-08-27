@@ -1,4 +1,5 @@
 ﻿using AwesomeAssertions;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.ParityCapture;
 using GitUI.SettingControlBindings;
 using NUnit.Framework;
@@ -185,6 +186,54 @@ public sealed class EndToEndCaptureTests
 
         driver.Popups.Should().ContainSingle().Which.Should().BeSameAs(dynamicItem.DropDown);
         dynamicItem.DropDown.Visible.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task DeleteIsolationRoot_should_retry_a_transient_apphost_lock_Async()
+    {
+        string isolationRoot = Path.Combine(
+            Path.GetTempPath(),
+            "GitExtensions.WinFormsParityCapture",
+            Guid.NewGuid().ToString("N"));
+        string runtimeRoot = Path.Combine(isolationRoot, "runtime");
+        Directory.CreateDirectory(runtimeRoot);
+        string appHostPath = Path.Combine(runtimeRoot, "GitExtensions.exe");
+        await File.WriteAllTextAsync(appHostPath, "locked apphost");
+        FileStream appHostLock = new(
+            appHostPath,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read);
+        Task releaseLock = Task.Run(async () =>
+        {
+            await Task.Delay(250);
+            await appHostLock.DisposeAsync();
+        });
+
+        try
+        {
+            CaptureRunner.DeleteIsolationRoot(isolationRoot);
+            await releaseLock;
+
+            Directory.Exists(isolationRoot).Should().BeFalse();
+        }
+        finally
+        {
+            await appHostLock.DisposeAsync();
+            if (Directory.Exists(isolationRoot))
+            {
+                Directory.Delete(isolationRoot, recursive: true);
+            }
+        }
+    }
+
+    [Test]
+    public void Repository_host_capture_should_use_HEAD_when_the_fixture_has_no_parent_commit()
+    {
+        ObjectId head = ObjectId.Random();
+
+        RepositoryHostCaptureFixture.ResolveBaseRevision(head, default).Should().Be(head);
+        RepositoryHostCaptureFixture.ResolveBaseRevision(head, ObjectId.IndexId).Should().Be(ObjectId.IndexId);
     }
 
     [Test]

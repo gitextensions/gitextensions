@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -36,6 +37,8 @@ internal static class CaptureRunner
         Directory.CreateDirectory(runtimeRoot);
 
         List<CaptureManifestEntry> entries = [];
+        int? captureResult = null;
+        ExceptionDispatchInfo? captureFailure = null;
         try
         {
             CopyRuntime(AppContext.BaseDirectory, runtimeRoot);
@@ -129,12 +132,28 @@ internal static class CaptureRunner
             string manifestPath = Path.Combine(outputPath, "manifest.json");
             File.WriteAllText(manifestPath, JsonSerializer.Serialize(manifest, ManifestJsonOptions) + Environment.NewLine);
             Console.WriteLine($"Capture manifest written to {manifestPath}");
-            return entries.Any(entry => entry.Status == CaptureStateStatus.Failed) ? 1 : 0;
+            captureResult = entries.Any(entry => entry.Status == CaptureStateStatus.Failed) ? 1 : 0;
         }
-        finally
+        catch (Exception ex)
+        {
+            captureFailure = ExceptionDispatchInfo.Capture(ex);
+        }
+
+        try
         {
             DeleteIsolationRoot(isolationRoot);
         }
+        catch (Exception cleanupException) when (captureFailure is not null)
+        {
+            throw new AggregateException(
+                "The capture failed and its isolated runtime could not be removed.",
+                captureFailure.SourceException,
+                cleanupException);
+        }
+
+        captureFailure?.Throw();
+        return captureResult
+            ?? throw new InvalidOperationException("The capture did not produce an exit result.");
     }
 
     // parity-scaffolding: the isolated worker must consume the caller's exact plan, even when its name matches the packaged default.
@@ -171,12 +190,14 @@ internal static class CaptureRunner
         {
             using WinFormsBootstrap bootstrap = WinFormsBootstrap.Create(repositoryPath, profile, theme, isolationRoot);
             using Control root = ComponentFactory.Create(component, bootstrap.Commands, state);
+            IReadOnlyDictionary<object, ControlTreeReader.FontBaseline> fontBaselines =
+                ControlTreeReader.CaptureFontBaselines(root);
             PrepareControl(root, bootstrap.Commands, component, monitor, scale, dpiMode);
             PumpUntilReady(root);
             int actualDpi = root.DeviceDpi;
             entries.Add(actualDpi != scale * 96 / 100
                 ? Unsupported(componentType, theme.Id, scale, state.Id, $"The WinForms DPI-change path reported {actualDpi} DPI instead of {scale * 96 / 100} DPI.")
-                : CaptureState(bootstrap, root, component, theme, scale, dpiMode, state, outputPath));
+                : CaptureState(bootstrap, root, component, theme, scale, dpiMode, state, outputPath, fontBaselines));
             Application.DoEvents();
             bootstrap.ThrowIfThreadException();
             ComponentFactory.CleanupBeforeDispose(root);
@@ -314,7 +335,8 @@ internal static class CaptureRunner
         int scale,
         CaptureDpiMode dpiMode,
         CaptureStatePlan state,
-        string outputRoot)
+        string outputRoot,
+        IReadOnlyDictionary<object, ControlTreeReader.FontBaseline>? fontBaselines = null)
     {
         string componentType = component.TypeName;
         try
@@ -333,7 +355,7 @@ internal static class CaptureRunner
             image.Bitmap.Save(imagePath);
 
             int dpi = root.DeviceDpi;
-            ControlTreeReader reader = new(root, dpi);
+            ControlTreeReader reader = new(root, dpi, fontBaselines);
             List<CaptureSurface> surfaces =
             [
                 reader.ReadPrimary(root, image.PrimaryScreenBounds)
@@ -500,7 +522,7 @@ internal static class CaptureRunner
         return options;
     }
 
-    private static void DeleteIsolationRoot(string isolationRoot)
+    internal static void DeleteIsolationRoot(string isolationRoot)
     {
         string fullRoot = Path.GetFullPath(isolationRoot);
         string expectedParent = Path.TrimEndingDirectorySeparator(Path.Combine(Path.GetTempPath(), "GitExtensions.WinFormsParityCapture"))
@@ -510,9 +532,21 @@ internal static class CaptureRunner
             throw new InvalidOperationException($"Refusing to remove unexpected isolation path '{fullRoot}'.");
         }
 
-        if (Directory.Exists(fullRoot))
+        const int deleteAttempts = 20;
+        for (int attempt = 1; Directory.Exists(fullRoot); attempt++)
         {
-            Directory.Delete(fullRoot, recursive: true);
+            try
+            {
+                Directory.Delete(fullRoot, recursive: true);
+            }
+            catch (Exception ex) when (
+                ex is IOException or UnauthorizedAccessException
+                && attempt < deleteAttempts)
+            {
+                // Windows can retain the just-exited apphost mapping briefly. Give the OS and
+                // antivirus scanner a bounded opportunity to release it before abandoning cleanup.
+                Thread.Sleep(100);
+            }
         }
     }
 
