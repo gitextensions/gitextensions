@@ -305,7 +305,7 @@ public sealed class ParityInventoryTests
         fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private int frameworkOnly; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -332,6 +332,111 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_record_an_exact_reviewed_missing_generated_member()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Designer.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                protected void Dispose(bool disposing) { }
+            }
+            """);
+        fixture.WriteTwin("Widget.axaml.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml", "<UserControl />");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 4,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.missing",
+                  "path": "member/method:Dispose",
+                  "originalPart": "Widget.Designer.cs",
+                  "originalAccessibility": "protected",
+                  "originalSignature": "void Dispose(bool disposing)",
+                  "rationale": "AXAML replaces the generated WinForms component-container disposal hook."
+                }
+              ]
+            }
+            """);
+
+        InventoryReport report = fixture.Run(useFrameworkAdaptations: true);
+
+        report.Findings.Should().NotContain(item => item.Code == "member.missing");
+        report.AcceptedFrameworkDeviations.Should().ContainSingle(item =>
+            item.Code == "member.missing"
+            && item.OriginalPart == "Widget.Designer.cs"
+            && item.OriginalValue == "protected void Dispose(bool disposing)"
+            && item.TwinPart == "(no Avalonia member)"
+            && item.TwinValue == null);
+    }
+
+    [Test]
+    public void Run_should_reject_source_drift_in_a_reviewed_missing_generated_member()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Designer.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                public void Dispose(bool disposing) { }
+            }
+            """);
+        fixture.WriteTwin("Widget.axaml.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml", "<UserControl />");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 4,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.missing",
+                  "path": "member/method:Dispose",
+                  "originalPart": "Widget.Designer.cs",
+                  "originalAccessibility": "protected",
+                  "originalSignature": "void Dispose(bool disposing)",
+                  "rationale": "Any source change requires a fresh review."
+                }
+              ]
+            }
+            """);
+
+        Action action = () => fixture.Run(useFrameworkAdaptations: true);
+
+        action.Should().Throw<InvalidDataException>().WithMessage("*drifted*");
+    }
+
+    [Test]
+    public void Run_should_reject_a_behavior_bearing_reviewed_missing_member()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public sealed class Widget { private void Run() { } }");
+        fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { }");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 4,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.missing",
+                  "path": "member/method:Run",
+                  "originalPart": "Widget.cs",
+                  "originalAccessibility": "private",
+                  "originalSignature": "void Run()",
+                  "rationale": "Behavior-bearing members must remain ordinary findings."
+                }
+              ]
+            }
+            """);
+
+        Action action = () => fixture.Run(useFrameworkAdaptations: true);
+
+        action.Should().Throw<InvalidDataException>()
+            .WithMessage("*not generated WinForms Designer lifecycle state*");
+    }
+
+    [Test]
     public void Run_should_record_an_exact_reviewed_field_signature_adaptation()
     {
         using InventoryFixture fixture = new();
@@ -339,7 +444,7 @@ public sealed class ParityInventoryTests
         fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private TextBlock caption; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -377,7 +482,7 @@ public sealed class ParityInventoryTests
         fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private TextBlock caption; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -423,7 +528,7 @@ public sealed class ParityInventoryTests
         FunctionalFinding finding = fixture.Run().Findings.Single(item => item.Code == "comment.missing");
         fixture.WriteFrameworkAdaptations($$"""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -472,7 +577,7 @@ public sealed class ParityInventoryTests
         FunctionalFinding extra = fixture.Run().Findings.Single(item => item.Code == "event.wiring.extra");
         fixture.WriteFrameworkAdaptations($$"""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -525,7 +630,7 @@ public sealed class ParityInventoryTests
         FunctionalFinding finding = fixture.Run().Findings.Single(item => item.Code == "event.wiring.extra");
         fixture.WriteFrameworkAdaptations($$"""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -561,7 +666,7 @@ public sealed class ParityInventoryTests
         FunctionalFinding finding = fixture.Run().Findings.Single(item => item.Code == "comment.missing");
         fixture.WriteFrameworkAdaptations($$"""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -589,7 +694,7 @@ public sealed class ParityInventoryTests
         fixture.WriteMatching("namespace Sample; public sealed class Widget { private int frameworkOnly; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -617,7 +722,7 @@ public sealed class ParityInventoryTests
         fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private long frameworkOnly; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -645,7 +750,7 @@ public sealed class ParityInventoryTests
         fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { public int frameworkOnly; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 3,
+              "schemaVersion": 4,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",

@@ -154,10 +154,10 @@ public sealed partial class FormPull : GitExtensionsDialog
         Merge.IsCheckedChanged += MergeCheckedChanged;
         Rebase.IsCheckedChanged += RebaseCheckedChanged;
         Fetch.IsCheckedChanged += FetchCheckedChanged;
-        Prune.IsCheckedChanged += PruneCheckedChanged;
-        PruneTags.IsCheckedChanged += PruneTagsCheckedChanged;
+        Prune.IsCheckedChanged += Prune_CheckedChanged;
+        PruneTags.IsCheckedChanged += PruneTags_CheckedChanged;
         Branches.DropDownOpened += BranchesDropDown;
-        localBranch.LostFocus += LocalBranchLeave;
+        localBranch.LostFocus += localBranch_Leave;
         _NO_TRANSLATE_Remotes.SelectionChanged += (_, _) => RemotesValidating();
 
         _NO_TRANSLATE_Remotes.PropertyChanged += (_, args) =>
@@ -983,7 +983,7 @@ public sealed partial class FormPull : GitExtensionsDialog
         Branches.Items.Clear();
     }
 
-    private void LocalBranchLeave(object? sender, EventArgs e)
+    private void localBranch_Leave(object? sender, EventArgs e)
     {
         if (_branch != localBranch.Text?.Trim() && string.IsNullOrWhiteSpace(Branches.Text))
         {
@@ -991,12 +991,12 @@ public sealed partial class FormPull : GitExtensionsDialog
         }
     }
 
-    private void PruneCheckedChanged(object? sender, EventArgs e)
+    private void Prune_CheckedChanged(object? sender, EventArgs e)
     {
         PruneTags.IsChecked = Prune.IsChecked == true && PruneTags.IsChecked == true;
     }
 
-    private void PruneTagsCheckedChanged(object? sender, EventArgs e)
+    private void PruneTags_CheckedChanged(object? sender, EventArgs e)
     {
         Prune.IsChecked = Prune.IsChecked == true || PruneTags.IsChecked == true;
         AllTags.IsChecked = AllTags.IsChecked == true || PruneTags.IsChecked == true;

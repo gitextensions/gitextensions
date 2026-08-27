@@ -232,7 +232,7 @@ public sealed partial class FormBrowse : GitModuleForm
         _splitterManager.RestoreSplitters();
         InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileHistoryMode);
         InitCommitDetails();
-        CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectionChanged;
+        CommitInfoTabControl.SelectionChanged += CommitInfoTabControl_SelectedIndexChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
         fileExplorerToolStripMenuItem.Click += FileExplorerToolStripMenuItemClick;
@@ -240,7 +240,7 @@ public sealed partial class FormBrowse : GitModuleForm
         manageSubmodulesToolStripMenuItem.Click += ManageSubmodulesToolStripMenuItemClick;
         updateAllSubmodulesToolStripMenuItem.Click += UpdateAllSubmodulesToolStripMenuItemClick;
         synchronizeAllSubmodulesToolStripMenuItem.Click += SynchronizeAllSubmodulesToolStripMenuItemClick;
-        manageWorktreeToolStripMenuItem.Click += ManageWorktreeToolStripMenuItemClick;
+        manageWorktreeToolStripMenuItem.Click += manageWorktreeToolStripMenuItem_Click;
         compressGitDatabaseToolStripMenuItem.Click += CompressGitDatabaseToolStripMenuItemClick;
         recoverLostObjectsToolStripMenuItem.Click += recoverLostObjectsToolStripMenuItemClick;
         deleteIndexLockToolStripMenuItem.Click += deleteIndexLockToolStripMenuItem_Click;
@@ -271,7 +271,7 @@ public sealed partial class FormBrowse : GitModuleForm
         _addUpstreamRemoteToolStripMenuItem.Click += _addUpstreamRemoteToolStripMenuItem_Click;
         pluginSettingsToolStripMenuItem.Click += PluginSettingsToolStripMenuItemClick;
         RefreshButton.Click += RefreshToolStripMenuItemClick;
-        toggleLeftPanel.Click += ToggleLeftPanelClick;
+        toggleLeftPanel.Click += toggleLeftPanel_Click;
         InitializeWorkspaceLayout();
         InitializeOutputHistory();
         branchSelect.Click += BranchSelectClick;
@@ -287,7 +287,7 @@ public sealed partial class FormBrowse : GitModuleForm
             KeyDownEvent,
             BranchSelectKeyDown,
             RoutingStrategies.Tunnel);
-        toolStripWorktrees.Click += ManageWorktreeToolStripMenuItemClick;
+        toolStripWorktrees.Click += manageWorktreeToolStripMenuItem_Click;
         WorktreeFlyout.Opening += (_, _) => PopulateWorktreeSelector();
         toolStripButtonPull.Click += ToolStripButtonPullClick;
         toolStripButtonPush.Click += (_, _) => UICommands.StartPushDialog(this, pushOnShow: false);
@@ -323,7 +323,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
         if (args.IsFileHistoryMode)
         {
-            ToggleLeftPanelClick(this, EventArgs.Empty);
+            toggleLeftPanel_Click(this, EventArgs.Empty);
         }
 
         ReloadRepository();
@@ -805,7 +805,7 @@ public sealed partial class FormBrowse : GitModuleForm
         RevisionInfo.SetRevisionWithChildren(revision, children: null);
     }
 
-    private void ToggleLeftPanelClick(object? sender, EventArgs e)
+    private void toggleLeftPanel_Click(object? sender, EventArgs e)
     {
         ColumnDefinition leftColumn = mainContentGrid.ColumnDefinitions[0];
         bool hide = leftColumn.Width.Value > 0;
@@ -826,7 +826,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void InitializeWorkspaceLayout()
     {
-        toggleSplitViewLayout.Click += ToggleSplitViewLayoutClick;
+        toggleSplitViewLayout.Click += toggleSplitViewLayout_Click;
         menuCommitInfoPosition.Click += CommitInfoPositionClick;
         commitInfoBelowMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.BelowList);
         commitInfoLeftwardMenuItem.Click += (_, _) => SetCommitInfoPosition(CommitInfoPosition.LeftwardFromList);
@@ -834,7 +834,7 @@ public sealed partial class FormBrowse : GitModuleForm
         RefreshWorkspaceLayout();
     }
 
-    private void ToggleSplitViewLayoutClick(object? sender, EventArgs e)
+    private void toggleSplitViewLayout_Click(object? sender, EventArgs e)
     {
         RememberWorkspaceDimensions();
         AppSettings.ShowSplitViewLayout = !AppSettings.ShowSplitViewLayout;
@@ -1125,7 +1125,7 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartCommitDialog(this);
     }
 
-    private void ManageWorktreeToolStripMenuItemClick(object? sender, EventArgs e)
+    private void manageWorktreeToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         using FormManageWorktree form = new(UICommands);
         form.ShowDialog(this);
@@ -1226,7 +1226,7 @@ public sealed partial class FormBrowse : GitModuleForm
                 item.Classes.Add("worktree-deleted");
             }
 
-            item.Click += WorktreeToolStripMenuItemClick;
+            item.Click += WorktreeToolStripMenuItem_Click;
             WorktreeFlyout.Items.Add(item);
         }
 
@@ -1250,7 +1250,7 @@ public sealed partial class FormBrowse : GitModuleForm
         WorktreeFlyout.Items.Add(pruneItem);
 
         MenuItem manageItem = CreateWorktreeFlyoutItem(TranslatedStrings.ManageWorktrees, Properties.Images.WorkTree);
-        manageItem.Click += ManageWorktreeToolStripMenuItemClick;
+        manageItem.Click += manageWorktreeToolStripMenuItem_Click;
         WorktreeFlyout.Items.Add(manageItem);
     }
 
@@ -1261,7 +1261,7 @@ public sealed partial class FormBrowse : GitModuleForm
             Icon = icon is null ? null : new Image { Width = 16, Height = 16, Source = icon },
         };
 
-    private void WorktreeToolStripMenuItemClick(object? sender, EventArgs e)
+    private void WorktreeToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         if (sender is not MenuItem { Tag: string path })
         {
@@ -1295,7 +1295,7 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartDeleteBranchDialog(this, string.Empty);
     }
 
-    private void CommitInfoTabControl_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void CommitInfoTabControl_SelectedIndexChanged(object? sender, SelectionChangedEventArgs e)
     {
         bool selectingGpgInfo = CommitInfoTabControl.SelectedItem == GpgInfoTabPage;
         if (!selectingGpgInfo)
@@ -1532,7 +1532,7 @@ public sealed partial class FormBrowse : GitModuleForm
         FormProcess.ReadDialog(this, UICommands, arguments: "gc", Module.WorkingDir, input: null, useDialogSettings: true);
     }
 
-    private void CommandsToolStripMenuItem_SubmenuOpened(object? sender, EventArgs e)
+    private void CommandsToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
     {
         IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
         bool singleNormalCommit = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
@@ -1940,7 +1940,7 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.FocusOutputHistoryAndToggleIfPanel:
                 return _outputHistoryController?.FocusAndToggleIfPanel() ?? false;
             case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
-            case Command.ToggleLeftPanel: ToggleLeftPanelClick(this, EventArgs.Empty); break;
+            case Command.ToggleLeftPanel: toggleLeftPanel_Click(this, EventArgs.Empty); break;
             case Command.OpenSettings: OnShowSettingsClick(this, EventArgs.Empty); break;
             case Command.FocusNextTab: FocusNextWorkspaceTab(forward: true); break;
             case Command.FocusPrevTab: FocusNextWorkspaceTab(forward: false); break;
@@ -1955,7 +1955,7 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.MergeBranches: MergeBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.CreateTag: TagToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Rebase: RebaseToolStripMenuItemClick(this, EventArgs.Empty); break;
-            case Command.ManageWorkTrees: ManageWorktreeToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.ManageWorkTrees: manageWorktreeToolStripMenuItem_Click(this, EventArgs.Empty); break;
             case Command.OpenRepo: OpenRepositoryDialog(); break;
             case Command.CloseRepository: ChangeWorkingDirectory(string.Empty); break;
             default: return base.ExecuteCommand(command);

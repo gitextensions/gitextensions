@@ -57,8 +57,8 @@ public sealed partial class AvatarControl : GitExtensionsControl
 
         clearImagecacheToolStripMenuItem.Click += OnClearCacheClick;
         registerGravatarToolStripMenuItem.Click += OnRegisterGravatarClick;
-        avatarProviderToolStripMenuItem.SubmenuOpened += AvatarProviderToolStripMenuItem_SubmenuOpened;
-        fallbackAvatarStyleToolStripMenuItem.SubmenuOpened += OnDefaultImageSubmenuOpened;
+        avatarProviderToolStripMenuItem.SubmenuOpened += avatarProviderToolStripMenuItem_DropDownOpening;
+        fallbackAvatarStyleToolStripMenuItem.SubmenuOpened += OnDefaultImageDropDownOpening;
         DetachedFromVisualTree += (_, _) => _cancellationTokenSequence.CancelCurrent();
 
         RefreshImage(null);
@@ -86,7 +86,7 @@ public sealed partial class AvatarControl : GitExtensionsControl
         ThreadHelper.FileAndForget(UpdateAvatarAsync);
     }
 
-    private void AvatarProviderToolStripMenuItem_SubmenuOpened(object? sender, EventArgs e)
+    private void avatarProviderToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
     {
         UpdateMenuItemSelection(avatarProviderToolStripMenuItem.Items, AppSettings.AvatarProvider);
     }
@@ -99,7 +99,7 @@ public sealed partial class AvatarControl : GitExtensionsControl
         previous?.Dispose();
     }
 
-    private void OnDefaultImageSubmenuOpened(object? sender, EventArgs e)
+    private void OnDefaultImageDropDownOpening(object? sender, EventArgs e)
     {
         UpdateMenuItemSelection(fallbackAvatarStyleToolStripMenuItem.Items, AppSettings.AvatarFallbackType);
     }
