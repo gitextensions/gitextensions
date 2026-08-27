@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using ToolStripItemCollection = System.Collections.IList;
 
 namespace GitUI;
 
@@ -12,7 +13,7 @@ partial class FileStatusList
         _collapseRootFolders.Click += CollapseRootFolders_Click;
     }
 
-    private void InsertTreeContextMenuItems(System.Collections.IList items, int index)
+    private void InsertTreeContextMenuItems(ToolStripItemCollection items, int index)
     {
         if (items.Contains(_treeContextMenuSeparator))
         {

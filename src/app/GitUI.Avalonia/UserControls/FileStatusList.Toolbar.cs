@@ -5,71 +5,20 @@ using GitExtensions.Extensibility.Git;
 using GitUI.Compat;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
+using Image = Avalonia.Media.IImage;
+using ToolStripMenuItem = Avalonia.Controls.MenuItem;
 
 namespace GitUI;
 
 partial class FileStatusList
 {
-    private readonly Avalonia.Media.IImage _treeImage = Images.FileTree;
-    private readonly Avalonia.Media.IImage _flatListImage = Images.DocumentTree.AdaptLightness();
+    private readonly Image _treeImage = Images.FileTree;
+    private readonly Image _flatListImage = Images.DocumentTree.AdaptLightness();
 
     private string? _findUsingOptionsPrefix;
 
     // order in AppSettings.FileStatusFindInFilesGitGrepTypeIndex
-    private MenuItem[] FindUsingMenuItems => field ??= [tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth];
-
-    private void WireToolbar()
-    {
-        btnCollapseGroups.Click += CollapseGroups_Click;
-        btnAsTree.Click += AsTree_ButtonClick;
-        btnByPath.Click += GroupBy_Click;
-        btnByExtension.Click += GroupBy_Click;
-        btnByStatus.Click += GroupBy_Click;
-        btnUnequalChange.Click += Filter_ButtonClick;
-        btnOnlyB.Click += Filter_ButtonClick;
-        btnOnlyA.Click += Filter_ButtonClick;
-        btnSameChange.Click += Filter_ButtonClick;
-        btnFindInFilesGitGrep.Click += FindInFilesGitGrep_ButtonClick;
-        tsmiFindUsingMatchCase.Click += FindUsingMatchCase_Click;
-        tsmiFindUsingWholeWord.Click += FindUsingWholeWord_Click;
-        _NO_TRANSLATE_tsmiFindUsingBasic.Click += FindUsingOption_Click;
-        _NO_TRANSLATE_tsmiFindUsingExtended.Click += FindUsingOption_Click;
-        _NO_TRANSLATE_tsmiFindUsingFixed.Click += FindUsingOption_Click;
-        _NO_TRANSLATE_tsmiFindUsingPerl.Click += FindUsingOption_Click;
-        tsmiFindUsingDialog.Click += FindUsing_Click;
-        tsmiFindUsingInputBox.Click += FindUsing_Click;
-        tsmiFindUsingBoth.Click += FindUsing_Click;
-        tsmiGroupByFilePathTree.Click += GroupByToolStripMenuItem_Click;
-        tsmiGroupByFilePathFlat.Click += GroupByToolStripMenuItem_Click;
-        tsmiGroupByFileExtensionTree.Click += GroupByToolStripMenuItem_Click;
-        tsmiGroupByFileExtensionFlat.Click += GroupByToolStripMenuItem_Click;
-        tsmiGroupByFileStatusTree.Click += GroupByToolStripMenuItem_Click;
-        tsmiGroupByFileStatusFlat.Click += GroupByToolStripMenuItem_Click;
-        tsmiDenseTree.Click += DenseTree_Click;
-        tsmiShowGroupNodesInFlatList.Click += ShowGroupNodesInFlatList_Click;
-        tsmiShowIgnoredFiles.Click += ShowIgnoredFiles_Click;
-        tsmiShowSkipWorktreeFiles.Click += ShowSkipWorktreeFiles_Click;
-        tsmiShowAssumeUnchangedFiles.Click += ShowAssumeUnchangedFiles_Click;
-        tsmiShowUntrackedFiles.Click += ShowUntrackedFiles_Click;
-        tsmiEditGitIgnore.Click += EditGitIgnore_Click;
-        tmsiEditLocallyIgnoredFiles.Click += EditLocallyIgnoredFiles_Click;
-        tsmiRefreshOnFormFocus.Click += RefreshOnFormFocus_Click;
-        tsmiShowDiffForAllParents.Click += ShowDiffForAllParents_Click;
-
-        SetSortTag(tsmiGroupByFilePathTree, DiffListSortType.FilePath);
-        SetSortTag(tsmiGroupByFilePathFlat, DiffListSortType.FilePathFlat);
-        SetSortTag(tsmiGroupByFileExtensionTree, DiffListSortType.FileExtension);
-        SetSortTag(tsmiGroupByFileExtensionFlat, DiffListSortType.FileExtensionFlat);
-        SetSortTag(tsmiGroupByFileStatusTree, DiffListSortType.FileStatus);
-        SetSortTag(tsmiGroupByFileStatusFlat, DiffListSortType.FileStatusFlat);
-
-        ((MenuFlyout)btnAsTree.Flyout!).Opening += (_, _) => UpdateToolbar();
-        ((MenuFlyout)btnFindInFilesGitGrep.Flyout!).Opening += FindInFilesGitGrep_DropDownOpening;
-        ((MenuFlyout)btnSettings.Flyout!).Opening += Settings_DropDownOpening;
-
-        static void SetSortTag(MenuItem item, DiffListSortType sortType)
-            => item.Tag = sortType;
-    }
+    private ToolStripMenuItem[] FindUsingMenuItems => field ??= [tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth];
 
     private void ApplyGroupBy()
     {
@@ -81,13 +30,13 @@ partial class FileStatusList
             : throw new InvalidOperationException("Exactly one group-by button must be checked");
     }
 
-    private void AsTree_ButtonClick(object? sender, EventArgs e)
+    private void AsTree_ButtonClick(object sender, EventArgs e)
     {
         btnAsTree.Icon = ReferenceEquals(btnAsTree.Icon, _treeImage) ? _flatListImage : _treeImage;
         ApplyGroupBy();
     }
 
-    private void CollapseGroups_Click(object? sender, EventArgs e)
+    private void CollapseGroups_Click(object sender, EventArgs e)
     {
         if (!_showDiffGroups)
         {
@@ -104,13 +53,13 @@ partial class FileStatusList
         SelectFirstVisibleItem();
     }
 
-    private void DenseTree_Click(object? sender, EventArgs e)
+    private void DenseTree_Click(object sender, EventArgs e)
     {
         AppSettings.FileStatusMergeSingleItemWithFolder.Value = tsmiDenseTree.IsChecked;
         ApplyFilter(selectFirstItem: false);
     }
 
-    private void EditGitIgnore_Click(object? sender, EventArgs e)
+    private void EditGitIgnore_Click(object sender, EventArgs e)
     {
         if (TryGetUICommandsDirect(out IGitUICommands? commands))
         {
@@ -119,7 +68,7 @@ partial class FileStatusList
         }
     }
 
-    private void EditLocallyIgnoredFiles_Click(object? sender, EventArgs e)
+    private void EditLocallyIgnoredFiles_Click(object sender, EventArgs e)
     {
         if (TryGetUICommandsDirect(out IGitUICommands? commands))
         {
@@ -128,10 +77,10 @@ partial class FileStatusList
         }
     }
 
-    private void Filter_ButtonClick(object? sender, EventArgs e)
+    private void Filter_ButtonClick(object sender, EventArgs e)
         => ApplyFilter(selectFirstItem: false);
 
-    private void FindInFilesGitGrep_ButtonClick(object? sender, EventArgs e)
+    private void FindInFilesGitGrep_ButtonClick(object sender, EventArgs e)
     {
         bool usingInputBox = tsmiFindUsingDialog.IsChecked != true;
         bool usingDialog = tsmiFindUsingInputBox.IsChecked != true;
@@ -157,25 +106,25 @@ partial class FileStatusList
         }
     }
 
-    private void FindUsingMatchCase_Click(object? sender, EventArgs e)
+    private void FindUsingMatchCase_Click(object sender, EventArgs e)
     {
         AppSettings.GitGrepIgnoreCase.Value = tsmiFindUsingMatchCase.IsChecked != true;
         FindInCommitFilesGitGrep();
     }
 
-    private void FindUsingWholeWord_Click(object? sender, EventArgs e)
+    private void FindUsingWholeWord_Click(object sender, EventArgs e)
     {
         AppSettings.GitGrepMatchWholeWord.Value = tsmiFindUsingWholeWord.IsChecked == true;
         FindInCommitFilesGitGrep();
     }
 
-    private void FindUsingOption_Click(object? sender, EventArgs e)
+    private void FindUsingOption_Click(object sender, EventArgs e)
     {
         AppSettings.GitGrepUserArguments.Value = sender is MenuItem item ? item.Header?.ToString() ?? string.Empty : string.Empty;
         FindInCommitFilesGitGrep();
     }
 
-    private void FindUsing_Click(object? sender, EventArgs e)
+    private void FindUsing_Click(object sender, EventArgs e)
     {
         if (sender is MenuItem item)
         {
@@ -190,7 +139,7 @@ partial class FileStatusList
         FindInFilesGitGrep_ButtonClick(sender, e);
     }
 
-    private void GroupBy_Click(object? sender, EventArgs e)
+    private void GroupBy_Click(object sender, EventArgs e)
     {
         btnByPath.IsChecked = ReferenceEquals(sender, btnByPath);
         btnByExtension.IsChecked = ReferenceEquals(sender, btnByExtension);
@@ -198,7 +147,7 @@ partial class FileStatusList
         ApplyGroupBy();
     }
 
-    private void GroupByToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void GroupByToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (sender is MenuItem { Tag: DiffListSortType sortType })
         {
@@ -218,10 +167,10 @@ partial class FileStatusList
         };
     }
 
-    private void RefreshOnFormFocus_Click(object? sender, EventArgs e)
+    private void RefreshOnFormFocus_Click(object sender, EventArgs e)
         => AppSettings.RefreshArtificialCommitOnApplicationActivated = tsmiRefreshOnFormFocus.IsChecked;
 
-    private void Settings_DropDownOpening(object? sender, EventArgs e)
+    private void Settings_DropDownOpening(object sender, EventArgs e)
     {
         tsmiRefreshOnFormFocus.IsChecked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
         tsmiShowDiffForAllParents.IsVisible = _enableDisablingShowDiffForAllParents;
@@ -229,7 +178,7 @@ partial class FileStatusList
         ToolTip.SetTip(tsmiShowDiffForAllParents, TranslatedStrings.ShowDiffForAllParentsTooltip);
     }
 
-    private void FindInFilesGitGrep_DropDownOpening(object? sender, EventArgs e)
+    private void FindInFilesGitGrep_DropDownOpening(object sender, EventArgs e)
     {
         tsmiFindUsingMatchCase.IsChecked = !AppSettings.GitGrepIgnoreCase.Value;
         tsmiFindUsingWholeWord.IsChecked = AppSettings.GitGrepMatchWholeWord.Value;
@@ -237,28 +186,28 @@ partial class FileStatusList
         tsmiFindUsingOptions.Header = _findUsingOptionsPrefix + AppSettings.GitGrepUserArguments.Value;
     }
 
-    private void ShowAssumeUnchangedFiles_Click(object? sender, EventArgs e)
+    private void ShowAssumeUnchangedFiles_Click(object sender, EventArgs e)
         => RequestRefresh();
 
-    private void ShowDiffForAllParents_Click(object? sender, EventArgs e)
+    private void ShowDiffForAllParents_Click(object sender, EventArgs e)
     {
         AppSettings.ShowDiffForAllParents = tsmiShowDiffForAllParents.IsChecked;
         RequestRefresh();
     }
 
-    private void ShowGroupNodesInFlatList_Click(object? sender, EventArgs e)
+    private void ShowGroupNodesInFlatList_Click(object sender, EventArgs e)
     {
         AppSettings.FileStatusShowGroupNodesInFlatList.Value = tsmiShowGroupNodesInFlatList.IsChecked;
         ApplyFilter(selectFirstItem: false);
     }
 
-    private void ShowIgnoredFiles_Click(object? sender, EventArgs e)
+    private void ShowIgnoredFiles_Click(object sender, EventArgs e)
         => RequestRefresh();
 
-    private void ShowSkipWorktreeFiles_Click(object? sender, EventArgs e)
+    private void ShowSkipWorktreeFiles_Click(object sender, EventArgs e)
         => RequestRefresh();
 
-    private void ShowUntrackedFiles_Click(object? sender, EventArgs e)
+    private void ShowUntrackedFiles_Click(object sender, EventArgs e)
         => RequestRefresh();
 
     private void UpdateToolbar()
@@ -350,10 +299,10 @@ partial class FileStatusList
             {
                 IconSplitButton button => button.Icon,
                 IconDropDownButton button => button.Icon,
-                Button { Content: Image content } => content.Source,
+                Button { Content: Avalonia.Controls.Image content } => content.Source,
                 _ => null,
             };
-            return image is null ? null : new Image { Source = image };
+            return image is null ? null : new Avalonia.Controls.Image { Source = image };
         }
 
         string GetToolbarItemText(int itemIndex, Control toolbarItem)
@@ -374,5 +323,58 @@ partial class FileStatusList
         bool isWorktree = withArtificial && revisions.Any(revision => revision.ObjectId == ObjectId.WorkTreeId);
         tsmiShowSkipWorktreeFiles.IsEnabled = isWorktree;
         tsmiShowUntrackedFiles.IsEnabled = isWorktree;
+    }
+
+    private void WireToolbar()
+    {
+        btnCollapseGroups.Click += CollapseGroups_Click;
+        btnAsTree.Click += AsTree_ButtonClick;
+        btnByPath.Click += GroupBy_Click;
+        btnByExtension.Click += GroupBy_Click;
+        btnByStatus.Click += GroupBy_Click;
+        btnUnequalChange.Click += Filter_ButtonClick;
+        btnOnlyB.Click += Filter_ButtonClick;
+        btnOnlyA.Click += Filter_ButtonClick;
+        btnSameChange.Click += Filter_ButtonClick;
+        btnFindInFilesGitGrep.Click += FindInFilesGitGrep_ButtonClick;
+        tsmiFindUsingMatchCase.Click += FindUsingMatchCase_Click;
+        tsmiFindUsingWholeWord.Click += FindUsingWholeWord_Click;
+        _NO_TRANSLATE_tsmiFindUsingBasic.Click += FindUsingOption_Click;
+        _NO_TRANSLATE_tsmiFindUsingExtended.Click += FindUsingOption_Click;
+        _NO_TRANSLATE_tsmiFindUsingFixed.Click += FindUsingOption_Click;
+        _NO_TRANSLATE_tsmiFindUsingPerl.Click += FindUsingOption_Click;
+        tsmiFindUsingDialog.Click += FindUsing_Click;
+        tsmiFindUsingInputBox.Click += FindUsing_Click;
+        tsmiFindUsingBoth.Click += FindUsing_Click;
+        tsmiGroupByFilePathTree.Click += GroupByToolStripMenuItem_Click;
+        tsmiGroupByFilePathFlat.Click += GroupByToolStripMenuItem_Click;
+        tsmiGroupByFileExtensionTree.Click += GroupByToolStripMenuItem_Click;
+        tsmiGroupByFileExtensionFlat.Click += GroupByToolStripMenuItem_Click;
+        tsmiGroupByFileStatusTree.Click += GroupByToolStripMenuItem_Click;
+        tsmiGroupByFileStatusFlat.Click += GroupByToolStripMenuItem_Click;
+        tsmiDenseTree.Click += DenseTree_Click;
+        tsmiShowGroupNodesInFlatList.Click += ShowGroupNodesInFlatList_Click;
+        tsmiShowIgnoredFiles.Click += ShowIgnoredFiles_Click;
+        tsmiShowSkipWorktreeFiles.Click += ShowSkipWorktreeFiles_Click;
+        tsmiShowAssumeUnchangedFiles.Click += ShowAssumeUnchangedFiles_Click;
+        tsmiShowUntrackedFiles.Click += ShowUntrackedFiles_Click;
+        tsmiEditGitIgnore.Click += EditGitIgnore_Click;
+        tmsiEditLocallyIgnoredFiles.Click += EditLocallyIgnoredFiles_Click;
+        tsmiRefreshOnFormFocus.Click += RefreshOnFormFocus_Click;
+        tsmiShowDiffForAllParents.Click += ShowDiffForAllParents_Click;
+
+        SetSortTag(tsmiGroupByFilePathTree, DiffListSortType.FilePath);
+        SetSortTag(tsmiGroupByFilePathFlat, DiffListSortType.FilePathFlat);
+        SetSortTag(tsmiGroupByFileExtensionTree, DiffListSortType.FileExtension);
+        SetSortTag(tsmiGroupByFileExtensionFlat, DiffListSortType.FileExtensionFlat);
+        SetSortTag(tsmiGroupByFileStatusTree, DiffListSortType.FileStatus);
+        SetSortTag(tsmiGroupByFileStatusFlat, DiffListSortType.FileStatusFlat);
+
+        ((MenuFlyout)btnAsTree.Flyout!).Opening += (_, _) => UpdateToolbar();
+        ((MenuFlyout)btnFindInFilesGitGrep.Flyout!).Opening += FindInFilesGitGrep_DropDownOpening;
+        ((MenuFlyout)btnSettings.Flyout!).Opening += Settings_DropDownOpening;
+
+        static void SetSortTag(MenuItem item, DiffListSortType sortType)
+            => item.Tag = sortType;
     }
 }

@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "7a1fa0a0ea569c5cd0738496a8643a8366e4aae9",
+  "analyzedCommit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
   "axisOrder": [
     "structural",
     "functional",
@@ -29470,28 +29470,31 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/linux/GitUI.FileStatusList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 21,
-          "note": "The family inventory is fully classified without suppression. Remaining product member debt is the 21 owner-draw/layout/pointer/icon/state members assigned to P8.6c.3; the context-menu source differences are documented Avalonia menu/event representation."
+          "findingCount": 401,
+          "note": "The byte-identical family inventory falls from 709 to 401 ordinary findings after restoring exact common-member order, source partial ownership, sender annotations, interface contracts, source-shaped aliases, and internal generated fields. All 217 order findings are closed; exact structural identity remains open."
         },
         "functional": {
-          "status": "gap",
-          "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "status": "partial",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/manual-review.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/windows/focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/linux/gate.log"
           ],
-          "platforms": [],
-          "findingCount": 50,
-          "note": "P8.6c.2c restores reset descriptions/artificial-commit semantics, move retry and error behavior, translated save filters, submodule default behavior, original-named action handlers, and the difftool overload/comment contract. The 50 retained product findings are visual/state work owned by P8.6c.3."
+          "platforms": [
+            "windows",
+            "linux"
+          ],
+          "findingCount": 401,
+          "note": "The source-shaped context-menu ownership and contracts pass in the 154-test Windows/Linux focused gate. The 401 family findings remain visible and exhaustive popup interaction remains open, so functional completion is not claimed."
         },
         "visual": {
           "status": "notApplicable",
@@ -29605,32 +29608,33 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-26",
-          "commit": "9503578db5152b498bf66de1592f8af722b8d73d",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-capture-contract-48/inventory/windows/FileStatusList.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-capture-contract-48/inventory/linux/FileStatusList.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/linux/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/windows/inventory-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/linux/inventory.log"
           ],
           "platforms": [],
-          "findingCount": 1058,
-          "note": "The byte-identical Windows/Linux inventory remains at 1,058 source/comment/member/event/menu/hotkey/setting/translation findings. The deliberate framework-only ShowDiffTree renderer selector remains explicit; exact structural identity remains open."
+          "findingCount": 401,
+          "note": "Seven source-internal menu fields now generate internal AXAML fields. ParityInventory honors x:FieldModifier and its 41-test Windows/Linux suite pins that accessibility contract. The family inventory retains 401 ordinary findings; exact structural identity remains open."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-26",
-          "commit": "9503578db5152b498bf66de1592f8af722b8d73d",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-capture-contract-48/inventory/windows/FileStatusList.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-capture-contract-48/tests/windows/focused-owned.trx",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-capture-contract-48/tests/windows/state-driver-final.trx",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-capture-contract-48/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/windows/focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/linux/gate.log"
           ],
           "platforms": [
             "windows",
             "linux"
           ],
-          "findingCount": 1058,
-          "note": "The source revision overload creates FileStatusWithDescription and enters the standard grouping pipeline. Non-flat single groups preserve hierarchy; flat sorts use the list; selection, focus, filtering, pointer, context, empty-state, and visible-item routes follow the active renderer. The source bold git-grep filter and capture contract pass in the 71-test Windows/Linux focused gate, while all 1,058 inventory findings remain visible and exact functional closure remains open."
+          "findingCount": 401,
+          "note": "The source revision/grouping, active-renderer, filtering, empty-state, context, and translation routes pass in the 154-test Windows/Linux focused gate. Seven menu fields retain source internal accessibility. The 401 family findings remain visible and exact functional closure remains open."
         },
         "visual": {
           "status": "partial",
@@ -30173,15 +30177,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-11",
-          "commit": "58b393d710aaf1b8f8d4b627822c1b0f52f67a66",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6c/FileStatusList.functional-findings.post-c2c.json",
-            "eng/avalonia/parity-evidence/P8.6c/c2c/inventory-classification.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/linux/GitUI.FileStatusList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 1058,
-          "note": "The current byte-identical Windows/Linux family inventory retains all 1,058 findings without suppression. Toolbar-specific generated AXAML, native menu/event, and framework-signature representations remain part of that open structural total."
+          "findingCount": 401,
+          "note": "Exact source-relative common-member order and the source-shaped ToolStripMenuItem alias are restored in this partial. The byte-identical family inventory retains 401 ordinary findings with no order findings; exact structural identity remains open."
         },
         "functional": {
           "status": "partial",
@@ -30260,30 +30264,31 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/linux/GitUI.FileStatusList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 622,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 401,
+          "note": "The source ToolStripMenuItem spelling is preserved through an alias to the real Avalonia MenuItem. The byte-identical family inventory retains 401 ordinary findings; exact structural identity remains open."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-25",
-          "commit": "a039ca6964044ff1ae15785d70ecad7d7a4228f0",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-hierarchy-43/inventory/FileStatusList.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-hierarchy-43/tests/windows/focused.trx",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-hierarchy-43/tests/linux/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/windows/focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/linux/gate.log"
           ],
           "platforms": [
             "windows",
             "linux"
           ],
-          "findingCount": 1058,
-          "note": "Collapse-all, collapse-root, expand-all, and select-all now operate for the corrected ungrouped path/extension/status tree as well as revision-group and file-tree requests. Exact family inventory and exhaustive popup interaction remain open."
+          "findingCount": 401,
+          "note": "Collapse-all, collapse-root, expand-all, and select-all retain their corrected tree behavior, and the source menu-item type spelling is restored. The 401 family findings and exhaustive popup interaction remain open."
         },
         "visual": {
           "status": "notApplicable",
@@ -30347,30 +30352,31 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-26",
-          "commit": "e8d2ada0eac6b7b6653d2c0cb23ac90e349927f1",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/inventory/windows/FileStatusList.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/inventory/linux/FileStatusList.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/linux/GitUI.FileStatusList.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 1058,
-          "note": "The 13-part inventory is byte-identical on Windows and Linux and retains all 1,058 source/comment/member/event/menu/hotkey/setting/translation findings without suppression. Exact structural identity remains open."
+          "findingCount": 401,
+          "note": "The byte-identical Windows/Linux inventory falls from 709 to 401 ordinary findings after restoring exact common-member order across the main, context-menu, and toolbar partials; source partial ownership; sender annotations; interface contracts; source-shaped aliases; and internal generated fields. All 217 order findings are closed; exact structural identity remains open."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-26",
-          "commit": "e8d2ada0eac6b7b6653d2c0cb23ac90e349927f1",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/inventory/windows/FileStatusList.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/tests/windows/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/inventory/windows/GitUI.FileStatusList.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/windows/focused-final.trx",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/tests/linux/gate.log"
           ],
           "platforms": [
             "windows",
             "linux"
           ],
-          "findingCount": 1058,
-          "note": "The source revision overload, hierarchy/render routes, empty-state lifecycle, authored filter-button widths/colors, translated Settings tooltip, active git-grep exception, and NoFiles AutoSize boundary pass the 99-test Windows/Linux focused gate. The inventory and exhaustive live interactions remain open, so functional completion is not claimed."
+          "findingCount": 401,
+          "note": "Source-shaped SetFilter and SetFileStatusListVisibility contracts, interface-typed collaborators, event sender annotations, and the Files/Copy paths translation identities pass in the 154-test Windows/Linux focused gate. The 401 ordinary findings and exhaustive live interactions remain open, so functional completion is not claimed."
         },
         "visual": {
           "status": "partial",
@@ -30417,13 +30423,13 @@
         },
         "platform": {
           "status": "partial",
-          "verifiedOn": "2026-08-26",
-          "commit": "e8d2ada0eac6b7b6653d2c0cb23ac90e349927f1",
+          "verifiedOn": "2026-08-27",
+          "commit": "49e870c94a9642c2a53947c40aa8636d2776f2b6",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/runtime/windows/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/runtime/wayland/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/runtime/x11/smoke.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/runtime/flatpak/smoke.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/runtime/wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/runtime/x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-63/runtime/flatpak/smoke.json"
           ],
           "platforms": [
             "windows",
@@ -30432,7 +30438,7 @@
             "flatpak"
           ],
           "findingCount": 0,
-          "note": "Fresh build, focused tests, and inspected isolated runtime smokes pass on Windows, native Wayland, nested X11, and Wayland Flatpak with --filesystem=host. Native-DPI hardware coverage, exhaustive review, and Apple Silicon remain open."
+          "note": "Fresh warning-clean builds, focused tests, and directly inspected isolated runtime smokes pass on Windows, native Wayland, nested X11, and Wayland Flatpak with --filesystem=host. Native-DPI hardware coverage, exhaustive review, and Apple Silicon remain open."
         }
       }
     },
