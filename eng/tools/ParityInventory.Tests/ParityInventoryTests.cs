@@ -218,6 +218,27 @@ public sealed class ParityInventoryTests
             && item.Path.Contains("nativeList", StringComparison.Ordinal));
     }
 
+    [Test]
+    public void Run_should_honor_axaml_field_modifier_accessibility()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Designer.cs", "namespace Sample; public partial class Widget { internal Button actionButton; }");
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml", """
+            <UserControl xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         x:Class="Sample.Widget">
+              <Button x:Name="actionButton" x:FieldModifier="internal" />
+            </UserControl>
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Findings.Should().NotContain(item =>
+            item.Code == "member.accessibility" && item.Path.Contains("actionButton", StringComparison.Ordinal));
+    }
+
     [TestCase("SelectedIndexChanged", "SelectionChanged")]
     [TestCase("Resize", "SizeChanged")]
     [TestCase("Enter", "GotFocus")]

@@ -49,7 +49,7 @@
       <MenuItem x:Name="tsmiOpenWithDifftool" Header="Open with _difftool">
         <MenuItem x:Name="tsmiSecondDiffCaption" IsEnabled="False" />
         <MenuItem x:Name="tsmiFirstDiffCaption" IsEnabled="False" />
-        <MenuItem x:Name="tsmiDiffFirstToSelected" Header="_First -&gt; Second" />
+        <MenuItem x:Name="tsmiDiffFirstToSelected" x:FieldModifier="internal" Header="_First -&gt; Second" />
         <MenuItem x:Name="tsmiDiffSelectedToLocal" Header="_Second -&gt; Working directory" />
         <MenuItem x:Name="tsmiDiffFirstToLocal" Header="First -&gt; _Working directory" />
         <Separator x:Name="sepDifftoolRemember" />
@@ -62,7 +62,7 @@
       <MenuItem x:Name="tsmiOpenWorkingDirectoryFileWith" Header="Open working directory file with..." />
       <MenuItem x:Name="tsmiOpenRevisionFile" Header="Ope_n this revision (temp file)" />
       <MenuItem x:Name="tsmiOpenRevisionFileWith" Header="Open this revision _with... (temp file)" />
-      <MenuItem x:Name="tsmiEditWorkingDirectoryFile" Header="_Edit working directory file" />
+      <MenuItem x:Name="tsmiEditWorkingDirectoryFile" x:FieldModifier="internal" Header="_Edit working directory file" />
       <MenuItem x:Name="tsmiOpenInVisualStudio" Header="Open in _Visual Studio" />
       <MenuItem x:Name="tsmiSaveAs" Header="S_ave selected as..." />
       <MenuItem x:Name="tsmiMove" Header="Rena_me / move" />
@@ -74,7 +74,7 @@
       <MenuItem x:Name="tsmiShowInFileTree" Header="Show in File _tree" IsVisible="False" />
       <MenuItem x:Name="tsmiFilterFileInGrid" Header="Filter file in _grid" IsVisible="False" />
       <MenuItem x:Name="tsmiFileHistory" Header="File _history" />
-      <MenuItem x:Name="tsmiBlame" Header="_Blame" />
+      <MenuItem x:Name="tsmiBlame" x:FieldModifier="internal" Header="_Blame" />
       <MenuItem x:Name="tsmiFindFile" Header="_Find file..." />
       <MenuItem x:Name="tsmiOpenFindInCommitFilesGitGrepDialog" Header="Find in _commit files using git-grep..." IsVisible="False" />
       <MenuItem x:Name="tsmiShowFindInCommitFilesGitGrep" Header="Show 'Find in commit fi_les using git-grep'" IsVisible="False" />
@@ -158,10 +158,10 @@
       <compat:IconDropDownButton x:Name="btnSettings" Classes="gitextensions-toolbar-button gitextensions-icon-only filestatus-toolbar-item" Width="29" Height="22" MinHeight="22" Margin="0,1,0,2" Icon="{x:Static properties:Images.Settings}" Content="Settings">
         <compat:IconDropDownButton.Flyout>
           <MenuFlyout>
-            <MenuItem x:Name="tsmiShowIgnoredFiles" Header="Show _ignored files" ToggleType="CheckBox" IsVisible="False" />
-            <MenuItem x:Name="tsmiShowSkipWorktreeFiles" Header="Show s_kip-worktree files" ToggleType="CheckBox" />
-            <MenuItem x:Name="tsmiShowAssumeUnchangedFiles" Header="Show _assumed-unchanged files" ToggleType="CheckBox" IsVisible="False" />
-            <MenuItem x:Name="tsmiShowUntrackedFiles" Header="Show _untracked files" ToggleType="CheckBox" IsChecked="True" />
+            <MenuItem x:Name="tsmiShowIgnoredFiles" x:FieldModifier="internal" Header="Show _ignored files" ToggleType="CheckBox" IsVisible="False" />
+            <MenuItem x:Name="tsmiShowSkipWorktreeFiles" x:FieldModifier="internal" Header="Show s_kip-worktree files" ToggleType="CheckBox" />
+            <MenuItem x:Name="tsmiShowAssumeUnchangedFiles" x:FieldModifier="internal" Header="Show _assumed-unchanged files" ToggleType="CheckBox" IsVisible="False" />
+            <MenuItem x:Name="tsmiShowUntrackedFiles" x:FieldModifier="internal" Header="Show _untracked files" ToggleType="CheckBox" IsChecked="True" />
             <Separator x:Name="sepShow" />
             <MenuItem x:Name="tsmiEditGitIgnore" Header="_Edit ignored files" />
             <MenuItem x:Name="tmsiEditLocallyIgnoredFiles" Header="Edit _locally ignored files" />
