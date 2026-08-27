@@ -121,7 +121,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             column.ResizeToFitContentAction = () =>
             {
                 HostedRepositoryRow[] rows = list.ItemsSource?.OfType<HostedRepositoryRow>().ToArray() ?? [];
-                string header = GetHeaderText(isSearchResult, columnIndex);
+                string header = column.Text;
                 int resizeStrategy = rows.Length == 0 ? ResizeOnHeader : ResizeOnContent;
                 IEnumerable<string?> values = resizeStrategy == ResizeOnHeader
                     ? [header]
@@ -400,14 +400,6 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             ?? throw new InvalidOperationException("The repository list header is not attached to its column grid."));
         header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(
             isSearchResult ? _searchResultColumnWidths : _myRepositoryColumnWidths);
-    }
-
-    private string GetHeaderText(bool isSearchResult, int columnIndex)
-    {
-        ContentControl[] headers = isSearchResult
-            ? [columnHeaderSearchName, columnHeaderSearchOwner, columnHeaderSearchIsFork, columnHeaderSearchForks]
-            : [columnHeaderMyReposName, columnHeaderMyReposIsFork, columnHeaderMyReposForks, columnHeaderMyReposIsPrivate];
-        return headers[columnIndex].Content as string ?? string.Empty;
     }
 
     private void _forkBtn_Click(object sender, EventArgs e)

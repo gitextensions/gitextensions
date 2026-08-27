@@ -20,6 +20,7 @@ using GitUI.Compat;
 using GitUI.UserControls;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
+using ColumnHeader = GitUI.Compat.WinFormsControls.ColumnHeader;
 using FlowLayoutPanel = GitUI.Compat.WinFormsControls.FlowLayoutPanel;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -85,6 +86,8 @@ public sealed class RepositoryHostForkCloneTests
         tabControl.Classes.Should().Contain("gitextensions-native-tabs");
         form.FindControl<ListBox>("myReposLV").Should().NotBeNull();
         form.FindControl<ListBox>("searchResultsLV").Should().NotBeNull();
+        form.FindControl<ColumnHeader>("columnHeaderMyReposName")!.Text.Should().Be("Name");
+        form.FindControl<ColumnHeader>("columnHeaderSearchOwner")!.Text.Should().Be("Owner");
         form.FindControl<NumericUpDown>("depthUpDown")!.Maximum.Should().Be(999);
         form.FindControl<Grid>("tableLayoutPanel2")!.RowDefinitions[1].Height.Value.Should().Be(183);
         form.FindControl<TextBox>("destinationTB")!.Width.Should().Be(294);

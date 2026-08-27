@@ -8,6 +8,9 @@ internal static class InventorySweepRunner
     public static InventorySweepResult Run(SweepOptions options)
     {
         IReadOnlyList<PortMapMapping> mappings = ReadPortMap(options.PortMapFile);
+        ReviewedFrameworkDeviationManifest manifest = ReviewedFrameworkDeviationManifest.Read(
+            options.FrameworkAdaptationsFile);
+        HashSet<string> appliedManifestEntries = new(StringComparer.Ordinal);
         Dictionary<string, TypeWork> workByType = new(StringComparer.Ordinal);
         Dictionary<string, IReadOnlyList<string>> mappingTypes = new(StringComparer.Ordinal);
         foreach (PortMapMapping mapping in mappings)
@@ -71,6 +74,7 @@ internal static class InventorySweepRunner
                     isTwin: true,
                     work.TwinFiles);
                 InventoryComparison comparison = InventoryComparer.Compare(original, twin);
+                comparison = manifest.Apply(work.TypeName, twin, comparison, appliedManifestEntries);
                 IReadOnlyList<FunctionalFinding> findings = comparison.Findings;
                 InventoryReport report = CreateReport(work.TypeName, original, twin, comparison);
                 string relativeReport = $"types/{Sanitize(work.TypeName)}.functional-findings.json";
@@ -126,6 +130,7 @@ internal static class InventorySweepRunner
         }
 
         FunctionalFinding[] allFindings = reports.Values.SelectMany(report => report.Findings).ToArray();
+        manifest.ValidateAllApplied(appliedManifestEntries);
         InventorySweepResult result = new()
         {
             SchemaVersion = InventorySweepResult.CurrentSchemaVersion,
