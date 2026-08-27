@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitUI.Properties;
 
 namespace GitUI.Avatars;
@@ -81,11 +81,6 @@ public static class AvatarService
         }
     }
 
-    public static void UpdateAvatarInitialFontsSettings()
-    {
-        InitialsAvatarProvider.UpdateFontsSettings();
-    }
-
     private static (IAvatarProvider provider, IAvatarCacheCleaner cacheCleaner) SetupCachingAndFallback()
     {
         FileSystemAvatarCache persistentCacheProvider = new(HotSwapProvider);
@@ -97,5 +92,10 @@ public static class AvatarService
                 UserImageAvatarProvider));
 
         return (mainProvider, cacheCleaner);
+    }
+
+    public static void UpdateAvatarInitialFontsSettings()
+    {
+        InitialsAvatarProvider.UpdateFontsSettings();
     }
 }

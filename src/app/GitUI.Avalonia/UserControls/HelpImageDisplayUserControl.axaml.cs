@@ -11,9 +11,7 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     private Bitmap? _image1;
     private Bitmap? _image2;
     private bool _isExpanded;
-    private bool _isHover;
     private bool _isLoaded;
-    private bool _showImage2OnHover;
 
     public HelpImageDisplayUserControl()
     {
@@ -45,6 +43,15 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     }
 
     public string? UniqueIsExpandedSettingsId { get; set; }
+
+    private void UpdateIsExpandedState()
+    {
+        linkLabelHide.IsVisible = _isExpanded;
+        buttonShowHelp.IsVisible = !_isExpanded;
+        pictureBox1.IsVisible = _isExpanded;
+        labelHoverText.IsVisible = _isExpanded && IsOnHoverShowImage2;
+        MinWidth = _isExpanded ? 289 : 30;
+    }
 
     public Bitmap? Image1
     {
@@ -83,6 +90,8 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         set => labelHoverText.Text = value;
     }
 
+    private bool _isHover;
+
     private void LoadSettings()
     {
         if (_isLoaded)
@@ -96,16 +105,9 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         UpdateImageDisplay();
     }
 
-    private string GetId() => UniqueIsExpandedSettingsId ?? "MUST_BE_SET";
+    private bool _showImage2OnHover;
 
-    private void UpdateIsExpandedState()
-    {
-        linkLabelHide.IsVisible = _isExpanded;
-        buttonShowHelp.IsVisible = !_isExpanded;
-        pictureBox1.IsVisible = _isExpanded;
-        labelHoverText.IsVisible = _isExpanded && IsOnHoverShowImage2;
-        MinWidth = _isExpanded ? 289 : 30;
-    }
+    private string GetId() => UniqueIsExpandedSettingsId ?? "MUST_BE_SET";
 
     private void UpdateImageDisplay()
     {

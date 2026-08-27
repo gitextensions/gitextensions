@@ -122,7 +122,6 @@ public partial class FormResolveConflicts : GitModuleForm
     }
 
     private readonly IFullPathResolver _fullPathResolver;
-    private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private ConflictResolutionPreference _solveMergeConflictDialogResult;
     private bool _solveMergeConflictApplyToAll;
     private string? _solveMergeConflictDialogCheckboxText;
@@ -132,6 +131,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private int _filesDeletedLocallyAndModifiedRemotelySolved;
     private int _filesModifiedLocallyAndDeletedRemotelySolved;
     private int _conflictItemsCount;
+    private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private bool _inTheMiddleOfRebase;
 
     public FormResolveConflicts()

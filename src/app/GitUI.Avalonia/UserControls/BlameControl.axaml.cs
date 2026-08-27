@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -174,11 +174,9 @@ public sealed partial class BlameControl : GitModuleControl
         return menuItem;
     }
 
-    public void HideCommitInfo()
+    public void UpdateShowLineNumbers()
     {
-        CommitInfo.IsVisible = false;
-        splitContainer1.RowDefinitions[0].Height = new GridLength(0);
-        splitContainer1.RowDefinitions[1].Height = new GridLength(0);
+        BlameFile.TextEditor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
     }
 
     internal void CancelBackgroundTasks()
@@ -187,14 +185,16 @@ public sealed partial class BlameControl : GitModuleControl
         BlameAuthor.Clear();
     }
 
-    public void UpdateShowLineNumbers()
-    {
-        BlameFile.TextEditor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
-    }
-
     public int CurrentFileColumn => BlameFile.CurrentFileColumn;
 
     public int CurrentFileLine => BlameFile.CurrentFileLine;
+
+    public void HideCommitInfo()
+    {
+        CommitInfo.IsVisible = false;
+        splitContainer1.RowDefinitions[0].Height = new GridLength(0);
+        splitContainer1.RowDefinitions[1].Height = new GridLength(0);
+    }
 
     public async Task LoadBlameAsync(
         GitRevision revision,

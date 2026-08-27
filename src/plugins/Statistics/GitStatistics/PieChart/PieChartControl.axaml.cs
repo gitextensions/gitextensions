@@ -67,8 +67,6 @@ public partial class PieChartControl : UserControl
         set => SetValue(InitialAngleProperty, value);
     }
 
-    public event EventHandler<SliceSelectedArgs>? SliceSelected;
-
     public void SetLeftMargin(float value)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(value);
@@ -150,6 +148,8 @@ public partial class PieChartControl : UserControl
         _edgeLineWidth = value;
         InvalidateVisual();
     }
+
+    public event EventHandler<SliceSelectedArgs>? SliceSelected;
 
     public override void Render(DrawingContext context)
     {

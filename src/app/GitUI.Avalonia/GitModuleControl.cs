@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using GitExtensions.Extensibility.Git;
@@ -15,6 +15,11 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
 
     /// <summary>Occurs after <see cref="UICommandsSource"/> is set.</summary>
     public event EventHandler<GitUICommandsSourceEventArgs>? UICommandsSourceSet;
+
+    protected override IServiceProvider ServiceProvider => UICommands;
+
+    /// <summary>Gets the commands exposed by <see cref="UICommandsSource"/>.</summary>
+    public IGitUICommands UICommands => UICommandsSource.UICommands;
 
     /// <summary>Gets or sets the command source for this control.</summary>
     public IGitUICommandsSource UICommandsSource
@@ -41,9 +46,6 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
         }
     }
 
-    /// <summary>Gets the commands exposed by <see cref="UICommandsSource"/>.</summary>
-    public IGitUICommands UICommands => UICommandsSource.UICommands;
-
     /// <summary>Gets the commands only if their source has already been set.</summary>
     internal bool TryGetUICommandsDirect([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
     {
@@ -51,12 +53,10 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
         return commands is not null;
     }
 
-    /// <summary>Gets the current Git module.</summary>
-    public IGitModule Module => UICommands.Module;
-
     nint IWin32Window.Handle => TopLevel.GetTopLevel(this)?.TryGetPlatformHandle()?.Handle ?? 0;
 
-    protected override IServiceProvider ServiceProvider => UICommands;
+    /// <summary>Gets the current Git module.</summary>
+    public IGitModule Module => UICommands.Module;
 
     protected override bool ExecuteCommand(int command)
     {

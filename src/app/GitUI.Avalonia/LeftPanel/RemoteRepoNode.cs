@@ -35,13 +35,6 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
 
     public bool CanToggle => _remotesManager is not null;
 
-    public bool IsRemoteUrlUsingHttp => _remote?.FetchUrl.IsUrlUsingHttp() == true;
-
-    private RemoteBranchTree RemoteTree => (RemoteBranchTree)Tree;
-
-    public void PopupManageRemotesForm()
-        => RemoteTree.PopupManageRemotesForm(FullPath);
-
     public bool Fetch()
     {
         UICommands.StartPullDialogAndPullImmediately(
@@ -51,6 +44,8 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
             pullAction: GitPullAction.Fetch);
         return pullCompleted;
     }
+
+    private RemoteBranchTree RemoteTree => (RemoteBranchTree)Tree;
 
     public bool Prune()
     {
@@ -69,6 +64,8 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
             OsShellUtil.OpenUrlInDefaultBrowser(_remote!.Value.FetchUrl);
         }
     }
+
+    public bool IsRemoteUrlUsingHttp => _remote?.FetchUrl.IsUrlUsingHttp() == true;
 
     public void Enable(bool fetch)
     {
@@ -91,6 +88,9 @@ internal sealed class RemoteRepoNode : BaseRevisionNode
 
     internal override void OnDoubleClick()
         => PopupManageRemotesForm();
+
+    public void PopupManageRemotesForm()
+        => RemoteTree.PopupManageRemotesForm(FullPath);
 
     private static Avalonia.Media.IImage GetIcon(Remote? remote)
     {

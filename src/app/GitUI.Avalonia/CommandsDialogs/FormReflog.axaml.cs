@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -31,14 +31,14 @@ public sealed partial class FormReflog : GitModuleForm
     private readonly TaskManager _loadOperations = GitUI.Compat.DesignTimeTaskManager.Create();
 
     private IReadOnlyList<RefLine> _refLines = [];
-    private string? _currentBranch;
-    private bool _isBranchCheckedOut;
-    private bool _isDirtyDir;
-    private string? _sortColumn;
-    private bool _sortAscending = true;
 
     [GeneratedRegex(@"^(?<sha>[^ ]+) (?<ref>[^:]+): (?<action>.+)$", RegexOptions.ExplicitCapture)]
     private static partial Regex ReflogRegex { get; }
+    private string? _currentBranch;
+    private bool _isBranchCheckedOut;
+    private string? _sortColumn;
+    private bool _sortAscending = true;
+    private bool _isDirtyDir;
 
     public FormReflog()
     {

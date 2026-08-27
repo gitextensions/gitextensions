@@ -1,4 +1,4 @@
-﻿using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Git;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.Properties;
 
@@ -11,6 +11,12 @@ internal sealed class TagNode : BaseRevisionNode, IGitRefActions, ICanDelete
     {
     }
 
+    internal override void OnDoubleClick()
+        => CreateBranch();
+
+    internal override void OnDelete()
+        => Delete();
+
     public bool CreateBranch()
         => UICommands.StartCreateBranchDialog(Owner, ObjectId);
 
@@ -22,10 +28,4 @@ internal sealed class TagNode : BaseRevisionNode, IGitRefActions, ICanDelete
 
     public bool Checkout()
         => UICommands.StartCheckoutRevisionDialog(Owner, FullPath);
-
-    internal override void OnDoubleClick()
-        => CreateBranch();
-
-    internal override void OnDelete()
-        => Delete();
 }

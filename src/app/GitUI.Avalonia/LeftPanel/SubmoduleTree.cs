@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Submodules;
@@ -154,6 +154,29 @@ internal sealed class SubmoduleTree : Tree
         return parentNode;
     }
 
+    private void Provider_StatusUpdated(object? sender, SubmoduleStatusEventArgs e)
+    {
+        if (e.Token.IsCancellationRequested)
+        {
+            return;
+        }
+
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            Load(e.Info);
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (!e.Token.IsCancellationRequested)
+                {
+                    Load(e.Info);
+                }
+            });
+        }
+    }
+
     public void UpdateSubmodule(IWin32Window owner, SubmoduleNode node)
         => UICommands.StartUpdateSubmoduleDialog(owner, node.LocalPath, node.SuperPath);
 
@@ -186,29 +209,6 @@ internal sealed class SubmoduleTree : Tree
 
     public void CommitSubmodule(IWin32Window owner, SubmoduleNode node)
         => UICommands.WithWorkingDirectory(node.Info.Path.EnsureTrailingPathSeparator()).StartCommitDialog(owner);
-
-    private void Provider_StatusUpdated(object? sender, SubmoduleStatusEventArgs e)
-    {
-        if (e.Token.IsCancellationRequested)
-        {
-            return;
-        }
-
-        if (Dispatcher.UIThread.CheckAccess())
-        {
-            Load(e.Info);
-        }
-        else
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (!e.Token.IsCancellationRequested)
-                {
-                    Load(e.Info);
-                }
-            });
-        }
-    }
 
     private string NormalizePath(string path)
     {

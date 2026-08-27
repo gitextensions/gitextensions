@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
 using GitCommands;
@@ -23,7 +23,8 @@ public sealed partial class FormStash : GitModuleForm
     private readonly CancellationTokenSequence _viewChangesSequence = new();
     private readonly AsyncLoader _asyncLoader = new();
     private int _lastSelectedStashIndex = -1;
-    private GitStash? _currentWorkingDirStashItem;
+
+    public bool ManageStashes { get; set; }
 
     public FormStash()
     {
@@ -68,53 +69,7 @@ public sealed partial class FormStash : GitModuleForm
         InitializeComplete();
     }
 
-    public bool ManageStashes { get; set; }
-
-    public static readonly string HotkeySettingsName = "Stash";
-
-    internal enum Command
-    {
-        NextStash = 0,
-        PreviousStash = 1,
-        Refresh = 2
-    }
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        translation.AddTranslationItem(nameof(FormStash), nameof(Stashes), "ToolTipText", "Select a stash");
-    }
-
-    public override void TranslateItems(ITranslation translation)
-    {
-        base.TranslateItems(translation);
-        string? toolTip = translation.TranslateItem(
-            nameof(FormStash),
-            nameof(Stashes),
-            "ToolTipText",
-            () => "Select a stash");
-        ToolTip.SetTip(Stashes, toolTip);
-    }
-
-    protected override void OnRuntimeLoad(EventArgs e)
-    {
-        base.OnRuntimeLoad(e);
-
-        StashKeepIndex.IsChecked = AppSettings.StashKeepIndex;
-        chkIncludeUntrackedFiles.IsChecked = AppSettings.IncludeUntrackedFilesInManualStash;
-        LoadHotkeys(HotkeySettingsName);
-        RefreshAll(force: true);
-    }
-
-    protected override void OnClosed(EventArgs e)
-    {
-        AppSettings.StashKeepIndex = StashKeepIndex.IsChecked == true;
-        AppSettings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.IsChecked == true;
-        _asyncLoader.Dispose();
-        _viewChangesSequence.Dispose();
-
-        base.OnClosed(e);
-    }
+    private GitStash? _currentWorkingDirStashItem;
 
     private void Initialize()
     {
@@ -172,6 +127,43 @@ public sealed partial class FormStash : GitModuleForm
         }
     }
 
+    public override void AddTranslationItems(ITranslation translation)
+    {
+        base.AddTranslationItems(translation);
+        translation.AddTranslationItem(nameof(FormStash), nameof(Stashes), "ToolTipText", "Select a stash");
+    }
+
+    public override void TranslateItems(ITranslation translation)
+    {
+        base.TranslateItems(translation);
+        string? toolTip = translation.TranslateItem(
+            nameof(FormStash),
+            nameof(Stashes),
+            "ToolTipText",
+            () => "Select a stash");
+        ToolTip.SetTip(Stashes, toolTip);
+    }
+
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+
+        StashKeepIndex.IsChecked = AppSettings.StashKeepIndex;
+        chkIncludeUntrackedFiles.IsChecked = AppSettings.IncludeUntrackedFilesInManualStash;
+        LoadHotkeys(HotkeySettingsName);
+        RefreshAll(force: true);
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        AppSettings.StashKeepIndex = StashKeepIndex.IsChecked == true;
+        AppSettings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.IsChecked == true;
+        _asyncLoader.Dispose();
+        _viewChangesSequence.Dispose();
+
+        base.OnClosed(e);
+    }
+
     private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         Stashed.SelectPreviousVisibleItem();
@@ -182,6 +174,15 @@ public sealed partial class FormStash : GitModuleForm
     {
         Stashed.SelectNextVisibleItem();
         View.ScrollToTop();
+    }
+
+    public static readonly string HotkeySettingsName = "Stash";
+
+    internal enum Command
+    {
+        NextStash = 0,
+        PreviousStash = 1,
+        Refresh = 2
     }
 
     private bool ChangeSelectedStash(bool next = true)

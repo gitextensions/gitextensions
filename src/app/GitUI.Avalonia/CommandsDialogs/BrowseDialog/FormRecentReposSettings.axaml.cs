@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -15,14 +15,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 
 public partial class FormRecentReposSettings : GitExtensionsForm
 {
-    private const int MinComboWidthAllowed = 30;
-
 #pragma warning disable SX1309 // Preserve the original designer field names for port parity.
-    private readonly MenuItem anchorToRecentReposToolStripMenuItem = new() { Header = "Anchor to recent repositories" };
-    private readonly MenuItem anchorToTopReposToolStripMenuItem = new() { Header = "Anchor to top repositories" };
     private readonly ContextMenu contextMenuStrip1 = new();
+    private readonly MenuItem anchorToTopReposToolStripMenuItem = new() { Header = "Anchor to top repositories" };
     private readonly MenuItem removeAnchorToolStripMenuItem = new() { Header = "Remove anchor" };
     private readonly MenuItem removeRecentToolStripMenuItem = new() { Header = "Remove from recent repositories" };
+    private readonly MenuItem anchorToRecentReposToolStripMenuItem = new() { Header = "Anchor to recent repositories" };
+    private const int MinComboWidthAllowed = 30;
 #pragma warning restore SX1309
     private readonly Func<string, Task<IList<Repository>>> _removeRecentAsync;
     private readonly Func<IEnumerable<Repository>, Task> _saveRecentAsync;

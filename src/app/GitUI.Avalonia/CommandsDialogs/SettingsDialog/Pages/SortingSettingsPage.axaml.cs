@@ -41,6 +41,17 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
     public static SettingsPageReference GetPageReference()
         => new SettingsPageReferenceByType(typeof(SortingSettingsPage));
 
+    private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : struct, Enum
+    {
+        ComboBoxItem<T>[] items = EnumHelper.GetValues<T>()
+            .Select(value => new ComboBoxItem<T>(value.GetDescription(), value))
+            .ToArray();
+        comboBox.ItemsSource = items;
+        comboBox.ItemTemplate = new FuncDataTemplate<ComboBoxItem<T>>(
+            (item, _) => new TextBlock { Text = item?.Text },
+            supportsRecycling: true);
+    }
+
     protected override void SettingsToPage()
     {
         _NO_TRANSLATE_cmbRevisionsSortBy.SelectedIndex = (int)AppSettings.RevisionSortOrder.Value;
@@ -50,21 +61,6 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
         txtPrioRemoteNames.Text = AppSettings.PrioritizedRemoteNames;
 
         base.SettingsToPage();
-    }
-
-    protected override void PageToSettings()
-    {
-        AppSettings.RevisionSortOrder.Value = (RevisionSortOrder)_NO_TRANSLATE_cmbRevisionsSortBy.SelectedIndex;
-        AppSettings.RevisionSortOrder.Save();
-        AppSettings.RefsSortOrder = (GitRefsSortOrder)_NO_TRANSLATE_cmbBranchesOrder.SelectedIndex;
-        AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
-        AppSettings.PrioritizedBranchNames = txtPrioBranchNames.Text ?? string.Empty;
-        AppSettings.PrioritizedRemoteNames = txtPrioRemoteNames.Text ?? string.Empty;
-
-        ResourceManager.TranslatedStrings.Reinitialize();
-        TranslatedStrings.Reinitialize();
-
-        base.PageToSettings();
     }
 
     public override void TranslateItems(ITranslation translation)
@@ -88,15 +84,19 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
             TextWrapping = TextWrapping.Wrap,
         };
 
-    private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : struct, Enum
+    protected override void PageToSettings()
     {
-        ComboBoxItem<T>[] items = EnumHelper.GetValues<T>()
-            .Select(value => new ComboBoxItem<T>(value.GetDescription(), value))
-            .ToArray();
-        comboBox.ItemsSource = items;
-        comboBox.ItemTemplate = new FuncDataTemplate<ComboBoxItem<T>>(
-            (item, _) => new TextBlock { Text = item?.Text },
-            supportsRecycling: true);
+        AppSettings.RevisionSortOrder.Value = (RevisionSortOrder)_NO_TRANSLATE_cmbRevisionsSortBy.SelectedIndex;
+        AppSettings.RevisionSortOrder.Save();
+        AppSettings.RefsSortOrder = (GitRefsSortOrder)_NO_TRANSLATE_cmbBranchesOrder.SelectedIndex;
+        AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
+        AppSettings.PrioritizedBranchNames = txtPrioBranchNames.Text ?? string.Empty;
+        AppSettings.PrioritizedRemoteNames = txtPrioRemoteNames.Text ?? string.Empty;
+
+        ResourceManager.TranslatedStrings.Reinitialize();
+        TranslatedStrings.Reinitialize();
+
+        base.PageToSettings();
     }
 
     private void WireEvents()

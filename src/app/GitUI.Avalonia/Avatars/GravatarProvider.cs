@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 using GitCommands;
 
@@ -48,11 +48,6 @@ public sealed class GravatarProvider : IAvatarProvider, IDisposable
         return _downloader.DownloadImageAsync(uri.Uri);
     }
 
-    public void Dispose()
-    {
-        _sha256.Dispose();
-    }
-
     private string ComputeHash(string email)
     {
         byte[] emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());
@@ -71,5 +66,10 @@ public sealed class GravatarProvider : IAvatarProvider, IDisposable
             AvatarFallbackType.Robohash => "robohash",
             _ => null,
         };
+    }
+
+    public void Dispose()
+    {
+        _sha256.Dispose();
     }
 }

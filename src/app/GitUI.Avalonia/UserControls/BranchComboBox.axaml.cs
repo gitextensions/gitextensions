@@ -15,8 +15,6 @@ namespace GitUI;
 public partial class BranchComboBox : GitExtensionsControl
 {
     private readonly TranslationString _branchCheckoutError = new("Branch '{0}' is not selectable, this branch has been removed from the selection.");
-    private IReadOnlyList<IGitRef>? _branchesToSelect;
-    private bool _settingSelectedText;
 
     public BranchComboBox()
     {
@@ -31,6 +29,8 @@ public partial class BranchComboBox : GitExtensionsControl
         InitializeComplete();
     }
 
+    private bool _settingSelectedText;
+
     /// <summary>
     /// Occurs whenever the branch selection has changed.
     /// </summary>
@@ -38,6 +38,7 @@ public partial class BranchComboBox : GitExtensionsControl
     [Category("Action")]
     [Description("Occurs whenever the branch selection has changed.")]
     public event EventHandler? SelectedValueChanged;
+    private IReadOnlyList<IGitRef>? _branchesToSelect;
 
     public IReadOnlyList<IGitRef>? BranchesToSelect
     {

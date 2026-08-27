@@ -43,16 +43,16 @@ internal partial class HelpToolStripMenuItem : ToolStripMenuItemEx
         frm.ShowDialog(OwnerForm);
     }
 
-    private void DonateToolStripMenuItemClick(object? sender, EventArgs e)
-    {
-        using FormDonate frm = new();
-        frm.ShowDialog(OwnerForm);
-    }
-
     private void checkForUpdatesToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         (UICommands.GetService(typeof(IUpdateCheckService)) as IUpdateCheckService)
             ?.SearchForUpdatesAndShow(OwnerForm!, alwaysShow: true);
+    }
+
+    private void DonateToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        using FormDonate frm = new();
+        frm.ShowDialog(OwnerForm);
     }
 
     private void reportAnIssueToolStripMenuItem_Click(object? sender, EventArgs e)
