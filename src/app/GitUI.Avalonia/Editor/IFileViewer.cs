@@ -1,3 +1,7 @@
+using Avalonia.Input;
+using GitUI.Compat;
+using Font = GitExtensions.Shims.WinForms.Font;
+
 namespace GitUI.Editor;
 
 public class SelectedLineEventArgs : EventArgs
@@ -10,35 +14,63 @@ public class SelectedLineEventArgs : EventArgs
     public int SelectedLine { get; }
 }
 
-/// <summary>
-/// Portable portion of the WinForms IFileViewer contract. Framework-specific mouse, key,
-/// font, and scrollbar event types remain at each UI implementation boundary.
-/// </summary>
 public interface IFileViewer
 {
-    event EventHandler? TextChanged;
-    event EventHandler<SelectedLineEventArgs>? SelectedLineChanged;
-    event EventHandler? TextLoaded;
+    event EventHandler<PointerEventArgs> MouseMove;
+    event EventHandler MouseEnter;
+    event EventHandler MouseLeave;
+    event EventHandler TextChanged;
+    event EventHandler HScrollPositionChanged;
+    event EventHandler VScrollPositionChanged;
+    event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
+    event EventHandler<KeyEventArgs> KeyDown;
+    event EventHandler<KeyEventArgs> KeyUp;
+    event EventHandler DoubleClick;
 
+    void EnableScrollBars(bool enable);
     void Find(bool replace);
     Task FindNextAsync(bool searchForwardOrOpenWithDifftool);
+
     string GetText();
+    void SetText(string text, Action? openWithDifftool);
+    void SetHighlighting(string syntax);
+    void SetHighlightingForFile(string filename);
+    void HighlightLines(int startLine, int endLine, System.Drawing.Color color);
+    void ClearHighlighting();
     string GetSelectedText();
     int GetSelectionPosition();
     int GetSelectionLength();
-    void HighlightLines(int startLine, int endLine, System.Drawing.Color color);
-    void ClearHighlighting();
-    void Refresh();
-    int GetLineFromVisualPosY(double visualPosY);
-    void GoToLine(int lineNumber);
-    void SetFileLoader(GetNextFileFnc fileLoader);
-    void GoToNextOccurrence();
-    void GoToPreviousOccurrence();
-
     Action? OpenWithDifftool { get; }
+    int VScrollPosition { get; set; }
+
     bool? ShowLineNumbers { get; set; }
+    EolMarkerStyle EolMarkerStyle { get; set; }
+    bool ShowSpaces { get; set; }
+    bool ShowTabs { get; set; }
     int VRulerPosition { get; set; }
     bool IsReadOnly { get; set; }
+
+    int GetLineFromVisualPosY(int visualPosY);
     int TotalNumberOfLines { get; }
+
+    /// <summary>
+    /// positions to the given line number.
+    /// </summary>
+    /// <param name="lineNumber">1..MaxLineNumber.</param>
+    void GoToLine(int lineNumber);
     int MaxLineNumber { get; }
+
+    Font Font { get; set; }
+
+    void SetFileLoader(GetNextFileFnc fileLoader);
+
+    /// <summary>
+    /// Move the file viewer caret position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences.
+    /// </summary>
+    void GoToNextOccurrence();
+
+    /// <summary>
+    /// Move the file viewer caret position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences.
+    /// </summary>
+    void GoToPreviousOccurrence();
 }
