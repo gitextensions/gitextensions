@@ -9,7 +9,9 @@ directory and starts a worker there in portable mode. Consequently, `GitExtensio
 the custom capture theme, and all other worker state stay under that disposable directory.
 The custom theme is staged as local/preinstalled for that isolated process, so it is never
 resolved from or written to the user themes directory. The supplied repository must also be
-a throwaway repository outside the current working tree.
+a throwaway repository outside the current working tree and contain at least one commit.
+Repository-host fixtures use `HEAD` as both sides of their deterministic comparison when that
+commit has no parent, so a valid object id is always supplied without requiring extra history.
 
 ```powershell
 dotnet run --project eng/tools/WinFormsParityCapture -c Release -- capture `
@@ -27,7 +29,12 @@ At 100%, a genuine 96-DPI monitor is mandatory. At 125%, 150%, and 200%, the too
 exact native monitor and otherwise sends `WM_DPICHANGED` to the real WinForms window. It never
 stretches a bitmap and never calls `Control.Scale`. Every successful tree names either
 `nativeMonitor` or `dpiChangeMessage`; unsupported states are manifest-only entries with a
-reason and `captureMethod` set to `unsupported`.
+reason and `captureMethod` set to `unsupported`. A pre-change per-control font baseline lets
+the reader normalize only runtime fonts actually scaled by WinForms' DPI handler; explicit
+fonts that remain unchanged keep their authored size. This matches the existing pixel-to-DIP
+normalization for control geometry. Isolation cleanup retries transient executable locks from
+a just-exited worker or antivirus scanner, and a cleanup error never hides the original capture
+failure.
 
 The shared `eng/tools/ParityCaptureSchema` project targets plain `net10.0` and has no UI or
 Windows dependency. P0.2 will deliberately reference that one schema project from the
