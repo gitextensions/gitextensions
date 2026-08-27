@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
+  "analyzedCommit": "646c5fdcb7eb926ff53a51e45709b2e548e77711",
   "axisOrder": [
     "structural",
     "functional",
@@ -4853,15 +4853,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
+          "verifiedOn": "2026-08-28",
+          "commit": "646c5fdcb7eb926ff53a51e45709b2e548e77711",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/windows-final/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/linux/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/windows-final/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/linux-final/types/GitUI.CommandsDialogs.FormBrowse.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 680,
-          "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 680 ordinary findings for this mapping; every remaining structural difference stays open."
+          "findingCount": 620,
+          "note": "P8.6i progress 68 restores exact common-member order, returns context actions to their original partial where applicable, and projects mapped linked partials through their logical twin paths. The byte-identical Windows/Linux schema-v4 inventory records 620 ordinary findings and zero member.order findings for this mapping; every other reported structural difference remains open."
         },
         "functional": {
           "status": "gap",
@@ -7371,15 +7371,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
+          "verifiedOn": "2026-08-28",
+          "commit": "646c5fdcb7eb926ff53a51e45709b2e548e77711",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/windows-final/types/GitUI.CommandsDialogs.FormPush.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/linux/types/GitUI.CommandsDialogs.FormPush.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/windows-final/types/GitUI.CommandsDialogs.FormPush.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/linux-final/types/GitUI.CommandsDialogs.FormPush.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 164,
-          "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 164 ordinary findings for this mapping; every remaining structural difference stays open."
+          "findingCount": 160,
+          "note": "P8.6i progress 68 restores exact common-member order, returns context actions to their original partial where applicable, and projects mapped linked partials through their logical twin paths. The byte-identical Windows/Linux schema-v4 inventory records 160 ordinary findings and zero member.order findings for this mapping; every other reported structural difference remains open."
         },
         "functional": {
           "status": "gap",
@@ -23418,15 +23418,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
+          "verifiedOn": "2026-08-28",
+          "commit": "646c5fdcb7eb926ff53a51e45709b2e548e77711",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/windows-final/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/windows-final/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/linux-final/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 354,
-          "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 354 ordinary findings for this mapping; every remaining structural difference stays open."
+          "findingCount": 333,
+          "note": "P8.6i progress 68 restores exact common-member order, returns context actions to their original partial where applicable, and projects mapped linked partials through their logical twin paths. The byte-identical Windows/Linux schema-v4 inventory records 333 ordinary findings and zero member.order findings for this mapping; every other reported structural difference remains open."
         },
         "functional": {
           "status": "gap",
@@ -23550,15 +23550,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
+          "verifiedOn": "2026-08-28",
+          "commit": "646c5fdcb7eb926ff53a51e45709b2e548e77711",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/windows-final/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/linux/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/windows-final/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/linux-final/types/GitUI.LeftPanel.RepoObjectsTree.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 354,
-          "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 354 ordinary findings for this mapping; every remaining structural difference stays open."
+          "findingCount": 333,
+          "note": "P8.6i progress 68 restores exact common-member order, returns context actions to their original partial where applicable, and projects mapped linked partials through their logical twin paths. The byte-identical Windows/Linux schema-v4 inventory records 333 ordinary findings and zero member.order findings for this mapping; every other reported structural difference remains open."
         },
         "functional": {
           "status": "gap",
@@ -26316,15 +26316,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "9b5ea806a03e1fbdf44911848adca44563b92bac",
+          "verifiedOn": "2026-08-28",
+          "commit": "646c5fdcb7eb926ff53a51e45709b2e548e77711",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-signatures-65/sweep/windows/types/GitUI.ScriptsEngine.ScriptsManager.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-signatures-65/sweep/linux/types/GitUI.ScriptsEngine.ScriptsManager.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/windows-final/types/GitUI.ScriptsEngine.ScriptsManager.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/linux-final/types/GitUI.ScriptsEngine.ScriptsManager.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 19,
-          "note": "P8.6i progress 65 restores safely anchored source comments and moves exact native-control field type substitutions into pinned, visible reviewed-deviation evidence. The byte-identical Windows/Linux schema-v4 inventory records 19 ordinary findings for this mapping; every remaining structural difference stays open."
+          "findingCount": 8,
+          "note": "P8.6i progress 68 restores exact common-member order, returns context actions to their original partial where applicable, and projects mapped linked partials through their logical twin paths. The byte-identical Windows/Linux schema-v4 inventory records 8 ordinary findings and zero member.order findings for this mapping; every other reported structural difference remains open."
         },
         "functional": {
           "status": "gap",
@@ -28858,15 +28858,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
+          "verifiedOn": "2026-08-28",
+          "commit": "646c5fdcb7eb926ff53a51e45709b2e548e77711",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/windows-final/types/GitUI.AvatarControl.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/linux/types/GitUI.AvatarControl.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/windows-final/types/GitUI.AvatarControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/linux-final/types/GitUI.AvatarControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 17,
-          "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 17 ordinary findings for this mapping; every remaining structural difference stays open."
+          "findingCount": 11,
+          "note": "P8.6i progress 68 restores exact common-member order, returns context actions to their original partial where applicable, and projects mapped linked partials through their logical twin paths. The byte-identical Windows/Linux schema-v4 inventory records 11 ordinary findings and zero member.order findings for this mapping; every other reported structural difference remains open."
         },
         "functional": {
           "status": "gap",
@@ -34905,15 +34905,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
+          "verifiedOn": "2026-08-28",
+          "commit": "646c5fdcb7eb926ff53a51e45709b2e548e77711",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/windows-final/types/GitUI.RevisionGridControl.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/linux/types/GitUI.RevisionGridControl.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/windows-final/types/GitUI.RevisionGridControl.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/source-order-68/sweep/linux-final/types/GitUI.RevisionGridControl.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 709,
-          "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 709 ordinary findings for this mapping; every remaining structural difference stays open."
+          "findingCount": 574,
+          "note": "P8.6i progress 68 restores exact common-member order, returns context actions to their original partial where applicable, and projects mapped linked partials through their logical twin paths. The byte-identical Windows/Linux schema-v4 inventory records 574 ordinary findings and zero member.order findings for this mapping; every other reported structural difference remains open."
         },
         "functional": {
           "status": "partial",

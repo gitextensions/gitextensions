@@ -818,32 +818,6 @@ public sealed partial class FormPush : GitModuleForm
         ShowOptions.IsVisible = false;
     }
 
-    private void TabControlTagBranch_Selected(object? sender, EventArgs e)
-    {
-        if (e is SelectionChangedEventArgs selectionChanged
-            && selectionChanged.Source != TabControlTagBranch)
-        {
-            return;
-        }
-
-        if (TabControlTagBranch.SelectedItem == MultipleBranchTab)
-        {
-            UpdateMultiBranchView();
-        }
-        else if (TabControlTagBranch.SelectedItem == TagTab)
-        {
-            FillTagDropDown();
-        }
-        else
-        {
-            UpdateBranchDropDown();
-            UpdateRemoteBranchDropDown();
-            BranchSelectedValueChanged(this, EventArgs.Empty);
-        }
-
-        UpdatePushButton();
-    }
-
     private void FillTagDropDown()
     {
         string selected = TagComboBox.Text ?? string.Empty;
@@ -903,6 +877,32 @@ public sealed partial class FormPush : GitModuleForm
 
         ProcessHeads(remoteHeads, _selectedRemote.Name);
         BranchGrid.ItemsSource = _branchRows;
+        UpdatePushButton();
+    }
+
+    private void TabControlTagBranch_Selected(object? sender, EventArgs e)
+    {
+        if (e is SelectionChangedEventArgs selectionChanged
+            && selectionChanged.Source != TabControlTagBranch)
+        {
+            return;
+        }
+
+        if (TabControlTagBranch.SelectedItem == MultipleBranchTab)
+        {
+            UpdateMultiBranchView();
+        }
+        else if (TabControlTagBranch.SelectedItem == TagTab)
+        {
+            FillTagDropDown();
+        }
+        else
+        {
+            UpdateBranchDropDown();
+            UpdateRemoteBranchDropDown();
+            BranchSelectedValueChanged(this, EventArgs.Empty);
+        }
+
         UpdatePushButton();
     }
 

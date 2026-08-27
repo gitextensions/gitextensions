@@ -298,6 +298,69 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Compare_should_order_linked_part_by_its_mapped_twin_path()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Part.cs", "namespace Sample; public partial class Widget { private int first; }");
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public partial class Widget { private int second; }");
+        fixture.WriteTwin("Widget.Part.cs", "namespace Sample; public partial class Widget { private int first; }");
+        fixture.WriteTwin("Linked/Widget.cs", "namespace Sample; public partial class Widget { private int second; }");
+
+        SourceInventory original = SourceInventoryReader.Read(
+            fixture.OriginalRoot,
+            "Sample.Widget",
+            new HashSet<string>(StringComparer.Ordinal),
+            isTwin: false);
+        original = original with
+        {
+            Parts = original.Parts.Select(part => part.Path == "Widget.cs"
+                ? part with { ExpectedTwinPath = "Linked/Widget.cs" }
+                : part).ToArray()
+        };
+        SourceInventory twin = SourceInventoryReader.Read(
+            fixture.TwinRoot,
+            "Sample.Widget",
+            new HashSet<string>(StringComparer.Ordinal),
+            isTwin: true);
+
+        InventoryComparison comparison = InventoryComparer.Compare(original, twin);
+
+        comparison.Findings.Should().NotContain(item => item.Code == "member.order");
+    }
+
+    [Test]
+    public void Compare_should_still_report_a_member_moved_out_of_its_mapped_partial()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Part.cs", "namespace Sample; public partial class Widget { private int first; }");
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public partial class Widget { private int second; }");
+        fixture.WriteTwin("Widget.Part.cs", "namespace Sample; public partial class Widget { private int first; private int second; }");
+        fixture.WriteTwin("Linked/Widget.cs", "namespace Sample; public partial class Widget { }");
+
+        SourceInventory original = SourceInventoryReader.Read(
+            fixture.OriginalRoot,
+            "Sample.Widget",
+            new HashSet<string>(StringComparer.Ordinal),
+            isTwin: false);
+        original = original with
+        {
+            Parts = original.Parts.Select(part => part.Path == "Widget.cs"
+                ? part with { ExpectedTwinPath = "Linked/Widget.cs" }
+                : part).ToArray()
+        };
+        SourceInventory twin = SourceInventoryReader.Read(
+            fixture.TwinRoot,
+            "Sample.Widget",
+            new HashSet<string>(StringComparer.Ordinal),
+            isTwin: true);
+
+        InventoryComparison comparison = InventoryComparer.Compare(original, twin);
+
+        comparison.Findings.Should().ContainSingle(item =>
+            item.Code == "member.partial" && item.Path == "member/field:second/part");
+    }
+
+    [Test]
     public void Run_should_record_an_exact_reviewed_framework_adaptation()
     {
         using InventoryFixture fixture = new();

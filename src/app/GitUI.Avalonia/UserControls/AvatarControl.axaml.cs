@@ -86,22 +86,12 @@ public sealed partial class AvatarControl : GitExtensionsControl
         ThreadHelper.FileAndForget(UpdateAvatarAsync);
     }
 
-    private void avatarProviderToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
-    {
-        UpdateMenuItemSelection(avatarProviderToolStripMenuItem.Items, AppSettings.AvatarProvider);
-    }
-
     private void RefreshImage(Bitmap? image)
     {
         Bitmap? previous = _ownedImage;
         _ownedImage = image;
         _avatarImage.Source = image ?? Images.User80;
         previous?.Dispose();
-    }
-
-    private void OnDefaultImageDropDownOpening(object? sender, EventArgs e)
-    {
-        UpdateMenuItemSelection(fallbackAvatarStyleToolStripMenuItem.Items, AppSettings.AvatarFallbackType);
     }
 
     private async Task UpdateAvatarAsync()
@@ -146,6 +136,16 @@ public sealed partial class AvatarControl : GitExtensionsControl
     private void OnRegisterGravatarClick(object? sender, EventArgs e)
     {
         OsShellUtil.OpenUrlInDefaultBrowser("https://www.gravatar.com");
+    }
+
+    private void OnDefaultImageDropDownOpening(object? sender, EventArgs e)
+    {
+        UpdateMenuItemSelection(fallbackAvatarStyleToolStripMenuItem.Items, AppSettings.AvatarFallbackType);
+    }
+
+    private void avatarProviderToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
+    {
+        UpdateMenuItemSelection(avatarProviderToolStripMenuItem.Items, AppSettings.AvatarProvider);
     }
 
     private static void UpdateMenuItemSelection<T>(IEnumerable<object?> menuItems, T currentValue)
