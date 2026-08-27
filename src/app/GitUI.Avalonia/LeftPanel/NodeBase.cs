@@ -29,6 +29,7 @@ internal abstract class NodeBase
 
     public NodeBase? Parent { get; private set; }
 
+    /// <summary>The corresponding tree node.</summary>
     public TreeViewItem TreeViewNode { get; }
 
     /// <summary>

@@ -48,6 +48,7 @@ public class MessageBoxes : Translate
     private readonly TranslationString _retry = new("Retry");
     private readonly TranslationString _retryOpenVisualStudio = new("Visual Studio failed to open the file.\nThis can be caused by an opened dialog window or other pending operations.\nTry again?");
 
+    // internal for FormTranslate
     internal MessageBoxes()
     {
         Translator.Translate(this, AppSettings.CurrentTranslation);
@@ -203,6 +204,10 @@ public class MessageBoxes : Translate
     public static bool Confirm(WinFormsShims.IWin32Window? owner, string text, string caption, WinFormsShims.MessageBoxIcon icon = WinFormsShims.MessageBoxIcon.Question, WinFormsShims.MessageBoxDefaultButton defaultButton = WinFormsShims.MessageBoxDefaultButton.Button1)
         => Show(owner, text, caption, WinFormsShims.MessageBoxButtons.YesNo, icon, defaultButton) == WinFormsShims.DialogResult.Yes;
 
+    /// <summary>
+        ///  Shows a message box with the specified parameters.
+        /// </summary>
+        /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
     public static WinFormsShims.DialogResult Show(
         WinFormsShims.IWin32Window? owner,
         string text,
@@ -219,6 +224,10 @@ public class MessageBoxes : Translate
         WinFormsShims.MessageBoxButtons buttons)
         => GitExtensions.Extensibility.MessageBoxes.Show(owner, text, caption, buttons);
 
+    /// <summary>
+        ///  Shows a message box without an explicit owner window.
+        /// </summary>
+        /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
     public static WinFormsShims.DialogResult Show(
         string text,
         string caption,
@@ -234,6 +243,10 @@ public class MessageBoxes : Translate
         WinFormsShims.MessageBoxIcon icon)
         => GitExtensions.Extensibility.MessageBoxes.Show(text, caption, buttons, icon);
 
+    /// <summary>
+        ///  Shows a message box without an explicit owner window or icon.
+        /// </summary>
+        /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
     public static WinFormsShims.DialogResult Show(
         string text,
         string caption,

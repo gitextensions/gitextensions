@@ -113,6 +113,7 @@ public partial class PatchGrid : GitModuleControl
         }
         catch (OperationCanceledException)
         {
+            // If retrieve of commit range failed, fall back on getting data commit by commit
             rebasedCommitsRevisions = [];
         }
 

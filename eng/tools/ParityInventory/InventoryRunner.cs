@@ -26,7 +26,7 @@ internal static class InventoryRunner
         InventoryComparison comparison = InventoryComparer.Compare(original, twin);
         ReviewedFrameworkDeviationManifest manifest = ReviewedFrameworkDeviationManifest.Read(
             options.FrameworkAdaptationsFile);
-        comparison = manifest.Apply(options.TypeName, twin, comparison);
+        comparison = manifest.Apply(options.TypeName, original, twin, comparison);
         IReadOnlyList<FunctionalFinding> findings = comparison.Findings;
         InventoryReport report = new()
         {

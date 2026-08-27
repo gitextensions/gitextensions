@@ -23,6 +23,24 @@ public partial class FormRebase : GitExtensionsDialog
         "Sets the commit date to the original author date" + "\n" +
         "(instead of the current date).";
 
+    // Available: GHJLVWXYZ
+    // A Add files
+    // B Abort
+    // C Continue rebase
+    // D Ignore date
+    // E Update dependent refs
+    // F From
+    // I Interactive
+    // K Skip
+    // M Committer date
+    // N Specific range
+    // O Commit...
+    // P Preserve Merges
+    // Q Autosquash
+    // R Rebase on
+    // S Solve conflicts
+    // T To
+    // U Auto stash
     private readonly TranslationString _continueRebaseText = new("&Continue rebase");
     private readonly TranslationString _solveConflictsText = new("&Solve conflicts");
     private readonly TranslationString _solveConflictsText2 = new(">&Solve conflicts<");

@@ -8,6 +8,7 @@ namespace GitUI.HelperDialogs;
 
 public partial class FormSelectMultipleBranches : GitExtensionsForm
 {
+    // only for translation
     public FormSelectMultipleBranches()
     {
         InitializeComponent();

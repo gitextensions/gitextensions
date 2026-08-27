@@ -12,13 +12,43 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 /// </summary>
 public sealed class GitStatusMonitor : IDisposable
 {
+    /// <summary>
+        /// We often change several files at once.
+        /// Short delay before we try to get the status.
+        /// </summary>
     private const int InteractiveUpdateDelay = 200;
+
+    /// <summary>
+        /// We often change several files at once.
+        /// Wait a second so they're all changed before we try to get the status.
+        /// </summary>
     private const int FileChangedUpdateDelay = 1000;
+
+    /// <summary>
+        /// Minimum interval between subsequent updates.
+        /// </summary>
     private const int MinUpdateInterval = 30000;
+
+    /// <summary>
+        /// Update every 5min, just to make sure something didn't slip through the cracks.
+        /// </summary>
     private const int PeriodicUpdateInterval = 5 * 60 * 1000;
+
+    /// <summary>
+        /// Periodic update in WSL, where FileSystemWatcher may not report changes
+        /// https://github.com/microsoft/WSL/issues/4581
+        /// </summary>
     private const int PeriodicUpdateIntervalWSL = 60 * 1000;
     private const int MaxConsecutiveErrors = 3;
+
+    /// <summary>
+        /// git-status command is running and no cancellation has been requested
+        /// </summary>
     private bool _commandIsRunningAndNotCancelled;
+
+    /// <summary>
+        /// The number of consecutive update failures.
+        /// </summary>
     private int _consecutiveErrorCount;
 
     private readonly FileSystemWatcher _workTreeWatcher = new();
@@ -33,7 +63,18 @@ public sealed class GitStatusMonitor : IDisposable
     private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
     private readonly Func<bool> _isMinimized;
     private bool _disposed;
+
+    // Timestamps to schedule status updates, limit the update interval dynamically
+    // Note that TickCount wraps after 25 days uptime, always compare diff
+
+    /// <summary>
+        /// Next scheduled update time
+        /// </summary>
     private int _nextUpdateTime;
+
+    /// <summary>
+        /// Earliest time for an scheduled update (interactive requests bypasses this)
+        /// </summary>
     private int _nextEarliestTime;
     private GitStatusMonitorState _currentStatus;
 
@@ -43,8 +84,14 @@ public sealed class GitStatusMonitor : IDisposable
         set => CurrentStatus = value ? GitStatusMonitorState.Running : GitStatusMonitorState.Stopped;
     }
 
+    /// <summary>
+        /// Occurs whenever git status monitor state changes.
+        /// </summary>
     public event EventHandler<GitStatusMonitorStateEventArgs>? GitStatusMonitorStateChanged;
 
+    /// <summary>
+        /// Occurs whenever current working directory status changes.
+        /// </summary>
     public event EventHandler<GitWorkingDirectoryStatusEventArgs?>? GitWorkingDirectoryStatusChanged;
 
     public GitStatusMonitor(IGitUICommandsSource commandsSource, Func<bool> isMinimized)
@@ -58,6 +105,8 @@ public sealed class GitStatusMonitor : IDisposable
 
         CurrentStatus = GitStatusMonitorState.Stopped;
 
+        // Setup a file watcher to detect changes to our files. When they
+        // change, we'll update our status.
         _workTreeWatcher.EnableRaisingEvents = false;
         _workTreeWatcher.Changed += WorkTreeChanged;
         _workTreeWatcher.Created += WorkTreeChanged;
@@ -67,6 +116,8 @@ public sealed class GitStatusMonitor : IDisposable
         _workTreeWatcher.IncludeSubdirectories = true;
         _workTreeWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastWrite;
 
+        // Setup a file watcher to detect changes to the .git repo files. When they
+        // change, we'll update our status.
         _gitDirWatcher.EnableRaisingEvents = false;
         _gitDirWatcher.Changed += GitDirChanged;
         _gitDirWatcher.Created += GitDirChanged;
@@ -183,6 +234,9 @@ public sealed class GitStatusMonitor : IDisposable
                     if (previousStatus == GitStatusMonitorState.Inactive
                         || previousStatus == GitStatusMonitorState.Running)
                     {
+                        // Timer is already running, schedule a new command only if a command is not running,
+                        // to avoid that many commands are started (and cancelled) if quickly switching Inactive/Running
+                        // If data has changed when Inactive it should be updated by normal means
                         if (!_commandIsRunningAndNotCancelled)
                         {
                             ScheduleNextInteractiveTime();
@@ -192,6 +246,8 @@ public sealed class GitStatusMonitor : IDisposable
                     }
 
                     EnableRaisingEvents();
+
+                    // An interactive update may be requested separately
                     ScheduleNextInteractiveTime(FileChangedUpdateDelay);
                     _timerRefresh.Start();
                     break;
@@ -317,6 +373,7 @@ public sealed class GitStatusMonitor : IDisposable
                 }
                 else
                 {
+                    // WSL link, FileSystemWatcher will throw on directories that are symbolic links
                     _gitDirWatcher.Path = workTreePath;
                     _submodulesPath = Path.Join(gitDirPath, "modules");
                 }
@@ -352,6 +409,9 @@ public sealed class GitStatusMonitor : IDisposable
 
         if (_isMinimized() || commandsSource.UICommands.RepoChangedNotifier.IsLocked)
         {
+            // No run for minimized,
+            // don't update status while repository is being modified by GitExt,
+            // repository status may change after these actions.
             if (CurrentStatus == GitStatusMonitorState.Running)
             {
                 CurrentStatus = GitStatusMonitorState.Inactive;
@@ -362,6 +422,7 @@ public sealed class GitStatusMonitor : IDisposable
 
         if (CurrentStatus == GitStatusMonitorState.Inactive)
         {
+            // Schedule a new update
             CurrentStatus = GitStatusMonitorState.Running;
         }
 
@@ -384,6 +445,7 @@ public sealed class GitStatusMonitor : IDisposable
 
             if (!Directory.Exists(_workTreeWatcher.Path) || activeModule.IsBareRepository())
             {
+                // The directory no longer exists, watcher cannot be enabled
                 return;
             }
 
@@ -392,6 +454,8 @@ public sealed class GitStatusMonitor : IDisposable
             noLocks = !_isFirstPostRepoChanged;
             cancellationToken = _statusSequence.Next();
             _commandIsRunningAndNotCancelled = true;
+
+            // Schedule periodic update, even if we don't know that anything changed
             _nextUpdateTime = commandStartTime
                 + (PathUtil.IsWslPath(_workTreeWatcher.Path) ? PeriodicUpdateIntervalWSL : PeriodicUpdateInterval);
             _nextEarliestTime = commandStartTime + MinUpdateInterval;
@@ -432,11 +496,14 @@ public sealed class GitStatusMonitor : IDisposable
                 {
                     if (++_consecutiveErrorCount < MaxConsecutiveErrors)
                     {
+                        // Try again
                         ScheduleNextInteractiveTime();
                         return;
                     }
 
                     await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                    // Avoid possible popups on every file changes
                     CurrentStatus = GitStatusMonitorState.Stopped;
                 }
                 catch
@@ -452,12 +519,14 @@ public sealed class GitStatusMonitor : IDisposable
                         _commandIsRunningAndNotCancelled = false;
                         if (ReferenceEquals(module, Module))
                         {
+                            // Adjust the min time to next update
                             int endTime = Environment.TickCount;
                             int commandTime = endTime - commandStartTime;
                             int minimumDelay = Math.Max(MinUpdateInterval, 2 * commandTime);
                             _nextEarliestTime = endTime + minimumDelay;
                             if (_nextUpdateTime - commandStartTime < _nextEarliestTime - commandStartTime)
                             {
+                                // Postpone the requested update
                                 _nextUpdateTime = _nextEarliestTime;
                             }
                         }
@@ -467,10 +536,17 @@ public sealed class GitStatusMonitor : IDisposable
         });
     }
 
+    /// <summary>
+        /// Schedule a status update after the specified delay
+        /// Do not change if a value is already set at a earlier time,
+        /// but respect the minimal (dynamic) update times between updates.
+        /// </summary>
+        /// <param name="delay">delay in milliseconds.</param>
     private void ScheduleNextUpdateTime(int delay)
     {
         lock (_statusSequenceLock)
         {
+            // Enforce a minimal time between updates, to not update too frequently
             int ticks = Environment.TickCount;
             int currentDelay = _nextUpdateTime - ticks;
             int minimumDelay = Math.Max(delay, _nextEarliestTime - ticks);
@@ -486,6 +562,12 @@ public sealed class GitStatusMonitor : IDisposable
         Update();
     }
 
+    /// <summary>
+        /// Schedule a status update from interactive changes (repo changed or refreshed)
+        /// Cancel any ongoing requests.
+        /// A short delay is added.
+        /// </summary>
+        /// <param name="delay">delay in milliseconds.</param>
     private void ScheduleNextInteractiveTime(int delay = InteractiveUpdateDelay)
     {
         lock (_statusSequenceLock)

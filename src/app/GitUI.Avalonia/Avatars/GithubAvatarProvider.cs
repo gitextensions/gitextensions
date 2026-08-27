@@ -10,6 +10,16 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
 {
     private static readonly HttpClient _client = CreateClient();
 
+    /* A brief skim through the Git Extensions repo history shows GitHub emails with the following user names:
+         *
+         * 25421792+mserfli
+         * 33052757+freza-tm
+         * gpongelli
+         * odie2
+         * palver123
+         * RaMMicHaeL
+         * SamuelLongchamps
+         */
     private readonly IAvatarDownloader _downloader;
     private readonly bool _onlySupplyNoReply;
 
@@ -44,6 +54,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
 
         if (!match.Success)
         {
+            // regular email address
             if (_onlySupplyNoReply)
             {
                 return null;
@@ -53,6 +64,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
             return new Uri($"https://avatars.githubusercontent.com/u/e?email={encodedEmail}&s={imageSize}");
         }
 
+        // email is an @users.noreply.github.com address
         string username = match.Groups["username"].Value;
         if (username.Contains('['))
         {

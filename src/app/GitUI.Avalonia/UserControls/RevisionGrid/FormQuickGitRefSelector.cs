@@ -13,6 +13,9 @@ internal sealed class FormQuickGitRefSelector : FormQuickItemSelector
     private readonly TranslationString _remote = new("remote");
     private readonly TranslationString _tag = new("tag");
 
+    /// <summary>
+        /// Gets the ref selected by the user.
+        /// </summary>
     public IGitRef? SelectedRef => SelectedItem as IGitRef;
 
     public void Init(QuickAction action, IReadOnlyList<IGitRef> refs)

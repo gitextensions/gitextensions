@@ -43,6 +43,14 @@ public class InitialsAvatarProvider : IAvatarProvider
 
     public bool PerformsIo => false;
 
+    /// <summary>
+        /// Calculate the most simpler non-cryptographic deterministic hash (to get the same result every times it is calculated for the same string)
+        /// We just need an inexpensive way to convert a string to an integer, and calculating a hash is a good way to do it.
+        /// We are not using <c>GetHashCode()</c> because it returns a different value for each process.
+        /// Borrowed from https://stackoverflow.com/a/5155015
+        /// </summary>
+        /// <param name="str">The string to calculate a hash for.</param>
+        /// <returns>The calculated hash.</returns>
     private static int GetDeterministicHashCode(string str)
     {
         unchecked
@@ -109,6 +117,7 @@ public class InitialsAvatarProvider : IAvatarProvider
         {
             if (name.Length == 1)
             {
+                // ... return that character as uppercase
                 return name.ToUpper();
             }
 
@@ -130,9 +139,11 @@ public class InitialsAvatarProvider : IAvatarProvider
                 return $"{upperChars[0]}{upperChars[^1]}";
             }
 
+            // return first letter upper-case and second letter original/lower case.
             return $"{char.ToUpper(name[0])}{name[1]}";
         }
 
+        // Return initials from first and last name-element as uppercase
         return $"{name[0]}{names[^1][0]}".ToUpper();
     }
 

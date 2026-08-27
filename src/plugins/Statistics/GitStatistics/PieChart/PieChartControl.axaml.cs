@@ -49,6 +49,9 @@ public partial class PieChartControl : UserControl
     private double _topMargin;
     private decimal[] _values = [];
 
+    /// <summary>
+        ///   Initializes the <c>PieChartControl</c>.
+        /// </summary>
     static PieChartControl()
     {
         AffectsRender<PieChartControl>(InitialAngleProperty);
@@ -59,14 +62,24 @@ public partial class PieChartControl : UserControl
         InitializeComponent();
     }
 
+    /// <summary>
+        ///   Gets or sets the tool tips.
+        /// </summary>
+        /// <value>The tool tips.</value>
     public string[]? ToolTips { get; set; }
 
+    /// <summary>
+        ///   Sets the initial angle from which pies are drawn.
+        /// </summary>
     public double InitialAngle
     {
         get => GetValue(InitialAngleProperty);
         set => SetValue(InitialAngleProperty, value);
     }
 
+    /// <summary>
+        ///   Sets the left margin for the chart.
+        /// </summary>
     public void SetLeftMargin(float value)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(value);
@@ -74,6 +87,9 @@ public partial class PieChartControl : UserControl
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets the right margin for the chart.
+        /// </summary>
     public void SetRightMargin(float value)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(value);
@@ -81,6 +97,9 @@ public partial class PieChartControl : UserControl
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets the top margin for the chart.
+        /// </summary>
     public void SetTopMargin(float value)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(value);
@@ -88,6 +107,9 @@ public partial class PieChartControl : UserControl
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets the bottom margin for the chart.
+        /// </summary>
     public void SetBottomMargin(float value)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(value);
@@ -95,12 +117,19 @@ public partial class PieChartControl : UserControl
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets the indicator if chart should fit the bounding rectangle
+        ///   exactly.
+        /// </summary>
     public void SetFitChart(bool value)
     {
         _fitChart = value;
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets values to be represented by the chart.
+        /// </summary>
     public void SetValues(decimal[] value)
     {
         _values = value;
@@ -113,36 +142,54 @@ public partial class PieChartControl : UserControl
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets colors to be used for rendering pie slices.
+        /// </summary>
     public void SetColors(Color[] value)
     {
         _colors = value.Length == 0 ? DefaultColors : value;
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets values for slice displacements.
+        /// </summary>
     public void SetSliceRelativeDisplacements(float[] value)
     {
         _relativeSliceDisplacements = value.Select(item => (double)item).ToArray();
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets pie slice relative height.
+        /// </summary>
     public void SetSliceRelativeHeight(float value)
     {
         _sliceRelativeHeight = value;
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets the shadow style.
+        /// </summary>
     public void SetShadowStyle(ShadowStyle value)
     {
         _shadowStyle = value;
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets the edge color type.
+        /// </summary>
     public void SetEdgeColorType(EdgeColorType value)
     {
         _edgeColorType = value;
         InvalidateVisual();
     }
 
+    /// <summary>
+        ///   Sets the edge lines width.
+        /// </summary>
     public void SetEdgeLineWidth(float value)
     {
         _edgeLineWidth = value;

@@ -96,6 +96,7 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
         {
             try
             {
+                // Use cached version if possible
                 if (AppSettings.GitCommand == command && GitVersion.Current?.IsUnknown is false)
                 {
                     return true;

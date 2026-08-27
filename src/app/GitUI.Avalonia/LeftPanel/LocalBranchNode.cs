@@ -11,6 +11,7 @@ internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICan
         IsCurrent = isCurrent;
     }
 
+    /// <summary>Indicates whether this is the currently checked-out branch.</summary>
     public bool IsCurrent { get; }
 
     internal override void OnDoubleClick()

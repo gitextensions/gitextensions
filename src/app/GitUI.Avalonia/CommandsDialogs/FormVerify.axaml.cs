@@ -556,6 +556,7 @@ public sealed partial class FormVerify : GitModuleForm
         });
     }
 
+    // TODO: add textbox for simple fulltext search/filtering (useful for large repos)
     private bool IsMatchToFilter(LostObject lostObject)
         => (ShowCommitsAndTags.IsChecked == true && lostObject.ObjectType is LostObjectType.Commit or LostObjectType.Tag)
             || (ShowOtherObjects.IsChecked == true && lostObject.ObjectType is not LostObjectType.Commit and not LostObjectType.Tag);

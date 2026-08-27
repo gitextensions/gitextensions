@@ -420,6 +420,8 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
         Validates.NotNull(_gitUiCommands);
         IGitModule gitCommands = GetGitCommands();
+
+        // IsRefreshing will set _refreshCancellation
         IsRefreshing = true;
         Validates.NotNull(_refreshCancellation);
 

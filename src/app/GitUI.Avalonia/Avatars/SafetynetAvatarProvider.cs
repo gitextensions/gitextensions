@@ -38,6 +38,7 @@ public sealed class SafetynetAvatarProvider : IAvatarProvider
         }
         catch (Exception ex)
         {
+            // Something went wrong. Log, ignore and proceed with fallback.
             Trace.WriteLine(ex.Message);
         }
 

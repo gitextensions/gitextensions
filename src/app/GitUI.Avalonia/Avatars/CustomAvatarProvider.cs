@@ -55,11 +55,19 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
             .Select(p => FromTemplateSegment(downloader, p))
             .WhereNotNull()];
 
+        // We can't use the chain provider here, because some returned providers (namely UriTemplateResolvers)
+        // don't actually fulfill the interface contract of IAvatarProvider. UriTemplateResolver is a special
+        // case that exists to prevent variables like hashes from being evaluated/calculated multiple times.
         return new CustomAvatarProvider(downloader, providerParts);
     }
 
+    /// <summary>
+        /// Parses a single template segment.
+        /// </summary>
     private static IAvatarProvider? FromTemplateSegment(IAvatarDownloader downloader, string providerTemplate)
     {
+        // if the segment is a tag like "<Demo>", we extract the name
+        // and try to parse it as an AvatarProvider enum.
         if (providerTemplate.StartsWith('<') && providerTemplate.EndsWith('>'))
         {
             string providerName = providerTemplate[1..^1];
@@ -73,6 +81,7 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
             return null;
         }
 
+        // in all other cases assume it's an UriTemplate
         return new UriTemplateResolver(providerTemplate);
     }
 }

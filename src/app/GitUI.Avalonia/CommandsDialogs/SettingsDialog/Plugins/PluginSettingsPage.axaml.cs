@@ -28,6 +28,7 @@ public partial class PluginSettingsPage : DistributedSettingsPage
 
     private void CreateSettingsControls()
     {
+        // Gather debug info for exceptions
         StringBuilder state = new();
         try
         {
