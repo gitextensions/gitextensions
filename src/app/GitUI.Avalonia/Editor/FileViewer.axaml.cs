@@ -39,7 +39,7 @@ namespace GitUI.Editor;
 // behavior follows the original loading boundary. Syntax and display options use AvaloniaEdit
 // while remaining independent from semantic diff rendering. Selected-line patching reuses the
 // shared PatchManager and keeps platform-specific UI at this Avalonia boundary.
-public partial class FileViewer : GitModuleControl, IFileViewer
+public partial class FileViewer : GitModuleControl
 {
     private const long MaximumAutomaticPreviewLength = 5 * 1024 * 1024;
     private const string EndOfLineGlyph = "¶";
@@ -58,12 +58,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     private readonly ConcurrentDictionary<string, Lazy<bool>> _difftasticCmdCache = [];
     private readonly DiffBackgroundRenderer _diffBackgroundRenderer;
     private readonly DiffTextColorizer _diffTextColorizer;
-    private readonly DiffViewerLineNumberControl _diffViewerLineNumberControl;
-    private FindAndReplaceForm? _findAndReplaceForm;
-    private GetNextFileFnc? _findAndReplaceFileLoader;
     private readonly IFullPathResolver _fullPathResolver;
-    private readonly List<HighlightedLines> _lineHighlights = [];
-    private DiffHighlightService? _diffHighlightService;
     private Func<Task>? _deferShowFunc;
     private Encoding? _encoding;
     private CancellationTokenRegistration _externalCancellationRegistration;
@@ -96,23 +91,18 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         ((Image)showSyntaxHighlighting.Content!).Source = syntaxHighlightingImage;
         ((Image)showSyntaxHighlightingToolStripMenuItem.Icon!).Source = syntaxHighlightingImage;
 
-        _diffViewerLineNumberControl = new DiffViewerLineNumberControl(TextEditor);
-        _diffViewerLineNumberControl.Clear();
-        TextEditor.TextArea.LeftMargins.Insert(0, _diffViewerLineNumberControl);
-
         _diffBackgroundRenderer = new DiffBackgroundRenderer(this);
         _diffTextColorizer = new DiffTextColorizer(this);
         TextEditor.TextArea.TextView.BackgroundRenderers.Add(_diffBackgroundRenderer);
-        TextEditor.TextArea.TextView.BackgroundRenderers.Add(new HighlightBackgroundRenderer(_lineHighlights));
         TextEditor.TextArea.TextView.LineTransformers.Add(_diffTextColorizer);
         TextEditor.TextChanged += (sender, e) => TextChanged?.Invoke(sender, e);
         TextEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
         TextEditor.TextArea.TextView.ScrollOffsetChanged += TextView_ScrollOffsetChanged;
         TextEditor.KeyDown += TextEditor_KeyDown;
         TextEditor.DoubleTapped += (_, _) => RequestDiffView?.Invoke(this, EventArgs.Empty);
-        TextEditor.PointerWheelChanged += TextEditor_PointerWheelChanged;
         _continuousScrollEventManager.TopScrollReached += _continuousScrollEventManager_TopScrollReached;
         _continuousScrollEventManager.BottomScrollReached += _continuousScrollEventManager_BottomScrollReached;
+        internalFileViewer.SetContinuousScrollManager(_continuousScrollEventManager);
         TextEditor.PointerMoved += (_, _) => ShowFileViewerToolbar();
         PointerExited += (_, _) => fileviewerToolbar.IsVisible = false;
         PictureBox.PointerWheelChanged += PictureBox_MouseWheel;
@@ -127,7 +117,6 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
             CancelPendingView();
             ClearImage();
-            CloseFindAndReplaceForm();
         };
 
         _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
@@ -356,6 +345,12 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         }
     }
 
+    public WinFormsShims.Font Font
+    {
+        get => internalFileViewer.Font;
+        set => internalFileViewer.Font = value;
+    }
+
     private bool ShowSyntaxHighlightingInDiff { get; set; }
 
     public int VRulerPosition
@@ -389,14 +384,14 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     public int HScrollPosition
     {
-        get => (int)TextEditor.TextArea.TextView.ScrollOffset.X;
-        set => TextEditor.ScrollToHorizontalOffset(value);
+        get => internalFileViewer.HScrollPosition;
+        set => internalFileViewer.HScrollPosition = value;
     }
 
     public int VScrollPosition
     {
-        get => (int)TextEditor.TextArea.TextView.ScrollOffset.Y;
-        set => TextEditor.ScrollToVerticalOffset(value);
+        get => internalFileViewer.VScrollPosition;
+        set => internalFileViewer.VScrollPosition = value;
     }
 
     public (ArgumentString Args, string ExtraCacheKey) GetDifftasticArguments()
@@ -467,7 +462,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     internal void DontMarkGutterSelectedLine()
     {
-        _diffViewerLineNumberControl.DontMarkSelectedLine();
+        internalFileViewer.DontMarkGutterSelectedLine();
     }
 
     /// <summary>
@@ -502,7 +497,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         string parsedText = text;
         PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
         SetDiffText(parsedText, highlightService, showLeftColumn: true);
-        GoToFirstChange();
+        internalFileViewer.GoToFirstChange(NumberOfContextLines);
         TextLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -521,7 +516,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
             ? new CombinedDiffHighlightService(ref parsedText, useGitColoring)
             : new PatchHighlightService(ref parsedText, useGitColoring, isGitWordDiff);
         SetDiffText(parsedText, highlightService, showLeftColumn: true);
-        GoToFirstChange();
+        internalFileViewer.GoToFirstChange(NumberOfContextLines);
         TextLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -535,7 +530,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         string parsedText = text ?? string.Empty;
         RangeDiffHighlightService highlightService = new(ref parsedText);
         SetDiffText(parsedText, highlightService, showLeftColumn: false);
-        GoToFirstChange();
+        internalFileViewer.GoToFirstChange(NumberOfContextLines);
         TextLoaded?.Invoke(this, EventArgs.Empty);
     }
 
@@ -550,11 +545,11 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         string parsedText = text;
         DifftasticHighlightService highlightService = new(
             ref parsedText,
-            _diffViewerLineNumberControl,
+            internalFileViewer.LineNumbersControl,
             out int rightColumnStart);
         VRulerPosition = rightColumnStart;
         SetDiffText(parsedText, highlightService, showLeftColumn: true);
-        GoToFirstChange();
+        internalFileViewer.GoToFirstChange(NumberOfContextLines);
         TextLoaded?.Invoke(this, EventArgs.Empty);
         return Task.CompletedTask;
     }
@@ -570,7 +565,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         string parsedText = text;
         RangeDiffHighlightService highlightService = new(ref parsedText);
         SetDiffText(parsedText, highlightService, showLeftColumn: false);
-        GoToFirstChange();
+        internalFileViewer.GoToFirstChange(NumberOfContextLines);
         TextLoaded?.Invoke(this, EventArgs.Empty);
         return Task.CompletedTask;
     }
@@ -584,7 +579,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         CancelPendingView();
         ResetView(ViewMode.Grep, item.Item.Name, item);
         string parsedText = text;
-        GrepHighlightService highlightService = new(ref parsedText, _diffViewerLineNumberControl);
+        GrepHighlightService highlightService = new(ref parsedText, internalFileViewer.LineNumbersControl);
         SetDiffText(parsedText, highlightService, showLeftColumn: false);
         TextLoaded?.Invoke(this, EventArgs.Empty);
         return Task.CompletedTask;
@@ -697,11 +692,12 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     private void SetText(string? text)
     {
-        ClearHighlighting();
-        TextEditor.Document ??= new TextDocument();
-        TextEditor.Document.Text = text ?? string.Empty;
-        TextEditor.ScrollToHome();
-        TextEditor.TextArea.TextView.Redraw();
+        internalFileViewer.SetText(
+            text ?? string.Empty,
+            _openWithDifftool,
+            _viewMode,
+            useGitColoring: false,
+            contentIdentification: _fileName);
     }
 
     /// <summary>
@@ -902,7 +898,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
                 string parsedText = text;
                 PatchHighlightService highlightService = new(ref parsedText, text.Contains('\u001b'), isGitWordDiff: false);
                 SetDiffText(parsedText, highlightService, showLeftColumn: true);
-                GoToFirstChange();
+                internalFileViewer.GoToFirstChange(NumberOfContextLines);
             }
             else
             {
@@ -1324,7 +1320,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     private void UpdateLineNumberVisibility()
     {
-        bool hasDiffLineNumbers = _diffHighlightService is not null;
+        bool hasDiffLineNumbers = internalFileViewer.DiffHighlightService is not null;
         TextEditor.ShowLineNumbers = ShowLineNumbers ?? !hasDiffLineNumbers;
     }
 
@@ -1461,53 +1457,13 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     /// <summary>Shows the Find window for this editor.</summary>
     public void Find(bool replace)
     {
-        GetOrCreateFindAndReplaceForm().ShowFor(TextEditor, replace && !TextEditor.IsReadOnly);
+        internalFileViewer.Find(replace);
     }
 
     /// <summary>Finds the next or previous occurrence using the current Find settings.</summary>
     public Task FindNextAsync(bool searchForwardOrOpenWithDifftool)
     {
-        return GetOrCreateFindAndReplaceForm().FindNextAsync(
-            viaF3: true,
-            searchBackward: !searchForwardOrOpenWithDifftool,
-            messageIfNotFound: "Text not found");
-    }
-
-    private FindAndReplaceForm GetOrCreateFindAndReplaceForm()
-    {
-        if (_findAndReplaceForm is null)
-        {
-            // Avalonia allocates a native top-level during Window construction, so defer reusable windows until first use.
-            _findAndReplaceForm = new FindAndReplaceForm();
-            _findAndReplaceForm.Closed += FindAndReplaceForm_Closed;
-            if (_findAndReplaceFileLoader is not null)
-            {
-                _findAndReplaceForm.SetFileLoader(_findAndReplaceFileLoader);
-            }
-        }
-
-        return _findAndReplaceForm;
-    }
-
-    private void FindAndReplaceForm_Closed(object? sender, EventArgs e)
-    {
-        if (ReferenceEquals(_findAndReplaceForm, sender))
-        {
-            _findAndReplaceForm = null;
-        }
-    }
-
-    private void CloseFindAndReplaceForm()
-    {
-        FindAndReplaceForm? form = _findAndReplaceForm;
-        if (form is null)
-        {
-            return;
-        }
-
-        _findAndReplaceForm = null;
-        form.Closed -= FindAndReplaceForm_Closed;
-        form.Close();
+        return internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool);
     }
 
     /// <summary>Reloads the configurable FileViewer hotkeys.</summary>
@@ -1554,20 +1510,20 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     private void SetDiffText(string text, DiffHighlightService highlightService, bool showLeftColumn)
     {
-        _diffHighlightService = highlightService;
+        internalFileViewer.SetTextHighlightService(highlightService);
         _diffBackgroundRenderer.SetHighlightService(highlightService);
         _diffTextColorizer.SetHighlightService(highlightService);
-        _diffViewerLineNumberControl.DisplayLineNum(highlightService.LinesInfo, showLeftColumn);
+        internalFileViewer.LineNumbersControl.DisplayLineNum(highlightService.LinesInfo, showLeftColumn);
         UpdateLineNumberVisibility();
         SetText(text);
     }
 
     private void ClearDiffHighlighting()
     {
-        _diffHighlightService = null;
+        internalFileViewer.SetTextHighlightService(TextHighlightService.Instance);
         _diffBackgroundRenderer.SetHighlightService(null);
         _diffTextColorizer.SetHighlightService(null);
-        _diffViewerLineNumberControl.Clear();
+        internalFileViewer.LineNumbersControl.Clear();
         UpdateLineNumberVisibility();
     }
 
@@ -1581,7 +1537,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     {
         get
         {
-            DiffLineInfo? lineInfo = _diffViewerLineNumberControl.GetLineInfo(TextEditor.TextArea.Caret.Line - 1);
+            DiffLineInfo? lineInfo = internalFileViewer.LineNumbersControl.GetLineInfo(TextEditor.TextArea.Caret.Line - 1);
             if (lineInfo is null)
             {
                 return TextEditor.TextArea.Caret.Line;
@@ -1616,12 +1572,12 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     {
         get
         {
-            if (_diffHighlightService is null)
+            if (internalFileViewer.DiffHighlightService is null)
             {
                 return TextEditor.Document?.LineCount ?? 1;
             }
 
-            IEnumerable<int> mappedLines = _diffHighlightService.LinesInfo.DiffLines.Values
+            IEnumerable<int> mappedLines = internalFileViewer.DiffHighlightService.LinesInfo.DiffLines.Values
                 .SelectMany(line => new[] { line.LeftLineNumber, line.RightLineNumber })
                 .Where(line => line != DiffLineInfo.NotApplicableLineNum);
             return mappedLines.DefaultIfEmpty(1).Max();
@@ -1630,14 +1586,14 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     private int FindDocumentLine(int fileLine)
     {
-        if (_diffHighlightService is null)
+        if (internalFileViewer.DiffHighlightService is null)
         {
             return fileLine;
         }
 
-        DiffLineInfo? mapped = _diffHighlightService.LinesInfo.DiffLines.Values.FirstOrDefault(
+        DiffLineInfo? mapped = internalFileViewer.DiffHighlightService.LinesInfo.DiffLines.Values.FirstOrDefault(
             info => info.RightLineNumber == fileLine);
-        mapped ??= _diffHighlightService.LinesInfo.DiffLines.Values.FirstOrDefault(
+        mapped ??= internalFileViewer.DiffHighlightService.LinesInfo.DiffLines.Values.FirstOrDefault(
             info => info.LeftLineNumber == fileLine);
         return mapped?.LineNumInDiff ?? fileLine;
     }
@@ -1658,10 +1614,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     /// </summary>
     public void HighlightLines(int startLine, int endLine, System.Drawing.Color color)
     {
-        _lineHighlights.Add(new HighlightedLines(
-            startLine,
-            endLine,
-            new SolidColorBrush(Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B)).ToImmutable()));
+        internalFileViewer.HighlightLines(startLine, endLine, color);
     }
 
     /// <summary>
@@ -1669,7 +1622,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     /// </summary>
     public void ClearHighlighting()
     {
-        _lineHighlights.Clear();
+        internalFileViewer.ClearHighlighting();
     }
 
     public Separator AddContextMenuSeparator()
@@ -1691,11 +1644,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     public void EnableScrollBars(bool enable)
     {
-        Avalonia.Controls.Primitives.ScrollBarVisibility visibility = enable
-            ? Avalonia.Controls.Primitives.ScrollBarVisibility.Auto
-            : Avalonia.Controls.Primitives.ScrollBarVisibility.Hidden;
-        TextEditor.HorizontalScrollBarVisibility = visibility;
-        TextEditor.VerticalScrollBarVisibility = visibility;
+        internalFileViewer.EnableScrollBars(enable);
     }
 
     /// <summary>
@@ -1704,7 +1653,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     public void Refresh()
     {
         TextEditor.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
-        _diffViewerLineNumberControl.InvalidateVisual();
+        internalFileViewer.LineNumbersControl.InvalidateVisual();
     }
 
     private void Caret_PositionChanged(object? sender, EventArgs e)
@@ -1716,7 +1665,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         }
 
         _lastCaretLine = line;
-        _diffViewerLineNumberControl.InvalidateVisual();
+        internalFileViewer.LineNumbersControl.InvalidateVisual();
         SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(CurrentFileLine - 1));
     }
 
@@ -1800,11 +1749,11 @@ public partial class FileViewer : GitModuleControl, IFileViewer
                 string parsedText = result.StandardOutput;
                 DifftasticHighlightService highlightService = new(
                     ref parsedText,
-                    _diffViewerLineNumberControl,
+                    internalFileViewer.LineNumbersControl,
                     out int rightColumnStart);
                 VRulerPosition = rightColumnStart;
                 SetDiffText(parsedText, highlightService, showLeftColumn: true);
-                GoToFirstChange();
+                internalFileViewer.GoToFirstChange(NumberOfContextLines);
                 TextLoaded?.Invoke(this, EventArgs.Empty);
             }, viewToken);
             return;
@@ -1904,16 +1853,16 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     }
 
     /// <summary>Gets the full viewer text.</summary>
-    public string GetText() => TextEditor.Text;
+    public string GetText() => internalFileViewer.GetText();
 
     /// <summary>Gets the selected viewer text.</summary>
-    public string GetSelectedText() => TextEditor.SelectedText;
+    public string GetSelectedText() => internalFileViewer.GetSelectedText();
 
     /// <summary>Gets the selected range start.</summary>
-    public int GetSelectionPosition() => TextEditor.SelectionStart;
+    public int GetSelectionPosition() => internalFileViewer.GetSelectionPosition();
 
     /// <summary>Gets the selected range length.</summary>
-    public int GetSelectionLength() => TextEditor.SelectionLength;
+    public int GetSelectionLength() => internalFileViewer.GetSelectionLength();
 
     /// <summary>Gets the retained external-difftool action.</summary>
     public Action? OpenWithDifftool => _openWithDifftool;
@@ -1921,18 +1870,17 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     /// <summary>Gets or sets whether the editor can be changed.</summary>
     public bool IsReadOnly
     {
-        get => TextEditor.IsReadOnly;
-        set => TextEditor.IsReadOnly = value;
+        get => internalFileViewer.IsReadOnly;
+        set => internalFileViewer.IsReadOnly = value;
     }
 
     /// <summary>Gets the number of document lines.</summary>
-    public int TotalNumberOfLines => TextEditor.Document?.LineCount ?? 0;
+    public int TotalNumberOfLines => internalFileViewer.TotalNumberOfLines;
 
     /// <summary>Configures cross-file search navigation.</summary>
     public void SetFileLoader(GetNextFileFnc fileLoader)
     {
-        _findAndReplaceFileLoader = fileLoader;
-        _findAndReplaceForm?.SetFileLoader(fileLoader);
+        internalFileViewer.SetFileLoader(fileLoader);
     }
 
     /// <summary>Moves to the next highlighted Find occurrence.</summary>
@@ -1940,86 +1888,6 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     /// <summary>Moves to the previous highlighted Find occurrence.</summary>
     public void GoToPreviousOccurrence() => internalFileViewer.GoToPreviousOccurrence();
-
-    /// <summary>Moves to the first changed block.</summary>
-    public void GoToFirstChange() => GoToChange(searchBackward: false, fromTop: true);
-
-    /// <summary>Moves to the next changed block.</summary>
-    public void GoToNextChange() => GoToChange(searchBackward: false, fromTop: false);
-
-    /// <summary>Moves to the previous changed block.</summary>
-    public void GoToPreviousChange() => GoToChange(searchBackward: true, fromTop: false);
-
-    private void GoToChange(bool searchBackward, bool fromTop)
-    {
-        if (_diffHighlightService is null)
-        {
-            return;
-        }
-
-        int[] changedLines =
-        [
-            .. _diffHighlightService.LinesInfo.DiffLines.Values
-                .Where(IsChangeLine)
-                .Select(info => info.LineNumInDiff)
-                .Order(),
-        ];
-        if (changedLines.Length == 0)
-        {
-            return;
-        }
-
-        List<int> blockStarts = [changedLines[0]];
-        for (int i = 1; i < changedLines.Length; i++)
-        {
-            if (changedLines[i] > changedLines[i - 1] + 1)
-            {
-                blockStarts.Add(changedLines[i]);
-            }
-        }
-
-        int target = FindTargetChangeBlock(changedLines, blockStarts, searchBackward, fromTop);
-        if (target <= 0)
-        {
-            return;
-        }
-
-        TextEditor.TextArea.Caret.Position = new TextViewPosition(target, 1);
-        TextEditor.ScrollToLine(Math.Max(1, target - NumberOfContextLines - 1));
-    }
-
-    private int FindTargetChangeBlock(
-        IReadOnlyCollection<int> changedLines,
-        IReadOnlyList<int> blockStarts,
-        bool searchBackward,
-        bool fromTop)
-    {
-        if (fromTop)
-        {
-            return blockStarts[0];
-        }
-
-        int caretLine = TextEditor.TextArea.Caret.Line;
-        if (!searchBackward)
-        {
-            return blockStarts.FirstOrDefault(line => line > caretLine);
-        }
-
-        int currentBlockStart = blockStarts.LastOrDefault(line => line <= caretLine);
-        int searchBefore = changedLines.Contains(caretLine) && currentBlockStart > 0
-            ? currentBlockStart
-            : caretLine;
-        return blockStarts.LastOrDefault(line => line < searchBefore);
-    }
-
-    private bool IsChangeLine(DiffLineInfo info)
-        => _viewMode == ViewMode.RangeDiff
-            ? info.LineType == DiffLineType.Header
-            : info.LineType is DiffLineType.Plus
-                or DiffLineType.Minus
-                or DiffLineType.MinusLeft
-                or DiffLineType.PlusRight
-                or DiffLineType.MinusPlus;
 
     /// <summary>Applies every displayed change from a revision or stash to the worktree/index.</summary>
     public void CherryPickAllChanges()
@@ -2299,12 +2167,12 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     /// <summary>
     ///  Scrolls to the first line.
     /// </summary>
-    public void ScrollToTop() => TextEditor.ScrollToHome();
+    public void ScrollToTop() => internalFileViewer.ScrollToTop();
 
     /// <summary>
     ///  Scrolls to the last line.
     /// </summary>
-    public void ScrollToBottom() => TextEditor.ScrollToEnd();
+    public void ScrollToBottom() => internalFileViewer.ScrollToBottom();
 
     /// <summary>
     ///  Focuses the text editor hosted by this viewer.
@@ -2405,13 +2273,13 @@ public partial class FileViewer : GitModuleControl, IFileViewer
     private void NextChangeButtonClick(object? sender, EventArgs e)
     {
         FocusViewer();
-        GoToNextChange();
+        internalFileViewer.GoToNextChange(NumberOfContextLines);
     }
 
     private void PreviousChangeButtonClick(object? sender, EventArgs e)
     {
         FocusViewer();
-        GoToPreviousChange();
+        internalFileViewer.GoToPreviousChange(NumberOfContextLines);
     }
 
     private void ShowNonprintableCharactersToolStripMenuItemClick(object? sender, EventArgs e)
@@ -2614,14 +2482,24 @@ public partial class FileViewer : GitModuleControl, IFileViewer
                     code = " " + code;
                 }
 
-                code = string.Join("\n", code.LazySplit('\n').Select(RemoveDiffPrefix));
+                code = string.Join("\n", code.LazySplit('\n').Select(RemovePrefix));
             }
         }
 
         ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.GetEffectiveSetting<AutoCRLFType>("core.autocrlf")));
 
-        static string RemoveDiffPrefix(string line)
-            => line.Length > 0 && line[0] is ' ' or '+' or '-' ? line[1..] : line;
+        return;
+
+        string RemovePrefix(string line)
+        {
+            string[] specials = internalFileViewer.GetFullDiffPrefixes();
+            foreach (string special in specials.Where(line.StartsWith))
+            {
+                return line[special.Length..];
+            }
+
+            return line;
+        }
     }
 
     private void CopyPatchToolStripMenuItemClick(object? sender, EventArgs e)
@@ -2640,46 +2518,12 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
     private void copyNewVersionToolStripMenuItem_Click(object? sender, EventArgs e)
     {
-        CopyNotStartingWith('-');
+        internalFileViewer.CopyNotStartingWith('-');
     }
 
     private void copyOldVersionToolStripMenuItem_Click(object? sender, EventArgs e)
     {
-        CopyNotStartingWith('+');
-    }
-
-    private void CopyNotStartingWith(char startChar)
-    {
-        string text = GetSelectedText();
-        bool noSelection = string.IsNullOrEmpty(text);
-        if (noSelection)
-        {
-            text = GetText();
-        }
-
-        if (_diffHighlightService is not null)
-        {
-            int position = noSelection ? 0 : GetSelectionPosition();
-            string fileText = GetText();
-            if (position > 0 && fileText[position - 1] != '\n')
-            {
-                text = " " + text;
-            }
-
-            IEnumerable<string> lines = text.LazySplit('\n')
-                .Where(line => line.Length == 0
-                               || line[0] != startChar
-                               || (line.Length > 2 && line[1] == line[0] && line[2] == line[0]));
-            int hunkPosition = fileText.IndexOf("\n@@", StringComparison.Ordinal);
-            if (hunkPosition <= position)
-            {
-                lines = lines.Select(line => line.Length > 0 && " -+".Contains(line[0]) ? line[1..] : line);
-            }
-
-            text = string.Join("\n", lines);
-        }
-
-        ClipboardUtil.TrySetText(text.AdjustLineEndings(Module.GetEffectiveSetting<AutoCRLFType>("core.autocrlf")));
+        internalFileViewer.CopyNotStartingWith('+');
     }
 
     private void FindToolStripMenuItemClick(object? sender, EventArgs e)
@@ -2876,10 +2720,10 @@ public partial class FileViewer : GitModuleControl, IFileViewer
                 TreatAllFilesAsTextToolStripMenuItemClick(this, EventArgs.Empty);
                 break;
             case Command.NextChange:
-                GoToNextChange();
+                internalFileViewer.GoToNextChange(NumberOfContextLines);
                 break;
             case Command.PreviousChange:
-                GoToPreviousChange();
+                internalFileViewer.GoToPreviousChange(NumberOfContextLines);
                 break;
             case Command.NextOccurrence:
                 GoToNextOccurrence();
@@ -2908,20 +2752,6 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         return true;
     }
 
-    private void TextEditor_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
-    {
-        AvaloniaEdit.Rendering.TextView textView = TextEditor.TextArea.TextView;
-        if (e.Delta.Y > 0 && textView.ScrollOffset.Y <= 0)
-        {
-            e.Handled = RaiseContinuousScroll(e.Delta.Y, e.KeyModifiers);
-        }
-        else if (e.Delta.Y < 0
-                 && textView.ScrollOffset.Y + textView.Bounds.Height >= textView.DocumentHeight)
-        {
-            e.Handled = RaiseContinuousScroll(e.Delta.Y, e.KeyModifiers);
-        }
-    }
-
     private void PictureBox_MouseWheel(object? sender, PointerWheelEventArgs e)
         => e.Handled = RaiseContinuousScroll(e.Delta.Y, e.KeyModifiers);
 
@@ -2945,54 +2775,6 @@ public partial class FileViewer : GitModuleControl, IFileViewer
         return false;
     }
 
-    /// <summary>
-    ///  An inclusive range of zero-based lines drawn with a background brush.
-    /// </summary>
-    private sealed record HighlightedLines(int StartLine, int EndLine, IBrush Brush);
-
-    /// <summary>
-    ///  Draws the line highlights (used by the blame view for the hovered commit)
-    ///  behind the text.
-    /// </summary>
-    private sealed class HighlightBackgroundRenderer : IBackgroundRenderer
-    {
-        private readonly List<HighlightedLines> _highlights;
-
-        public HighlightBackgroundRenderer(List<HighlightedLines> highlights)
-        {
-            _highlights = highlights;
-        }
-
-        public KnownLayer Layer => KnownLayer.Background;
-
-        public void Draw(AvaloniaEdit.Rendering.TextView textView, DrawingContext drawingContext)
-        {
-            if (_highlights.Count == 0 || !textView.VisualLinesValid)
-            {
-                return;
-            }
-
-            foreach (VisualLine visualLine in textView.VisualLines)
-            {
-                int index = visualLine.FirstDocumentLine.LineNumber - 1;
-                foreach (HighlightedLines highlight in _highlights)
-                {
-                    if (index >= highlight.StartLine && index <= highlight.EndLine)
-                    {
-                        drawingContext.FillRectangle(
-                            highlight.Brush,
-                            new Avalonia.Rect(
-                                0,
-                                visualLine.VisualTop - textView.ScrollOffset.Y,
-                                textView.Bounds.Width,
-                                visualLine.Height));
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
     internal TestAccessor GetTestAccessor() => new(this);
 
     internal readonly struct TestAccessor
@@ -3004,9 +2786,9 @@ public partial class FileViewer : GitModuleControl, IFileViewer
             _control = control;
         }
 
-        public bool IsFindAndReplaceFormCreated => _control._findAndReplaceForm is not null;
+        public bool IsFindAndReplaceFormCreated => _control.internalFileViewer.GetTestAccessor().IsFindAndReplaceFormCreated;
 
-        public FindAndReplaceForm FindAndReplaceForm => _control.GetOrCreateFindAndReplaceForm();
+        public FindAndReplaceForm FindAndReplaceForm => _control.internalFileViewer.GetTestAccessor().FindAndReplaceForm;
 
         public ComboBox EncodingToolStripComboBox => _control.encodingToolStripComboBox;
 
@@ -3044,7 +2826,7 @@ public partial class FileViewer : GitModuleControl, IFileViewer
 
         public int VRulerPosition => _control.VRulerPosition;
 
-        public bool HasDiffHighlighting => _control._diffHighlightService is not null;
+        public bool HasDiffHighlighting => _control.internalFileViewer.DiffHighlightService is not null;
 
         public HyperlinkButton ShowPreviewLink => _control._NO_TRANSLATE_lblShowPreview;
 
