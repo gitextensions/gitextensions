@@ -75,6 +75,7 @@ internal static class InventorySweepRunner
                     work.TwinFiles);
                 InventoryComparison comparison = InventoryComparer.Compare(original, twin);
                 comparison = manifest.Apply(work.TypeName, original, twin, comparison, appliedManifestEntries);
+                comparison = DependentFindingClassifier.Classify(original, comparison);
                 IReadOnlyList<FunctionalFinding> findings = comparison.Findings;
                 InventoryReport report = CreateReport(work.TypeName, original, twin, comparison);
                 string relativeReport = $"types/{Sanitize(work.TypeName)}.functional-findings.json";
@@ -91,6 +92,8 @@ internal static class InventorySweepRunner
                     OriginalPartCount = original.Parts.Count,
                     TwinPartCount = twin.Parts.Count,
                     FindingCount = findings.Count,
+                    DependentFindingCount = comparison.DependentFindings.Count,
+                    TotalDifferenceCount = findings.Count + comparison.DependentFindings.Count,
                     FindingsByCategory = report.Summary.FindingsByCategory,
                     AdaptedCommentCount = comparison.AdaptedComments.Count,
                     AcceptedFrameworkDeviationCount = comparison.AcceptedFrameworkDeviations.Count
@@ -124,12 +127,17 @@ internal static class InventorySweepRunner
                 AnalysisStatus = analysisStatus,
                 TypeNames = typeNames,
                 FindingCount = analyzedTypes.Sum(type => type.FindingCount),
+                DependentFindingCount = analyzedTypes.Sum(type => type.DependentFindingCount),
+                TotalDifferenceCount = analyzedTypes.Sum(type => type.TotalDifferenceCount),
                 Evidence = analyzedTypes.Select(type => type.Report).Order(StringComparer.Ordinal).ToArray(),
                 Note = note
             });
         }
 
         FunctionalFinding[] allFindings = reports.Values.SelectMany(report => report.Findings).ToArray();
+        DependentFinding[] allDependentFindings = reports.Values
+            .SelectMany(report => report.DependentFindings)
+            .ToArray();
         manifest.ValidateAllApplied(appliedManifestEntries);
         InventorySweepResult result = new()
         {
@@ -144,6 +152,8 @@ internal static class InventorySweepRunner
                 AnalyzedTypeCount = typeResults.Count,
                 UnsupportedMappingCount = mappingResults.Count(mapping => mapping.AnalysisStatus == "unsupported"),
                 FindingCount = allFindings.Length,
+                DependentFindingCount = allDependentFindings.Length,
+                TotalDifferenceCount = allFindings.Length + allDependentFindings.Length,
                 FindingsByCategory = allFindings.GroupBy(finding => finding.Category, StringComparer.Ordinal)
                     .OrderBy(group => group.Key, StringComparer.Ordinal)
                     .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal),
@@ -206,6 +216,8 @@ internal static class InventorySweepRunner
             Summary = new InventorySummary
             {
                 FindingCount = comparison.Findings.Count,
+                DependentFindingCount = comparison.DependentFindings.Count,
+                TotalDifferenceCount = comparison.Findings.Count + comparison.DependentFindings.Count,
                 FindingsByCategory = comparison.Findings.GroupBy(finding => finding.Category, StringComparer.Ordinal)
                     .OrderBy(group => group.Key, StringComparer.Ordinal)
                     .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal),
@@ -213,6 +225,7 @@ internal static class InventorySweepRunner
                 AcceptedFrameworkDeviationCount = comparison.AcceptedFrameworkDeviations.Count
             },
             Findings = comparison.Findings,
+            DependentFindings = comparison.DependentFindings,
             AdaptedComments = comparison.AdaptedComments,
             AcceptedFrameworkDeviations = comparison.AcceptedFrameworkDeviations
         };

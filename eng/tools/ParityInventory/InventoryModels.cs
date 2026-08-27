@@ -5,7 +5,7 @@ namespace GitExtensions.ParityInventory;
 // parity-scaffolding: Supplies the stable interchange contract consumed by later parity tooling.
 internal sealed record InventoryReport
 {
-    public const int CurrentSchemaVersion = 4;
+    public const int CurrentSchemaVersion = 5;
 
     public required int SchemaVersion { get; init; }
 
@@ -18,6 +18,8 @@ internal sealed record InventoryReport
     public required InventorySummary Summary { get; init; }
 
     public required IReadOnlyList<FunctionalFinding> Findings { get; init; }
+
+    public required IReadOnlyList<DependentFinding> DependentFindings { get; init; }
 
     public required IReadOnlyList<CommentAdaptation> AdaptedComments { get; init; }
 
@@ -194,6 +196,8 @@ internal sealed record InventoryComparison
 {
     public required IReadOnlyList<FunctionalFinding> Findings { get; init; }
 
+    public required IReadOnlyList<DependentFinding> DependentFindings { get; init; }
+
     public required IReadOnlyList<CommentAdaptation> AdaptedComments { get; init; }
 
     public required IReadOnlyList<AcceptedFrameworkDeviation> AcceptedFrameworkDeviations { get; init; }
@@ -203,6 +207,10 @@ internal sealed record InventoryComparison
 internal sealed record InventorySummary
 {
     public required int FindingCount { get; init; }
+
+    public required int DependentFindingCount { get; init; }
+
+    public required int TotalDifferenceCount { get; init; }
 
     public required IReadOnlyDictionary<string, int> FindingsByCategory { get; init; }
 
@@ -227,4 +235,12 @@ internal sealed record FunctionalFinding
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? TwinValue { get; init; }
+}
+
+// parity-scaffolding: Retains a concrete source difference whose repair is blocked by an actionable root finding.
+internal sealed record DependentFinding
+{
+    public required string RootPath { get; init; }
+
+    public required FunctionalFinding Finding { get; init; }
 }
