@@ -290,20 +290,20 @@ public sealed class GitStatusMonitor : IDisposable
     private void Init(IGitUICommandsSource commandsSource)
     {
         UICommandsSource = commandsSource ?? throw new ArgumentNullException(nameof(commandsSource));
-        UICommandsSource.UICommandsChanged += CommandsSourceGitUICommandsChanged;
+        UICommandsSource.UICommandsChanged += commandsSource_GitUICommandsChanged;
         ActivateCommands(commandsSource.UICommands);
     }
 
-    private void CommandsSourceGitUICommandsChanged(object? sender, GitUICommandsChangedEventArgs e)
+    private void commandsSource_GitUICommandsChanged(object? sender, GitUICommandsChangedEventArgs e)
     {
         IGitUICommands? oldCommands = e.OldCommands;
         if (oldCommands is not null)
         {
-            oldCommands.PreCheckoutBranch -= GitUICommandsPreCheckout;
-            oldCommands.PreCheckoutRevision -= GitUICommandsPreCheckout;
-            oldCommands.PostCheckoutBranch -= GitUICommandsPostCheckout;
-            oldCommands.PostCheckoutRevision -= GitUICommandsPostCheckout;
-            oldCommands.PostRepositoryChanged -= GitUICommandsPostRepositoryChanged;
+            oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
+            oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
+            oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;
+            oldCommands.PostCheckoutRevision -= GitUICommands_PostCheckout;
+            oldCommands.PostRepositoryChanged -= GitUICommands_PostRepositoryChanged;
         }
 
         if (sender is IGitUICommandsSource source)
@@ -314,22 +314,22 @@ public sealed class GitStatusMonitor : IDisposable
 
     private void ActivateCommands(IGitUICommands commands)
     {
-        commands.PreCheckoutBranch += GitUICommandsPreCheckout;
-        commands.PreCheckoutRevision += GitUICommandsPreCheckout;
-        commands.PostCheckoutBranch += GitUICommandsPostCheckout;
-        commands.PostCheckoutRevision += GitUICommandsPostCheckout;
-        commands.PostRepositoryChanged += GitUICommandsPostRepositoryChanged;
+        commands.PreCheckoutBranch += GitUICommands_PreCheckout;
+        commands.PreCheckoutRevision += GitUICommands_PreCheckout;
+        commands.PostCheckoutBranch += GitUICommands_PostCheckout;
+        commands.PostCheckoutRevision += GitUICommands_PostCheckout;
+        commands.PostRepositoryChanged += GitUICommands_PostRepositoryChanged;
 
         IGitModule module = commands.Module;
         StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
     }
 
-    private void GitUICommandsPostCheckout(object? sender, GitUIPostActionEventArgs e)
+    private void GitUICommands_PostCheckout(object? sender, GitUIPostActionEventArgs e)
     {
         CurrentStatus = GitStatusMonitorState.Running;
     }
 
-    private void GitUICommandsPostRepositoryChanged(object? sender, GitUIEventArgs e)
+    private void GitUICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
     {
         lock (_statusSequenceLock)
         {
@@ -337,7 +337,7 @@ public sealed class GitStatusMonitor : IDisposable
         }
     }
 
-    private void GitUICommandsPreCheckout(object? sender, GitUIEventArgs e)
+    private void GitUICommands_PreCheckout(object? sender, GitUIEventArgs e)
     {
         CurrentStatus = GitStatusMonitorState.Paused;
     }

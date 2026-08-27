@@ -175,7 +175,7 @@ public sealed partial class FormPush : GitModuleForm
         _NO_TRANSLATE_Branch.SelectionChanged += BranchSelectedValueChanged;
         RemoteBranch.SelectionChanged += (_, _) => UpdatePushButton();
         TagComboBox.SelectionChanged += (_, _) => UpdatePushButton();
-        TabControlTagBranch.SelectionChanged += TabControlTagBranchSelected;
+        TabControlTagBranch.SelectionChanged += TabControlTagBranch_Selected;
         ckForceWithLease.IsCheckedChanged += ForceWithLeaseCheckedChanged;
         ForcePushBranches.IsCheckedChanged += ForcePushBranchesCheckedChanged;
         ForcePushTags.IsCheckedChanged += ForcePushTagsCheckedChanged;
@@ -818,7 +818,7 @@ public sealed partial class FormPush : GitModuleForm
         ShowOptions.IsVisible = false;
     }
 
-    private void TabControlTagBranchSelected(object? sender, EventArgs e)
+    private void TabControlTagBranch_Selected(object? sender, EventArgs e)
     {
         if (e is SelectionChangedEventArgs selectionChanged
             && selectionChanged.Source != TabControlTagBranch)
