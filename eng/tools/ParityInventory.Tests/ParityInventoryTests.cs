@@ -277,6 +277,123 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_record_an_exact_reviewed_framework_adaptation()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public sealed class Widget { }");
+        fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private int frameworkOnly; }");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 1,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.extra",
+                  "path": "member/field:frameworkOnly",
+                  "twinPart": "Widget.cs",
+                  "twinAccessibility": "private",
+                  "twinSignature": "int frameworkOnly",
+                  "rationale": "Avalonia requires this exact framework-owned state."
+                }
+              ]
+            }
+            """);
+
+        InventoryReport report = fixture.Run(useFrameworkAdaptations: true);
+
+        report.Findings.Should().BeEmpty();
+        report.AcceptedFrameworkDeviations.Should().ContainSingle(item =>
+            item.Code == "member.extra"
+            && item.Path == "member/field:frameworkOnly"
+            && item.TwinPart == "Widget.cs"
+            && item.TwinValue == "private int frameworkOnly"
+            && item.Rationale == "Avalonia requires this exact framework-owned state.");
+    }
+
+    [Test]
+    public void Run_should_reject_a_stale_reviewed_framework_adaptation()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteMatching("namespace Sample; public sealed class Widget { private int frameworkOnly; }");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 1,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.extra",
+                  "path": "member/field:frameworkOnly",
+                  "twinPart": "Widget.axaml.cs",
+                  "twinAccessibility": "private",
+                  "twinSignature": "int frameworkOnly",
+                  "rationale": "This entry must disappear when the source difference disappears."
+                }
+              ]
+            }
+            """);
+
+        Action action = () => fixture.Run(useFrameworkAdaptations: true);
+
+        action.Should().Throw<InvalidDataException>().WithMessage("*is stale*");
+    }
+
+    [Test]
+    public void Run_should_reject_signature_drift_in_a_reviewed_framework_adaptation()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public sealed class Widget { }");
+        fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private long frameworkOnly; }");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 1,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.extra",
+                  "path": "member/field:frameworkOnly",
+                  "twinPart": "Widget.cs",
+                  "twinAccessibility": "private",
+                  "twinSignature": "int frameworkOnly",
+                  "rationale": "A type change requires a fresh review."
+                }
+              ]
+            }
+            """);
+
+        Action action = () => fixture.Run(useFrameworkAdaptations: true);
+
+        action.Should().Throw<InvalidDataException>().WithMessage("*drifted*");
+    }
+
+    [Test]
+    public void Run_should_reject_accessibility_drift_in_a_reviewed_framework_adaptation()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public sealed class Widget { }");
+        fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { public int frameworkOnly; }");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 1,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.extra",
+                  "path": "member/field:frameworkOnly",
+                  "twinPart": "Widget.cs",
+                  "twinAccessibility": "private",
+                  "twinSignature": "int frameworkOnly",
+                  "rationale": "An accessibility change requires a fresh review."
+                }
+              ]
+            }
+            """);
+
+        Action action = () => fixture.Run(useFrameworkAdaptations: true);
+
+        action.Should().Throw<InvalidDataException>().WithMessage("*drifted*");
+    }
+
+    [Test]
     public void Run_should_extract_csharp_and_axaml_menu_trees()
     {
         using InventoryFixture fixture = new();
@@ -495,6 +612,8 @@ internal sealed class InventoryFixture : IDisposable
 
     public string OutputFile => Path.Combine(_root, "output", "functional-findings.json");
 
+    public string FrameworkAdaptationsFile => Path.Combine(_root, "reviewed-framework-adaptations.json");
+
     public void WriteMatching(string code)
     {
         WriteOriginal("Widget.cs", code);
@@ -520,14 +639,18 @@ internal sealed class InventoryFixture : IDisposable
             $"<xliff><file original=\"{category}\"><body>{units}</body></file></xliff>");
     }
 
-    public InventoryReport Run() =>
+    public void WriteFrameworkAdaptations(string content) =>
+        File.WriteAllText(FrameworkAdaptationsFile, content);
+
+    public InventoryReport Run(bool useFrameworkAdaptations = false) =>
         InventoryRunner.Run(new InventoryOptions
         {
             OriginalRoot = OriginalRoot,
             TwinRoot = TwinRoot,
             TypeName = "Sample.Widget",
             TranslationsFile = Path.Combine(_root, "English.xlf"),
-            OutputFile = OutputFile
+            OutputFile = OutputFile,
+            FrameworkAdaptationsFile = useFrameworkAdaptations ? FrameworkAdaptationsFile : null
         });
 
     public void Dispose() => Directory.Delete(_root, recursive: true);

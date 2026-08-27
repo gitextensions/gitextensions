@@ -15,6 +15,8 @@ internal sealed record SweepOptions
 
     public required string OutputFile { get; init; }
 
+    public string? FrameworkAdaptationsFile { get; init; }
+
     public static SweepOptions Parse(string[] args)
     {
         Dictionary<string, string> values = new(StringComparer.Ordinal);
@@ -35,14 +37,16 @@ internal sealed record SweepOptions
             TwinRoot = Require(values, "--twin-root"),
             TranslationsFile = Require(values, "--translations"),
             AnalyzedCommit = Require(values, "--analyzed-commit"),
-            OutputFile = Require(values, "--output")
+            OutputFile = Require(values, "--output"),
+            FrameworkAdaptationsFile = values.GetValueOrDefault("--framework-adaptations")
         };
     }
 
     private const string Usage =
         "Usage: ParityInventory sweep --portmap <portmap.json> --original-root <path> "
         + "--twin-root <path> --translations <English.xlf> --analyzed-commit <sha> "
-        + "--output <functional-findings.json>";
+        + "--output <functional-findings.json> "
+        + "[--framework-adaptations <reviewed-framework-adaptations.json>]";
 
     private static string Require(IReadOnlyDictionary<string, string> values, string name) =>
         values.TryGetValue(name, out string? value) && !string.IsNullOrWhiteSpace(value)

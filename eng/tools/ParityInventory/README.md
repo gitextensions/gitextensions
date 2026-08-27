@@ -10,10 +10,11 @@ dotnet run --project eng/tools/ParityInventory -- compare `
   --twin-root src/app/GitUI.Avalonia `
   --type GitUI.FileStatusList `
   --translations src/app/GitUI/Translation/English.xlf `
+  --framework-adaptations eng/avalonia/framework-adaptations.json `
   --output eng/avalonia/parity-evidence/P0.4/functional-findings.json
 ```
 
-The report schema version is `3`. It contains:
+The report schema version is `4`. It contains:
 
 - deterministic original and twin inventories: source partials, members and lexical order,
   event handlers/wiring, menu trees, hotkey command IDs, settings reads/writes,
@@ -37,6 +38,13 @@ The report schema version is `3`. It contains:
   Designer-generated summary/separator/control-name comments. Each entry retains its original
   path/value, twin part, and rationale. A handwritten TODO, NOTE, HACK, issue link, or any other
   comment inside `InitializeComponent` remains a finding;
+- optional reviewed framework adaptations loaded from an explicit manifest. This channel accepts
+  only exact `member.extra` findings and pins the type name, finding code/path, twin source part,
+  declared accessibility, full twin signature, and a non-empty rationale. It has no wildcard
+  syntax. A removed finding,
+  renamed member, moved partial, or changed signature makes the run fail as stale instead of
+  silently accepting drift. Accepted entries remain in `acceptedFrameworkDeviations`; they do not
+  establish exact structural identity;
 - explicit `partial.missing` findings that name both the original partial and expected twin
   path.
 

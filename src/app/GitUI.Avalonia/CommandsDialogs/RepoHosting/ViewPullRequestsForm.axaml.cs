@@ -850,11 +850,11 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         string[] headers =
         [
-            GetHeaderText(columnHeaderId),
-            GetHeaderText(columnHeaderHeading),
-            GetHeaderText(columnHeaderBy),
-            GetHeaderText(columnHeaderCreated),
-            GetHeaderText(columnHeaderBranch),
+            columnHeaderId.Text,
+            columnHeaderHeading.Text,
+            columnHeaderBy.Text,
+            columnHeaderCreated.Text,
+            columnHeaderBranch.Text,
         ];
         _pullRequestColumnsSizedToContent = rows.Count > 0;
         for (int columnIndex = 0; columnIndex < _pullRequestColumnWidths.Length; columnIndex++)
@@ -886,9 +886,6 @@ public partial class ViewPullRequestsForm : GitModuleForm
         int fillColumn = _pullRequestColumnsSizedToContent ? 1 : 4;
         header.ColumnDefinitions = WinFormsListViewColumnSizer.CreateColumns(_pullRequestColumnWidths, fillColumn);
     }
-
-    private static string GetHeaderText(ContentControl header)
-        => header.Content as string ?? string.Empty;
 
     private static Control CreateDiscussionRow(DiscussionRow? row, Avalonia.Controls.INameScope nameScope)
     {

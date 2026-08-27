@@ -32,6 +32,12 @@ public class ColumnHeader : ContentControl
 {
     internal Action? ResizeToFitContentAction { get; set; }
 
+    public string Text
+    {
+        get => Content as string ?? string.Empty;
+        set => Content = value;
+    }
+
     protected override Type StyleKeyOverride => typeof(ContentControl);
 
     internal void ResizeToFitContent()
