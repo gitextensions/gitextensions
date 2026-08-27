@@ -27,7 +27,7 @@ public interface IShellDescriptor
     /// <summary>
     /// Gets the shell icon.
     /// </summary>
-    // Avalonia constraint: the portable twin exposes the native image interface instead of System.Drawing.Image.
+    // Avalonia constraint: the portable API exposes IImage instead of System.Drawing.Image.
     public IImage Icon { get; }
 
     /// <summary>

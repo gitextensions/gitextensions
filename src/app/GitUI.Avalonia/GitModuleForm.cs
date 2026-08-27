@@ -9,9 +9,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
-// Twin of GitUI/GitModuleForm.cs (reduced): access to IGitUICommands and the GitModule,
-// including the command-service bridge used by hotkeys and user scripts.
-
 /// <summary>Base window that provides access to the module and <see cref="IGitUICommands"/>.</summary>
 public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceManager.IGitModuleForm, IScriptOptionsForm
 {

@@ -30,8 +30,8 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // The JoinableTaskContext must capture Avalonia's UI SynchronizationContext —
-            // the twin of the `using (new Form())` trick in the WinForms Program.
+            // The JoinableTaskContext must capture Avalonia's UI SynchronizationContext,
+            // which is established here by installing the context before constructing it.
             AvaloniaSynchronizationContext.InstallIfNeeded();
             ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
@@ -146,7 +146,7 @@ public partial class App : Application
         }
     }
 
-    // Twin of GitExtensions/Program.cs GetWorkingDir (keep in sync on upstream drift).
+    // Keep startup working-directory resolution aligned with Program.GetWorkingDir.
     internal static string? GetWorkingDir(string[] args)
     {
         string? workingDir = null;

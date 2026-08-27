@@ -16,7 +16,6 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
-// Twin of GitUI/CommandsDialogs/SettingsDialog/Pages/RevisionLinksSettingsPage.cs.
 // The editable DataGridView is represented by a typed ListBox whose row text boxes update
 // the original ExternalLinkFormat objects directly.
 public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage

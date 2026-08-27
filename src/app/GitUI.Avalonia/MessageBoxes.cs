@@ -9,8 +9,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
-// Reduced twin: generic overloads forward to the shared approved wrapper; domain-specific
-// translated helpers join this class as their Avalonia consumers are ported.
 public class MessageBoxes : Translate
 {
     private readonly TranslationString _cannotFindRevisionFilter = new(@"Revision ""{0}"" is not visible in the revision grid. Remove the revision filter.");

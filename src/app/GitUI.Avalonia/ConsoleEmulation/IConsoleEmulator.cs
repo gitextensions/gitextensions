@@ -1,7 +1,5 @@
 namespace GitUI.ConsoleEmulation;
 
-// Twin of GitUI/ConsoleEmulation/IConsoleEmulator.cs.
-
 /// <summary>
 ///  Represents a console emulator integration.
 /// </summary>

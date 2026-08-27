@@ -10,8 +10,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
-// Twin of GitUI/UserControls/BranchComboBox.cs. Avalonia's editable ComboBox replaces
-// WinForms autocomplete; the adjacent dialog preserves multi-head merge selection.
+// Avalonia's editable ComboBox replaces WinForms autocomplete; the adjacent dialog preserves
+// multi-head merge selection.
 public partial class BranchComboBox : GitExtensionsControl
 {
     private readonly TranslationString _branchCheckoutError = new("Branch '{0}' is not selectable, this branch has been removed from the selection.");

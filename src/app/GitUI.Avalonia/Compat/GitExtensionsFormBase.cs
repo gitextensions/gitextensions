@@ -13,8 +13,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace ResourceManager;
 
-// NOTE do not make this class abstract as it breaks the Avalonia designer
-
 /// <summary>
 /// Base class for all Git Extensions forms.
 /// </summary>

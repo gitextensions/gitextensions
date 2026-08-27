@@ -13,9 +13,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormArchive.cs. The native Avalonia storage provider is
-// the only platform boundary; archive selection and command construction retain the original
-// code-behind shape.
+// The native Avalonia storage provider supplies the platform-specific archive picker.
 public sealed partial class FormArchive : GitModuleForm
 {
     private readonly TranslationString _saveFileDialogFilterZip =

@@ -5,9 +5,8 @@ using ResourceManager;
 
 namespace GitUI.UserControls.Settings;
 
-// Twin of UserControls/Settings/SettingsLinkLabel. The containing settings page or dialog
-// owns its established translation key; this reusable control only presents the link and
-// optional information icon.
+// The containing settings page or dialog owns its established translation key; this reusable
+// control only presents the link and optional information icon.
 public sealed partial class SettingsLinkLabel : TranslatedControl
 {
     private string? _toolTipText;

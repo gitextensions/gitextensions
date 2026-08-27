@@ -13,9 +13,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormCherryPick.cs. The parent ListView is represented by
-// translated headers and one typed ListBox; command and sequential-dialog behavior stay at
-// their original code-behind boundaries.
+// The parent ListView is represented by translated headers and one typed ListBox.
 public partial class FormCherryPick : GitExtensionsDialog
 {
     #region Translation

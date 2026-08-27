@@ -4,8 +4,8 @@ using GitUI.Editor.Diff;
 
 namespace GitUI.Models;
 
-// Avalonia twin of OutputHistoryModel. Its ANSI parser is the existing Avalonia diff parser;
-// storage, formatting, depth and notification semantics remain the same as WinForms.
+// ANSI parsing uses the Avalonia diff parser; storage, formatting, depth, and notification
+// semantics remain the same as WinForms.
 internal sealed class OutputHistoryModel : IOutputHistoryProvider, IOutputHistoryRecorder
 {
     private const string _endMark = "###";

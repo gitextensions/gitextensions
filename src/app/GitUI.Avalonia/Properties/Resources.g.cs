@@ -2,7 +2,7 @@
 // Exposes the original GitUI string-resource property names by reading the packaged
 // Resources.resx (inline string entries) and ChangeLog.md. The WinForms resource designer
 // mixes System.Drawing image accessors with these strings, so it cannot be linked directly;
-// the images already have their own generated Images.g.cs twin.
+// the images already have their own generated Images.g.cs file.
 
 #nullable enable
 
