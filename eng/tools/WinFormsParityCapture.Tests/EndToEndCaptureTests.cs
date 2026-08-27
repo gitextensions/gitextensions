@@ -236,6 +236,40 @@ public sealed class EndToEndCaptureTests
         RepositoryHostCaptureFixture.ResolveBaseRevision(head, ObjectId.IndexId).Should().Be(ObjectId.IndexId);
     }
 
+    [TestCase(120, 959, 678)]
+    [TestCase(144, 1147, 806)]
+    [TestCase(192, 1524, 1061)]
+    public void CalculateDpiChangedBounds_should_scale_the_client_and_retain_the_fallback_chrome(
+        int targetDpi,
+        int expectedWidth,
+        int expectedHeight)
+    {
+        Rectangle bounds = CaptureRunner.CalculateDpiChangedBounds(
+            new Rectangle(16, 16, 770, 550),
+            new Size(754, 511),
+            currentDpi: 96,
+            targetDpi);
+
+        bounds.Should().Be(new Rectangle(16, 16, expectedWidth, expectedHeight));
+    }
+
+    [TestCase(0, 96, "currentDpi")]
+    [TestCase(96, 0, "targetDpi")]
+    public void CalculateDpiChangedBounds_should_reject_nonpositive_DPI(
+        int currentDpi,
+        int targetDpi,
+        string parameterName)
+    {
+        Action action = () => CaptureRunner.CalculateDpiChangedBounds(
+            new Rectangle(0, 0, 100, 100),
+            new Size(90, 90),
+            currentDpi,
+            targetDpi);
+
+        action.Should().Throw<ArgumentOutOfRangeException>()
+            .Which.ParamName.Should().Be(parameterName);
+    }
+
     [Test]
     [Apartment(ApartmentState.STA)]
     public void State_driver_should_capture_the_native_combo_box_popup()

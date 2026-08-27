@@ -32,9 +32,13 @@ stretches a bitmap and never calls `Control.Scale`. Every successful tree names 
 reason and `captureMethod` set to `unsupported`. A pre-change per-control font baseline lets
 the reader normalize only runtime fonts actually scaled by WinForms' DPI handler; explicit
 fonts that remain unchanged keep their authored size. This matches the existing pixel-to-DIP
-normalization for control geometry. Isolation cleanup retries transient executable locks from
-a just-exited worker or antivirus scanner, and a cleanup error never hides the original capture
-failure.
+normalization for control geometry. For the message fallback, the suggested window rectangle
+scales the measured client area with WinForms' integer DPI rounding and retains the actual
+non-client inset. Sending the DPI-change message does not move native chrome onto a differently
+scaled monitor, so scaling that unchanged inset would overstate the product client. The retained full
+window image and `dpiChangeMessage` provenance keep this fallback distinguishable from native
+monitor evidence. Isolation cleanup retries transient executable locks from a just-exited worker
+or antivirus scanner, and a cleanup error never hides the original capture failure.
 
 The shared `eng/tools/ParityCaptureSchema` project targets plain `net10.0` and has no UI or
 Windows dependency. P0.2 will deliberately reference that one schema project from the
