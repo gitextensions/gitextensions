@@ -46,6 +46,11 @@ internal sealed class HoverHighlightCalculator : IDisposable
     /// </summary>
     public void Clear()
     {
+        if (HighlightedIds is null)
+        {
+            return;
+        }
+
         HighlightedIds = null;
         IsDirty = true;
     }
