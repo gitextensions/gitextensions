@@ -2,10 +2,8 @@ using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
 
-// Twin of GitUI/GitExtensionsDialog.cs. The MainPanel/ControlsPanel chrome that the WinForms
-// base contributes through its Designer file is declared in each dialog's .axaml instead
-// (a bottom-docked ControlsPanel button row and a filling MainPanel), because Avalonia
-// windows do not inherit visual trees.
+// Avalonia windows do not inherit visual trees, so each dialog's .axaml declares the
+// MainPanel/ControlsPanel chrome supplied by the WinForms base Designer.
 
 /// <summary>Base class for a Git Extensions dialog.</summary>
 public class GitExtensionsDialog : GitModuleForm

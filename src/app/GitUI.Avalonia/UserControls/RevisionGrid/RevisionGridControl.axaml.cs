@@ -37,7 +37,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
-// Twin of the enum declared in GitUI/UserControls/RevisionGrid/RevisionGridControl.cs.
 public enum RevisionGraphDrawStyle
 {
     Normal,
@@ -45,7 +44,6 @@ public enum RevisionGraphDrawStyle
     HighlightSelected
 }
 
-// Twin of the enum declared in GitUI/UserControls/RevisionGrid/RevisionGridControl.cs.
 public enum SortDirection
 {
     Ascending,

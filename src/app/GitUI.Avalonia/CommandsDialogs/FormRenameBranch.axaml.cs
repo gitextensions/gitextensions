@@ -8,7 +8,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormRenameBranch.cs.
 public sealed partial class FormRenameBranch : GitModuleForm
 {
     private readonly IGitBranchNameNormaliser _branchNameNormaliser = null!;

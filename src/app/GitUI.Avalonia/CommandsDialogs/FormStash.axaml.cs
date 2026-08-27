@@ -13,8 +13,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormStash.cs. The file list and viewer retain the original
-// stash inspection and selected-patch application boundary.
 public sealed partial class FormStash : GitModuleForm
 {
     private readonly TranslationString _currentWorkingDirChanges = new("Current working directory changes");

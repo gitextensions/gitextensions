@@ -8,9 +8,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormInit.cs. The directory history items are the
-// repository paths (strings) rather than Repository objects, and the folder picker is
-// the shared FolderBrowserButton twin.
+// Directory history items are repository path strings rather than Repository objects; folder
+// selection uses FolderBrowserButton.
 public sealed partial class FormInit : GitExtensionsDialog
 {
     private readonly TranslationString _chooseDirectory =

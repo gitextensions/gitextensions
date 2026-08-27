@@ -32,13 +32,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Editor;
 
-// Functional twin of GitUI/Editor/FileViewer.cs. It renders parsed patch, combined, word,
-// and range diffs and supports the file-to-file continuous scrolling used by FormStash,
-// plus the plain-text mode with line highlighting used by blame. Search/navigation uses
-// the original dialog and command boundaries. Blob, image, binary, large-file, and encoding
-// behavior follows the original loading boundary. Syntax and display options use AvaloniaEdit
-// while remaining independent from semantic diff rendering. Selected-line patching reuses the
-// shared PatchManager and keeps platform-specific UI at this Avalonia boundary.
 public partial class FileViewer : GitModuleControl
 {
     private const long MaximumAutomaticPreviewLength = 5 * 1024 * 1024;

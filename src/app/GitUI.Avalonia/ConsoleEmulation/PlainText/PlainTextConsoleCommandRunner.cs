@@ -14,9 +14,8 @@ using Microsoft;
 
 namespace GitUI.ConsoleEmulation.PlainText;
 
-// Twin of GitUI/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs: the RichTextBox
-// becomes a read-only AvaloniaEdit control and the WinForms timer a DispatcherTimer. The
-// process handling is identical.
+// The RichTextBox becomes a read-only AvaloniaEdit control and the WinForms timer a
+// DispatcherTimer. Process handling is unchanged.
 
 /// <summary>
 ///  Displays redirected process output in an edit box when no embedded terminal is being used.

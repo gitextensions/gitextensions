@@ -8,7 +8,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.ScriptsEngine;
 
-// Avalonia twin of GitUI/ScriptsEngine/FormFilePrompt.cs.
 internal sealed partial class FormFilePrompt : GitExtensionsForm, IUserInputPrompt
 {
     public string UserInput { get; private set; } = string.Empty;

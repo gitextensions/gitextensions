@@ -2,8 +2,6 @@ using Avalonia.Controls;
 
 namespace GitUI.ConsoleEmulation;
 
-// Twin of GitUI/ConsoleEmulation/IConsoleShellRunner.cs (Control is an Avalonia control).
-
 /// <summary>
 ///  Represents an interactive terminal session embedded in the repository browser's terminal tab.
 /// </summary>

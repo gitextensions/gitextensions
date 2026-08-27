@@ -5,9 +5,8 @@ using GitUI.Compat;
 
 namespace ResourceManager;
 
-// Twin of ResourceManager/TranslatedControl.cs: provides xlf translation for user controls.
-// The translation category and item keys are identical to WinForms (type name + field names),
-// so the existing language files apply unchanged.
+// Provides XLF translation for Avalonia controls. Translation category and item keys remain
+// the WinForms type and field names, so the existing language files apply unchanged.
 public class TranslatedControl : UserControl, ITranslate
 {
     /// <summary>Performs post-initialisation tasks such as translation.</summary>

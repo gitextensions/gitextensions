@@ -8,9 +8,9 @@ namespace GitUI;
 /// Sets the mouse cursor to a wait cursor to indicate UI activity over some lexical scope.
 /// </summary>
 /// <remarks>
-/// Twin of GitUI/WaitCursorScope.cs. WinForms tracks one global <c>Cursor.Current</c>;
-/// Avalonia only has per-control cursors, so this scope swaps the cursor of every open
-/// window and restores the captured values on dispose. Nesting works like the original:
+/// WinForms tracks one global <c>Cursor.Current</c>; Avalonia only has per-control cursors, so
+/// this scope swaps the cursor of every open window and restores the captured values on dispose.
+/// Nesting works like the original:
 /// an inner scope captures the outer scope's wait cursor and restores back to it, and
 /// only the top-most scope fully restores the original cursors.
 /// </remarks>

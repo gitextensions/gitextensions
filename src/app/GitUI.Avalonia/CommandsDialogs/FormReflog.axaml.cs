@@ -19,8 +19,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormReflog.cs. The read-only sortable DataGridView is
-// represented by the same header-plus-ListBox pattern as the other Avalonia grid twins.
+// The read-only sortable DataGridView is represented by a header and typed ListBox.
 public sealed partial class FormReflog : GitModuleForm
 {
     private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new("You have changes in your working directory that could be lost.\n\nDo you want to continue?");

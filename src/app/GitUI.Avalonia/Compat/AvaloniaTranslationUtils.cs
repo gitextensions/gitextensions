@@ -415,6 +415,6 @@ public sealed class TranslationCompat : AvaloniaObject
         => control.SetValue(ToolTipPropertyNameProperty, value);
 }
 
-/// <summary>Marks an Avalonia twin whose WinForms original does not participate in XLF translation.</summary>
+/// <summary>Marks an Avalonia class whose WinForms counterpart does not participate in XLF translation.</summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = true)]
 internal sealed class UntranslatedAttribute : Attribute;

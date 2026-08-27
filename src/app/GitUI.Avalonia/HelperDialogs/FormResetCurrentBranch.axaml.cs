@@ -9,9 +9,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.HelperDialogs;
 
-// Twin of GitUI/HelperDialogs/FormResetCurrentBranch.cs. Avalonia has no native title-bar
-// Help button, so the same context-sensitive git-reset documentation action is kept in the
-// dialog footer while reset behavior remains in the original code-behind shape.
+// Avalonia has no native title-bar Help button, so the context-sensitive git-reset action is
+// kept in the dialog footer.
 public partial class FormResetCurrentBranch : GitModuleForm
 {
     private const string GitResetDocumentationUrl = "https://git-scm.com/docs/git-reset#Documentation/git-reset.txt-";

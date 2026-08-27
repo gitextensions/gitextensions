@@ -199,7 +199,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
         });
     }
 
-    // WinForms tinted the invalid field/button with an adapted LightCoral; the twin uses the
+    // WinForms tinted the invalid field/button with an adapted LightCoral; Avalonia uses the
     // shared semantic invalid-input brush and clears back to the theme default when valid.
     private static void SetInvalidBackground(TemplatedControl control, bool invalid)
     {

@@ -42,7 +42,7 @@ public partial class FormLog : GitModuleForm
     }
 
     // WinForms wired the grid load, revision selection, and file selection through the
-    // Designer/Load events; the twin wires them once in the constructor.
+    // Designer/Load events; Avalonia wires them once in the constructor.
     private void WireEvents()
     {
         diffViewer.ExtraDiffArgumentsChanged += DiffViewerExtraDiffArgumentsChanged;
@@ -73,7 +73,7 @@ public partial class FormLog : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            // The FileStatusList twin exposes the WinForms SelectedItem (a FileStatusItem)
+            // FileStatusList exposes the WinForms-shaped SelectedItem (a FileStatusItem)
             // as SelectedFileStatusItem; SelectedItem returns the GitItemStatus instead.
             _ = diffViewer.ViewChangesAsync(DiffFiles.SelectedFileStatusItem,
                 cancellationToken: _viewChangesSequence.Next());

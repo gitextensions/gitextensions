@@ -11,7 +11,6 @@ using AvaloniaRect = Avalonia.Rect;
 
 namespace GitUI.UserControls.RevisionGrid.Graph.Rendering;
 
-// Twin of GitUI/UserControls/RevisionGrid/Graph/Rendering/GraphRenderer.cs.
 // The lane/segment logic is kept identical to upstream; the GDI Graphics parameter is
 // replaced by Avalonia's DrawingContext drawing into a per-row cell whose origin is (0,0)
 // (GDI's RenderingOrigin). SmoothingMode switches do not apply and are dropped.

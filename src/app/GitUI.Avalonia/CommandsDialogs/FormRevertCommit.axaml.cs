@@ -14,9 +14,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormRevertCommit.cs. The parent ListView is represented by
-// translated headers and one typed ListBox; command, message, and conflict behavior stay at
-// their original code-behind boundaries.
+// The parent ListView is represented by translated headers and one typed ListBox.
 public partial class FormRevertCommit : GitExtensionsDialog
 {
     private readonly TranslationString _noneParentSelectedText = new("None parent is selected!");

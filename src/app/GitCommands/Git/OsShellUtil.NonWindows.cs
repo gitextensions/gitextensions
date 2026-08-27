@@ -11,14 +11,14 @@ public static class OsShellUtil
     private const string ErrorCaption = "Git Extensions";
 
     /// <summary>
-    ///  Let the user chose an application to open a file.
+    ///  Open a file with its associated default application.
     /// </summary>
     /// <param name="filePath">Pathname of the file to open.</param>
     public static void Open(string filePath)
         => Launch(filePath, OsShellLaunchKind.Open);
 
     /// <summary>
-    ///  Open a file with its associated default application.
+    ///  Let the user choose an application to open a file.
     /// </summary>
     /// <param name="filePath">Pathname of the file to open.</param>
     public static void OpenAs(string filePath)

@@ -12,8 +12,8 @@ using GitUI.UserControls;
 
 namespace GitUI.HelperDialogs;
 
-// Twin of GitUI/HelperDialogs/FormStatus.cs. Platform taskbar progress is not portable; the
-// status badge window icons are, and the console is always the plain text emulator.
+// Platform taskbar progress is not portable; status badge window icons are, and the console
+// uses the plain-text emulator.
 public partial class FormStatus : GitExtensionsDialog
 {
     private static readonly Lazy<IReadOnlyDictionary<Avalonia.Media.Imaging.Bitmap, Avalonia.Controls.WindowIcon>> _statusIcons = new(

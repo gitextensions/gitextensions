@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using GitCommands;
@@ -20,11 +20,10 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormRemotes.cs. The PuTTY SSH panel and connection test
-// remain intentionally absent because the portable application uses OpenSSH. Active and
-// inactive remotes retain the original grouping, remote colors use Avalonia's native color
-// picker, and the original detail controls edit each branch's pull behavior. The URL history
-// combos hold path strings rather than Repository objects.
+// The PuTTY SSH panel and connection test do not apply because the portable application uses
+// OpenSSH. Active and inactive remotes retain the original grouping, colors use Avalonia's
+// native color picker, and the original detail controls edit each branch's pull behavior. The
+// URL history combos hold path strings rather than Repository objects.
 public sealed partial class FormRemotes : GitModuleForm
 {
     private const string BtnRemoteColorText = "Set &color";
