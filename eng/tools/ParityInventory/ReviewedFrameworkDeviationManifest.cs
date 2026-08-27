@@ -5,7 +5,7 @@ namespace GitExtensions.ParityInventory;
 // parity-scaffolding: Loads exact, reviewed framework adaptations without providing wildcard suppression.
 internal sealed class ReviewedFrameworkDeviationManifest
 {
-    private const int CurrentSchemaVersion = 2;
+    private const int CurrentSchemaVersion = 3;
 
     private readonly IReadOnlyList<ReviewedFrameworkDeviationEntry> _entries;
 
@@ -39,28 +39,23 @@ internal sealed class ReviewedFrameworkDeviationManifest
                 Require(element, "typeName"),
                 Require(element, "code"),
                 Require(element, "path"),
+                Optional(element, "category"),
                 Optional(element, "originalPart"),
                 Optional(element, "originalAccessibility"),
                 Optional(element, "originalSignature"),
-                Require(element, "twinPart"),
-                Require(element, "twinAccessibility"),
-                Require(element, "twinSignature"),
+                Optional(element, "originalValue"),
+                Optional(element, "twinPart"),
+                Optional(element, "twinAccessibility"),
+                Optional(element, "twinSignature"),
+                Optional(element, "twinValue"),
                 Require(element, "rationale"));
-            if ((entry.Code != "member.extra" && entry.Code != "member.signature")
-                || !entry.Path.StartsWith("member/", StringComparison.Ordinal)
-                || (entry.Code == "member.signature" && !entry.Path.EndsWith("/signature", StringComparison.Ordinal)))
+            if (entry.IsMemberDeviation)
             {
-                throw new InvalidDataException(
-                    $"Reviewed adaptation '{entry.Identity}' is not an exact supported member finding.");
+                ValidateMemberEntry(entry);
             }
-
-            if (entry.Code == "member.signature"
-                && (entry.OriginalPart is null
-                    || entry.OriginalAccessibility is null
-                    || entry.OriginalSignature is null))
+            else
             {
-                throw new InvalidDataException(
-                    $"Reviewed signature adaptation '{entry.Identity}' must pin the original member.");
+                ValidateExactFindingEntry(entry);
             }
 
             entries.Add(entry);
@@ -87,6 +82,12 @@ internal sealed class ReviewedFrameworkDeviationManifest
         List<AcceptedFrameworkDeviation> deviations = [.. comparison.AcceptedFrameworkDeviations];
         foreach (ReviewedFrameworkDeviationEntry entry in _entries.Where(entry => entry.TypeName == typeName))
         {
+            if (!entry.IsMemberDeviation)
+            {
+                ApplyExactFinding(entry, original, findings, deviations, appliedEntries);
+                continue;
+            }
+
             FunctionalFinding[] matches = findings.Where(finding =>
                 finding.Category == "members"
                 && finding.Code == entry.Code
@@ -171,6 +172,116 @@ internal sealed class ReviewedFrameworkDeviationManifest
         };
     }
 
+    private static void ValidateMemberEntry(ReviewedFrameworkDeviationEntry entry)
+    {
+        if (!entry.Path.StartsWith("member/", StringComparison.Ordinal)
+            || (entry.Code == "member.signature" && !entry.Path.EndsWith("/signature", StringComparison.Ordinal))
+            || entry.TwinPart is null
+            || entry.TwinAccessibility is null
+            || entry.TwinSignature is null)
+        {
+            throw new InvalidDataException(
+                $"Reviewed adaptation '{entry.Identity}' is not an exact supported member finding.");
+        }
+
+        if (entry.Code == "member.signature"
+            && (entry.OriginalPart is null
+                || entry.OriginalAccessibility is null
+                || entry.OriginalSignature is null))
+        {
+            throw new InvalidDataException(
+                $"Reviewed signature adaptation '{entry.Identity}' must pin the original member.");
+        }
+    }
+
+    private static void ValidateExactFindingEntry(ReviewedFrameworkDeviationEntry entry)
+    {
+        bool isDesignerComment = entry.Category == "comments"
+            && entry.Code == "comment.missing"
+            && entry.Path.StartsWith("comment/", StringComparison.Ordinal)
+            && entry.Path.Contains(".Designer.cs/", StringComparison.Ordinal)
+            && entry.OriginalPart?.EndsWith(".Designer.cs", StringComparison.Ordinal) == true
+            && entry.OriginalValue is not null
+            && entry.TwinPart is not null
+            && entry.TwinValue is null;
+        bool isMissingEventWire = entry.Category == "events"
+            && entry.Code == "event.wiring.missing"
+            && entry.Path.StartsWith("event.wiring/", StringComparison.Ordinal)
+            && entry.OriginalPart is not null
+            && entry.OriginalValue is not null
+            && entry.TwinPart is null
+            && entry.TwinValue is null;
+        bool isExtraEventWire = entry.Category == "events"
+            && entry.Code == "event.wiring.extra"
+            && entry.Path.StartsWith("event.wiring/", StringComparison.Ordinal)
+            && entry.OriginalPart is null
+            && entry.OriginalValue is null
+            && entry.TwinPart is not null
+            && entry.TwinValue is not null;
+        if (!isDesignerComment && !isMissingEventWire && !isExtraEventWire)
+        {
+            throw new InvalidDataException(
+                $"Reviewed adaptation '{entry.Identity}' is not an exact supported generated-comment or event-wiring finding.");
+        }
+    }
+
+    private static void ApplyExactFinding(
+        ReviewedFrameworkDeviationEntry entry,
+        SourceInventory original,
+        List<FunctionalFinding> findings,
+        List<AcceptedFrameworkDeviation> deviations,
+        ISet<string>? appliedEntries)
+    {
+        FunctionalFinding[] matches = findings.Where(finding =>
+            finding.Category == entry.Category
+            && finding.Code == entry.Code
+            && finding.Path == entry.Path
+            && finding.OriginalValue == entry.OriginalValue
+            && finding.TwinValue == entry.TwinValue).ToArray();
+        if (matches.Length != 1)
+        {
+            throw new InvalidDataException(
+                $"Reviewed adaptation '{entry.Identity}' is stale or drifted: expected one exact live finding, found {matches.Length}.");
+        }
+
+        if (entry.Code == "comment.missing")
+        {
+            SourcePart[] sourceParts = original.Parts.Where(part => part.Path == entry.OriginalPart).ToArray();
+            if (sourceParts.Length != 1 || sourceParts[0].ExpectedTwinPath != entry.TwinPart)
+            {
+                throw new InvalidDataException(
+                    $"Reviewed adaptation '{entry.Identity}' source or expected twin part drifted.");
+            }
+        }
+        else if (entry.Code == "event.wiring.missing"
+                 && !ValuePinsPart(entry.OriginalValue!, entry.OriginalPart!))
+        {
+            throw new InvalidDataException($"Reviewed adaptation '{entry.Identity}' original part drifted.");
+        }
+        else if (entry.Code == "event.wiring.extra"
+                 && !ValuePinsPart(entry.TwinValue!, entry.TwinPart!))
+        {
+            throw new InvalidDataException($"Reviewed adaptation '{entry.Identity}' twin part drifted.");
+        }
+
+        findings.Remove(matches[0]);
+        deviations.Add(new AcceptedFrameworkDeviation
+        {
+            Category = entry.Category!,
+            Code = entry.Code,
+            Path = entry.Path,
+            OriginalPart = entry.OriginalPart ?? "(no WinForms source fact)",
+            TwinPart = entry.TwinPart ?? "(no Avalonia source fact)",
+            Rationale = entry.Rationale,
+            OriginalValue = entry.OriginalValue,
+            TwinValue = entry.TwinValue
+        });
+        appliedEntries?.Add(entry.Identity);
+    }
+
+    private static bool ValuePinsPart(string value, string part) =>
+        value.StartsWith($"EventWireEntry {{ Part = {part}, ", StringComparison.Ordinal);
+
     public void ValidateAllApplied(IReadOnlySet<string> appliedEntries)
     {
         string[] unused = _entries.Select(entry => entry.Identity)
@@ -200,14 +311,19 @@ internal sealed class ReviewedFrameworkDeviationManifest
         string TypeName,
         string Code,
         string Path,
+        string? Category,
         string? OriginalPart,
         string? OriginalAccessibility,
         string? OriginalSignature,
-        string TwinPart,
-        string TwinAccessibility,
-        string TwinSignature,
+        string? OriginalValue,
+        string? TwinPart,
+        string? TwinAccessibility,
+        string? TwinSignature,
+        string? TwinValue,
         string Rationale)
     {
         public string Identity => $"{TypeName}/{Code}/{Path}";
+
+        public bool IsMemberDeviation => Code is "member.extra" or "member.signature";
     }
 }
