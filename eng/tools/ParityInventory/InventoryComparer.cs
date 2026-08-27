@@ -101,8 +101,16 @@ internal static class InventoryComparer
             .Where(member => comparableKeys.Contains(MemberKey(member)))
             .Select((member, order) => (Key: MemberKey(member), Order: order))
             .ToDictionary(item => item.Key, item => item.Order, StringComparer.Ordinal);
+        Dictionary<string, int> expectedTwinPartOrder = original.Parts
+            .Select((part, order) => (Part: part.ExpectedTwinPath
+                ?? throw new InvalidDataException("Original source part is missing its expected twin path."), Order: order))
+            .GroupBy(item => item.Part, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Min(item => item.Order), StringComparer.Ordinal);
         Dictionary<string, int> twinOrder = twin.Members
             .Where(member => comparableKeys.Contains(MemberKey(member)))
+            .OrderBy(member => expectedTwinPartOrder.GetValueOrDefault(member.Part, int.MaxValue))
+            .ThenBy(member => member.Part, StringComparer.Ordinal)
+            .ThenBy(member => member.Order)
             .Select((member, order) => (Key: MemberKey(member), Order: order))
             .ToDictionary(item => item.Key, item => item.Order, StringComparer.Ordinal);
         foreach ((string key, int order) in originalOrder)
