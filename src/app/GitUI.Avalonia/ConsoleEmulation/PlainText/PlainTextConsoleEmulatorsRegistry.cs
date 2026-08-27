@@ -3,8 +3,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.ConsoleEmulation.PlainText;
 
-// Avalonia twin of PlainTextConsoleEmulatorsRegistry. Unlike the WinForms fallback, the
-// Avalonia implementation also provides the portable embedded plain-text shell.
+// Unlike the WinForms fallback, Avalonia also provides the portable embedded plain-text shell.
 internal sealed class PlainTextConsoleEmulatorsRegistry : IConsoleEmulatorsRegistry
 {
     private static readonly PlainTextConsoleEmulator _emulator = new();

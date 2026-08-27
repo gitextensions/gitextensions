@@ -3,7 +3,7 @@ using Avalonia.Controls;
 namespace GitUI.Compat;
 
 /// <summary>
-///  Applies the WinForms Label preferred-width boundary to source AutoSize label twins.
+///  Applies the WinForms Label preferred-width boundary to ported AutoSize labels.
 /// </summary>
 internal static class WinFormsAutoSizeTextBlock
 {

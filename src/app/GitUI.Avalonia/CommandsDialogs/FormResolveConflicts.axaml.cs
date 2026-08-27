@@ -19,9 +19,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormResolveConflicts.cs. The conflicted-files grid is a
-// ListBox showing the file names (the WinForms grid's hidden Author column had no data
-// source upstream either).
+// The conflicted-files grid is a ListBox showing file names; the WinForms grid's hidden Author
+// column has no data source.
 public partial class FormResolveConflicts : GitModuleForm
 {
     #region Translation

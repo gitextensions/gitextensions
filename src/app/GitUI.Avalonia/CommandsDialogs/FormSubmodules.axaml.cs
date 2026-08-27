@@ -17,9 +17,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormSubmodules.cs. The WinForms BindingSource and
-// DataGridView become one explicitly populated ListBox; selection updates the same-named
-// detail controls while the original submodule command/configuration paths stay intact.
+// The WinForms BindingSource and DataGridView become one explicitly populated ListBox.
 public sealed partial class FormSubmodules : GitModuleForm
 {
     private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormSubmodules"));

@@ -49,7 +49,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private IReadOnlyList<IPullRequestInformation>? _pullRequestsInfo;
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
-    // Framework constraint: the native AsyncLoader twin owns TaskManager-backed execution.
+    // Framework constraint: the Avalonia AsyncLoader owns TaskManager-backed execution.
     private readonly AsyncLoader _loader = new();
     private readonly CancellationTokenSequence _pullRequestsSequence = new();
     private readonly CancellationTokenSequence _detailsSequence = new();

@@ -129,7 +129,7 @@ public sealed class FormSparseWorkingCopy : GitModuleForm
         AcceptButton = btnSave;
         CancelButton = btnCancel;
 
-        // WinForms Button.DialogResult has no Avalonia twin; setting the form's DialogResult while
+        // Avalonia Button has no DialogResult property; setting the form's DialogResult while
         // modal closes it, matching the original OK/Cancel buttons.
         btnSave.Click += delegate { DialogResult = WinFormsShims.DialogResult.OK; };
         btnCancel.Click += delegate { DialogResult = WinFormsShims.DialogResult.Cancel; };

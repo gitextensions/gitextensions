@@ -7,8 +7,8 @@ using GitUI.Properties;
 
 namespace GitUI.ScriptsEngine;
 
-// Avalonia twin of GitUI/ScriptsEngine/ScriptInfo.cs. The serialized contract is identical;
-// only icon materialization changes from GDI bitmaps to Avalonia images.
+// The serialized contract is unchanged; only icon materialization changes from GDI bitmaps
+// to Avalonia images.
 
 // WARNING: This class is serialized to XML!
 public partial class ScriptInfo

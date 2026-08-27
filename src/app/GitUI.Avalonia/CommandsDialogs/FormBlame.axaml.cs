@@ -32,13 +32,13 @@ public partial class FormBlame : GitModuleForm
 
         FileName = fileName;
 
-        // The Avalonia BlameControl.LoadBlameAsync twin drops the WinForms children and
-        // controlToMask parameters, which have no Avalonia equivalent.
+        // Avalonia drops the WinForms children and controlToMask parameters, which have no
+        // equivalent in BlameControl.LoadBlameAsync.
         _ = blameControl1.LoadBlameAsync(revision ?? Module.GetRevision(), fileName, revisionGridInfo: null, revisionGridFileUpdate: null, Module.FilesEncoding, initialLine, joinableTaskFactory: ThreadHelper.JoinableTaskFactory);
         blameControl1.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
     }
 
-    // WinForms wired the title to the Load event; the twin uses the runtime-load override.
+    // WinForms wires the title to Load; Avalonia uses the runtime-load override.
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);

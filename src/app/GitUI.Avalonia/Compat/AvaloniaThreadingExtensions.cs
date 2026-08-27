@@ -5,9 +5,9 @@ using GitExtUtils;
 namespace GitUI;
 
 /// <summary>
-///  Twins of the WinForms-control threading extensions in GitExtUtils
+///  Provides the WinForms-control threading extension surface from GitExtUtils
 ///  (<c>ThreadHelper.InvokeAndForget</c>, <c>ControlThreadingExtensions.SwitchToMainThreadAsync</c>)
-///  for Avalonia visuals, so ported code-behind compiles unchanged.
+///  for Avalonia visuals, so ported code-behind retains the same call sites.
 /// </summary>
 public static class AvaloniaThreadingExtensions
 {

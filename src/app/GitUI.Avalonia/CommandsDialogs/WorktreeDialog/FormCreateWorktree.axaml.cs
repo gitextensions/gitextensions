@@ -11,8 +11,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog;
 
-// Twin of GitUI/CommandsDialogs/WorktreeDialog/FormCreateWorktree.cs. The branch list
-// remains code-behind driven and the original worktree command construction is retained.
 public sealed partial class FormCreateWorktree : GitExtensionsDialog
 {
     private readonly CancellationTokenSequence _branchesLoadSequence = new();

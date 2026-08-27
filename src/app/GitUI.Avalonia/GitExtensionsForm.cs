@@ -7,8 +7,6 @@ using Size = System.Drawing.Size;
 
 namespace GitUI;
 
-// NOTE do not make this class abstract as it breaks the Avalonia designer
-
 /// <summary>Base class for a Git Extensions <see cref="Window"/>.</summary>
 /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
 public class GitExtensionsForm : GitExtensionsFormBase

@@ -5,8 +5,6 @@ using ResourceManager;
 
 namespace GitUI.UserControls;
 
-// Twin of GitUI/UserControls/PasswordInput.cs. Drag and drop of text onto the password box
-// is not ported yet.
 public partial class PasswordInput : TranslatedControl
 {
     private Button? _originalAcceptButton;

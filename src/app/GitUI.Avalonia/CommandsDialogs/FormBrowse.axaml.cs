@@ -40,8 +40,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Avalonia twin of the repository browser. Controls owned by later port phases are added only
-// when their commands are functional, rather than presenting inert toolbar entries.
 public sealed partial class FormBrowse : GitModuleForm
 {
     private readonly TranslationString _indexLockCantDelete = new("Failed to delete index.lock");

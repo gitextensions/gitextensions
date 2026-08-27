@@ -26,9 +26,8 @@ using Rectangle = Avalonia.Rect;
 
 namespace GitUI;
 
-// Twin of GitUI/UserControls/FileStatusList.cs. Avalonia's ListBox/TreeView templates replace
-// MultiSelectTreeView while preserving the original filtering, staging/context-menu, status,
-// revision grouping, and repository-hierarchy boundaries used by its consumers.
+// Avalonia's ListBox/TreeView templates replace MultiSelectTreeView while preserving the
+// original filtering, staging/context-menu, status, revision grouping, and repository hierarchy.
 public partial class FileStatusList : GitModuleControl
 {
     private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(1);

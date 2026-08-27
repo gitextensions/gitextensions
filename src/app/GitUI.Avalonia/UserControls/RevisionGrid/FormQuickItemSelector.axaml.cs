@@ -8,7 +8,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.UserControls.RevisionGrid;
 
-// Avalonia twin of GitUI/UserControls/RevisionGrid/FormQuickItemSelector.cs.
 // The original has no emitted translation keys; its title and action text are supplied by callers.
 [Untranslated]
 internal partial class FormQuickItemSelector : GitExtensionsForm

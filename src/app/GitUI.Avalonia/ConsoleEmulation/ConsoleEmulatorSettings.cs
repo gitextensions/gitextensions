@@ -2,8 +2,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.ConsoleEmulation;
 
-// Twin of GitUI/ConsoleEmulation/ConsoleEmulatorSettings.cs. The point-based shim font keeps
-// the original settings boundary; runners convert it only at the Avalonia presentation edge.
+// The point-based shim font preserves the settings boundary; runners convert it only at the
+// Avalonia presentation edge.
 
 /// <summary>
 ///  Represents the visual settings used by the console emulator.

@@ -12,8 +12,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormApplyPatch.cs. It deliberately keeps the original
-// control and handler names so middle-of-patch recovery maps directly between front ends.
 public partial class FormApplyPatch : GitModuleForm
 {
     // Available: CEGHJLMNPQTUVXYZ

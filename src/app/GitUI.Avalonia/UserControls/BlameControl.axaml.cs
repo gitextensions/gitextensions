@@ -23,9 +23,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.Blame;
 
-// Twin of GitUI/UserControls/BlameControl.cs. The author gutter is a BlameAuthorMargin
-// inside the file editor instead of a second scroll-synchronised editor, so the
-// scroll-position handlers of the original have no twin.
+// The author gutter is a BlameAuthorMargin inside the file editor instead of a second
+// scroll-synchronised editor, so separate scroll-position handlers are unnecessary.
 public sealed partial class BlameControl : GitModuleControl
 {
     /// <summary>

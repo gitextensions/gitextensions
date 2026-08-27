@@ -4,9 +4,9 @@ using Application = Avalonia.Application;
 namespace GitExtUtils.GitUI;
 
 /// <summary>
-///  Twin of the WinForms <c>DpiUtil</c> for code linked/ported into GitUI.Avalonia.
-///  Avalonia layouts and renders in device-independent pixels and applies the display scale
-///  itself, so scaling here is the identity function.
+///  Provides the WinForms-shaped <c>DpiUtil</c> surface used by ported code. Avalonia lays out
+///  and renders in device-independent pixels and applies the display scale itself, so scaling
+///  here is the identity function.
 /// </summary>
 public static class DpiUtil
 {

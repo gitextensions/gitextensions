@@ -16,7 +16,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 namespace GitUI.CommandsDialogs;
 
 /// <summary>Form to merge a branch into the current branch.</summary>
-// Twin of GitUI/CommandsDialogs/FormMergeBranch.cs.
 public partial class FormMergeBranch : GitModuleForm
 {
     private readonly TranslationString _formMergeBranchHoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
