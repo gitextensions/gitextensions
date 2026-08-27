@@ -228,9 +228,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         compareToBaseToolStripMenuItem.Click += compareToBaseToolStripMenuItem_Click;
         compareToWorkingDirectoryMenuItem.Click += compareToWorkingDirectoryMenuItem_Click;
         compareSelectedCommitsMenuItem.Click += compareSelectedCommitsMenuItem_Click;
-        getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Click += GetHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click;
+        getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Click += getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click;
         openBuildReportToolStripMenuItem.Click += (_, _) => OpenBuildReport(SelectedRevision);
-        openPullRequestPageStripMenuItem.Click += OpenPullRequestPageStripMenuItem_Click;
+        openPullRequestPageStripMenuItem.Click += openPullRequestPageStripMenuItem_Click;
         HotkeysEnabled = true;
         UICommandsSourceSet += (_, _) =>
         {
@@ -1389,13 +1389,13 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void GetHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click(object? sender, EventArgs e)
+    private void getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         OsShellUtil.OpenUrlInDefaultBrowser(
             GitUI.UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature"));
     }
 
-    private void OpenPullRequestPageStripMenuItem_Click(object? sender, EventArgs e)
+    private void openPullRequestPageStripMenuItem_Click(object? sender, EventArgs e)
     {
         string? url = SelectedRevision?.BuildStatus?.PullRequestUrl;
         if (!string.IsNullOrWhiteSpace(url))

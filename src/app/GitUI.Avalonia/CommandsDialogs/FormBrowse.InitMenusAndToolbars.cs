@@ -23,7 +23,7 @@ partial class FormBrowse
     {
         if (_hasRuntimeCommands)
         {
-            commandsToolStripMenuItem.SubmenuOpened += CommandsToolStripMenuItem_SubmenuOpened;
+            commandsToolStripMenuItem.SubmenuOpened += CommandsToolStripMenuItem_DropDownOpening;
         }
 
         InitFilters();
