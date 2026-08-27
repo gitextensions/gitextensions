@@ -21,7 +21,8 @@ internal static class Program
                 InventorySweepResult sweep = InventorySweepRunner.Run(SweepOptions.Parse(args));
                 Console.WriteLine(
                     $"Assessed {sweep.Summary.MappingCount} mappings and {sweep.Summary.AnalyzedTypeCount} types; "
-                    + $"wrote {sweep.Summary.FindingCount} findings and recorded "
+                    + $"wrote {sweep.Summary.FindingCount} actionable findings plus "
+                    + $"{sweep.Summary.DependentFindingCount} dependent findings and recorded "
                     + $"{sweep.Summary.AdaptedCommentCount} adapted comments plus "
                     + $"{sweep.Summary.AcceptedFrameworkDeviationCount} accepted framework deviations at "
                     + $"{Path.GetFullPath(sweep.OutputFile)}.");
@@ -32,7 +33,8 @@ internal static class Program
             InventoryReport report = InventoryRunner.Run(options);
             Console.WriteLine(
                 $"Compared {report.Original.Parts.Count} original and {report.Twin.Parts.Count} twin parts; "
-                + $"wrote {report.Summary.FindingCount} findings and recorded "
+                + $"wrote {report.Summary.FindingCount} actionable findings plus "
+                + $"{report.Summary.DependentFindingCount} dependent findings and recorded "
                 + $"{report.Summary.AdaptedCommentCount} adapted comments plus "
                 + $"{report.Summary.AcceptedFrameworkDeviationCount} accepted framework deviations at "
                 + $"{Path.GetFullPath(options.OutputFile)}.");

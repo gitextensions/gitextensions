@@ -49,6 +49,7 @@ internal static class InventoryComparer
                 .ThenBy(finding => finding.OriginalValue, StringComparer.Ordinal)
                 .ThenBy(finding => finding.TwinValue, StringComparer.Ordinal)
                 .ToArray(),
+            DependentFindings = [],
             AdaptedComments = commentComparison.AdaptedComments,
             AcceptedFrameworkDeviations = frameworkInputs.Deviations
         };
