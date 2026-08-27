@@ -50,6 +50,7 @@ public static class EditorHelper
     private static string GetZed()
         => GetEditorCommandLine("zed.exe", "--wait", "Zed.dev");
 
+    // http://stackoverflow.com/questions/8951275/git-config-core-editor-how-to-make-sublime-text-the-default-editor-for-git-on
     private static string GetSublimeText()
         => GetEditorCommandLine("sublime_text.exe", "--new-window --wait", "Sublime Text");
 
@@ -58,6 +59,7 @@ public static class EditorHelper
         string exec = executableName.FindInFolders(installFolders);
         if (string.IsNullOrEmpty(exec))
         {
+            // hoping the tool is available in the PATH
             exec = Path.GetExtension(executableName) == ".exe"
                 ? Path.GetFileNameWithoutExtension(executableName)
                 : executableName;

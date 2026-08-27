@@ -123,6 +123,8 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
 
     private void cmdOk_Click(object? sender, EventArgs e)
     {
+        // Ok button set as the "AcceptButton" for the form
+        // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
         cmdOk.Focus();
 
         ObjectId objectId = default;

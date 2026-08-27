@@ -15,6 +15,9 @@ public class GitExtensionsDialog : GitModuleForm
     {
     }
 
+    /// <summary>Creates a new <see cref="GitExtensionsForm"/> indicating position restore.</summary>
+    /// <param name="enablePositionRestore">Indicates whether the <see cref="Avalonia.Controls.Window"/>'s position
+    /// will be restored upon being re-opened.</param>
     protected GitExtensionsDialog(IGitUICommands? commands, bool enablePositionRestore)
         : base(commands, enablePositionRestore)
     {

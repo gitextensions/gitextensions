@@ -94,11 +94,15 @@ public sealed partial class FormStash : GitModuleForm
         }
         else if (ManageStashes && stashedItems.Count > 1)
         {
+            // more than just the default ("Current working directory changes")
             Stashes.SelectedIndex = 1;
+
+            // First load done, show worktree on next refresh
             ManageStashes = false;
         }
         else if (stashedItems.Count > 0)
         {
+            // (no stashes) -> select default ("Current working directory changes")
             Stashes.SelectedIndex = 0;
         }
     }
@@ -187,6 +191,7 @@ public sealed partial class FormStash : GitModuleForm
 
     private bool ChangeSelectedStash(bool next = true)
     {
+        // Move in list similar to RevGrid, so newest is first in list
         int index = Stashes.SelectedIndex + (next ? -1 : 1);
 
         if (index >= Stashes.ItemCount || index < 0)
@@ -214,6 +219,8 @@ public sealed partial class FormStash : GitModuleForm
         GitStash gitStash = (GitStash)Stashes.SelectedItem!;
         if (gitStash == _currentWorkingDirStashItem)
         {
+            // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
+            // Must be handled when displaying
             ObjectId headId = Module.RevParse("HEAD");
             GitRevision workTreeRev = new(ObjectId.WorkTreeId)
             {
@@ -221,6 +228,7 @@ public sealed partial class FormStash : GitModuleForm
             };
             if (headId.IsZero)
             {
+                // Likely a detached head
                 Stashed.SetDiffs(null, workTreeRev, gitItemStatuses);
             }
             else
@@ -391,6 +399,7 @@ public sealed partial class FormStash : GitModuleForm
     {
         if (!force && Stashes.SelectedIndex != 0)
         {
+            // Worktree not select, not relevant
             return;
         }
 

@@ -75,6 +75,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         }
 
         NewThreadScheduler scheduler = NewThreadScheduler.Default;
+
+        // Run this first as it (may) force start queries
         IObservable<BuildInfo> runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
         IObservable<BuildInfo> fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
         IObservable<BuildInfo> fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
@@ -84,6 +86,9 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             .DelaySubscription(anyRunningBuilds ? ShortPollInterval : LongPollInterval));
         bool shouldLookForNewlyFinishedBuilds = false;
         DateTime nowFrozen = DateTime.Now;
+
+        // All finished builds have already been retrieved,
+        // so looking for new finished builds make sense only if running builds have been found previously
         IObservable<BuildInfo> fromNowObservable = Observable.If(
             () => shouldLookForNewlyFinishedBuilds,
             buildServerAdapter.GetFinishedBuildsSince(scheduler, nowFrozen)
@@ -227,6 +232,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         string? buildServerName = BuildServerSettings.ServerName[effectiveSettings];
         if (!string.IsNullOrEmpty(buildServerName))
         {
+            // A build server type is explicitly configured.
+            // Only bail out if integration has been explicitly disabled.
             if (BuildServerSettings.IntegrationEnabled[effectiveSettings] is false)
             {
                 return null;
@@ -234,6 +241,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         }
         else
         {
+            // Nothing configured. Auto-detect only when the user hasn't touched
+            // integration settings at all (both ServerName and IntegrationEnabled are unset).
             if (BuildServerSettings.IntegrationEnabled[effectiveSettings] is not null)
             {
                 return null;
@@ -246,6 +255,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             }
         }
 
+        // When explicitly configured, let the matching detector populate settings from remotes
         TryPopulateSettingsForBuildServer(buildServerName, BuildServerSettings.GetSettingsSource(effectiveSettings));
         Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>? export = ManagedExtensibility
             .GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>()
@@ -283,6 +293,14 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         }
     }
 
+    /// <summary>
+        ///  Attempts to detect the build server type from the repository's remote URLs
+        ///  by querying registered <see cref="IBuildServerAutoDetector"/> exports.
+        ///  When detected, writes adapter-specific settings to <paramref name="settingsSource"/>
+        ///  (if not already set) so the adapter can use them without re-parsing.
+        ///  Respects <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/> for remote ordering,
+        ///  so that forks resolve to the upstream project's CI rather than the fork's.
+        /// </summary>
     private string? TryAutoDetectBuildServerType(SettingsSource? settingsSource = null)
     {
         try
@@ -304,6 +322,10 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         return null;
     }
 
+    /// <summary>
+        ///  For an explicitly configured build server, runs the matching auto-detector
+        ///  to populate adapter-specific settings from remote URLs.
+        /// </summary>
     private void TryPopulateSettingsForBuildServer(string buildServerName, SettingsSource settingsSource)
     {
         try
@@ -324,6 +346,10 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         }
     }
 
+    /// <summary>
+        ///  Collects remote URLs from the current module, ordered by
+        ///  <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/>.
+        /// </summary>
     private List<string> GetOrderedRemoteUrls()
     {
         IGitModule module = _module();

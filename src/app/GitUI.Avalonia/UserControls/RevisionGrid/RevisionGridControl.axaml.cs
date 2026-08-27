@@ -133,8 +133,14 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         _gridView.ItemsSource = _revisions;
 
         MenuCommands = new RevisionGridMenuCommands(this);
+
+        // fill View context menu from MenuCommands
         FillMenuFromMenuCommands(MenuCommands.ViewMenuCommands, viewToolStripMenuItem);
+
+        // fill Navigate context menu from MenuCommands
         FillMenuFromMenuCommands(MenuCommands.NavigateMenuCommands, navigateToolStripMenuItem);
+
+        // Apply checkboxes changes also to FormBrowse main menu
         MenuCommands.TriggerMenuChanged();
 
         // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
@@ -249,6 +255,11 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     /// </summary>
     public GitRevision? SelectedRevision => _gridView.SelectedItem as GitRevision;
 
+    /// <summary>
+        /// The (first) seen name for commits, for FileHistory with path filters.
+        /// See BuildFilter() for limitations of commits included.
+        /// The property is explicitly initialized by FileHistory.
+        /// </summary>
     internal Dictionary<ObjectId, string>? FilePathByObjectId { get; set; }
 
     internal FilterInfo CurrentFilter => _filterInfo;
@@ -451,6 +462,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     /// <inheritdoc />
     public void ShowFilteredBranches()
     {
+        // Must be able to set ByBranchFilter without a filter to edit it
         _filterInfo.ByBranchFilter = true;
         _filterInfo.ShowCurrentBranchOnly = false;
         RefreshFilteredRevisions();
@@ -501,6 +513,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     internal bool TryGetSuperProjectInfo([System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out SuperProjectInfo? spi)
     {
+        // If _superprojectCurrentCheckout is not yet calculated when the grid is shown,
+        // a separate Refresh() will be invoked to update the row later.
         spi = _superprojectCurrentCheckout;
         return spi is not null;
     }
@@ -668,6 +682,10 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         return _revisions.FirstOrDefault(r => r.ObjectId == objectId)!;
     }
 
+    /// <summary>
+        /// Get the actual GitRevision from grid or use GitModule if parents may be rewritten or the commit is not in the grid.
+        /// </summary>
+        /// <returns>The GitRevision or null if not found</returns>
     public GitRevision? GetActualRevision(ObjectId objectId)
     {
         GitRevision? revision = GetRevision(objectId);
@@ -754,6 +772,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         return ParseFileNames(Module, args, cancellationToken: default).FirstOrDefault();
     }
 
+    /// <summary>
+        /// The last selected commit in the grid (with related CommitInfo in Browse).
+        /// </summary>
     public ObjectId SelectedId
     {
         get => SelectedRevision?.ObjectId ?? _pendingSelectedObjectId;
@@ -2100,6 +2121,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         });
     }
 
+    // returns " --find-renames=... --find-copies=..." according to app settings
     private static ArgumentString FindRenamesAndCopiesOpts()
         => AppSettings.FollowRenamesInFileHistoryExactOnly
             ? " --find-renames=\"100%\" --find-copies=\"100%\""

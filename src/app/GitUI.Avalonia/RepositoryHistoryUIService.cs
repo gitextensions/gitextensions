@@ -23,6 +23,11 @@ public interface IRepositoryHistoryUIService
     IList<Repository> AddAsMostRecent(string path);
     bool CanOpenRepository(string path);
     void Invalidate();
+
+    /// <summary>
+        ///  Start updating the branch name cache.
+        /// </summary>
+        /// <param name="onlyIfEmpty">Start updating only if the cache is empty.</param>
     void TriggerBranchNameCacheUpdate(bool onlyIfEmpty = false);
 }
 

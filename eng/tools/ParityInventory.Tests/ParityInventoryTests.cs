@@ -305,7 +305,7 @@ public sealed class ParityInventoryTests
         fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private int frameworkOnly; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 1,
+              "schemaVersion": 2,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -332,13 +332,82 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_record_an_exact_reviewed_field_signature_adaptation()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public sealed class Widget { private Label caption; }");
+        fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private TextBlock caption; }");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 2,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.signature",
+                  "path": "member/field:caption/signature",
+                  "originalPart": "Widget.cs",
+                  "originalAccessibility": "private",
+                  "originalSignature": "Label caption",
+                  "twinPart": "Widget.cs",
+                  "twinAccessibility": "private",
+                  "twinSignature": "TextBlock caption",
+                  "rationale": "Compiled AXAML generates the native Avalonia control field type."
+                }
+              ]
+            }
+            """);
+
+        InventoryReport report = fixture.Run(useFrameworkAdaptations: true);
+
+        report.Findings.Should().BeEmpty();
+        report.AcceptedFrameworkDeviations.Should().ContainSingle(item =>
+            item.Code == "member.signature"
+            && item.Path == "member/field:caption/signature"
+            && item.OriginalPart == "Widget.cs"
+            && item.OriginalValue == "private Label caption"
+            && item.TwinPart == "Widget.cs"
+            && item.TwinValue == "private TextBlock caption");
+    }
+
+    [Test]
+    public void Run_should_reject_source_drift_in_a_reviewed_field_signature_adaptation()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public sealed class Widget { private LinkLabel caption; }");
+        fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private TextBlock caption; }");
+        fixture.WriteFrameworkAdaptations("""
+            {
+              "schemaVersion": 2,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "code": "member.signature",
+                  "path": "member/field:caption/signature",
+                  "originalPart": "Widget.cs",
+                  "originalAccessibility": "private",
+                  "originalSignature": "Label caption",
+                  "twinPart": "Widget.cs",
+                  "twinAccessibility": "private",
+                  "twinSignature": "TextBlock caption",
+                  "rationale": "Any source type change requires a fresh review."
+                }
+              ]
+            }
+            """);
+
+        Action action = () => fixture.Run(useFrameworkAdaptations: true);
+
+        action.Should().Throw<InvalidDataException>().WithMessage("*source drifted*");
+    }
+
+    [Test]
     public void Run_should_reject_a_stale_reviewed_framework_adaptation()
     {
         using InventoryFixture fixture = new();
         fixture.WriteMatching("namespace Sample; public sealed class Widget { private int frameworkOnly; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 1,
+              "schemaVersion": 2,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -366,7 +435,7 @@ public sealed class ParityInventoryTests
         fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private long frameworkOnly; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 1,
+              "schemaVersion": 2,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",
@@ -394,7 +463,7 @@ public sealed class ParityInventoryTests
         fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { public int frameworkOnly; }");
         fixture.WriteFrameworkAdaptations("""
             {
-              "schemaVersion": 1,
+              "schemaVersion": 2,
               "deviations": [
                 {
                   "typeName": "Sample.Widget",

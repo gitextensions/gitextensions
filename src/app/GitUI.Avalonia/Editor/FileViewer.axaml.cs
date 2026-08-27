@@ -117,6 +117,8 @@ public partial class FileViewer : GitModuleControl
     private readonly IFullPathResolver _fullPathResolver;
     private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
     private readonly ContinuousScrollEventManager _continuousScrollEventManager = new();
+
+    // Cache for the configuration of a difftastic difftool
     private readonly Lock _difftasticCmdCacheLock = new();
     private readonly ConcurrentDictionary<string, Lazy<bool>> _difftasticCmdCache = [];
     private ViewMode _viewMode;
@@ -354,6 +356,7 @@ public partial class FileViewer : GitModuleControl
         }
     }
 
+    // Private properties
     private IgnoreWhitespaceKind IgnoreWhitespace { get; set; }
 
     private int NumberOfContextLines { get; set; }
@@ -364,6 +367,7 @@ public partial class FileViewer : GitModuleControl
 
     private bool ShowSyntaxHighlightingInDiff { get; set; }
 
+    // Public methods
     public void SetGitBlameGutter(IEnumerable<GitBlameEntry> gitBlameEntries)
     {
         internalFileViewer.ShowGutterAvatars = AppSettings.BlameShowAuthorAvatar;
@@ -596,6 +600,13 @@ public partial class FileViewer : GitModuleControl
     /// <summary>Gets the full viewer text.</summary>
     public string GetText() => internalFileViewer.GetText();
 
+    /// <summary>
+        /// Present the text as a patch in the file viewer.
+        /// </summary>
+        /// <param name="item">The gitItem to present.</param>
+        /// <param name="text">The patch text.</param>
+        /// <param name="line">The line number to display.</param>
+        /// <param name="openWithDifftool">The action to open the difftool.</param>
     public async Task ViewPatchAsync(
         FileStatusItem item,
         string text,
@@ -639,6 +650,12 @@ public partial class FileViewer : GitModuleControl
         }, cancellationToken);
     }
 
+    /// <summary>
+        /// Present the text as a patch in the file viewer.
+        /// </summary>
+        /// <param name="fileName">The fileName to present.</param>
+        /// <param name="text">The patch text.</param>
+        /// <param name="openWithDifftool">The action to open the difftool.</param>
     public async Task ViewFixedPatchAsync(
         string fileName,
         string text,
@@ -793,6 +810,15 @@ public partial class FileViewer : GitModuleControl
         CancellationToken cancellationToken = default)
         => ViewGitItemAsync(file, objectId, item: null, line, openWithDifftool, cancellationToken);
 
+    /// <summary>
+        /// View the git item with the TreeId.
+        /// </summary>
+        /// <param name="file">GitItem file, with TreeId.</param>
+        /// <param name="objectId">Revision to present. Can be the zero <see cref="ObjectId"/> if file.TreeId is set.</param>
+        /// <param name="item">Metadata for line patching and presentation.</param>
+        /// <param name="line">The line to display.</param>
+        /// <param name="openWithDifftool">difftool command</param>
+        /// <returns>Task to view the item</returns>
     private async Task ViewGitItemAsync(
         GitItemStatus file,
         ObjectId objectId,
@@ -845,6 +871,10 @@ public partial class FileViewer : GitModuleControl
     /// </summary>
     public bool LinePatchingBlocksUntilReload { private get; set; }
 
+    /// <summary>
+        /// Current state for line patching allowed for worktree/index
+        /// Cleared when the file is reloaded.
+        /// </summary>
     private bool AllowLinePatching
     {
         get => _allowLinePatching;
@@ -887,6 +917,9 @@ public partial class FileViewer : GitModuleControl
     private void SetVisibilityDiffContextMenu(ViewMode viewMode)
     {
         bool isPartialTextView = viewMode.IsPartialTextView();
+
+        // stage and reset has different implementation depending on the viewItem
+        // For the user it looks the same and they expect the same menu item (and hotkey)
         bool isIndex = ViewItemStagedStatus() == StagedStatus.Index;
         stageSelectedLinesToolStripMenuItem.IsVisible = SupportLinePatching && !isIndex;
         unstageSelectedLinesToolStripMenuItem.IsVisible = SupportLinePatching && isIndex;
@@ -1041,6 +1074,9 @@ public partial class FileViewer : GitModuleControl
             return string.Empty;
         }
 
+        // Do not freeze GE when selecting large binary files
+        // Show only the header of the binary file to indicate contents and files incorrectly handled
+        // Use a dedicated editor to view the complete file
         int limit = Math.Min(text.Length, columnWidth * columnCount * 256);
         int i = 0;
         while (i < limit)
@@ -1051,9 +1087,11 @@ public partial class FileViewer : GitModuleControl
                 str.AppendLine();
             }
 
+            // OFFSET
             str.Append($"{baseIndex:X4}   ");
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
             {
+                // space between columns
                 if (columnIndex != 0)
                 {
                     str.Append("  ");
@@ -1072,9 +1110,12 @@ public partial class FileViewer : GitModuleControl
             }
 
             str.Append("   ");
+
+            // ASCII
             i = baseIndex;
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
             {
+                // space between columns
                 if (columnIndex != 0)
                 {
                     str.Append(' ');
@@ -1127,6 +1168,7 @@ public partial class FileViewer : GitModuleControl
         SetToolbarChecked(showNonPrintChars, show);
     }
 
+    // Event handlers
     private void OnUICommandsChanged(object? sender, GitUICommandsChangedEventArgs? e)
     {
         BindSettingsCommands((sender as IGitUICommandsSource)?.UICommands);
@@ -1296,11 +1338,14 @@ public partial class FileViewer : GitModuleControl
     {
         if (!file.TreeId.IsZero && !commitId.IsArtificial)
         {
+            // current value is immutable (and IsSubmodule should have been set)
             return file.TreeId;
         }
 
         if (commitId == ObjectId.WorkTreeId && (!file.TreeId.IsZero || file.IsSubmodule))
         {
+            // treeId already calculated, no point in doing it again.
+            // (if treeId is set, it means that IsSubmodule is set).
             return default;
         }
 
@@ -1317,10 +1362,14 @@ public partial class FileViewer : GitModuleControl
         return default;
     }
 
+    /// <summary>
+        /// Use implementation matching the current viewItem.
+        /// </summary>
     private bool StageSelectedLines()
     {
         if (!SupportLinePatching)
         {
+            // Hotkey executed when menu is disabled
             return false;
         }
 
@@ -1340,6 +1389,7 @@ public partial class FileViewer : GitModuleControl
     {
         if (!SupportLinePatching || ViewItemStagedStatus() != StagedStatus.Index)
         {
+            // Hotkey executed when menu is disabled
             return false;
         }
 
@@ -1351,6 +1401,7 @@ public partial class FileViewer : GitModuleControl
     {
         if (!SupportLinePatching)
         {
+            // Hotkey executed when menu is disabled
             return false;
         }
 
@@ -1371,6 +1422,7 @@ public partial class FileViewer : GitModuleControl
     {
         if (!AllowLinePatching || _viewItem is null)
         {
+            // reload not completed
             return;
         }
 
@@ -1424,6 +1476,7 @@ public partial class FileViewer : GitModuleControl
         if (!AllowLinePatching || _viewItem is null
             || TaskDialog.ShowDialog(GetOwner(), _NO_TRANSLATE_resetSelectedLinesConfirmationDialog) != TaskDialogButton.Yes)
         {
+            // reload not completed
             return;
         }
 
@@ -1478,10 +1531,15 @@ public partial class FileViewer : GitModuleControl
         ProcessApplyOutput(args, patch, patchUpdateDiff: true);
     }
 
+    /// <summary>
+        /// Cherry-pick/revert patches (not worktree).
+        /// </summary>
+        /// <param name="reverse"><see langword="true"/> if patches is to be reversed; otherwise <see langword="false"/>.</param>.
     private void ApplySelectedLines(bool allFile, bool reverse)
     {
         if (!AllowLinePatching || _viewItem is null)
         {
+            // reload not completed
             return;
         }
 
@@ -1580,6 +1638,11 @@ public partial class FileViewer : GitModuleControl
         PatchApplied?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+        /// Copy selected text, excluding diff added/deleted information.
+        /// </summary>
+        /// <param name="sender">sender object.</param>
+        /// <param name="e">event args.</param>
     private void CopyToolStripMenuItemClick(object? sender, EventArgs e)
     {
         string code = GetSelectedText();
@@ -1620,6 +1683,11 @@ public partial class FileViewer : GitModuleControl
         }
     }
 
+    /// <summary>
+        /// Copy selected text as a patch.
+        /// </summary>
+        /// <param name="sender">sender object.</param>
+        /// <param name="e">event args.</param>
     private void CopyPatchToolStripMenuItemClick(object? sender, EventArgs e)
     {
         string text = GetSelectedText();
@@ -1644,6 +1712,11 @@ public partial class FileViewer : GitModuleControl
         internalFileViewer.CopyNotStartingWith('+');
     }
 
+    /// <summary>
+        /// Go to next change
+        /// For normal diffs, this is the next block of lines with a difference.
+        /// For range-diff, it is the next commit summary header.
+        /// </summary>
     private void NextChangeButtonClick(object? sender, EventArgs e)
     {
         FocusViewer();
@@ -1739,6 +1812,7 @@ public partial class FileViewer : GitModuleControl
             case Command.Replace:
                 if (TextEditor.IsReadOnly)
                 {
+                    // Don't handle the hotkey to let the control handle it if an action is bound to it
                     return false;
                 }
 

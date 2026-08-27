@@ -10,6 +10,15 @@ public static class UserScriptContextMenuExtensions
 {
     private const string ScriptNameSuffix = "_ownScript";
 
+    /// <summary>
+        ///  Adds user scripts to the <paramref name="contextMenu"/>, or under <paramref name="hostMenuItem"/>,
+        ///  if scripts are not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
+        /// </summary>
+        /// <param name="contextMenu">The context menu to add user scripts to.</param>
+        /// <param name="hostMenuItem">The menu item user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/> are added to.</param>
+        /// <param name="scriptInvoker">The handler that handles user script invocation.</param>
+        /// <param name="serviceProvider">The DI service provider.</param>
+        /// <returns><see langword="true"/> if any scripts were added to menus; otherwise <see langword="false"/>.</returns>
     public static bool AddUserScripts(
         this ContextMenu contextMenu,
         MenuItem hostMenuItem,
@@ -55,6 +64,7 @@ public static class UserScriptContextMenuExtensions
 
             if (scriptFilterAddDirect(script) && hostItemIndex >= 0)
             {
+                // insert items after hostMenuItem
                 contextMenu.Items.Insert(++lastScriptItemIndex, item);
             }
             else
@@ -70,6 +80,12 @@ public static class UserScriptContextMenuExtensions
         return itemsAdded;
     }
 
+    /// <summary>
+        ///  Removes user scripts from the <paramref name="contextMenu"/>, or from <paramref name="hostMenuItem"/>,
+        ///  if scripts are not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
+        /// </summary>
+        /// <param name="contextMenu">The context menu to remove user scripts from.</param>
+        /// <param name="hostMenuItem">The menu item from which to remove user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.</param>
     public static void RemoveUserScripts(this ContextMenu contextMenu, MenuItem hostMenuItem)
     {
         ArgumentNullException.ThrowIfNull(contextMenu);

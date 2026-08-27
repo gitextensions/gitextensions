@@ -111,13 +111,21 @@ public sealed partial class FilterToolBar : TranslatedControl
     private IRevisionGridFilter RevisionGridFilter
         => _revisionGridFilter ?? throw new InvalidOperationException($"{nameof(Bind)} is not called.");
 
+    /// <summary>
+        ///  Applies the preset branch filters, such as "show all", "show current", and "show filtered".
+        /// </summary>
     private void ApplyPresetBranchesFilter(Action filterAction)
     {
         _filterBeingChanged = true;
+
+        // Action the filter
         filterAction();
         _filterBeingChanged = false;
     }
 
+    /// <summary>
+        ///  Applies custom branch filters supplied via the filter textbox.
+        /// </summary>
     private void ApplyCustomBranchFilter(bool checkBranch = true)
     {
         if (_isApplyingFilter)
@@ -128,6 +136,7 @@ public sealed partial class FilterToolBar : TranslatedControl
         _isApplyingFilter = true;
         try
         {
+            // The user has accepted the filter
             _filterBeingChanged = false;
             string filter = tscboBranchFilter.Text == TranslatedStrings.NoResultsFound
                 ? string.Empty
@@ -252,6 +261,7 @@ public sealed partial class FilterToolBar : TranslatedControl
     {
         if (string.IsNullOrEmpty(tstxtRevisionFilter.Text) && string.IsNullOrEmpty(filter))
         {
+            // The current filter is empty and the new filter is empty. No-op
             return;
         }
 
@@ -259,6 +269,10 @@ public sealed partial class FilterToolBar : TranslatedControl
         ApplyRevisionFilter();
     }
 
+    /// <summary>
+        /// Update the function to get refs for branch dropdown filter
+        /// </summary>
+        /// <param name="getRefs">Function to get refs, expected to be cached</param>
     public void RefreshRevisionFunction(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
         _getRefs = getRefs ?? throw new ArgumentNullException(nameof(getRefs));
@@ -295,6 +309,12 @@ public sealed partial class FilterToolBar : TranslatedControl
         }
     }
 
+    /// <summary>
+        /// Update the tscboBranchFilter dropdown items matching the current filter.
+        /// This is called when dropdown clicked or text is manually changed
+        /// (so tscboBranchFilter.Items is not necessarily available when set externally
+        /// from the left panel or FormBrowse).
+        /// </summary>
     private void UpdateBranchFilterItems()
     {
         if (_getModule is null || !GetModule().IsValidGitWorkingDir())

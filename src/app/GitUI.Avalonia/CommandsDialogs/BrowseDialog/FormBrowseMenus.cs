@@ -17,6 +17,9 @@ namespace GitUI.CommandsDialogs;
 /// </remarks>
 internal sealed class FormBrowseMenus : ITranslate, IDisposable
 {
+    /// <summary>
+        /// The menu to which we will be adding RevisionGrid command menus.
+        /// </summary>
     private readonly Menu _mainMenuStrip;
     private readonly RevisionGridControl _revisionGrid;
     private readonly Dictionary<MenuItem, MenuItem> _sourceItems = [];

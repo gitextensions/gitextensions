@@ -24,6 +24,9 @@ internal partial class FormQuickItemSelector : GitExtensionsForm
         InitializeComplete();
     }
 
+    /// <summary>
+        /// Gets the item selected by the user.
+        /// </summary>
     public object? SelectedItem => (lbxRefs.SelectedItem as ListBoxItem)?.Tag;
 
     public DrawingPoint Location
@@ -45,6 +48,8 @@ internal partial class FormQuickItemSelector : GitExtensionsForm
         int longestLabelLength = 0;
         foreach (ItemData item in items)
         {
+            // assume that the branch names or tags are never longer than MaxRefLength symbols long
+            // if they are (sanity!) - don't resize past beyond certain limit
             string label = item.Label.Length > MaxRefLength ? item.Label[..MaxRefLength] : item.Label;
             longestLabelLength = Math.Max(longestLabelLength, label.Length);
             rows.Add(new ListBoxItem { Content = item.Label, Tag = item.Item });

@@ -267,6 +267,10 @@ public sealed partial class FormCommit : GitModuleForm
         InitializeComplete();
     }
 
+    /// <summary>
+        /// Flag whether the push needs to be forced, i.e. after amending a commit or after soft reset to the previous commit.
+        /// </summary>
+        /// The Amend checkbox is disabled after soft reset.
     private bool PushForced => (Amend.IsChecked == true || !Amend.IsEnabled) && AppSettings.CommitAndPushForcedWhenAmend;
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -407,16 +411,19 @@ public sealed partial class FormCommit : GitModuleForm
 
     public override bool ProcessHotkey(WinFormsShims.Keys keyData)
     {
+        // generic handling of this form's hotkeys (upstream)
         if (base.ProcessHotkey(keyData))
         {
             return true;
         }
 
+        // downstream (without keys for quick search and without keys for text selection and copy e.g. in commit message)
         if (GitExtensionsControl.IsTextEditKey(keyData, multiLine: true))
         {
             return false;
         }
 
+        // route to visible controls which have their own hotkeys
         return _currentFilesList.ProcessHotkey(keyData)
             || SelectedDiff.ProcessHotkey(keyData);
     }
@@ -449,6 +456,15 @@ public sealed partial class FormCommit : GitModuleForm
 
     internal enum Command
     {
+        /* obsolete: AddToGitIgnore = 0, */
+        /* obsolete: DeleteSelectedFiles = 1, */
+        /* obsolete: ResetSelectedFiles = 6, */
+        /* obsolete: StageSelectedFile = 7, */
+        /* obsolete: UnStageSelectedFile = 8, */
+        /* obsolete: ShowHistory = 9, */
+        /* obsolete: OpenFile = 13, */
+        /* obsolete: OpenFileWith = 14, */
+        /* obsolete: EditFile = 15, */
         FocusUnstagedFiles = 2,
         FocusSelectedDiff = 3,
         FocusStagedFiles = 4,
@@ -1468,6 +1484,7 @@ public sealed partial class FormCommit : GitModuleForm
 
             if (empty2 && line == 1)
             {
+                // Ensure next line. Optionally add a bullet.
                 Message.EnsureEmptyLine(commitValidationIndentAfterFirstLine, 1);
                 if (Message.LineCount() > 2)
                 {
@@ -1650,6 +1667,11 @@ public sealed partial class FormCommit : GitModuleForm
         Message.Focus();
     }
 
+    /// <summary>
+        /// replace the Message.Text in an undo-able way.
+        /// </summary>
+        /// <param name="message">the new message.</param>
+        /// <param name="regexEnabled">regex replace is enabled</param>
     private void ReplaceMessage(string message, bool regexEnabled = false)
     {
         if (regexEnabled)

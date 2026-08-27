@@ -167,8 +167,15 @@ public sealed partial class FormBrowse : GitModuleForm
     {
     }
 
+    /// <summary>
+        /// Open Browse - main GUI including dashboard.
+        /// </summary>
+        /// <param name="commands">The commands in the current form.</param>
+        /// <param name="args">The start up arguments.</param>
     public FormBrowse(IGitUICommands commands, BrowseArguments args)
         : this(commands, args, gpgInfoProvider: null)
+
+    // Type or member is obsolete
     {
     }
 
@@ -685,6 +692,8 @@ public sealed partial class FormBrowse : GitModuleForm
     private void RegisterPlugins()
     {
         bool werePluginsRegistered = PluginRegistry.PluginsRegistered;
+
+        // Allow the plugin to perform any self-registration actions
         PluginRegistry.Register(UICommands);
         if (!werePluginsRegistered && PluginRegistry.PluginsRegistered)
         {
@@ -1133,6 +1142,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
     private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
     {
+        // Broadcast RepoChanged in case repo was changed outside of GE
         UICommands.RepoChangedNotifier.Notify();
         RefreshGitStatusMonitor();
     }
@@ -1394,6 +1404,7 @@ public sealed partial class FormBrowse : GitModuleForm
         string translation = AppSettings.Translation;
         CommitInfoPosition commitInfoPosition = AppSettings.CommitInfoPosition;
 
+        // Await plugin registration
         _loadOperations.JoinPendingOperations();
         UICommands.StartSettingsDialog(this);
         HandleSettingsChanged(translation, commitInfoPosition);
@@ -1693,6 +1704,15 @@ public sealed partial class FormBrowse : GitModuleForm
 
     internal enum Command
     {
+        // Focus or visuals
+        // START menu
+        // DASHBOARD menu
+        // REPOSITORY menu
+        // COMMANDS menu
+        // PLUGINS menu
+        // TOOLS menu
+        // HELP menu
+        // Toolbar
         GitBash = 0,
         GitGui = 1,
         GitGitK = 2,
@@ -1789,6 +1809,7 @@ public sealed partial class FormBrowse : GitModuleForm
             return true;
         }
 
+        // generic handling of this form's hotkeys (upstream)
         if (base.ProcessHotkey(keyData))
         {
             return true;
