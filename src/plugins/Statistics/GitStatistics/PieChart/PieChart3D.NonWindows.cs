@@ -46,11 +46,11 @@ public sealed class PieChart3D
 
     public double EdgeLineWidth { private get; set; } = 1;
 
+    public ShadowStyle ShadowStyle { private get; set; } = ShadowStyle.GradualShadow;
+
     public bool FitToBoundingRectangle { private get; set; }
 
     public int HighlightedIndex { private get; set; } = -1;
-
-    public ShadowStyle ShadowStyle { private get; set; } = ShadowStyle.GradualShadow;
 
     internal int SliceCount => _slices.Count;
 
@@ -61,15 +61,15 @@ public sealed class PieChart3D
             ? brush.Color
             : Colors.Transparent;
 
-    public void SetInitialAngle(double value)
-    {
-        _initialAngle = value;
-        RebuildSlices();
-    }
-
     public void SetSliceRelativeDisplacements(double[] value)
     {
         _relativeSliceDisplacements = value.Length == 0 ? [0] : value;
+        RebuildSlices();
+    }
+
+    public void SetInitialAngle(double value)
+    {
+        _initialAngle = value;
         RebuildSlices();
     }
 

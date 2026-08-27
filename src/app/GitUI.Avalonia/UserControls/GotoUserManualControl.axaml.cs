@@ -8,8 +8,6 @@ public sealed partial class GotoUserManualControl : GitExtensionsControl
 {
     private readonly TranslationString _gotoUserManualControlTooltip =
         new("Read more about this feature at {0}");
-    private string _manualSectionAnchorName = string.Empty;
-    private string _manualSectionSubfolder = string.Empty;
 
     public GotoUserManualControl()
     {
@@ -17,6 +15,8 @@ public sealed partial class GotoUserManualControl : GitExtensionsControl
         linkLabelHelp.Click += linkLabelHelp_LinkClicked;
         InitializeComplete();
     }
+
+    private string _manualSectionAnchorName = string.Empty;
 
     public string ManualSectionAnchorName
     {
@@ -27,6 +27,8 @@ public sealed partial class GotoUserManualControl : GitExtensionsControl
             UpdateTooltip();
         }
     }
+
+    private string _manualSectionSubfolder = string.Empty;
 
     public string ManualSectionSubfolder
     {

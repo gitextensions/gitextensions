@@ -25,9 +25,31 @@ namespace GitUI.CommandsDialogs;
 // the original sortable columns and selection checkboxes without introducing a view model.
 public sealed partial class FormVerify : GitModuleForm
 {
-    private const string _restoredObjectsTagPrefix = "LOST_FOUND_";
+    private sealed partial class LostObject
+    {
+        public static LostObject CreatePreview(
+            LostObjectType objectType,
+            string rawType,
+            ObjectId objectId,
+            DateTime? date,
+            string? subject,
+            string? author,
+            ObjectId parent = default)
+        {
+            LostObject item = new(objectType, rawType, objectId)
+            {
+                Date = date,
+                Subject = subject,
+                Author = author,
+                Parent = parent,
+            };
+            return item;
+        }
+    }
+
     private const string _commitColumns = "28,80,100,*,150,92,92";
     private const string _objectColumns = "28,80,*,0,0,150,0";
+    private const string _restoredObjectsTagPrefix = "LOST_FOUND_";
 
     private readonly TranslationString _removeDanglingObjectsCaption = new("Remove");
     private readonly TranslationString _removeDanglingObjectsQuestion = new("Are you sure you want to delete all dangling objects?");
@@ -37,20 +59,20 @@ public sealed partial class FormVerify : GitModuleForm
     private readonly TranslationString _seemingly = new("seemingly");
 
     private readonly List<LostObject> _lostObjects = [];
-    private readonly List<LostObject> _filteredLostObjects = [];
     private readonly HashSet<ObjectId> _selectedObjectIds = [];
     private readonly CancellationTokenSequence _typeDetectionSequence = new();
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
     private readonly TaskManager _loadOperations = GitUI.Compat.DesignTimeTaskManager.Create();
+    private readonly List<LostObject> _filteredLostObjects = [];
     private readonly IGitTagController? _gitTagController;
 
     private LostObject? _previewedItem;
-    private string? _defaultFilename;
     private string? _sortColumn;
     private bool _sortAscending;
-    private bool _typeDetected;
+    private string? _defaultFilename;
     private bool _updatingSelectionHeader;
+    private bool _typeDetected;
 
     // https://en.wikipedia.org/wiki/List_of_file_signatures
     private static readonly Dictionary<string, string> _languagesStartOfFile = new()
@@ -102,19 +124,6 @@ public sealed partial class FormVerify : GitModuleForm
         { "<", "xml" },
     };
 
-    private static readonly Dictionary<string, string[]> _fileTypesEquivalences = new()
-    {
-        { "js", ["ts", "jsx", "tsx"] },
-        { "html", ["php", "cshtml"] },
-        { "cpp", ["c"] },
-        { "xml", ["config", "settings", "csproj", "xlf", "props"] },
-        { "zip", ["docx", "xlsx", "pptx", "odt", "ods", "odp", "epub", "jar", "msix"] },
-        { "exe", ["dll"] },
-        { "doc", ["xls", "ppt", "msi"] },
-        { "md", ["sh", "yml"] },
-        { "txt", ["csv", "css", "md", "yml"] },
-    };
-
     public FormVerify()
     {
         InitializeComponent();
@@ -132,7 +141,18 @@ public sealed partial class FormVerify : GitModuleForm
         InitializeComplete();
     }
 
-    private LostObject? CurrentItem => Warnings.SelectedItem as LostObject;
+    private static readonly Dictionary<string, string[]> _fileTypesEquivalences = new()
+    {
+        { "js", ["ts", "jsx", "tsx"] },
+        { "html", ["php", "cshtml"] },
+        { "cpp", ["c"] },
+        { "xml", ["config", "settings", "csproj", "xlf", "props"] },
+        { "zip", ["docx", "xlsx", "pptx", "odt", "ods", "odp", "epub", "jar", "msix"] },
+        { "exe", ["dll"] },
+        { "doc", ["xls", "ppt", "msi"] },
+        { "md", ["sh", "yml"] },
+        { "txt", ["csv", "css", "md", "yml"] },
+    };
 
     private void WireControls()
     {
@@ -270,6 +290,8 @@ public sealed partial class FormVerify : GitModuleForm
         _updatingSelectionHeader = false;
     }
 
+    private LostObject? CurrentItem => Warnings.SelectedItem as LostObject;
+
     private void SaveObjectsClick(object? sender, EventArgs e)
     {
         FormProcess.ShowDialog(this, UICommands, $"fsck-objects --lost-found{GetOptions()}", Module.WorkingDir, input: null, useDialogSettings: true);
@@ -326,6 +348,14 @@ public sealed partial class FormVerify : GitModuleForm
         UpdateLostObjects();
     }
 
+    private void ReloadForOptionChange()
+    {
+        if (TryGetUICommands(out _))
+        {
+            UpdateLostObjects();
+        }
+    }
+
     private void btnRestoreSelectedObjects_Click(object? sender, EventArgs e)
     {
         DeleteLostFoundTags();
@@ -351,31 +381,11 @@ public sealed partial class FormVerify : GitModuleForm
         UpdateLostObjects();
     }
 
-    private void ReloadForOptionChange()
-    {
-        if (TryGetUICommands(out _))
-        {
-            UpdateLostObjects();
-        }
-    }
-
     private void ShowCommitsCheckedChanged(object? sender, EventArgs e)
     {
         if (ShowCommitsAndTags.IsChecked != true && ShowOtherObjects.IsChecked != true)
         {
             ShowOtherObjects.IsChecked = true;
-        }
-        else
-        {
-            UpdateFilteredLostObjects();
-        }
-    }
-
-    private void ShowOtherObjects_CheckedChanged(object? sender, EventArgs e)
-    {
-        if (ShowCommitsAndTags.IsChecked != true && ShowOtherObjects.IsChecked != true)
-        {
-            ShowCommitsAndTags.IsChecked = true;
         }
         else
         {
@@ -398,12 +408,15 @@ public sealed partial class FormVerify : GitModuleForm
         }
     }
 
-    private void Warnings_KeyDown(object? sender, KeyEventArgs e)
+    private void ShowOtherObjects_CheckedChanged(object? sender, EventArgs e)
     {
-        if (e.Key == Key.Enter)
+        if (ShowCommitsAndTags.IsChecked != true && ShowOtherObjects.IsChecked != true)
         {
-            ViewCurrentItem();
-            e.Handled = true;
+            ShowCommitsAndTags.IsChecked = true;
+        }
+        else
+        {
+            UpdateFilteredLostObjects();
         }
     }
 
@@ -651,19 +664,20 @@ public sealed partial class FormVerify : GitModuleForm
         saveAsToolStripMenuItem.IsEnabled = isBlob;
     }
 
+    private void Warnings_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            ViewCurrentItem();
+            e.Handled = true;
+        }
+    }
+
     private void copyHashToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         if (CurrentItem is LostObject lostObject)
         {
             ClipboardUtil.TrySetText(lostObject.ObjectId.ToString());
-        }
-    }
-
-    private void copyParentHashToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        if (CurrentItem is LostObject { Parent.IsZero: false } lostObject)
-        {
-            ClipboardUtil.TrySetText(lostObject.Parent.ToString());
         }
     }
 
@@ -792,25 +806,11 @@ public sealed partial class FormVerify : GitModuleForm
         }
     }
 
-    private sealed partial class LostObject
+    private void copyParentHashToolStripMenuItem_Click(object? sender, EventArgs e)
     {
-        public static LostObject CreatePreview(
-            LostObjectType objectType,
-            string rawType,
-            ObjectId objectId,
-            DateTime? date,
-            string? subject,
-            string? author,
-            ObjectId parent = default)
+        if (CurrentItem is LostObject { Parent.IsZero: false } lostObject)
         {
-            LostObject item = new(objectType, rawType, objectId)
-            {
-                Date = date,
-                Subject = subject,
-                Author = author,
-                Parent = parent,
-            };
-            return item;
+            ClipboardUtil.TrySetText(lostObject.Parent.ToString());
         }
     }
 

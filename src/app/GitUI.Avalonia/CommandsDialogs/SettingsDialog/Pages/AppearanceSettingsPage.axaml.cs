@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using GitCommands;
 using GitCommands.Utils;
@@ -42,6 +42,17 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         InitializeComplete();
     }
 
+    private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : struct, Enum
+    {
+        ComboBoxItem<T>[] items = EnumHelper.GetValues<T>()
+            .Select(value => new ComboBoxItem<T>(value.GetDescription(), value))
+            .ToArray();
+        comboBox.ItemsSource = items;
+        comboBox.ItemTemplate = new FuncDataTemplate<ComboBoxItem<T>>(
+            (item, _) => new TextBlock { Text = item?.Text },
+            supportsRecycling: true);
+    }
+
     public static SettingsPageReference GetPageReference()
         => new SettingsPageReferenceByType(typeof(AppearanceSettingsPage));
 
@@ -70,50 +81,6 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         PopulateLanguages();
         PopulateSelectedDictionary();
         base.SettingsToPage();
-    }
-
-    protected override void PageToSettings()
-    {
-        AppSettings.RelativeDate = chkShowRelativeDate.IsChecked == true;
-        AppSettings.ShowRepoCurrentBranch = chkShowRepoCurrentBranch.IsChecked == true;
-        AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.IsChecked == true;
-        AppSettings.EnableAutoScale = chkEnableAutoScale.IsChecked == true;
-        AppSettings.TruncatePathMethod = truncatePathMethod.SelectedIndex switch
-        {
-            1 => TruncatePathMethod.Compact,
-            2 => TruncatePathMethod.TrimStart,
-            3 => TruncatePathMethod.FileNameOnly,
-            _ => TruncatePathMethod.None,
-        };
-
-        GitCommands.AvatarProvider avatarProvider = GetSelectedEnumValue(AvatarProvider, AppSettings.AvatarProvider);
-        AvatarFallbackType fallbackType = GetSelectedEnumValue(_NO_TRANSLATE_NoImageService, AppSettings.AvatarFallbackType);
-        string customTemplate = txtCustomAvatarTemplate.Text ?? string.Empty;
-        bool shouldClearCache = AppSettings.AvatarProvider != avatarProvider
-            || AppSettings.AvatarFallbackType != fallbackType
-            || AppSettings.CustomAvatarTemplate != customTemplate;
-
-        AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.IsChecked == true;
-        AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.IsChecked == true;
-        AppSettings.AvatarImageCacheDays = (int)(_NO_TRANSLATE_DaysToCacheImages.Value ?? AppSettings.AvatarImageCacheDays);
-        AppSettings.CustomAvatarTemplate = customTemplate;
-        AppSettings.AvatarProvider = avatarProvider;
-        AppSettings.AvatarFallbackType = fallbackType;
-
-        if (shouldClearCache)
-        {
-            AvatarService.UpdateAvatarProvider();
-            ThreadHelper.FileAndForget(AvatarService.CacheCleaner.ClearCacheAsync);
-        }
-
-        AppSettings.Translation = Language.SelectedItem as string ?? Language.Text ?? "English";
-        ResourceManager.TranslatedStrings.Reinitialize();
-        GitUI.TranslatedStrings.Reinitialize();
-        AppSettings.Dictionary = Dictionary.SelectedIndex == 0
-            ? "none"
-            : Dictionary.SelectedItem as string ?? Dictionary.Text ?? "none";
-
-        base.PageToSettings();
     }
 
     public override void AddTranslationItems(ITranslation translation)
@@ -205,6 +172,60 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         Dictionary.SelectedItem = AppSettings.Dictionary;
     }
 
+    protected override void PageToSettings()
+    {
+        AppSettings.RelativeDate = chkShowRelativeDate.IsChecked == true;
+        AppSettings.ShowRepoCurrentBranch = chkShowRepoCurrentBranch.IsChecked == true;
+        AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.IsChecked == true;
+        AppSettings.EnableAutoScale = chkEnableAutoScale.IsChecked == true;
+        AppSettings.TruncatePathMethod = truncatePathMethod.SelectedIndex switch
+        {
+            1 => TruncatePathMethod.Compact,
+            2 => TruncatePathMethod.TrimStart,
+            3 => TruncatePathMethod.FileNameOnly,
+            _ => TruncatePathMethod.None,
+        };
+
+        GitCommands.AvatarProvider avatarProvider = GetSelectedEnumValue(AvatarProvider, AppSettings.AvatarProvider);
+        AvatarFallbackType fallbackType = GetSelectedEnumValue(_NO_TRANSLATE_NoImageService, AppSettings.AvatarFallbackType);
+        string customTemplate = txtCustomAvatarTemplate.Text ?? string.Empty;
+        bool shouldClearCache = AppSettings.AvatarProvider != avatarProvider
+            || AppSettings.AvatarFallbackType != fallbackType
+            || AppSettings.CustomAvatarTemplate != customTemplate;
+
+        AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.IsChecked == true;
+        AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.IsChecked == true;
+        AppSettings.AvatarImageCacheDays = (int)(_NO_TRANSLATE_DaysToCacheImages.Value ?? AppSettings.AvatarImageCacheDays);
+        AppSettings.CustomAvatarTemplate = customTemplate;
+        AppSettings.AvatarProvider = avatarProvider;
+        AppSettings.AvatarFallbackType = fallbackType;
+
+        if (shouldClearCache)
+        {
+            AvatarService.UpdateAvatarProvider();
+            ThreadHelper.FileAndForget(AvatarService.CacheCleaner.ClearCacheAsync);
+        }
+
+        AppSettings.Translation = Language.SelectedItem as string ?? Language.Text ?? "English";
+        ResourceManager.TranslatedStrings.Reinitialize();
+        GitUI.TranslatedStrings.Reinitialize();
+        AppSettings.Dictionary = Dictionary.SelectedIndex == 0
+            ? "none"
+            : Dictionary.SelectedItem as string ?? Dictionary.Text ?? "none";
+
+        base.PageToSettings();
+    }
+
+    private void SetTruncatePathMethodItems(IReadOnlyList<string> items)
+    {
+        int selectedIndex = truncatePathMethod.SelectedIndex;
+        truncatePathMethod.ItemsSource = items.ToArray();
+        truncatePathMethod.SelectedIndex = selectedIndex;
+    }
+
+    private static T GetSelectedEnumValue<T>(ComboBox comboBox, T fallback) where T : struct, Enum
+        => comboBox.SelectedItem is ComboBoxItem<T> item ? item.Value : fallback;
+
     private void Dictionary_DropDown(object? sender, EventArgs e)
     {
         try
@@ -233,24 +254,6 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         }
     }
 
-    private void SetTruncatePathMethodItems(IReadOnlyList<string> items)
-    {
-        int selectedIndex = truncatePathMethod.SelectedIndex;
-        truncatePathMethod.ItemsSource = items.ToArray();
-        truncatePathMethod.SelectedIndex = selectedIndex;
-    }
-
-    private static T GetSelectedEnumValue<T>(ComboBox comboBox, T fallback) where T : struct, Enum
-        => comboBox.SelectedItem is ComboBoxItem<T> item ? item.Value : fallback;
-
-    private void ManageAvatarOptionsDisplay()
-    {
-        bool showCustomTemplate = GetSelectedEnumValue(AvatarProvider, GitCommands.AvatarProvider.Default)
-            == GitCommands.AvatarProvider.Custom;
-        lblCustomAvatarTemplate.IsVisible = showCustomTemplate;
-        txtCustomAvatarTemplate.IsVisible = showCustomTemplate;
-    }
-
     private static void SelectEnumValue<T>(ComboBox comboBox, T value) where T : struct, Enum
     {
         comboBox.SelectedItem = comboBox.ItemsSource?
@@ -258,15 +261,12 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
             .FirstOrDefault(item => EqualityComparer<T>.Default.Equals(item.Value, value));
     }
 
-    private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : struct, Enum
+    private void ManageAvatarOptionsDisplay()
     {
-        ComboBoxItem<T>[] items = EnumHelper.GetValues<T>()
-            .Select(value => new ComboBoxItem<T>(value.GetDescription(), value))
-            .ToArray();
-        comboBox.ItemsSource = items;
-        comboBox.ItemTemplate = new FuncDataTemplate<ComboBoxItem<T>>(
-            (item, _) => new TextBlock { Text = item?.Text },
-            supportsRecycling: true);
+        bool showCustomTemplate = GetSelectedEnumValue(AvatarProvider, GitCommands.AvatarProvider.Default)
+            == GitCommands.AvatarProvider.Custom;
+        lblCustomAvatarTemplate.IsVisible = showCustomTemplate;
+        txtCustomAvatarTemplate.IsVisible = showCustomTemplate;
     }
 
     internal TestAccessor GetTestAccessor() => new(this);

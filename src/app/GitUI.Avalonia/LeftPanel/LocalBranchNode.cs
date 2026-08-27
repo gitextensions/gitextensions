@@ -1,4 +1,4 @@
-﻿using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Git;
 using GitUI.LeftPanel.Interfaces;
 
 namespace GitUI.LeftPanel;
@@ -12,6 +12,20 @@ internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICan
     }
 
     public bool IsCurrent { get; }
+
+    internal override void OnDoubleClick()
+    {
+        if (!IsCurrent)
+        {
+            Checkout();
+        }
+    }
+
+    internal override void OnRename()
+        => Rename();
+
+    internal override void OnDelete()
+        => Delete();
 
     public bool Checkout()
         => MessageBoxes.ConfirmBranchCheckout(Owner, FullPath)
@@ -28,18 +42,4 @@ internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICan
 
     public bool Rename()
         => UICommands.StartRenameDialog(Owner, FullPath);
-
-    internal override void OnRename()
-        => Rename();
-
-    internal override void OnDelete()
-        => Delete();
-
-    internal override void OnDoubleClick()
-    {
-        if (!IsCurrent)
-        {
-            Checkout();
-        }
-    }
 }

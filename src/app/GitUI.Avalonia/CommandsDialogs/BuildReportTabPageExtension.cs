@@ -13,10 +13,12 @@ public class BuildReportTabPageExtension
     private readonly TabControl _tabControl;
     private readonly string _caption;
     private readonly Func<IGitModule> _getModule;
-    private readonly HyperlinkButton _openReportLink;
     private TabItem? _buildReportTabPage;
     private GitRevision? _selectedGitRevision;
     private string? _url;
+    private readonly HyperlinkButton _openReportLink;
+
+    public Control? Control { get; private set; }
 
     public BuildReportTabPageExtension(Func<IGitModule> getModule, TabControl tabControl, string caption)
     {
@@ -32,8 +34,6 @@ public class BuildReportTabPageExtension
         };
         _openReportLink.Click += (_, _) => OsShellUtil.OpenUrlInDefaultBrowser(_url);
     }
-
-    public Control? Control { get; private set; }
 
     public void FillBuildReport(GitRevision? revision)
     {

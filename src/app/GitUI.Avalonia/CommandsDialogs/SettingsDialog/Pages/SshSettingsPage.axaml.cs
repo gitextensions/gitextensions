@@ -92,16 +92,6 @@ public sealed partial class SshSettingsPage : SettingsPageWithHeader
         base.PageToSettings();
     }
 
-    public bool AutoFindPuttyPaths()
-    {
-        if (!OperatingSystem.IsWindows())
-        {
-            return false;
-        }
-
-        return GetPuttyLocations().Any(AutoFindPuttyPathsInDir);
-    }
-
     [SupportedOSPlatform("windows")]
     private static IEnumerable<string> GetPuttyLocations()
     {
@@ -137,6 +127,16 @@ public sealed partial class SshSettingsPage : SettingsPageWithHeader
         {
             yield return registryLocation;
         }
+    }
+
+    public bool AutoFindPuttyPaths()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return false;
+        }
+
+        return GetPuttyLocations().Any(AutoFindPuttyPathsInDir);
     }
 
     private bool AutoFindPuttyPathsInDir(string installDirectory)

@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 
@@ -17,8 +17,6 @@ internal sealed class RepositoryCurrentBranchNameCache(IRepositoryCurrentBranchN
     : IRepositoryCurrentBranchNameCache
 {
     private readonly ConcurrentDictionary<string, string> _cache = new(GetPathComparer());
-
-    public bool IsEmpty => _cache.IsEmpty;
 
     public string? GetCachedBranchName(string repositoryPath)
         => _cache.TryGetValue(repositoryPath, out string? branchName) ? branchName : null;
@@ -46,6 +44,8 @@ internal sealed class RepositoryCurrentBranchNameCache(IRepositoryCurrentBranchN
     }
 
     public void InvalidateAll() => _cache.Clear();
+
+    public bool IsEmpty => _cache.IsEmpty;
 
     private static StringComparer GetPathComparer()
         => OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;

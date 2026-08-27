@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Properties;
@@ -132,6 +132,12 @@ internal sealed class WorktreeTree : Tree
         return boundaryIndex < 0 ? string.Empty : prefix[..(boundaryIndex + 1)].ToString();
     }
 
+    private static readonly SearchValues<char> DirectorySeparatorChars = SearchValues.Create(
+        [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
+
+    private static readonly SearchValues<char> WordBoundaryChars = SearchValues.Create(
+        ['_', '-', '.', ' ']);
+
     public void CreateWorktree(IWin32Window owner)
     {
         string mainWorktreePath = TreeViewNode.Items
@@ -159,10 +165,4 @@ internal sealed class WorktreeTree : Tree
             UICommands.RepoChangedNotifier.Notify();
         }
     }
-
-    private static readonly SearchValues<char> DirectorySeparatorChars = SearchValues.Create(
-        [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
-
-    private static readonly SearchValues<char> WordBoundaryChars = SearchValues.Create(
-        ['_', '-', '.', ' ']);
 }

@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.LeftPanel.Interfaces;
 
@@ -23,8 +23,22 @@ internal sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICa
         return pullCompleted;
     }
 
+    private (string Remote, string Branch) GetRemoteBranchInfo()
+    {
+        int separator = FullPath.IndexOf('/');
+        return separator < 0
+            ? (FullPath, string.Empty)
+            : (FullPath[..separator], FullPath[(separator + 1)..]);
+    }
+
+    internal override void OnDelete()
+        => Delete();
+
     public bool CreateBranch()
         => UICommands.StartCreateBranchDialog(Owner, FullPath);
+
+    public bool Delete()
+        => UICommands.StartDeleteRemoteBranchDialog(Owner, FullPath);
 
     public bool Checkout()
         => MessageBoxes.ConfirmBranchCheckout(Owner, FullPath)
@@ -33,8 +47,8 @@ internal sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICa
     public bool Merge()
         => UICommands.StartMergeBranchDialog(Owner, FullPath);
 
-    public bool Delete()
-        => UICommands.StartDeleteRemoteBranchDialog(Owner, FullPath);
+    internal override void OnDoubleClick()
+        => Checkout();
 
     public bool FetchAndMerge()
         => Fetch() && Merge();
@@ -47,18 +61,4 @@ internal sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICa
 
     public bool FetchAndRebase()
         => Fetch() && Rebase();
-
-    internal override void OnDoubleClick()
-        => Checkout();
-
-    internal override void OnDelete()
-        => Delete();
-
-    private (string Remote, string Branch) GetRemoteBranchInfo()
-    {
-        int separator = FullPath.IndexOf('/');
-        return separator < 0
-            ? (FullPath, string.Empty)
-            : (FullPath[..separator], FullPath[(separator + 1)..]);
-    }
 }

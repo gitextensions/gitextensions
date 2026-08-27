@@ -15,8 +15,6 @@ public static class RevisionGraphLaneColor
     private static Color _nonRelativeColor;
     private static IBrush _nonRelativeBrush = Brushes.LightGray;
 
-    internal static readonly List<IBrush> PresetGraphBrushes = [];
-
     public static int GetColorForLane(int seed)
     {
         EnsureThemeColors();
@@ -40,6 +38,8 @@ public static class RevisionGraphLaneColor
             return _nonRelativeBrush;
         }
     }
+
+    internal static readonly List<IBrush> PresetGraphBrushes = [];
 
     public static IBrush GetBrushForLane(int laneColor)
     {

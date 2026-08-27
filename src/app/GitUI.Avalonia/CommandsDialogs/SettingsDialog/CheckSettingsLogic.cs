@@ -29,48 +29,6 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
         return true;
     }
 
-    public static bool SolveGitExtensionsDir()
-    {
-        string directory = Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory);
-        if (!Directory.Exists(directory))
-        {
-            return false;
-        }
-
-        AppSettings.SetInstallDir(directory);
-        return true;
-    }
-
-    public static bool SolveGitCommand(string? possibleNewPath = null)
-    {
-        IEnumerable<string> candidates = OperatingSystem.IsWindows()
-            ? GetWindowsCommandLocations(possibleNewPath)
-            : GetPortableCommandLocations(possibleNewPath);
-
-        foreach (string command in candidates)
-        {
-            try
-            {
-                if (AppSettings.GitCommand == command && GitVersion.Current?.IsUnknown is false)
-                {
-                    return true;
-                }
-
-                if (!string.IsNullOrEmpty(new Executable(command).GetOutput(arguments: "--version")))
-                {
-                    AppSettings.GitCommandValue = command;
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                // Finding Git is deliberately best-effort.
-            }
-        }
-
-        return false;
-    }
-
     public static bool SolveLinuxToolsDir(string? possibleNewPath = null)
     {
         if (!OperatingSystem.IsWindows())
@@ -114,6 +72,48 @@ public class CheckSettingsLogic(CommonLogic commonLogic)
         static bool ContainsShell(string path)
             => Directory.Exists(path)
                 && (File.Exists(Path.Join(path, "sh.exe")) || File.Exists(Path.Join(path, "sh")));
+    }
+
+    public static bool SolveGitExtensionsDir()
+    {
+        string directory = Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory);
+        if (!Directory.Exists(directory))
+        {
+            return false;
+        }
+
+        AppSettings.SetInstallDir(directory);
+        return true;
+    }
+
+    public static bool SolveGitCommand(string? possibleNewPath = null)
+    {
+        IEnumerable<string> candidates = OperatingSystem.IsWindows()
+            ? GetWindowsCommandLocations(possibleNewPath)
+            : GetPortableCommandLocations(possibleNewPath);
+
+        foreach (string command in candidates)
+        {
+            try
+            {
+                if (AppSettings.GitCommand == command && GitVersion.Current?.IsUnknown is false)
+                {
+                    return true;
+                }
+
+                if (!string.IsNullOrEmpty(new Executable(command).GetOutput(arguments: "--version")))
+                {
+                    AppSettings.GitCommandValue = command;
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                // Finding Git is deliberately best-effort.
+            }
+        }
+
+        return false;
     }
 
     public static bool CheckIfFileIsInPath(string fileName)

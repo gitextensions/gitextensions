@@ -24,6 +24,9 @@ internal sealed class StashNode : Node
 
     public ObjectId ObjectId { get; }
 
+    internal override void OnDoubleClick()
+        => OpenStash(Owner);
+
     internal bool OpenStash(IWin32Window owner)
     {
         return UICommands.StartStashDialog(owner, manageStashes: true, ReflogSelector);
@@ -78,7 +81,4 @@ internal sealed class StashNode : Node
             }
         }
     }
-
-    internal override void OnDoubleClick()
-        => OpenStash(Owner);
 }

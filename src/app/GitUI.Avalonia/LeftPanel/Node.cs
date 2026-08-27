@@ -1,4 +1,4 @@
-﻿using Avalonia.Media;
+using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
 using GitUI.LeftPanel.Interfaces;
 
@@ -6,15 +6,14 @@ namespace GitUI.LeftPanel;
 
 internal abstract class Node : NodeBase, INode
 {
+    protected Tree Tree { get; }
+
+    protected IGitUICommands UICommands => Tree.UICommands;
     protected Node(Tree tree, NodeBase parent, string caption, IImage icon, bool isBold = false, bool isItalic = false)
         : base(tree.OwnerControl, parent, caption, icon, isBold, isItalic)
     {
         Tree = tree;
     }
-
-    protected Tree Tree { get; }
-
-    protected IGitUICommands UICommands => Tree.UICommands;
 
     internal virtual void OnSelected()
     {

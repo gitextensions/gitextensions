@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using GitCommands;
 using GitCommands.Utils;
@@ -65,10 +65,6 @@ public sealed partial class AvatarControl : GitExtensionsControl
         InitializeComplete();
     }
 
-    public string? Email { get; private set; }
-
-    public string? AuthorName { get; private set; }
-
     public void ClearCache()
     {
         ThreadHelper.FileAndForget(async () =>
@@ -78,6 +74,10 @@ public sealed partial class AvatarControl : GitExtensionsControl
             await UpdateAvatarAsync();
         });
     }
+
+    public string? Email { get; private set; }
+
+    public string? AuthorName { get; private set; }
 
     public void LoadImage(string? email, string? name)
     {
@@ -91,27 +91,17 @@ public sealed partial class AvatarControl : GitExtensionsControl
         UpdateMenuItemSelection(avatarProviderToolStripMenuItem.Items, AppSettings.AvatarProvider);
     }
 
-    private void OnClearCacheClick(object? sender, EventArgs e)
-    {
-        ClearCache();
-    }
-
-    private void OnDefaultImageSubmenuOpened(object? sender, EventArgs e)
-    {
-        UpdateMenuItemSelection(fallbackAvatarStyleToolStripMenuItem.Items, AppSettings.AvatarFallbackType);
-    }
-
-    private void OnRegisterGravatarClick(object? sender, EventArgs e)
-    {
-        OsShellUtil.OpenUrlInDefaultBrowser("https://www.gravatar.com");
-    }
-
     private void RefreshImage(Bitmap? image)
     {
         Bitmap? previous = _ownedImage;
         _ownedImage = image;
         _avatarImage.Source = image ?? Images.User80;
         previous?.Dispose();
+    }
+
+    private void OnDefaultImageSubmenuOpened(object? sender, EventArgs e)
+    {
+        UpdateMenuItemSelection(fallbackAvatarStyleToolStripMenuItem.Items, AppSettings.AvatarFallbackType);
     }
 
     private async Task UpdateAvatarAsync()
@@ -146,6 +136,16 @@ public sealed partial class AvatarControl : GitExtensionsControl
 
             RefreshImage(image);
         });
+    }
+
+    private void OnClearCacheClick(object? sender, EventArgs e)
+    {
+        ClearCache();
+    }
+
+    private void OnRegisterGravatarClick(object? sender, EventArgs e)
+    {
+        OsShellUtil.OpenUrlInDefaultBrowser("https://www.gravatar.com");
     }
 
     private static void UpdateMenuItemSelection<T>(IEnumerable<object?> menuItems, T currentValue)

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -24,11 +24,11 @@ public class BlameAuthorMargin : AbstractMargin, GitUI.IPersistedSplitter
 
     private readonly Typeface _typeface;
     private readonly double _fontSize;
-    private readonly Dictionary<int, IBrush> _brushs = [];
+    private Bitmap?[] _avatars = [];
     private readonly List<(int StartLine, int EndLine, IBrush Brush)> _highlights = [];
     private string[] _authorLines = [];
-    private Bitmap?[] _avatars = [];
     private GitBlameEntry[] _blameLines = [];
+    private readonly Dictionary<int, IBrush> _brushs = [];
     private int _contentVersion;
     private bool _isResizing;
     private bool _showAvatars;

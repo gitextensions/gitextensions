@@ -55,6 +55,11 @@ internal sealed class CommitIdColumnProvider : ColumnProvider
         UpdateToolTip(control, revision);
     }
 
+    internal static int GetCharLengthForColumnWidth(double width, double characterWidth)
+        => characterWidth <= 0
+            ? 0
+            : Math.Clamp((int)Math.Floor(width / characterWidth), 0, ObjectId.Sha1CharCount);
+
     public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
         if (revision.IsArtificial)
@@ -66,9 +71,4 @@ internal sealed class CommitIdColumnProvider : ColumnProvider
         toolTip = revision.Guid;
         return true;
     }
-
-    internal static int GetCharLengthForColumnWidth(double width, double characterWidth)
-        => characterWidth <= 0
-            ? 0
-            : Math.Clamp((int)Math.Floor(width / characterWidth), 0, ObjectId.Sha1CharCount);
 }

@@ -47,6 +47,23 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         InitializeComplete();
     }
 
+    private string? AdaptCommandIfWsl(string? command)
+    {
+        if (string.IsNullOrEmpty(command) || !PathUtil.IsWslPath(Module?.WorkingDir))
+        {
+            return command;
+        }
+
+        int colonIndex = command.IndexOf(':');
+        if (colonIndex == (command[0] == '"' ? 2 : 1))
+        {
+            int windowsDriveIndex = colonIndex - 1;
+            command = $"{command[..windowsDriveIndex]}/mnt/{char.ToLower(command[windowsDriveIndex])}{command[(colonIndex + 1)..]}";
+        }
+
+        return WslRebaseRegex.Replace(command, @"$(wslpath -aw $&)").ToPosixPath();
+    }
+
     protected override void Init(ISettingsPageHost pageHost)
     {
         base.Init(pageHost);
@@ -136,6 +153,22 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         base.SettingsToPage();
     }
 
+    private void WireEvents()
+    {
+        btnMergeToolCommandSuggest.Click += (_, _) => SuggestMergeToolCommand();
+        btnDiffToolCommandSuggest.Click += (_, _) => SuggestDiffToolCommand();
+        btnMergeToolBrowse.Click += (_, _) => this.InvokeAndForget(() => BrowseToolAsync(DiffMergeToolType.Merge));
+        btnDiffToolBrowse.Click += (_, _) => this.InvokeAndForget(() => BrowseToolAsync(DiffMergeToolType.Diff));
+        btnCommitTemplateBrowse.Click += (_, _) => this.InvokeAndForget(BrowseCommitTemplateAsync);
+        ConfigureEncoding.Click += ConfigureEncoding_Click;
+        txtMergeToolPath.LostFocus += (_, _) => txtMergeToolPath.Text = txtMergeToolPath.Text.ToPosixPath();
+        txtDiffToolPath.LostFocus += (_, _) => txtDiffToolPath.Text = txtDiffToolPath.Text.ToPosixPath();
+        txtMergeToolPath.TextChanged += txtMergeToolPath_TextChanged;
+        txtDiffToolPath.TextChanged += txtDiffToolPath_TextChanged;
+        _NO_TRANSLATE_cboMergeTool.PropertyChanged += cboMergeTool_PropertyChanged;
+        _NO_TRANSLATE_cboDiffTool.PropertyChanged += cboDiffTool_PropertyChanged;
+    }
+
     protected override void PageToSettings()
     {
         if (CurrentSettings is null)
@@ -169,39 +202,6 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
             : globalAutoCrlfTrue.IsChecked == true ? AutoCRLFType.@true
             : null;
         CurrentSettings.SetValue("core.autocrlf", autoCrlf?.ToString());
-    }
-
-    private void WireEvents()
-    {
-        btnMergeToolCommandSuggest.Click += (_, _) => SuggestMergeToolCommand();
-        btnDiffToolCommandSuggest.Click += (_, _) => SuggestDiffToolCommand();
-        btnMergeToolBrowse.Click += (_, _) => this.InvokeAndForget(() => BrowseToolAsync(DiffMergeToolType.Merge));
-        btnDiffToolBrowse.Click += (_, _) => this.InvokeAndForget(() => BrowseToolAsync(DiffMergeToolType.Diff));
-        btnCommitTemplateBrowse.Click += (_, _) => this.InvokeAndForget(BrowseCommitTemplateAsync);
-        ConfigureEncoding.Click += ConfigureEncoding_Click;
-        txtMergeToolPath.LostFocus += (_, _) => txtMergeToolPath.Text = txtMergeToolPath.Text.ToPosixPath();
-        txtDiffToolPath.LostFocus += (_, _) => txtDiffToolPath.Text = txtDiffToolPath.Text.ToPosixPath();
-        txtMergeToolPath.TextChanged += txtMergeToolPath_TextChanged;
-        txtDiffToolPath.TextChanged += txtDiffToolPath_TextChanged;
-        _NO_TRANSLATE_cboMergeTool.PropertyChanged += cboMergeTool_PropertyChanged;
-        _NO_TRANSLATE_cboDiffTool.PropertyChanged += cboDiffTool_PropertyChanged;
-    }
-
-    private string? AdaptCommandIfWsl(string? command)
-    {
-        if (string.IsNullOrEmpty(command) || !PathUtil.IsWslPath(Module?.WorkingDir))
-        {
-            return command;
-        }
-
-        int colonIndex = command.IndexOf(':');
-        if (colonIndex == (command[0] == '"' ? 2 : 1))
-        {
-            int windowsDriveIndex = colonIndex - 1;
-            command = $"{command[..windowsDriveIndex]}/mnt/{char.ToLower(command[windowsDriveIndex])}{command[(colonIndex + 1)..]}";
-        }
-
-        return WslRebaseRegex.Replace(command, @"$(wslpath -aw $&)").ToPosixPath();
     }
 
     private IReadOnlyList<string> GetCredentialHelpers()
@@ -361,16 +361,6 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         return files.FirstOrDefault()?.TryGetLocalPath();
     }
 
-    private void ConfigureEncoding_Click(object? sender, EventArgs e)
-    {
-        using FormAvailableEncodings dialog = new();
-        if (dialog.ShowDialog(TopLevel.GetTopLevel(this) as GitExtensions.Shims.WinForms.IWin32Window)
-            == GitExtensions.Shims.WinForms.DialogResult.OK)
-        {
-            CommonLogic.FillEncodings(Global_FilesEncoding);
-        }
-    }
-
     private void txtMergeToolPath_TextChanged(object? sender, EventArgs e)
     {
         if (!IsLoadingSettings && txtMergeToolPath.IsFocused && IsRegisteredTool(_NO_TRANSLATE_cboMergeTool.Text, DiffMergeToolType.Merge))
@@ -384,6 +374,16 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         if (!IsLoadingSettings && txtDiffToolPath.IsFocused && IsRegisteredTool(_NO_TRANSLATE_cboDiffTool.Text, DiffMergeToolType.Diff))
         {
             SuggestDiffToolCommand();
+        }
+    }
+
+    private void ConfigureEncoding_Click(object? sender, EventArgs e)
+    {
+        using FormAvailableEncodings dialog = new();
+        if (dialog.ShowDialog(TopLevel.GetTopLevel(this) as GitExtensions.Shims.WinForms.IWin32Window)
+            == GitExtensions.Shims.WinForms.DialogResult.OK)
+        {
+            CommonLogic.FillEncodings(Global_FilesEncoding);
         }
     }
 

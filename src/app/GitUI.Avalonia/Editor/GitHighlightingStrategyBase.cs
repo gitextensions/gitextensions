@@ -42,16 +42,6 @@ internal abstract class GitHighlightingStrategyBase : DocumentColorizingTransfor
         _commentChar = commentCharSetting.Length == 1 ? commentCharSetting[0] : defaultValue[0];
     }
 
-    public string Name { get; }
-
-    protected override void ColorizeLine(DocumentLine line)
-    {
-        TextDocument document = CurrentContext.Document;
-        MarkTokens(document, line);
-    }
-
-    protected abstract void MarkTokens(TextDocument document, DocumentLine line);
-
     protected bool TryHighlightComment(TextDocument document, DocumentLine line)
     {
         if (IsComment(document, line))
@@ -62,6 +52,16 @@ internal abstract class GitHighlightingStrategyBase : DocumentColorizingTransfor
 
         return false;
     }
+
+    protected override void ColorizeLine(DocumentLine line)
+    {
+        TextDocument document = CurrentContext.Document;
+        MarkTokens(document, line);
+    }
+
+    protected abstract void MarkTokens(TextDocument document, DocumentLine line);
+
+    public string Name { get; }
 
     protected void SetStyle(int startOffset, int endOffset, MediaColor color, bool bold = false)
     {
