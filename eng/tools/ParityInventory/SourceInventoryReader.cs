@@ -783,9 +783,10 @@ internal static class SourceInventoryReader
             }
 
             string kind = element.Name.LocalName;
+            string accessibility = (string?)element.Attribute(x + "FieldModifier") ?? "private";
 
-            // AXAML x:Name generates the private field that the WinForms Designer declares explicitly.
-            part.Members.Add(NewMember(part.Path, part.Members.Count, "field", name, "private", $"{kind} {name}"));
+            // AXAML x:Name generates the field that the WinForms Designer declares explicitly.
+            part.Members.Add(NewMember(part.Path, part.Members.Count, "field", name, accessibility, $"{kind} {name}"));
             XElement[] contentChildren = element.Elements().Take(2).ToArray();
             bool hasNestedTextContent = contentChildren.Length == 1
                 && contentChildren[0].Name.LocalName == "TextBlock"

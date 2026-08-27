@@ -34,16 +34,19 @@ public sealed class FileStatusListTests
         control.SetDiffs([renamed, documentation, rangeDiff]);
         FileStatusList.TestAccessor accessor = control.GetTestAccessor();
 
-        control.SetFilter("old-name").Should().Be(2, "the renamed file matches its old name and range-diff markers stay visible");
+        control.SetFilter("old-name");
+        accessor.FilteredItemsCount.Should().Be(2, "the renamed file matches its old name and range-diff markers stay visible");
         control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
         accessor.FilterComboBox.Classes.Should().Contain("file-filter-active");
 
-        control.SetFilter("[").Should().Be(2, "an invalid expression keeps the last valid result");
+        control.SetFilter("[");
+        accessor.FilteredItemsCount.Should().Be(2, "an invalid expression keeps the last valid result");
         control.GitItemFilteredStatuses.Should().Equal(renamed, rangeDiff);
         accessor.FilterComboBox.Classes.Should().Contain("file-filter-invalid");
         ToolTip.GetTip(accessor.FilterComboBox).Should().BeOfType<string>().Which.Should().NotBeEmpty();
 
-        control.SetFilter(string.Empty).Should().Be(3);
+        control.SetFilter(string.Empty);
+        accessor.FilteredItemsCount.Should().Be(3);
         control.GitItemFilteredStatuses.Should().Equal(renamed, documentation, rangeDiff);
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-active");
         accessor.FilterComboBox.Classes.Should().NotContain("file-filter-invalid");
@@ -60,11 +63,14 @@ public sealed class FileStatusListTests
             control.SetDiffs([item]);
 
             AppSettings.TruncatePathMethod = TruncatePathMethod.FileNameOnly;
-            control.SetFilter("directory").Should().Be(0);
-            control.SetFilter("match").Should().Be(1);
+            control.SetFilter("directory");
+            control.GetTestAccessor().FilteredItemsCount.Should().Be(0);
+            control.SetFilter("match");
+            control.GetTestAccessor().FilteredItemsCount.Should().Be(1);
 
             AppSettings.TruncatePathMethod = TruncatePathMethod.TrimStart;
-            control.SetFilter("directory").Should().Be(1);
+            control.SetFilter("directory");
+            control.GetTestAccessor().FilteredItemsCount.Should().Be(1);
         }
         finally
         {
@@ -337,7 +343,8 @@ public sealed class FileStatusListTests
         roots[2].IsGroupHeader.Should().BeFalse();
         accessor.NoFilesLabel.IsVisible.Should().BeFalse();
 
-        control.SetFilter("source").Should().Be(2, "range-diff markers remain visible through file filters");
+        control.SetFilter("source");
+        control.GetTestAccessor().FilteredItemsCount.Should().Be(2, "range-diff markers remain visible through file filters");
 
         roots = [.. accessor.DiffTree.Items.Cast<FileStatusList.DiffTreeNode>()];
         roots[0].Text.Should().Be("(1/2) Changes");
@@ -392,7 +399,8 @@ public sealed class FileStatusListTests
             .Single(node => node.Item is not null);
         accessor.DiffTree.SelectedItem = secondNode;
 
-        control.SetFilter("shared").Should().Be(2);
+        control.SetFilter("shared");
+        control.GetTestAccessor().FilteredItemsCount.Should().Be(2);
 
         control.SelectedGitItem.Should().BeSameAs(secondParent);
     }
@@ -468,6 +476,7 @@ public sealed class FileStatusListTests
 
         translation.Received(1).AddTranslationItem(nameof(FileStatusList), "cboFilterComboBox", "Watermark", "Filter files using a regular expression...");
         translation.Received(1).AddTranslationItem(nameof(FileStatusList), "NoFiles", "Text", "No changes");
+        translation.Received(1).AddTranslationItem(nameof(FileStatusList), "columnHeader", "Text", "Files");
         translation.Received(1).AddTranslationItem(nameof(FileStatusList), "tsmiStageFile", "Text", "&Stage selected");
         translation.Received(1).AddTranslationItem(nameof(FileStatusList), "_collapseAll", "Text", "C&ollapse all");
         translation.Received(1).AddTranslationItem(nameof(FileStatusList), "_saveFileFilterAllFiles", "Text", "All files");
