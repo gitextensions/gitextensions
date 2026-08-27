@@ -643,16 +643,47 @@ internal static class CaptureRunner
             return;
         }
 
-        Rectangle currentBounds = NativeMethods.GetWindowRectangle(root.FindForm()?.Handle ?? root.Handle);
-        double factor = (double)targetDpi / currentDpi;
-        Rectangle suggestedBounds = new(
-            currentBounds.X,
-            currentBounds.Y,
-            Math.Max(1, (int)Math.Round(currentBounds.Width * factor)),
-            Math.Max(1, (int)Math.Round(currentBounds.Height * factor)));
-        NativeMethods.SendDpiChanged(root.FindForm()?.Handle ?? root.Handle, targetDpi, suggestedBounds);
+        Control window = root.FindForm() ?? root;
+        Rectangle currentBounds = NativeMethods.GetWindowRectangle(window.Handle);
+        Rectangle suggestedBounds = CalculateDpiChangedBounds(
+            currentBounds,
+            window.ClientSize,
+            currentDpi,
+            targetDpi);
+        NativeMethods.SendDpiChanged(window.Handle, targetDpi, suggestedBounds);
         Application.DoEvents();
     }
+
+    internal static Rectangle CalculateDpiChangedBounds(
+        Rectangle windowBounds,
+        Size clientSize,
+        int currentDpi,
+        int targetDpi)
+    {
+        if (currentDpi <= 0 || targetDpi <= 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                currentDpi <= 0 ? nameof(currentDpi) : nameof(targetDpi),
+                "DPI must be positive.");
+        }
+
+        int nonClientWidth = Math.Max(0, windowBounds.Width - clientSize.Width);
+        int nonClientHeight = Math.Max(0, windowBounds.Height - clientSize.Height);
+        int targetClientWidth = ScalePixel(clientSize.Width, currentDpi, targetDpi);
+        int targetClientHeight = ScalePixel(clientSize.Height, currentDpi, targetDpi);
+        return new Rectangle(
+            windowBounds.Location,
+            new Size(
+                checked(targetClientWidth + nonClientWidth),
+                checked(targetClientHeight + nonClientHeight)));
+    }
+
+    private static int ScalePixel(int value, int currentDpi, int targetDpi) =>
+        Math.Max(
+            1,
+            checked((int)Math.Round(
+                value * (double)targetDpi / currentDpi,
+                MidpointRounding.AwayFromZero)));
 
     private sealed class CaptureHostForm(IGitUICommands commands) : Form, IGitUICommandsSource, IGitModuleForm
     {
