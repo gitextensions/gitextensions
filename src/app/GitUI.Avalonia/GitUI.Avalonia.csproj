@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Avalonia twin of GitUI: ported types keep their original GitUI
-         namespaces so upstream diffs map 1:1 and translation keys stay valid. -->
+    <!-- Ported types retain their GitUI namespaces so upstream diffs map 1:1 and translation
+         keys stay valid. -->
     <TargetFramework>net10.0</TargetFramework>
     <UseWindowsForms>false</UseWindowsForms>
     <RootNamespace>GitUI</RootNamespace>
@@ -15,7 +15,7 @@
   <ItemGroup>
     <!-- Avalonia generates one InitializeComponent method per inheritance level, which makes
          an empty compiled-XAML base collide with every concrete settings-page partial. Keep the
-         source-shaped empty Designer twin available to parity tooling without compiling it. -->
+         source-shaped empty Designer file available to parity tooling without compiling it. -->
     <AvaloniaXaml Remove="CommandsDialogs\SettingsDialog\SettingsPageBase.axaml" />
     <AvaloniaXaml Remove="CommandsDialogs\SettingsDialog\AutoLayoutSettingsPage.axaml" />
 
@@ -164,7 +164,7 @@
     <ProjectReference Include="..\..\..\externals\NetSpell.SpellChecker\SpellChecker.csproj"
                       AdditionalProperties="BuildAvalonia=true" />
     <!-- The language files are shared with the WinForms application; translation keys are
-         identical, so all existing translations apply to the Avalonia twins unchanged. -->
+         identical, so all existing translations apply to the Avalonia controls unchanged. -->
     <None Include="..\GitUI\Translation\*.xlf" Link="Translation\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <!-- Compile and deploy the same CSS theme files as the WinForms application. -->
     <Content Include="..\GitUI\Themes\*.css" Link="Themes\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
@@ -177,8 +177,8 @@
     <AvaloniaResource Include="..\GitUI\Resources\Icons\*.ico" Link="Resources\Icons\%(Filename)%(Extension)" />
     <AvaloniaResource Include="..\..\..\setup\assets\Logo\*.png" Link="Resources\Logo\%(Filename)%(Extension)" />
 
-    <!-- The original string resources (contributor lists, changelog) have no generated Avalonia
-         twin like Images.g.cs; the resx and changelog are packaged and read by Properties/Resources.g.cs. -->
+    <!-- String resources such as contributor lists and the changelog have no generated Avalonia
+         accessor; the resx and changelog are packaged and read by Properties/Resources.g.cs. -->
     <AvaloniaResource Include="..\GitUI\Properties\Resources.resx" Link="Properties\Resources.resx" />
     <AvaloniaResource Include="..\GitUI\Resources\ChangeLog.md" Link="Resources\ChangeLog.md" />
   </ItemGroup>

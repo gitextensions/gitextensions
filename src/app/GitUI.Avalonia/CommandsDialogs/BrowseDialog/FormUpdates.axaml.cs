@@ -15,9 +15,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs.BrowseDialog;
 
-// Twin of CommandsDialogs/BrowseDialog/FormUpdates. The shared release configuration still
-// describes Windows MSI packages, so Linux and macOS deliberately expose release links
-// without attempting to execute that installer.
+// The shared release configuration describes Windows MSI packages, so Linux and macOS expose
+// release links without attempting to execute the installer.
 public sealed partial class FormUpdates : GitExtensionsDialog
 {
     private const string ReleasesPage = "https://github.com/gitextensions/gitextensions/releases";

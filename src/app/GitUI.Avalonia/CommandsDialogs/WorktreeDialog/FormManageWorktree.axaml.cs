@@ -10,8 +10,7 @@ using GitUI.Compat;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog;
 
-// Twin of GitUI/CommandsDialogs/WorktreeDialog/FormManageWorktree.cs. The read-only
-// DataGridView becomes a typed ListBox with the original column translation identities.
+// The read-only DataGridView becomes a typed ListBox with the original column translations.
 public partial class FormManageWorktree : GitExtensionsDialog
 {
     private IReadOnlyList<GitWorktree>? _worktrees;

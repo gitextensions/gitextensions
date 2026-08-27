@@ -12,8 +12,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs.SubmodulesDialog;
 
-// Twin of GitUI/CommandsDialogs/SubmodulesDialog/FormAddSubmodule.cs. Editable combo items
-// are repository path strings so Avalonia retains their display text after selection.
+// Editable combo items are repository path strings so Avalonia retains their display text.
 public sealed partial class FormAddSubmodule : GitModuleForm
 {
     private readonly TranslationString _remoteAndLocalPathRequired

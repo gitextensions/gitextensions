@@ -2,8 +2,6 @@ using Avalonia.Controls;
 
 namespace GitUI.ConsoleEmulation;
 
-// Twin of GitUI/ConsoleEmulation/IConsoleCommandRunner.cs (Control is an Avalonia control).
-
 /// <summary>
 ///  Represents a control that executes a console command and displays its output.
 /// </summary>

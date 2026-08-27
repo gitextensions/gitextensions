@@ -7,8 +7,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.UserControls;
 
-// Twin of GitUI/UserControls/FolderBrowserButton.cs. PathShowingControl retains the
-// original any-Control boundary for the TextBox and ComboBox consumers in ported dialogs.
+// PathShowingControl retains the original any-Control boundary for TextBox and ComboBox
+// consumers.
 [LocalizableProperties]
 public partial class FolderBrowserButton : GitExtensionsControl
 {

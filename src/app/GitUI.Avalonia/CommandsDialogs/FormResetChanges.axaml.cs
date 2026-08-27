@@ -4,8 +4,6 @@ using GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormResetChanges.cs.
-
 /// <summary>
 /// Shows a form asking if the user wants to reset their changes.
 /// </summary>

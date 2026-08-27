@@ -6,9 +6,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace ResourceManager;
 
-// Twin of ResourceManager/GitExtensionsControl.cs. Avalonia routes ProcessKeyDown through
-// its containing form, so this class retains the original control-level hotkey table and
-// exposes ProcessHotkey for that form to call.
+// Avalonia routes ProcessKeyDown through its containing form, so this class retains the
+// control-level hotkey table and exposes ProcessHotkey for that form to call.
 public class GitExtensionsControl : TranslatedControl
 {
     private IReadOnlyList<HotkeyCommand> _hotkeys = [];

@@ -2,8 +2,7 @@ using Avalonia.Media;
 
 namespace GitUI.UserControls.RevisionGrid.Graph.Rendering;
 
-// Twin of GitUI/UserControls/RevisionGrid/Graph/Rendering/Context.cs: the GDI Graphics is
-// replaced by Avalonia's DrawingContext; the geometry stays System.Drawing like upstream.
+// Avalonia DrawingContext replaces GDI Graphics; geometry remains in System.Drawing types.
 internal readonly ref struct Context
 {
     public readonly RevisionGraphConfig Config;

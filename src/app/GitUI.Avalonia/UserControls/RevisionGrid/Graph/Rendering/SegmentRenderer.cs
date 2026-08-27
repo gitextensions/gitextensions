@@ -3,7 +3,6 @@ using AvaloniaPoint = Avalonia.Point;
 
 namespace GitUI.UserControls.RevisionGrid.Graph.Rendering;
 
-// Twin of GitUI/UserControls/RevisionGrid/Graph/Rendering/SegmentRenderer.cs.
 // The geometry math is kept identical to upstream (System.Drawing primitives); only the
 // draw calls target Avalonia's DrawingContext. GDI's SmoothingMode switches and its
 // anti-alias offset compensation do not apply to Avalonia and are dropped.

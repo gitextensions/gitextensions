@@ -12,8 +12,6 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.CommandsDialogs;
 
-// Functional Avalonia twin of RevisionDiffControl. The shared diff calculator and the
-// WinForms-shaped list/viewer/blame boundary are retained.
 public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUpdate
 {
     private IRevisionGridInfo? _revisionGridInfo;

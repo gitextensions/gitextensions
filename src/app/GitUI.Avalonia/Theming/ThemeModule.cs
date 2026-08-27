@@ -4,8 +4,8 @@ using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Theming;
 
-// Avalonia twin of GitUI/Theming/ThemeModule.cs. Theme loading stays identical; applying
-// WinForms system colors and ICSharpCode.TextEditor settings is owned by the UI framework.
+// Theme loading stays shared; applying framework-specific system colors and editor settings
+// remains at the UI boundary.
 public static class ThemeModule
 {
     public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;

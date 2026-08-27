@@ -7,8 +7,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormMergeSubmodule.cs. The control names and command flow
-// stay aligned with WinForms; opening a submodule uses another in-process Avalonia browser.
+// Opening a submodule uses another in-process Avalonia browser.
 public sealed partial class FormMergeSubmodule : GitModuleForm
 {
     private readonly TranslationString _stageFilename = new("Stage {0}");

@@ -16,9 +16,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormClone.cs. The clone runs in FormRemoteProcess through
-// OpenSSH; the PuTTY pieces (Load SSH key button and registry/key-agent recovery prompts)
-// are not ported. Remote-branch discovery keeps the original busy cursor and reports native
+// Cloning runs in FormRemoteProcess through OpenSSH, so PuTTY-specific key loading and registry
+// or key-agent recovery do not apply. Remote-branch discovery reports native
 // Git/OpenSSH errors directly. The history combos hold the path strings rather than Repository
 // objects, and the "opened as dialog" check replaces the WinForms ShowInTaskbar test.
 public sealed partial class FormClone : GitExtensionsDialog

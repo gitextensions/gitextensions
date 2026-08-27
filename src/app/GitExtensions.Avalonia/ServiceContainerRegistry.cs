@@ -9,8 +9,6 @@ using ResourceManager;
 
 namespace GitExtensions;
 
-// Twin of GitExtensions/ServiceContainerRegistry.cs; GitUI.ServiceContainerRegistry is the
-// GitUI.Avalonia twin registry.
 internal static class ServiceContainerRegistry
 {
     public static void RegisterServices(ServiceContainer serviceContainer)

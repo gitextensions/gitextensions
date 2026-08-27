@@ -4,10 +4,8 @@ using GitExtensions.Shims.WinForms;
 
 namespace GitUI.HelperDialogs;
 
-// Twin of GitUI/HelperDialogs/FormRemoteProcess.cs. Remote commands retain their own
-// semantic process boundary and the inherited retry callback. OpenSSH handles host-key
-// confirmation and authentication through the existing process input; PuTTY-only registry
-// and key-agent recovery is intentionally not part of the cross-platform application.
+// OpenSSH handles host-key confirmation and authentication through the existing process input;
+// PuTTY-only registry and key-agent recovery is not part of the cross-platform application.
 public class FormRemoteProcess : FormProcess
 {
     public FormRemoteProcess(IGitUICommands commands, ArgumentString arguments)

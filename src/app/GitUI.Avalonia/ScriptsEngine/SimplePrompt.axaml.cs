@@ -5,7 +5,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.ScriptsEngine;
 
-// Avalonia twin of GitUI/ScriptsEngine/SimplePrompt.cs.
 // The original is a plain Form and deliberately has no XLF translation surface.
 [Untranslated]
 internal sealed partial class SimplePrompt : GitExtensionsForm, IUserInputPrompt

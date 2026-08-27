@@ -8,8 +8,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
-// Avalonia twin of GitUI/Plugin/FailedPluginWrapper.cs. Only icon materialization differs:
-// the public plugin contract still carries the headless image wrapper on net10.0.
+// The public plugin contract carries the headless image wrapper on net10.0, so only icon
+// materialization differs here.
 internal partial class FailedPluginWrapper : IGitPlugin
 {
     [GeneratedRegex(@"""GitExtensions.([^""]+)""", RegexOptions.ExplicitCapture)]

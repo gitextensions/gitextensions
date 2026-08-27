@@ -76,7 +76,7 @@ public class Panel : Border
 }
 
 /// <summary>
-/// Preserves the source flow-layout identity around the native Avalonia layout selected by each twin.
+/// Preserves the source flow-layout identity around the native Avalonia layout used by ported views.
 /// </summary>
 public class FlowLayoutPanel : Decorator
 {

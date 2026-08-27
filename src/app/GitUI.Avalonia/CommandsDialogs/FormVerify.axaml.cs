@@ -21,8 +21,7 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormVerify.cs. Avalonia's header-plus-ListBox grid keeps
-// the original sortable columns and selection checkboxes without introducing a view model.
+// Avalonia's header-plus-ListBox grid provides sortable columns and selection checkboxes.
 public sealed partial class FormVerify : GitModuleForm
 {
     private sealed partial class LostObject

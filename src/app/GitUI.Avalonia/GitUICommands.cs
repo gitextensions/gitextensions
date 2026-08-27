@@ -22,10 +22,6 @@ using Window = Avalonia.Controls.Window;
 
 namespace GitUI;
 
-// Twin of GitUI/GitUICommands.cs. Members are implemented as their dialogs get ported;
-// everything else throws NotImplementedException naming the member, so a missing port
-// surfaces clearly instead of failing silently.
-
 /// <summary>Contains methods to invoke Git Extensions forms, dialogs, etc.</summary>
 public sealed class GitUICommands : IGitUICommands
 {
@@ -677,8 +673,6 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, changesRepo: false);
     }
 
-    #region Not ported yet
-
     public void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex = false)
     {
         _commitTemplateManager.Register(key, addingText, icon, isRegex);
@@ -1197,7 +1191,7 @@ public sealed class GitUICommands : IGitUICommands
     public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
     {
         // The WinForms client launches a separate process (or reuses Browse) for file
-        // history; this twin opens the window in-process, non-modal like that process.
+        // history; Avalonia opens the window in-process and non-modal.
         DoActionOnRepo(owner, action: () =>
         {
             CommandsDialogs.FormFileHistory form = new(this, fileName, revision, filterByRevision, showBlame);
@@ -1924,6 +1918,4 @@ public sealed class GitUICommands : IGitUICommands
         /// <returns>A new instance of <see cref="IGitUICommands"/>.</returns>
     public IGitUICommands WithWorkingDirectory(string? workingDirectory)
         => new GitUICommands(_serviceProvider, new GitModule(this.GetRequiredService<IGitExecutorProvider>(), workingDirectory));
-
-    #endregion
 }

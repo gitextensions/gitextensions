@@ -10,9 +10,8 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormCheckoutBranch.cs with the full local and remote flow.
-// Deviations: the WinForms ErrorProvider validation becomes an on-checkout message box,
-// and Avalonia's SizeToContent replaces the ApplyLayout/RecalculateSizeConstraints row math.
+// WinForms ErrorProvider validation becomes an on-checkout message box, and Avalonia's
+// SizeToContent replaces the ApplyLayout/RecalculateSizeConstraints row math.
 public partial class FormCheckoutBranch : GitExtensionsDialog
 {
     #region Translation

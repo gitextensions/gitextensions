@@ -40,8 +40,6 @@ public interface IHotkeySettingsManager : IHotkeySettingsLoader
     void SaveSettings(IEnumerable<HotkeySettings> settings);
 }
 
-// Reduced twin: preserves the original manager and persistence contract while publishing
-// defaults only for command groups whose Avalonia consumers are implemented.
 internal sealed class HotkeySettingsManager : IHotkeySettingsManager
 {
     private static readonly XmlSerializer _serializer = new(typeof(HotkeySettings[]), [typeof(HotkeyCommand)]);

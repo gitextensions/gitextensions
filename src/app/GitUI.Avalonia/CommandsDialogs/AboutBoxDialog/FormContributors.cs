@@ -8,7 +8,7 @@ using ResourceManager;
 namespace GitUI.CommandsDialogs.AboutBoxDialog;
 
 // The original has no XLF catalog entry; its contributor strings come from the packaged resources
-// and are shown as-is, so the twin contributes no translation keys.
+// and are shown as-is, so this class contributes no translation keys.
 [Untranslated]
 public sealed partial class FormContributors : GitExtensionsForm
 {

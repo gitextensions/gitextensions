@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Avalonia twin of the GitExtensions entry point. -->
+    <!-- Cross-platform Avalonia entry point. -->
     <OutputType>Exe</OutputType>
     <IsPublishable>true</IsPublishable>
     <TargetFramework>net10.0</TargetFramework>

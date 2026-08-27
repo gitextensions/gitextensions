@@ -7,7 +7,7 @@ namespace GitUI;
 ///  Combines <see cref="WaitCursorScope"/> with disabling a window for the duration of the scope.
 /// </summary>
 /// <remarks>
-///  Twin of GitUI/FormBusyScope.cs. Usage is:
+///  Usage is:
 ///  <code>
 ///  using (FormBusyScope.Enter(this))
 ///  {
