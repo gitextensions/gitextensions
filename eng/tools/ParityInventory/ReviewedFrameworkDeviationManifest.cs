@@ -5,7 +5,7 @@ namespace GitExtensions.ParityInventory;
 // parity-scaffolding: Loads exact, reviewed framework adaptations without providing wildcard suppression.
 internal sealed class ReviewedFrameworkDeviationManifest
 {
-    private const int CurrentSchemaVersion = 3;
+    private const int CurrentSchemaVersion = 4;
 
     private readonly IReadOnlyList<ReviewedFrameworkDeviationEntry> _entries;
 
@@ -104,25 +104,37 @@ internal sealed class ReviewedFrameworkDeviationManifest
                 memberKey = memberKey[..^"/signature".Length];
             }
 
-            MemberEntry[] members = twin.Members.Where(member => $"{member.Kind}:{member.Name}" == memberKey).ToArray();
+            SourceInventory memberInventory = entry.Code == "member.missing" ? original : twin;
+            MemberEntry[] members = memberInventory.Members
+                .Where(member => $"{member.Kind}:{member.Name}" == memberKey)
+                .ToArray();
             if (members.Length != 1)
             {
                 throw new InvalidDataException(
-                    $"Reviewed adaptation '{entry.Identity}' is ambiguous: expected one twin member, found {members.Length}.");
+                    $"Reviewed adaptation '{entry.Identity}' is ambiguous: expected one "
+                    + $"{(entry.Code == "member.missing" ? "original" : "twin")} member, found {members.Length}.");
             }
 
             MemberEntry member = members[0];
-            if (member.Part != entry.TwinPart
-                || member.Accessibility != entry.TwinAccessibility
-                || member.Signature != entry.TwinSignature)
+            string? expectedPart = entry.Code == "member.missing" ? entry.OriginalPart : entry.TwinPart;
+            string? expectedAccessibility = entry.Code == "member.missing"
+                ? entry.OriginalAccessibility
+                : entry.TwinAccessibility;
+            string? expectedSignature = entry.Code == "member.missing"
+                ? entry.OriginalSignature
+                : entry.TwinSignature;
+            if (member.Part != expectedPart
+                || member.Accessibility != expectedAccessibility
+                || member.Signature != expectedSignature)
             {
                 throw new InvalidDataException(
-                    $"Reviewed adaptation '{entry.Identity}' drifted. Expected '{entry.TwinPart}' / "
-                    + $"'{entry.TwinAccessibility}' / '{entry.TwinSignature}', found '{member.Part}' / "
+                    $"Reviewed adaptation '{entry.Identity}' drifted. Expected '{expectedPart}' / "
+                    + $"'{expectedAccessibility}' / '{expectedSignature}', found '{member.Part}' / "
                     + $"'{member.Accessibility}' / '{member.Signature}'.");
             }
 
-            MemberEntry? originalMember = null;
+            MemberEntry? originalMember = entry.Code == "member.missing" ? member : null;
+            MemberEntry? twinMember = entry.Code == "member.missing" ? null : member;
             if (entry.Code == "member.signature")
             {
                 MemberEntry[] originalMembers = original.Members
@@ -153,10 +165,10 @@ internal sealed class ReviewedFrameworkDeviationManifest
                 Code = entry.Code,
                 Path = entry.Path,
                 OriginalPart = originalMember?.Part ?? "(no WinForms member)",
-                TwinPart = member.Part,
+                TwinPart = twinMember?.Part ?? "(no Avalonia member)",
                 Rationale = entry.Rationale,
                 OriginalValue = originalMember is null ? null : $"{originalMember.Accessibility} {originalMember.Signature}",
-                TwinValue = $"{member.Accessibility} {member.Signature}"
+                TwinValue = twinMember is null ? null : $"{twinMember.Accessibility} {twinMember.Signature}"
             });
             appliedEntries?.Add(entry.Identity);
         }
@@ -175,24 +187,48 @@ internal sealed class ReviewedFrameworkDeviationManifest
     private static void ValidateMemberEntry(ReviewedFrameworkDeviationEntry entry)
     {
         if (!entry.Path.StartsWith("member/", StringComparison.Ordinal)
-            || (entry.Code == "member.signature" && !entry.Path.EndsWith("/signature", StringComparison.Ordinal))
-            || entry.TwinPart is null
-            || entry.TwinAccessibility is null
-            || entry.TwinSignature is null)
+            || (entry.Code == "member.signature" && !entry.Path.EndsWith("/signature", StringComparison.Ordinal)))
         {
             throw new InvalidDataException(
                 $"Reviewed adaptation '{entry.Identity}' is not an exact supported member finding.");
         }
 
-        if (entry.Code == "member.signature"
-            && (entry.OriginalPart is null
+        bool requiresOriginal = entry.Code is "member.missing" or "member.signature";
+        bool requiresTwin = entry.Code is "member.extra" or "member.signature";
+        bool hasOriginal = entry.OriginalPart is not null
+            || entry.OriginalAccessibility is not null
+            || entry.OriginalSignature is not null;
+        bool hasTwin = entry.TwinPart is not null
+            || entry.TwinAccessibility is not null
+            || entry.TwinSignature is not null;
+        if ((requiresOriginal
+             && (entry.OriginalPart is null
                 || entry.OriginalAccessibility is null
                 || entry.OriginalSignature is null))
+            || (requiresTwin
+                && (entry.TwinPart is null
+                    || entry.TwinAccessibility is null
+                    || entry.TwinSignature is null))
+            || (!requiresOriginal && hasOriginal)
+            || (!requiresTwin && hasTwin))
         {
             throw new InvalidDataException(
-                $"Reviewed signature adaptation '{entry.Identity}' must pin the original member.");
+                $"Reviewed member adaptation '{entry.Identity}' must pin every present member.");
+        }
+
+        if (entry.Code == "member.missing" && !IsGeneratedDesignerMember(entry))
+        {
+            throw new InvalidDataException(
+                $"Reviewed missing-member adaptation '{entry.Identity}' is not generated WinForms Designer lifecycle state.");
         }
     }
+
+    private static bool IsGeneratedDesignerMember(ReviewedFrameworkDeviationEntry entry) =>
+        entry.OriginalPart!.EndsWith(".Designer.cs", StringComparison.Ordinal)
+        && (entry.Path, entry.OriginalAccessibility, entry.OriginalSignature) is
+            ("member/field:components", "private", "System.ComponentModel.IContainer components")
+            or ("member/method:Dispose", "protected", "void Dispose(bool disposing)")
+            or ("member/method:InitializeComponent", "private", "void InitializeComponent()");
 
     private static void ValidateExactFindingEntry(ReviewedFrameworkDeviationEntry entry)
     {
@@ -324,6 +360,6 @@ internal sealed class ReviewedFrameworkDeviationManifest
     {
         public string Identity => $"{TypeName}/{Code}/{Path}";
 
-        public bool IsMemberDeviation => Code is "member.extra" or "member.signature";
+        public bool IsMemberDeviation => Code is "member.missing" or "member.extra" or "member.signature";
     }
 }
