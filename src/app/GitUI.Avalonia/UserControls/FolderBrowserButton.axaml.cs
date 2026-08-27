@@ -63,7 +63,8 @@ public partial class FolderBrowserButton : GitExtensionsControl
         // if we do not use the DirectoryInfo then a path with slashes instead of backslashes won't work
         directoryInfoPath ??= getter();
 
-        // TODO: do we need the owning TopLevel or is "this" ok?
+        // TODO: do we need ParentForm or is "this" ok?
+        // The owning TopLevel is Avalonia's ParentForm equivalent.
         string? userSelectedPath = OsShellUtil.PickFolder((TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window)!, directoryInfoPath);
 
         if (userSelectedPath is not null)
