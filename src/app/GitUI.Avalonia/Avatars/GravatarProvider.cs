@@ -6,6 +6,8 @@ namespace GitUI.Avatars;
 
 public sealed class GravatarProvider : IAvatarProvider, IDisposable
 {
+    // For details about the rating see https://en.gravatar.com/site/implement/images#rating
+    // "g": suitable for display on all websites with any audience type.
     private const string _rating = "g";
 
     private readonly IAvatarDownloader _downloader;
@@ -50,6 +52,7 @@ public sealed class GravatarProvider : IAvatarProvider, IDisposable
 
     private string ComputeHash(string email)
     {
+        // Gravatar doesn't specify an encoding
         byte[] emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());
         byte[] hashBytes = _sha256.ComputeHash(emailBytes);
         return HexString.FromByteArray(hashBytes);

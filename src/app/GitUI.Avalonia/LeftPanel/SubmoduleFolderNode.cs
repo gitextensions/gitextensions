@@ -16,6 +16,11 @@ internal sealed class SubmoduleFolderNode : Node
 
     internal string Name => _name;
 
+    /// <summary>
+        ///  Compacts chains of single-child folder nodes by merging their names with "/" separators.
+        ///  For example, a chain "extension" → "src" → "test" → "assets" becomes
+        ///  a single folder node named "extension/src/test/assets".
+        /// </summary>
     public void CompactSingleChildFolders()
     {
         while (TreeViewNode.Items is [TreeViewItem { Tag: SubmoduleFolderNode childFolder }])

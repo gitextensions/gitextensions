@@ -144,12 +144,14 @@ public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
                     }
                     catch (Exception ex)
                     {
+                        // do nothing
                         Trace.WriteLine($"Failed to delete file '{file}'. Error: {ex}");
                     }
                 }
             }
             catch (Exception ex)
             {
+                // do nothing
                 Trace.WriteLine($"Failed to enumerate files. Error: {ex}");
             }
         }

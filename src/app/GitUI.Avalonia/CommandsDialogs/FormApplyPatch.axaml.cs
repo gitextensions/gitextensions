@@ -16,6 +16,17 @@ namespace GitUI.CommandsDialogs;
 // control and handler names so middle-of-patch recovery maps directly between front ends.
 public partial class FormApplyPatch : GitModuleForm
 {
+    // Available: CEGHJLMNPQTUVXYZ
+    // A add files
+    // B abort
+    // D directory
+    // F file
+    // I ignore whitespace
+    // K skip patch
+    // O sign-off
+    // R Browse file
+    // S solve conflicts
+    // W Browse dir
     private readonly TranslationString _conflictResolvedText = new("Conflicts resolved");
     private readonly TranslationString _conflictMergetoolText = new("&Solve conflicts");
     private readonly TranslationString _selectPatchFileFilter = new("Patch file (*.Patch)");
@@ -234,6 +245,9 @@ public partial class FormApplyPatch : GitModuleForm
         }
     }
 
+    // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
+    // only looks at start, as all we want is to tell from automail format
+    // returns false on any problem, never throws
     private static bool IsDiffFile(string path)
     {
         try

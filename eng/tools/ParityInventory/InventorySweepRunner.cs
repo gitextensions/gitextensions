@@ -74,7 +74,7 @@ internal static class InventorySweepRunner
                     isTwin: true,
                     work.TwinFiles);
                 InventoryComparison comparison = InventoryComparer.Compare(original, twin);
-                comparison = manifest.Apply(work.TypeName, twin, comparison, appliedManifestEntries);
+                comparison = manifest.Apply(work.TypeName, original, twin, comparison, appliedManifestEntries);
                 IReadOnlyList<FunctionalFinding> findings = comparison.Findings;
                 InventoryReport report = CreateReport(work.TypeName, original, twin, comparison);
                 string relativeReport = $"types/{Sanitize(work.TypeName)}.functional-findings.json";

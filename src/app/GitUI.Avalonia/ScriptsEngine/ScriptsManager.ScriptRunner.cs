@@ -18,6 +18,7 @@ partial class ScriptsManager
         private const string userInput = "UserInput";
         private const string userFiles = "UserFiles";
 
+        // Regex that ensure that in the default value, there is the same number of '{' than '}' to find the right end of the default value expression.
         [GeneratedRegex(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}", RegexOptions.ExplicitCapture)]
         private static partial Regex UserInputRegex { get; }
 
@@ -49,6 +50,8 @@ partial class ScriptsManager
             }
 
             string userInputCaption = string.Format(TranslatedStrings.ScriptUserInputCaption, scriptName);
+
+            // Specific handling of "UserInput" because the value entered should replace only "UserInput" with same label
             Match match;
             while ((match = UserInputRegex.Match(arguments)).Success)
             {
@@ -165,6 +168,9 @@ partial class ScriptsManager
             if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
             {
                 OsShellUtil.OpenUrlInDefaultBrowser(argument);
+
+                // 'RunPowerShell' always runs the script detached (yet).
+                // Hence currently, it does not make sense to trigger the 'RepoChangedNotifier' if '!scriptInfo.RunInBackground'.
                 return true;
             }
 
@@ -232,6 +238,9 @@ partial class ScriptsManager
             }
             else
             {
+                // It is totally valid to have a command without an argument, e.g.:
+                //    Command  : myscript.cmd
+                //    Arguments: <blank>
                 new Executable(command, uiCommands.Module.WorkingDir).Start(argument ?? string.Empty);
             }
 
@@ -243,6 +252,7 @@ partial class ScriptsManager
 
         private static string OverrideCommandWhenNecessary(string originalCommand)
         {
+            // Make sure we are able to run git, even if git is not in the path
             if (originalCommand.Equals("git", StringComparison.CurrentCultureIgnoreCase)
                 || originalCommand.Equals("{git}", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -258,6 +268,7 @@ partial class ScriptsManager
                     ?? throw new ExternalOperationException(originalCommand, string.Empty, AppContext.BaseDirectory);
             }
 
+            // Prefix should be {plugin:pluginname},{plugin=pluginname}
             Match match = PluginRegex.Match(originalCommand);
             return match.Success && match.Groups.Count > 1
                 ? $"{PluginPrefix}{match.Groups["name"].Value.ToLower()}"

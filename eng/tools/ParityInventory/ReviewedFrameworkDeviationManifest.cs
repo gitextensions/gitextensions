@@ -5,7 +5,7 @@ namespace GitExtensions.ParityInventory;
 // parity-scaffolding: Loads exact, reviewed framework adaptations without providing wildcard suppression.
 internal sealed class ReviewedFrameworkDeviationManifest
 {
-    private const int CurrentSchemaVersion = 1;
+    private const int CurrentSchemaVersion = 2;
 
     private readonly IReadOnlyList<ReviewedFrameworkDeviationEntry> _entries;
 
@@ -39,14 +39,28 @@ internal sealed class ReviewedFrameworkDeviationManifest
                 Require(element, "typeName"),
                 Require(element, "code"),
                 Require(element, "path"),
+                Optional(element, "originalPart"),
+                Optional(element, "originalAccessibility"),
+                Optional(element, "originalSignature"),
                 Require(element, "twinPart"),
                 Require(element, "twinAccessibility"),
                 Require(element, "twinSignature"),
                 Require(element, "rationale"));
-            if (entry.Code != "member.extra" || !entry.Path.StartsWith("member/", StringComparison.Ordinal))
+            if ((entry.Code != "member.extra" && entry.Code != "member.signature")
+                || !entry.Path.StartsWith("member/", StringComparison.Ordinal)
+                || (entry.Code == "member.signature" && !entry.Path.EndsWith("/signature", StringComparison.Ordinal)))
             {
                 throw new InvalidDataException(
-                    $"Reviewed adaptation '{entry.Identity}' is not an exact member.extra finding.");
+                    $"Reviewed adaptation '{entry.Identity}' is not an exact supported member finding.");
+            }
+
+            if (entry.Code == "member.signature"
+                && (entry.OriginalPart is null
+                    || entry.OriginalAccessibility is null
+                    || entry.OriginalSignature is null))
+            {
+                throw new InvalidDataException(
+                    $"Reviewed signature adaptation '{entry.Identity}' must pin the original member.");
             }
 
             entries.Add(entry);
@@ -64,6 +78,7 @@ internal sealed class ReviewedFrameworkDeviationManifest
 
     public InventoryComparison Apply(
         string typeName,
+        SourceInventory original,
         SourceInventory twin,
         InventoryComparison comparison,
         ISet<string>? appliedEntries = null)
@@ -83,6 +98,11 @@ internal sealed class ReviewedFrameworkDeviationManifest
             }
 
             string memberKey = entry.Path["member/".Length..];
+            if (entry.Code == "member.signature")
+            {
+                memberKey = memberKey[..^"/signature".Length];
+            }
+
             MemberEntry[] members = twin.Members.Where(member => $"{member.Kind}:{member.Name}" == memberKey).ToArray();
             if (members.Length != 1)
             {
@@ -101,16 +121,40 @@ internal sealed class ReviewedFrameworkDeviationManifest
                     + $"'{member.Accessibility}' / '{member.Signature}'.");
             }
 
+            MemberEntry? originalMember = null;
+            if (entry.Code == "member.signature")
+            {
+                MemberEntry[] originalMembers = original.Members
+                    .Where(candidate => $"{candidate.Kind}:{candidate.Name}" == memberKey)
+                    .ToArray();
+                if (originalMembers.Length != 1)
+                {
+                    throw new InvalidDataException(
+                        $"Reviewed adaptation '{entry.Identity}' is ambiguous: expected one original member, found {originalMembers.Length}.");
+                }
+
+                originalMember = originalMembers[0];
+                if (originalMember.Part != entry.OriginalPart
+                    || originalMember.Accessibility != entry.OriginalAccessibility
+                    || originalMember.Signature != entry.OriginalSignature)
+                {
+                    throw new InvalidDataException(
+                        $"Reviewed adaptation '{entry.Identity}' source drifted. Expected '{entry.OriginalPart}' / "
+                        + $"'{entry.OriginalAccessibility}' / '{entry.OriginalSignature}', found '{originalMember.Part}' / "
+                        + $"'{originalMember.Accessibility}' / '{originalMember.Signature}'.");
+                }
+            }
+
             findings.Remove(matches[0]);
             deviations.Add(new AcceptedFrameworkDeviation
             {
                 Category = "members",
                 Code = entry.Code,
                 Path = entry.Path,
-                OriginalPart = "(no WinForms member)",
+                OriginalPart = originalMember?.Part ?? "(no WinForms member)",
                 TwinPart = member.Part,
                 Rationale = entry.Rationale,
-                OriginalValue = null,
+                OriginalValue = originalMember is null ? null : $"{originalMember.Accessibility} {originalMember.Signature}",
                 TwinValue = $"{member.Accessibility} {member.Signature}"
             });
             appliedEntries?.Add(entry.Identity);
@@ -147,10 +191,18 @@ internal sealed class ReviewedFrameworkDeviationManifest
             : throw new InvalidDataException($"Framework-adaptation property '{propertyName}' is required.");
     }
 
+    private static string? Optional(JsonElement element, string propertyName) =>
+        element.TryGetProperty(propertyName, out JsonElement property) && property.ValueKind == JsonValueKind.String
+            ? property.GetString()
+            : null;
+
     private sealed record ReviewedFrameworkDeviationEntry(
         string TypeName,
         string Code,
         string Path,
+        string? OriginalPart,
+        string? OriginalAccessibility,
+        string? OriginalSignature,
         string TwinPart,
         string TwinAccessibility,
         string TwinSignature,

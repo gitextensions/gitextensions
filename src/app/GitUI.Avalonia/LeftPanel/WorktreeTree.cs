@@ -97,6 +97,8 @@ internal sealed class WorktreeTree : Tree
             }
 
             hasDirectorySeparator = hasDirectorySeparator || span.ContainsAny(DirectorySeparatorChars);
+
+            // Find the longest character-for-character match.
             int limit = Math.Min(prefix.Length, span.Length);
             int matchLength = 0;
             for (int i = 0; i < limit; i++)

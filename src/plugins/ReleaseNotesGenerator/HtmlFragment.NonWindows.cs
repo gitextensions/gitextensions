@@ -15,6 +15,8 @@ internal static class HtmlFragment
                 : "text/html");
     private static readonly DataFormat<byte[]> LinuxHtmlFormat = DataFormat.CreateBytesPlatformFormat("text/html");
 
+    // Helper to convert an integer into an 8 digit string.
+    // String must be 8 characters, because it will be used to replace an 8 character string within a larger string.
     internal static string To8DigitString(int value) => $"{value:00000000}";
 
     internal static string CreateHtmlFormatClipboardText(string htmlFragment, Uri? sourceUri = null)

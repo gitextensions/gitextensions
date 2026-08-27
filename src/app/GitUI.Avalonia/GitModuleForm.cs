@@ -22,6 +22,7 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
     private bool _scriptHotkeysLoaded;
     private IGitUICommands? _uiCommands;
 
+    /// <inheritdoc />
     public event EventHandler<GitUICommandsChangedEventArgs>? UICommandsChanged;
 
     /// <summary>For the visual designer and construction tests only, like WinForms.</summary>
@@ -44,6 +45,7 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
     public IScriptsRunner ScriptsRunner
         => _scriptsRunner ??= UICommands.GetRequiredService<IScriptsRunner>();
 
+    /// <inheritdoc />
     public IGitUICommands UICommands
     {
         get => _uiCommands

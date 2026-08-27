@@ -96,6 +96,8 @@ public sealed partial class FormPush : GitModuleForm
         InitializeComponent();
         WireControls();
 
+        // can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
+        // they are reset to false
         _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
         _gitRefs = Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes);
         _currentBranchName = Module.GetSelectedBranch();
@@ -486,6 +488,8 @@ public sealed partial class FormPush : GitModuleForm
         };
         form.ShowDialog(owner);
         ErrorOccurred = form.ErrorOccurred();
+
+        // Invalidate the cached git config so that tracking info written by git (e.g. via --set-upstream) is picked up on the next refresh.
         Module.InvalidateGitSettings();
         if (!Module.InTheMiddleOfAction() && !ErrorOccurred)
         {

@@ -12,6 +12,10 @@ public static class ShellExtensionManager
     internal const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
     internal const string GitExtensionsShellEx64Name = "GitExtensionsShellEx64.dll";
 
+    /// <summary>
+        ///  Checks if the shell extension files are found at the known location.
+        /// </summary>
+        /// <returns><see langword="true"/> the extension files are found at the known location; otherwise <see langword="false"/>.</returns>
     public static bool FilesExist()
     {
         string path32 = FindFileInBinFolders(GitExtensionsShellEx32Name);
@@ -20,6 +24,10 @@ public static class ShellExtensionManager
                  || (Environment.Is64BitOperatingSystem && string.IsNullOrEmpty(path64)));
     }
 
+    /// <summary>
+        ///  Checks if the shell extension is properly registered in the system.
+        /// </summary>
+        /// <returns><see langword="true"/> if the extension is registered; otherwise <see langword="false"/>.</returns>
     public static bool IsRegistered()
     {
         if (!OperatingSystem.IsWindows())
@@ -42,12 +50,24 @@ public static class ShellExtensionManager
                @"Directory\Background\shellex\ContextMenuHandlers\GitExtensions2"));
     }
 
+    /// <summary>
+        /// Register shell extensions
+        /// </summary>
+        /// <exception cref="FileNotFoundException">If at least one necessary for registration file wasn't found</exception>
+        /// <exception cref="Win32Exception">If user canceled elevation dialog (when ex.NativeErrorCode == 1223)</exception>
+        /// <exception cref="Exception">Other potential error</exception>
     public static void Register()
     {
         AppSettings.SetInstallDir(AppSettings.GetGitExtensionsDirectory()!);
         RunRegSvrForShellExtensionDlls("/s {0}");
     }
 
+    /// <summary>
+        /// Unregister shell extensions
+        /// </summary>
+        /// <exception cref="FileNotFoundException">If at least one necessary for registration file wasn't found</exception>
+        /// <exception cref="Win32Exception">If user canceled elevation dialog (when ex.NativeErrorCode == 1223)</exception>
+        /// <exception cref="Exception">Other potential error</exception>
     public static void Unregister()
         => RunRegSvrForShellExtensionDlls("/s /u {0}");
 

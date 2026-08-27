@@ -54,6 +54,8 @@ public sealed class AvatarMemoryCache : IAvatarProvider, IAvatarCacheCleaner
 
                 if (!IsRequestInProgress(key))
                 {
+                    // Early exit when the image is not in the cache and key is no more in the requests list
+                    // => the request has failed!
                     break;
                 }
 

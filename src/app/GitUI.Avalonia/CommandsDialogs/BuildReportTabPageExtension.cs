@@ -84,6 +84,7 @@ public class BuildReportTabPageExtension
     {
         if (e.PropertyName == nameof(GitRevision.BuildStatus))
         {
+            // Refresh the selected Git revision
             FillBuildReport(_selectedGitRevision);
         }
     }
