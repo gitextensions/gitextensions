@@ -1,4 +1,4 @@
-﻿using System.Collections.Frozen;
+using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
@@ -79,10 +79,61 @@ internal sealed class MessageColumnProvider : ColumnProvider
             AppSettings.ShowTags);
     }
 
-    public override void Clear()
+    public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
-        _aheadBehindDataByLocalBranch = null;
-        _aheadBehindDataByRemoteBranch = null;
+        _toolTipBuilder.Clear();
+
+        if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
+        {
+            // The body is not stored for older commits (to save memory)
+            string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(GetBody(revision))
+                ?? revision.Subject + (revision.HasMultiLineMessage ? TranslatedStrings.BodyNotLoaded : "");
+            _toolTipBuilder.EnsureCapacity(bodySummary.Length + 10);
+            _toolTipBuilder.Append(bodySummary);
+
+            if (revision.Refs.Count != 0)
+            {
+                if (_toolTipBuilder.Length != 0)
+                {
+                    _toolTipBuilder.AppendLine();
+                    _toolTipBuilder.AppendLine();
+                }
+
+                foreach (IGitRef gitRef in SortRefs(revision.Refs))
+                {
+                    if (gitRef.IsBisectGood)
+                    {
+                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsGood);
+                    }
+                    else if (gitRef.IsBisectBad)
+                    {
+                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsBad);
+                    }
+                    else
+                    {
+                        _toolTipBuilder.Append('[').Append(gitRef.Name).Append(']');
+                        if (GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } data)
+                        {
+                            _toolTipBuilder.Append("   ").Append(data.ToDisplay(reverse: gitRef.IsRemote));
+                        }
+
+                        _toolTipBuilder.AppendLine();
+                    }
+                }
+            }
+
+            toolTip = _toolTipBuilder.ToString();
+            return true;
+        }
+
+        if (_settings.ShowGitStatusForArtificialCommits
+            && _grid.GetChangeCount(revision.ObjectId) is ArtificialCommitChangeCount changeCount)
+        {
+            toolTip = _toolTipBuilder.Append(changeCount.GetSummary()).ToString();
+            return true;
+        }
+
+        return base.TryGetToolTip(revision, out toolTip);
     }
 
     public override Control CreateCell()
@@ -193,61 +244,49 @@ internal sealed class MessageColumnProvider : ColumnProvider
         UpdateToolTip(panel, revision);
     }
 
-    public override bool TryGetToolTip(GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    private static IReadOnlyList<IGitRef> SortRefs(IEnumerable<IGitRef> refs)
     {
-        _toolTipBuilder.Clear();
+        List<IGitRef> sortedRefs = [.. refs];
+        sortedRefs.Sort(CompareRefs);
+        return sortedRefs;
 
-        if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
+        static int CompareRefs(IGitRef left, IGitRef right)
         {
-            // The body is not stored for older commits (to save memory)
-            string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(GetBody(revision))
-                ?? revision.Subject + (revision.HasMultiLineMessage ? TranslatedStrings.BodyNotLoaded : "");
-            _toolTipBuilder.EnsureCapacity(bodySummary.Length + 10);
-            _toolTipBuilder.Append(bodySummary);
+            int result = GetRank(left).CompareTo(GetRank(right));
+            return result == 0
+                ? string.Compare(left.Name, right.Name, StringComparison.Ordinal)
+                : result;
+        }
 
-            if (revision.Refs.Count != 0)
+        static int GetRank(IGitRef gitRef)
+        {
+            if (gitRef.IsBisect)
             {
-                if (_toolTipBuilder.Length != 0)
-                {
-                    _toolTipBuilder.AppendLine();
-                    _toolTipBuilder.AppendLine();
-                }
-
-                foreach (IGitRef gitRef in SortRefs(revision.Refs))
-                {
-                    if (gitRef.IsBisectGood)
-                    {
-                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsGood);
-                    }
-                    else if (gitRef.IsBisectBad)
-                    {
-                        _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsBad);
-                    }
-                    else
-                    {
-                        _toolTipBuilder.Append('[').Append(gitRef.Name).Append(']');
-                        if (GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } data)
-                        {
-                            _toolTipBuilder.Append("   ").Append(data.ToDisplay(reverse: gitRef.IsRemote));
-                        }
-
-                        _toolTipBuilder.AppendLine();
-                    }
-                }
+                return 0;
             }
 
-            toolTip = _toolTipBuilder.ToString();
-            return true;
-        }
+            if (gitRef.IsSelected)
+            {
+                return 1;
+            }
 
-        if (_settings.ShowGitStatusForArtificialCommits
-            && _grid.GetChangeCount(revision.ObjectId) is ArtificialCommitChangeCount changeCount)
-        {
-            toolTip = _toolTipBuilder.Append(changeCount.GetSummary()).ToString();
-            return true;
-        }
+            if (gitRef.IsSelectedHeadMergeSource)
+            {
+                return 2;
+            }
 
-        return base.TryGetToolTip(revision, out toolTip);
+            if (gitRef.IsHead)
+            {
+                return 3;
+            }
+
+            if (gitRef.IsRemote)
+            {
+                return 4;
+            }
+
+            return 5;
+        }
     }
 
     private static double GetArtificialLabelWidth(MessageCell panel)
@@ -418,6 +457,33 @@ internal sealed class MessageColumnProvider : ColumnProvider
         };
     }
 
+    private string[] GetCommitMessageLines(GitRevision revision)
+        => GetBody(revision)?.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries) ?? [revision.Subject];
+
+    private string? GetBody(GitRevision revision)
+    {
+        if (revision.Body is null)
+        {
+            if (_commitDataManager is not null
+                && (_settings.ShowCommitBodyInRevisionGrid || _settings.ShowGitNotes || _settings.NotesInSeparateColumn))
+            {
+                _commitDataManager.InitiateDelayedLoadingOfDetails(revision);
+            }
+
+            return null;
+        }
+
+        return _settings.NotesInSeparateColumn
+            ? revision.Body
+            : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
+    }
+
+    public override void Clear()
+    {
+        _aheadBehindDataByLocalBranch = null;
+        _aheadBehindDataByRemoteBranch = null;
+    }
+
     private (string Display, string TrackedCompleteName) GetAheadBehind(IGitRef gitRef, bool withCounts = true)
     {
         _aheadBehindDataByLocalBranch ??= _aheadBehindDataProvider?.GetData()
@@ -464,72 +530,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
             ? data
             : null;
     }
-
-    private static IReadOnlyList<IGitRef> SortRefs(IEnumerable<IGitRef> refs)
-    {
-        List<IGitRef> sortedRefs = [.. refs];
-        sortedRefs.Sort(CompareRefs);
-        return sortedRefs;
-
-        static int CompareRefs(IGitRef left, IGitRef right)
-        {
-            int result = GetRank(left).CompareTo(GetRank(right));
-            return result == 0
-                ? string.Compare(left.Name, right.Name, StringComparison.Ordinal)
-                : result;
-        }
-
-        static int GetRank(IGitRef gitRef)
-        {
-            if (gitRef.IsBisect)
-            {
-                return 0;
-            }
-
-            if (gitRef.IsSelected)
-            {
-                return 1;
-            }
-
-            if (gitRef.IsSelectedHeadMergeSource)
-            {
-                return 2;
-            }
-
-            if (gitRef.IsHead)
-            {
-                return 3;
-            }
-
-            if (gitRef.IsRemote)
-            {
-                return 4;
-            }
-
-            return 5;
-        }
-    }
-
-    private string? GetBody(GitRevision revision)
-    {
-        if (revision.Body is null)
-        {
-            if (_commitDataManager is not null
-                && (_settings.ShowCommitBodyInRevisionGrid || _settings.ShowGitNotes || _settings.NotesInSeparateColumn))
-            {
-                _commitDataManager.InitiateDelayedLoadingOfDetails(revision);
-            }
-
-            return null;
-        }
-
-        return _settings.NotesInSeparateColumn
-            ? revision.Body
-            : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
-    }
-
-    private string[] GetCommitMessageLines(GitRevision revision)
-        => GetBody(revision)?.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries) ?? [revision.Subject];
 
     private string? GetRefToolTip(IGitRef? gitRef)
     {

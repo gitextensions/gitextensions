@@ -72,6 +72,8 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
     private readonly TranslationString _configureMergeTool =
         new("You need to configure merge tool in order to solve merge conflicts.");
     private readonly TranslationString _noDiffToolConfiguredCaption = new("Difftool");
+    private readonly TranslationString _puttyFoundAuto =
+        new("All paths needed for PuTTY could be automatically found and are set.");
     private readonly TranslationString _linuxToolsShNotFound =
         new("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
             "Please make sure there are linux tools installed (through Git for Windows or cygwin) or set the correct path manually.");
@@ -80,8 +82,6 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
     private readonly TranslationString _shCanBeRunCaption = new("Locate linux tools");
     private readonly TranslationString _gcmDetectedCaption =
         new("Obsolete git-credential-winstore.exe detected");
-    private readonly TranslationString _puttyFoundAuto =
-        new("All paths needed for PuTTY could be automatically found and are set.");
 
     private const string _putty = "PuTTY";
     private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
@@ -130,49 +130,15 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     public override void OnPageShown() => CheckSettings();
 
-    public bool CheckSettings()
+    private void translationConfig_Click(object? sender, EventArgs e)
     {
-        _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(
-            () => CheckSettingsLogic.CommonLogic.GitConfigSettingsSet.EffectiveSettings);
-        ChecklistResult result = Evaluate(CommonLogic);
-        Render(GitFound, GitFound_Fix, isVisible: true, result.GitStatus, result.GitMessage);
-        Render(UserNameSet, UserNameSet_Fix, isVisible: true, result.Identity, result.IdentityMessage);
-        Render(MergeTool, MergeTool_Fix, isVisible: true, result.MergeTool, result.MergeToolMessage);
-        Render(DiffTool, DiffTool_Fix, isVisible: true, result.DiffTool, result.DiffToolMessage);
-        Render(
-            ShellExtensionsRegistered,
-            ShellExtensionsRegistered_Fix,
-            result.WindowsChecksVisible,
-            result.ShellExtensions,
-            result.ShellExtensionsMessage);
-        Render(GitBinFound, GitBinFound_Fix, result.WindowsChecksVisible, result.GitBin, result.GitBinMessage);
-        Render(
-            GitExtensionsInstall,
-            GitExtensionsInstall_Fix,
-            result.WindowsChecksVisible,
-            result.InstallRegistration,
-            result.InstallRegistrationMessage);
-        Render(SshConfig, SshConfig_Fix, result.WindowsChecksVisible, result.Ssh, result.SshMessage);
-        Render(
-            translationConfig,
-            translationConfig_Fix,
-            isVisible: true,
-            result.Translation,
-            result.TranslationMessage);
-        Render(
-            GcmDetected,
-            GcmDetectedFix,
-            result.ObsoleteCredentialHelperVisible,
-            result.ObsoleteCredentialHelper,
-            result.ObsoleteCredentialHelperMessage);
+        using FormChooseTranslation frm = new();
+        frm.ShowDialog(TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window); // will set Settings.Translation
 
-        if (result.IsValid && AppSettings.CheckSettings)
-        {
-            AppSettings.CheckSettings = false;
-        }
+        PageHost.LoadAll();
 
-        CheckAtStartup.IsChecked = AppSettings.CheckSettings;
-        return result.IsValid;
+        Translator.Translate(this, AppSettings.CurrentTranslation);
+        SaveAndRescan_Click(this, EventArgs.Empty);
     }
 
     internal ChecklistResult Evaluate(CommonLogic commonLogic)
@@ -454,139 +420,6 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         }
     }
 
-    /// <summary>
-    /// Renders settings as correctly configured.
-    /// </summary>
-    private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
-    {
-        SetStatusColors(settingButton, GetStatusColor(128, 255, 128));
-        settingButton.Content = text;
-        settingFixButton.IsVisible = false;
-    }
-
-    /// <summary>
-    /// Renders settings as misconfigured.
-    /// </summary>
-    private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
-    {
-        SetStatusColors(settingButton, GetStatusColor(255, 128, 128));
-        settingButton.Content = text;
-        settingFixButton.IsVisible = true;
-    }
-
-    private static void RenderSettingNotRecommended(Button settingButton, Button settingFixButton, string text)
-    {
-        SetStatusColors(settingButton, GetStatusColor(255, 255, 128));
-        settingButton.Content = text;
-        settingFixButton.IsVisible = true;
-    }
-
-    private static void SetStatusColors(Button settingButton, System.Drawing.Color background)
-    {
-        settingButton.Background = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(background));
-        settingButton.Foreground = new SolidColorBrush(
-            AvaloniaThemeResources.ToMediaColor(ColorHelper.GetTextColor(background)));
-    }
-
-    // OtherColors is part of the Windows-only source set; preserve its exact portable color formula here.
-    private static System.Drawing.Color GetStatusColor(int red, int green, int blue)
-    {
-        System.Drawing.Color color = System.Drawing.Color.FromArgb(red, green, blue);
-        return WinFormsShims.Application.SystemColorMode == WinFormsShims.SystemColorMode.Dark
-            ? color.DimColor()
-            : color;
-    }
-
-    private void GitFound_Click(object? sender, EventArgs e)
-    {
-        if (!CheckSettingsLogic.SolveGitCommand())
-        {
-            MessageBoxes.Show(
-                TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
-                _solveGitCommandFailed.Text,
-                _solveGitCommandFailedCaption.Text,
-                WinFormsShims.MessageBoxButtons.OK,
-                WinFormsShims.MessageBoxIcon.Error);
-            PageHost.GotoPage(GitSettingsPage.GetPageReference());
-            return;
-        }
-
-        MessageBoxes.Show(
-            TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
-            string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue),
-            _gitCanBeRunCaption.Text,
-            WinFormsShims.MessageBoxButtons.OK,
-            WinFormsShims.MessageBoxIcon.Information);
-        PageHost.GotoPage(GitSettingsPage.GetPageReference());
-        SaveAndRescan_Click(sender, e);
-    }
-
-    private void UserNameSet_Click(object? sender, EventArgs e)
-        => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
-
-    private void MergeToolFix_Click(object? sender, EventArgs e)
-    {
-        string? mergeTool = _diffMergeToolConfigurationManager?.ConfiguredMergeTool;
-        if (string.IsNullOrEmpty(mergeTool))
-        {
-            GotoPageGlobalSettings();
-            return;
-        }
-
-        SaveAndRescan_Click(this, EventArgs.Empty);
-    }
-
-    private void DiffToolFix_Click(object? sender, EventArgs e)
-    {
-        string? diffTool = _diffMergeToolConfigurationManager?.ConfiguredDiffTool;
-        if (string.IsNullOrEmpty(diffTool))
-        {
-            GotoPageGlobalSettings();
-            return;
-        }
-
-        SaveAndRescan_Click(this, EventArgs.Empty);
-    }
-
-    private void GotoPageGlobalSettings()
-        => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
-
-    private void ShellExtensionsRegistered_Click(object? sender, EventArgs e)
-    {
-        ShellExtensionManager.Register();
-        CheckSettings();
-    }
-
-    private void GitBinFound_Click(object? sender, EventArgs e)
-    {
-        if (!CheckSettingsLogic.SolveLinuxToolsDir())
-        {
-            MessageBoxes.Show(
-                TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
-                _linuxToolsShNotFound.Text,
-                _linuxToolsShNotFoundCaption.Text,
-                WinFormsShims.MessageBoxButtons.OK,
-                WinFormsShims.MessageBoxIcon.Error);
-            PageHost.GotoPage(GitSettingsPage.GetPageReference());
-            return;
-        }
-
-        MessageBoxes.Show(
-            TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
-            string.Format(_shCanBeRun.Text, AppSettings.LinuxToolsDir),
-            _shCanBeRunCaption.Text,
-            WinFormsShims.MessageBoxButtons.OK,
-            WinFormsShims.MessageBoxIcon.Information);
-        PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
-        SaveAndRescan_Click(sender, e);
-    }
-
-    private void GitExtensionsInstall_Click(object? sender, EventArgs e)
-    {
-        CheckSettingsLogic.SolveGitExtensionsDir();
-        CheckSettings();
-    }
-
     private void SshConfig_Click(object? sender, EventArgs e)
     {
         if (GitSshHelpers.IsPlink)
@@ -619,20 +452,111 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         }
     }
 
-    private void translationConfig_Click(object? sender, EventArgs e)
+    private void GitExtensionsInstall_Click(object? sender, EventArgs e)
     {
-        using FormChooseTranslation frm = new();
-        frm.ShowDialog(TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window); // will set Settings.Translation
+        CheckSettingsLogic.SolveGitExtensionsDir();
+        CheckSettings();
+    }
 
-        PageHost.LoadAll();
+    private void GitBinFound_Click(object? sender, EventArgs e)
+    {
+        if (!CheckSettingsLogic.SolveLinuxToolsDir())
+        {
+            MessageBoxes.Show(
+                TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+                _linuxToolsShNotFound.Text,
+                _linuxToolsShNotFoundCaption.Text,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error);
+            PageHost.GotoPage(GitSettingsPage.GetPageReference());
+            return;
+        }
 
-        Translator.Translate(this, AppSettings.CurrentTranslation);
+        MessageBoxes.Show(
+            TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+            string.Format(_shCanBeRun.Text, AppSettings.LinuxToolsDir),
+            _shCanBeRunCaption.Text,
+            WinFormsShims.MessageBoxButtons.OK,
+            WinFormsShims.MessageBoxIcon.Information);
+        PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
+        SaveAndRescan_Click(sender, e);
+    }
+
+    private static void SetStatusColors(Button settingButton, System.Drawing.Color background)
+    {
+        settingButton.Background = new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(background));
+        settingButton.Foreground = new SolidColorBrush(
+            AvaloniaThemeResources.ToMediaColor(ColorHelper.GetTextColor(background)));
+    }
+
+    // OtherColors is part of the Windows-only source set; preserve its exact portable color formula here.
+    private static System.Drawing.Color GetStatusColor(int red, int green, int blue)
+    {
+        System.Drawing.Color color = System.Drawing.Color.FromArgb(red, green, blue);
+        return WinFormsShims.Application.SystemColorMode == WinFormsShims.SystemColorMode.Dark
+            ? color.DimColor()
+            : color;
+    }
+
+    private void ShellExtensionsRegistered_Click(object? sender, EventArgs e)
+    {
+        ShellExtensionManager.Register();
+        CheckSettings();
+    }
+
+    private void DiffToolFix_Click(object? sender, EventArgs e)
+    {
+        string? diffTool = _diffMergeToolConfigurationManager?.ConfiguredDiffTool;
+        if (string.IsNullOrEmpty(diffTool))
+        {
+            GotoPageGlobalSettings();
+            return;
+        }
+
         SaveAndRescan_Click(this, EventArgs.Empty);
     }
 
-    private void GcmDetectedFix_Click(object? sender, EventArgs e)
-        => OsShellUtil.OpenUrlInDefaultBrowser(
-            "https://github.com/gitextensions/gitextensions/wiki/Fix-GitCredentialWinStore-missing");
+    private void MergeToolFix_Click(object? sender, EventArgs e)
+    {
+        string? mergeTool = _diffMergeToolConfigurationManager?.ConfiguredMergeTool;
+        if (string.IsNullOrEmpty(mergeTool))
+        {
+            GotoPageGlobalSettings();
+            return;
+        }
+
+        SaveAndRescan_Click(this, EventArgs.Empty);
+    }
+
+    private void GotoPageGlobalSettings()
+        => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
+
+    private void UserNameSet_Click(object? sender, EventArgs e)
+        => PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
+
+    private void GitFound_Click(object? sender, EventArgs e)
+    {
+        if (!CheckSettingsLogic.SolveGitCommand())
+        {
+            MessageBoxes.Show(
+                TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+                _solveGitCommandFailed.Text,
+                _solveGitCommandFailedCaption.Text,
+                WinFormsShims.MessageBoxButtons.OK,
+                WinFormsShims.MessageBoxIcon.Error);
+            PageHost.GotoPage(GitSettingsPage.GetPageReference());
+            return;
+        }
+
+        MessageBoxes.Show(
+            TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window,
+            string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue),
+            _gitCanBeRunCaption.Text,
+            WinFormsShims.MessageBoxButtons.OK,
+            WinFormsShims.MessageBoxIcon.Information);
+        PageHost.GotoPage(GitSettingsPage.GetPageReference());
+        SaveAndRescan_Click(sender, e);
+    }
 
     private void SaveAndRescan_Click(object? sender, EventArgs e)
     {
@@ -646,6 +570,82 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private void CheckAtStartup_CheckedChanged(object? sender, EventArgs e)
         => AppSettings.CheckSettings = CheckAtStartup.IsChecked == true;
+
+    public bool CheckSettings()
+    {
+        _diffMergeToolConfigurationManager = new DiffMergeToolConfigurationManager(
+            () => CheckSettingsLogic.CommonLogic.GitConfigSettingsSet.EffectiveSettings);
+        ChecklistResult result = Evaluate(CommonLogic);
+        Render(GitFound, GitFound_Fix, isVisible: true, result.GitStatus, result.GitMessage);
+        Render(UserNameSet, UserNameSet_Fix, isVisible: true, result.Identity, result.IdentityMessage);
+        Render(MergeTool, MergeTool_Fix, isVisible: true, result.MergeTool, result.MergeToolMessage);
+        Render(DiffTool, DiffTool_Fix, isVisible: true, result.DiffTool, result.DiffToolMessage);
+        Render(
+            ShellExtensionsRegistered,
+            ShellExtensionsRegistered_Fix,
+            result.WindowsChecksVisible,
+            result.ShellExtensions,
+            result.ShellExtensionsMessage);
+        Render(GitBinFound, GitBinFound_Fix, result.WindowsChecksVisible, result.GitBin, result.GitBinMessage);
+        Render(
+            GitExtensionsInstall,
+            GitExtensionsInstall_Fix,
+            result.WindowsChecksVisible,
+            result.InstallRegistration,
+            result.InstallRegistrationMessage);
+        Render(SshConfig, SshConfig_Fix, result.WindowsChecksVisible, result.Ssh, result.SshMessage);
+        Render(
+            translationConfig,
+            translationConfig_Fix,
+            isVisible: true,
+            result.Translation,
+            result.TranslationMessage);
+        Render(
+            GcmDetected,
+            GcmDetectedFix,
+            result.ObsoleteCredentialHelperVisible,
+            result.ObsoleteCredentialHelper,
+            result.ObsoleteCredentialHelperMessage);
+
+        if (result.IsValid && AppSettings.CheckSettings)
+        {
+            AppSettings.CheckSettings = false;
+        }
+
+        CheckAtStartup.IsChecked = AppSettings.CheckSettings;
+        return result.IsValid;
+    }
+
+    /// <summary>
+    /// Renders settings as correctly configured.
+    /// </summary>
+    private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
+    {
+        SetStatusColors(settingButton, GetStatusColor(128, 255, 128));
+        settingButton.Content = text;
+        settingFixButton.IsVisible = false;
+    }
+
+    /// <summary>
+    /// Renders settings as misconfigured.
+    /// </summary>
+    private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
+    {
+        SetStatusColors(settingButton, GetStatusColor(255, 128, 128));
+        settingButton.Content = text;
+        settingFixButton.IsVisible = true;
+    }
+
+    private static void RenderSettingNotRecommended(Button settingButton, Button settingFixButton, string text)
+    {
+        SetStatusColors(settingButton, GetStatusColor(255, 255, 128));
+        settingButton.Content = text;
+        settingFixButton.IsVisible = true;
+    }
+
+    private void GcmDetectedFix_Click(object? sender, EventArgs e)
+        => OsShellUtil.OpenUrlInDefaultBrowser(
+            "https://github.com/gitextensions/gitextensions/wiki/Fix-GitCredentialWinStore-missing");
 
     internal enum CheckState
     {

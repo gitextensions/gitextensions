@@ -8,13 +8,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog;
 
 public abstract class GroupSettingsPage : Translate, ISettingsPage
 {
+    public string Title { get; }
     protected GroupSettingsPage(string title)
     {
         Title = title;
         Translator.Translate(this, AppSettings.CurrentTranslation);
     }
-
-    public string Title { get; }
 
     public string GetTitle() => Title;
 

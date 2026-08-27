@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using GitCommands;
 using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
@@ -8,9 +8,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public partial class ShellExtensionSettingsPage : SettingsPageWithHeader
 {
+#pragma warning disable SX1309 // Preserve the original Designer field name used by translation and parity tooling.
+    private readonly ToolTip toolTip1 = new();
     private const char Checked_InMenu = '0';
     private const char Indeterminate_InSubMenu = '1';
-    private const char Unchecked_NotInMenu = '2';
 
     private static readonly string[] MenuEntries =
     [
@@ -33,15 +34,14 @@ public partial class ShellExtensionSettingsPage : SettingsPageWithHeader
         "View stash",
         "View changes",
     ];
+    private const char Unchecked_NotInMenu = '2';
 
     private readonly TranslationString _noItems = new("no items");
+
+    private readonly List<CheckBox> _menuEntryControls = [];
     private readonly TranslationString _menuHelp = new(@"* Checked: at top level for direct access
 * Intermediate: in a cascaded context menu
 * Unchecked: not added to the menu");
-
-    private readonly List<CheckBox> _menuEntryControls = [];
-#pragma warning disable SX1309 // Preserve the original Designer field name used by translation and parity tooling.
-    private readonly ToolTip toolTip1 = new();
 #pragma warning restore SX1309
     private bool _isLoading = false;
 

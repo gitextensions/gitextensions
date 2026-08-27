@@ -37,9 +37,6 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
         InitializeComplete();
     }
 
-    public static SettingsPageReference GetPageReference()
-        => new SettingsPageReferenceByType(typeof(DiffViewerSettingsPage));
-
     protected override void SettingsToPage()
     {
         chkRememberIgnoreWhiteSpacePreference.IsChecked = AppSettings.RememberIgnoreWhiteSpacePreference;
@@ -81,6 +78,9 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
         base.PageToSettings();
     }
 
+    private void chkUseGitColoring_CheckedChanged(object? sender, EventArgs e)
+        => chkUseGEThemeGitColoring.IsEnabled = chkUseGitColoring.IsChecked == true;
+
     public override void AddTranslationItems(GitExtensions.Extensibility.Translations.ITranslation translation)
     {
         base.AddTranslationItems(translation);
@@ -100,9 +100,6 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
         ConfigureToolTips(translation);
     }
 
-    private void chkUseGitColoring_CheckedChanged(object? sender, EventArgs e)
-        => chkUseGEThemeGitColoring.IsEnabled = chkUseGitColoring.IsChecked == true;
-
     private static void btnSaveCurrentViewSettingsAsDefault_Click(object? sender, EventArgs e)
     {
         foreach (FieldInfo staticAppSettingField in typeof(AppSettings).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
@@ -115,6 +112,9 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
 
         AppSettings.SaveSettings();
     }
+
+    public static SettingsPageReference GetPageReference()
+        => new SettingsPageReferenceByType(typeof(DiffViewerSettingsPage));
 
     private void ConfigureTranslatedText()
     {

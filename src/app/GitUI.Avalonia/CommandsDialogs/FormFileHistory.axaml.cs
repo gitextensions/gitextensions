@@ -16,19 +16,19 @@ namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUpdate
 {
-    private readonly TranslationString _fileNotFound = new(" - Git could not identify the file {0}");
     private readonly TranslationString _buildReportTabCaption = new("Build Report");
+    private readonly TranslationString _fileNotFound = new(" - Git could not identify the file {0}");
+    private readonly IFullPathResolver _fullPathResolver;
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
-    private readonly IFullPathResolver _fullPathResolver;
     private readonly ObjectId _initialSelectedId = default;
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
     private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
     private readonly List<Task> _viewTasks = [];
+    private BuildReportTabPageExtension? _buildReportTabPageExtension;
 
     private string? _commitInfoTabPageText;
-    private BuildReportTabPageExtension? _buildReportTabPageExtension;
 
     private string FileName { get; init; } = string.Empty;
 
@@ -202,250 +202,6 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     private void FileChangesSelectionChanged(object? sender, EventArgs e)
         => UpdateSelectedFileViewers();
 
-    private void TabControl1SelectedIndexChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (ReferenceEquals(e.Source, tabControl1))
-        {
-            UpdateSelectedFileViewers();
-        }
-    }
-
-    private void OpenWithDifftoolToolStripMenuItem_Click(object? sender, EventArgs e)
-        => OpenFilesWithDiffTool(RevisionDiffKind.DiffAB, sender);
-
-    private void diffToolRemoteLocalStripMenuItem_Click(object? sender, EventArgs e)
-        => OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal, sender);
-
-    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
-    {
-        string? toolName = (sender as MenuItem)?.Tag as string;
-        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
-        string? oldFileName = selectedRevisions.Count > 0 ? GetFileNameForRevision(selectedRevisions[0]) : null;
-        UICommands.OpenWithDifftool(this, selectedRevisions, FileName, oldFileName, diffKind, isTracked: true, customTool: toolName);
-    }
-
-    private void FileHistoryContextMenuOpening(object? sender, System.ComponentModel.CancelEventArgs e)
-    {
-        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
-        copyToClipboardToolStripMenuItem.RefreshItems();
-        openWithDifftoolToolStripMenuItem.IsEnabled = selectedRevisions.Count is >= 1 and <= 2;
-        diffToolRemoteLocalStripMenuItem.IsEnabled =
-            selectedRevisions.Count == 1
-            && selectedRevisions[0].ObjectId != ObjectId.WorkTreeId
-            && File.Exists(_fullPathResolver.Resolve(FileName));
-        saveAsToolStripMenuItem.IsEnabled = selectedRevisions.Count == 1;
-    }
-
-    private void saveAsToolStripMenuItem_Click(object? sender, EventArgs e)
-        => ThreadHelper.FileAndForget(SaveSelectedRevisionAsAsync);
-
-    private async Task SaveSelectedRevisionAsAsync()
-    {
-        GitRevision? selectedRevision = RevisionGrid.SelectedRevision;
-        if (selectedRevision is null)
-        {
-            return;
-        }
-
-        string historicalFileName = GetFileNameForRevision(selectedRevision) ?? FileName;
-        string? fullName = _fullPathResolver.Resolve(historicalFileName)?.ToNativePath();
-        if (string.IsNullOrWhiteSpace(fullName))
-        {
-            return;
-        }
-
-        string? initialDirectory = Path.GetDirectoryName(fullName);
-        string extension = Path.GetExtension(fullName);
-        if (!await PortalPickerGuard.IsAvailableAsync())
-        {
-            return;
-        }
-
-        IStorageFile? file = await PortalPickerGuard.SaveFilePickerAsync(StorageProvider, new FilePickerSaveOptions
-        {
-            SuggestedFileName = Path.GetFileName(fullName),
-            SuggestedStartLocation = initialDirectory is null ? null : await StorageProvider.TryGetFolderFromPathAsync(initialDirectory),
-            DefaultExtension = extension.TrimStart('.'),
-            FileTypeChoices =
-            [
-                new FilePickerFileType($"Current format (*{extension})") { Patterns = [$"*{extension}"] },
-                new FilePickerFileType("All files (*.*)") { Patterns = ["*.*"] },
-            ],
-        });
-        string? targetPath = file?.TryGetLocalPath();
-        if (targetPath is not null)
-        {
-            await Module.SaveBlobAsAsync(targetPath, $"{selectedRevision.Guid}:\"{historicalFileName}\"");
-        }
-    }
-
-    private void followFileHistoryToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.FollowRenamesInFileHistory = !AppSettings.FollowRenamesInFileHistory;
-        UpdateFollowHistoryMenuItems();
-        LoadFileHistory();
-    }
-
-    private void followFileHistoryRenamesToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.FollowRenamesInFileHistoryExactOnly = !AppSettings.FollowRenamesInFileHistoryExactOnly;
-        UpdateFollowHistoryMenuItems();
-        LoadFileHistory();
-    }
-
-    private void UpdateFollowHistoryMenuItems()
-    {
-        followFileHistoryToolStripMenuItem.IsChecked = AppSettings.FollowRenamesInFileHistory;
-        followFileHistoryRenamesToolStripMenuItem.IsEnabled = AppSettings.FollowRenamesInFileHistory;
-        followFileHistoryRenamesToolStripMenuItem.IsChecked = AppSettings.FollowRenamesInFileHistoryExactOnly;
-    }
-
-    private void showFullHistoryToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
-        UpdateHistoryMenuItems();
-        LoadFileHistory();
-    }
-
-    private void simplifyMergesToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.SimplifyMergesInFileHistory = !AppSettings.SimplifyMergesInFileHistory;
-        UpdateHistoryMenuItems();
-        if (AppSettings.FullHistoryInFileHistory)
-        {
-            LoadFileHistory();
-        }
-    }
-
-    private void UpdateHistoryMenuItems()
-    {
-        showFullHistoryToolStripMenuItem.IsChecked = AppSettings.FullHistoryInFileHistory;
-        simplifyMergesToolStripMenuItem.IsChecked = AppSettings.SimplifyMergesInFileHistory;
-        simplifyMergesToolStripMenuItem.IsEnabled = AppSettings.FullHistoryInFileHistory;
-    }
-
-    private void toolStripSplitLoad_ButtonClick(object? sender, EventArgs e)
-        => LoadFileHistory();
-
-    private void loadHistoryOnShowToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.LoadFileHistoryOnShow = !AppSettings.LoadFileHistoryOnShow;
-        UpdateLoadMenuItems();
-    }
-
-    private void loadBlameOnShowToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.LoadBlameOnShow = !AppSettings.LoadBlameOnShow;
-        UpdateLoadMenuItems();
-    }
-
-    private void UpdateLoadMenuItems()
-    {
-        loadHistoryOnShowToolStripMenuItem.IsChecked = AppSettings.LoadFileHistoryOnShow;
-        loadBlameOnShowToolStripMenuItem.IsChecked = AppSettings.LoadBlameOnShow && BlameTab.IsVisible;
-    }
-
-    private void ignoreWhitespaceToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.IgnoreWhitespaceOnBlame = !AppSettings.IgnoreWhitespaceOnBlame;
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void detectMoveAndCopyInThisFileToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.DetectCopyInFileOnBlame = !AppSettings.DetectCopyInFileOnBlame;
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void detectMoveAndCopyInAllFilesToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.DetectCopyInAllOnBlame = !AppSettings.DetectCopyInAllOnBlame;
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void displayAuthorFirstToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.BlameDisplayAuthorFirst = !AppSettings.BlameDisplayAuthorFirst;
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void showAuthorAvatarToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.BlameShowAuthorAvatar = !AppSettings.BlameShowAuthorAvatar;
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void showAuthorToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.BlameShowAuthor = !AppSettings.BlameShowAuthor;
-        if (!AppSettings.BlameShowAuthor)
-        {
-            AppSettings.BlameShowAuthorDate = true;
-        }
-
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void showAuthorDateToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.BlameShowAuthorDate = !AppSettings.BlameShowAuthorDate;
-        if (!AppSettings.BlameShowAuthorDate)
-        {
-            AppSettings.BlameShowAuthor = true;
-        }
-
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void showAuthorTimeToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.BlameShowAuthorTime = !AppSettings.BlameShowAuthorTime;
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void showLineNumbersToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.BlameShowLineNumbers = !AppSettings.BlameShowLineNumbers;
-        Blame.UpdateShowLineNumbers();
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void showOriginalFilePathToolStripMenuItem_Click(object? sender, EventArgs e)
-    {
-        AppSettings.BlameShowOriginalFilePath = !AppSettings.BlameShowOriginalFilePath;
-        UpdateBlameMenuItems();
-        UpdateSelectedFileViewers(force: true);
-    }
-
-    private void GitcommandLogToolStripMenuItemClick(object? sender, EventArgs e)
-    {
-        FormGitCommandLog.ShowOrActivate(this);
-    }
-
-    private void UpdateBlameMenuItems()
-    {
-        ignoreWhitespaceToolStripMenuItem.IsChecked = AppSettings.IgnoreWhitespaceOnBlame;
-        detectMoveAndCopyInThisFileToolStripMenuItem.IsChecked = AppSettings.DetectCopyInFileOnBlame;
-        detectMoveAndCopyInAllFilesToolStripMenuItem.IsChecked = AppSettings.DetectCopyInAllOnBlame;
-        displayAuthorFirstToolStripMenuItem.IsChecked = AppSettings.BlameDisplayAuthorFirst;
-        showAuthorAvatarToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthorAvatar;
-        showAuthorToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthor;
-        showAuthorDateToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthorDate;
-        showAuthorTimeToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthorTime;
-        showAuthorTimeToolStripMenuItem.IsEnabled = AppSettings.BlameShowAuthorDate;
-        showLineNumbersToolStripMenuItem.IsChecked = AppSettings.BlameShowLineNumbers;
-        showOriginalFilePathToolStripMenuItem.IsChecked = AppSettings.BlameShowOriginalFilePath;
-    }
-
     private void SetTitle(string? alternativeFileName = null)
     {
         StringBuilder str = new StringBuilder()
@@ -531,6 +287,250 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             tabControl1,
             _buildReportTabCaption.Text);
         _buildReportTabPageExtension.FillBuildReport(selectedRevisions.Count == 1 ? revision : null);
+    }
+
+    private void TabControl1SelectedIndexChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (ReferenceEquals(e.Source, tabControl1))
+        {
+            UpdateSelectedFileViewers();
+        }
+    }
+
+    private void OpenWithDifftoolToolStripMenuItem_Click(object? sender, EventArgs e)
+        => OpenFilesWithDiffTool(RevisionDiffKind.DiffAB, sender);
+
+    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
+    {
+        string? toolName = (sender as MenuItem)?.Tag as string;
+        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+        string? oldFileName = selectedRevisions.Count > 0 ? GetFileNameForRevision(selectedRevisions[0]) : null;
+        UICommands.OpenWithDifftool(this, selectedRevisions, FileName, oldFileName, diffKind, isTracked: true, customTool: toolName);
+    }
+
+    private void saveAsToolStripMenuItem_Click(object? sender, EventArgs e)
+        => ThreadHelper.FileAndForget(SaveSelectedRevisionAsAsync);
+
+    private async Task SaveSelectedRevisionAsAsync()
+    {
+        GitRevision? selectedRevision = RevisionGrid.SelectedRevision;
+        if (selectedRevision is null)
+        {
+            return;
+        }
+
+        string historicalFileName = GetFileNameForRevision(selectedRevision) ?? FileName;
+        string? fullName = _fullPathResolver.Resolve(historicalFileName)?.ToNativePath();
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            return;
+        }
+
+        string? initialDirectory = Path.GetDirectoryName(fullName);
+        string extension = Path.GetExtension(fullName);
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return;
+        }
+
+        IStorageFile? file = await PortalPickerGuard.SaveFilePickerAsync(StorageProvider, new FilePickerSaveOptions
+        {
+            SuggestedFileName = Path.GetFileName(fullName),
+            SuggestedStartLocation = initialDirectory is null ? null : await StorageProvider.TryGetFolderFromPathAsync(initialDirectory),
+            DefaultExtension = extension.TrimStart('.'),
+            FileTypeChoices =
+            [
+                new FilePickerFileType($"Current format (*{extension})") { Patterns = [$"*{extension}"] },
+                new FilePickerFileType("All files (*.*)") { Patterns = ["*.*"] },
+            ],
+        });
+        string? targetPath = file?.TryGetLocalPath();
+        if (targetPath is not null)
+        {
+            await Module.SaveBlobAsAsync(targetPath, $"{selectedRevision.Guid}:\"{historicalFileName}\"");
+        }
+    }
+
+    private void followFileHistoryToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.FollowRenamesInFileHistory = !AppSettings.FollowRenamesInFileHistory;
+        UpdateFollowHistoryMenuItems();
+        LoadFileHistory();
+    }
+
+    private void UpdateFollowHistoryMenuItems()
+    {
+        followFileHistoryToolStripMenuItem.IsChecked = AppSettings.FollowRenamesInFileHistory;
+        followFileHistoryRenamesToolStripMenuItem.IsEnabled = AppSettings.FollowRenamesInFileHistory;
+        followFileHistoryRenamesToolStripMenuItem.IsChecked = AppSettings.FollowRenamesInFileHistoryExactOnly;
+    }
+
+    private void showFullHistoryToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
+        UpdateHistoryMenuItems();
+        LoadFileHistory();
+    }
+
+    private void simplifyMergesToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.SimplifyMergesInFileHistory = !AppSettings.SimplifyMergesInFileHistory;
+        UpdateHistoryMenuItems();
+        if (AppSettings.FullHistoryInFileHistory)
+        {
+            LoadFileHistory();
+        }
+    }
+
+    private void FileHistoryContextMenuOpening(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+        copyToClipboardToolStripMenuItem.RefreshItems();
+        openWithDifftoolToolStripMenuItem.IsEnabled = selectedRevisions.Count is >= 1 and <= 2;
+        diffToolRemoteLocalStripMenuItem.IsEnabled =
+            selectedRevisions.Count == 1
+            && selectedRevisions[0].ObjectId != ObjectId.WorkTreeId
+            && File.Exists(_fullPathResolver.Resolve(FileName));
+        saveAsToolStripMenuItem.IsEnabled = selectedRevisions.Count == 1;
+    }
+
+    private void UpdateHistoryMenuItems()
+    {
+        showFullHistoryToolStripMenuItem.IsChecked = AppSettings.FullHistoryInFileHistory;
+        simplifyMergesToolStripMenuItem.IsChecked = AppSettings.SimplifyMergesInFileHistory;
+        simplifyMergesToolStripMenuItem.IsEnabled = AppSettings.FullHistoryInFileHistory;
+    }
+
+    private void diffToolRemoteLocalStripMenuItem_Click(object? sender, EventArgs e)
+        => OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal, sender);
+
+    private void toolStripSplitLoad_ButtonClick(object? sender, EventArgs e)
+        => LoadFileHistory();
+
+    private void loadHistoryOnShowToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.LoadFileHistoryOnShow = !AppSettings.LoadFileHistoryOnShow;
+        UpdateLoadMenuItems();
+    }
+
+    private void UpdateLoadMenuItems()
+    {
+        loadHistoryOnShowToolStripMenuItem.IsChecked = AppSettings.LoadFileHistoryOnShow;
+        loadBlameOnShowToolStripMenuItem.IsChecked = AppSettings.LoadBlameOnShow && BlameTab.IsVisible;
+    }
+
+    private void loadBlameOnShowToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.LoadBlameOnShow = !AppSettings.LoadBlameOnShow;
+        UpdateLoadMenuItems();
+    }
+
+    private void followFileHistoryRenamesToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.FollowRenamesInFileHistoryExactOnly = !AppSettings.FollowRenamesInFileHistoryExactOnly;
+        UpdateFollowHistoryMenuItems();
+        LoadFileHistory();
+    }
+
+    private void ignoreWhitespaceToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.IgnoreWhitespaceOnBlame = !AppSettings.IgnoreWhitespaceOnBlame;
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void detectMoveAndCopyInAllFilesToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.DetectCopyInAllOnBlame = !AppSettings.DetectCopyInAllOnBlame;
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void detectMoveAndCopyInThisFileToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.DetectCopyInFileOnBlame = !AppSettings.DetectCopyInFileOnBlame;
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void displayAuthorFirstToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.BlameDisplayAuthorFirst = !AppSettings.BlameDisplayAuthorFirst;
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void showAuthorToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.BlameShowAuthor = !AppSettings.BlameShowAuthor;
+        if (!AppSettings.BlameShowAuthor)
+        {
+            AppSettings.BlameShowAuthorDate = true;
+        }
+
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void showAuthorDateToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.BlameShowAuthorDate = !AppSettings.BlameShowAuthorDate;
+        if (!AppSettings.BlameShowAuthorDate)
+        {
+            AppSettings.BlameShowAuthor = true;
+        }
+
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void showAuthorTimeToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.BlameShowAuthorTime = !AppSettings.BlameShowAuthorTime;
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void showLineNumbersToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.BlameShowLineNumbers = !AppSettings.BlameShowLineNumbers;
+        Blame.UpdateShowLineNumbers();
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void showOriginalFilePathToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.BlameShowOriginalFilePath = !AppSettings.BlameShowOriginalFilePath;
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void UpdateBlameMenuItems()
+    {
+        ignoreWhitespaceToolStripMenuItem.IsChecked = AppSettings.IgnoreWhitespaceOnBlame;
+        detectMoveAndCopyInThisFileToolStripMenuItem.IsChecked = AppSettings.DetectCopyInFileOnBlame;
+        detectMoveAndCopyInAllFilesToolStripMenuItem.IsChecked = AppSettings.DetectCopyInAllOnBlame;
+        displayAuthorFirstToolStripMenuItem.IsChecked = AppSettings.BlameDisplayAuthorFirst;
+        showAuthorAvatarToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthorAvatar;
+        showAuthorToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthor;
+        showAuthorDateToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthorDate;
+        showAuthorTimeToolStripMenuItem.IsChecked = AppSettings.BlameShowAuthorTime;
+        showAuthorTimeToolStripMenuItem.IsEnabled = AppSettings.BlameShowAuthorDate;
+        showLineNumbersToolStripMenuItem.IsChecked = AppSettings.BlameShowLineNumbers;
+        showOriginalFilePathToolStripMenuItem.IsChecked = AppSettings.BlameShowOriginalFilePath;
+    }
+
+    private void showAuthorAvatarToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        AppSettings.BlameShowAuthorAvatar = !AppSettings.BlameShowAuthorAvatar;
+        UpdateBlameMenuItems();
+        UpdateSelectedFileViewers(force: true);
+    }
+
+    private void GitcommandLogToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        FormGitCommandLog.ShowOrActivate(this);
     }
 
     private void TrackViewTask(Task task)

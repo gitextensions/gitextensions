@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -26,6 +26,8 @@ public partial class Dashboard : GitModuleControl
     private readonly TranslationString _openRepository = new("Open repository");
     private readonly TranslationString _translate = new("Translate");
 
+    public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
+
     public Dashboard()
     {
         InitializeComponent();
@@ -43,7 +45,6 @@ public partial class Dashboard : GitModuleControl
         InitializeComplete();
     }
 
-    public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
     public event EventHandler? ConfigureRepositoriesRequested;
     public event EventHandler? OpenRepositoryRequested;
 

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
@@ -38,6 +38,12 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
         }
     }
 
+    public IHotkeySettingsLoader HotkeySettingsReader
+        => _hotkeySettingsLoader ??= UICommands.GetRequiredService<IHotkeySettingsLoader>();
+
+    public IScriptsRunner ScriptsRunner
+        => _scriptsRunner ??= UICommands.GetRequiredService<IScriptsRunner>();
+
     public IGitUICommands UICommands
     {
         get => _uiCommands
@@ -54,17 +60,17 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
         }
     }
 
-    public IHotkeySettingsLoader HotkeySettingsReader
-        => _hotkeySettingsLoader ??= UICommands.GetRequiredService<IHotkeySettingsLoader>();
-
     /// <summary>Gets the module of the currently set <see cref="UICommands"/>.</summary>
     public IGitModule Module => UICommands.Module;
 
-    public IScriptsRunner ScriptsRunner
-        => _scriptsRunner ??= UICommands.GetRequiredService<IScriptsRunner>();
-
-    public virtual IScriptOptionsProvider GetScriptOptionsProvider()
-        => ScriptOptionsProviderBase.Default;
+    protected override bool ExecuteCommand(int command)
+    {
+        IScriptsManager scriptsManager = UICommands.GetRequiredService<IScriptsManager>();
+        ScriptInfo? script = scriptsManager.GetScript(command);
+        return script is not null
+            ? ScriptsRunner.RunScript(script, this, UICommands, GetScriptOptionsProvider())
+            : base.ExecuteCommand(command);
+    }
 
     public override bool ProcessHotkey(WinFormsShims.Keys keyData)
     {
@@ -101,14 +107,8 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceMa
         _scriptHotkeysLoaded = true;
     }
 
-    protected override bool ExecuteCommand(int command)
-    {
-        IScriptsManager scriptsManager = UICommands.GetRequiredService<IScriptsManager>();
-        ScriptInfo? script = scriptsManager.GetScript(command);
-        return script is not null
-            ? ScriptsRunner.RunScript(script, this, UICommands, GetScriptOptionsProvider())
-            : base.ExecuteCommand(command);
-    }
+    public virtual IScriptOptionsProvider GetScriptOptionsProvider()
+        => ScriptOptionsProviderBase.Default;
 
     protected override void OnApplicationActivated()
     {

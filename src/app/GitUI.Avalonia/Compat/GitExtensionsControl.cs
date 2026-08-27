@@ -16,17 +16,6 @@ public class GitExtensionsControl : TranslatedControl
     protected virtual IServiceProvider ServiceProvider
         => this.GetLogicalAncestors().OfType<IGitModuleForm>().First().UICommands;
 
-    protected bool HotkeysEnabled { get; set; }
-
-    protected IReadOnlyList<HotkeyCommand> Hotkeys => _hotkeys;
-
-    protected void LoadHotkeys(string hotkeySettingsName)
-    {
-        _hotkeys = HotkeysEnabled
-            ? ServiceProvider.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName) ?? []
-            : [];
-    }
-
     public virtual bool ProcessHotkey(WinFormsShims.Keys keyData)
     {
         // Avalonia maps modifier-only and unsupported key events to None; None is not an assignable hotkey.
@@ -37,6 +26,17 @@ public class GitExtensionsControl : TranslatedControl
 
         HotkeyCommand? hotkey = _hotkeys.FirstOrDefault(hotkey => hotkey.KeyData == keyData);
         return hotkey is not null && ExecuteCommand(hotkey.CommandCode);
+    }
+
+    protected IReadOnlyList<HotkeyCommand> Hotkeys => _hotkeys;
+
+    protected bool HotkeysEnabled { get; set; }
+
+    protected void LoadHotkeys(string hotkeySettingsName)
+    {
+        _hotkeys = HotkeysEnabled
+            ? ServiceProvider.GetRequiredService<IHotkeySettingsLoader>().LoadHotkeys(hotkeySettingsName) ?? []
+            : [];
     }
 
     public string GetShortcutKeyDisplayString<T>(T commandCode)

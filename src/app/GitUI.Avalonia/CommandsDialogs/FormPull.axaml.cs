@@ -19,7 +19,9 @@ namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormPull : GitExtensionsDialog
 {
-    private const string AllRemotes = "[ All ]";
+    private readonly TranslationString _areYouSureYouWantToRebaseMerge = new(
+        "The current commit is a merge." + Environment.NewLine
+        + "Are you sure you want to rebase this merge?");
     private const string BranchMergeSetting = "branch.{0}.merge";
     private const string PullFromRemoteToolTip = "Remote repository to pull from";
     private const string PullFromUrlToolTip = "Url to pull from";
@@ -27,10 +29,6 @@ public sealed partial class FormPull : GitExtensionsDialog
     private const string RemoteBranchToolTip = "Remote branch to pull. Leave empty to pull all branches.";
     private const string PruneToolTip = "Removes remote tracking branches that no longer exist on the remote (e.g. if someone else deleted them).\r\n\r\nActual command line (if checked): --prune --force\r\n";
     private const string PruneTagsToolTip = "Before fetching, remove any local tags that no longer exist on the remote if --prune is enabled.";
-
-    private readonly TranslationString _areYouSureYouWantToRebaseMerge = new(
-        "The current commit is a merge." + Environment.NewLine
-        + "Are you sure you want to rebase this merge?");
     private readonly TranslationString _areYouSureYouWantToRebaseMergeCaption = new("Rebase merge commit?");
     private readonly TranslationString _allMergeConflictSolvedQuestion = new("Are all merge conflicts solved? Do you want to commit?");
     private readonly TranslationString _allMergeConflictSolvedQuestionCaption = new("Conflicts solved");
@@ -74,6 +72,7 @@ public sealed partial class FormPull : GitExtensionsDialog
     private readonly TranslationString _buttonFetch = new("&Fetch");
     private readonly TranslationString _pullFetchPruneAllConfirmation = new(
         "Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?");
+    private const string AllRemotes = "[ All ]";
 
     private readonly IConfigFileRemoteSettingsManager _remotesManager = null!;
     private readonly IFullPathResolver _fullPathResolver = null!;

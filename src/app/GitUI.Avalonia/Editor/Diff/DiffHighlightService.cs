@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using AvaloniaEdit.Document;
 using GitCommands;
 using GitCommands.Git;
@@ -140,6 +140,11 @@ public abstract class DiffHighlightService : TextHighlightService
         }
     }
 
+    public override void AddTextHighlighting(TextDocument document)
+    {
+        // Avalonia framework constraint: the native background and text renderers consume the marker model directly.
+    }
+
     public override bool IsSearchMatch(DiffViewerLineNumberControl lineNumbersControl, int indexInText)
         => lineNumbersControl.GetLineInfo(indexInText)?.LineType is DiffLineType.Plus
             or DiffLineType.Minus
@@ -148,11 +153,6 @@ public abstract class DiffHighlightService : TextHighlightService
             or DiffLineType.PlusRight;
 
     public virtual string[] GetFullDiffPrefixes() => [];
-
-    public override void AddTextHighlighting(TextDocument document)
-    {
-        // Avalonia framework constraint: the native background and text renderers consume the marker model directly.
-    }
 
     private void SetText(ref string text)
     {

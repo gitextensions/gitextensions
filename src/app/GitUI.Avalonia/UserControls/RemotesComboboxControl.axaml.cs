@@ -4,9 +4,6 @@ namespace GitUI.UserControls;
 
 public sealed partial class RemotesComboboxControl : GitModuleControl
 {
-    private bool _allowMultiselect;
-    private bool _remotesLoaded;
-
     public RemotesComboboxControl()
     {
         InitializeComponent();
@@ -14,6 +11,8 @@ public sealed partial class RemotesComboboxControl : GitModuleControl
         InitializeComplete();
         AllowMultiselect = false;
     }
+
+    private bool _remotesLoaded;
 
     public string SelectedRemote
     {
@@ -26,6 +25,8 @@ public sealed partial class RemotesComboboxControl : GitModuleControl
             comboBoxRemotes.Text = value;
         }
     }
+
+    private bool _allowMultiselect;
 
     public bool AllowMultiselect
     {

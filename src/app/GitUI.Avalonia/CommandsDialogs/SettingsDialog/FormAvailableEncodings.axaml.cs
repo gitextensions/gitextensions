@@ -83,18 +83,6 @@ public sealed partial class FormAvailableEncodings : GitExtensionsFormBase
         ListIncludedEncodings.SelectedItem = encoding;
     }
 
-    private void ToRight_Click(object? sender, EventArgs e)
-    {
-        if (ListIncludedEncodings.SelectedItem is not Encoding encoding || IsRequiredEncoding(encoding))
-        {
-            return;
-        }
-
-        _includedEncodings.Remove(encoding);
-        InsertAvailableEncoding(encoding);
-        ListAvailableEncodings.SelectedItem = encoding;
-    }
-
     private void ButtonOk_Click(object? sender, EventArgs e)
     {
         AppSettings.AvailableEncodings.Clear();
@@ -111,6 +99,18 @@ public sealed partial class FormAvailableEncodings : GitExtensionsFormBase
     {
         DialogResult = WinFormsShims.DialogResult.Cancel;
         Close();
+    }
+
+    private void ToRight_Click(object? sender, EventArgs e)
+    {
+        if (ListIncludedEncodings.SelectedItem is not Encoding encoding || IsRequiredEncoding(encoding))
+        {
+            return;
+        }
+
+        _includedEncodings.Remove(encoding);
+        InsertAvailableEncoding(encoding);
+        ListAvailableEncodings.SelectedItem = encoding;
     }
 
     private void UpdateActions()

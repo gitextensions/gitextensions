@@ -544,15 +544,14 @@ public sealed class TextRange : ISegment
 /// <summary>Finds occurrences in an AvaloniaEdit text document without owning UI.</summary>
 public sealed class TextEditorSearcher : IDisposable
 {
-    private TextDocument? _document;
+    /// <summary>Occurs when the bounded scan region changes.</summary>
+    public event EventHandler? ScanRegionChanged;
     private TextEditor? _editor;
     private string? _lookForComparison;
     private ScanRegionRenderer? _regionRenderer;
     private int? _scanOffset;
     private int _scanLength;
-
-    /// <summary>Occurs when the bounded scan region changes.</summary>
-    public event EventHandler? ScanRegionChanged;
+    private TextDocument? _document;
 
     /// <summary>Gets or sets whether character casing must match.</summary>
     public bool MatchCase { get; set; }

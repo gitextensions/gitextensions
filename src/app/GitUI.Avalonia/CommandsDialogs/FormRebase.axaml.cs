@@ -247,15 +247,15 @@ public partial class FormRebase : GitExtensionsDialog
         }
     }
 
-    private void chkInteractive_CheckedChanged(object? sender, EventArgs e)
-    {
-        chkAutosquash.IsEnabled = chkInteractive.IsChecked == true;
-    }
-
     private void MergetoolClick(object? sender, EventArgs e)
     {
         UICommands.StartResolveConflictsDialog(this);
         EnableButtons();
+    }
+
+    private void chkInteractive_CheckedChanged(object? sender, EventArgs e)
+    {
+        chkAutosquash.IsEnabled = chkInteractive.IsChecked == true;
     }
 
     private void chkIgnoreDate_CheckedChanged(object? sender, EventArgs e)

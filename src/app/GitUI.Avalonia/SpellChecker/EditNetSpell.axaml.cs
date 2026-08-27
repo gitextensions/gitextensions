@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
@@ -41,6 +41,7 @@ public partial class EditNetSpell : GitModuleControl
     private readonly TranslationString _dictionaryText = new("Dictionary");
     private readonly TranslationString _markIllFormedLinesText = new("Mark ill formed lines");
     private readonly TranslationString _autoCompletionText = new("Provide auto completion");
+    private readonly Spelling _spelling;
 
     private static WordDictionary? _wordDictionary;
 
@@ -49,6 +50,10 @@ public partial class EditNetSpell : GitModuleControl
     private AsyncLazy<IEnumerable<AutoCompleteWord>?>? _autoCompleteListTask;
     private bool _autoCompleteWasUserActivated;
     private bool _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
+
+    private readonly DispatcherTimer _spellCheckTimer;
+    private readonly DispatcherTimer _autoCompleteTimer;
+    private readonly DispatcherTimer _autoCompleteToolTipTimer;
 
     // Avalonia routes navigation directly to the native list instead of sending virtual key strings.
     private readonly HashSet<Key> _keysToSendToAutoComplete =
@@ -60,11 +65,6 @@ public partial class EditNetSpell : GitModuleControl
         Key.End,
         Key.Home,
     ];
-
-    private readonly DispatcherTimer _spellCheckTimer;
-    private readonly DispatcherTimer _autoCompleteTimer;
-    private readonly DispatcherTimer _autoCompleteToolTipTimer;
-    private readonly Spelling _spelling;
     private readonly IWordAtCursorExtractor _wordAtCursorExtractor = new WordAtCursorExtractor();
     private int _contextMenuTextIndex = -1;
     private WinFormsShims.Font _textBoxFont;
@@ -82,10 +82,6 @@ public partial class EditNetSpell : GitModuleControl
             TextBox.FontWeight = value.Bold ? FontWeight.Bold : FontWeight.Normal;
         }
     }
-
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public WinFormsShims.Font MistakeFont { get; set; }
 
     // Avalonia's spelling and validation adorners do not change the TextBox undo stack.
     public bool IsUndoInProgress;
@@ -150,10 +146,6 @@ public partial class EditNetSpell : GitModuleControl
         InitializeComplete();
     }
 
-    public event EventHandler? TextChanged;
-
-    public event EventHandler? SelectionChanged;
-
     [AllowNull]
     public string Text
     {
@@ -164,6 +156,8 @@ public partial class EditNetSpell : GitModuleControl
             OnTextAssigned();
         }
     }
+
+    public event EventHandler? TextChanged;
 
     public void EvaluateForecolor()
     {
@@ -176,16 +170,55 @@ public partial class EditNetSpell : GitModuleControl
         TextAssigned?.Invoke(this, EventArgs.Empty);
     }
 
-    public string WatermarkText
+    public string Line(int line) => GetLines()[line];
+
+    public void ReplaceLine(int line, string withText)
     {
-        get => TextBox.PlaceholderText ?? string.Empty;
-        set => TextBox.PlaceholderText = value;
+        int caret = SelectionStart + SelectionLength;
+        (int start, int length) = GetLineBounds(line);
+        ReplaceText(start, length, withText);
+        CaretIndex = caret;
     }
+
+    public int LineLength(int line) => line < LineCount() ? Line(line).Length : 0;
 
     public int CaretIndex
     {
         get => TextBox.CaretIndex;
         set => TextBox.CaretIndex = Math.Clamp(value, 0, Text.Length);
+    }
+
+    public int LineCount() => GetLines().Length;
+
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public WinFormsShims.Font MistakeFont { get; set; }
+
+    public int CurrentColumn
+    {
+        get
+        {
+            int previousNewLine = CaretIndex == 0 ? -1 : Text.LastIndexOf('\n', CaretIndex - 1);
+            return CaretIndex - previousNewLine;
+        }
+    }
+
+    public int CurrentLine => Text.Take(CaretIndex).Count(character => character == '\n') + 1;
+
+    public event EventHandler? SelectionChanged;
+
+    private void EditNetSpellEnabledChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == IsEnabledProperty)
+        {
+            TextBox.IsReadOnly = !IsEnabled;
+        }
+    }
+
+    public string WatermarkText
+    {
+        get => TextBox.PlaceholderText ?? string.Empty;
+        set => TextBox.PlaceholderText = value;
     }
 
     public int SelectionStart
@@ -212,76 +245,14 @@ public partial class EditNetSpell : GitModuleControl
         set => TextBox.SelectedText = value ?? string.Empty;
     }
 
-    public int CurrentColumn
-    {
-        get
-        {
-            int previousNewLine = CaretIndex == 0 ? -1 : Text.LastIndexOf('\n', CaretIndex - 1);
-            return CaretIndex - previousNewLine;
-        }
-    }
-
-    public int CurrentLine => Text.Take(CaretIndex).Count(character => character == '\n') + 1;
-
-    public string Line(int line) => GetLines()[line];
-
-    public int LineLength(int line) => line < LineCount() ? Line(line).Length : 0;
-
-    public int LineCount() => GetLines().Length;
-
-    public void ReplaceLine(int line, string withText)
-    {
-        int caret = SelectionStart + SelectionLength;
-        (int start, int length) = GetLineBounds(line);
-        ReplaceText(start, length, withText);
-        CaretIndex = caret;
-    }
-
-    public void SelectAll() => TextBox.SelectAll();
-
     public bool Focus() => TextBox.Focus();
 
-    /// <summary>
-    /// Make sure this line is empty by inserting a newline at its start.
-    /// </summary>
-    public void EnsureEmptyLine(bool addBullet, int afterLine)
-    {
-        int lineLength = LineLength(afterLine);
-        if (lineLength > 0)
-        {
-            string bullet = addBullet ? " - " : string.Empty;
-            (int start, _) = GetLineBounds(afterLine);
-            string newLine = Environment.NewLine;
-            int newCursorPos = start + newLine.Length + bullet.Length + lineLength - 1;
-            ReplaceText(start, 0, newLine + bullet);
-            CaretIndex = newCursorPos;
-        }
-    }
+    protected DistributedSettings Settings
+        => TryGetUICommands(out IGitUICommands? commands)
+            ? commands.Module.GetEffectiveSettings() as DistributedSettings ?? AppSettings.SettingsContainer
+            : AppSettings.SettingsContainer;
 
-    public void CheckSpelling()
-    {
-        _spellCheckTimer.Stop();
-        SpellCheckAdorner.MisspelledWords.Clear();
-        SpellCheckAdorner.IllFormedLines.Clear();
-        SpellCheckAdorner.MarkFirstLineBlank = false;
-
-        string text = Text;
-        if (text.Length < 5000 && TryLoadDictionary())
-        {
-            try
-            {
-                _spelling.Text = text;
-                _spelling.SpellCheck();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex);
-            }
-        }
-
-        MarkLines();
-        SpellCheckAdorner.InvalidateVisual();
-    }
+    public void SelectAll() => TextBox.SelectAll();
 
     private static string DictionaryDirectory
     {
@@ -298,10 +269,40 @@ public partial class EditNetSpell : GitModuleControl
         }
     }
 
-    protected DistributedSettings Settings
-        => TryGetUICommands(out IGitUICommands? commands)
-            ? commands.Module.GetEffectiveSettings() as DistributedSettings ?? AppSettings.SettingsContainer
-            : AppSettings.SettingsContainer;
+    private void AddWordSuggestions(List<object> items, int textIndex)
+    {
+        if (!AppSettings.ProvideAutocompletion || !TryLoadDictionary())
+        {
+            return;
+        }
+
+        try
+        {
+            _spelling.Text = Text;
+            _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(textIndex);
+            if (_spelling.CurrentWord.Length == 0 || _spelling.TestWord())
+            {
+                return;
+            }
+
+            _spelling.Suggest();
+            (int start, int length) = _wordAtCursorExtractor.GetWordBounds(Text, textIndex);
+            string word = _spelling.CurrentWord;
+            foreach (string suggestion in _spelling.Suggestions)
+            {
+                items.Add(CreateMenuItem(suggestion, (_, _) => ReplaceText(start, length, suggestion), fontWeight: FontWeight.Bold));
+            }
+
+            items.Add(CreateMenuItem(_addToDictionaryText.Text, (_, _) => AddToDictionary(word)));
+            items.Add(CreateMenuItem(_ignoreWordText.Text, (_, _) => IgnoreWord(word)));
+            items.Add(CreateMenuItem(_removeWordText.Text, (_, _) => ReplaceText(start, length, string.Empty)));
+            items.Add(new Separator());
+        }
+        catch (Exception ex)
+        {
+            Trace.WriteLine(ex);
+        }
+    }
 
     private void EditNetSpellAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
@@ -316,34 +317,32 @@ public partial class EditNetSpell : GitModuleControl
         CancelAutoComplete();
     }
 
-    private void TextBoxTextChanged(object? sender, EventArgs e)
+    private void ToggleAutoCompletion()
     {
-        if (!_disableAutoCompleteTriggerOnTextUpdate)
+        if (!AppSettings.ProvideAutocompletion || Design.IsDesignMode)
         {
-            _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
-
-            // Reset when timer is already running
-            _autoCompleteTimer.Stop();
-            _autoCompleteTimer.Start();
+            CloseAutoComplete();
+            CancelAutoComplete();
+            return;
         }
 
-        SpellCheckAdorner.MisspelledWords.Clear();
-        SpellCheckAdorner.IllFormedLines.Clear();
-        SpellCheckAdorner.ForegroundRanges.Clear();
-        SpellCheckAdorner.InvalidateVisual();
-        TextChanged?.Invoke(this, EventArgs.Empty);
+        InitializeAutoCompleteWordsTask();
+        CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
+        AsyncLazy<IEnumerable<AutoCompleteWord>?> autoCompleteListTask = _autoCompleteListTask!;
 
-        if (Text.Length >= 4 && Settings.Detached().Dictionary is not "None")
+        ThreadHelper.FileAndForget(async () =>
         {
-            _spellCheckTimer.Stop();
-            _spellCheckTimer.Start();
-        }
+            IEnumerable<AutoCompleteWord>? words = await autoCompleteListTask.GetValueAsync(cancellationToken);
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            if (words is not null)
+            {
+                _spelling.AddAutoCompleteWords(words.Select(word => word.Word));
+            }
+        });
     }
 
-    private void TextBox_KeyDown(object? sender, KeyEventArgs e)
-    {
-        e.Handled = HandleTextBoxKeyDown(e.Key, e.KeyModifiers);
-    }
+    private void SpellingMisspelledWord(object? sender, SpellingEventArgs e)
+        => SpellCheckAdorner.MisspelledWords.Add(new TextPos(e.TextIndex, e.TextIndex + e.Word.Length));
 
     private bool HandleTextBoxKeyDown(Key key, KeyModifiers keyModifiers)
     {
@@ -400,63 +399,59 @@ public partial class EditNetSpell : GitModuleControl
         return false;
     }
 
-    private void TextBox_KeyPress(object? sender, TextInputEventArgs e)
+    public void CheckSpelling()
     {
-        if (string.IsNullOrEmpty(e.Text))
+        _spellCheckTimer.Stop();
+        SpellCheckAdorner.MisspelledWords.Clear();
+        SpellCheckAdorner.IllFormedLines.Clear();
+        SpellCheckAdorner.MarkFirstLineBlank = false;
+
+        string text = Text;
+        if (text.Length < 5000 && TryLoadDictionary())
+        {
+            try
+            {
+                _spelling.Text = text;
+                _spelling.SpellCheck();
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+            }
+        }
+
+        MarkLines();
+        SpellCheckAdorner.InvalidateVisual();
+    }
+
+    private void MarkLines()
+    {
+        if (!AppSettings.MarkIllFormedLinesInCommitMsg)
         {
             return;
         }
 
-        bool isSeparator = e.Text[^1].IsSeparator();
-        _disableAutoCompleteTriggerOnTextUpdate = isSeparator;
-        if (isSeparator)
+        string[] lines = GetLines();
+        int textIndex = 0;
+        for (int line = 0; line < lines.Length; line++)
         {
-            CloseAutoComplete();
-        }
-    }
-
-    private void TextBox_LostFocus(object? sender, RoutedEventArgs e)
-    {
-        // Avalonia raises LostFocus before the list receives focus, so defer the original ActiveControl check.
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (!AutoComplete.IsKeyboardFocusWithin)
+            int maximumLength = line switch
             {
-                CloseAutoComplete();
+                0 => 50,
+                1 => 0,
+                _ => 72,
+            };
+            if (lines[line].Length > maximumLength)
+            {
+                SpellCheckAdorner.IllFormedLines.Add(
+                    new TextPos(textIndex + maximumLength, textIndex + lines[line].Length));
             }
-        }, DispatcherPriority.Input);
-    }
 
-    private void TextBox_SelectionChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.Property == TextBox.CaretIndexProperty
-            || e.Property == TextBox.SelectionStartProperty
-            || e.Property == TextBox.SelectionEndProperty)
-        {
-            SelectionChanged?.Invoke(this, EventArgs.Empty);
+            textIndex += lines[line].Length + 1;
         }
+
+        SpellCheckAdorner.MarkFirstLineBlank = Text.Length > 1 && lines.Length > 0 && lines[0].Length == 0;
     }
-
-    private void TextBox_MouseDown(object? sender, PointerPressedEventArgs e)
-    {
-        if (e.GetCurrentPoint(TextBox).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
-        {
-            _contextMenuTextIndex = GetTextIndex(e.GetPosition(TextBox));
-        }
-    }
-
-    private void EditNetSpellEnabledChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.Property == IsEnabledProperty)
-        {
-            TextBox.IsReadOnly = !IsEnabled;
-        }
-    }
-
-    private void SpellCheckTimerTick(object? sender, EventArgs e) => CheckSpelling();
-
-    private void SpellingMisspelledWord(object? sender, SpellingEventArgs e)
-        => SpellCheckAdorner.MisspelledWords.Add(new TextPos(e.TextIndex, e.TextIndex + e.Word.Length));
 
     private void SpellCheckContextMenuOpening(object? sender, CancelEventArgs e)
     {
@@ -496,38 +491,70 @@ public partial class EditNetSpell : GitModuleControl
         SpellCheckContextMenu.ItemsSource = items;
     }
 
-    private void AddWordSuggestions(List<object> items, int textIndex)
+    private void SpellCheckTimerTick(object? sender, EventArgs e) => CheckSpelling();
+
+    private void TextBoxTextChanged(object? sender, EventArgs e)
     {
-        if (!AppSettings.ProvideAutocompletion || !TryLoadDictionary())
+        if (!_disableAutoCompleteTriggerOnTextUpdate)
+        {
+            _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
+
+            // Reset when timer is already running
+            _autoCompleteTimer.Stop();
+            _autoCompleteTimer.Start();
+        }
+
+        SpellCheckAdorner.MisspelledWords.Clear();
+        SpellCheckAdorner.IllFormedLines.Clear();
+        SpellCheckAdorner.ForegroundRanges.Clear();
+        SpellCheckAdorner.InvalidateVisual();
+        TextChanged?.Invoke(this, EventArgs.Empty);
+
+        if (Text.Length >= 4 && Settings.Detached().Dictionary is not "None")
+        {
+            _spellCheckTimer.Stop();
+            _spellCheckTimer.Start();
+        }
+    }
+
+    private void TextBox_KeyDown(object? sender, KeyEventArgs e)
+    {
+        e.Handled = HandleTextBoxKeyDown(e.Key, e.KeyModifiers);
+    }
+
+    private void PasteTextFromClipboard()
+    {
+        if (!WinFormsShims.Clipboard.ContainsText())
         {
             return;
         }
 
-        try
+        // insert only text with replace vertical tab to line feed
+        TextBox.SelectedText = WinFormsShims.Clipboard.GetText().Replace('\v', '\n');
+    }
+
+    private void TextBox_KeyPress(object? sender, TextInputEventArgs e)
+    {
+        if (string.IsNullOrEmpty(e.Text))
         {
-            _spelling.Text = Text;
-            _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(textIndex);
-            if (_spelling.CurrentWord.Length == 0 || _spelling.TestWord())
-            {
-                return;
-            }
-
-            _spelling.Suggest();
-            (int start, int length) = _wordAtCursorExtractor.GetWordBounds(Text, textIndex);
-            string word = _spelling.CurrentWord;
-            foreach (string suggestion in _spelling.Suggestions)
-            {
-                items.Add(CreateMenuItem(suggestion, (_, _) => ReplaceText(start, length, suggestion), fontWeight: FontWeight.Bold));
-            }
-
-            items.Add(CreateMenuItem(_addToDictionaryText.Text, (_, _) => AddToDictionary(word)));
-            items.Add(CreateMenuItem(_ignoreWordText.Text, (_, _) => IgnoreWord(word)));
-            items.Add(CreateMenuItem(_removeWordText.Text, (_, _) => ReplaceText(start, length, string.Empty)));
-            items.Add(new Separator());
+            return;
         }
-        catch (Exception ex)
+
+        bool isSeparator = e.Text[^1].IsSeparator();
+        _disableAutoCompleteTriggerOnTextUpdate = isSeparator;
+        if (isSeparator)
         {
-            Trace.WriteLine(ex);
+            CloseAutoComplete();
+        }
+    }
+
+    private void TextBox_SelectionChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == TextBox.CaretIndexProperty
+            || e.Property == TextBox.SelectionStartProperty
+            || e.Property == TextBox.SelectionEndProperty)
+        {
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -616,170 +643,79 @@ public partial class EditNetSpell : GitModuleControl
         CheckSpelling();
     }
 
-    private void ToggleAutoCompletion()
+    private void TextBox_LostFocus(object? sender, RoutedEventArgs e)
     {
-        if (!AppSettings.ProvideAutocompletion || Design.IsDesignMode)
+        // Avalonia raises LostFocus before the list receives focus, so defer the original ActiveControl check.
+        Dispatcher.UIThread.Post(() =>
         {
-            CloseAutoComplete();
-            CancelAutoComplete();
-            return;
-        }
-
-        InitializeAutoCompleteWordsTask();
-        CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
-        AsyncLazy<IEnumerable<AutoCompleteWord>?> autoCompleteListTask = _autoCompleteListTask!;
-
-        ThreadHelper.FileAndForget(async () =>
-        {
-            IEnumerable<AutoCompleteWord>? words = await autoCompleteListTask.GetValueAsync(cancellationToken);
-            await this.SwitchToMainThreadAsync(cancellationToken);
-            if (words is not null)
+            if (!AutoComplete.IsKeyboardFocusWithin)
             {
-                _spelling.AddAutoCompleteWords(words.Select(word => word.Word));
+                CloseAutoComplete();
             }
-        });
+        }, DispatcherPriority.Input);
     }
 
-    public void RefreshAutoCompleteWords()
+    private void CutMenuItemClick(object? sender, RoutedEventArgs e)
     {
-        if (AppSettings.ProvideAutocompletion)
-        {
-            InitializeAutoCompleteWordsTask();
-        }
+        TextBox.Cut();
+        CheckSpelling();
     }
 
-    private void InitializeAutoCompleteWordsTask()
+    private void CopyMenuItemdClick(object? sender, RoutedEventArgs e)
     {
-        CancelAutoComplete();
-        _autoCompleteCancellationTokenSource = new CancellationTokenSource();
-        CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
-        _autoCompleteListTask = new AsyncLazy<IEnumerable<AutoCompleteWord>?>(
-            async () =>
-            {
-                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
-                Task<IEnumerable<AutoCompleteWord>>[] subTasks =
-                    [.. _autoCompleteProviders.Select(provider => provider.GetAutoCompleteWordsAsync(cancellationToken))];
-                try
-                {
-                    IEnumerable<AutoCompleteWord>[] results = await Task.WhenAll(subTasks);
-                    return results.SelectMany(result => result).Distinct();
-                }
-                catch (OperationCanceledException)
-                {
-                    // WaitAll was cancelled
-                    return null;
-                }
-                catch (Exception)
-                {
-                    if (subTasks.Any(task => task.IsCanceled))
-                    {
-                        // At least one task was cancelled
-                        return null;
-                    }
-
-                    throw;
-                }
-            },
-            ThreadHelper.JoinableTaskFactory);
+        TextBox.Copy();
     }
 
-    public void AddAutoCompleteProvider(IAutoCompleteProvider autoCompleteProvider)
+    private void PasteMenuItemClick(object? sender, RoutedEventArgs e)
     {
-        _autoCompleteProviders.Add(autoCompleteProvider);
-    }
-
-    private string GetWordAtCursor()
-    {
-        return _wordAtCursorExtractor.Extract(Text, CaretIndex - 1);
-    }
-
-    private void CloseAutoComplete()
-    {
-        AutoComplete.IsVisible = false;
-        _autoCompleteWasUserActivated = false;
-    }
-
-    private void AcceptAutoComplete(AutoCompleteWord? completionWord = null)
-    {
-        completionWord ??= AutoComplete.SelectedItem as AutoCompleteWord;
-        if (completionWord is null)
+        if (!WinFormsShims.Clipboard.ContainsText())
         {
             return;
         }
 
-        string word = GetWordAtCursor();
-        int start = Math.Max(0, CaretIndex - word.Length);
-        TextBox.SelectionStart = start;
-        TextBox.SelectionEnd = CaretIndex;
-        TextBox.SelectedText = completionWord.Word;
-        CaretIndex = start + completionWord.Word.Length;
-        CloseAutoComplete();
+        PasteTextFromClipboard();
+        CheckSpelling();
     }
 
-    private void UpdateOrShowAutoComplete(bool calledByUser)
+    private void DeleteMenuItemClick(object? sender, RoutedEventArgs e)
     {
-        if (TopLevel.GetTopLevel(this) is null && !Design.IsDesignMode)
+        TextBox.SelectedText = string.Empty;
+        CheckSpelling();
+    }
+
+    private void SelectAllMenuItemClick(object? sender, RoutedEventArgs e)
+    {
+        TextBox.SelectAll();
+    }
+
+    public void ChangeTextColor(int line, int offset, int length, DrawingColor color)
+    {
+        // Avalonia TextBox has no per-range format API, so the native adorner draws the same foreground range.
+        (int lineStart, int lineLength) = GetLineBounds(line);
+        int start = Math.Clamp(lineStart + offset, lineStart, lineStart + lineLength);
+        int end = Math.Clamp(start + length, start, lineStart + lineLength);
+        SpellCheckAdorner.ForegroundRanges.Add(
+            new SpellCheckAdorner.TextColorRange(
+                new TextPos(start, end),
+                Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B)));
+        SpellCheckAdorner.InvalidateVisual();
+    }
+
+    /// <summary>
+    /// Make sure this line is empty by inserting a newline at its start.
+    /// </summary>
+    public void EnsureEmptyLine(bool addBullet, int afterLine)
+    {
+        int lineLength = LineLength(afterLine);
+        if (lineLength > 0)
         {
-            return;
+            string bullet = addBullet ? " - " : string.Empty;
+            (int start, _) = GetLineBounds(afterLine);
+            string newLine = Environment.NewLine;
+            int newCursorPos = start + newLine.Length + bullet.Length + lineLength - 1;
+            ReplaceText(start, 0, newLine + bullet);
+            CaretIndex = newCursorPos;
         }
-
-        if (_autoCompleteListTask is null || !AppSettings.ProvideAutocompletion)
-        {
-            return;
-        }
-
-        if (!_autoCompleteListTask.IsValueFactoryCompleted)
-        {
-            _autoCompleteListTask.GetValueAsync(_autoCompleteCancellationTokenSource.Token).Forget();
-
-            if (calledByUser)
-            {
-                ToolTip.SetTip(TextBox, "AutoComplete is not available yet (it is still parsing the changed files).");
-                ToolTip.SetIsOpen(TextBox, true);
-                _autoCompleteToolTipTimer.Stop();
-                _autoCompleteToolTipTimer.Start();
-            }
-
-            return;
-        }
-
-        _autoCompleteToolTipTimer.Stop();
-        ToolTip.SetIsOpen(TextBox, false);
-
-        string word = GetWordAtCursor();
-        if (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated)
-        {
-            CloseAutoComplete();
-            return;
-        }
-
-        IEnumerable<AutoCompleteWord>? autoCompleteList =
-            ThreadHelper.JoinableTaskFactory.Run(_autoCompleteListTask.GetValueAsync);
-        IReadOnlyList<AutoCompleteWord> list = autoCompleteList?
-            .Where(candidate => candidate.Matches(word))
-            .OrderBy(candidate => candidate.Word, StringComparer.CurrentCultureIgnoreCase)
-            .ToList()
-            ?? [];
-
-        if (list.Count == 0)
-        {
-            CloseAutoComplete();
-            return;
-        }
-
-        if (list.Count == 1 && calledByUser)
-        {
-            AcceptAutoComplete(list[0]);
-            return;
-        }
-
-        if (calledByUser)
-        {
-            _autoCompleteWasUserActivated = true;
-        }
-
-        ShowAutoCompleteList(list);
     }
 
     private void ShowAutoCompleteList(IReadOnlyList<AutoCompleteWord> list)
@@ -860,6 +796,153 @@ public partial class EditNetSpell : GitModuleControl
         TextBox.Focus();
     }
 
+    public void RefreshAutoCompleteWords()
+    {
+        if (AppSettings.ProvideAutocompletion)
+        {
+            InitializeAutoCompleteWordsTask();
+        }
+    }
+
+    private void InitializeAutoCompleteWordsTask()
+    {
+        CancelAutoComplete();
+        _autoCompleteCancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
+        _autoCompleteListTask = new AsyncLazy<IEnumerable<AutoCompleteWord>?>(
+            async () =>
+            {
+                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
+                Task<IEnumerable<AutoCompleteWord>>[] subTasks =
+                    [.. _autoCompleteProviders.Select(provider => provider.GetAutoCompleteWordsAsync(cancellationToken))];
+                try
+                {
+                    IEnumerable<AutoCompleteWord>[] results = await Task.WhenAll(subTasks);
+                    return results.SelectMany(result => result).Distinct();
+                }
+                catch (OperationCanceledException)
+                {
+                    // WaitAll was cancelled
+                    return null;
+                }
+                catch (Exception)
+                {
+                    if (subTasks.Any(task => task.IsCanceled))
+                    {
+                        // At least one task was cancelled
+                        return null;
+                    }
+
+                    throw;
+                }
+            },
+            ThreadHelper.JoinableTaskFactory);
+    }
+
+    public void AddAutoCompleteProvider(IAutoCompleteProvider autoCompleteProvider)
+    {
+        _autoCompleteProviders.Add(autoCompleteProvider);
+    }
+
+    private string GetWordAtCursor()
+    {
+        return _wordAtCursorExtractor.Extract(Text, CaretIndex - 1);
+    }
+
+    private void CloseAutoComplete()
+    {
+        AutoComplete.IsVisible = false;
+        _autoCompleteWasUserActivated = false;
+    }
+
+    private void AcceptAutoComplete(AutoCompleteWord? completionWord = null)
+    {
+        completionWord ??= AutoComplete.SelectedItem as AutoCompleteWord;
+        if (completionWord is null)
+        {
+            return;
+        }
+
+        string word = GetWordAtCursor();
+        int start = Math.Max(0, CaretIndex - word.Length);
+        TextBox.SelectionStart = start;
+        TextBox.SelectionEnd = CaretIndex;
+        TextBox.SelectedText = completionWord.Word;
+        CaretIndex = start + completionWord.Word.Length;
+        CloseAutoComplete();
+    }
+
+    private void AddNewLine()
+    {
+        TextBox.SelectedText = "\n";
+    }
+
+    private void UpdateOrShowAutoComplete(bool calledByUser)
+    {
+        if (TopLevel.GetTopLevel(this) is null && !Design.IsDesignMode)
+        {
+            return;
+        }
+
+        if (_autoCompleteListTask is null || !AppSettings.ProvideAutocompletion)
+        {
+            return;
+        }
+
+        if (!_autoCompleteListTask.IsValueFactoryCompleted)
+        {
+            _autoCompleteListTask.GetValueAsync(_autoCompleteCancellationTokenSource.Token).Forget();
+
+            if (calledByUser)
+            {
+                ToolTip.SetTip(TextBox, "AutoComplete is not available yet (it is still parsing the changed files).");
+                ToolTip.SetIsOpen(TextBox, true);
+                _autoCompleteToolTipTimer.Stop();
+                _autoCompleteToolTipTimer.Start();
+            }
+
+            return;
+        }
+
+        _autoCompleteToolTipTimer.Stop();
+        ToolTip.SetIsOpen(TextBox, false);
+
+        string word = GetWordAtCursor();
+        if (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated)
+        {
+            CloseAutoComplete();
+            return;
+        }
+
+        IEnumerable<AutoCompleteWord>? autoCompleteList =
+            ThreadHelper.JoinableTaskFactory.Run(_autoCompleteListTask.GetValueAsync);
+        IReadOnlyList<AutoCompleteWord> list = autoCompleteList?
+            .Where(candidate => candidate.Matches(word))
+            .OrderBy(candidate => candidate.Word, StringComparer.CurrentCultureIgnoreCase)
+            .ToList()
+            ?? [];
+
+        if (list.Count == 0)
+        {
+            CloseAutoComplete();
+            return;
+        }
+
+        if (list.Count == 1 && calledByUser)
+        {
+            AcceptAutoComplete(list[0]);
+            return;
+        }
+
+        if (calledByUser)
+        {
+            _autoCompleteWasUserActivated = true;
+        }
+
+        ShowAutoCompleteList(list);
+    }
+
     private void AutoComplete_Click(object? sender, PointerReleasedEventArgs e)
     {
         if (e.InitialPressMouseButton == MouseButton.Left)
@@ -881,61 +964,6 @@ public partial class EditNetSpell : GitModuleControl
         _autoCompleteTimer.Stop();
     }
 
-    private void AutoCompleteToolTipTimer_Tick(object? sender, EventArgs e)
-    {
-        ToolTip.SetIsOpen(TextBox, false);
-        _autoCompleteToolTipTimer.Stop();
-    }
-
-    private void PasteTextFromClipboard()
-    {
-        if (!WinFormsShims.Clipboard.ContainsText())
-        {
-            return;
-        }
-
-        // insert only text with replace vertical tab to line feed
-        TextBox.SelectedText = WinFormsShims.Clipboard.GetText().Replace('\v', '\n');
-    }
-
-    private void CutMenuItemClick(object? sender, RoutedEventArgs e)
-    {
-        TextBox.Cut();
-        CheckSpelling();
-    }
-
-    private void CopyMenuItemdClick(object? sender, RoutedEventArgs e)
-    {
-        TextBox.Copy();
-    }
-
-    private void PasteMenuItemClick(object? sender, RoutedEventArgs e)
-    {
-        if (!WinFormsShims.Clipboard.ContainsText())
-        {
-            return;
-        }
-
-        PasteTextFromClipboard();
-        CheckSpelling();
-    }
-
-    private void DeleteMenuItemClick(object? sender, RoutedEventArgs e)
-    {
-        TextBox.SelectedText = string.Empty;
-        CheckSpelling();
-    }
-
-    private void SelectAllMenuItemClick(object? sender, RoutedEventArgs e)
-    {
-        TextBox.SelectAll();
-    }
-
-    private void AddNewLine()
-    {
-        TextBox.SelectedText = "\n";
-    }
-
     private void ReplaceText(int start, int length, string replacement)
     {
         string text = Text;
@@ -950,46 +978,18 @@ public partial class EditNetSpell : GitModuleControl
         CheckSpelling();
     }
 
-    public void ChangeTextColor(int line, int offset, int length, DrawingColor color)
+    private void AutoCompleteToolTipTimer_Tick(object? sender, EventArgs e)
     {
-        // Avalonia TextBox has no per-range format API, so the native adorner draws the same foreground range.
-        (int lineStart, int lineLength) = GetLineBounds(line);
-        int start = Math.Clamp(lineStart + offset, lineStart, lineStart + lineLength);
-        int end = Math.Clamp(start + length, start, lineStart + lineLength);
-        SpellCheckAdorner.ForegroundRanges.Add(
-            new SpellCheckAdorner.TextColorRange(
-                new TextPos(start, end),
-                Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B)));
-        SpellCheckAdorner.InvalidateVisual();
+        ToolTip.SetIsOpen(TextBox, false);
+        _autoCompleteToolTipTimer.Stop();
     }
 
-    private void MarkLines()
+    private void TextBox_MouseDown(object? sender, PointerPressedEventArgs e)
     {
-        if (!AppSettings.MarkIllFormedLinesInCommitMsg)
+        if (e.GetCurrentPoint(TextBox).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
         {
-            return;
+            _contextMenuTextIndex = GetTextIndex(e.GetPosition(TextBox));
         }
-
-        string[] lines = GetLines();
-        int textIndex = 0;
-        for (int line = 0; line < lines.Length; line++)
-        {
-            int maximumLength = line switch
-            {
-                0 => 50,
-                1 => 0,
-                _ => 72,
-            };
-            if (lines[line].Length > maximumLength)
-            {
-                SpellCheckAdorner.IllFormedLines.Add(
-                    new TextPos(textIndex + maximumLength, textIndex + lines[line].Length));
-            }
-
-            textIndex += lines[line].Length + 1;
-        }
-
-        SpellCheckAdorner.MarkFirstLineBlank = Text.Length > 1 && lines.Length > 0 && lines[0].Length == 0;
     }
 
     private int GetTextIndex(Point point)
