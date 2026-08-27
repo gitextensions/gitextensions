@@ -131,7 +131,7 @@ public class HoverHighlightCalculatorTests
         testAccessor.RenderGraphToCache(range, toRowIndex: rowCount - 1, _rowHeight);
         testAccessor.HoverHighlight.IsDirty.Should().BeFalse();
 
-        testAccessor.HoverHighlight.SetHoverHighlight(main, tipRow);
+        Assert.Throws<OperationCanceledException>(() => testAccessor.HoverHighlight.SetHoverHighlight(main, tipRow));
         testAccessor.HoverHighlight.IsDirty.Should().BeFalse();
     }
 
