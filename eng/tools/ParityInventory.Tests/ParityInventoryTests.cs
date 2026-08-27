@@ -9,6 +9,77 @@ namespace GitExtensions.ParityInventory.Tests;
 public sealed class ParityInventoryTests
 {
     [Test]
+    public void Run_should_retain_comment_and_event_cascades_under_the_missing_handler_root()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private void Wire() => button.Click += HandleClick;
+
+                // Preserve the product action.
+                private void HandleClick(object sender, EventArgs e) { }
+            }
+            """);
+        fixture.WriteTwin("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private void Wire() { }
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Findings.Should().Contain(item =>
+            item.Code == "member.missing" && item.Path == "member/method:HandleClick");
+        report.Findings.Should().NotContain(item =>
+            item.Code == "comment.missing"
+            || item.Code == "event.handler.missing"
+            || item.Code == "event.wiring.missing");
+        report.DependentFindings.Should().HaveCount(3).And.OnlyContain(item =>
+            item.RootPath == "member/method:HandleClick");
+        report.DependentFindings.Select(item => item.Finding.Code).Should().BeEquivalentTo(
+            "comment.missing",
+            "event.handler.missing",
+            "event.wiring.missing");
+        report.Summary.FindingCount.Should().Be(report.Findings.Count);
+        report.Summary.DependentFindingCount.Should().Be(3);
+        report.Summary.TotalDifferenceCount.Should().Be(report.Findings.Count + 3);
+    }
+
+    [Test]
+    public void Run_should_keep_comment_and_event_findings_actionable_when_the_handler_exists()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private void Wire() => button.Click += HandleClick;
+
+                // Preserve the product action.
+                private void HandleClick(object sender, EventArgs e) { }
+            }
+            """);
+        fixture.WriteTwin("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private void Wire() { }
+                private void HandleClick(object sender, EventArgs e) { }
+            }
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.DependentFindings.Should().BeEmpty();
+        report.Findings.Should().Contain(item => item.Code == "comment.missing");
+        report.Findings.Should().Contain(item => item.Code == "event.wiring.missing");
+    }
+
+    [Test]
     public void Run_should_report_missing_partial_with_expected_twin_path()
     {
         using InventoryFixture fixture = new();

@@ -105,6 +105,7 @@ internal static class CommentInventoryComparer
                 .ThenBy(finding => finding.Path, StringComparer.Ordinal)
                 .ThenBy(finding => finding.OriginalValue, StringComparer.Ordinal)
                 .ToArray(),
+            DependentFindings = [],
             AdaptedComments = adaptations
                 .OrderBy(adaptation => adaptation.Path, StringComparer.Ordinal)
                 .ThenBy(adaptation => adaptation.OriginalText, StringComparer.Ordinal)
