@@ -1,6 +1,9 @@
 using Avalonia.Input;
 using GitUI.Compat;
+using Color = System.Drawing.Color;
 using Font = GitExtensions.Shims.WinForms.Font;
+using KeyEventHandler = System.EventHandler<Avalonia.Input.KeyEventArgs>;
+using MouseEventHandler = System.EventHandler<Avalonia.Input.PointerEventArgs>;
 
 namespace GitUI.Editor;
 
@@ -16,15 +19,15 @@ public class SelectedLineEventArgs : EventArgs
 
 public interface IFileViewer
 {
-    event EventHandler<PointerEventArgs> MouseMove;
+    event MouseEventHandler MouseMove;
     event EventHandler MouseEnter;
     event EventHandler MouseLeave;
     event EventHandler TextChanged;
     event EventHandler HScrollPositionChanged;
     event EventHandler VScrollPositionChanged;
     event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
-    event EventHandler<KeyEventArgs> KeyDown;
-    event EventHandler<KeyEventArgs> KeyUp;
+    event KeyEventHandler KeyDown;
+    event KeyEventHandler KeyUp;
     event EventHandler DoubleClick;
 
     void EnableScrollBars(bool enable);
@@ -35,7 +38,7 @@ public interface IFileViewer
     void SetText(string text, Action? openWithDifftool);
     void SetHighlighting(string syntax);
     void SetHighlightingForFile(string filename);
-    void HighlightLines(int startLine, int endLine, System.Drawing.Color color);
+    void HighlightLines(int startLine, int endLine, Color color);
     void ClearHighlighting();
     string GetSelectedText();
     int GetSelectionPosition();
