@@ -58,6 +58,63 @@ public sealed class ControlTreeReaderTests
 
     [Test]
     [Category("P8_6i")]
+    public void ReadPrimary_should_record_dpi_scaled_fonts_in_logical_units()
+    {
+        using Form form = new() { Font = new Font("Segoe UI", 9F, GraphicsUnit.Point) };
+        form.CreateControl();
+        IReadOnlyDictionary<object, ControlTreeReader.FontBaseline> baselines =
+            ControlTreeReader.CaptureFontBaselines(form);
+        form.Font = new Font("Segoe UI", 18F, GraphicsUnit.Point);
+        ControlTreeReader reader = new(form, dpi: 192, baselines);
+
+        CaptureFont? font = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Font;
+
+        font.Should().NotBeNull();
+        font!.EmSize.Should().Be(9m);
+        font.SizePoints.Should().Be(9m);
+        font.SizeDip.Should().Be(12m);
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_preserve_explicit_fonts_not_changed_by_dpi()
+    {
+        using Form form = new() { Font = new Font("Segoe UI", 9F, GraphicsUnit.Point) };
+        form.CreateControl();
+        IReadOnlyDictionary<object, ControlTreeReader.FontBaseline> baselines =
+            ControlTreeReader.CaptureFontBaselines(form);
+        ControlTreeReader reader = new(form, dpi: 192, baselines);
+
+        CaptureFont? font = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200)).Root.Font;
+
+        font.Should().NotBeNull();
+        font!.EmSize.Should().Be(9m);
+        font.SizePoints.Should().Be(9m);
+        font.SizeDip.Should().Be(12m);
+    }
+
+    [Test]
+    [Category("P8_6i")]
+    public void ReadPrimary_should_use_the_root_baseline_for_late_inherited_controls()
+    {
+        using Form form = new() { Font = new Font("Segoe UI", 9F, GraphicsUnit.Point) };
+        form.CreateControl();
+        IReadOnlyDictionary<object, ControlTreeReader.FontBaseline> baselines =
+            ControlTreeReader.CaptureFontBaselines(form);
+        form.Font = new Font("Segoe UI", 18F, GraphicsUnit.Point);
+        using Label lateChild = new() { Font = form.Font };
+        form.Controls.Add(lateChild);
+        ControlTreeReader reader = new(form, dpi: 192, baselines);
+
+        CaptureFont? font = reader.ReadPrimary(form, new Rectangle(0, 0, 300, 200))
+            .Root.Children.Single().Font;
+
+        font.Should().NotBeNull();
+        font!.SizePoints.Should().Be(9m);
+    }
+
+    [Test]
+    [Category("P8_6i")]
     public void ReadPrimary_should_record_the_form_client_inset_relative_to_the_full_window_surface()
     {
         using Form form = new()
