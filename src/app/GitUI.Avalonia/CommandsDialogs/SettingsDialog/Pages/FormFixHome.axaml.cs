@@ -52,6 +52,10 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
             return false;
         }
 
+        // Check whether the XDG_CONFIG_HOME is compatible (unset or matching) with "path" being tested as potential HOME directory
+        // and contains a git config file in the according subfolder
+        // (refer to https://git-scm.com/docs/git-config#Documentation/git-config.txt-XDGCONFIGHOMEgitconfig)
+        // Make issues with casing a "user problem" (case-insensitive equality would depend on file system type)
         string? xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
         return (string.IsNullOrEmpty(xdgConfigHome) || xdgConfigHome == xdgConfigDirectory)
             && CanReadFile(Path.Join(xdgConfigDirectory, "git", "config"));

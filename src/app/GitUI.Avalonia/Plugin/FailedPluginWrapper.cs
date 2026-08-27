@@ -25,6 +25,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
         _exception = loadingException.Demystify().ToString();
         try
         {
+            // Try to extract plugin name from exception
             Match match = PluginNameRegex.Match(_exception);
             if (match.Success)
             {

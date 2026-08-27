@@ -180,6 +180,9 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
 
     private GitArgumentBuilder CreateWorktreeCommand(IGitModule module, string relativePath, string newBranchOption)
     {
+        // https://git-scm.com/docs/git-worktree
+        // Get the default value, set if unset in config.
+        // Similar in DiffHighlightService.
         const string command = "worktree";
         GitCommandConfiguration commandConfiguration = new();
         IReadOnlyList<GitConfigItem> items = GitCommandConfiguration.Default.Get(command);

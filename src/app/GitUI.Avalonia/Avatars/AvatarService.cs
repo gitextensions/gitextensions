@@ -39,7 +39,11 @@ public static class AvatarService
         AvatarFallbackType? fallbackType,
         IAvatarDownloader? downloader = null)
     {
+        // initialize download only if needed (some options, like local providers, don't need a downloader)
+        // and use the downloader provided as parameter if possible.
         Lazy<IAvatarDownloader> lazyDownloader = new(() => downloader ?? new AvatarDownloader());
+
+        // build collection of (non-null) providers
         IAvatarProvider[] providers = [.. new[]
         {
             BuildMainProvider(),
@@ -47,6 +51,7 @@ public static class AvatarService
         }
         .WhereNotNull()];
 
+        // only create chained avatar overhead if really needed
         return providers.Length switch
         {
             0 => null,
@@ -70,6 +75,7 @@ public static class AvatarService
             };
         }
 
+        // Local methods to build requested main and fallback providers:
         IAvatarProvider? BuildMainProvider()
         {
             return provider switch

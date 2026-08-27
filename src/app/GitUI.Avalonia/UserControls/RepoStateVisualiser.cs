@@ -11,6 +11,7 @@ internal interface IRepoStateVisualiser
 
 internal sealed class RepoStateVisualiser : IRepoStateVisualiser
 {
+    // Images properties allocate on each call, so cache our images.
     internal static readonly (IImage, IBrush) Clean = (Images.RepoStateClean, Brushes.Lime);
     internal static readonly (IImage, IBrush) Dirty = (Images.RepoStateDirty, Brushes.LightSalmon);
     internal static readonly (IImage, IBrush) DirtySubmodules = (Images.RepoStateDirtySubmodules, Brushes.Orange);

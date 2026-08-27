@@ -16,11 +16,16 @@ internal sealed class GitConfigSettingsPageController
             return null;
         }
 
+        // the path can be either a folder or a file
+        // if the path is a folder but lacks the trailing slash, Path.GetDirectoryName will return the parent directory
+        // so we want to ensure the supplied directory is slash-terminated
         if (Directory.Exists(suppliedPath))
         {
             suppliedPath = suppliedPath.EnsureTrailingPathSeparator();
         }
 
+        // Path.GetDirectoryName returns directory information for path, or null if path denotes a root directory or is null.
+        // Returns Empty if path does not contain directory information.
         string initialDirectory = Path.GetDirectoryName(suppliedPath) ?? suppliedPath;
         return !string.IsNullOrWhiteSpace(initialDirectory) && Directory.Exists(initialDirectory)
             ? initialDirectory.EnsureTrailingPathSeparator()

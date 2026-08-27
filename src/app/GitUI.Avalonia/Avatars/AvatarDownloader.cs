@@ -33,6 +33,7 @@ public sealed class AvatarDownloader : IAvatarDownloader
         {
             (DateTime _, Task<byte[]?> task) = _downloads.GetOrAdd(imageUrl, _ => (DateTime.UtcNow, DownloadAsync(imageUrl)));
 
+            // If we discover a faulted task, remove it and try again
             if (task.IsFaulted || task.IsCanceled)
             {
                 _downloads.TryRemove(imageUrl, out _);
@@ -51,7 +52,10 @@ public sealed class AvatarDownloader : IAvatarDownloader
 
     private static async Task<byte[]?> DownloadAsync(Uri imageUrl)
     {
+        // Get onto background thread
         await TaskScheduler.Default;
+
+        // Limit the number of concurrent download requests
         await _downloadSemaphore.WaitAsync();
 
         try
@@ -67,6 +71,7 @@ public sealed class AvatarDownloader : IAvatarDownloader
         }
         catch (Exception ex)
         {
+            // catch IO errors
             Trace.WriteLine(ex.Message);
         }
         finally

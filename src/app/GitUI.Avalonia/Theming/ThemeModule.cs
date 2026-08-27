@@ -30,6 +30,7 @@ public static class ThemeModule
         }
         catch (ThemeException ex)
         {
+            // Not good, ColorHelper needs actual InvariantTheme to correctly transform colors.
             MessageBoxes.ShowError(null, $"Failed to load invariant theme: {ex.Message}"
                     + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
             return ThemeSettings.Default;

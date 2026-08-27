@@ -54,6 +54,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
             return command;
         }
 
+        // Replace "D:" with "/mnt/d"
         int colonIndex = command.IndexOf(':');
         if (colonIndex == (command[0] == '"' ? 2 : 1))
         {
@@ -125,6 +126,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         GlobalEditor.Text = CurrentSettings.GetValue("core.editor");
         txtCommitTemplatePath.Text = CurrentSettings.GetValue("commit.template");
 
+        // Hide credential helper because EffectiveGitConfigSettings can only return the last value
         GitConfigSettings? gitConfigSettings = TryGetGitConfigSettings(CurrentSettings);
         bool showCredentialHelper = gitConfigSettings is not null;
         lblCredentialHelper.IsVisible = showCredentialHelper;
@@ -169,6 +171,10 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
         _NO_TRANSLATE_cboDiffTool.PropertyChanged += cboDiffTool_PropertyChanged;
     }
 
+    /// <summary>
+        /// silently does not save some settings if Git is not configured correctly
+        /// (user notification is done elsewhere).
+        /// </summary>
     protected override void PageToSettings()
     {
         if (CurrentSettings is null)

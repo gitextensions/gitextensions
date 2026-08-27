@@ -1085,6 +1085,7 @@ public partial class FileStatusList : GitModuleControl
         }
     }
 
+    // Event handlers
     private void ItemContextMenu_Opening(object? sender, CancelEventArgs e)
     {
         if (sender is null || (SelectedFileStatusItem?.Item.IsStatusOnly ?? false))

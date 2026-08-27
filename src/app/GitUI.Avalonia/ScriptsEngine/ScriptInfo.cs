@@ -13,6 +13,7 @@ namespace GitUI.ScriptsEngine;
 // WARNING: This class is serialized to XML!
 public partial class ScriptInfo
 {
+    // Match a single '&' (lookahead to not be followed by a second '&')
     [GeneratedRegex("&(?!&)", RegexOptions.ExplicitCapture)]
     private static partial Regex MnemonicAmpersandRegex { get; }
 
@@ -38,6 +39,9 @@ public partial class ScriptInfo
 
     public int HotkeyCommandIdentifier { get; set; }
 
+    /// <summary>
+        /// Gets or sets the icon name.
+        /// </summary>
     public string? Icon
     {
         get;
@@ -48,6 +52,9 @@ public partial class ScriptInfo
         }
     }
 
+    /// <summary>
+        /// Gets or sets the path to the file containing the icon.
+        /// </summary>
     public string? IconFilePath
     {
         get;
@@ -58,8 +65,15 @@ public partial class ScriptInfo
         }
     }
 
+    /// <summary>
+        ///  Returns the name with mnemonic ampersands removed.
+        /// </summary>
     public string GetDisplayName() => MnemonicAmpersandRegex.Replace(Name!, "");
 
+    /// <summary>
+        /// Gets the associated bitmap.
+        /// </summary>
+        /// <returns>Bitmap image.</returns>
     public IImage? GetIcon()
     {
         if (_icon is not null)

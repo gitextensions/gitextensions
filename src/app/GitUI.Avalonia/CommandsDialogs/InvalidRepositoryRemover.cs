@@ -6,6 +6,12 @@ namespace GitUI.CommandsDialogs;
 
 public interface IInvalidRepositoryRemover
 {
+    /// <summary>
+        ///  Shows a dialog to remove the provided invalid repository, or all invalid repositories.
+        /// </summary>
+        /// <param name="repositoryPath">An invalid repository.</param>
+        /// <returns><see langword="true"/> if any repositories were removed; otherwise <see langword="false"/>.</returns>
+        /// <remarks>The method does not verify that the provided <paramref name="repositoryPath"/> is invalid.</remarks>
     bool ShowDeleteInvalidRepositoryDialog(string repositoryPath);
 }
 

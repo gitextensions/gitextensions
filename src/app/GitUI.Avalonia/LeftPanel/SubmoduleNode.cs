@@ -85,6 +85,7 @@ internal sealed class SubmoduleNode : Node
     {
         if (IsCurrent)
         {
+            // For the current module the module is already open, so launch a new instance
             LaunchGitExtensions();
         }
         else

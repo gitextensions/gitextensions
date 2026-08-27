@@ -11,6 +11,7 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     private Bitmap? _image1;
     private Bitmap? _image2;
     private bool _isExpanded;
+    ////public const string fastForwardHoverText = "Hover to see scenario when fast forward is possible.";
     private bool _isLoaded;
 
     public HelpImageDisplayUserControl()
@@ -73,6 +74,9 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         }
     }
 
+    /// <summary>
+        /// see also IsOnHoverShowImage2NoticeText.
+        /// </summary>
     public bool IsOnHoverShowImage2
     {
         get => _showImage2OnHover;
@@ -84,6 +88,9 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         }
     }
 
+    /// <summary>
+        /// only shown when IsOnHoverShowImage2 is true.
+        /// </summary>
     public string IsOnHoverShowImage2NoticeText
     {
         get => labelHoverText.Text ?? string.Empty;

@@ -57,6 +57,7 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsManager
 
     public IReadOnlyList<HotkeySettings> LoadSettings()
     {
+        // Get the default settings
         IReadOnlyList<HotkeySettings> defaultSettings = CreateDefaultSettings();
         HotkeySettings[]? loadedSettings = LoadSerializedSettings();
 

@@ -748,6 +748,7 @@ Inactive remote is completely invisible to git.");
         {
             HashSet<string> candidates = new(UserGitRemotes!.Count);
 
+            // TODO: Same thing for AzureDevOpsRemoteParser (that doesn't have the same url format!) ???
             GitHostingRemoteParser gitHostingRemoteParser = new();
             foreach (ConfigFileRemote remote in UserGitRemotes)
             {

@@ -121,6 +121,9 @@ public sealed partial class ChecklistSettingsPage : SettingsPageWithHeader
         InitializeComplete();
     }
 
+    /// <summary>
+        /// TODO: remove this direct dependency to another SettingsPage later when possible.
+        /// </summary>
     public SshSettingsPage? SshSettingsPage { get; set; }
 
     public override bool IsInstantSavePage => true;

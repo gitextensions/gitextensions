@@ -19,6 +19,25 @@ namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormPull : GitExtensionsDialog
 {
+    // Available: IJKQVXYZ
+    // A Fetch all tags
+    // B Browse...
+    // C Stash changes
+    // D Prune remote branches and tags
+    // E Rebase
+    // F Do not merge, only fetch
+    // G Manage remotes
+    // H Auto stash
+    // L Local branch
+    // M Merge
+    // N Fetch no tag
+    // O Remote branch
+    // P Prune remote branches
+    // R Remote
+    // S Solve conflicts
+    // T Follow tagopt
+    // U URL
+    // W Download full history
     private readonly TranslationString _areYouSureYouWantToRebaseMerge = new(
         "The current commit is a merge." + Environment.NewLine
         + "Are you sure you want to rebase this merge?");

@@ -484,6 +484,17 @@ internal sealed class MessageColumnProvider : ColumnProvider
         _aheadBehindDataByRemoteBranch = null;
     }
 
+    /// <summary>
+        ///  Returns a tuple of the ahead/behind indicator for a local or remote branch ref label
+        ///  and the <see cref="IGitRef.CompleteName"/> of the tracked (for a local ref) or tracking (for a remote ref) branch.
+        /// </summary>
+        /// <remarks>
+        ///  Uses <see cref="AheadBehindData.ToDisplay"/> for consistent formatting with the push button and left panel.
+        ///  When rendering a local branch's tracked remote as a virtual label, the perspective is inverted: what the local branch
+        ///  is ahead of the remote appears as the remote being behind, and vice versa — so <see cref="AheadBehindData.BehindCount"/>
+        ///  and <see cref="AheadBehindData.AheadCount"/> are swapped before formatting.
+        ///  Returns an empty display string for untracked refs or when the provider is unavailable.
+        /// </remarks>
     private (string Display, string TrackedCompleteName) GetAheadBehind(IGitRef gitRef, bool withCounts = true)
     {
         _aheadBehindDataByLocalBranch ??= _aheadBehindDataProvider?.GetData()
@@ -491,6 +502,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         if (gitRef.IsRemote)
         {
+            // Match the remote ref via AheadBehindData.RemoteRef, which holds the full refs/remotes/… name
+            // regardless of whether the remote branch is named differently from the local tracking branch.
             _aheadBehindDataByRemoteBranch ??= _aheadBehindDataByLocalBranch.Values
                 .DistinctBy(data => data.RemoteRef)
                 .ToFrozenDictionary(data => data.RemoteRef, data => data);
@@ -502,6 +515,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
         }
         else if (_aheadBehindDataByLocalBranch.TryGetValue(gitRef.Name, out AheadBehindData aheadBehind))
         {
+            // This info is displayed in a virtual remote ref label.
+            // From the remote ref's perspective, ahead/behind are swapped relative to the local branch.
             return (aheadBehind.ToDisplay(withCounts, reverse: true), aheadBehind.RemoteRef);
         }
 

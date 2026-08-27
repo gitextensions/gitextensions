@@ -194,6 +194,8 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         }
 
         bool found = DiffFiles.SelectFileOrFolder(relativePath, notify: false);
+
+        // Switch to view (and load file tree if not already done)
         focusView();
         if (found)
         {
@@ -231,6 +233,10 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         _taskManager.JoinPendingOperations();
     }
 
+    /// <summary>
+        ///  Gets whether this control is showing the file tree in contrast to showing diffs.
+        /// </summary>
+    // The RevisionDiff has a companion RevisionFileTree, but the latter has none.
     internal bool IsFileTreeMode => _revisionFileTree is null;
 
     public void Bind(
@@ -282,10 +288,19 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 
     private void RequestRefresh()
     {
+        // Request immediate update of commit count, no delay due to backoff
+        // If a file system change was triggered too, the requests should be merged
+        // (this will also update the count if only worktree<->index is changed)
+        // This may trigger a second RefreshArtificial()
         _refreshGitStatus?.Invoke();
         RefreshArtificial();
     }
 
+    /// <summary>
+        /// Show the file in the BlameViewer if Blame is visible.
+        /// </summary>
+        /// <param name="line">The line to start at.</param>
+        /// <returns>a task</returns>
     private async Task ShowSelectedFileBlameAsync(FileStatusItem selectedItem, int? line)
     {
         BlameControl.IsVisible = true;
@@ -364,6 +379,7 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
 
     private void DiffFiles_SelectedIndexChanged(object? sender, EventArgs e)
     {
+        // Switch to diff if the selection changes (but not for file tree mode)
         GitItemStatus? item = DiffFiles.SelectedGitItem;
         if (!IsFileTreeMode && _showBlame && item is not null && item.Name != _selectedBlameItem?.Name)
         {
@@ -406,6 +422,10 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
         OpenInFileTreeTab(requestBlame: true);
     }
 
+    /// <summary>
+        /// Open the selected item in the FileTree tab
+        /// </summary>
+        /// <param name="requestBlame">Request that Blame is shown in the FileTree</param>
     private void OpenInFileTreeTab(bool requestBlame)
     {
         if (_revisionFileTree is null)
