@@ -18630,27 +18630,28 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-26",
-          "commit": "e8d2ada0eac6b7b6653d2c0cb23ac90e349927f1",
+          "verifiedOn": "2026-08-27",
+          "commit": "3e6322e2a718d64ea11db9cc0502497b5ee566ae",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/inventory/windows/FileViewer.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/inventory/linux/FileViewer.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/windows/GitUI.Editor.FileViewer.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/linux/GitUI.Editor.FileViewer.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 590,
-          "note": "The byte-identical Windows/Linux two-part inventory retains 590 findings; exact source/member/comment identity remains open."
+          "findingCount": 432,
+          "note": "The byte-identical Windows/Linux schema-v4 inventory retains 432 ordinary findings after editor-owned search, line-number, highlight, change-navigation, continuous-scroll, and view-position members move back to FileViewerInternal; exact source/member/comment identity remains open."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-26",
-          "commit": "e8d2ada0eac6b7b6653d2c0cb23ac90e349927f1",
+          "verifiedOn": "2026-08-27",
+          "commit": "3e6322e2a718d64ea11db9cc0502497b5ee566ae",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/inventory/windows/FileViewer.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/tests/windows/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/windows/GitUI.Editor.FileViewer.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/tests/linux/focused.trx"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 590,
-          "note": "Existing viewer behavior, all fourteen configured source menu shortcuts, seven toolbar shortcut suffixes, and the source-named toolbar contract pass the 99-test Windows/Linux focused gate. The 590-finding inventory and exhaustive behavior audit remain open."
+          "findingCount": 432,
+          "note": "FileViewer delegates editor-owned behavior to the restored FileViewerInternal contract, including lazy search lifecycle, exact diff-prefix copy, continuous scrolling, and same-content caret restoration. The focused Windows/Linux gate passes; the 432-finding inventory and exhaustive behavior audit remain open."
         },
         "visual": {
           "status": "partial",
@@ -18762,25 +18763,28 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "3e6322e2a718d64ea11db9cc0502497b5ee566ae",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/windows/GitUI.Editor.FileViewerInternal.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/linux/GitUI.Editor.FileViewerInternal.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 92,
-          "note": "The P0.4 source inventory found structural/member differences."
+          "findingCount": 158,
+          "note": "The byte-identical schema-v4 inventory retains 158 ordinary findings after restoring the original owner and nearly all missing members. The remainder is dominated by common-member order, framework signatures/events, comments, native renderer helpers, and WinForms paint/dispose lifecycle differences."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "3e6322e2a718d64ea11db9cc0502497b5ee566ae",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/windows/GitUI.Editor.FileViewerInternal.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 162,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 158,
+          "note": "The restored internal owner implements the complete IFileViewer contract, lazy Find lifecycle, source-named line/highlight/continuous-scroll state, exact diff-prefix copy, change navigation, and same-content view-position restoration. Focused Windows/Linux tests pass; remaining source findings and exhaustive live behavior stay open."
         },
         "visual": {
           "status": "unverified",
@@ -19346,26 +19350,29 @@
       "complete": false,
       "axes": {
         "structural": {
-          "status": "verified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "status": "gap",
+          "verifiedOn": "2026-08-27",
+          "commit": "3e6322e2a718d64ea11db9cc0502497b5ee566ae",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/windows/GitUI.Editor.IFileViewer.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/linux/GitUI.Editor.IFileViewer.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 0,
-          "note": "The P0.4 inventory found no structural/member differences in its measured surface."
+          "findingCount": 4,
+          "note": "The complete source member set and order are restored. Four explicit signature findings remain for Avalonia pointer/key event arguments and the qualified portable color type."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-27",
+          "commit": "3e6322e2a718d64ea11db9cc0502497b5ee566ae",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/windows/GitUI.Editor.IFileViewer.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/tests/linux/focused.trx"
           ],
-          "platforms": [],
-          "findingCount": 0,
-          "note": "Static inventory is clean, but runtime success/error/async behavior is not fully exercised."
+          "platforms": ["windows", "linux"],
+          "findingCount": 4,
+          "note": "FileViewerInternal now implements the complete contract and focused Windows/Linux tests exercise search, text, selection, highlighting, line navigation, view-position restoration, and display options. Exhaustive interaction remains open."
         },
         "visual": {
           "status": "notApplicable",
@@ -30631,27 +30638,28 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-26",
-          "commit": "e8d2ada0eac6b7b6653d2c0cb23ac90e349927f1",
+          "verifiedOn": "2026-08-27",
+          "commit": "3e6322e2a718d64ea11db9cc0502497b5ee566ae",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/inventory/windows/FolderBrowserButton.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/inventory/linux/FolderBrowserButton.json"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/windows/GitUI.UserControls.FolderBrowserButton.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/linux/GitUI.UserControls.FolderBrowserButton.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 17,
-          "note": "The byte-identical Windows/Linux inventory retains the outer text, PathShowingControl, Click, and inner buttonBrowse identities; 17 generated AXAML and native event/type findings remain, so exact structural identity is open."
+          "findingCount": 4,
+          "note": "The byte-identical Windows/Linux schema-v4 inventory retains four ordinary generated-lifecycle/control-signature/comment findings and twelve visible accepted deviations. The exact _text and forwarded Click framework adaptations are pinned by source part, accessibility, signature, and rationale."
         },
         "functional": {
           "status": "partial",
-          "verifiedOn": "2026-08-26",
-          "commit": "e8d2ada0eac6b7b6653d2c0cb23ac90e349927f1",
+          "verifiedOn": "2026-08-27",
+          "commit": "3e6322e2a718d64ea11db9cc0502497b5ee566ae",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/inventory/windows/FolderBrowserButton.json",
-            "eng/avalonia/parity-evidence/P8.6i/repository-host-semantics-46/tests/windows/focused.trx"
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/inventory/windows/GitUI.UserControls.FolderBrowserButton.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/tests/windows/focused.trx",
+            "eng/avalonia/parity-evidence/P8.6i/embedded-controls-61/tests/linux/focused.trx"
           ],
           "platforms": ["windows", "linux"],
-          "findingCount": 17,
-          "note": "The outer text stays empty, the inner translated folder-icon button retains Browse and its source 100x25 minimum, PathShowingControl is updated, and a host-wired Click opens exactly one picker on Windows and Linux; exhaustive consumers and interaction remain open."
+          "findingCount": 4,
+          "note": "The outer text, inner translated folder-icon button, PathShowingControl update, and one-picker host Click route remain covered on Windows and Linux. The picker-owner TODO is framework-adapted; exhaustive consumers and interaction remain open."
         },
         "visual": {
           "status": "partial",

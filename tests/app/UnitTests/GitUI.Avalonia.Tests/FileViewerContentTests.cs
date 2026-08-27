@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
@@ -389,19 +390,37 @@ public sealed class FileViewerContentTests
     public void FileViewer_should_expose_portable_contract_and_navigate_change_blocks()
     {
         FileViewer viewer = new();
-        IFileViewer contract = viewer;
+        FileViewerInternal internalViewer = viewer.FindControl<FileViewerInternal>("internalFileViewer")!;
+        IFileViewer contract = internalViewer;
         viewer.ViewPatch("diff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1,4 +1,4 @@\n-old\n+new\n context\n@@ -8,2 +8,2 @@\n-before\n+after\n");
 
         contract.GetText().Should().Contain("+after");
-        viewer.GoToFirstChange();
+        internalViewer.GoToFirstChange(contextLines: 3);
         int firstBlock = viewer.TextEditor.TextArea.Caret.Line;
-        viewer.GoToNextChange();
+        internalViewer.GoToNextChange(contextLines: 3);
 
         firstBlock.Should().Be(5);
         viewer.TextEditor.TextArea.Caret.Line.Should().Be(9);
-        viewer.GoToPreviousChange();
+        internalViewer.GoToPreviousChange(contextLines: 3);
         viewer.TextEditor.TextArea.Caret.Line.Should().Be(5);
         contract.TotalNumberOfLines.Should().BeGreaterThan(9);
+    }
+
+    [AvaloniaTest]
+    public void FileViewerInternal_should_restore_the_caret_for_the_same_content_identity()
+    {
+        FileViewerInternal viewer = new();
+        string first = string.Join('\n', Enumerable.Range(1, 60).Select(line => $"line {line}"));
+        string refreshed = first.Replace("line 40", "line forty", StringComparison.Ordinal);
+
+        viewer.SetText(first, openWithDifftool: null, ViewMode.Text, useGitColoring: false, contentIdentification: "same.txt");
+        viewer.Editor.TextArea.Caret.Position = new TextViewPosition(40, 3);
+
+        bool restored = viewer.SetText(refreshed, openWithDifftool: null, ViewMode.Text, useGitColoring: false, contentIdentification: "same.txt");
+
+        restored.Should().BeTrue();
+        viewer.Editor.TextArea.Caret.Line.Should().Be(40);
+        viewer.Editor.TextArea.Caret.Column.Should().Be(3);
     }
 
     private FileViewer CreateViewer()

@@ -32,7 +32,7 @@ public partial class FolderBrowserButton : GitExtensionsControl
     public event EventHandler? Click;
 
     /// <summary>
-    /// Gets or sets the host-form text using the original WinForms mnemonic syntax.
+    /// Specifies the text label of the button.
     /// </summary>
     public string Text
     {
@@ -63,6 +63,7 @@ public partial class FolderBrowserButton : GitExtensionsControl
         // if we do not use the DirectoryInfo then a path with slashes instead of backslashes won't work
         directoryInfoPath ??= getter();
 
+        // TODO: do we need the owning TopLevel or is "this" ok?
         string? userSelectedPath = OsShellUtil.PickFolder((TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window)!, directoryInfoPath);
 
         if (userSelectedPath is not null)
