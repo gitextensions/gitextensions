@@ -27,6 +27,7 @@ internal static class InventoryRunner
         ReviewedFrameworkDeviationManifest manifest = ReviewedFrameworkDeviationManifest.Read(
             options.FrameworkAdaptationsFile);
         comparison = manifest.Apply(options.TypeName, original, twin, comparison);
+        comparison = DependentFindingClassifier.Classify(original, comparison);
         IReadOnlyList<FunctionalFinding> findings = comparison.Findings;
         InventoryReport report = new()
         {
@@ -37,6 +38,8 @@ internal static class InventoryRunner
             Summary = new InventorySummary
             {
                 FindingCount = findings.Count,
+                DependentFindingCount = comparison.DependentFindings.Count,
+                TotalDifferenceCount = findings.Count + comparison.DependentFindings.Count,
                 FindingsByCategory = findings
                     .GroupBy(finding => finding.Category, StringComparer.Ordinal)
                     .OrderBy(group => group.Key, StringComparer.Ordinal)
@@ -45,6 +48,7 @@ internal static class InventoryRunner
                 AcceptedFrameworkDeviationCount = comparison.AcceptedFrameworkDeviations.Count
             },
             Findings = findings,
+            DependentFindings = comparison.DependentFindings,
             AdaptedComments = comparison.AdaptedComments,
             AcceptedFrameworkDeviations = comparison.AcceptedFrameworkDeviations
         };

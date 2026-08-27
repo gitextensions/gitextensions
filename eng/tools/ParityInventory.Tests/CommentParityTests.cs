@@ -273,7 +273,7 @@ public sealed class CommentParityTests
 
         InventoryReport report = fixture.Run();
 
-        report.SchemaVersion.Should().Be(4);
+        report.SchemaVersion.Should().Be(5);
         report.Findings.Should().ContainSingle(item =>
             item.Code == "comment.missing"
             && item.OriginalValue == "TODO: this product rationale must still be ported.");
