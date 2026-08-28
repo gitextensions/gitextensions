@@ -1,5 +1,6 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.Loader;
 using GitUI;
 using Microsoft.VisualStudio.Composition;
 
@@ -96,7 +97,7 @@ public static class ManagedExtensibility
         {
             try
             {
-                Assembly assembly = Assembly.Load(file.FullName);
+                Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName);
 
                 // Eagerly validate that all types in the assembly can be resolved.
                 // Outdated plugins targeting an incompatible interface version succeed
@@ -182,7 +183,7 @@ public static class ManagedExtensibility
 
                     return fileDescription is not null && args.Name.StartsWith(fileDescription);
                 });
-            return dll is null ? null : Assembly.Load(dll);
+            return dll is null ? null : AssemblyLoadContext.Default.LoadFromAssemblyPath(dll);
         }
         catch
         {
