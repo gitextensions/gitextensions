@@ -239,9 +239,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         popStashToolStripMenuItem.Click += PopStashToolStripMenuItemClick;
         dropStashToolStripMenuItem.Click += DropStashToolStripMenuItemClick;
         rebaseOnToolStripMenuItem.SubmenuOpened += RebaseOnToolStripMenuItem_DropDownOpening;
-        rebaseToolStripMenuItem.Click += RebaseToolStripMenuItemClick;
-        rebaseInteractivelyToolStripMenuItem.Click += RebaseInteractivelyToolStripMenuItemClick;
-        rebaseWithAdvOptionsToolStripMenuItem.Click += RebaseWithAdvOptionsToolStripMenuItemClick;
+        rebaseToolStripMenuItem.Click += ToolStripItemClickRebaseBranch;
+        rebaseInteractivelyToolStripMenuItem.Click += OnRebaseInteractivelyClicked;
+        rebaseWithAdvOptionsToolStripMenuItem.Click += OnRebaseWithAdvOptionsClicked;
         resetCurrentBranchToHereToolStripMenuItem.Click += ResetCurrentBranchToHereToolStripMenuItemClick;
         resetAnotherBranchToHereToolStripMenuItem.Click += ResetAnotherBranchToHereToolStripMenuItemClick;
         resetChangesToolStripMenuItem.Click += ResetChangesToolStripMenuItemClick;
@@ -252,9 +252,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         revertCommitToolStripMenuItem.Click += RevertCommitToolStripMenuItemClick;
         cherryPickCommitToolStripMenuItem.Click += CherryPickCommitToolStripMenuItemClick;
         archiveRevisionToolStripMenuItem.Click += ArchiveRevisionToolStripMenuItemClick;
-        markRevisionAsBadToolStripMenuItem.Click += (_, _) => ContinueBisect(GitBisectOption.Bad);
-        markRevisionAsGoodToolStripMenuItem.Click += (_, _) => ContinueBisect(GitBisectOption.Good);
-        bisectSkipRevisionToolStripMenuItem.Click += (_, _) => ContinueBisect(GitBisectOption.Skip);
+        markRevisionAsBadToolStripMenuItem.Click += MarkRevisionAsBadToolStripMenuItemClick;
+        markRevisionAsGoodToolStripMenuItem.Click += MarkRevisionAsGoodToolStripMenuItemClick;
+        bisectSkipRevisionToolStripMenuItem.Click += BisectSkipRevisionToolStripMenuItemClick;
         stopBisectToolStripMenuItem.Click += StopBisectToolStripMenuItemClick;
         tsmiSelectInLeftPanel.Click += SelectInLeftPanel_Click;
         fixupCommitToolStripMenuItem.Click += FixupCommitToolStripMenuItemClick;
@@ -262,7 +262,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         amendCommitToolStripMenuItem.Click += AmendCommitToolStripMenuItemClick;
         editCommitToolStripMenuItem.Click += editCommitToolStripMenuItem_Click;
         rewordCommitToolStripMenuItem.Click += rewordCommitToolStripMenuItem_Click;
-        openCommitsWithDiffToolMenuItem.Click += (_, _) => DiffSelectedCommitsWithDifftool();
+        openCommitsWithDiffToolMenuItem.Click += diffSelectedCommitsMenuItem_Click;
         compareToBranchToolStripMenuItem.Click += CompareToBranchToolStripMenuItem_Click;
         compareWithCurrentBranchToolStripMenuItem.Click += CompareWithCurrentBranchToolStripMenuItem_Click;
         selectAsBaseToolStripMenuItem.Click += selectAsBaseToolStripMenuItem_Click;
@@ -270,7 +270,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         compareToWorkingDirectoryMenuItem.Click += compareToWorkingDirectoryMenuItem_Click;
         compareSelectedCommitsMenuItem.Click += compareSelectedCommitsMenuItem_Click;
         getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Click += getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click;
-        openBuildReportToolStripMenuItem.Click += (_, _) => OpenBuildReport(SelectedRevision);
+        openBuildReportToolStripMenuItem.Click += openBuildReportToolStripMenuItem_Click;
         openPullRequestPageStripMenuItem.Click += openPullRequestPageStripMenuItem_Click;
         HotkeysEnabled = true;
         UICommandsSourceSet += (_, _) =>
@@ -1491,12 +1491,12 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void RebaseToolStripMenuItemClick(object? sender, EventArgs e)
+    private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
     {
         StartRebase(interactive: false);
     }
 
-    private void RebaseInteractivelyToolStripMenuItemClick(object? sender, EventArgs e)
+    private void OnRebaseInteractivelyClicked(object sender, EventArgs e)
     {
         StartRebase(interactive: true);
     }
@@ -1523,11 +1523,15 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
-    private void RebaseWithAdvOptionsToolStripMenuItemClick(object? sender, EventArgs e)
+    private void OnRebaseWithAdvOptionsClicked(object sender, EventArgs e)
     {
         if (_rebaseOnTopOf is not null)
         {
-            UICommands.StartRebaseDialogWithAdvOptions(GetOwner(), _rebaseOnTopOf);
+            IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
+            string from = selectedRevisions.Count == 2
+                ? selectedRevisions[1].ObjectId.ToShortString()
+                : string.Empty;
+            UICommands.StartRebaseDialogWithAdvOptions(GetOwner(), _rebaseOnTopOf, from);
         }
     }
 
@@ -1688,6 +1692,21 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         ArgumentString command = Commands.ContinueBisect(bisectOption, revision.ObjectId);
         FormProcess.ShowDialog(GetOwner(), UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: false);
         ReloadCurrentView();
+    }
+
+    private void MarkRevisionAsBadToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        ContinueBisect(GitBisectOption.Bad);
+    }
+
+    private void MarkRevisionAsGoodToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        ContinueBisect(GitBisectOption.Good);
+    }
+
+    private void BisectSkipRevisionToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        ContinueBisect(GitBisectOption.Skip);
     }
 
     private void StopBisectToolStripMenuItemClick(object sender, EventArgs e)
@@ -1952,6 +1971,11 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
         }
     }
 
+    private void diffSelectedCommitsMenuItem_Click(object? sender, EventArgs e)
+    {
+        DiffSelectedCommitsWithDifftool();
+    }
+
     protected override bool ExecuteCommand(int command)
     {
         switch ((Command)command)
@@ -2006,6 +2030,11 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     private static void OpenBuildReport(GitRevision? revision)
         => OsShellUtil.OpenUrlInDefaultBrowser(revision?.BuildStatus?.Url);
+
+    private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        OpenBuildReport(SelectedRevision);
+    }
 
     private bool RenameSingleRef()
     {

@@ -15,7 +15,7 @@ internal static class InventoryComparer
         CompareMemberOrder(comparableOriginal, comparableTwin, findings);
         CompareSet(comparableOriginal.EventWiring, comparableTwin.EventWiring, EventKey, "events", "event.wiring", findings);
         CompareSet(comparableOriginal.EventHandlers, comparableTwin.EventHandlers, value => value, "events", "event.handler", findings);
-        CompareSet(comparableOriginal.Menus, comparableTwin.Menus, MenuKey, "menus", "menu.item", findings);
+        CompareMenuSequences(comparableOriginal.Menus, comparableTwin.Menus, findings);
         CompareSet(comparableOriginal.HotkeyCommandIds, comparableTwin.HotkeyCommandIds, value => value, "hotkeys", "hotkey.command", findings);
         CompareSet(comparableOriginal.Settings, comparableTwin.Settings, SettingKey, "settings", "setting", findings);
         CompareSet(comparableOriginal.TranslationStrings, comparableTwin.TranslationStrings, item => item.Name,
@@ -229,6 +229,74 @@ internal static class InventoryComparer
         }
     }
 
+    private static void CompareMenuSequences(
+        IReadOnlyList<MenuEntry> original,
+        IReadOnlyList<MenuEntry> twin,
+        List<FunctionalFinding> findings)
+    {
+        string[] parents = original.Select(item => item.Parent)
+            .Concat(twin.Select(item => item.Parent))
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(parent => parent, StringComparer.Ordinal)
+            .ToArray();
+        foreach (string parent in parents)
+        {
+            MenuEntry[] originalItems = original.Where(item => item.Parent == parent)
+                .OrderBy(item => item.Order).ToArray();
+            MenuEntry[] twinItems = twin.Where(item => item.Parent == parent)
+                .OrderBy(item => item.Order).ToArray();
+            int[,] lengths = new int[originalItems.Length + 1, twinItems.Length + 1];
+            for (int originalIndex = originalItems.Length - 1; originalIndex >= 0; originalIndex--)
+            {
+                for (int twinIndex = twinItems.Length - 1; twinIndex >= 0; twinIndex--)
+                {
+                    lengths[originalIndex, twinIndex] = MenuIdentity(originalItems[originalIndex]) == MenuIdentity(twinItems[twinIndex])
+                        ? lengths[originalIndex + 1, twinIndex + 1] + 1
+                        : Math.Max(lengths[originalIndex + 1, twinIndex], lengths[originalIndex, twinIndex + 1]);
+                }
+            }
+
+            int source = 0;
+            int target = 0;
+            while (source < originalItems.Length || target < twinItems.Length)
+            {
+                if (source < originalItems.Length
+                    && target < twinItems.Length
+                    && MenuIdentity(originalItems[source]) == MenuIdentity(twinItems[target]))
+                {
+                    source++;
+                    target++;
+                }
+                else if (target < twinItems.Length
+                         && (source == originalItems.Length
+                             || lengths[source, target + 1] > lengths[source + 1, target]))
+                {
+                    MenuEntry item = twinItems[target++];
+                    findings.Add(NewFinding(
+                        "menus",
+                        "menu.item.extra",
+                        $"menu.item/{MenuKey(item)}",
+                        $"Twin has extra menu item '{MenuKey(item)}'.",
+                        null,
+                        Format(item)));
+                }
+                else
+                {
+                    MenuEntry item = originalItems[source++];
+                    findings.Add(NewFinding(
+                        "menus",
+                        "menu.item.missing",
+                        $"menu.item/{MenuKey(item)}",
+                        $"Original menu item '{MenuKey(item)}' is missing from the twin.",
+                        Format(item),
+                        null));
+                }
+            }
+        }
+    }
+
+    private static string MenuIdentity(MenuEntry item) => $"{item.Kind}:{item.Name}";
+
     private static FunctionalFinding NewFinding(
         string category,
         string code,
@@ -253,7 +321,10 @@ internal static class InventoryComparer
 
     private static bool MemberSignaturesMatch(MemberEntry original, MemberEntry twin)
     {
-        if (string.Equals(original.Signature, twin.Signature, StringComparison.Ordinal))
+        if (string.Equals(
+                NormalizeSignatureForComparison(original.Signature),
+                NormalizeSignatureForComparison(twin.Signature),
+                StringComparison.Ordinal))
         {
             return true;
         }
@@ -266,6 +337,11 @@ internal static class InventoryComparer
                 UnqualifyFieldType(twin.Signature),
                 StringComparison.Ordinal);
     }
+
+    private static string NormalizeSignatureForComparison(string signature) =>
+        signature.Replace("( ", "(", StringComparison.Ordinal)
+            .Replace(" )", ")", StringComparison.Ordinal)
+            .Replace(" ,", ",", StringComparison.Ordinal);
 
     private static string UnqualifyFieldType(string signature)
     {

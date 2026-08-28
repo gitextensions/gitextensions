@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -546,7 +546,6 @@ internal sealed class WorkingDirectoryToolStripSplitButton : IconSplitButton, IT
     {
         TranslationUtils.AddTranslationItemsFromFields(TranslationCategory, this, translation);
         translation.AddTranslationItem(TranslationCategory, "tsmiFavouriteRepositories", "Text", "&Favorite repositories");
-        translation.AddTranslationItem(TranslationCategory, "closeToolStripMenuItem", "Text", "&Close (go to Dashboard)");
     }
 
     internal void TranslateControlItems(ITranslation translation)

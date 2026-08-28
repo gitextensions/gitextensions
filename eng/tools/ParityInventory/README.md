@@ -28,6 +28,11 @@ The report schema version is `4`. It contains:
 - direct WinForms/Avalonia lifecycle event equivalents (`SelectedIndexChanged`/
   `SelectionChanged`, `Resize`/`SizeChanged`, `Enter`/`GotFocus`, and `Leave`/`LostFocus`)
   compared by their shared semantic event without hiding handler or target differences;
+- WinForms-shaped Avalonia menu controls (`ToolStripMenuItem`, `ToolStripSeparator`, and
+  `ContextMenuStrip`) read from AXAML as native menu entries. Menu children are sequence-aligned,
+  so one genuine insertion or omission remains one finding instead of shifting every later item;
+- signature comparison ignores formatter-only spaces immediately inside parameter lists while
+  retaining parameter types, names, defaults, order, accessibility, and framework type changes;
 - `comment.missing`, `comment.changed`, and `comment.drifted` findings. Comment sequence
   alignment prevents one deletion from producing a cascade of false changes;
 - a separate `adaptedComments` collection for conservative WinForms-to-Avalonia framework-name
@@ -39,9 +44,9 @@ The report schema version is `4`. It contains:
   path/value, twin part, and rationale. A handwritten TODO, NOTE, HACK, issue link, or any other
   comment inside `InitializeComponent` remains a finding;
 - optional reviewed framework adaptations loaded from an explicit manifest. This channel accepts
-  only exact `member.extra` findings and pins the type name, finding code/path, twin source part,
-  declared accessibility, full twin signature, and a non-empty rationale. It has no wildcard
-  syntax. A removed finding,
+  exact member and native event facts and pins the type name, finding code/path, every applicable
+  source part/value, declared accessibility, full signature, and a non-empty rationale. It has no
+  wildcard syntax. A removed finding,
   renamed member, moved partial, or changed signature makes the run fail as stale instead of
   silently accepting drift. Accepted entries remain in `acceptedFrameworkDeviations`; they do not
   establish exact structural identity;
