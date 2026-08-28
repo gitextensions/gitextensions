@@ -157,21 +157,21 @@ public sealed partial class FormVerify : GitModuleForm
     {
         Warnings.ItemTemplate = new FuncDataTemplate<LostObject>(CreateLostObjectRow, supportsRecycling: false);
         Warnings.SelectionChanged += Warnings_SelectionChanged;
-        Warnings.DoubleTapped += (_, _) => ViewCurrentItem();
+        Warnings.DoubleTapped += Warnings_CellMouseDoubleClick;
         Warnings.KeyDown += Warnings_KeyDown;
         Warnings.AddHandler(PointerPressedEvent, Warnings_PointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
-        mnuLostObjects.Opening += (_, _) => UpdateContextMenuItems();
-        mnuLostObjectView.Click += (_, _) => ViewCurrentItem();
+        mnuLostObjects.Opening += mnuLostObjects_Opening;
+        mnuLostObjectView.Click += mnuLostObjectView_Click;
         mnuLostObjectsCreateTag.Click += mnuLostObjectsCreateTag_Click;
         mnuLostObjectsCreateBranch.Click += mnuLostObjectsCreateBranch_Click;
         copyHashToolStripMenuItem.Click += copyHashToolStripMenuItem_Click;
         copyParentHashToolStripMenuItem.Click += copyParentHashToolStripMenuItem_Click;
-        saveAsToolStripMenuItem.Click += (_, _) => SaveCurrentBlob();
+        saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
         ShowCommitsAndTags.IsCheckedChanged += ShowCommitsCheckedChanged;
         ShowOtherObjects.IsCheckedChanged += ShowOtherObjects_CheckedChanged;
-        NoReflogs.IsCheckedChanged += (_, _) => ReloadForOptionChange();
-        FullCheck.IsCheckedChanged += (_, _) => ReloadForOptionChange();
-        Unreachable.IsCheckedChanged += (_, _) => ReloadForOptionChange();
+        NoReflogs.IsCheckedChanged += NoReflogsCheckedChanged;
+        FullCheck.IsCheckedChanged += FullCheckCheckedChanged;
+        Unreachable.IsCheckedChanged += UnreachableCheckedChanged;
         columnIsLostObjectSelected.IsCheckedChanged += SelectionHeader_CheckedChanged;
         columnDate.PointerReleased += (_, e) => SortBy(nameof(LostObject.Date), e);
         columnType.PointerReleased += (_, e) => SortBy(nameof(LostObject.RawType), e);
@@ -313,6 +313,11 @@ public sealed partial class FormVerify : GitModuleForm
         UpdateLostObjects();
     }
 
+    private void mnuLostObjectView_Click(object? sender, EventArgs e)
+    {
+        ViewCurrentItem();
+    }
+
     private void mnuLostObjectsCreateTag_Click(object? sender, EventArgs e)
     {
         if (CurrentItem is not { ObjectType: LostObjectType.Commit } currentItem)
@@ -382,6 +387,21 @@ public sealed partial class FormVerify : GitModuleForm
         UpdateLostObjects();
     }
 
+    private void UnreachableCheckedChanged(object? sender, EventArgs e)
+    {
+        ReloadForOptionChange();
+    }
+
+    private void FullCheckCheckedChanged(object? sender, EventArgs e)
+    {
+        ReloadForOptionChange();
+    }
+
+    private void NoReflogsCheckedChanged(object? sender, EventArgs e)
+    {
+        ReloadForOptionChange();
+    }
+
     private void ShowCommitsCheckedChanged(object? sender, EventArgs e)
     {
         if (ShowCommitsAndTags.IsChecked != true && ShowOtherObjects.IsChecked != true)
@@ -419,6 +439,11 @@ public sealed partial class FormVerify : GitModuleForm
         {
             UpdateFilteredLostObjects();
         }
+    }
+
+    private void Warnings_CellMouseDoubleClick(object? sender, TappedEventArgs e)
+    {
+        ViewCurrentItem();
     }
 
     private void Warnings_SelectionChanged(object? sender, EventArgs e)
@@ -666,6 +691,11 @@ public sealed partial class FormVerify : GitModuleForm
         saveAsToolStripMenuItem.IsEnabled = isBlob;
     }
 
+    private void mnuLostObjects_Opening(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        UpdateContextMenuItems();
+    }
+
     private void Warnings_KeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
@@ -814,6 +844,11 @@ public sealed partial class FormVerify : GitModuleForm
         {
             ClipboardUtil.TrySetText(lostObject.Parent.ToString());
         }
+    }
+
+    private void saveAsToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        SaveCurrentBlob();
     }
 
     internal TestAccessor GetTestAccessor() => new(this);

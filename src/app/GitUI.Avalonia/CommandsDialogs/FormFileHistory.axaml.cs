@@ -1,27 +1,32 @@
 ﻿using System.Text;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Compat;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
 
 public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUpdate
 {
+    private const string FormBrowseName = "FormBrowse";
+
     private readonly TranslationString _buildReportTabCaption = new("Build Report");
     private readonly TranslationString _fileNotFound = new(" - Git could not identify the file {0}");
+    private readonly ICommitDataManager _commitDataManager;
     private readonly IFullPathResolver _fullPathResolver;
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
-    private readonly ObjectId _initialSelectedId = default;
 
     // Avalonia's designer constructs views before the application initializes ThreadHelper.
     private readonly TaskManager _taskManager = GitUI.Compat.DesignTimeTaskManager.Create();
@@ -36,6 +41,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     {
         InitializeComponent();
         _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+        _commitDataManager = new CommitDataManager(() => Module);
         ConfigureControls();
         InitializeComplete();
     }
@@ -53,10 +59,10 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     {
         InitializeComponent();
         _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+        _commitDataManager = new CommitDataManager(() => Module);
         ConfigureControls();
 
-        _initialSelectedId = revision?.ObjectId ?? default;
-        RevisionGrid.SelectedId = _initialSelectedId;
+        RevisionGrid.SelectedId = revision?.ObjectId ?? default;
 
         // Git paths always use forward slashes, including when the dialog is opened from
         // the file tree on Windows.
@@ -100,17 +106,21 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         RevisionGrid.RevisionContextMenu = FileHistoryContextMenu;
 
         RevisionGrid.SelectionChanged += FileChangesSelectionChanged;
+        RevisionGrid.DoubleTapped += FileChangesDoubleClick;
         tabControl1.SelectionChanged += TabControl1SelectedIndexChanged;
         CommitDiff.EscapePressed += Close;
         Diff.EscapePressed += Close;
         View.EscapePressed += Close;
         Blame.EscapePressed += Close;
+        Blame.CommandClick += new System.EventHandler<ResourceManager.CommandEventArgs>(Blame_CommandClick);
         Diff.ExtraDiffArgumentsChanged += (_, _) => UpdateSelectedFileViewers();
 
         FileHistoryContextMenu.Opening += FileHistoryContextMenuOpening;
         openWithDifftoolToolStripMenuItem.Click += OpenWithDifftoolToolStripMenuItem_Click;
         diffToolRemoteLocalStripMenuItem.Click += diffToolRemoteLocalStripMenuItem_Click;
         saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
+        revertCommitToolStripMenuItem.Click += revertCommitToolStripMenuItem_Click;
+        cherryPickThisCommitToolStripMenuItem.Click += cherryPickThisCommitToolStripMenuItem_Click;
         followFileHistoryToolStripMenuItem.Click += followFileHistoryToolStripMenuItem_Click;
         followFileHistoryRenamesToolStripMenuItem.Click += followFileHistoryRenamesToolStripMenuItem_Click;
         toolStripSplitLoad.Click += toolStripSplitLoad_ButtonClick;
@@ -204,9 +214,9 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         }
     }
 
-    private string? GetFileNameForRevision(GitRevision revision)
+    private string? GetFileNameForRevision(GitRevision rev)
     {
-        ObjectId objectId = revision.IsArtificial ? RevisionGrid.CurrentCheckout : revision.ObjectId;
+        ObjectId objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
         return RevisionGrid.GetRevisionFileName(FileName, objectId);
     }
 
@@ -308,6 +318,11 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         }
     }
 
+    private void FileChangesDoubleClick(object? sender, TappedEventArgs e)
+    {
+        RevisionGrid.ViewSelectedRevisions();
+    }
+
     private void OpenWithDifftoolToolStripMenuItem_Click(object? sender, EventArgs e)
         => OpenFilesWithDiffTool(RevisionDiffKind.DiffAB, sender);
 
@@ -378,18 +393,46 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
 
     private void showFullHistoryToolStripMenuItem_Click(object? sender, EventArgs e)
     {
-        AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
-        UpdateHistoryMenuItems();
-        LoadFileHistory();
+        ToggleFullHistoryFlag();
     }
 
     private void simplifyMergesToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        ToggleSimplifyMergesFlag();
+    }
+
+    private void ToggleSimplifyMergesFlag()
     {
         AppSettings.SimplifyMergesInFileHistory = !AppSettings.SimplifyMergesInFileHistory;
         UpdateHistoryMenuItems();
         if (AppSettings.FullHistoryInFileHistory)
         {
             LoadFileHistory();
+        }
+    }
+
+    private void ToggleFullHistoryFlag()
+    {
+        AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
+        UpdateHistoryMenuItems();
+        LoadFileHistory();
+    }
+
+    private void cherryPickThisCommitToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+        if (selectedRevisions.Count == 1)
+        {
+            UICommands.StartCherryPickDialog(this, selectedRevisions[0]);
+        }
+    }
+
+    private void revertCommitToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+        if (selectedRevisions.Count == 1)
+        {
+            UICommands.StartRevertCommitDialog(this, selectedRevisions[0]);
         }
     }
 
@@ -402,7 +445,11 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             selectedRevisions.Count == 1
             && selectedRevisions[0].ObjectId != ObjectId.WorkTreeId
             && File.Exists(_fullPathResolver.Resolve(FileName));
+        manipulateCommitToolStripMenuItem.IsEnabled =
+            selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
         saveAsToolStripMenuItem.IsEnabled = selectedRevisions.Count == 1;
+        copyToClipboardToolStripMenuItem.IsEnabled =
+            selectedRevisions.Count >= 1 && !selectedRevisions[0].IsArtificial;
     }
 
     private void UpdateHistoryMenuItems()
@@ -436,6 +483,36 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         UpdateLoadMenuItems();
     }
 
+    private void Blame_CommandClick(object? sender, CommandEventArgs e)
+    {
+        if (e.Command == "gotocommit")
+        {
+            Validates.NotNull(e.Data);
+            if (Module.TryResolvePartialCommitId(e.Data, out ObjectId commitId)
+                && !RevisionGrid.SetSelectedRevision(commitId))
+            {
+                MessageBoxes.RevisionFilteredInGrid(this, commitId);
+            }
+        }
+        else if (e.Command == "gotobranch" || e.Command == "gototag")
+        {
+            Validates.NotNull(e.Data);
+            CommitData? commit = _commitDataManager.GetCommitData(e.Data);
+            if (commit is not null && !RevisionGrid.SetSelectedRevision(commit.ObjectId))
+            {
+                MessageBoxes.RevisionFilteredInGrid(this, commit.ObjectId);
+            }
+        }
+        else if (e.Command == "navigatebackward")
+        {
+            RevisionGrid.NavigateBackward();
+        }
+        else if (e.Command == "navigateforward")
+        {
+            RevisionGrid.NavigateForward();
+        }
+    }
+
     private void followFileHistoryRenamesToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         AppSettings.FollowRenamesInFileHistoryExactOnly = !AppSettings.FollowRenamesInFileHistoryExactOnly;
@@ -462,6 +539,18 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         AppSettings.DetectCopyInFileOnBlame = !AppSettings.DetectCopyInFileOnBlame;
         UpdateBlameMenuItems();
         UpdateSelectedFileViewers(force: true);
+    }
+
+    public override void AddTranslationItems(ITranslation translation)
+    {
+        base.AddTranslationItems(translation);
+        AvaloniaTranslationUtils.AddTranslationItemsFromFields(FormBrowseName, ToolStripFilters, translation);
+    }
+
+    public override void TranslateItems(ITranslation translation)
+    {
+        base.TranslateItems(translation);
+        AvaloniaTranslationUtils.TranslateItemsFromFields(FormBrowseName, ToolStripFilters, translation);
     }
 
     private void displayAuthorFirstToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -563,4 +652,25 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
 
     bool IRevisionGridFileUpdate.SelectFileInRevision(ObjectId commitId, RelativePath ignoredFilename)
         => RevisionGrid.SetSelectedRevision(commitId);
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly FormFileHistory _form;
+
+        public TestAccessor(FormFileHistory form)
+        {
+            _form = form;
+        }
+
+        public RevisionGridControl RevisionGrid => _form.RevisionGrid;
+
+        public Editor.FileViewer FileViewer => _form.View;
+
+        public MenuItem ManipulateCommitMenuItem => _form.manipulateCommitToolStripMenuItem;
+
+        public void SelectViewTab() => _form.tabControl1.SelectedItem = _form.ViewTab;
+    }
 }

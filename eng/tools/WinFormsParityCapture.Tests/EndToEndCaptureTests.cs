@@ -386,6 +386,30 @@ public sealed class EndToEndCaptureTests
             .WithMessage("*declined to open*");
     }
 
+    [Test]
+    [Apartment(ApartmentState.STA)]
+    public void State_driver_should_open_and_restore_a_tool_strip_combo_box_popup()
+    {
+        using ToolStripComboBoxForm form = new();
+        form.Show();
+        Application.DoEvents();
+
+        using (ControlStateDriver driver = ControlStateDriver.Apply(
+                   form,
+                   new CaptureStatePlan
+                   {
+                       Id = "combo.open",
+                       Kind = CaptureStateKind.MenuOpen,
+                       TargetField = "_comboBox",
+                   }))
+        {
+            form.IsDropDownOpen.Should().BeTrue();
+            driver.RequiresScreenGrab.Should().BeTrue();
+        }
+
+        form.IsDropDownOpen.Should().BeFalse();
+    }
+
     [TestCase(true, false, 0, 48, 100, false, TestName = "Visible graph has not rendered")]
     [TestCase(true, true, 48, 48, 48, false, TestName = "Visible rows are still updating")]
     [TestCase(true, false, 48, 48, 100, false, TestName = "Rendered graph width has not been published")]
@@ -546,5 +570,21 @@ public sealed class EndToEndCaptureTests
             get => _target.Text;
             set => _target.Text = value;
         }
+    }
+
+    private sealed class ToolStripComboBoxForm : Form
+    {
+        private readonly ToolStripComboBox _comboBox = new();
+
+        public ToolStripComboBoxForm()
+        {
+            _comboBox.Items.AddRange(["Current working directory changes", "stash@{0}"]);
+            _comboBox.SelectedIndex = 0;
+            ToolStrip toolStrip = new();
+            toolStrip.Items.Add(_comboBox);
+            Controls.Add(toolStrip);
+        }
+
+        public bool IsDropDownOpen => _comboBox.DroppedDown;
     }
 }

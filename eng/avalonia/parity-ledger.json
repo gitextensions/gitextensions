@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+  "analyzedCommit": "111c890e315eaf6690ec004330cc44485e36201b",
   "axisOrder": [
     "structural",
     "functional",
@@ -6171,14 +6171,14 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormFileHistory.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormFileHistory.functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 69,
-          "note": "P8.6i progress 69 groups 7 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 69 actionable and 76 total differences for this mapping; every structural difference stays open."
+        "commit": "111c890e315eaf6690ec004330cc44485e36201b",
+        "evidence": [
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/windows/types/GitUI.CommandsDialogs.FormFileHistory.functional-findings.json",
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/linux/types/GitUI.CommandsDialogs.FormFileHistory.functional-findings.json"
+        ],
+        "platforms": [],
+        "findingCount": 22,
+        "note": "P8.6i progress 77 restores the original revision-grid, blame-navigation, manipulate, revert, cherry-pick, history-toggle, translation-context, and test-accessor contracts. The byte-identical Windows/Linux schema-v5 inventory records 22 actionable and 22 total differences for this mapping; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",
@@ -8150,14 +8150,14 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormStash.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormStash.functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 30,
-          "note": "P8.6i progress 69 groups 14 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 30 actionable and 44 total differences for this mapping; every structural difference stays open."
+        "commit": "111c890e315eaf6690ec004330cc44485e36201b",
+        "evidence": [
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/windows/types/GitUI.CommandsDialogs.FormStash.functional-findings.json",
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/linux/types/GitUI.CommandsDialogs.FormStash.functional-findings.json"
+        ],
+        "platforms": [],
+        "findingCount": 21,
+        "note": "P8.6i progress 77 restores the original lifecycle boundaries, Escape priority, dialog result, diff-option sender, drop-down sizing, close persistence, and common-member order. The byte-identical Windows/Linux schema-v5 inventory records 21 actionable and 27 total differences for this mapping; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",
@@ -8282,14 +8282,14 @@
         "structural": {
           "status": "verified",
           "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 87,
-          "note": "P8.6i progress 69 groups 21 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 87 actionable and 108 total differences for this mapping; every structural difference stays open."
+        "commit": "111c890e315eaf6690ec004330cc44485e36201b",
+        "evidence": [
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/windows/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json",
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/linux/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json"
+        ],
+        "platforms": [],
+        "findingCount": 29,
+        "note": "P8.6i progress 77 corrects this mapping to the exact original source linked by the portable project. Its linked partial remains structurally exact; the evidence file's 29 actionable and 34 total differences belong to the owning FormVerify type aggregate, not this linked partial."
         },
         "functional": {
           "status": "verified",
@@ -8348,14 +8348,14 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 87,
-          "note": "P8.6i progress 69 groups 21 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 87 actionable and 108 total differences for this mapping; every structural difference stays open."
+        "commit": "111c890e315eaf6690ec004330cc44485e36201b",
+        "evidence": [
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/windows/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json",
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/linux/types/GitUI.CommandsDialogs.FormVerify.functional-findings.json"
+        ],
+        "platforms": [],
+        "findingCount": 29,
+        "note": "P8.6i progress 77 restores the original warnings, context-menu, save, and option-handler identities while retaining native Avalonia event substitutions as exact reviewed adaptations. The byte-identical Windows/Linux schema-v5 inventory records 29 actionable and 34 total differences for this mapping; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",
@@ -20344,15 +20344,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "9b5ea806a03e1fbdf44911848adca44563b92bac",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-signatures-65/sweep/windows/types/GitUI.GitUICommands.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-signatures-65/sweep/linux/types/GitUI.GitUICommands.functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 78,
-          "note": "P8.6i progress 65 restores safely anchored source comments and moves exact native-control field type substitutions into pinned, visible reviewed-deviation evidence. The byte-identical Windows/Linux schema-v4 inventory records 78 ordinary findings for this mapping; every remaining structural difference stays open."
+        "verifiedOn": "2026-08-28",
+        "commit": "111c890e315eaf6690ec004330cc44485e36201b",
+        "evidence": [
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/windows/types/GitUI.GitUICommands.functional-findings.json",
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/linux/types/GitUI.GitUICommands.functional-findings.json"
+        ],
+        "platforms": [],
+        "findingCount": 43,
+        "note": "P8.6i progress 77 restores the original working-directory guard and format-patch, gitignore, revert/reset, clone/init, difftool, and remote-command routes with source-shaped wrappers and a test accessor. The byte-identical Windows/Linux schema-v5 inventory records 43 actionable and 43 total differences for this mapping; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",
@@ -24292,15 +24292,15 @@
       "axes": {
         "structural": {
           "status": "gap",
-          "verifiedOn": "2026-08-27",
-          "commit": "1c1fe80f6436123fc2403d2cafc85cf0ea955d31",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/windows-final/types/GitUI.MessageBoxes.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/framework-contracts-67/sweep/linux/types/GitUI.MessageBoxes.functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 16,
-          "note": "P8.6i progress 67 classifies exact generated lifecycle omissions, framework-only member seams, and approved framework signature substitutions while restoring original handler identities. The byte-identical Windows/Linux schema-v4 inventory records 16 ordinary findings for this mapping; every remaining structural difference stays open."
+        "verifiedOn": "2026-08-28",
+        "commit": "111c890e315eaf6690ec004330cc44485e36201b",
+        "evidence": [
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/windows/types/GitUI.MessageBoxes.functional-findings.json",
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/linux/types/GitUI.MessageBoxes.functional-findings.json"
+        ],
+        "platforms": [],
+        "findingCount": 10,
+        "note": "P8.6i progress 77 restores the translated invalid-Git-directory message boundary consumed by GitUICommands. The byte-identical Windows/Linux schema-v5 inventory records 10 actionable and 10 total differences for this mapping; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",
@@ -28945,14 +28945,14 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
-          "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.Blame.BlameControl.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.Blame.BlameControl.functional-findings.json"
-          ],
-          "platforms": [],
-          "findingCount": 46,
-          "note": "P8.6i progress 69 groups 8 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 46 actionable and 54 total differences for this mapping; every structural difference stays open."
+        "commit": "111c890e315eaf6690ec004330cc44485e36201b",
+        "evidence": [
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/windows/types/GitUI.Blame.BlameControl.functional-findings.json",
+          "eng/avalonia/parity-evidence/P8.6i/command-surfaces-77/final/linux/types/GitUI.Blame.BlameControl.functional-findings.json"
+        ],
+        "platforms": [],
+        "findingCount": 24,
+        "note": "P8.6i progress 77 restores the original CommandClick event boundary and forwards CommitInfo command navigation through the same handler identity. The byte-identical Windows/Linux schema-v5 inventory records 24 actionable and 30 total differences for this mapping; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",

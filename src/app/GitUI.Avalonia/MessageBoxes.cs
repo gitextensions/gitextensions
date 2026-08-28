@@ -18,6 +18,8 @@ public class MessageBoxes : Translate
 
     private readonly TranslationString _failedToRunShell = new("Failed to run shell");
 
+    private readonly TranslationString _notValidGitDirectory = new("The current directory is not a valid git repository.");
+
     private readonly TranslationString _unresolvedMergeConflictsCaption = new("Merge conflicts");
     private readonly TranslationString _unresolvedMergeConflicts = new("There are unresolved merge conflicts, solve conflicts now?");
 
@@ -66,6 +68,9 @@ public class MessageBoxes : Translate
     public static void FailedToRunShell(WinFormsShims.IWin32Window? owner, string shell, Exception ex)
         => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
                             + $"{Instance._reason.Text}: {ex.Message}");
+
+    public static void NotValidGitDirectory(WinFormsShims.IWin32Window? owner)
+        => ShowError(owner, Instance._notValidGitDirectory.Text);
 
     public static void SubmoduleDirectoryDoesNotExist(WinFormsShims.IWin32Window? owner, string directory, string submoduleName)
         => ShowError(owner, string.Format(Instance._submoduleDirectoryDoesNotExist.Text, directory, submoduleName), Instance._cannotOpenSubmoduleCaption.Text);

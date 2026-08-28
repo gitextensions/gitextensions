@@ -4,6 +4,7 @@ using System.Text;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using GitCommands;
@@ -92,6 +93,36 @@ public sealed class StashTests
     }
 
     [AvaloniaTest]
+    public void FormStash_should_cancel_on_escape_when_no_child_surface_consumes_it()
+    {
+        FormStash form = new();
+
+        form.RaiseEvent(new KeyEventArgs
+        {
+            RoutedEvent = InputElement.KeyDownEvent,
+            Key = Key.Escape
+        });
+
+        form.DialogResult.Should().Be(GitExtensions.Shims.WinForms.DialogResult.Cancel);
+    }
+
+    [AvaloniaTest]
+    public void FormStash_should_close_the_stash_dropdown_before_cancelling_on_escape()
+    {
+        FormStash form = new();
+        form.Stashes.IsDropDownOpen = true;
+
+        form.RaiseEvent(new KeyEventArgs
+        {
+            RoutedEvent = InputElement.KeyDownEvent,
+            Key = Key.Escape
+        });
+
+        form.Stashes.IsDropDownOpen.Should().BeFalse();
+        form.DialogResult.Should().Be(GitExtensions.Shims.WinForms.DialogResult.None);
+    }
+
+    [AvaloniaTest]
     public async Task FormStash_should_show_worktree_changes_and_stash_selected_files()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands();
@@ -103,7 +134,10 @@ public sealed class StashTests
 
         FormStash form = new(commands);
         form.Show();
-        await WaitUntilAsync(() => !form.Loading.IsVisible && form.Stashed.GitItemStatuses.Count == 2);
+        await WaitUntilAsync(() =>
+            !form.Loading.IsVisible
+            && form.Stashed.GitItemStatuses.Count == 2
+            && form.StashSelectedFiles.IsEnabled);
 
         form.Stashes.SelectedIndex.Should().Be(0);
         form.StashMessage.IsReadOnly.Should().BeFalse();
@@ -135,7 +169,10 @@ public sealed class StashTests
 
         FormStash form = new(commands) { ManageStashes = true };
         form.Show();
-        await WaitUntilAsync(() => !form.Loading.IsVisible && form.Stashed.GitItemStatuses.Count == 1);
+        await WaitUntilAsync(() =>
+            !form.Loading.IsVisible
+            && form.Stashed.GitItemStatuses.Count == 1
+            && form.View.TextEditor.Text.Contains("diff --git", StringComparison.Ordinal));
 
         form.Stashes.SelectedIndex.Should().Be(1);
         form.StashMessage.Text.Should().Be("saved work");
