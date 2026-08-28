@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Config;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
@@ -203,9 +203,9 @@ public class MessageBoxes : Translate
         => Show(owner, text, caption, WinFormsShims.MessageBoxButtons.YesNo, icon, defaultButton) == WinFormsShims.DialogResult.Yes;
 
     /// <summary>
-        ///  Shows a message box with the specified parameters.
-        /// </summary>
-        /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
+    ///  Shows a message box with the specified parameters.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
     public static WinFormsShims.DialogResult Show(
         WinFormsShims.IWin32Window? owner,
         string text,
@@ -223,9 +223,9 @@ public class MessageBoxes : Translate
         => GitExtensions.Extensibility.MessageBoxes.Show(owner, text, caption, buttons);
 
     /// <summary>
-        ///  Shows a message box without an explicit owner window.
-        /// </summary>
-        /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
+    ///  Shows a message box without an explicit owner window.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
     public static WinFormsShims.DialogResult Show(
         string text,
         string caption,
@@ -234,6 +234,10 @@ public class MessageBoxes : Translate
         WinFormsShims.MessageBoxDefaultButton defaultButton)
         => GitExtensions.Extensibility.MessageBoxes.Show(text, caption, buttons, icon, defaultButton);
 
+    /// <summary>
+    ///  Shows a message box without an explicit owner window.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
     public static WinFormsShims.DialogResult Show(
         string text,
         string caption,
@@ -242,9 +246,9 @@ public class MessageBoxes : Translate
         => GitExtensions.Extensibility.MessageBoxes.Show(text, caption, buttons, icon);
 
     /// <summary>
-        ///  Shows a message box without an explicit owner window or icon.
-        /// </summary>
-        /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
+    ///  Shows a message box without an explicit owner window or icon.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
     public static WinFormsShims.DialogResult Show(
         string text,
         string caption,

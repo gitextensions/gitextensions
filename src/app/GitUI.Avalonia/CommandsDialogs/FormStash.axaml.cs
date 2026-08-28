@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
 using GitCommands;
@@ -82,6 +82,7 @@ public sealed partial class FormStash : GitModuleForm
 
         if (_lastSelectedStashIndex > 0)
         {
+            // Last operation was a drop, select next index
             if (_lastSelectedStashIndex >= stashedItems.Count)
             {
                 _lastSelectedStashIndex--;

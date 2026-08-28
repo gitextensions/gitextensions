@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using GitCommands;
@@ -111,6 +111,8 @@ public sealed partial class FormDeleteTag : GitModuleForm
         {
             Remote = remote,
         };
+        ////Remote = currentRemote,
+        ////Text = string.Format(_deleteFromCaption.Text, currentRemote),
         form.ShowDialog(this);
 
         if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())

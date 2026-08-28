@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using GitCommands;
 using GitCommands.Utils;
@@ -113,6 +113,8 @@ public sealed partial class AvatarControl : GitExtensionsControl
         }
 
         CancellationToken token = _cancellationTokenSequence.Next();
+
+        // resize our control (I'm not using AutoSize for a reason)
         byte[]? imageData = await _avatarProvider.GetAvatarAsync(email, AuthorName, AppSettings.AuthorImageSizeInCommitInfo);
         Bitmap? image = AvatarImage.Decode(imageData);
 

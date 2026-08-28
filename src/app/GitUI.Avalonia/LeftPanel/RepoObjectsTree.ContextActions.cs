@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Media;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -119,6 +119,8 @@ partial class RepoObjectsTree : IMenuItemFactory
 
         // git refs (tag, local & remote branch) menu items (rename, delete, merge, etc)
         _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
+
+        // RemoteBranchNode
         _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
         _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
         menuMain.InsertItems(_tagNodeMenuItems.Select(s => s.Item).Prepend(new Separator()), after: _actionItems[RepoAction.Filter]);
@@ -327,6 +329,8 @@ partial class RepoObjectsTree : IMenuItemFactory
     {
         // Avalonia exposes item visibility before opening, but re-run the original separator
         // normalization after the external popup surface has opened.
+        // Waiting for the ContextMenuStrip (as the visual parent of its menu items) to be visible to
+        // toggle (depending on ToolStripItem.Visible) existing separators in between item groups as required.
         menuMain.ToggleSeparators();
     }
 

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -166,10 +166,10 @@ public sealed partial class FormBrowse : GitModuleForm
     }
 
     /// <summary>
-        /// Open Browse - main GUI including dashboard.
-        /// </summary>
-        /// <param name="commands">The commands in the current form.</param>
-        /// <param name="args">The start up arguments.</param>
+    /// Open Browse - main GUI including dashboard.
+    /// </summary>
+    /// <param name="commands">The commands in the current form.</param>
+    /// <param name="args">The start up arguments.</param>
     public FormBrowse(IGitUICommands commands, BrowseArguments args)
         : this(commands, args, gpgInfoProvider: null)
 
@@ -305,6 +305,9 @@ public sealed partial class FormBrowse : GitModuleForm
         stashPopToolStripMenuItem.Click += (_, _) => UICommands.StashPop(this);
         manageStashesToolStripMenuItem.Click += StashToolStripMenuItemClick;
         createAStashToolStripMenuItem.Click += (_, _) => UICommands.StartStashDialog(this, manageStashes: false);
+
+        // The toolstrip and menu items must be initialised after InitializeComplete
+        // which invokes the translation logic and applies the current language to the components.
         _NO_TRANSLATE_WorkingDir.Initialize(
             () => UICommands,
             _repositoryHistoryUIService
@@ -460,6 +463,10 @@ public sealed partial class FormBrowse : GitModuleForm
     private void UICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
     {
         CancellationToken cancellationToken = _loadOperationsCancellationTokenSource.Token;
+
+        // Note that this called in most FormBrowse context to "be sure"
+        // that the repo has not been updated externally.
+        // It can also be called from background tasks, e.g. from BackgroundFetchPlugin.
         _loadOperations.FileAndForget(async () =>
         {
             await _loadOperations.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
@@ -693,6 +700,11 @@ public sealed partial class FormBrowse : GitModuleForm
 
         // Allow the plugin to perform any self-registration actions
         PluginRegistry.Register(UICommands);
+
+        // pluginsToolStripMenuItem.DropDownItems menu already contains at least 2 items:
+        //    [1] Separator
+        //    [0] Plugin Settings
+        // insert all plugins except 'Plugin Manager' above the separator
         if (!werePluginsRegistered && PluginRegistry.PluginsRegistered)
         {
             UICommands.RaisePostRegisterPlugin(this);
@@ -1729,19 +1741,30 @@ public sealed partial class FormBrowse : GitModuleForm
         }
 
         object? focused = FocusManager?.GetFocusedElement();
+
+        // downstream (without keys for quick search and without keys for text selection and copy e.g. in CommitInfo)
+        // but allow routing Ctrl+A away from RevisionGridControl in order to not select all revisions
         if (focused is TextBox && GitExtensionsControl.IsTextEditKey(keyData, multiLine: true))
         {
             return false;
         }
 
+        // route to visible controls which have their own hotkeys
         return keyData != (WinFormsShims.Keys.Control | WinFormsShims.Keys.A)
             && RevisionGrid.ProcessHotkey(keyData);
     }
 
     private void CommandsToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
     {
+        // Most options do not make sense for artificial commits or no revision selected at all
         IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
         bool singleNormalCommit = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
+
+        // Some commands like stash, undo commit etc has no relation to selections
+        // Require that a single commit is selected
+        // Some commands like delete branch could be available for artificial as no default is used,
+        // but hide for consistency
+        // Not operating on selected revision
         bool hasWorkingTree = !Module.IsBareRepository();
 
         branchToolStripMenuItem.IsEnabled =
@@ -1781,6 +1804,9 @@ public sealed partial class FormBrowse : GitModuleForm
         GitPullAction action = AppSettings.DefaultPullAction == GitPullAction.None
             ? AppSettings.FormPullAction
             : AppSettings.DefaultPullAction;
+
+        // Clicking on the Pull button toolbar button will perform the default selected action silently,
+        // except if that action is to open the dialog (PullAction.None)
         DoPull(action, isSilent: AppSettings.DefaultPullAction != GitPullAction.None);
     }
 
@@ -1839,6 +1865,9 @@ public sealed partial class FormBrowse : GitModuleForm
     /// </summary>
     private void FillTerminalTab()
     {
+        // If terminal control already exists, just focus it
+        // Check if there are available console emulators
+        // Delay-create the terminal window when the tab is first selected
         if (!AppSettings.ShowConEmuTab.Value
             || _consoleEmulatorsRegistry is null
             || _consoleEmulatorsRegistry.AvailableConsoleEmulators.Count == 0
@@ -1847,6 +1876,7 @@ public sealed partial class FormBrowse : GitModuleForm
             return;
         }
 
+        // We have to set ImageKey after it's added to the tab control
         _consoleTabPage = new TabItem
         {
             Header = _consoleTabCaption.Text,

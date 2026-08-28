@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid;
@@ -14,8 +14,8 @@ internal sealed class FormQuickGitRefSelector : FormQuickItemSelector
     private readonly TranslationString _tag = new("tag");
 
     /// <summary>
-        /// Gets the ref selected by the user.
-        /// </summary>
+    /// Gets the ref selected by the user.
+    /// </summary>
     public IGitRef? SelectedRef => SelectedItem as IGitRef;
 
     public void Init(QuickAction action, IReadOnlyList<IGitRef> refs)
@@ -23,6 +23,8 @@ internal sealed class FormQuickGitRefSelector : FormQuickItemSelector
         List<ItemData> items = Filter(refs, _local, _remote, _tag, gitRef => gitRef.IsHead);
         items.AddRange(Filter(refs, _local, _remote, _tag, gitRef => gitRef.IsRemote));
         items.AddRange(Filter(refs, _local, _remote, _tag, gitRef => gitRef.IsTag));
+
+        // if there are any items, then skip the header and select the first actual item.
         int selectedIndex = items.Count > 0 ? 1 : 0;
 
         Init(

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
@@ -17,7 +17,9 @@ public sealed class CustomDiffMergeToolProvider
     /// </summary>
     internal const int FormBrowseToolDelay = 8000;
 
-    /// <summary>Clear the existing caches.</summary>
+    /// <summary>
+    /// Clear the existing caches.
+    /// </summary>
     /// <param name="isDiff">True if diff, false if merge.</param>
     public async Task ClearAsync(bool isDiff)
     {

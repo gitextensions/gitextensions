@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
@@ -13,42 +13,42 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 public sealed class GitStatusMonitor : IDisposable
 {
     /// <summary>
-        /// We often change several files at once.
-        /// Short delay before we try to get the status.
-        /// </summary>
+    /// We often change several files at once.
+    /// Short delay before we try to get the status.
+    /// </summary>
     private const int InteractiveUpdateDelay = 200;
 
     /// <summary>
-        /// We often change several files at once.
-        /// Wait a second so they're all changed before we try to get the status.
-        /// </summary>
+    /// We often change several files at once.
+    /// Wait a second so they're all changed before we try to get the status.
+    /// </summary>
     private const int FileChangedUpdateDelay = 1000;
 
     /// <summary>
-        /// Minimum interval between subsequent updates.
-        /// </summary>
+    /// Minimum interval between subsequent updates.
+    /// </summary>
     private const int MinUpdateInterval = 30000;
 
     /// <summary>
-        /// Update every 5min, just to make sure something didn't slip through the cracks.
-        /// </summary>
+    /// Update every 5min, just to make sure something didn't slip through the cracks.
+    /// </summary>
     private const int PeriodicUpdateInterval = 5 * 60 * 1000;
 
     /// <summary>
-        /// Periodic update in WSL, where FileSystemWatcher may not report changes
-        /// https://github.com/microsoft/WSL/issues/4581
-        /// </summary>
+    /// Periodic update in WSL, where FileSystemWatcher may not report changes
+    /// https://github.com/microsoft/WSL/issues/4581
+    /// </summary>
     private const int PeriodicUpdateIntervalWSL = 60 * 1000;
     private const int MaxConsecutiveErrors = 3;
 
     /// <summary>
-        /// git-status command is running and no cancellation has been requested
-        /// </summary>
+    /// git-status command is running and no cancellation has been requested
+    /// </summary>
     private bool _commandIsRunningAndNotCancelled;
 
     /// <summary>
-        /// The number of consecutive update failures.
-        /// </summary>
+    /// The number of consecutive update failures.
+    /// </summary>
     private int _consecutiveErrorCount;
 
     private readonly FileSystemWatcher _workTreeWatcher = new();
@@ -68,13 +68,13 @@ public sealed class GitStatusMonitor : IDisposable
     // Note that TickCount wraps after 25 days uptime, always compare diff
 
     /// <summary>
-        /// Next scheduled update time
-        /// </summary>
+    /// Next scheduled update time
+    /// </summary>
     private int _nextUpdateTime;
 
     /// <summary>
-        /// Earliest time for an scheduled update (interactive requests bypasses this)
-        /// </summary>
+    /// Earliest time for an scheduled update (interactive requests bypasses this)
+    /// </summary>
     private int _nextEarliestTime;
     private GitStatusMonitorState _currentStatus;
 
@@ -85,13 +85,13 @@ public sealed class GitStatusMonitor : IDisposable
     }
 
     /// <summary>
-        /// Occurs whenever git status monitor state changes.
-        /// </summary>
+    /// Occurs whenever git status monitor state changes.
+    /// </summary>
     public event EventHandler<GitStatusMonitorStateEventArgs>? GitStatusMonitorStateChanged;
 
     /// <summary>
-        /// Occurs whenever current working directory status changes.
-        /// </summary>
+    /// Occurs whenever current working directory status changes.
+    /// </summary>
     public event EventHandler<GitWorkingDirectoryStatusEventArgs?>? GitWorkingDirectoryStatusChanged;
 
     public GitStatusMonitor(IGitUICommandsSource commandsSource, Func<bool> isMinimized)
@@ -476,6 +476,7 @@ public sealed class GitStatusMonitor : IDisposable
 
                 if (result.ExitedSuccessfully && ReferenceEquals(module, Module))
                 {
+                    // Update callers also if cancelled, this is for the correct module
                     IReadOnlyList<GitItemStatus> changedFiles =
                         _getAllChangedFilesOutputParser.Parse(result.StandardOutput);
                     await _taskManager.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
@@ -537,11 +538,11 @@ public sealed class GitStatusMonitor : IDisposable
     }
 
     /// <summary>
-        /// Schedule a status update after the specified delay
-        /// Do not change if a value is already set at a earlier time,
-        /// but respect the minimal (dynamic) update times between updates.
-        /// </summary>
-        /// <param name="delay">delay in milliseconds.</param>
+    /// Schedule a status update after the specified delay
+    /// Do not change if a value is already set at a earlier time,
+    /// but respect the minimal (dynamic) update times between updates.
+    /// </summary>
+    /// <param name="delay">delay in milliseconds.</param>
     private void ScheduleNextUpdateTime(int delay)
     {
         lock (_statusSequenceLock)
@@ -563,13 +564,14 @@ public sealed class GitStatusMonitor : IDisposable
     }
 
     /// <summary>
-        /// Schedule a status update from interactive changes (repo changed or refreshed)
-        /// Cancel any ongoing requests.
-        /// A short delay is added.
-        /// </summary>
-        /// <param name="delay">delay in milliseconds.</param>
+    /// Schedule a status update from interactive changes (repo changed or refreshed)
+    /// Cancel any ongoing requests.
+    /// A short delay is added.
+    /// </summary>
+    /// <param name="delay">delay in milliseconds.</param>
     private void ScheduleNextInteractiveTime(int delay = InteractiveUpdateDelay)
     {
+        // Start commands, also if running already
         lock (_statusSequenceLock)
         {
             _statusSequence.CancelCurrent();

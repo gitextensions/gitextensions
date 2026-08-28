@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -44,13 +44,13 @@ public class InitialsAvatarProvider : IAvatarProvider
     public bool PerformsIo => false;
 
     /// <summary>
-        /// Calculate the most simpler non-cryptographic deterministic hash (to get the same result every times it is calculated for the same string)
-        /// We just need an inexpensive way to convert a string to an integer, and calculating a hash is a good way to do it.
-        /// We are not using <c>GetHashCode()</c> because it returns a different value for each process.
-        /// Borrowed from https://stackoverflow.com/a/5155015
-        /// </summary>
-        /// <param name="str">The string to calculate a hash for.</param>
-        /// <returns>The calculated hash.</returns>
+    /// Calculate the most simpler non-cryptographic deterministic hash (to get the same result every times it is calculated for the same string)
+    /// We just need an inexpensive way to convert a string to an integer, and calculating a hash is a good way to do it.
+    /// We are not using <c>GetHashCode()</c> because it returns a different value for each process.
+    /// Borrowed from https://stackoverflow.com/a/5155015
+    /// </summary>
+    /// <param name="str">The string to calculate a hash for.</param>
+    /// <returns>The calculated hash.</returns>
     private static int GetDeterministicHashCode(string str)
     {
         unchecked
@@ -99,6 +99,7 @@ public class InitialsAvatarProvider : IAvatarProvider
     {
         possibleNames = possibleNames?.Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
+        // if no valid name-elements are found, return acceptable fallback
         if (possibleNames?.Length is not > 0)
         {
             return "?";
@@ -113,8 +114,10 @@ public class InitialsAvatarProvider : IAvatarProvider
 
         string name = names[0];
 
+        // If only a single valid name-element is found ...
         if (names.Length == 1)
         {
+            // ... and that name-element is only a single character long ...
             if (name.Length == 1)
             {
                 // ... return that character as uppercase
@@ -201,10 +204,14 @@ public class InitialsAvatarProvider : IAvatarProvider
 
         double initialFontSize = Math.Max(1, avatarSize * 0.7);
         FormattedText measuredText = CreateText(initialFontSize);
+
+        // Adjust font size based on the estimated measure of input text
         double ratio = Math.Min(
             avatarSize / Math.Max(measuredText.Width, 1),
             avatarSize / Math.Max(measuredText.Height, 1));
         FormattedText displayedText = CreateText(initialFontSize * Math.Min(ratio, 1));
+
+        // centering horizontally and vertically
         double xOffset = Math.Max((avatarSize - displayedText.Width) / 2, 0);
         double yOffset = Math.Max((avatarSize - displayedText.Height) / 2, 0);
 

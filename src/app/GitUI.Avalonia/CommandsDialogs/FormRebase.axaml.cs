@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using GitCommands;
@@ -461,6 +461,7 @@ public partial class FormRebase : GitExtensionsDialog
                 && !string.IsNullOrWhiteSpace(from)
                 && !string.IsNullOrWhiteSpace(to))
             {
+                // Rebase onto
                 rebaseOptions.OnTo = onto;
                 rebaseOptions.From = from;
                 rebaseOptions.BranchName = to;

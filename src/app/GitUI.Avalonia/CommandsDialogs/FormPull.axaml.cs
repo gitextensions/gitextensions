@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using GitCommands;
 using GitCommands.Config;
@@ -126,6 +126,9 @@ public sealed partial class FormPull : GitExtensionsDialog
         Branches.Text = defaultRemoteBranch ?? GetConfiguredRemoteBranch() ?? string.Empty;
         SetPullAction(pullAction, defaultRemote);
         AutoStash.IsChecked = AppSettings.AutoStash;
+
+        // If this repo is shallow, show an option to Unshallow
+        // Detect by presence of the shallow file, not 100% sure it's the best way, but it's created upon shallow cloning and removed upon unshallowing
         Unshallow.IsVisible = File.Exists(commands.Module.ResolveGitInternalPath("shallow"));
         _runtimeInitialized = true;
 
@@ -186,6 +189,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
     private void BindRemotesDropDown(string? selectedRemoteName)
     {
+        // refresh registered git remotes
         List<ConfigFileRemote> remotes = [.. _remotesManager.LoadRemotes(loadDisabled: false)];
         _bInternalUpdate = true;
         _NO_TRANSLATE_Remotes.Items.Clear();
@@ -217,6 +221,7 @@ public sealed partial class FormPull : GitExtensionsDialog
         string? remote,
         GitPullAction pullAction)
     {
+        // Special case for "Fetch and prune" and "Fetch and prune all" to make sure user confirms the action.
         if (pullAction == GitPullAction.FetchPruneAll)
         {
             string messageBoxTitle = string.Format(_pruneFromCaption.Text, string.IsNullOrEmpty(remote) ? AllRemotes : remote);
@@ -354,6 +359,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             return WinFormsShims.DialogResult.No;
         }
 
+        // Rebase failed -> special 'rebase' merge conflict
         if (!ExecuteBeforeScripts())
         {
             return WinFormsShims.DialogResult.No;
@@ -378,6 +384,9 @@ public sealed partial class FormPull : GitExtensionsDialog
             {
                 if (!ErrorOccurred)
                 {
+                    // If the "Update submodules on checkout" option is `true`, initialize and update
+                    // all submodules. If it's `false` don't initialize/update the submodules. If it's
+                    // indeterminate, ask the user what they'd like to do.
                     if (!InitModules(owner))
                     {
                         UICommands.UpdateSubmodules(owner);
@@ -407,6 +416,8 @@ public sealed partial class FormPull : GitExtensionsDialog
         void ExecuteAfterScripts()
         {
             ScriptsRunner.RunEventScripts(ScriptEvent.AfterFetch, this);
+
+            // Request to pull/merge in addition to the fetch
             if (Fetch.IsChecked != true)
             {
                 ScriptsRunner.RunEventScripts(ScriptEvent.AfterPull, this);
@@ -415,6 +426,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
         bool ExecuteBeforeScripts()
         {
+            // Request to pull/merge in addition to the fetch
             if (Fetch.IsChecked != true
                 && !ScriptsRunner.RunEventScripts(ScriptEvent.BeforePull, this))
             {
@@ -608,6 +620,7 @@ public sealed partial class FormPull : GitExtensionsDialog
                 return false;
             }
 
+            // auto pull only if current branch was rejected
             if (IsRefRemoved.IsMatch(process.GetOutputString()))
             {
                 TaskDialogPage page = new()

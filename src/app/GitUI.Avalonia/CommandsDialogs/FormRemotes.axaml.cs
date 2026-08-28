@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using GitCommands;
@@ -112,10 +112,14 @@ Inactive remote is completely invisible to git.");
         InitializeComponent();
         WireControls();
         InitializeComplete();
+
+        // Persist the text of the buttons to be able to restore it whenever the color is reset
         _btnRemoteColorText = btnRemoteColor.Content;
 
         _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
         GitBranchNameOptions options = new(replacementToken: AppSettings.AutoNormaliseSymbol, allowTrailingSlash: true);
+
+        // remove text from 'new' and 'delete' buttons because now they are represented by icons
         txtRemotePrefix.LostFocus += (_, _) => txtRemotePrefix.Text = _branchNameNormaliser.Normalise(txtRemotePrefix.Text ?? string.Empty, options);
 
         ToolTip.SetTip(New, _btnNewTooltip.Text);

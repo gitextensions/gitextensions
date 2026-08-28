@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -17,7 +17,7 @@ internal abstract class ColumnProvider
     /// <summary>Gets the layout model for this column.</summary>
     public RevisionGridColumn Column { get; }
 
-    /// <summary>Gets the display-friendly name of this column.</summary>
+    /// <summary>The display friendly name of this column.</summary>
     public string Name { get; }
 
     public int Index { get; internal set; }

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -251,6 +251,9 @@ public partial class FormResolveConflicts : GitModuleForm
                 oldSelectedRow = Math.Max(0, ConflictedFiles.ItemCount - 1);
             }
 
+            // as part of the databinding event, the fist row is selected automatically
+            // if previously another row was selected, we need to reset the selection,
+            // and select the desired row
             if (ConflictedFiles.ItemCount > oldSelectedRow)
             {
                 // Replacing the items source clears the selection; reselect the desired
@@ -1309,6 +1312,8 @@ public partial class FormResolveConflicts : GitModuleForm
                 {
                     Directory.SetCurrentDirectory(Module.WorkingDir);
                     await Task.Run(() => Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool));
+
+                    // "main menu" clicked, cancel dropdown manually, invoke default mergetool
                     Initialize();
                 }
             }

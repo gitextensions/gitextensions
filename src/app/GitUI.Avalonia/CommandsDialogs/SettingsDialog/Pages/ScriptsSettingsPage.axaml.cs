@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -124,6 +124,7 @@ Diff selection:
     {
         ApplyEditorToSelectedScript();
 
+        // TODO: this is an abomination, the whole script persistence must be scorched and rewritten
         System.ComponentModel.BindingList<ScriptInfo> scripts = _scriptsManager.GetScripts();
         scripts.Clear();
         foreach (ScriptInfoProxy proxy in _scripts)
