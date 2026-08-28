@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -101,6 +101,8 @@ public sealed partial class FormPush : GitModuleForm
         _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
         _gitRefs = Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes);
         _currentBranchName = Module.GetSelectedBranch();
+
+        // refresh registered git remotes
         _userGitRemotes = [.. _remotesManager.LoadRemotes(loadDisabled: false)];
 
         PopulateRecursiveSubmoduleOptions();
@@ -261,6 +263,10 @@ public sealed partial class FormPush : GitModuleForm
         string? selected = _currentBranchRemote?.Name
             ?? _userGitRemotes.FirstOrDefault(remote => StringComparer.OrdinalIgnoreCase.Equals(remote.Name, "origin"))?.Name
             ?? _userGitRemotes.FirstOrDefault()?.Name;
+
+        // we couldn't find the default assigned remote for the selected branch
+        // it is usually gets mapped via FormRemotes -> "default pull behavior" tab
+        // so pick the default user remote
         _NO_TRANSLATE_Remotes.SelectedItem = selected;
         RemotesUpdated(this, EventArgs.Empty);
     }
@@ -434,6 +440,12 @@ public sealed partial class FormPush : GitModuleForm
             return false;
         }
 
+        // Extra check if the branch is already known to the remote, give a warning when not.
+        // This is not possible when the remote is an URL, but this is ok since most users push to
+        // known remotes anyway.
+        // If the current branch is not the default push, and not known by the remote
+        // (as far as we know since we are disconnected....)
+        // Ask if this is really what the user wants
         if (!pushToUrl
             && TabControlTagBranch.SelectedItem == BranchTab
             && localBranch != AllRefs
@@ -534,6 +546,7 @@ public sealed partial class FormPush : GitModuleForm
 
     private bool HandlePushOnExit(ref bool isError, FormProcess form)
     {
+        // there is no way to pull to not current branch
         if (!isError
             || _selectedBranch != _currentBranchName
             || PushToRemote.IsChecked != true
@@ -542,6 +555,8 @@ public sealed partial class FormPush : GitModuleForm
             return false;
         }
 
+        // if push was rejected, offer force push and for current branch also pull/merge
+        // Note that the Git output contains color codes etc too
         Regex rejected = new(
             $"! \\[rejected\\]\\s*((?<currBranch>{Regex.Escape(_currentBranchName)})|.*) -> ",
             RegexOptions.None,
@@ -555,6 +570,7 @@ public sealed partial class FormPush : GitModuleForm
         (GitPullAction pullAction, bool forcePush) = AskForAutoPullOnPushRejectedAction(form, match.Groups["currBranch"].Success);
         if (forcePush)
         {
+            // Note that WSL may add other arguments prior to the actual command so "push" may not be first.
             string arguments = form.ProcessArguments ?? string.Empty;
             if (!arguments.Contains("--force-with-lease", StringComparison.Ordinal))
             {
@@ -723,6 +739,7 @@ public sealed partial class FormPush : GitModuleForm
             }
         }
 
+        // Set text again as workaround for appearing focused after setting DropDownWidth
         RemoteBranch.Text = previous;
     }
 
@@ -801,6 +818,7 @@ public sealed partial class FormPush : GitModuleForm
             return;
         }
 
+        // update the text box of the Remote Url combobox to show the URL of selected remote
         PushDestination.Text = string.IsNullOrEmpty(_selectedRemote.PushUrl) ? _selectedRemote.Url : _selectedRemote.PushUrl;
         UpdateRemoteBranchDropDown();
         BranchSelectedValueChanged(this, EventArgs.Empty);
@@ -823,6 +841,8 @@ public sealed partial class FormPush : GitModuleForm
         string selected = TagComboBox.Text ?? string.Empty;
         TagComboBox.Items.Clear();
         TagComboBox.Items.Add(AllRefs);
+
+        // var tags = Module.GetTagHeads(Module.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
         foreach (string tag in Module.GetRefs(RefsFilter.Tags).Select(reference => reference.Name))
         {
             TagComboBox.Items.Add(tag);
@@ -1036,6 +1056,7 @@ public sealed partial class FormPush : GitModuleForm
             row.SetPush(willPush(row));
         }
 
+        // Necessary to end the edit mode of the Cell.
         UpdatePushButton();
     }
 

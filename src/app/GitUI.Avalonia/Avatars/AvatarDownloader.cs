@@ -20,6 +20,7 @@ public sealed class AvatarDownloader : IAvatarDownloader
 
     public async Task<byte[]?> DownloadImageAsync(Uri? imageUrl)
     {
+        // check network connectivity
         if (imageUrl is null)
         {
             return null;
@@ -36,6 +37,7 @@ public sealed class AvatarDownloader : IAvatarDownloader
             // If we discover a faulted task, remove it and try again
             if (task.IsFaulted || task.IsCanceled)
             {
+                // Image from cached download has been disposed (in all probability during a cache cleanup)
                 _downloads.TryRemove(imageUrl, out _);
 
                 if (++errorCount > 3)

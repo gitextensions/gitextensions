@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -112,8 +112,8 @@ public sealed partial class FilterToolBar : TranslatedControl
         => _revisionGridFilter ?? throw new InvalidOperationException($"{nameof(Bind)} is not called.");
 
     /// <summary>
-        ///  Applies the preset branch filters, such as "show all", "show current", and "show filtered".
-        /// </summary>
+    ///  Applies the preset branch filters, such as "show all", "show current", and "show filtered".
+    /// </summary>
     private void ApplyPresetBranchesFilter(Action filterAction)
     {
         _filterBeingChanged = true;
@@ -124,8 +124,8 @@ public sealed partial class FilterToolBar : TranslatedControl
     }
 
     /// <summary>
-        ///  Applies custom branch filters supplied via the filter textbox.
-        /// </summary>
+    ///  Applies custom branch filters supplied via the filter textbox.
+    /// </summary>
     private void ApplyCustomBranchFilter(bool checkBranch = true)
     {
         if (_isApplyingFilter)
@@ -138,6 +138,8 @@ public sealed partial class FilterToolBar : TranslatedControl
         {
             // The user has accepted the filter
             _filterBeingChanged = false;
+
+            // Apply the textbox contents, no check if the (multiple) options is in tscboBranchFilter.Items (or that the list is generated)
             string filter = tscboBranchFilter.Text == TranslatedStrings.NoResultsFound
                 ? string.Empty
                 : tscboBranchFilter.Text?.Trim() ?? string.Empty;
@@ -145,6 +147,9 @@ public sealed partial class FilterToolBar : TranslatedControl
             {
                 List<string> acceptedFilters = [];
                 IReadOnlyList<IGitRef> refs = GetRefs(RefsFilter.NoFilter);
+
+                // Split at whitespace (char[])null is default) but with split options.
+                // Ignore quoting, Git revisions do not allow spaces.
                 foreach (string branch in filter.Split(
                              (char[]?)null,
                              StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
@@ -223,8 +228,10 @@ public sealed partial class FilterToolBar : TranslatedControl
     }
 
     /// <summary>
-    ///  Sets the branches filter without checking that the supplied refs exist.
+    ///  Sets the branches filter.
+    ///  No check that the branches exist (must be checked already, expected to be called from left panel).
     /// </summary>
+    /// <param name="filter">The branches to filter separated by whitespace.</param>
     public void SetBranchFilter(string? filter)
     {
         tscboBranchFilter.Text = filter;
@@ -270,9 +277,9 @@ public sealed partial class FilterToolBar : TranslatedControl
     }
 
     /// <summary>
-        /// Update the function to get refs for branch dropdown filter
-        /// </summary>
-        /// <param name="getRefs">Function to get refs, expected to be cached</param>
+    /// Update the function to get refs for branch dropdown filter
+    /// </summary>
+    /// <param name="getRefs">Function to get refs, expected to be cached</param>
     public void RefreshRevisionFunction(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
         _getRefs = getRefs ?? throw new ArgumentNullException(nameof(getRefs));
@@ -310,11 +317,11 @@ public sealed partial class FilterToolBar : TranslatedControl
     }
 
     /// <summary>
-        /// Update the tscboBranchFilter dropdown items matching the current filter.
-        /// This is called when dropdown clicked or text is manually changed
-        /// (so tscboBranchFilter.Items is not necessarily available when set externally
-        /// from the left panel or FormBrowse).
-        /// </summary>
+    /// Update the tscboBranchFilter dropdown items matching the current filter.
+    /// This is called when dropdown clicked or text is manually changed
+    /// (so tscboBranchFilter.Items is not necessarily available when set externally
+    /// from the left panel or FormBrowse).
+    /// </summary>
     private void UpdateBranchFilterItems()
     {
         if (_getModule is null || !GetModule().IsValidGitWorkingDir())
@@ -324,6 +331,9 @@ public sealed partial class FilterToolBar : TranslatedControl
         }
 
         IsEnabled = true;
+
+        // Options are interpreted as the refs the search should be limited too
+        // If neither option is selected all refs will be queried also including stash and notes
         RefsFilter filter = (tsmiBranchLocal.IsChecked ? RefsFilter.Heads : RefsFilter.NoFilter)
             | (tsmiBranchRemote.IsChecked ? RefsFilter.Remotes : RefsFilter.NoFilter)
             | (tsmiBranchTag.IsChecked ? RefsFilter.Tags : RefsFilter.NoFilter);

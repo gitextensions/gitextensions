@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
@@ -41,11 +41,14 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
             return false;
         }
 
+        // Check default Git config location
         if (CanReadFile(Path.Join(path, ".gitconfig")))
         {
             return true;
         }
 
+        // Check presence of XDG config directory
+        // Consider alternative Git config file
         string xdgConfigDirectory = Path.Join(path, ".config");
         if (!Directory.Exists(xdgConfigDirectory))
         {
@@ -88,6 +91,9 @@ public sealed partial class FormFixHome : GitExtensionsFormBase
         }
         catch
         {
+            // Exception occurred while checking for home dir.
+            // Could be a security issue. Just return true to let the user fix
+            // this manually.
             return true;
         }
     }

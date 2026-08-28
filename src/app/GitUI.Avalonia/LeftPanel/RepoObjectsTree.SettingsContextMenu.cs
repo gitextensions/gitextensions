@@ -11,6 +11,7 @@ partial class RepoObjectsTree
     /// </summary>
     private void FixInvalidTreeToPositionIndices()
     {
+        // Sort by index, then force assign 0-based sequential indices
         RepoTreeKind[] kinds = Enum.GetValues<RepoTreeKind>();
         RepoTreeKind[] orderedKinds =
         [

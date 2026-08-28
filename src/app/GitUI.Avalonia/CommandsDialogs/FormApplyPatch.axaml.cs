@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using GitCommands;
@@ -229,6 +229,7 @@ public partial class FormApplyPatch : GitModuleForm
             }
             else
             {
+                // No need for PathUtil.GetRepoPath(), file streamed
                 ArgumentString arguments = Commands.ApplyMailboxPatch(signOff, ignoreWhitespace);
                 Module.ApplyPatch(directory, arguments);
             }

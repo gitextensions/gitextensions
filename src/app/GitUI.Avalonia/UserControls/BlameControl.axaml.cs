@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -573,6 +573,7 @@ public sealed partial class BlameControl : GitModuleControl
 
     private Color[] GetAgeBucketGradientColors()
     {
+        // Color chosen from: https://colorbrewer2.org/#type=sequential&scheme=Greens&n=7
         Color[] fallbacks =
         [
             Color.FromArgb(247, 252, 245),

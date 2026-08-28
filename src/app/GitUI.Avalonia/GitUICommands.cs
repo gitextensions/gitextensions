@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls.ApplicationLifetimes;
 using GitCommands;
 using GitCommands.Git;
@@ -328,12 +328,12 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     /// <param name="requiresValidWorkingDir">If action requires valid working directory.</param>
-        /// <param name="owner">Owner window.</param>
-        /// <param name="changesRepo">if successfully done action changes repo state.</param>
-        /// <param name="preEvent">Event invoked before performing action.</param>
-        /// <param name="postEvent">Event invoked after performing action.</param>
-        /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
-        /// <returns>true if action was successfully done, false otherwise.</returns>
+    /// <param name="owner">Owner window.</param>
+    /// <param name="changesRepo">if successfully done action changes repo state.</param>
+    /// <param name="preEvent">Event invoked before performing action.</param>
+    /// <param name="postEvent">Event invoked after performing action.</param>
+    /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
+    /// <returns>true if action was successfully done, false otherwise.</returns>
     private bool DoActionOnRepo(
         IWin32Window? owner,
         Func<bool> action,
@@ -486,7 +486,12 @@ public sealed class GitUICommands : IGitUICommands
     public bool DoActionOnRepo(Func<bool> action)
         => DoActionOnRepo(owner: null, action, requiresValidWorkingDir: false);
 
-    /// <summary>Launches the repository browser in a new process.</summary>
+    /// <summary>
+    /// Launch FormBrowse in a new GE instance.
+    /// </summary>
+    /// <param name="workingDir">The working directory for the new process.</param>
+    /// <param name="selectedId">The optional commit to be selected.</param>
+    /// <param name="firstId">The first commit to be selected, the first commit in a diff.</param>
     internal static void LaunchBrowse(string workingDir = "", ObjectId selectedId = default, ObjectId firstId = default)
     {
         if (!Directory.Exists(workingDir))
@@ -731,8 +736,8 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     /// <summary>Start Merge dialog, using the specified branch.</summary>
-        /// <param name="owner">Owner of the dialog.</param>
-        /// <param name="branch">Branch to merge into the current branch.</param>
+    /// <param name="owner">Owner of the dialog.</param>
+    /// <param name="branch">Branch to merge into the current branch.</param>
     public bool StartMergeBranchDialog(IWin32Window? owner, string? branch)
     {
         bool Action()
@@ -795,11 +800,11 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     /// <summary>
-        /// Open the archive dialog.
-        /// </summary>
-        /// <param name="revision">Revision to create an archive from.</param>
-        /// <param name="revision2">Revision for differential archive.</param>
-        /// <param name="path">Files path for archive.</param>
+    /// Open the archive dialog.
+    /// </summary>
+    /// <param name="revision">Revision to create an archive from.</param>
+    /// <param name="revision2">Revision for differential archive.</param>
+    /// <param name="path">Files path for archive.</param>
     public bool StartArchiveDialog(IWin32Window? owner = null, GitRevision? revision = null, GitRevision? revision2 = null, string? path = null)
     {
         return DoActionOnRepo(owner, action: () =>
@@ -911,6 +916,8 @@ public sealed class GitUICommands : IGitUICommands
                     }
 
                     previousForm = form;
+
+                    // ReSharper disable once PossibleMultipleEnumeration
                     if (form.ShowDialog(owner) == DialogResult.OK)
                     {
                         repoChanged = true;
@@ -1115,7 +1122,7 @@ public sealed class GitUICommands : IGitUICommands
     {
         bool Action()
         {
-            // Execute the submodule update command from the submodule's parent directory
+            // Execute the submodule update comment from the submodule's parent directory
             return FormProcess.ShowDialog(owner, this, arguments: Commands.SubmoduleUpdate(submoduleLocalPath), submoduleParentPath, null, true);
         }
 
@@ -1177,10 +1184,10 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartRepoSettingsDialog(IWin32Window? owner) => StartSettingsDialog(owner);
 
     /// <summary>
-        /// Open Browse - main GUI including dashboard.
-        /// </summary>
-        /// <param name="owner">current window owner.</param>
-        /// <param name="args">The start up arguments.</param>
+    /// Open Browse - main GUI including dashboard.
+    /// </summary>
+    /// <param name="owner">current window owner.</param>
+    /// <param name="args">The start up arguments.</param>
     public bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null)
     {
         FormBrowse form = new(this, args ?? new BrowseArguments());
@@ -1202,7 +1209,7 @@ public sealed class GitUICommands : IGitUICommands
 
     public void OpenWithDifftool(IWin32Window? owner, IReadOnlyList<GitRevision?> revisions, string fileName, string? oldFileName, RevisionDiffKind diffKind, bool isTracked, string? customTool = null)
     {
-        // Note: Order in revisions is that first clicked is last in array.
+        // Note: Order in revisions is that first clicked is last in array
         if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out string? firstRevision, out string? secondRevision, out string? error))
         {
             MessageBoxes.Show(owner, error, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1298,7 +1305,7 @@ public sealed class GitUICommands : IGitUICommands
         => StartPullDialogAndPullImmediately(out _, owner, remoteBranch, remote, pullAction);
 
     /// <param name="pullCompleted">true if pull completed with no errors.</param>
-        /// <returns>if revision grid should be refreshed.</returns>
+    /// <returns>if revision grid should be refreshed.</returns>
     public bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
         => StartPullDialogInternal(owner, pullOnShow: true, out pullCompleted, remoteBranch, remote, pullAction);
 
@@ -1458,6 +1465,7 @@ public sealed class GitUICommands : IGitUICommands
             case "add":
             case "addfiles":
                 // If filenames have been specified, quote them and pass them to the dialog, else pass '.' for current dir.
+                // If names of files or folders have been specified, pass them
                 return StartAddFilesDialog(owner: null, addFiles: args.Count < 3 ? "." : string.Join(' ', args.Skip(2).Select(file => file.Quote())));
             case "apply":
             case "applypatch":
@@ -1654,12 +1662,12 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     /// <summary>
-        /// Reset all changes to HEAD.
-        /// </summary>
-        /// <param name="owner">Owner window.</param>
-        /// <param name="workTreeFiles">Worktree files, to determine the status for the popup dialog.</param>
-        /// <param name="onlyWorkTree">Only reset worktree files.</param>
-        /// <returns><see langword="true"/> if executed.</returns>
+    /// Reset all changes to HEAD.
+    /// </summary>
+    /// <param name="owner">Owner window.</param>
+    /// <param name="workTreeFiles">Worktree files, to determine the status for the popup dialog.</param>
+    /// <param name="onlyWorkTree">Only reset worktree files.</param>
+    /// <returns><see langword="true"/> if executed.</returns>
     public bool StartResetChangesDialog(IWin32Window? owner, IReadOnlyCollection<GitItemStatus> workTreeFiles, bool onlyWorkTree)
     {
         // Show a form asking the user if they want to reset the changes.
@@ -1704,9 +1712,9 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     /// <summary>
-        /// Remove working directory from filename and convert to POSIX path.
-        /// This is to prevent filenames that are too long while there is room left when the workingdir was not in the path.
-        /// </summary>
+    /// Remove working directory from filename and convert to POSIX path.
+    /// This is to prevent filenames that are too long while there is room left when the workingdir was not in the path.
+    /// </summary>
     private string NormalizeFileName(string fileName)
     {
         fileName = fileName.ToPosixPath();
@@ -1730,6 +1738,7 @@ public sealed class GitUICommands : IGitUICommands
     /// <returns>false on error.</returns>
     private bool RunFileHistoryCommand(IReadOnlyList<string> args, bool showBlame)
     {
+        // Use the capitalization of the filename as passed because filenames in Git may differ from Windows file system.
         string fileName = NormalizeFileName(args[2]);
         if (string.IsNullOrWhiteSpace(fileName))
         {
@@ -1758,8 +1767,11 @@ public sealed class GitUICommands : IGitUICommands
             filterByRevision = true;
         }
 
+        // Similar to StartFileHistoryDialog()
         if (AppSettings.UseBrowseForFileHistory.Value)
         {
+            // NOTE: fileHistoryFileName doesn't need to be quoted, as it the filter will get quoted
+            // when the filter gets set.
             return StartBrowseDialog(owner: null, new BrowseArguments
             {
                 RevFilter = filterByRevision ? revision?.ObjectId.ToString() : null,
@@ -1771,6 +1783,7 @@ public sealed class GitUICommands : IGitUICommands
 
         return DoActionOnRepo(owner: null, action: () =>
         {
+            // NOTE: fileHistoryFileName must be quoted.
             FormFileHistory form = new(this, fileName.QuoteNE(), revision, filterByRevision, showBlame);
             ShowModelessWindow(form, owner: null);
             return true;
@@ -1905,17 +1918,17 @@ public sealed class GitUICommands : IGitUICommands
     public IGitRemoteCommand CreateRemoteCommand() => throw NotPorted(nameof(CreateRemoteCommand));
 
     /// <summary>
-        ///  Creates a new instance of <see cref="IGitUICommands"/> for a git repository specified by <paramref name="module"/>.
-        /// </summary>
-        /// <param name="module">The git repository.</param>
-        /// <returns>A new instance of <see cref="IGitUICommands"/>.</returns>
+    ///  Creates a new instance of <see cref="IGitUICommands"/> for a git repository specified by <paramref name="module"/>.
+    /// </summary>
+    /// <param name="module">The git repository.</param>
+    /// <returns>A new instance of <see cref="IGitUICommands"/>.</returns>
     public IGitUICommands WithGitModule(IGitModule module) => new GitUICommands(_serviceProvider, module);
 
     /// <summary>
-        ///  Creates a new instance of <see cref="IGitUICommands"/> for a git repository specified by <paramref name="workingDirectory"/>.
-        /// </summary>
-        /// <param name="workingDirectory">The git repository working directory.</param>
-        /// <returns>A new instance of <see cref="IGitUICommands"/>.</returns>
+    ///  Creates a new instance of <see cref="IGitUICommands"/> for a git repository specified by <paramref name="workingDirectory"/>.
+    /// </summary>
+    /// <param name="workingDirectory">The git repository working directory.</param>
+    /// <returns>A new instance of <see cref="IGitUICommands"/>.</returns>
     public IGitUICommands WithWorkingDirectory(string? workingDirectory)
         => new GitUICommands(_serviceProvider, new GitModule(this.GetRequiredService<IGitExecutorProvider>(), workingDirectory));
 }

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using GitExtensions.Extensibility.Settings;
@@ -168,6 +168,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
             HighlightNode(node, true);
             for (TreeViewItem? parent = _parents.GetValueOrDefault(node); parent is not null; parent = _parents.GetValueOrDefault(parent))
             {
+                // if visible: when searching, if the selected node is valid, it will still have grey background
                 parent.IsExpanded = true;
             }
 

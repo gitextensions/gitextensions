@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using GitExtensions.Extensibility.Git;
@@ -26,6 +26,8 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
     {
         get
         {
+            // Double check locking
+            // Search ancestors for an implementation of IGitUICommandsSource
             _uiCommandsSource ??= this.GetLogicalAncestors()
                 .OfType<IGitUICommandsSource>()
                 .FirstOrDefault()
@@ -46,7 +48,15 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl, IWin32W
         }
     }
 
-    /// <summary>Gets the commands only if their source has already been set.</summary>
+    /// <summary>
+    /// Gets the UI commands, if they've initialised.
+    /// </summary>
+    /// <remarks>
+    /// <para>This method will not attempt to initialise the commands if they have not
+    /// yet been initialised.</para>
+    /// <para>By contrast, the <see cref="UICommands"/> property attempts to initialise
+    /// the value if not previously initialised.</para>
+    /// </remarks>
     internal bool TryGetUICommandsDirect([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
     {
         commands = _uiCommandsSource?.UICommands;

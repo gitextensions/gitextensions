@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -373,6 +373,8 @@ public sealed partial class FormVerify : GitModuleForm
 
         if (restoredObjectsCount == _filteredLostObjects.Count)
         {
+            // if user restored all items, nothing else to do in this form.
+            // User wants to see restored commits, so close this dialog and return to the main window.
             DialogResult = WinFormsShims.DialogResult.OK;
             return;
         }

@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using GitCommands.Git.Gpg;
@@ -24,10 +24,12 @@ public partial class RevisionGpgInfoControl : GitModuleControl
 
     public void DisplayGpgInfo(GpgInfo? info)
     {
+        // No Commit Signature and No Tag Signature
         if (info is null)
         {
             commitSignPicture.IsVisible = false;
             txtCommitGpgInfo.Text = _commitNotSigned.Text;
+            /* TAG section */
             tagSignPicture.IsVisible = false;
             txtTagGpgInfo.IsVisible = false;
         }

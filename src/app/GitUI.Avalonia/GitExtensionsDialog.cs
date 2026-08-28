@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
 
@@ -22,12 +22,20 @@ public class GitExtensionsDialog : GitModuleForm
     }
 
     /// <summary>
-    ///  Gets or sets the anchor pointing to a section in the manual pertaining to this dialog.
+    /// Gets or sets the anchor pointing to a section in the manual pertaining to this dialog.
     /// </summary>
+    /// <remarks>
+    /// The URL structure:
+    /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
+    /// </remarks>
     public string? ManualSectionAnchorName { get; set; }
 
     /// <summary>
-    ///  Gets or sets the name of a document pertaining to this dialog.
+    /// Gets or sets the name of a document pertaining to this dialog.
     /// </summary>
+    /// <remarks>
+    /// The URL structure:
+    /// https://git-extensions-documentation.readthedocs.io/{ManualSectionSubfolder}.html#{ManualSectionAnchorName}.
+    /// </remarks>
     public string? ManualSectionSubfolder { get; set; }
 }
