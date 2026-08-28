@@ -1,13 +1,17 @@
-﻿using Avalonia.Controls;
+using System.ComponentModel;
+using Avalonia.Controls;
 using Avalonia.Media;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
+using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.LeftPanel.ContextMenu;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
+using ToolStripSeparator = GitUI.Compat.WinFormsControls.ToolStripSeparator;
 
 namespace GitUI.LeftPanel;
 
@@ -59,15 +63,102 @@ partial class RepoObjectsTree : IMenuItemFactory
 
     private void EnableMoveTreeUpDownContexMenu(bool hasSingleSelection, NodeBase? selectedNode)
     {
-        Tree[] visibleTrees = [.. _trees.Where(tree => tree.IsEnabled).OrderBy(tree => tree.PositionIndex)];
+        Tree[] visibleTrees = [.. _rootNodes.Where(tree => tree.IsEnabled).OrderBy(tree => tree.PositionIndex)];
         int index = selectedNode is Tree tree ? Array.IndexOf(visibleTrees, tree) : -1;
         SetAction(RepoAction.MoveUp, hasSingleSelection && index >= 0, index > 0);
         SetAction(RepoAction.MoveDown, hasSingleSelection && index >= 0, index < visibleTrees.Length - 1);
     }
 
+    private void EnableRemoteBranchContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
+    {
+        bool isSingleRemoteBranchSelected = hasSingleSelection && selectedNode is RemoteBranchNode;
+        bool canRunCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
+        bool canChangeWorkingTree = canRunCommands && !commands!.Module.IsBareRepository();
+        EnableMenuItems(_remoteBranchMenuItems, _ => isSingleRemoteBranchSelected);
+        SetAction(RepoAction.FetchBranch, isSingleRemoteBranchSelected, canRunCommands);
+        SetAction(RepoAction.FetchMerge, isSingleRemoteBranchSelected, canChangeWorkingTree);
+        SetAction(RepoAction.FetchCheckout, isSingleRemoteBranchSelected, canChangeWorkingTree);
+        SetAction(RepoAction.FetchCreate, isSingleRemoteBranchSelected, canChangeWorkingTree);
+        SetAction(RepoAction.FetchRebase, isSingleRemoteBranchSelected, canChangeWorkingTree);
+    }
+
+    private void EnableRemoteRepoContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
+    {
+        bool isSingleRemoteRepoSelected = hasSingleSelection && selectedNode is RemoteRepoNode;
+        RemoteRepoNode? remoteRepo = selectedNode as RemoteRepoNode;
+        bool canRunCommands = TryGetUICommandsDirect(out _);
+        SetAction(RepoAction.ManageRemote, isSingleRemoteRepoSelected, canRunCommands);
+        SetAction(RepoAction.FetchRemote, isSingleRemoteRepoSelected && remoteRepo?.Enabled is true, canRunCommands);
+        SetAction(RepoAction.DisableRemote, isSingleRemoteRepoSelected && remoteRepo?.Enabled is true, canRunCommands && remoteRepo?.CanToggle is true);
+        SetAction(RepoAction.PruneRemote, isSingleRemoteRepoSelected && remoteRepo?.Enabled is true, canRunCommands);
+        SetAction(RepoAction.OpenRemoteUrl, isSingleRemoteRepoSelected && remoteRepo?.IsRemoteUrlUsingHttp is true, enabled: true);
+        SetAction(RepoAction.EnableRemote, isSingleRemoteRepoSelected && remoteRepo?.Enabled is false, canRunCommands && remoteRepo?.CanToggle is true);
+        SetAction(RepoAction.EnableRemoteAndFetch, isSingleRemoteRepoSelected && remoteRepo?.Enabled is false, canRunCommands && remoteRepo?.CanToggle is true);
+    }
+
+    private void EnableSortContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
+    {
+        bool isSingleRefSelected = hasSingleSelection && selectedNode is IGitRefActions;
+        _sortByContextMenuItem.Enable(isSingleRefSelected);
+
+        // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
+        bool showSortOrder = AppSettings.RefsSortBy != GitRefsSortBy.Default;
+        _sortOrderContextMenuItem.Enable(isSingleRefSelected && showSortOrder);
+    }
+
+    private void EnableWorktreeContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
+    {
+        bool isSingleWorktreeSelected = hasSingleSelection && selectedNode is WorktreeNode;
+        WorktreeNode? worktreeNode = selectedNode as WorktreeNode;
+        bool canRunCommands = TryGetUICommandsDirect(out _);
+        bool canActOnWorktree = isSingleWorktreeSelected && worktreeNode is { IsCurrent: false, Worktree.IsDeleted: false };
+        bool worktreePathExists = isSingleWorktreeSelected && worktreeNode is not null && Directory.Exists(worktreeNode.Worktree.Path);
+
+        // Always show menu items for any worktree node, but disable for current/deleted
+        mnubtnOpenWorktree.IsVisible = isSingleWorktreeSelected;
+        mnubtnOpenWorktree.IsEnabled = canActOnWorktree && canRunCommands;
+        mnubtnDeleteWorktree.IsVisible = isSingleWorktreeSelected;
+        mnubtnDeleteWorktree.IsEnabled = canActOnWorktree && canRunCommands;
+        toolStripSeparator13.IsVisible = isSingleWorktreeSelected;
+        mnubtnCopyWorktreePath.IsVisible = isSingleWorktreeSelected;
+        mnubtnCopyWorktreePath.IsEnabled = isSingleWorktreeSelected;
+        mnubtnShowWorktreeInFolder.IsVisible = isSingleWorktreeSelected;
+        mnubtnShowWorktreeInFolder.IsEnabled = worktreePathExists;
+    }
+
+    private void EnableStashContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
+    {
+        bool isSingleStashSelected = hasSingleSelection && selectedNode is StashNode;
+        bool canChangeWorkingTree = TryGetUICommandsDirect(out IGitUICommands? commands) && !commands!.Module.IsBareRepository();
+        EnableMenuItems(isSingleStashSelected && canChangeWorkingTree, mnubtnOpenStash, mnubtnApplyStash, mnubtnPopStash, mnubtnDropStash);
+    }
+
+    private void EnableSubmoduleContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
+    {
+        bool isSingleSubmoduleSelected = hasSingleSelection && selectedNode is SubmoduleNode;
+        SubmoduleNode? submoduleNode = selectedNode as SubmoduleNode;
+        bool canRunCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
+        bool canChangeWorkingTree = canRunCommands && !commands!.Module.IsBareRepository();
+        SetAction(RepoAction.OpenSubmodule, isSingleSubmoduleSelected && submoduleNode?.IsCurrent is false, enabled: true);
+        SetAction(RepoAction.OpenSubmoduleInGitExtensions, isSingleSubmoduleSelected, enabled: true);
+        SetAction(RepoAction.UpdateSubmodule, isSingleSubmoduleSelected, canRunCommands);
+        SetAction(RepoAction.ManageSubmodules, isSingleSubmoduleSelected && submoduleNode?.IsCurrent is true, canChangeWorkingTree);
+        SetAction(RepoAction.SynchronizeSubmodules, isSingleSubmoduleSelected && submoduleNode?.IsCurrent is true, canChangeWorkingTree);
+        SetAction(RepoAction.ResetSubmodule, isSingleSubmoduleSelected, canChangeWorkingTree);
+        SetAction(RepoAction.StashSubmodule, isSingleSubmoduleSelected, canChangeWorkingTree);
+        SetAction(RepoAction.CommitSubmodule, isSingleSubmoduleSelected, canChangeWorkingTree);
+    }
+
     private static void RegisterClick(MenuItem item, Action onClick)
     {
         item.Click += (o, e) => onClick();
+    }
+
+    private void RegisterAction(RepoAction action, MenuItem item)
+    {
+        item.IsVisible = false;
+        item.Click += (_, _) => ExecuteAction(action);
+        _actionItems.Add(action, item);
     }
 
     private void RegisterClick<T>(MenuItem item, Action<T> onClick) where T : class, INode
@@ -113,9 +204,8 @@ partial class RepoObjectsTree : IMenuItemFactory
     [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(_sortByContextMenuItem), nameof(_sortOrderContextMenuItem), nameof(_localBranchMenuItems), nameof(_remoteBranchMenuItems), nameof(_tagNodeMenuItems))]
     private void RegisterContextActions()
     {
-        menuMain.Items.Add(_actionSeparator);
-        AddAction(RepoAction.Copy, nameof(RepoObjectsTree), "copyContextMenuItem", "&Copy to clipboard", Images.CopyToClipboard);
-        AddAction(RepoAction.Filter, nameof(RepoObjectsTree), "filterForSelectedRefsMenuItem", "&Filter for selected", Images.ShowThisBranchOnly);
+        RegisterAction(RepoAction.Copy, copyContextMenuItem);
+        RegisterAction(RepoAction.Filter, filterForSelectedRefsMenuItem);
 
         // git refs (tag, local & remote branch) menu items (rename, delete, merge, etc)
         _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
@@ -127,43 +217,61 @@ partial class RepoObjectsTree : IMenuItemFactory
         menuMain.InsertItems(_remoteBranchMenuItems.Select(s => s.Item).Prepend(new Separator()), after: _actionItems[RepoAction.Filter]);
         menuMain.InsertItems(_localBranchMenuItems.Select(s => s.Item).Prepend(new Separator()), after: _actionItems[RepoAction.Filter]);
 
-        AddAction(RepoAction.FetchBranch, nameof(RepoObjectsTree), "mnubtnFetchOneBranch", "Fe&tch", Images.Stage);
-        AddAction(RepoAction.FetchMerge, nameof(RepoObjectsTree), "mnubtnPullFromRemoteBranch", "Fetch && Merge (&Pull)", Images.Pull);
-        AddAction(RepoAction.FetchCheckout, nameof(RepoObjectsTree), "mnubtnRemoteBranchFetchAndCheckout", "&Fetch && Checkout", Images.BranchCheckout);
-        AddAction(RepoAction.FetchRebase, nameof(RepoObjectsTree), "mnubtnFetchRebase", "Fetch && Re&base", Images.Rebase);
-        AddAction(RepoAction.FetchCreate, nameof(RepoObjectsTree), "mnubtnFetchCreateBranch", "Fetc&h && Create Branch", Images.Branch.AdaptLightness());
-        AddAction(RepoAction.CreateInFolder, nameof(RepoObjectsTree), "mnubtnCreateBranch", "Create Branch...", Images.BranchCreate);
-        AddAction(RepoAction.DeleteFolderBranches, nameof(RepoObjectsTree), "mnubtnDeleteAllBranches", "Delete All", Images.BranchDelete);
-        AddAction(RepoAction.ManageRemotes, nameof(RepoObjectsTree), "mnuBtnManageRemotesFromRootNode", "&Manage...", Images.Remotes);
-        AddAction(RepoAction.FetchAllRemotes, nameof(RepoObjectsTree), "mnuBtnFetchAllRemotes", "Fetch all remotes", Images.PullFetchAll);
-        AddAction(RepoAction.PruneAllRemotes, nameof(RepoObjectsTree), "mnuBtnPruneAllRemotes", "Fetch and prune all remotes", Images.PullFetchPruneAll);
-        AddAction(RepoAction.ManageRemote, nameof(RepoObjectsTree), "mnubtnManageRemotes", "&Manage...", Images.Remotes);
-        AddAction(RepoAction.EnableRemote, nameof(RepoObjectsTree), "mnubtnEnableRemote", "&Activate", Images.EyeOpened.AdaptLightness());
-        AddAction(RepoAction.EnableRemoteAndFetch, nameof(RepoObjectsTree), "mnubtnEnableRemoteAndFetch", "A&ctivate and fetch", Images.RemoteEnableAndFetch.AdaptLightness());
-        AddAction(RepoAction.DisableRemote, nameof(RepoObjectsTree), "mnubtnDisableRemote", "&Deactivate", Images.EyeClosed.AdaptLightness());
-        AddAction(RepoAction.FetchRemote, nameof(RepoObjectsTree), "mnubtnFetchAllBranchesFromARemote", "&Fetch", Images.PullFetch);
-        AddAction(RepoAction.PruneRemote, nameof(RepoObjectsTree), "mnuBtnPruneAllBranchesFromARemote", "Fetch and &prune", Images.PullFetchPrune);
-        AddAction(RepoAction.OpenRemoteUrl, nameof(RepoObjectsTree), "mnuBtnOpenRemoteUrlInBrowser", "Open remote Url", Images.Globe);
-        AddAction(RepoAction.OpenSubmodule, nameof(RepoObjectsTree), "mnubtnOpenSubmodule", "&Open", Images.FolderOpen);
-        AddAction(RepoAction.OpenSubmoduleInGitExtensions, nameof(RepoObjectsTree), "mnubtnOpenGESubmodule", "O&pen", Images.GitExtensionsLogo16);
-        AddAction(RepoAction.ManageSubmodules, nameof(RepoObjectsTree), "mnubtnManageSubmodules", "&Manage...", Images.SubmodulesManage);
-        AddAction(RepoAction.UpdateSubmodule, nameof(RepoObjectsTree), "mnubtnUpdateSubmodule", "&Update", Images.SubmodulesUpdate);
-        AddAction(RepoAction.SynchronizeSubmodules, nameof(RepoObjectsTree), "mnubtnSynchronizeSubmodules", "Synchronize", Images.SubmodulesSync);
-        AddAction(RepoAction.ResetSubmodule, nameof(RepoObjectsTree), "mnubtnResetSubmodule", "&Reset", Images.ResetWorkingDirChanges);
-        AddAction(RepoAction.StashSubmodule, nameof(RepoObjectsTree), "mnubtnStashSubmodule", "&Stash", Images.Stash);
-        AddAction(RepoAction.CommitSubmodule, nameof(RepoObjectsTree), "mnubtnCommitSubmodule", "&Commit", Images.RepoStateDirtySubmodules);
-        AddAction(RepoAction.Collapse, nameof(RepoObjectsTree), "mnubtnCollapse", "Collapse", Images.CollapseAll.AdaptLightness());
-        AddAction(RepoAction.Expand, nameof(RepoObjectsTree), "mnubtnExpand", "Expand", Images.ExpandAll.AdaptLightness());
-        AddAction(RepoAction.MoveUp, nameof(RepoObjectsTree), "mnubtnMoveUp", "Move Up", Images.ArrowUp);
-        AddAction(RepoAction.MoveDown, nameof(RepoObjectsTree), "mnubtnMoveDown", "Move Down", Images.ArrowDown);
+        RegisterAction(RepoAction.FetchBranch, mnubtnFetchOneBranch);
+        RegisterAction(RepoAction.FetchMerge, mnubtnPullFromRemoteBranch);
+        RegisterAction(RepoAction.FetchCheckout, mnubtnRemoteBranchFetchAndCheckout);
+        RegisterAction(RepoAction.FetchRebase, mnubtnFetchRebase);
+        RegisterAction(RepoAction.FetchCreate, mnubtnFetchCreateBranch);
+        RegisterAction(RepoAction.CreateInFolder, mnubtnCreateBranch);
+        RegisterAction(RepoAction.DeleteFolderBranches, mnubtnDeleteAllBranches);
+        RegisterAction(RepoAction.ManageRemotes, mnuBtnManageRemotesFromRootNode);
+        RegisterAction(RepoAction.FetchAllRemotes, mnuBtnFetchAllRemotes);
+        RegisterAction(RepoAction.PruneAllRemotes, mnuBtnPruneAllRemotes);
+        RegisterAction(RepoAction.ManageRemote, mnubtnManageRemotes);
+        RegisterAction(RepoAction.EnableRemote, mnubtnEnableRemote);
+        RegisterAction(RepoAction.EnableRemoteAndFetch, mnubtnEnableRemoteAndFetch);
+        RegisterAction(RepoAction.DisableRemote, mnubtnDisableRemote);
+        RegisterAction(RepoAction.FetchRemote, mnubtnFetchAllBranchesFromARemote);
+        RegisterAction(RepoAction.PruneRemote, mnuBtnPruneAllBranchesFromARemote);
+        RegisterAction(RepoAction.OpenRemoteUrl, mnuBtnOpenRemoteUrlInBrowser);
+        RegisterAction(RepoAction.OpenSubmodule, mnubtnOpenSubmodule);
+        RegisterAction(RepoAction.OpenSubmoduleInGitExtensions, mnubtnOpenGESubmodule);
+        RegisterAction(RepoAction.ManageSubmodules, mnubtnManageSubmodules);
+        RegisterAction(RepoAction.UpdateSubmodule, mnubtnUpdateSubmodule);
+        RegisterAction(RepoAction.SynchronizeSubmodules, mnubtnSynchronizeSubmodules);
+        RegisterAction(RepoAction.ResetSubmodule, mnubtnResetSubmodule);
+        RegisterAction(RepoAction.StashSubmodule, mnubtnStashSubmodule);
+        RegisterAction(RepoAction.CommitSubmodule, mnubtnCommitSubmodule);
+        RegisterAction(RepoAction.Collapse, mnubtnCollapse);
+        RegisterAction(RepoAction.Expand, mnubtnExpand);
+        RegisterAction(RepoAction.MoveUp, mnubtnMoveUp);
+        RegisterAction(RepoAction.MoveDown, mnubtnMoveDown);
+
+        // Stash
+        RegisterClick(mnubtnStashAllFromRootNode, () => _stashTree.StashAll(this));
+        RegisterClick(mnubtnStashStagedFromRootNode, () => _stashTree.StashStaged(this));
+        RegisterClick(mnubtnManageStashFromRootNode, () => _stashTree.OpenStash(this));
+        RegisterClick<StashNode>(mnubtnOpenStash, node => node.OpenStash(this));
+        RegisterClick<StashNode>(mnubtnApplyStash, node => node.ApplyStash(this));
+        RegisterClick<StashNode>(mnubtnPopStash, node => node.PopStash(this));
+        RegisterClick<StashNode>(mnubtnDropStash, node => node.DropStash(this));
+
+        // Worktree
+        RegisterClick(mnubtnCreateWorktreeFromRootNode, () => _worktreeTree.CreateWorktree(this));
+        RegisterClick(mnubtnPruneWorktreesFromRootNode, () => _worktreeTree.PruneWorktrees(this));
+        RegisterClick(mnubtnManageWorktreesFromRootNode, () => _worktreeTree.ManageWorktrees(this));
+        RegisterClick(mnubtnOpenWorktree, () => ((WorktreeNode)SelectedNode!).OpenWorktree());
+        RegisterClick(mnubtnDeleteWorktree, () => ((WorktreeNode)SelectedNode!).DeleteWorktree());
+        RegisterClick(mnubtnCopyWorktreePath, () => ClipboardUtil.TrySetText(((WorktreeNode)SelectedNode!).Worktree.Path));
+        RegisterClick(mnubtnShowWorktreeInFolder, () => OsShellUtil.OpenWithFileExplorer(((WorktreeNode)SelectedNode!).Worktree.Path));
 
         // Sort by / order
         _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.Module).GetRefs));
         _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.Module).GetRefs));
-        menuMain.InsertItems(new Control[] { new Separator(), _sortByContextMenuItem, _sortOrderContextMenuItem }, after: _actionItems[RepoAction.MoveDown]);
+        menuMain.InsertItems(new Control[] { new ToolStripSeparator(), _sortByContextMenuItem, _sortOrderContextMenuItem }, after: mnubtnMoveDown);
     }
 
-    private void contextMenu_Opening(object? sender, System.ComponentModel.CancelEventArgs e)
+    private void contextMenu_Opening(object sender, CancelEventArgs e)
     {
         foreach (MenuItem item in _actionItems.Values)
         {
@@ -178,57 +286,17 @@ partial class RepoObjectsTree : IMenuItemFactory
 
         NodeBase[] selectedNodes = [.. GetSelectedNodes()];
         bool hasSingleSelection = selectedNodes.Length == 1;
-
-        bool stashTreeSelected = SelectedNode is StashTree;
-        bool stashSelected = SelectedStashNode is not null;
-        bool worktreeTreeSelected = SelectedNode is WorktreeTree;
-        bool worktreeSelected = SelectedWorktreeNode is not null;
+        NodeBase? selectedNode = SelectedNode;
         bool canRunCommands = TryGetUICommandsDirect(out IGitUICommands? commands);
         bool canChangeWorkingTree = canRunCommands && !commands!.Module.IsBareRepository();
 
-        mnubtnStashAllFromRootNode.IsVisible = stashTreeSelected;
-        mnubtnStashStagedFromRootNode.IsVisible = stashTreeSelected;
-        mnubtnManageStashFromRootNode.IsVisible = stashTreeSelected;
-        mnubtnOpenStash.IsVisible = stashSelected;
-        mnubtnApplyStash.IsVisible = stashSelected;
-        mnubtnPopStash.IsVisible = stashSelected;
-        mnubtnDropStash.IsVisible = stashSelected;
-
-        mnubtnStashAllFromRootNode.IsEnabled = canRunCommands;
-        mnubtnStashStagedFromRootNode.IsEnabled = canRunCommands;
-        mnubtnManageStashFromRootNode.IsEnabled = canRunCommands;
-        mnubtnOpenStash.IsEnabled = canChangeWorkingTree;
-        mnubtnApplyStash.IsEnabled = canChangeWorkingTree;
-        mnubtnPopStash.IsEnabled = canChangeWorkingTree;
-        mnubtnDropStash.IsEnabled = canChangeWorkingTree;
-
-        mnubtnCreateWorktreeFromRootNode.IsVisible = worktreeTreeSelected;
-        mnubtnPruneWorktreesFromRootNode.IsVisible = worktreeTreeSelected;
-        mnubtnManageWorktreesFromRootNode.IsVisible = worktreeTreeSelected;
-        mnubtnCreateWorktreeFromRootNode.IsEnabled = canChangeWorkingTree;
-        mnubtnPruneWorktreesFromRootNode.IsEnabled = canRunCommands;
-        mnubtnManageWorktreesFromRootNode.IsEnabled = canRunCommands;
-
-        bool canActOnWorktree = worktreeSelected
-            && SelectedWorktreeNode is { IsCurrent: false, Worktree.IsDeleted: false };
-        mnubtnOpenWorktree.IsVisible = worktreeSelected;
-        mnubtnDeleteWorktree.IsVisible = worktreeSelected;
-        worktreePathSeparator.IsVisible = worktreeSelected;
-        mnubtnCopyWorktreePath.IsVisible = worktreeSelected;
-        mnubtnShowWorktreeInFolder.IsVisible = worktreeSelected;
-        mnubtnOpenWorktree.IsEnabled = canActOnWorktree && canRunCommands;
-        mnubtnDeleteWorktree.IsEnabled = canActOnWorktree && canRunCommands;
-        mnubtnCopyWorktreePath.IsEnabled = worktreeSelected;
-        mnubtnShowWorktreeInFolder.IsEnabled = worktreeSelected
-            && Directory.Exists(SelectedWorktreeNode!.Worktree.Path);
-
-        bool canCopy = SelectedNode is BaseBranchLeafNode or StashNode;
+        bool canCopy = selectedNode is BaseBranchLeafNode or StashNode;
         bool canFilter = GetSelectedNodes().OfType<IGitRefActions>().Any()
             && _filterRevisionGridBySpaceSeparatedRefs is not null;
         SetAction(RepoAction.Copy, canCopy, canCopy);
         SetAction(RepoAction.Filter, canFilter, canFilter);
 
-        LocalBranchNode? selectedLocalBranch = SelectedNode as LocalBranchNode;
+        LocalBranchNode? selectedLocalBranch = selectedNode as LocalBranchNode;
 
         foreach (ToolStripItemWithKey item in _localBranchMenuItems)
         {
@@ -243,79 +311,34 @@ partial class RepoObjectsTree : IMenuItemFactory
                 && (selectedLocalBranch?.IsCurrent == false || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(item.Key));
         }
 
-        EnableMenuItems(_remoteBranchMenuItems, _ => hasSingleSelection && SelectedNode is RemoteBranchNode);
-        EnableMenuItems(_tagNodeMenuItems, _ => hasSingleSelection && SelectedNode is TagNode);
+        EnableRemoteBranchContextMenu(hasSingleSelection, selectedNode);
+        EnableMenuItems(_tagNodeMenuItems, _ => hasSingleSelection && selectedNode is TagNode);
+        SetAction(RepoAction.ManageRemotes, hasSingleSelection && selectedNode is RemoteBranchTree, canRunCommands);
+        SetAction(RepoAction.FetchAllRemotes, hasSingleSelection && selectedNode is RemoteBranchTree, canRunCommands);
+        SetAction(RepoAction.PruneAllRemotes, hasSingleSelection && selectedNode is RemoteBranchTree, canRunCommands);
+        EnableRemoteRepoContextMenu(hasSingleSelection, selectedNode);
+        EnableMenuItems(hasSingleSelection && selectedNode is StashTree && canRunCommands, mnubtnStashAllFromRootNode, mnubtnStashStagedFromRootNode, mnubtnManageStashFromRootNode);
+        EnableStashContextMenu(hasSingleSelection, selectedNode);
+        EnableSubmoduleContextMenu(hasSingleSelection, selectedNode);
+        EnableWorktreeContextMenu(hasSingleSelection, selectedNode);
+        EnableMenuItems(hasSingleSelection && selectedNode is WorktreeTree && canRunCommands, mnubtnCreateWorktreeFromRootNode, mnubtnPruneWorktreesFromRootNode, mnubtnManageWorktreesFromRootNode);
+        SetAction(RepoAction.CreateInFolder, hasSingleSelection && selectedNode is BranchPathNode, canChangeWorkingTree);
+        SetAction(RepoAction.DeleteFolderBranches, hasSingleSelection && selectedNode is BranchPathNode, canChangeWorkingTree);
+        EnableExpandCollapseContextMenu(selectedNodes);
+        EnableMoveTreeUpDownContexMenu(hasSingleSelection, selectedNode);
+        EnableSortContextMenu(hasSingleSelection, selectedNode);
 
-        bool isSingleRefSelected = hasSingleSelection && SelectedNode is IGitRefActions;
-        _sortByContextMenuItem.Enable(isSingleRefSelected);
-
-        // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
-        bool showSortOrder = AppSettings.RefsSortBy != GitRefsSortBy.Default;
-        _sortOrderContextMenuItem.Enable(isSingleRefSelected && showSortOrder);
-
-        switch (SelectedNode)
+        if (hasSingleSelection && selectedLocalBranch is not null && canRunCommands)
         {
-            case RemoteBranchNode:
-                SetActionVisible(RepoAction.FetchBranch, canRunCommands);
-                SetActionVisible(RepoAction.FetchMerge, canChangeWorkingTree);
-                SetActionVisible(RepoAction.FetchCheckout, canChangeWorkingTree);
-                SetActionVisible(RepoAction.FetchRebase, canChangeWorkingTree);
-                SetActionVisible(RepoAction.FetchCreate, canChangeWorkingTree);
-                break;
-            case BranchPathNode:
-                SetActionVisible(RepoAction.CreateInFolder, canChangeWorkingTree);
-                SetActionVisible(RepoAction.DeleteFolderBranches, canChangeWorkingTree);
-                break;
-            case RemoteBranchTree:
-                SetActionVisible(RepoAction.ManageRemotes, canRunCommands);
-                SetActionVisible(RepoAction.FetchAllRemotes, canRunCommands);
-                SetActionVisible(RepoAction.PruneAllRemotes, canRunCommands);
-                break;
-            case RemoteRepoNode remoteRepo:
-                SetActionVisible(RepoAction.ManageRemote, canRunCommands);
-                if (remoteRepo.Enabled)
-                {
-                    SetActionVisible(RepoAction.FetchRemote, canRunCommands);
-                    SetActionVisible(RepoAction.PruneRemote, canRunCommands);
-                    SetActionVisible(RepoAction.DisableRemote, canRunCommands && remoteRepo.CanToggle);
-                }
-                else
-                {
-                    SetActionVisible(RepoAction.EnableRemote, canRunCommands && remoteRepo.CanToggle);
-                    SetActionVisible(RepoAction.EnableRemoteAndFetch, canRunCommands && remoteRepo.CanToggle);
-                }
-
-                if (remoteRepo.IsRemoteUrlUsingHttp)
-                {
-                    SetActionVisible(RepoAction.OpenRemoteUrl, enabled: true);
-                }
-
-                break;
-            case SubmoduleNode submodule:
-                bool singleSubmodule = GetSelectedNodes().Take(2).Count() == 1;
-                SetAction(RepoAction.OpenSubmodule, singleSubmodule && !submodule.IsCurrent, enabled: true);
-                SetAction(RepoAction.OpenSubmoduleInGitExtensions, singleSubmodule, enabled: true);
-                SetAction(RepoAction.UpdateSubmodule, singleSubmodule, canRunCommands);
-                SetAction(RepoAction.ManageSubmodules, singleSubmodule && submodule.IsCurrent, canChangeWorkingTree);
-                SetAction(RepoAction.SynchronizeSubmodules, singleSubmodule && submodule.IsCurrent, canChangeWorkingTree);
-                SetAction(RepoAction.ResetSubmodule, singleSubmodule, canChangeWorkingTree);
-                SetAction(RepoAction.StashSubmodule, singleSubmodule, canChangeWorkingTree);
-                SetAction(RepoAction.CommitSubmodule, singleSubmodule, canChangeWorkingTree);
-                break;
+            menuMain.AddUserScripts(
+                runScriptToolStripMenuItem,
+                ExecuteCommand,
+                script => script.AddToRevisionGridContextMenu,
+                commands!);
         }
-
-        if (SelectedNode?.TreeViewNode.Items.Count > 0)
+        else
         {
-            SetActionVisible(RepoAction.Collapse, SelectedNode.TreeViewNode.IsExpanded);
-            SetActionVisible(RepoAction.Expand, !SelectedNode.TreeViewNode.IsExpanded);
-        }
-
-        if (SelectedNode is Tree selectedTree)
-        {
-            Tree[] visibleTrees = [.. _trees.Where(tree => tree.IsEnabled).OrderBy(tree => tree.PositionIndex)];
-            int index = Array.IndexOf(visibleTrees, selectedTree);
-            SetActionVisible(RepoAction.MoveUp, index > 0);
-            SetActionVisible(RepoAction.MoveDown, index >= 0 && index < visibleTrees.Length - 1);
+            menuMain.RemoveUserScripts(runScriptToolStripMenuItem);
         }
 
         menuMain.ToggleSeparators();

@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -20,11 +20,9 @@ namespace GitUI.UserControls;
 
 internal sealed partial class FilterToolBar : TranslatedControl
 {
-    internal const string ReflogButtonName = nameof(tsbShowReflog);
     private const string TranslationCategory = nameof(FormBrowse);
     private const int MaxFilterItems = 30;
-
-    private static readonly string[] _noResultsFound = [TranslatedStrings.NoResultsFound];
+    internal const string ReflogButtonName = nameof(tsbShowReflog);
 
     private static readonly (string Name, string Property, string Text)[] TranslationItems =
     [
@@ -56,15 +54,17 @@ internal sealed partial class FilterToolBar : TranslatedControl
     ];
 
     private readonly List<string> _revisionFilters;
+
+    private static readonly string[] _noResultsFound = [TranslatedStrings.NoResultsFound];
     private Func<IGitModule>? _getModule;
     private IRevisionGridFilter? _revisionGridFilter;
     private bool _isApplyingFilter;
     private bool _filterBeingChanged;
-    private Func<RefsFilter, IReadOnlyList<IGitRef>>? _getRefs;
     private bool _updatingSuggestions;
     private string _advancedFilterToolTip = string.Empty;
-    private string? _tslblRevisionFilterToolTip;
+    private Func<RefsFilter, IReadOnlyList<IGitRef>>? _getRefs;
     private Action<string>? _showInvalidReference;
+    private string? _tslblRevisionFilterToolTip;
 
     public FilterToolBar()
     {
@@ -244,68 +244,6 @@ internal sealed partial class FilterToolBar : TranslatedControl
         return _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
     }
 
-    /// <summary>
-    ///  Sets the branches filter.
-    ///  No check that the branches exist (must be checked already, expected to be called from left panel).
-    /// </summary>
-    /// <param name="filter">The branches to filter separated by whitespace.</param>
-    public void SetBranchFilter(string? filter)
-    {
-        tscboBranchFilter.Text = filter;
-        ApplyCustomBranchFilter(checkBranch: false);
-    }
-
-    /// <summary>
-    /// If focus on branch filter, focus revision filter otherwise branch filter.
-    /// </summary>
-    public void SetFocus()
-    {
-        if (tstxtRevisionFilter.IsFocused)
-        {
-            tscboBranchFilter.Focus();
-        }
-        else
-        {
-            tstxtRevisionFilter.Focus();
-        }
-    }
-
-    private static void SetInputGesture(
-        MenuItem menuItem,
-        IReadOnlyList<HotkeyCommand> hotkeys,
-        RevisionGridControl.Command command)
-    {
-        WinFormsShims.Keys keys = hotkeys.FirstOrDefault(hotkey => hotkey.CommandCode == (int)command)?.KeyData
-            ?? WinFormsShims.Keys.None;
-        menuItem.InputGesture = KeysMapper.ToKeyGesture(keys);
-    }
-
-    /// <summary>
-    ///  Sets the revision filter.
-    /// </summary>
-    /// <param name="filter">The filter to apply.</param>
-    public void SetRevisionFilter(string? filter)
-    {
-        if (string.IsNullOrEmpty(tstxtRevisionFilter.Text) && string.IsNullOrEmpty(filter))
-        {
-            // The current filter is empty and the new filter is empty. No-op
-            return;
-        }
-
-        tstxtRevisionFilter.Text = filter;
-        ApplyRevisionFilter();
-    }
-
-    /// <summary>
-    /// Update the function to get refs for branch dropdown filter
-    /// </summary>
-    /// <param name="getRefs">Function to get refs, expected to be cached</param>
-    public void RefreshRevisionFunction(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-    {
-        _getRefs = getRefs ?? throw new ArgumentNullException(nameof(getRefs));
-        tscboBranchFilter.ItemsSource = Array.Empty<string>();
-    }
-
     private void InitBranchSelectionFilter(FilterChangedEventArgs e)
     {
         // Note: it is a weird combination, and it is mimicking the implementations in RevisionGridControl.
@@ -363,6 +301,68 @@ internal sealed partial class FilterToolBar : TranslatedControl
     }
 
     /// <summary>
+    ///  Sets the branches filter.
+    ///  No check that the branches exist (must be checked already, expected to be called from left panel).
+    /// </summary>
+    /// <param name="filter">The branches to filter separated by whitespace.</param>
+    public void SetBranchFilter(string? filter)
+    {
+        tscboBranchFilter.Text = filter;
+        ApplyCustomBranchFilter(checkBranch: false);
+    }
+
+    private static void SetInputGesture(
+        MenuItem menuItem,
+        IReadOnlyList<HotkeyCommand> hotkeys,
+        RevisionGridControl.Command command)
+    {
+        WinFormsShims.Keys keys = hotkeys.FirstOrDefault(hotkey => hotkey.CommandCode == (int)command)?.KeyData
+            ?? WinFormsShims.Keys.None;
+        menuItem.InputGesture = KeysMapper.ToKeyGesture(keys);
+    }
+
+    /// <summary>
+    /// If focus on branch filter, focus revision filter otherwise branch filter.
+    /// </summary>
+    public void SetFocus()
+    {
+        if (tstxtRevisionFilter.IsFocused)
+        {
+            tscboBranchFilter.Focus();
+        }
+        else
+        {
+            tstxtRevisionFilter.Focus();
+        }
+    }
+
+    /// <summary>
+    ///  Sets the revision filter.
+    /// </summary>
+    /// <param name="filter">The filter to apply.</param>
+    public void SetRevisionFilter(string? filter)
+    {
+        if (string.IsNullOrEmpty(tstxtRevisionFilter.Text) && string.IsNullOrEmpty(filter))
+        {
+            // The current filter is empty and the new filter is empty. No-op
+            return;
+        }
+
+        tstxtRevisionFilter.Text = filter;
+        ApplyRevisionFilter();
+    }
+
+    /// <summary>
+    /// Update the function to get refs for branch dropdown filter
+    /// </summary>
+    /// <param name="getRefs">Function to get refs, expected to be cached</param>
+    public void RefreshRevisionFunction(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    {
+        _getRefs = getRefs ?? throw new ArgumentNullException(nameof(getRefs));
+        tscboBranchFilter.ItemsSource = Array.Empty<string>();
+    }
+
+    /// <summary>
     /// Update the tscboBranchFilter dropdown items matching the current filter.
     /// This is called when dropdown clicked or text is manually changed
     /// (so tscboBranchFilter.Items is not necessarily available when set externally
@@ -413,6 +413,91 @@ internal sealed partial class FilterToolBar : TranslatedControl
         setShortcutString(tsmiAdvancedFilter, RevisionGridControl.Command.RevisionFilter);
     }
 
+    private void PromoteRevisionFilter(string filter)
+    {
+        if (string.IsNullOrWhiteSpace(filter)
+            || (_revisionFilters.Count > 0 && _revisionFilters[0] == filter))
+        {
+            return;
+        }
+
+        _revisionFilters.Remove(filter);
+        _revisionFilters.Insert(0, filter);
+        AppSettings.RevisionFilterDropdowns = [.. _revisionFilters.Take(MaxFilterItems)];
+        RefreshRevisionFilterItems();
+        tstxtRevisionFilter.Text = filter;
+    }
+
+    private void RefreshRevisionFilterItems()
+        => tstxtRevisionFilter.ItemsSource = _revisionFilters.ToArray();
+
+    private void SetBranchMode(MenuItem source, Avalonia.Media.IImage icon)
+    {
+        tssbtnShowBranches.Content = source.Header;
+        tssbtnShowBranches.Icon = icon;
+        ToolTip.SetTip(tssbtnShowBranches, ToolTip.GetTip(source));
+    }
+
+    private void revisionGridFilter_FilterChanged(object? sender, FilterChangedEventArgs e)
+    {
+        _isApplyingFilter = true;
+        try
+        {
+            tsmiShowOnlyFirstParent.IsChecked = e.ShowOnlyFirstParent;
+            tsbShowReflog.IsChecked = e.ShowReflogReferences;
+            InitBranchSelectionFilter(e);
+
+            List<(string Filter, MenuItem MenuItem)> revisionFilters =
+            [
+                (e.MessageFilter, tsmiCommitFilter),
+                (e.CommitterFilter, tsmiCommitterFilter),
+                (e.AuthorFilter, tsmiAuthorFilter),
+                (e.DiffContentFilter, tsmiDiffContainsFilter),
+            ];
+
+            // If there is no filter in filterInfo, clear text but retain checks
+            tstxtRevisionFilter.Text = string.Empty;
+            if (revisionFilters.Any(item => !string.IsNullOrWhiteSpace(item.Filter)))
+            {
+                foreach ((string filter, MenuItem menuItem) in revisionFilters)
+                {
+                    // Check the first menuitem that matches and following identical filters
+                    bool selected = !string.IsNullOrWhiteSpace(filter)
+                        && (string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text)
+                            || filter == tstxtRevisionFilter.Text);
+                    menuItem.IsChecked = selected;
+                    if (selected)
+                    {
+                        tstxtRevisionFilter.Text = filter;
+                    }
+                }
+            }
+
+            // Add to dropdown and settings, unless already included
+            PromoteRevisionFilter(tstxtRevisionFilter.Text?.Trim() ?? string.Empty);
+            ToolTip.SetTip(
+                tsbtnAdvancedFilter,
+                string.IsNullOrEmpty(e.FilterSummary) ? _advancedFilterToolTip : e.FilterSummary);
+            tsbtnAdvancedFilter.Icon = e.HasFilter
+                ? Properties.Images.FunnelExclamation
+                : Properties.Images.FunnelPencil;
+            tsmiResetPathFilters.IsEnabled = !string.IsNullOrEmpty(e.PathFilter);
+            tsmiResetAllFilters.IsEnabled = e.HasFilter;
+        }
+        finally
+        {
+            _isApplyingFilter = false;
+        }
+    }
+
+    private void revisionFilterBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
+        {
+            ApplyRevisionFilter();
+        }
+    }
+
     private void tsbtnAdvancedFilter_ButtonClick(object? sender, EventArgs e)
     {
         if (!tsmiResetAllFilters.IsEnabled)
@@ -422,14 +507,6 @@ internal sealed partial class FilterToolBar : TranslatedControl
         else
         {
             tsbtnAdvancedFilter.Flyout?.ShowAt(tsbtnAdvancedFilter);
-        }
-    }
-
-    private void revisionFilterBox_CheckedChanged(object sender, EventArgs e)
-    {
-        if (!string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
-        {
-            ApplyRevisionFilter();
         }
     }
 
@@ -509,9 +586,6 @@ internal sealed partial class FilterToolBar : TranslatedControl
     private void tssbtnShowBranches_Click(object sender, EventArgs e)
         => tssbtnShowBranches.Flyout?.ShowAt(tssbtnShowBranches);
 
-    internal TestAccessor GetTestAccessor()
-        => new(this);
-
     private void ShowInvalidReference(string branch)
     {
         if (_showInvalidReference is not null)
@@ -533,90 +607,8 @@ internal sealed partial class FilterToolBar : TranslatedControl
             page);
     }
 
-    private void revisionGridFilter_FilterChanged(object? sender, FilterChangedEventArgs e)
-    {
-        _isApplyingFilter = true;
-        try
-        {
-            tsmiShowOnlyFirstParent.IsChecked = e.ShowOnlyFirstParent;
-            tsbShowReflog.IsChecked = e.ShowReflogReferences;
-            InitBranchSelectionFilter(e);
-
-            List<(string Filter, MenuItem MenuItem)> revisionFilters =
-            [
-                (e.MessageFilter, tsmiCommitFilter),
-                (e.CommitterFilter, tsmiCommitterFilter),
-                (e.AuthorFilter, tsmiAuthorFilter),
-                (e.DiffContentFilter, tsmiDiffContainsFilter),
-            ];
-
-            // If there is no filter in filterInfo, clear text but retain checks
-            tstxtRevisionFilter.Text = string.Empty;
-            if (revisionFilters.Any(item => !string.IsNullOrWhiteSpace(item.Filter)))
-            {
-                foreach ((string filter, MenuItem menuItem) in revisionFilters)
-                {
-                    // Check the first menuitem that matches and following identical filters
-                    bool selected = !string.IsNullOrWhiteSpace(filter)
-                        && (string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text)
-                            || filter == tstxtRevisionFilter.Text);
-                    menuItem.IsChecked = selected;
-                    if (selected)
-                    {
-                        tstxtRevisionFilter.Text = filter;
-                    }
-                }
-            }
-
-            // Add to dropdown and settings, unless already included
-            PromoteRevisionFilter(tstxtRevisionFilter.Text?.Trim() ?? string.Empty);
-            ToolTip.SetTip(
-                tsbtnAdvancedFilter,
-                string.IsNullOrEmpty(e.FilterSummary) ? _advancedFilterToolTip : e.FilterSummary);
-            tsbtnAdvancedFilter.Icon = e.HasFilter
-                ? Properties.Images.FunnelExclamation
-                : Properties.Images.FunnelPencil;
-            tsmiResetPathFilters.IsEnabled = !string.IsNullOrEmpty(e.PathFilter);
-            tsmiResetAllFilters.IsEnabled = e.HasFilter;
-        }
-        finally
-        {
-            _isApplyingFilter = false;
-        }
-    }
-
-    private void PromoteRevisionFilter(string filter)
-    {
-        if (string.IsNullOrWhiteSpace(filter)
-            || (_revisionFilters.Count > 0 && _revisionFilters[0] == filter))
-        {
-            return;
-        }
-
-        _revisionFilters.Remove(filter);
-        _revisionFilters.Insert(0, filter);
-        AppSettings.RevisionFilterDropdowns = [.. _revisionFilters.Take(MaxFilterItems)];
-        RefreshRevisionFilterItems();
-        tstxtRevisionFilter.Text = filter;
-    }
-
-    private void RefreshRevisionFilterItems()
-        => tstxtRevisionFilter.ItemsSource = _revisionFilters.ToArray();
-
-    private void SetBranchMode(MenuItem source, Avalonia.Media.IImage icon)
-    {
-        tssbtnShowBranches.Content = source.Header;
-        tssbtnShowBranches.Icon = icon;
-        ToolTip.SetTip(tssbtnShowBranches, ToolTip.GetTip(source));
-    }
-
-    internal void RefreshBrowseDialogShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
-    {
-        _tslblRevisionFilterToolTip ??= ToolTip.GetTip(tslblRevisionFilter)?.ToString() ?? string.Empty;
-        ToolTip.SetTip(
-            tslblRevisionFilter,
-            _tslblRevisionFilterToolTip.UpdateSuffix(hotkeys.GetShortcutToolTip(FormBrowse.Command.FocusFilter)));
-    }
+    internal TestAccessor GetTestAccessor()
+        => new(this);
 
     public override void AddTranslationItems(ITranslation translation)
     {
@@ -654,6 +646,14 @@ internal sealed partial class FilterToolBar : TranslatedControl
         {
             contentControl.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(translated);
         }
+    }
+
+    internal void RefreshBrowseDialogShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
+    {
+        _tslblRevisionFilterToolTip ??= ToolTip.GetTip(tslblRevisionFilter)?.ToString() ?? string.Empty;
+        ToolTip.SetTip(
+            tslblRevisionFilter,
+            _tslblRevisionFilterToolTip.UpdateSuffix(hotkeys.GetShortcutToolTip(FormBrowse.Command.FocusFilter)));
     }
 
     internal void RefreshRevisionGridShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
