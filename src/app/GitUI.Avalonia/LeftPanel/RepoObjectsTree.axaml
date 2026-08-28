@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:compat="using:GitUI.Compat"
+             xmlns:wf="using:GitUI.Compat.WinFormsControls"
              xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.LeftPanel.RepoObjectsTree"
              MinWidth="190">
@@ -57,7 +58,7 @@
     <Grid x:Name="branchSearchPanel"
           Grid.Row="1"
           ColumnDefinitions="*,26">
-      <TextBox x:Name="txtBranchCriterion"
+      <TextBox x:Name="_txtBranchCriterion"
                Grid.Column="0"
                Height="24"
                Margin="1"
@@ -79,53 +80,161 @@
               ScrollViewer.VerticalScrollBarVisibility="Auto"
               ScrollViewer.AllowAutoHide="False">
       <TreeView.ContextMenu>
-        <ContextMenu x:Name="menuMain">
-          <MenuItem x:Name="mnubtnStashAllFromRootNode" Header="_Stash" />
-          <MenuItem x:Name="mnubtnStashStagedFromRootNode" Header="S_tash staged" />
-          <MenuItem x:Name="mnubtnManageStashFromRootNode" Header="_Manage stashes..." />
-          <MenuItem x:Name="mnubtnOpenStash"
+        <wf:ContextMenuStrip x:Name="menuMain">
+          <wf:ToolStripMenuItem x:Name="copyContextMenuItem" Header="_Copy to clipboard">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="filterForSelectedRefsMenuItem" Header="_Filter for selected">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ShowThisBranchOnly}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripSeparator x:Name="toolStripSeparator2" />
+          <wf:ToolStripMenuItem x:Name="mnuBtnManageRemotesFromRootNode" Header="_Manage...">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Remotes}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnuBtnFetchAllRemotes" Header="Fetch all remotes">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchAll}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnuBtnPruneAllRemotes" Header="Fetch and prune all remotes">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchPruneAll}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripSeparator x:Name="toolStripSeparator3" />
+          <wf:ToolStripMenuItem x:Name="mnubtnManageRemotes" Header="_Manage...">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Remotes}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnEnableRemote" Header="_Activate">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.EyeOpened}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnEnableRemoteAndFetch" Header="A_ctivate and fetch">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RemoteEnableAndFetch}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnDisableRemote" Header="_Deactivate">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.EyeClosed}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnFetchAllBranchesFromARemote" Header="_Fetch">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetch}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnuBtnPruneAllBranchesFromARemote" Header="Fetch and _prune">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PullFetchPrune}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnuBtnOpenRemoteUrlInBrowser" Header="Open remote Url">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Globe}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripSeparator x:Name="toolStripSeparator5" />
+          <wf:ToolStripMenuItem x:Name="mnubtnOpenSubmodule" Header="_Open">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.FolderOpen}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnOpenGESubmodule" Header="O_pen">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.GitExtensionsLogo16}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnManageSubmodules" Header="_Manage...">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SubmodulesManage}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnUpdateSubmodule" Header="_Update">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SubmodulesUpdate}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnSynchronizeSubmodules" Header="Synchronize">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SubmodulesSync}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnResetSubmodule" Header="_Reset">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnStashSubmodule" Header="_Stash">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stash}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnCommitSubmodule" Header="_Commit">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RepoStateDirtySubmodules}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripSeparator x:Name="toolStripSeparator8" />
+          <wf:ToolStripMenuItem x:Name="mnubtnRemoteBranchFetchAndCheckout" Header="_Fetch &amp;&amp; Checkout">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchCheckout}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnPullFromRemoteBranch" Header="Fetch &amp;&amp; Merge (_Pull)">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Pull}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnFetchRebase" Header="Fetch &amp;&amp; Re_base">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Rebase}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnFetchCreateBranch" Header="Fetc_h &amp;&amp; Create Branch">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Branch}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnFetchOneBranch" Header="Fe_tch">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Stage}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripSeparator x:Name="toolStripSeparator6" />
+          <wf:ToolStripMenuItem x:Name="mnubtnCreateBranch" Header="Create Branch...">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchCreate}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnDeleteAllBranches" Header="Delete All">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BranchDelete}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripSeparator x:Name="toolStripSeparator10" />
+          <wf:ToolStripMenuItem x:Name="mnubtnStashAllFromRootNode" Header="_Stash" />
+          <wf:ToolStripMenuItem x:Name="mnubtnStashStagedFromRootNode" Header="S_tash staged" />
+          <wf:ToolStripMenuItem x:Name="mnubtnManageStashFromRootNode" Header="_Manage stashes..." />
+          <wf:ToolStripSeparator x:Name="toolStripSeparator7" />
+          <wf:ToolStripMenuItem x:Name="mnubtnOpenStash"
                     Header="_Open stash"
                     ToolTip.Tip="Open this stash"
                     compat:TranslationCompat.UseToolTipText="True" />
-          <MenuItem x:Name="mnubtnApplyStash"
+          <wf:ToolStripMenuItem x:Name="mnubtnApplyStash"
                     Header="_Apply stash"
                     ToolTip.Tip="Apply this stash"
                     compat:TranslationCompat.UseToolTipText="True" />
-          <MenuItem x:Name="mnubtnPopStash"
+          <wf:ToolStripMenuItem x:Name="mnubtnPopStash"
                     Header="_Pop stash"
                     ToolTip.Tip="Pop this stash"
                     compat:TranslationCompat.UseToolTipText="True" />
-          <MenuItem x:Name="mnubtnDropStash"
+          <wf:ToolStripMenuItem x:Name="mnubtnDropStash"
                     Header="_Drop stash..."
                     ToolTip.Tip="Drop this stash"
                     compat:TranslationCompat.UseToolTipText="True" />
-          <MenuItem x:Name="mnubtnCreateWorktreeFromRootNode" Header="_Create worktree..." />
-          <MenuItem x:Name="mnubtnPruneWorktreesFromRootNode" Header="_Prune worktrees" />
-          <MenuItem x:Name="mnubtnManageWorktreesFromRootNode" Header="_Manage worktrees..." />
-          <MenuItem x:Name="mnubtnOpenWorktree"
+          <wf:ToolStripSeparator x:Name="toolStripSeparator11" />
+          <wf:ToolStripMenuItem x:Name="mnubtnCreateWorktreeFromRootNode" Header="_Create worktree..." />
+          <wf:ToolStripMenuItem x:Name="mnubtnPruneWorktreesFromRootNode" Header="_Prune worktrees" />
+          <wf:ToolStripMenuItem x:Name="mnubtnManageWorktreesFromRootNode" Header="_Manage worktrees..." />
+          <wf:ToolStripSeparator x:Name="toolStripSeparator12" />
+          <wf:ToolStripMenuItem x:Name="mnubtnOpenWorktree"
                     Header="_Open worktree"
                     ToolTip.Tip="Open this worktree"
                     compat:TranslationCompat.UseToolTipText="True">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.FolderOpen}" /></MenuItem.Icon>
-          </MenuItem>
-          <MenuItem x:Name="mnubtnDeleteWorktree"
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnDeleteWorktree"
                     Header="_Delete worktree..."
                     ToolTip.Tip="Delete this worktree"
                     compat:TranslationCompat.UseToolTipText="True" />
-          <Separator x:Name="worktreePathSeparator" />
-          <MenuItem x:Name="mnubtnCopyWorktreePath"
+          <wf:ToolStripSeparator x:Name="toolStripSeparator13" />
+          <wf:ToolStripMenuItem x:Name="mnubtnCopyWorktreePath"
                     Header="Copy _path"
                     ToolTip.Tip="Copy the worktree path to clipboard"
                     compat:TranslationCompat.UseToolTipText="True">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CopyToClipboard}" /></MenuItem.Icon>
-          </MenuItem>
-          <MenuItem x:Name="mnubtnShowWorktreeInFolder"
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnShowWorktreeInFolder"
                     Header="Show _in folder"
                     ToolTip.Tip="Show the worktree in File Explorer"
                     compat:TranslationCompat.UseToolTipText="True">
             <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.BrowseFileExplorer}" /></MenuItem.Icon>
-          </MenuItem>
-        </ContextMenu>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripSeparator x:Name="toolStripSeparator9" />
+          <wf:ToolStripMenuItem x:Name="mnubtnCollapse" Header="Collapse">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CollapseAll}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnExpand" Header="Expand">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ExpandAll}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripSeparator x:Name="toolStripSeparator4" />
+          <wf:ToolStripMenuItem x:Name="mnubtnMoveUp" Header="Move Up">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ArrowUp}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripMenuItem x:Name="mnubtnMoveDown" Header="Move Down">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ArrowDown}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+          <wf:ToolStripSeparator x:Name="toolStripSeparator1" />
+          <wf:ToolStripMenuItem x:Name="runScriptToolStripMenuItem" Header="Run script">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Console}" /></MenuItem.Icon>
+          </wf:ToolStripMenuItem>
+        </wf:ContextMenuStrip>
       </TreeView.ContextMenu>
     </TreeView>
   </Grid>

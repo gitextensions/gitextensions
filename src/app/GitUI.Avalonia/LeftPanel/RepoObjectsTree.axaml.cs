@@ -3,18 +3,22 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.Submodules;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.LeftPanel.ContextMenu;
 using GitUI.LeftPanel.Interfaces;
 using GitUI.Properties;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
 using ResourceManager;
@@ -24,10 +28,14 @@ namespace GitUI.LeftPanel;
 
 public sealed partial class RepoObjectsTree : GitModuleControl
 {
+    public const string HotkeySettingsName = "LeftPanel";
     private readonly Dictionary<RepoAction, MenuItem> _actionItems = [];
-    private readonly Separator _actionSeparator = new();
+    private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
+    private readonly TranslationString _searchTooltip = new("Search");
 
-    private readonly List<Tree> _trees = [];
+    private readonly List<Tree> _rootNodes = [];
+    private LocalBranchTree _branchesTree = null!;
+    private RemoteBranchTree _remotesTree = null!;
     private IReadOnlyCollection<GitRevision> _currentStashes = [];
     private string _currentBranch = string.Empty;
     private IReadOnlyList<GitWorktree> _currentWorktrees = [];
@@ -38,17 +46,15 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private bool _includeStashes;
     private Action<string, ObjectId, ObjectId>? _openRepository;
     private IConfigFileRemoteSettingsManager? _remotesManager;
-    private List<TreeViewItem>? _searchResults;
-    public const string HotkeySettingsName = "LeftPanel";
-    private readonly TranslationString _searchTooltip = new("Search");
-    private StashTree? _stashTree;
+    private TagTree _tagTree = null!;
     private ISubmoduleStatusProvider? _submoduleStatusProvider;
+    private StashTree _stashTree = null!;
     private readonly SubmoduleTree _submoduleTree;
     private readonly WorktreeTree _worktreeTree;
-    private Action<string?>? _filterRevisionGridBySpaceSeparatedRefs;
+    private List<TreeViewItem>? _searchResult;
 
     /// <summary>Occurs when the selected node changes.</summary>
-    public event EventHandler? SelectionChanged;
+    public event EventHandler? NodeSelectionChanged;
 
     /// <summary>Gets the ref of the selected node, or <see langword="null"/> for group nodes.</summary>
     public IGitRef? SelectedRef => (SelectedNode as BaseRevisionNode)?.GitRef;
@@ -68,66 +74,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private StashNode? SelectedStashNode => SelectedNode as StashNode;
 
     private WorktreeNode? SelectedWorktreeNode => SelectedNode as WorktreeNode;
-
-    public RepoObjectsTree()
-    {
-        InitializeComponent();
-        tsbCollapseAll.Icon = Images.CollapseAll.AdaptLightness();
-        _submoduleTree = new SubmoduleTree(this);
-        _worktreeTree = new WorktreeTree(this);
-        HotkeysEnabled = true;
-        RegisterContextActions();
-
-        treeMain.SelectionChanged += (_, _) => SelectionChanged?.Invoke(this, EventArgs.Empty);
-        menuMain.Opening += contextMenu_Opening;
-        menuMain.Opened += contextMenu_Opened;
-        tsbCollapseAll.Click += btnCollapseAll_Click;
-        tsbShowBranches.Click += tsbShowBranches_Click;
-        tsbShowRemotes.Click += tsbShowRemotes_Click;
-        tsbShowWorktrees.Click += tsbShowWorktrees_Click;
-        tsbShowTags.Click += tsbShowTags_Click;
-        tsbShowSubmodules.Click += tsbShowSubmodules_Click;
-        tsbShowStashes.Click += tsbShowStashes_Click;
-        btnSearch.Click += OnBtnSearchClicked;
-        txtBranchCriterion.PropertyChanged += OnBranchCriterionChanged;
-        txtBranchCriterion.KeyDown += TxtBranchCriterion_KeyDown;
-
-        mnubtnStashAllFromRootNode.Click += (_, _) => _stashTree?.StashAll(this);
-        mnubtnStashStagedFromRootNode.Click += (_, _) => _stashTree?.StashStaged(this);
-        mnubtnManageStashFromRootNode.Click += (_, _) => _stashTree?.OpenStash(this);
-        mnubtnOpenStash.Click += (_, _) => SelectedStashNode?.OpenStash(this);
-        mnubtnApplyStash.Click += (_, _) => SelectedStashNode?.ApplyStash(this);
-        mnubtnPopStash.Click += (_, _) => SelectedStashNode?.PopStash(this);
-        mnubtnDropStash.Click += (_, _) => SelectedStashNode?.DropStash(this);
-        mnubtnCreateWorktreeFromRootNode.Click += (_, _) => _worktreeTree.CreateWorktree(this);
-        mnubtnPruneWorktreesFromRootNode.Click += (_, _) => _worktreeTree.PruneWorktrees(this);
-        mnubtnManageWorktreesFromRootNode.Click += (_, _) => _worktreeTree.ManageWorktrees(this);
-        mnubtnOpenWorktree.Click += (_, _) => SelectedWorktreeNode?.OpenWorktree();
-        mnubtnDeleteWorktree.Click += (_, _) => SelectedWorktreeNode?.DeleteWorktree();
-        mnubtnCopyWorktreePath.Click += (_, _) => ClipboardUtil.TrySetText(SelectedWorktreeNode?.Worktree.Path ?? string.Empty);
-        mnubtnShowWorktreeInFolder.Click += (_, _) => OsShellUtil.OpenWithFileExplorer(SelectedWorktreeNode!.Worktree.Path);
-
-        tsbShowBranches.IsChecked = AppSettings.RepoObjectsTreeShowBranches;
-        tsbShowRemotes.IsChecked = AppSettings.RepoObjectsTreeShowRemotes;
-        tsbShowWorktrees.IsChecked = AppSettings.RepoObjectsTreeShowWorktrees;
-        tsbShowTags.IsChecked = AppSettings.RepoObjectsTreeShowTags;
-        tsbShowSubmodules.IsChecked = AppSettings.RepoObjectsTreeShowSubmodules;
-        tsbShowStashes.IsChecked = AppSettings.RepoObjectsTreeShowStashes;
-        FixInvalidTreeToPositionIndices();
-
-        AttachedToLogicalTree += (_, _) => _submoduleTree.Attach(_submoduleStatusProvider);
-        DetachedFromLogicalTree += (_, _) => _submoduleTree.Detach();
-
-        InitializeComplete();
-        ToolTip.SetTip(btnSearch, _searchTooltip.Text);
-        ToolTip.SetTip(tsbCollapseAll, Translate(nameof(RepoObjectsTree), "mnubtnCollapse", "Collapse all subnodes", "ToolTipText"));
-        ToolTip.SetTip(tsbShowBranches, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowBranches.Content!));
-        ToolTip.SetTip(tsbShowRemotes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowRemotes.Content!));
-        ToolTip.SetTip(tsbShowWorktrees, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowWorktrees.Content!));
-        ToolTip.SetTip(tsbShowTags, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowTags.Content!));
-        ToolTip.SetTip(tsbShowSubmodules, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowSubmodules.Content!));
-        ToolTip.SetTip(tsbShowStashes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowStashes.Content!));
-    }
+    private Action<string?> _filterRevisionGridBySpaceSeparatedRefs = null!;
+    private IAheadBehindDataProvider? _aheadBehindDataProvider;
+    private bool _searchCriteriaChanged;
+    private ICheckRefs _refsSource = null!;
+    private IRevisionGridInfo _revisionGridInfo = null!;
 
     internal void OpenRepository(string path, ObjectId selectedId = default, ObjectId firstId = default)
         => _openRepository?.Invoke(path, selectedId, firstId);
@@ -178,37 +129,40 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         HashSet<string> expandedNodes =
         [
-            .. _trees
+            .. _rootNodes
                 .SelectMany(tree => tree.DescendantsAndSelf())
                 .Where(node => node.TreeViewNode.IsExpanded)
                 .Select(GetNodeIdentity),
         ];
         HashSet<string> selectedNodes = [.. GetSelectedNodes().Select(GetNodeIdentity)];
-        bool restoreState = _trees.Count > 0;
+        bool restoreState = _rootNodes.Count > 0;
 
         ClearSearchResults();
-        _trees.Clear();
+        _rootNodes.Clear();
 
         IGitRef[] branches = [.. refs.Where(gitRef => gitRef.IsHead && !gitRef.IsTag)];
         IGitRef[] remotes = [.. refs.Where(gitRef => gitRef.IsRemote)];
         IGitRef[] tags = [.. refs.Where(gitRef => gitRef.IsTag && !gitRef.IsDereference)];
-        _trees.Add(new LocalBranchTree(this, branches, currentBranch));
-        _trees.Add(new RemoteBranchTree(this, remotes, enabledRemotes, disabledRemotes, remotesManager));
+        _branchesTree = new LocalBranchTree(this, branches, currentBranch);
+        _remotesTree = new RemoteBranchTree(this, remotes, enabledRemotes, disabledRemotes, remotesManager);
+        _tagTree = new TagTree(this, tags);
+        _rootNodes.Add(_branchesTree);
+        _rootNodes.Add(_remotesTree);
         _worktreeTree.Load(_currentWorktrees, currentWorkingDirectory);
-        _trees.Add(_worktreeTree);
-        _trees.Add(new TagTree(this, tags));
-        _trees.Add(_submoduleTree);
+        _rootNodes.Add(_worktreeTree);
+        _rootNodes.Add(_tagTree);
+        _rootNodes.Add(_submoduleTree);
 
         _stashTree = new StashTree(this, stashes);
         if (includeStashes)
         {
-            _trees.Add(_stashTree);
+            _rootNodes.Add(_stashTree);
         }
 
         ApplyRoots();
         if (restoreState)
         {
-            NodeBase[] nodes = [.. _trees.SelectMany(tree => tree.DescendantsAndSelf())];
+            NodeBase[] nodes = [.. _rootNodes.SelectMany(tree => tree.DescendantsAndSelf())];
             foreach (NodeBase node in nodes)
             {
                 node.TreeViewNode.IsExpanded = expandedNodes.Contains(GetNodeIdentity(node));
@@ -225,6 +179,70 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
+    public RepoObjectsTree()
+    {
+        InitializeComponent();
+        tsbCollapseAll.Icon = Images.CollapseAll.AdaptLightness();
+        _submoduleTree = new SubmoduleTree(this);
+        _worktreeTree = new WorktreeTree(this);
+        HotkeysEnabled = true;
+        RegisterContextActions();
+
+        treeMain.SelectionChanged += (_, _) => NodeSelectionChanged?.Invoke(this, EventArgs.Empty);
+        menuMain.Opening += contextMenu_Opening;
+        menuMain.Opened += contextMenu_Opened;
+        tsbCollapseAll.Click += btnCollapseAll_Click;
+        tsbShowBranches.Click += tsbShowBranches_Click;
+        tsbShowRemotes.Click += tsbShowRemotes_Click;
+        tsbShowWorktrees.Click += tsbShowWorktrees_Click;
+        tsbShowTags.Click += tsbShowTags_Click;
+        tsbShowSubmodules.Click += tsbShowSubmodules_Click;
+        tsbShowStashes.Click += tsbShowStashes_Click;
+        btnSearch.Click += OnBtnSearchClicked;
+        _txtBranchCriterion.PropertyChanged += OnBranchCriterionChanged;
+        _txtBranchCriterion.KeyDown += TxtBranchCriterion_KeyDown;
+
+        tsbShowBranches.IsChecked = AppSettings.RepoObjectsTreeShowBranches;
+        tsbShowRemotes.IsChecked = AppSettings.RepoObjectsTreeShowRemotes;
+        tsbShowWorktrees.IsChecked = AppSettings.RepoObjectsTreeShowWorktrees;
+        tsbShowTags.IsChecked = AppSettings.RepoObjectsTreeShowTags;
+        tsbShowSubmodules.IsChecked = AppSettings.RepoObjectsTreeShowSubmodules;
+        tsbShowStashes.IsChecked = AppSettings.RepoObjectsTreeShowStashes;
+        FixInvalidTreeToPositionIndices();
+
+        AttachedToLogicalTree += (_, _) => _submoduleTree.Attach(_submoduleStatusProvider);
+        DetachedFromLogicalTree += (_, _) =>
+        {
+            _selectionCancellationTokenSequence.CancelCurrent();
+            _submoduleTree.Detach();
+        };
+
+        InitializeComplete();
+        ToolTip.SetTip(btnSearch, _searchTooltip.Text);
+        ToolTip.SetTip(tsbCollapseAll, Translate(nameof(RepoObjectsTree), "mnubtnCollapse", "Collapse all subnodes", "ToolTipText"));
+        ToolTip.SetTip(tsbShowBranches, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowBranches.Content!));
+        ToolTip.SetTip(tsbShowRemotes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowRemotes.Content!));
+        ToolTip.SetTip(tsbShowWorktrees, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowWorktrees.Content!));
+        ToolTip.SetTip(tsbShowTags, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowTags.Content!));
+        ToolTip.SetTip(tsbShowSubmodules, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowSubmodules.Content!));
+        ToolTip.SetTip(tsbShowStashes, AvaloniaTranslationUtils.RemoveAvaloniaMnemonics((string)tsbShowStashes.Content!));
+    }
+
+    public void Initialize(
+        IAheadBehindDataProvider? aheadBehindDataProvider,
+        Action<string?> filterRevisionGridBySpaceSeparatedRefs,
+        ICheckRefs refsSource,
+        IRevisionGridInfo revisionGridInfo)
+    {
+        _aheadBehindDataProvider = aheadBehindDataProvider;
+        _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;
+        _refsSource = refsSource;
+        _revisionGridInfo = revisionGridInfo;
+
+        // Lazily resolve the command source so each tree receives repository notifications.
+        _ = UICommandsSource;
+    }
+
     /// <summary>Connects the tree's selected-ref filtering action to the revision grid.</summary>
     public void Initialize(
         Action<string?> filterRevisionGridBySpaceSeparatedRefs,
@@ -232,6 +250,31 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     {
         _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;
         _openRepository = openRepository;
+    }
+
+    /// <summary>
+    /// FormBrowse refreshing the left panel when refreshing the grid.
+    /// (Update the objects in the panel.)
+    /// </summary>
+    /// <param name="getRefs">Function to get refs.</param>
+    /// <param name="getStashRevs">Lazy accessor for stash commits.</param>
+    /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
+    public void RefreshRevisionsLoading(
+        Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs,
+        Lazy<IReadOnlyCollection<GitRevision>> getStashRevs,
+        bool forceRefresh)
+    {
+        IReadOnlyList<IGitRef> refs = getRefs(RefsFilter.NoFilter);
+        SetRefs(
+            refs,
+            getStashRevs.Value,
+            includeStashes: true,
+            Module.GetSelectedBranch(emptyIfDetached: true),
+            _enabledRemotes,
+            _disabledRemotes,
+            _remotesManager,
+            _currentWorktrees,
+            _currentWorkingDirectory);
     }
 
     internal static string GetNodeIdentity(NodeBase node)
@@ -368,7 +411,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     {
         TreeViewItem[] visibleRoots =
         [
-            .. _trees
+            .. _rootNodes
                 .Where(tree => tree.IsEnabled)
                 .OrderBy(tree => tree.PositionIndex)
                 .ThenBy(tree => tree.Kind)
@@ -383,6 +426,13 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         ClearSearchResults();
         ApplyRoots();
     }
+
+    /// <summary>
+    /// FormBrowse refreshing the left panel after updating the grid.
+    /// (Update the visibility for left panel objects.)
+    /// </summary>
+    public void RefreshRevisionsLoaded()
+        => ApplyRoots();
 
     /// <summary>
     /// Refresh after resorting.
@@ -414,6 +464,64 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         LoadHotkeys(HotkeySettingsName);
     }
 
+    public void SelectionChanged(IReadOnlyList<GitRevision> selectedRevisions)
+    {
+        if ((selectedRevisions.Count == 0 && SelectedNode is null)
+            || (selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId == SelectedRevisionObjectId))
+        {
+            return;
+        }
+
+        CancellationToken cancellationToken = _selectionCancellationTokenSequence.Next();
+        GitRevision? selectedRevision = selectedRevisions.FirstOrDefault();
+        string? selectedGuid = selectedRevision is null
+            ? null
+            : selectedRevision.IsArtificial ? "HEAD" : selectedRevision.Guid;
+
+        ThreadHelper.FileAndForget(async () =>
+        {
+            HashSet<string> mergedBranches = selectedGuid is null
+                ? []
+                : [.. await Module.GetMergedBranchesAsync(
+                    includeRemote: true,
+                    fullRefname: true,
+                    commit: selectedGuid,
+                    cancellationToken)];
+
+            selectedRevision?.Refs.ForEach(gitRef => mergedBranches.Remove(gitRef.CompleteName));
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                _branchesTree.DescendantsAndSelf()
+                    .OfType<BaseBranchLeafNode>()
+                    .ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsHeadsPrefix + node.FullPath));
+                _remotesTree.DescendantsAndSelf()
+                    .OfType<BaseBranchLeafNode>()
+                    .ForEach(node => node.IsMerged = mergedBranches.Contains(GitRefName.RefsRemotesPrefix + node.FullPath));
+            });
+        });
+    }
+
+    public void SelectGitRef(string gitRef)
+    {
+        BaseRevisionNode? node = _rootNodes
+            .SelectMany(tree => tree.DescendantsAndSelf())
+            .OfType<BaseRevisionNode>()
+            .FirstOrDefault(revisionNode => revisionNode.FullPath == gitRef);
+        if (node is null)
+        {
+            return;
+        }
+
+        SelectNode(node, multiple: false, includingDescendants: false);
+        node.TreeViewNode.BringIntoView();
+    }
+
+    private void OnRuntimeLoad()
+    {
+        ReloadHotkeys();
+    }
+
     protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
     {
         base.OnUICommandsSourceSet(source);
@@ -421,44 +529,94 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         _submoduleTree.Attach(_submoduleStatusProvider);
         if (source.UICommands.GetService(typeof(IHotkeySettingsLoader)) is not null)
         {
-            ReloadHotkeys();
+            OnRuntimeLoad();
         }
+    }
+
+    private void AddTree(Tree tree)
+    {
+        if (!_rootNodes.Contains(tree))
+        {
+            _rootNodes.Add(tree);
+        }
+
+        ApplyRoots();
+    }
+
+    internal bool IsNodeSelected(TreeViewItem item)
+        => treeMain.SelectedItems?.Contains(item) == true || ReferenceEquals(treeMain.SelectedItem, item);
+
+    internal void SetNodeSelected(TreeViewItem item, bool selected)
+    {
+        if (treeMain.SelectedItems is null)
+        {
+            if (selected)
+            {
+                treeMain.SelectedItem = item;
+            }
+
+            return;
+        }
+
+        if (selected)
+        {
+            if (!treeMain.SelectedItems.Contains(item))
+            {
+                treeMain.SelectedItems.Add(item);
+            }
+        }
+        else
+        {
+            treeMain.SelectedItems.Remove(item);
+        }
+    }
+
+    private void RemoveTree(Tree tree)
+    {
+        _rootNodes.Remove(tree);
+        ApplyRoots();
     }
 
     private void DoSearch()
     {
-        string criterion = txtBranchCriterion.Text?.Trim() ?? string.Empty;
+        if (_searchCriteriaChanged)
+        {
+            _searchCriteriaChanged = false;
+            ClearSearchResults();
+        }
+
+        string criterion = _txtBranchCriterion.Text?.Trim() ?? string.Empty;
         if (string.IsNullOrEmpty(criterion))
         {
             ClearSearchResults();
-            txtBranchCriterion.Focus();
+            _txtBranchCriterion.Focus();
             return;
         }
 
-        if (_searchResults is null)
+        if (_searchResult is null)
         {
-            _searchResults =
+            _searchResult =
             [
-                .. _trees
+                .. _rootNodes
                     .Where(tree => tree.IsEnabled)
                     .SelectMany(tree => tree.DescendantsAndSelf())
                     .Where(node => node.SearchText.Contains(criterion, StringComparison.InvariantCultureIgnoreCase))
                     .Select(node => node.TreeViewNode),
             ];
-            foreach (TreeViewItem result in _searchResults)
+            foreach (TreeViewItem result in _searchResult)
             {
                 result.Classes.Add("repo-search-result");
             }
         }
 
-        if (_searchResults.Count == 0)
+        if (_searchResult.Count == 0)
         {
             return;
         }
 
-        TreeViewItem next = _searchResults[0];
-        _searchResults.RemoveAt(0);
-        _searchResults.Add(next);
+        TreeViewItem next = _searchResult[0];
+        _searchResult.RemoveAt(0);
+        _searchResult.Add(next);
         if (next.Tag is NodeBase node)
         {
             for (NodeBase? parent = node.Parent; parent is not null; parent = parent.Parent)
@@ -471,43 +629,22 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         next.BringIntoView();
     }
 
-    private void OnBtnSearchClicked(object? sender, EventArgs e)
-    {
-        DoSearch();
-    }
-
     private void ClearSearchResults()
     {
-        if (_searchResults is not null)
+        if (_searchResult is not null)
         {
-            foreach (TreeViewItem item in _searchResults)
+            foreach (TreeViewItem item in _searchResult)
             {
                 item.Classes.Remove("repo-search-result");
             }
         }
 
-        _searchResults = null;
+        _searchResult = null;
     }
 
-    private void btnCollapseAll_Click(object? sender, EventArgs e)
+    private void OnBtnSearchClicked(object? sender, EventArgs e)
     {
-        foreach (Tree tree in _trees)
-        {
-            SetExpanded(tree.TreeViewNode, expanded: false, recursive: true);
-        }
-    }
-
-    private void AddAction(RepoAction action, string category, string name, string source, IImage icon)
-    {
-        MenuItem item = new()
-        {
-            Header = AvaloniaTranslationUtils.ToAvaloniaMnemonics(Translate(category, name, source)),
-            Icon = new Image { Width = 16, Height = 16, Source = icon, Stretch = Stretch.Uniform },
-            IsVisible = false,
-        };
-        item.Click += (_, _) => ExecuteAction(action);
-        _actionItems.Add(action, item);
-        menuMain.Items.Add(item);
+        DoSearch();
     }
 
     private static string Translate(string category, string name, string source, string property = "Text")
@@ -521,23 +658,21 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         return text;
     }
 
+    private void btnCollapseAll_Click(object? sender, EventArgs e)
+    {
+        foreach (Tree tree in _rootNodes)
+        {
+            SetExpanded(tree.TreeViewNode, expanded: false, recursive: true);
+        }
+    }
+
     private void OnBranchCriterionChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == TextBox.TextProperty)
         {
+            _searchCriteriaChanged = true;
             ClearSearchResults();
         }
-    }
-
-    private void TxtBranchCriterion_KeyDown(object? sender, KeyEventArgs e)
-    {
-        if (e.Key != Key.Enter)
-        {
-            return;
-        }
-
-        OnBtnSearchClicked(this, EventArgs.Empty);
-        e.Handled = true;
     }
 
     private void SetActionVisible(RepoAction action, bool enabled)
@@ -598,19 +733,20 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    public override bool ProcessHotkey(WinFormsShims.Keys keyData)
+    private void TxtBranchCriterion_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (txtBranchCriterion.IsKeyboardFocusWithin && GitExtensionsControl.IsTextEditKey(keyData))
+        if (e.Key != Key.Enter)
         {
-            return false;
+            return;
         }
 
-        return base.ProcessHotkey(keyData);
+        OnBtnSearchClicked(this, EventArgs.Empty);
+        e.Handled = true;
     }
 
     private void ReorderTree(Tree tree, bool up)
     {
-        Tree[] visibleTrees = [.. _trees.Where(item => item.IsEnabled).OrderBy(item => item.PositionIndex)];
+        Tree[] visibleTrees = [.. _rootNodes.Where(item => item.IsEnabled).OrderBy(item => item.PositionIndex)];
         int index = Array.IndexOf(visibleTrees, tree);
         int swapIndex = up ? index - 1 : index + 1;
         if (index < 0 || swapIndex < 0 || swapIndex >= visibleTrees.Length)
@@ -643,32 +779,14 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     internal void SelectTreeViewItem(TreeViewItem item)
         => treeMain.SelectedItem = item;
 
-    internal bool IsNodeSelected(TreeViewItem item)
-        => treeMain.SelectedItems?.Contains(item) == true || ReferenceEquals(treeMain.SelectedItem, item);
-
-    internal void SetNodeSelected(TreeViewItem item, bool selected)
+    public override bool ProcessHotkey(WinFormsShims.Keys keyData)
     {
-        if (treeMain.SelectedItems is null)
+        if (_txtBranchCriterion.IsKeyboardFocusWithin && GitExtensionsControl.IsTextEditKey(keyData))
         {
-            if (selected)
-            {
-                treeMain.SelectedItem = item;
-            }
-
-            return;
+            return false;
         }
 
-        if (selected)
-        {
-            if (!treeMain.SelectedItems.Contains(item))
-            {
-                treeMain.SelectedItems.Add(item);
-            }
-        }
-        else
-        {
-            treeMain.SelectedItems.Remove(item);
-        }
+        return base.ProcessHotkey(keyData);
     }
 
     protected override bool ExecuteCommand(int cmd)
@@ -699,8 +817,54 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         return items.Select(item => item.Tag).OfType<NodeBase>();
     }
 
+    private void SelectNode(NodeBase node, bool multiple, bool includingDescendants)
+    {
+        if (!multiple)
+        {
+            treeMain.SelectedItems?.Clear();
+        }
+
+        node.Select(select: true, includingDescendants);
+        treeMain.SelectedItem = node.TreeViewNode;
+    }
+
     internal TestAccessor GetTestAccessor()
         => new(this);
+
+    private enum RepoAction
+    {
+        Copy,
+        Filter,
+        FetchBranch,
+        FetchMerge,
+        FetchCheckout,
+        FetchRebase,
+        FetchCreate,
+        CreateInFolder,
+        DeleteFolderBranches,
+        ManageRemotes,
+        FetchAllRemotes,
+        PruneAllRemotes,
+        ManageRemote,
+        EnableRemote,
+        EnableRemoteAndFetch,
+        DisableRemote,
+        FetchRemote,
+        PruneRemote,
+        OpenRemoteUrl,
+        OpenSubmodule,
+        OpenSubmoduleInGitExtensions,
+        ManageSubmodules,
+        UpdateSubmodule,
+        SynchronizeSubmodules,
+        ResetSubmodule,
+        StashSubmodule,
+        CommitSubmodule,
+        Collapse,
+        Expand,
+        MoveUp,
+        MoveDown,
+    }
 
     internal readonly struct TestAccessor(RepoObjectsTree control)
     {
@@ -708,7 +872,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         internal Avalonia.Controls.ContextMenu ContextMenu => control.menuMain;
 
-        internal TextBox SearchBox => control.txtBranchCriterion;
+        internal TextBox SearchBox => control._txtBranchCriterion;
 
         internal Button SearchButton => control.btnSearch;
 
@@ -773,41 +937,6 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         internal void SetWorktrees(IReadOnlyList<GitWorktree> worktrees, string currentWorkingDirectory)
             => control._worktreeTree.Load(worktrees, currentWorkingDirectory);
-    }
-
-    private enum RepoAction
-    {
-        Copy,
-        Filter,
-        FetchBranch,
-        FetchMerge,
-        FetchCheckout,
-        FetchRebase,
-        FetchCreate,
-        CreateInFolder,
-        DeleteFolderBranches,
-        ManageRemotes,
-        FetchAllRemotes,
-        PruneAllRemotes,
-        ManageRemote,
-        EnableRemote,
-        EnableRemoteAndFetch,
-        DisableRemote,
-        FetchRemote,
-        PruneRemote,
-        OpenRemoteUrl,
-        OpenSubmodule,
-        OpenSubmoduleInGitExtensions,
-        ManageSubmodules,
-        UpdateSubmodule,
-        SynchronizeSubmodules,
-        ResetSubmodule,
-        StashSubmodule,
-        CommitSubmodule,
-        Collapse,
-        Expand,
-        MoveUp,
-        MoveDown,
     }
 }
 

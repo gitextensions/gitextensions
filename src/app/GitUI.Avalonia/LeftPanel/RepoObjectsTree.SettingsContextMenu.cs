@@ -27,7 +27,7 @@ partial class RepoObjectsTree
 
     private Dictionary<Tree, int> GetTreeToPositionIndex()
     {
-        return _trees.ToDictionary(tree => tree, tree => tree.PositionIndex);
+        return _rootNodes.ToDictionary(tree => tree, tree => tree.PositionIndex);
     }
 
     private void SaveTreeToPositionIndex(Dictionary<Tree, int> treeToPositionIndex)
@@ -48,7 +48,7 @@ partial class RepoObjectsTree
 
     public void ClearTrees()
     {
-        foreach (Tree tree in _trees)
+        foreach (Tree tree in _rootNodes)
         {
             tree.TreeViewNode.Items.Clear();
             tree.Nodes.Clear();
