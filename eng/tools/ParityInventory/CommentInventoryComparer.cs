@@ -7,6 +7,11 @@ internal static class CommentInventoryComparer
 {
     public static InventoryComparison Compare(SourceInventory original, SourceInventory twin)
     {
+        IReadOnlyDictionary<string, string> originalPartMap = original.Parts.ToDictionary(
+            part => part.Path,
+            part => part.ExpectedTwinPath ?? part.Path,
+            StringComparer.Ordinal);
+        IReadOnlySet<string> uniquelyComparableMemberAnchors = GetUniquelyComparableMemberAnchors(original, twin);
         IndexedComment[] originalComments = original.Comments
             .Select((comment, index) => new IndexedComment(index, comment))
             .ToArray();
@@ -15,16 +20,16 @@ internal static class CommentInventoryComparer
             .ToArray();
         Dictionary<CommentGroupKey, IndexedComment[]> originalGroups = originalComments
             .GroupBy(comment => new CommentGroupKey(
-                GetComparablePart(comment.Entry),
-                GetComparableAnchor(comment.Entry.Anchor),
+                GetComparablePart(comment.Entry, originalPartMap),
+                GetComparableAnchor(comment.Entry.Anchor, uniquelyComparableMemberAnchors),
                 comment.Entry.Placement))
             .ToDictionary(
                 group => group.Key,
                 group => group.OrderBy(comment => comment.Entry.Order).ToArray());
         Dictionary<CommentGroupKey, IndexedComment[]> twinGroups = twinComments
             .GroupBy(comment => new CommentGroupKey(
-                GetComparablePart(comment.Entry),
-                GetComparableAnchor(comment.Entry.Anchor),
+                NormalizeTwinPart(comment.Entry.Part),
+                GetComparableAnchor(comment.Entry.Anchor, uniquelyComparableMemberAnchors),
                 comment.Entry.Placement))
             .ToDictionary(
                 group => group.Key,
@@ -198,8 +203,8 @@ internal static class CommentInventoryComparer
         }
 
         if (original.Kind == twin.Kind
-            && GetComparableAnchor(original.Anchor) == "method:<closed-lifecycle>()"
-            && GetComparableAnchor(twin.Anchor) == "method:<closed-lifecycle>()"
+            && GetLifecycleAnchor(original.Anchor) == "method:<closed-lifecycle>()"
+            && GetLifecycleAnchor(twin.Anchor) == "method:<closed-lifecycle>()"
             && NormalizeLifecycleComment(original.Text) == NormalizeLifecycleComment(twin.Text))
         {
             return AlignmentKind.Adapted;
@@ -308,31 +313,71 @@ internal static class CommentInventoryComparer
     private static string GetPath(CommentEntry comment) =>
         $"comment/{comment.Part}/{comment.Anchor}/{comment.Placement}/{comment.Order}";
 
-    private static string GetComparablePart(CommentEntry comment)
+    private static string GetComparablePart(
+        CommentEntry comment,
+        IReadOnlyDictionary<string, string> originalPartMap)
     {
-        string part = comment.Part;
-        if (GetComparableAnchor(comment.Anchor) == "method:<closed-lifecycle>()")
+        if (GetLifecycleAnchor(comment.Anchor) == "method:<closed-lifecycle>()"
+            && comment.Part.EndsWith(".Designer.cs", StringComparison.Ordinal))
         {
-            if (part.EndsWith(".Designer.cs", StringComparison.Ordinal))
-            {
-                return $"{part[..^".Designer.cs".Length]}.cs";
-            }
-
-            if (part.EndsWith(".axaml.cs", StringComparison.Ordinal))
-            {
-                return $"{part[..^".axaml.cs".Length]}.cs";
-            }
+            return $"{comment.Part[..^".Designer.cs".Length]}.cs";
         }
 
-        return part.EndsWith(".axaml.cs", StringComparison.Ordinal)
-            ? $"{part[..^".axaml.cs".Length]}.cs"
-            : part;
+        string part = originalPartMap.GetValueOrDefault(comment.Part, comment.Part);
+        return NormalizeTwinPart(part);
     }
 
-    private static string GetComparableAnchor(string anchor) =>
+    private static string NormalizeTwinPart(string part) =>
+        part.EndsWith(".axaml.cs", StringComparison.Ordinal)
+            ? $"{part[..^".axaml.cs".Length]}.cs"
+            : part;
+
+    private static IReadOnlySet<string> GetUniquelyComparableMemberAnchors(
+        SourceInventory original,
+        SourceInventory twin)
+    {
+        HashSet<string> uniqueOriginal = original.Members
+            .GroupBy(GetRelaxedMemberAnchor, StringComparer.Ordinal)
+            .Where(group => group.Count() == 1)
+            .Select(group => group.Key)
+            .ToHashSet(StringComparer.Ordinal);
+        HashSet<string> uniqueTwin = twin.Members
+            .GroupBy(GetRelaxedMemberAnchor, StringComparer.Ordinal)
+            .Where(group => group.Count() == 1)
+            .Select(group => group.Key)
+            .ToHashSet(StringComparer.Ordinal);
+        uniqueOriginal.IntersectWith(uniqueTwin);
+        return uniqueOriginal;
+    }
+
+    private static string GetComparableAnchor(string anchor, IReadOnlySet<string> uniquelyComparableMemberAnchors)
+    {
+        string lifecycleAnchor = GetLifecycleAnchor(anchor);
+        if (lifecycleAnchor != anchor)
+        {
+            return lifecycleAnchor;
+        }
+
+        string relaxedAnchor = GetRelaxedCommentAnchor(anchor);
+        string finalSegment = relaxedAnchor[(relaxedAnchor.LastIndexOf('/') + 1)..];
+        return uniquelyComparableMemberAnchors.Contains(finalSegment) ? relaxedAnchor : anchor;
+    }
+
+    private static string GetLifecycleAnchor(string anchor) =>
         anchor is "method:Dispose(bool disposing)" or "method:OnClosed(EventArgs e)"
             ? "method:<closed-lifecycle>()"
             : anchor;
+
+    private static string GetRelaxedMemberAnchor(MemberEntry member) => $"{member.Kind}:{member.Name}";
+
+    private static string GetRelaxedCommentAnchor(string anchor) =>
+        string.Join(
+            "/",
+            anchor.Split('/').Select(segment =>
+            {
+                int parameterList = segment.IndexOf('(');
+                return parameterList < 0 ? segment : segment[..parameterList];
+            }));
 
     private enum AlignmentKind
     {
