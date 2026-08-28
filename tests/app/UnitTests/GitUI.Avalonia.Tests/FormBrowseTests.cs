@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia.Controls;
@@ -355,7 +355,7 @@ public sealed class FormBrowseTests
 
             bool reloadStarted = false;
             loadingStatus.PropertyChanged += (_, e) =>
-                reloadStarted |= e.Property == TextBlock.TextProperty && loadingStatus.Text == "Loading…";
+                reloadStarted |= e.Property == TextBlock.TextProperty && loadingStatus.Text == "Loading";
             commands.RepoChangedNotifier.Notify();
 
             await WaitUntilAsync(() => reloadStarted && loadingStatus.Text == "2 revisions");
@@ -1303,7 +1303,7 @@ public sealed class FormBrowseTests
             await WaitUntilAsync(() => loadingStatus.Text == "2 revisions");
             bool reloadStarted = false;
             loadingStatus.PropertyChanged += (_, e) =>
-                reloadStarted |= e.Property == TextBlock.TextProperty && loadingStatus.Text == "Loading…";
+                reloadStarted |= e.Property == TextBlock.TextProperty && loadingStatus.Text == "Loading";
 
             form.undoLastCommitToolStripMenuItem.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
@@ -1926,7 +1926,7 @@ public sealed class FormBrowseTests
                 relatedRef.Guid.Returns(initialCommit.ToString());
                 relatedRef.ObjectId.Returns(initialCommit);
                 revisionGrid.SetSelectedRevision(secondCommit).Should().BeTrue();
-                revisionGrid.GoToRelatedRef(relatedRef).Should().BeTrue();
+                revisionGrid.TryGoToRelatedRef(relatedRef).Should().BeTrue();
                 revisionGrid.SelectedRevision!.ObjectId.Should().Be(initialCommit);
             }
             finally

@@ -64,6 +64,14 @@ internal sealed class MessageColumnProvider : ColumnProvider
         Clear();
     }
 
+    public void ClearRefHighlight()
+    {
+        foreach (MessageCell cell in _grid.GetVisualDescendants().OfType<MessageCell>())
+        {
+            cell.ClearHighlight();
+        }
+    }
+
     public override void ApplySettings()
     {
         Column.IsVisible = true;
@@ -523,7 +531,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return (string.Empty, string.Empty);
     }
 
-    private AheadBehindData? GetAheadBehindData(bool isRemote, string completeName)
+    internal AheadBehindData? GetAheadBehindData(bool isRemote, string completeName)
     {
         _aheadBehindDataByLocalBranch ??= _aheadBehindDataProvider?.GetData()
             ?? FrozenDictionary<string, AheadBehindData>.Empty;
@@ -735,7 +743,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         private void OnDoubleTapped(object? sender, TappedEventArgs e)
         {
             if (HitTest(e.GetPosition) is { GitRef: not null } label
-                && _provider._grid.GoToRelatedRef(label.GitRef))
+                && _provider._grid.TryGoToRelatedRef(label.GitRef))
             {
                 e.Handled = true;
             }

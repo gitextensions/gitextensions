@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -65,7 +65,7 @@ partial class FormBrowse
                 return;
             }
 
-            RefreshLeftPanel(sender, e);
+            RefreshLeftPanel(e.GetRefs, e.GetStashRevs, e.ForceRefresh);
         };
 
         RevisionGrid.RevisionsLoaded += (sender, e) =>
@@ -86,21 +86,39 @@ partial class FormBrowse
         {
             _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
-            // Avalonia clears an empty file tree at the revision boundary so a later tab switch keeps keyboard focus.
-            if (RevisionGrid.SelectedRevision is null)
-            {
-                fileTree.Clear();
-            }
-
             RevisionGrid_SelectionChanged(sender, e);
         };
 
         RevisionGrid.SelectedId = selectedId.IsZero ? firstId : selectedId;
+        RevisionGrid.FirstId = firstId;
 
-        // force focus of file list
-        // The native grid does not expose the original dedicated artificial/head toggle event.
+        RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (_, _) =>
+        {
+            if (!revisionDiff.IsVisible)
+            {
+                CommitInfoTabControl.SelectedItem = DiffTabPage;
+            }
 
-        // The native tree does not yet expose the ref-node lookup required by SelectInLeftPanel,
-        // so the grid keeps this optional callback unset instead of selecting the wrong surface.
+            if (revisionDiff.IsVisible)
+            {
+                // force focus of file list
+                revisionDiff.SwitchFocus(alreadyContainedFocus: false);
+            }
+        };
+
+        RevisionGrid.SelectInLeftPanel = SelectInLeftPanel;
+
+        return;
+
+        void SelectInLeftPanel(string gitRef)
+        {
+            if (!leftPanel.IsVisible)
+            {
+                toggleLeftPanel_Click(this, EventArgs.Empty);
+            }
+
+            repoObjectsTree.SelectGitRef(gitRef);
+            repoObjectsTree.Focus();
+        }
     }
 }
