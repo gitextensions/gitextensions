@@ -32,4 +32,30 @@ public sealed class GitUICommandsCommitTemplateTests
 
         observer.RegisteredTemplates.Should().NotContain(item => item.Name == key);
     }
+
+    [Test]
+    public void GitUICommands_should_create_the_original_remote_command_contract()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        GitUICommands commands = new(Substitute.For<IServiceProvider>(), module);
+
+        IGitRemoteCommand remoteCommand = commands.CreateRemoteCommand();
+        Action execute = remoteCommand.Execute;
+
+        execute.Should().Throw<InvalidOperationException>()
+            .WithMessage("CommandText is required");
+    }
+
+    [Test]
+    public void GitUICommands_should_route_the_original_difftool_command()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        GitUICommands commands = new(Substitute.For<IServiceProvider>(), module);
+
+        bool routed = commands.GetTestAccessor().RunCommandBasedOnArgument(["", "difftool", "tracked.txt"]);
+
+        routed.Should().BeTrue();
+        module.Received(1).OpenWithDifftool("tracked.txt");
+        commands.GetTestAccessor().RunCommandBasedOnArgument(["", "difftool"]).Should().BeFalse();
+    }
 }

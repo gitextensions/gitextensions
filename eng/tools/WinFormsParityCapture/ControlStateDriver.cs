@@ -391,6 +391,11 @@ internal sealed class ControlStateDriver : IDisposable
             return;
         }
 
+        if (target is ToolStripComboBox toolStripComboBox)
+        {
+            target = toolStripComboBox.ComboBox;
+        }
+
         if (target is ComboBox comboBox)
         {
             if (!comboBox.IsHandleCreated || comboBox.Items.Count == 0)
