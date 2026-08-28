@@ -1,7 +1,7 @@
 {
   "$schema": "parity-ledger.schema.json",
   "schemaVersion": 1,
-  "analyzedCommit": "111c890e315eaf6690ec004330cc44485e36201b",
+  "analyzedCommit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
   "axisOrder": [
     "structural",
     "functional",
@@ -7309,34 +7309,36 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormPull.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormPull.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/windows/types/GitUI.CommandsDialogs.FormPull.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/linux/types/GitUI.CommandsDialogs.FormPull.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 70,
-          "note": "P8.6i progress 69 groups 5 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 70 actionable and 75 total differences for this mapping; every structural difference stays open."
+          "findingCount": 39,
+          "note": "P8.6i progress 78 restores the original Pageant key-loading and source handler boundaries while retaining the native owner/control substitutions as visible reviewed deviations. The byte-identical Windows/Linux schema-v5 inventory records 39 actionable and 39 total differences for this mapping; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/form-pull.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/windows/types/GitUI.CommandsDialogs.FormPull.functional-findings.json"
           ],
-          "platforms": [],
-          "findingCount": 388,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 39,
+          "note": "The 10 focused pull tests pass on Windows and Linux, including merge, fetch-without-changing-HEAD, rebase/complete arguments, prune, auto-stash restore, conflict recovery, and immediate submodule pull. Pageant now starts before branch discovery and configured pulls. The current inventory retains 39 functional-contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/form-pull.trx"],
+          "platforms": ["windows"],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "The focused suite constructs and headlessly renders the complete dialog, but the shared paired-capture catalog does not yet contain FormPull; no WinForms/Avalonia visual-parity claim is made."
         },
         "themingAndColor": {
           "status": "unverified",
@@ -7348,22 +7350,32 @@
           "note": "theme/color behavior has not been captured for this mapped view"
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/form-pull.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Focused tests exercise remote/branch selection and merge, fetch, rebase, complete, prune, auto-stash, failure, and submodule routes. Hover/focus/disabled state, every popup, theme, keyboard, and restart path remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/form-pull.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/linux-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/linux-x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/flatpak-wayland/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "The focused suite passes on Windows and Linux and fresh application smokes pass on Windows, Wayland, X11, and Wayland-only Flatpak with --filesystem=host. FormPull-specific confined and Apple Silicon interaction remain unverified."
         }
       }
     },
@@ -7375,34 +7387,36 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormPush.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormPush.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/windows/types/GitUI.CommandsDialogs.FormPush.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/linux/types/GitUI.CommandsDialogs.FormPush.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 112,
-          "note": "P8.6i progress 69 groups 48 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 112 actionable and 160 total differences for this mapping; every structural difference stays open."
+          "findingCount": 100,
+          "note": "P8.6i progress 78 restores Pageant startup for configured and direct remote probes, the original load/validation/selection/context handler identities, and source declaration order. The byte-identical Windows/Linux schema-v5 inventory records 100 actionable and 112 total differences for this mapping; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/form-push.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/windows/types/GitUI.CommandsDialogs.FormPush.functional-findings.json"
           ],
-          "platforms": [],
-          "findingCount": 494,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 112,
+          "note": "The 11 focused push tests pass on Windows and Linux, including configured/direct remote pushes, tags, branch-selection modes, force-with-lease, rejected-push pull/retry, and repository-host pull-request continuation. Pageant now starts before configured pushes and remote probes. The current inventory retains 112 functional-contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/form-push.trx"],
+          "platforms": ["windows"],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "The focused suite headlessly renders the selected-remote dialog, including the restored SSH-key action, but the shared paired-capture catalog does not yet contain FormPush; no WinForms/Avalonia visual-parity claim is made."
         },
         "themingAndColor": {
           "status": "unverified",
@@ -7414,22 +7428,32 @@
           "note": "theme/color behavior has not been captured for this mapped view"
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/form-push.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Focused tests exercise remote/branch/tag/multiple-branch selection, force-with-lease, rejected-push recovery, and pull-request routes. Live Pageant, hover/focus/disabled state, every popup, theme, keyboard, and restart path remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/form-push.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/linux-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/linux-x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/flatpak-wayland/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "The focused suite passes on Windows and Linux and fresh application smokes pass on Windows, Wayland, X11, and Wayland-only Flatpak with --filesystem=host. FormPush-specific confined interaction, live Windows Pageant, and Apple Silicon remain unverified."
         }
       }
     },
@@ -7575,34 +7599,36 @@
         "structural": {
           "status": "gap",
           "verifiedOn": "2026-08-28",
-          "commit": "aca1fbf284cc824261aab0892d3668a1bcf05749",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/windows/types/GitUI.CommandsDialogs.FormRemotes.functional-findings.json",
-            "eng/avalonia/parity-evidence/P8.6i/dependent-findings-69/sweep/linux/types/GitUI.CommandsDialogs.FormRemotes.functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/windows/types/GitUI.CommandsDialogs.FormRemotes.functional-findings.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/linux/types/GitUI.CommandsDialogs.FormRemotes.functional-findings.json"
           ],
           "platforms": [],
-          "findingCount": 86,
-          "note": "P8.6i progress 69 groups 25 comment/event cascades beneath their exact missing-method roots without accepting or removing them. The byte-identical Windows/Linux schema-v5 inventory records 86 actionable and 111 total differences for this mapping; every structural difference stays open."
+          "findingCount": 85,
+          "note": "P8.6i progress 78 restores the Windows-only PuTTY panel, .ppk persistence/picker, Pageant load, Plink probe, and source handler/container identities. The byte-identical Windows/Linux schema-v5 inventory records 85 actionable and 87 total differences for this mapping; every remaining structural difference stays open."
         },
         "functional": {
           "status": "gap",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
           "evidence": [
-            "eng/avalonia/parity-evidence/P5.2/final/inventory/functional-findings.json"
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/remotes.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/windows/types/GitUI.CommandsDialogs.FormRemotes.functional-findings.json"
           ],
-          "platforms": [],
-          "findingCount": 441,
-          "note": "The P0.4 functional inventory found member/event/menu/hotkey/settings/translation differences."
+          "platforms": ["windows", "linux"],
+          "findingCount": 87,
+          "note": "The 5 focused remotes tests pass on Windows and Linux, covering construction/translation, create-toggle-delete, pull tracking, and remote color. The source-shaped PuTTY panel now persists .ppk paths and routes browse, Pageant load, and Plink probes on Windows while remaining hidden for portable OpenSSH. The current inventory retains 87 functional-contract differences, so the axis remains a gap."
         },
         "visual": {
           "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+          "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/remotes.trx"],
+          "platforms": ["windows"],
           "findingCount": 0,
-          "note": "visual layout has not been captured for this mapped view"
+          "note": "The focused suite constructs and displays FormRemotes, including the restored PuTTY panel fields, but the shared paired-capture catalog does not yet contain FormRemotes; no WinForms/Avalonia visual-parity claim is made."
         },
         "themingAndColor": {
           "status": "unverified",
@@ -7614,22 +7640,32 @@
           "note": "theme/color behavior has not been captured for this mapped view"
         },
         "behavioralState": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/remotes.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx"
+          ],
+          "platforms": ["windows", "linux"],
           "findingCount": 0,
-          "note": "the complete interaction state matrix has not been exercised"
+          "note": "Focused tests exercise remote creation, enable/disable, deletion, tracking selection, and color persistence. Live PuTTY picker/Pageant/Plink process states, hover/focus/disabled state, every popup, theme, keyboard, and restart path remain open."
         },
         "platform": {
-          "status": "unverified",
-          "verifiedOn": "2026-08-05",
-          "commit": "f917227f4b83f79b39922fcfa8fb0770f94ab79d",
-          "evidence": [],
-          "platforms": [],
+          "status": "partial",
+          "verifiedOn": "2026-08-29",
+          "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e",
+          "evidence": [
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/remotes.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/windows/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/linux-wayland/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/linux-x11/smoke.json",
+            "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/runtime/flatpak-wayland/smoke.json"
+          ],
+          "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"],
           "findingCount": 0,
-          "note": "Windows and WSL headless build gates do not prove Windows, Wayland, X11, Flatpak, and macOS runtime parity."
+          "note": "The focused suite passes on Windows and Linux and fresh application smokes pass on Windows, Wayland, X11, and Wayland-only Flatpak with --filesystem=host. FormRemotes-specific confined interaction, live Windows PuTTY tools, and Apple Silicon remain unverified."
         }
       }
     },
@@ -40928,6 +40964,32 @@
         "themingAndColor": { "status": "gap", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/final/paired-diagnostic-classification.json"], "platforms": ["windows"], "findingCount": 2205, "note": "Thirty-six light, dark, and custom pairs retain 2,205 resolved-color diagnostics; no color tolerance or suppression was added." },
         "behavioralState": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/final/diff/findings.json", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/windows-focused/p8.6g.3a-focused-windows.trx", "eng/avalonia/parity-evidence/P8.6g/g3a/tests/linux-focused/p8.6g.3a-focused-linux.trx"], "platforms": ["windows", "linux-wayland", "linux-x11"], "findingCount": 522, "note": "Normal, executable-focused, arguments-focused, and start-disabled pairs plus the 31-test combined action/control suite are covered. Exact pointer, keyboard, picker, link, resize, persistence, and error-state closure remains P8.6g.3b." },
         "platform": { "status": "partial", "verifiedOn": "2026-08-12", "commit": "f793183b0ecdb51aaefa928d38fb54cd01b95b7d", "evidence": ["eng/avalonia/parity-evidence/P8.6g/g3a/runtime/windows/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/wayland/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/x11/smoke.json", "eng/avalonia/parity-evidence/P8.6g/g3a/runtime/flatpak/smoke.json"], "platforms": ["windows", "linux-wayland", "linux-x11", "flatpak"], "findingCount": 0, "note": "Fresh runtime smokes pass and screenshots were inspected on Windows, native Wayland, X11, and Wayland-only Flatpak with --filesystem=host. Official IDE Show Preview, live Gource owner walk, native 96-DPI, and macOS remain P8.6g.3b/P8.6a/P8.4." }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Infrastructure/Plink.cs",
+      "twin": "src/app/GitUI.Avalonia/Infrastructure/Plink.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "verified", "verifiedOn": "2026-08-28", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/windows/types/GitUI.Infrastructure.Plink.functional-findings.json", "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/linux/types/GitUI.Infrastructure.Plink.functional-findings.json"], "platforms": [], "findingCount": 0, "note": "The byte-identical Windows/Linux schema-v5 inventory records the complete original Plink type with zero structural findings." },
+        "functional": { "status": "partial", "verifiedOn": "2026-08-29", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/ssh.trx", "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The unchanged original URL conversion suite runs through the portable twin on Windows and Linux. A live configured Plink executable/host connection remains unverified." },
+        "visual": { "status": "notApplicable", "verifiedOn": "2026-08-28", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": [], "platforms": [], "findingCount": 0, "note": "This process helper declares no UI chrome; the owning FormRemotes surface remains recorded separately." },
+        "themingAndColor": { "status": "notApplicable", "verifiedOn": "2026-08-28", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": [], "platforms": [], "findingCount": 0, "note": "This process helper declares no theme or color surface." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-29", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/ssh.trx", "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "URL quoting and SSH URL conversion states are covered; live success, missing executable, connection failure, and visible terminal lifetime remain open." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-29", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/ssh.trx", "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "The helper and conversion suite build/run on Windows and Linux, but FormRemotes exposes the cmd.exe/Plink route only on Windows. A live configured Windows probe and Apple Silicon remain open." }
+      }
+    },
+    {
+      "source": "src/app/GitUI/Infrastructure/PuttyHelpers.cs",
+      "twin": "src/app/GitUI.Avalonia/Infrastructure/PuttyHelpers.cs",
+      "complete": false,
+      "axes": {
+        "structural": { "status": "verified", "verifiedOn": "2026-08-28", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/windows/types/GitUI.Infrastructure.PuttyHelpers.functional-findings.json", "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/final/linux/types/GitUI.Infrastructure.PuttyHelpers.functional-findings.json"], "platforms": [], "findingCount": 0, "note": "The byte-identical Windows/Linux schema-v5 inventory records the complete original member, documentation, and declaration order with zero structural findings; the explicit off-Windows guard is a platform implementation detail." },
+        "functional": { "status": "partial", "verifiedOn": "2026-08-29", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/ssh.trx", "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Windows retains the original Pageant/PuTTYgen implementation and Linux coverage verifies the documented unavailable result without evaluating a .ppk callback. A live Windows Pageant process/key load remains open." },
+        "visual": { "status": "notApplicable", "verifiedOn": "2026-08-28", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": [], "platforms": [], "findingCount": 0, "note": "This process helper declares no UI chrome; the owning FormPush/FormRemotes surfaces remain recorded separately." },
+        "themingAndColor": { "status": "notApplicable", "verifiedOn": "2026-08-28", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": [], "platforms": [], "findingCount": 0, "note": "This process helper declares no theme or color surface." },
+        "behavioralState": { "status": "partial", "verifiedOn": "2026-08-28", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx"], "platforms": ["linux"], "findingCount": 0, "note": "The off-Windows no-agent state is covered. Windows missing/configured executable, already-running/new Pageant, empty/missing/valid key, and process-result states remain open." },
+        "platform": { "status": "partial", "verifiedOn": "2026-08-29", "commit": "8ab1d9e0a14b239d9ae8633313595903bc07f49e", "evidence": ["eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/windows/ssh.trx", "eng/avalonia/parity-evidence/P8.6i/remote-workflows-78/tests/linux/affected.trx"], "platforms": ["windows", "linux"], "findingCount": 0, "note": "Windows builds the unchanged process path and Linux verifies the OpenSSH/ssh-agent substitute. Live Windows Pageant and Apple Silicon remain open." }
       }
     },
     {

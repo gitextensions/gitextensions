@@ -80,6 +80,7 @@ public sealed class FormPushTests
         translation.Received(1).AddTranslationItem(nameof(FormPush), "labelTo", "Text", "&to");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "ckForceWithLease", "Text", "&Force with lease");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "AddRemote", "Text", "&Manage remotes");
+        translation.Received(1).AddTranslationItem(nameof(FormPush), "LoadSSHKey", "Text", "&Load SSH key");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "BranchTab", "Text", "Push branches");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "TagTab", "Text", "Push tags");
         translation.Received(1).AddTranslationItem(nameof(FormPush), "MultipleBranchTab", "Text", "Push multiple branches");
@@ -109,9 +110,20 @@ public sealed class FormPushTests
     }
 
     [AvaloniaTest]
+    public void FormPush_should_hide_PuTTY_key_loading_until_a_remote_is_selected()
+    {
+        FormPush form = new();
+
+        Button loadSshKey = form.FindControl<Button>("LoadSSHKey")
+            ?? throw new InvalidOperationException("The source LoadSSHKey action was not created.");
+        loadSshKey.IsVisible.Should().BeFalse();
+    }
+
+    [AvaloniaTest]
     public void FormPush_should_show_the_current_branch_selected_remote_and_force_with_lease()
     {
         GitModule module = CreateRepositoryAndRemote();
+        module.SetSetting("remote.origin.puttykeyfile", "C:\\keys\\origin.ppk");
         FormPush form = new(new GitUICommands(_serviceContainer, module));
 
         form.Show();
@@ -129,6 +141,8 @@ public sealed class FormPushTests
                 ?? throw new InvalidOperationException("The create-pull-request checkbox was not created.");
             Button push = form.FindControl<Button>("Push")
                 ?? throw new InvalidOperationException("Push button was not created.");
+            Button loadSshKey = form.FindControl<Button>("LoadSSHKey")
+                ?? throw new InvalidOperationException("The source LoadSSHKey action was not created.");
             Label labelFrom = form.FindControl<Label>("labelFrom")
                 ?? throw new InvalidOperationException("Branch label was not created.");
             Label labelTo = form.FindControl<Label>("labelTo")
@@ -140,6 +154,7 @@ public sealed class FormPushTests
             (branch.SelectedItem as string ?? branch.Text).Should().Be(module.GetSelectedBranch());
             remoteBranch.Text.Should().Be(branch.Text);
             push.IsEnabled.Should().BeTrue();
+            loadSshKey.IsVisible.Should().Be(OperatingSystem.IsWindows());
             forceWithLease.IsChecked.Should().BeFalse();
             createPullRequest.IsEnabled.Should().BeFalse("the configured local remote is not hosted by Azure DevOps");
 

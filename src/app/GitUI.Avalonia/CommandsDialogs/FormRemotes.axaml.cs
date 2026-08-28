@@ -1,6 +1,8 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -11,7 +13,9 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Compat;
+using GitUI.Infrastructure;
 using GitUI.Theming;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
@@ -20,10 +24,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// The PuTTY SSH panel and connection test do not apply because the portable application uses
-// OpenSSH. Active and inactive remotes retain the original grouping, colors use Avalonia's
-// native color picker, and the original detail controls edit each branch's pull behavior. The
-// URL history combos hold path strings rather than Repository objects.
 public sealed partial class FormRemotes : GitModuleForm
 {
     private const string BtnRemoteColorText = "Set &color";
@@ -96,6 +96,15 @@ Inactive remote is completely invisible to git.");
 
     private readonly TranslationString _disabledRemoteAlreadyExists =
         new("An inactive remote named \"{0}\" already exists.");
+
+    private readonly TranslationString _remoteBranchDataError =
+        new("Invalid ´{1}´ found for branch ´{0}´." + Environment.NewLine + "Value has been reset to empty value.");
+
+    private readonly TranslationString _sshKeyOpenFilter =
+        new("Private key (*.ppk)");
+
+    private readonly TranslationString _sshKeyOpenCaption =
+        new("Select ssh key file");
     #endregion
 
     public FormRemotes()
@@ -160,6 +169,8 @@ Inactive remote is completely invisible to git.");
 
         Remotes.SelectionChanged += Remotes_SelectedIndexChanged;
         Remotes.ContainerPrepared += Remotes_ContainerPrepared;
+        Remotes.SizeChanged += (_, _) => AutoResizeRemotesColumn();
+        Remotes.PointerReleased += Remotes_MouseUp;
         New.Click += NewClick;
         Delete.Click += DeleteClick;
         btnToggleState.Click += btnToggleState_Click;
@@ -171,8 +182,11 @@ Inactive remote is completely invisible to git.");
         checkBoxSepPushUrl.IsCheckedChanged += checkBoxSepPushUrl_CheckedChanged;
         folderBrowserButtonUrl.PathShowingControl = Url;
         folderBrowserButtonPushUrl.PathShowingControl = comboBoxPushUrl;
-        btnRemoteColor.ColorChanged += btnRemoteColor_ColorChanged;
+        btnRemoteColor.ColorChanged += btnRemoteColor_Click;
         btnRemoteColorReset.Click += btnRemoteColorReset_Click;
+        SshBrowse.Click += SshBrowseClick;
+        LoadSSHKey.Click += LoadSshKeyClick;
+        TestConnection.Click += TestConnectionClick;
 
         RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
         RemoteRepositoryCombo.LostFocus += RemoteRepositoryComboValidated;
@@ -220,13 +234,19 @@ Inactive remote is completely invisible to git.");
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
+        application_Idle(this, e);
+    }
 
+    private void application_Idle(object? sender, EventArgs e)
+    {
         // make sure only single load option is given
         if (PreselectRemoteOnLoad is not null && PreselectLocalOnLoad is not null)
         {
             throw new ArgumentException($"Only one option allowed:" +
                 $" Either {nameof(PreselectRemoteOnLoad)} or {nameof(PreselectLocalOnLoad)}");
         }
+
+        pnlMgtPuttySsh.IsVisible = OperatingSystem.IsWindows() && GitSshHelpers.IsPlink;
 
         if (!AppSettings.AlwaysShowAdvOpt)
         {
@@ -240,6 +260,11 @@ Inactive remote is completely invisible to git.");
 
         // load the data for the very first time
         Initialize(PreselectRemoteOnLoad, PreselectLocalOnLoad);
+    }
+
+    private void AutoResizeRemotesColumn()
+    {
+        Remotes.InvalidateMeasure();
     }
 
     private void Url_Enter(object sender, EventArgs e)
@@ -402,7 +427,7 @@ Inactive remote is completely invisible to git.");
         return MediaColor.FromArgb(color.A, color.R, color.G, color.B);
     }
 
-    private void btnRemoteColor_ColorChanged(object? sender, ColorChangedEventArgs e)
+    private void btnRemoteColor_Click(object? sender, ColorChangedEventArgs e)
     {
         if (!_settingRemoteColor)
         {
@@ -492,7 +517,7 @@ Inactive remote is completely invisible to git.");
                                                    remote,
                                                    remoteUrl,
                                                    checkBoxSepPushUrl.IsChecked == true ? remotePushUrl : null,
-                                                   _selectedRemote?.PuttySshKey ?? string.Empty,
+                                                   PuttySshKey.Text ?? string.Empty,
                                                    color,
                                                    remotePrefix);
 
@@ -587,6 +612,48 @@ Inactive remote is completely invisible to git.");
 
             Initialize();
         }
+    }
+
+    private void SshBrowseClick(object sender, EventArgs e)
+    {
+        this.InvokeAndForget(SshBrowseAsync);
+    }
+
+    private async Task SshBrowseAsync()
+    {
+        if (!await PortalPickerGuard.IsAvailableAsync())
+        {
+            return;
+        }
+
+        FilePickerOpenOptions options = new()
+        {
+            AllowMultiple = false,
+            Title = _sshKeyOpenCaption.Text,
+            FileTypeFilter =
+            [
+                new FilePickerFileType(_sshKeyOpenFilter.Text) { Patterns = ["*.ppk"] },
+                FilePickerFileTypes.All,
+            ],
+        };
+        options.SuggestedStartLocation = await StorageProvider.TryGetFolderFromPathAsync(".");
+        IReadOnlyList<IStorageFile> files = await PortalPickerGuard.OpenFilePickerAsync(StorageProvider, options);
+        string? path = files.FirstOrDefault()?.TryGetLocalPath();
+        if (!string.IsNullOrEmpty(path))
+        {
+            PuttySshKey.Text = path;
+        }
+    }
+
+    private void LoadSshKeyClick(object sender, EventArgs e)
+    {
+        PuttyHelpers.StartPageantIfConfigured(() => PuttySshKey.Text);
+    }
+
+    private void TestConnectionClick(object sender, EventArgs e)
+    {
+        string url = Url.Text ?? string.Empty;
+        ThreadHelper.FileAndForget(() => new Plink().ConnectAsync(url));
     }
 
     private void RemoteBranchesSelectionChanged(object? sender, EventArgs e)
@@ -690,6 +757,7 @@ Inactive remote is completely invisible to git.");
         Url.Text = string.Empty;
         comboBoxPushUrl.Text = string.Empty;
         checkBoxSepPushUrl.IsChecked = false;
+        PuttySshKey.Text = string.Empty;
         gbMgtPanel.Header = _gbMgtPanelHeaderNew.Text;
         txtRemotePrefix.Text = string.Empty;
         SetRemoteColor(color: null);
@@ -709,6 +777,7 @@ Inactive remote is completely invisible to git.");
         Url.Text = _selectedRemote.Url;
         comboBoxPushUrl.Text = _selectedRemote.PushUrl;
         checkBoxSepPushUrl.IsChecked = !string.IsNullOrEmpty(_selectedRemote.PushUrl);
+        PuttySshKey.Text = _selectedRemote.PuttySshKey;
         gbMgtPanel.Header = _gbMgtPanelHeaderEdit.Text;
         BindBtnToggleState(_selectedRemote.Disabled);
         btnToggleState.IsVisible = true;
@@ -725,6 +794,11 @@ Inactive remote is completely invisible to git.");
         ShowSeparatePushUrl(checkBoxSepPushUrl.IsChecked == true);
     }
 
+    private void Remotes_MouseUp(object sender, PointerReleasedEventArgs e)
+    {
+        flpnlRemoteManagement.IsEnabled = !_selectedRemote?.Disabled ?? true;
+    }
+
     private void ShowSeparatePushUrl(bool visible)
     {
         labelPushUrl.IsVisible = visible;
@@ -736,7 +810,7 @@ Inactive remote is completely invisible to git.");
             : _labelUrlAsFetchPush.Text);
     }
 
-    private void FillWithSomeGeneratedRemoteUrls(ComboBox combobox, Func<ConfigFileRemote, string> urlGetter)
+    private void FillWithSomeGeneratedRemoteUrls(CaseSensitiveComboBox combobox, Func<ConfigFileRemote, string> urlGetter)
     {
         string remoteName = RemoteName.Text ?? string.Empty;
         bool fillEmptyUrl = true;
