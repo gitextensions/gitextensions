@@ -226,15 +226,22 @@
 
     <Grid Grid.Row="2"
           Margin="0,12,0,0"
-          ColumnDefinitions="Auto,*,Auto">
+          ColumnDefinitions="Auto,*,Auto,Auto">
       <compat:IconButton x:Name="Pull"
                          Grid.Column="0"
                          MinWidth="100"
                          Content="P_ull" />
+      <compat:IconButton x:Name="LoadSSHKey"
+                         Grid.Column="2"
+                         Margin="0,0,8,0"
+                         MinWidth="137"
+                         Icon="{x:Static properties:Images.Putty}"
+                         IsVisible="False"
+                         Content="_Load SSH key" />
       <compat:IconButton x:Name="Push"
                          compat:TranslationCompat.TranslateText="False"
                          Classes="gitextensions-dialog-action"
-                         Grid.Column="2"
+                         Grid.Column="3"
                          MinWidth="100"
                          Icon="{x:Static properties:Images.ArrowUp}"
                          IsDefault="True" />

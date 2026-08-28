@@ -11,8 +11,10 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI.Compat;
 using GitUI.HelperDialogs;
+using GitUI.Infrastructure;
 using GitUI.ScriptsEngine;
 using ResourceManager;
+using CancelEventArgs = System.ComponentModel.CancelEventArgs;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
@@ -96,9 +98,10 @@ public sealed partial class FormPull : GitExtensionsDialog
     private readonly IConfigFileRemoteSettingsManager _remotesManager = null!;
     private readonly IFullPathResolver _fullPathResolver = null!;
     private readonly string _branch = string.Empty;
-    private List<string>? _heads;
+    private List<IGitRef>? _heads;
     private bool _bInternalUpdate;
     private bool _runtimeInitialized;
+    private GitPullAction _pullAction;
 
     [GeneratedRegex(@"Your configuration specifies to .* the ref '.*'[\r]?[\n]from the remote, but no such ref was fetched.", RegexOptions.ExplicitCapture)]
     private static partial Regex IsRefRemoved { get; }
@@ -142,8 +145,7 @@ public sealed partial class FormPull : GitExtensionsDialog
     protected override void OnRuntimeLoad(EventArgs e)
     {
         base.OnRuntimeLoad(e);
-        _NO_TRANSLATE_Remotes.Focus();
-        UpdateFormTitleAndButton();
+        FormPullLoad(this, e);
     }
 
     private void WireControls()
@@ -161,20 +163,21 @@ public sealed partial class FormPull : GitExtensionsDialog
         PruneTags.IsCheckedChanged += PruneTags_CheckedChanged;
         Branches.DropDownOpened += BranchesDropDown;
         localBranch.LostFocus += localBranch_Leave;
-        _NO_TRANSLATE_Remotes.SelectionChanged += (_, _) => RemotesValidating();
+        _NO_TRANSLATE_Remotes.SelectionChanged += Remotes_TextChanged;
+        _NO_TRANSLATE_Remotes.LostFocus += (_, _) => RemotesValidating(_NO_TRANSLATE_Remotes, new CancelEventArgs());
 
         _NO_TRANSLATE_Remotes.PropertyChanged += (_, args) =>
         {
             if (args.Property == ComboBox.TextProperty && !_bInternalUpdate)
             {
-                RemotesValidating();
+                Remotes_TextChanged(_NO_TRANSLATE_Remotes, EventArgs.Empty);
             }
         };
         comboBoxPullSource.PropertyChanged += (_, args) =>
         {
             if (args.Property == ComboBox.TextProperty)
             {
-                ResetRemoteHeads();
+                PullSourceValidating(comboBoxPullSource, new CancelEventArgs());
                 UpdateActionState();
             }
         };
@@ -213,7 +216,7 @@ public sealed partial class FormPull : GitExtensionsDialog
         _NO_TRANSLATE_Remotes.SelectedItem = selected;
         _NO_TRANSLATE_Remotes.Text = selected;
         _bInternalUpdate = false;
-        RemotesValidating();
+        RemotesValidating(_NO_TRANSLATE_Remotes, new CancelEventArgs());
     }
 
     public WinFormsShims.DialogResult PullAndShowDialogWhenFailed(
@@ -221,6 +224,9 @@ public sealed partial class FormPull : GitExtensionsDialog
         string? remote,
         GitPullAction pullAction)
     {
+        // This path executes before the window is attached, so preserve the requested radio selection explicitly.
+        SetPullAction(pullAction, remote);
+
         // Special case for "Fetch and prune" and "Fetch and prune all" to make sure user confirms the action.
         if (pullAction == GitPullAction.FetchPruneAll)
         {
@@ -275,19 +281,20 @@ public sealed partial class FormPull : GitExtensionsDialog
 
         using (WaitCursorScope.Enter())
         {
+            LoadPuttyKey();
+
             if (_heads is null)
             {
                 _heads = PullFromUrl.IsChecked == true
-                    ? [.. Module.GetRefs(RefsFilter.Heads).Select(head => head.LocalName)]
+                    ? [.. Module.GetRefs(RefsFilter.Heads)]
                     : [.. Module.GetRefs(RefsFilter.Remotes)
-                        .Where(head => head.Remote.Equals(remote, StringComparison.OrdinalIgnoreCase))
-                        .Select(head => head.LocalName)];
+                        .Where(head => head.Remote.Equals(remote, StringComparison.OrdinalIgnoreCase))];
             }
 
             string selected = Branches.Text ?? string.Empty;
             Branches.Items.Clear();
             Branches.Items.Add(string.Empty);
-            foreach (string head in _heads.Distinct(StringComparer.Ordinal).OrderBy(head => head, StringComparer.Ordinal))
+            foreach (string head in _heads.Select(head => head.LocalName).Distinct(StringComparer.Ordinal).OrderBy(head => head, StringComparer.Ordinal))
             {
                 Branches.Items.Add(head);
             }
@@ -461,9 +468,15 @@ public sealed partial class FormPull : GitExtensionsDialog
     }
 
     private string CalculateSource()
-        => PullFromUrl.IsChecked == true
-            ? comboBoxPullSource.Text?.Trim() ?? string.Empty
-            : IsPullAll() ? "--all" : GetSelectedRemoteName();
+    {
+        if (PullFromUrl.IsChecked == true)
+        {
+            return comboBoxPullSource.Text?.Trim() ?? string.Empty;
+        }
+
+        LoadPuttyKey();
+        return IsPullAll() ? "--all" : GetSelectedRemoteName();
+    }
 
     private bool InitModules(WinFormsShims.IWin32Window? owner)
     {
@@ -782,6 +795,67 @@ public sealed partial class FormPull : GitExtensionsDialog
         return remoteBranchName;
     }
 
+    private void LoadPuttyKey()
+    {
+        if (!GitSshHelpers.IsPlink)
+        {
+            return;
+        }
+
+        HashSet<string> files = new(new PathEqualityComparer());
+        foreach (string remote in GetSelectedRemotes())
+        {
+            string sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);
+            if (!string.IsNullOrEmpty(sshKeyFile))
+            {
+                files.Add(sshKeyFile);
+            }
+        }
+
+        foreach (string sshKeyFile in files)
+        {
+            PuttyHelpers.StartPageantIfConfigured(() => sshKeyFile);
+        }
+
+        return;
+
+        IEnumerable<string> GetSelectedRemotes()
+        {
+            if (PullFromUrl.IsChecked == true)
+            {
+                yield break;
+            }
+
+            if (IsPullAll())
+            {
+                foreach (string remote in _NO_TRANSLATE_Remotes.Items.OfType<string>())
+                {
+                    if (!string.IsNullOrWhiteSpace(remote) && remote != AllRemotes)
+                    {
+                        yield return remote;
+                    }
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(GetSelectedRemoteName()))
+            {
+                yield return GetSelectedRemoteName();
+            }
+        }
+    }
+
+    private void FormPullLoad(object sender, EventArgs e)
+    {
+        _NO_TRANSLATE_Remotes.Focus();
+
+        // Reapply the requested action after Avalonia attaches and normalizes the radio group.
+        if (_runtimeInitialized)
+        {
+            SetPullAction(_pullAction, GetSelectedRemoteName());
+        }
+
+        UpdateFormTitleAndButton();
+    }
+
     private void UpdateFormTitleAndButton()
     {
         bool fetch = Fetch.IsChecked == true;
@@ -924,19 +998,30 @@ public sealed partial class FormPull : GitExtensionsDialog
             pullAction = AppSettings.DefaultPullAction;
         }
 
+        _pullAction = pullAction;
+
+        // Avalonia normalizes radio groups after attachment; clear siblings explicitly to match WinForms pre-show selection.
         switch (pullAction)
         {
             case GitPullAction.Rebase:
+                Merge.IsChecked = false;
+                Fetch.IsChecked = false;
                 Rebase.IsChecked = true;
                 break;
             case GitPullAction.Fetch:
+                Merge.IsChecked = false;
+                Rebase.IsChecked = false;
                 Fetch.IsChecked = true;
                 break;
             case GitPullAction.FetchAll:
+                Merge.IsChecked = false;
+                Rebase.IsChecked = false;
                 Fetch.IsChecked = true;
                 SelectRemote(AllRemotes);
                 break;
             case GitPullAction.FetchPruneAll:
+                Merge.IsChecked = false;
+                Rebase.IsChecked = false;
                 Fetch.IsChecked = true;
                 Prune.IsChecked = true;
                 PruneTags.IsChecked = false;
@@ -944,6 +1029,8 @@ public sealed partial class FormPull : GitExtensionsDialog
 
                 break;
             default:
+                Rebase.IsChecked = false;
+                Fetch.IsChecked = false;
                 Merge.IsChecked = true;
                 break;
         }
@@ -968,10 +1055,23 @@ public sealed partial class FormPull : GitExtensionsDialog
         _NO_TRANSLATE_Remotes.SelectedItem = _NO_TRANSLATE_Remotes.Items.OfType<string>().FirstOrDefault(item => item == remote);
         _NO_TRANSLATE_Remotes.Text = remote;
         _bInternalUpdate = false;
-        RemotesValidating();
+        RemotesValidating(_NO_TRANSLATE_Remotes, new CancelEventArgs());
     }
 
-    private void RemotesValidating()
+    private void PullSourceValidating(object sender, CancelEventArgs e)
+    {
+        ResetRemoteHeads();
+    }
+
+    private void Remotes_TextChanged(object sender, EventArgs e)
+    {
+        if (!_bInternalUpdate)
+        {
+            RemotesValidating(this, new CancelEventArgs());
+        }
+    }
+
+    private void RemotesValidating(object sender, CancelEventArgs e)
     {
         ResetRemoteHeads();
         string remote = GetSelectedRemoteName();
@@ -986,8 +1086,6 @@ public sealed partial class FormPull : GitExtensionsDialog
         {
             Fetch.IsChecked = true;
         }
-
-        UpdateActionState();
     }
 
     private void ResetRemoteHeads()
@@ -996,7 +1094,7 @@ public sealed partial class FormPull : GitExtensionsDialog
         Branches.Items.Clear();
     }
 
-    private void localBranch_Leave(object? sender, EventArgs e)
+    private void localBranch_Leave(object sender, EventArgs e)
     {
         if (_branch != localBranch.Text?.Trim() && string.IsNullOrWhiteSpace(Branches.Text))
         {
@@ -1004,12 +1102,12 @@ public sealed partial class FormPull : GitExtensionsDialog
         }
     }
 
-    private void Prune_CheckedChanged(object? sender, EventArgs e)
+    private void Prune_CheckedChanged(object sender, EventArgs e)
     {
         PruneTags.IsChecked = Prune.IsChecked == true && PruneTags.IsChecked == true;
     }
 
-    private void PruneTags_CheckedChanged(object? sender, EventArgs e)
+    private void PruneTags_CheckedChanged(object sender, EventArgs e)
     {
         Prune.IsChecked = Prune.IsChecked == true || PruneTags.IsChecked == true;
         AllTags.IsChecked = AllTags.IsChecked == true || PruneTags.IsChecked == true;
