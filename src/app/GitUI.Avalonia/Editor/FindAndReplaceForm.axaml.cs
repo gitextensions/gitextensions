@@ -543,23 +543,18 @@ public sealed class TextRange : ISegment
     public int EndOffset => Offset + Length;
 }
 
-/// <summary>Finds occurrences in an AvaloniaEdit text document without owning UI.</summary>
+/// <summary>This class finds occurrences of a search string in a text editor's IDocument... it's like Find box without a GUI.</summary>
 public sealed class TextEditorSearcher : IDisposable
 {
-    /// <summary>Occurs when the bounded scan region changes.</summary>
     public event EventHandler? ScanRegionChanged;
+    public bool MatchCase;
+    public bool MatchWholeWordOnly;
     private TextEditor? _editor;
-    private string? _lookForComparison;
-    private ScanRegionRenderer? _regionRenderer;
+    private string? _lookFor2; // uppercase in case-insensitive mode
+    private ScanRegionRenderer? _region;
     private int? _scanOffset;
     private int _scanLength;
     private TextDocument? _document;
-
-    /// <summary>Gets or sets whether character casing must match.</summary>
-    public bool MatchCase { get; set; }
-
-    /// <summary>Gets or sets whether matches must have word boundaries.</summary>
-    public bool MatchWholeWordOnly { get; set; }
 
     /// <summary>Gets or sets the document to search.</summary>
     public TextDocument? Document
@@ -597,12 +592,12 @@ public sealed class TextEditorSearcher : IDisposable
     /// <summary>Gets whether searching is restricted to a range.</summary>
     public bool HasScanRegion => _scanOffset is not null;
 
-    internal bool HasScanRegionRenderer => _regionRenderer is not null;
+    internal bool HasScanRegionRenderer => _region is not null;
 
-    /// <summary>Gets the first searchable offset.</summary>
+    /// <summary>Begins the start offset for searching.</summary>
     public int BeginOffset => _scanOffset ?? 0;
 
-    /// <summary>Gets the first offset after the searchable range.</summary>
+    /// <summary>Begins the end offset for searching.</summary>
     public int EndOffset => _scanOffset is int offset
         ? offset + _scanLength
         : _document?.TextLength ?? 0;
@@ -616,7 +611,7 @@ public sealed class TextEditorSearcher : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>Restricts searching to a document range.</summary>
+    /// <summary>Sets the region to search. The region is updated automatically as the document changes.</summary>
     /// <param name="offset">The zero-based range offset.</param>
     /// <param name="length">The range length.</param>
     public void SetScanRegion(int offset, int length)
@@ -624,12 +619,12 @@ public sealed class TextEditorSearcher : IDisposable
         TextDocument document = _document ?? throw new InvalidOperationException("The searcher has no document.");
         if (_scanOffset is not null)
         {
-            document.TextChanged -= DocumentOnTextChanged;
+            document.TextChanged -= DocumentOnTextContentChanged;
         }
 
         _scanOffset = offset;
         _scanLength = length;
-        document.TextChanged += DocumentOnTextChanged;
+        document.TextChanged += DocumentOnTextContentChanged;
         UpdateRegionRenderer();
         ScanRegionChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -644,7 +639,7 @@ public sealed class TextEditorSearcher : IDisposable
 
         if (_document is not null)
         {
-            _document.TextChanged -= DocumentOnTextChanged;
+            _document.TextChanged -= DocumentOnTextContentChanged;
         }
 
         _scanOffset = null;
@@ -653,11 +648,10 @@ public sealed class TextEditorSearcher : IDisposable
         ScanRegionChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>Finds the next match, wrapping once when necessary.</summary>
-    /// <param name="beginAtOffset">The offset at which searching starts.</param>
-    /// <param name="searchBackward">Whether to search toward the document start.</param>
-    /// <param name="loopedAround">Receives whether the search wrapped.</param>
-    /// <returns>The matching range, or <see langword="null"/>.</returns>
+    /// <summary>Finds next instance of LookFor, according to the search rules (MatchCase, MatchWholeWordOnly).</summary>
+    /// <param name="beginAtOffset">Offset in Document at which to begin the search.</param>
+    /// <remarks>If there is a match at beginAtOffset precisely, it will be returned.</remarks>
+    /// <returns>Region of document that matches the search string.</returns>
     public TextRange? FindNext(int beginAtOffset, bool searchBackward, out bool loopedAround)
     {
         string lookFor = LookFor ?? throw new InvalidOperationException("No search text was specified.");
@@ -671,7 +665,7 @@ public sealed class TextEditorSearcher : IDisposable
         int startAt = BeginOffset;
         int endAt = EndOffset;
         int currentOffset = Globals.InRange(beginAtOffset, startAt, endAt);
-        _lookForComparison = MatchCase ? lookFor : lookFor.ToUpperInvariant();
+        _lookFor2 = MatchCase ? lookFor : lookFor.ToUpperInvariant();
 
         TextRange? result;
         if (searchBackward)
@@ -698,16 +692,18 @@ public sealed class TextEditorSearcher : IDisposable
 
     private TextRange? FindNextIn(int offset1, int offset2, bool searchBackward)
     {
-        TextDocument document = _document ?? throw new InvalidOperationException("The searcher has no document.");
         string lookFor = LookFor ?? throw new InvalidOperationException("No search text was specified.");
-        string comparison = _lookForComparison ?? throw new InvalidOperationException("Search comparison text was not initialized.");
+        _ = _document ?? throw new InvalidOperationException("The searcher has no document.");
+        _ = _lookFor2 ?? throw new InvalidOperationException("Search comparison text was not initialized.");
 
         offset2 -= lookFor.Length;
+
+        // Search
         if (searchBackward)
         {
             for (int offset = offset2; offset >= offset1; offset--)
             {
-                if (MatchesAt(document, comparison, lookFor.Length, offset))
+                if (IsPartWordMatch(offset) && (!MatchWholeWordOnly || IsWholeWordMatch(offset)))
                 {
                     return new TextRange(offset, lookFor.Length);
                 }
@@ -717,7 +713,7 @@ public sealed class TextEditorSearcher : IDisposable
         {
             for (int offset = offset1; offset <= offset2; offset++)
             {
-                if (MatchesAt(document, comparison, lookFor.Length, offset))
+                if (IsPartWordMatch(offset) && (!MatchWholeWordOnly || IsWholeWordMatch(offset)))
                 {
                     return new TextRange(offset, lookFor.Length);
                 }
@@ -727,30 +723,50 @@ public sealed class TextEditorSearcher : IDisposable
         return null;
     }
 
-    private bool MatchesAt(TextDocument document, string comparison, int length, int offset)
-    {
-        string candidate = document.GetText(offset, length);
-        if (!MatchCase)
-        {
-            candidate = candidate.ToUpperInvariant();
-        }
+    private static bool MatchFirstCh(char a, char b, bool matchCase)
+        => matchCase ? a == b : char.ToUpperInvariant(a) == char.ToUpperInvariant(b);
 
-        return candidate == comparison
-            && (!MatchWholeWordOnly || (IsWordBoundary(document, offset) && IsWordBoundary(document, offset + length)));
-    }
+    private bool IsWholeWordMatch(int offset)
+        => IsWordBoundary(offset) && IsWordBoundary(offset + (LookFor?.Length ?? 0));
 
-    private static bool IsWordBoundary(TextDocument document, int offset)
+    private bool IsWordBoundary(int offset)
     {
+        TextDocument document = _document ?? throw new InvalidOperationException("The searcher has no document.");
         return offset <= 0
             || offset >= document.TextLength
-            || !IsAlphaNumeric(document.GetCharAt(offset - 1))
-            || !IsAlphaNumeric(document.GetCharAt(offset));
+            || !IsAlphaNumeric(offset - 1)
+            || !IsAlphaNumeric(offset);
     }
 
-    private static bool IsAlphaNumeric(char character)
-        => char.IsLetterOrDigit(character) || character == '_';
+    private bool IsAlphaNumeric(int offset)
+    {
+        TextDocument document = _document ?? throw new InvalidOperationException("The searcher has no document.");
+        char character = document.GetCharAt(offset);
+        return char.IsLetterOrDigit(character) || character == '_';
+    }
 
-    private void DocumentOnTextChanged(object? sender, EventArgs e)
+    private bool IsPartWordMatch(int offset)
+    {
+        TextDocument document = _document ?? throw new InvalidOperationException("The searcher has no document.");
+        string lookFor = LookFor ?? throw new InvalidOperationException("No search text was specified.");
+        string comparison = _lookFor2 ?? throw new InvalidOperationException("Search comparison text was not initialized.");
+        if (!MatchFirstCh(document.GetCharAt(offset), comparison[0], MatchCase))
+        {
+            return false;
+        }
+
+        for (int index = 1; index < lookFor.Length; index++)
+        {
+            if (!MatchFirstCh(document.GetCharAt(offset + index), comparison[index], MatchCase))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void DocumentOnTextContentChanged(object? sender, EventArgs e)
     {
         ClearScanRegion();
     }
@@ -764,22 +780,22 @@ public sealed class TextEditorSearcher : IDisposable
 
         RemoveRegionRenderer();
         DrawingColor regionColor = DrawingColor.FromArgb(160, 160, 160).AdaptBackColor().DimColor();
-        _regionRenderer = new ScanRegionRenderer(
+        _region = new ScanRegionRenderer(
             new TextRange(_scanOffset.Value, _scanLength),
             new SolidColorBrush(AvaloniaThemeResources.ToMediaColor(regionColor)).ToImmutable());
-        _editor.TextArea.TextView.BackgroundRenderers.Add(_regionRenderer);
+        _editor.TextArea.TextView.BackgroundRenderers.Add(_region);
         _editor.TextArea.TextView.Redraw();
     }
 
     private void RemoveRegionRenderer()
     {
-        if (_editor is not null && _regionRenderer is not null)
+        if (_editor is not null && _region is not null)
         {
-            _editor.TextArea.TextView.BackgroundRenderers.Remove(_regionRenderer);
+            _editor.TextArea.TextView.BackgroundRenderers.Remove(_region);
             _editor.TextArea.TextView.Redraw();
         }
 
-        _regionRenderer = null;
+        _region = null;
     }
 
     private sealed class ScanRegionRenderer : IBackgroundRenderer

@@ -144,7 +144,7 @@ public sealed class ReleaseNotesGeneratorPluginTests
                 ? "public.html"
                 : "text/html";
 
-        using DataTransfer data = HtmlFragment.CreateClipboardData(fragment);
+        using DataTransfer data = HtmlFragment.CreateHtmlFormatClipboardDataObject(fragment);
 
         data.Formats.Select(format => format.Identifier)
             .Should().Contain(DataFormat.Text.Identifier, richFormat);
@@ -175,6 +175,20 @@ public sealed class ReleaseNotesGeneratorPluginTests
                 "<!--StartFragment--><p>Hallo</p><!--EndFragment-->\r\n" +
                 "</body></html>");
         }
+    }
+
+    [Test]
+    public void Html_fragment_should_decode_cf_html_metadata()
+    {
+        const string fragment = "<p>Hällo</p>";
+        string rawClipboardText = HtmlFragment.CreateHtmlFormatClipboardText(fragment);
+
+        HtmlFragment decoded = new(rawClipboardText);
+
+        decoded.Version.Should().Be("0.9");
+        decoded.Fragment.Should().Be(fragment);
+        decoded.Context.Should().Contain("<!--StartFragment-->" + fragment + "<!--EndFragment-->");
+        decoded.SourceUrl.Should().BeNull();
     }
 
     private GitModule CreateRepository()

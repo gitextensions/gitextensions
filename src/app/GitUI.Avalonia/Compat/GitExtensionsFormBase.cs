@@ -147,14 +147,31 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
 
     protected override void OnOpened(EventArgs e)
     {
+        // Avalonia exposes Opened rather than WinForms' separate Load and Shown hooks.
+        // Preserve their one-shot ordering and overridable method boundaries for ported forms.
+        bool raiseRuntimeLifecycle = !Design.IsDesignMode && !_runtimeLoadRaised;
+        if (raiseRuntimeLifecycle)
+        {
+            _runtimeLoadRaised = true;
+            OnLoad(e);
+        }
+
         base.OnOpened(e);
 
         // Avalonia's preview host opens the window; design mode must never start runtime work.
-        if (!Design.IsDesignMode && !_runtimeLoadRaised)
+        if (raiseRuntimeLifecycle)
         {
-            _runtimeLoadRaised = true;
             OnRuntimeLoad(e);
+            OnShown(e);
         }
+    }
+
+    protected virtual void OnLoad(EventArgs e)
+    {
+    }
+
+    protected virtual void OnShown(EventArgs e)
+    {
     }
 
     private void GitExtensionsFormBase_Activated(object? sender, EventArgs e)
