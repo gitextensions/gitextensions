@@ -75,6 +75,8 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         }
         catch (Exception exception)
         {
+            // Bail out before the user saves the incompletely loaded settings
+            // and has their day ruined.
             DialogResult = WinFormsShims.DialogResult.Abort;
             MessageBoxes.ShowError(this, exception.Message, "Failed to load settings");
             throw;

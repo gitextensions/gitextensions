@@ -1,4 +1,4 @@
-using System.Runtime.Versioning;
+﻿using System.Runtime.Versioning;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
@@ -121,6 +121,7 @@ public sealed partial class SshSettingsPage : SettingsPageWithHeader
             yield return Path.Join(programFilesX86, "TortoiseSvn", "bin");
         }
 
+        // Old(?) uninstaller
         string? registryLocation = GitUI.CommandsDialogs.SettingsDialog.CommonLogic.GetRegistryValue(
             Registry.LocalMachine,
             "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",

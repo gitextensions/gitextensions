@@ -135,6 +135,8 @@ public partial class FormRevisionFilter : GitExtensionsDialog
     private void option_CheckedChanged(object? sender, EventArgs e)
     {
         UpdateFilters();
+
+        // If CommitsLimitCheck was changed, the displayed value may need to be updated too
         if (ReferenceEquals(sender, CommitsLimitCheck) && CommitsLimitCheck.IsChecked != true)
         {
             _NO_TRANSLATE_CommitsLimit.Value = _filterInfo.CommitsLimitDefault;

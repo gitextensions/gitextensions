@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -67,7 +67,7 @@ internal abstract class ToolStripMenuItemEx : MenuItem, ITranslate
     /// <summary>
     ///  Allows refreshing the state of the menu item depending on the state of the loaded git repository.
     /// </summary>
-    /// <param name="bareRepository"><see langword="true"/> if the current git repository is bare; otherwise, <see langword="false"/>.</param>
+    /// <param name="bareRepository"><see lang="true"/> if the current git repository is bare; otherwise, <see lang="false"/>.</param>
     public virtual void RefreshState(bool bareRepository)
     {
     }

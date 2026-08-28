@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Media;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
@@ -27,33 +27,33 @@ public sealed class PieChart3D
     private IReadOnlyList<Slice> _slices = [];
 
     /// <summary>
-        ///   Initializes a new instance of <c>PieChart3D</c> with given bounds,
-        ///   array of values and relative pie slice height.
-        /// </summary>
-        /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle bounding
-        ///   the chart.
-        /// </param>
-        /// <param name = "yBoundingRect">
-        ///   y-coordinate of the upper-left corner of the rectangle bounding
-        ///   the chart.
-        /// </param>
-        /// <param name = "widthBoundingRect">
-        ///   Width of the rectangle bounding the chart.
-        /// </param>
-        /// <param name = "heightBoundingRect">
-        ///   Height of the rectangle bounding the chart.
-        /// </param>
-        /// <param name = "values">
-        ///   An array of <c>decimal</c> values to chart.
-        /// </param>
-        /// <param name = "sliceColors">
-        ///   An array of colors used to render slices.
-        /// </param>
-        /// <param name = "sliceRelativeHeight">
-        ///   Thickness of the slice to chart relative to the height of the
-        ///   bounding rectangle.
-        /// </param>
+    ///   Initializes a new instance of <c>PieChart3D</c> with given bounds,
+    ///   array of values and relative pie slice height.
+    /// </summary>
+    /// <param name = "xBoundingRect">
+    ///   x-coordinate of the upper-left corner of the rectangle bounding
+    ///   the chart.
+    /// </param>
+    /// <param name = "yBoundingRect">
+    ///   y-coordinate of the upper-left corner of the rectangle bounding
+    ///   the chart.
+    /// </param>
+    /// <param name = "widthBoundingRect">
+    ///   Width of the rectangle bounding the chart.
+    /// </param>
+    /// <param name = "heightBoundingRect">
+    ///   Height of the rectangle bounding the chart.
+    /// </param>
+    /// <param name = "values">
+    ///   An array of <c>decimal</c> values to chart.
+    /// </param>
+    /// <param name = "sliceColors">
+    ///   An array of colors used to render slices.
+    /// </param>
+    /// <param name = "sliceRelativeHeight">
+    ///   Thickness of the slice to chart relative to the height of the
+    ///   bounding rectangle.
+    /// </param>
     public PieChart3D(
         double xBoundingRect,
         double yBoundingRect,
@@ -71,25 +71,25 @@ public sealed class PieChart3D
     }
 
     /// <summary>
-        ///   Sets slice edge color mode. If set to <c>PenColor</c> (default),
-        ///   then value set by <c>EdgeColor</c> property is used.
-        /// </summary>
+    ///   Sets slice edge color mode. If set to <c>PenColor</c> (default),
+    ///   then value set by <c>EdgeColor</c> property is used.
+    /// </summary>
     public EdgeColorType EdgeColorType { private get; set; } = EdgeColorType.SystemColor;
 
     /// <summary>
-        ///   Sets slice edge line width. If not set, default value is 1.
-        /// </summary>
+    ///   Sets slice edge line width. If not set, default value is 1.
+    /// </summary>
     public double EdgeLineWidth { private get; set; } = 1;
 
     /// <summary>
-        ///   Sets the shadowing style used.
-        /// </summary>
+    ///   Sets the shadowing style used.
+    /// </summary>
     public ShadowStyle ShadowStyle { private get; set; } = ShadowStyle.GradualShadow;
 
     /// <summary>
-        ///   Sets the flag that controls if chart is fit to bounding rectangle
-        ///   exactly.
-        /// </summary>
+    ///   Sets the flag that controls if chart is fit to bounding rectangle
+    ///   exactly.
+    /// </summary>
     public bool FitToBoundingRectangle { private get; set; }
 
     public int HighlightedIndex { private get; set; } = -1;
@@ -104,9 +104,9 @@ public sealed class PieChart3D
             : Colors.Transparent;
 
     /// <summary>
-        ///   Sets the slice displacement relative to the ellipse semi-axis.
-        ///   Must be less than 1.
-        /// </summary>
+    ///   Sets the slice displacement relative to the ellipse semi-axis.
+    ///   Must be less than 1.
+    /// </summary>
     public void SetSliceRelativeDisplacements(double[] value)
     {
         _relativeSliceDisplacements = value.Length == 0 ? [0] : value;
@@ -154,17 +154,19 @@ public sealed class PieChart3D
     }
 
     /// <summary>
-        ///   Searches the chart to find the index of the pie slice which
-        ///   contains point given. Search order goes in the direction opposite
-        ///   to drawing order.
-        /// </summary>
-        /// <param name = "point">
-        ///   <c>PointF</c> point for which pie slice is searched for.
-        /// </param>
-        /// <returns>
-        ///   Index of the corresponding pie slice, or -1 if none is found.
-        /// </returns>
+    ///   Searches the chart to find the index of the pie slice which
+    ///   contains point given. Search order goes in the direction opposite
+    ///   to drawing order.
+    /// </summary>
+    /// <param name = "point">
+    ///   <c>PointF</c> point for which pie slice is searched for.
+    /// </param>
+    /// <returns>
+    ///   Index of the corresponding pie slice, or -1 if none is found.
+    /// </returns>
     public int FindPieSliceUnderPoint(Point point)
+
+    // finally search for bottom sides
     {
         for (int index = _slices.Count - 1; index >= 0; index--)
         {
@@ -177,6 +179,11 @@ public sealed class PieChart3D
             }
 
             double angle = NormalizeAngle(Math.Atan2(y, x) / DegreesToRadians);
+
+            // first check tops
+            // check for start/stop sides, starting from the foremost
+            // if not found yet, check end sides from the foremost to the right
+            // side
             if (ContainsAngle(slice.StartAngle, slice.SweepAngle, angle))
             {
                 return slice.Index;

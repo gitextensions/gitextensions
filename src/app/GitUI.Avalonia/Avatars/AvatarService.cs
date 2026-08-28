@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitUI.Properties;
 
 namespace GitUI.Avatars;
@@ -24,7 +24,8 @@ public static class AvatarService
     public static IAvatarCacheCleaner CacheCleaner { get; }
 
     /// <summary>
-    /// Updates the internal avatar provider chain to reflect the active settings.
+    /// Updates the internal avatar provider chain to
+    /// reflect the current active (according to <see cref="AppSettings"/> provider.
     /// </summary>
     public static void UpdateAvatarProvider()
     {
@@ -59,6 +60,10 @@ public static class AvatarService
             _ => new ChainedAvatarProvider(providers),
         };
 
+        // 1. query GitHub (with non-reply and regular email addresses)
+        //    GitHub might internally fall back to Gravatar, so only need a single request in most cases.
+        // 2. resolve via Gravatar (for users that don't have a GitHub account)
+        //    this request also directly provides the fallback if it's Gravatar compatible.
         IAvatarProvider BuildDefaultMainProvider()
             => new ChainedAvatarProvider(
                 new GithubAvatarProvider(lazyDownloader.Value),

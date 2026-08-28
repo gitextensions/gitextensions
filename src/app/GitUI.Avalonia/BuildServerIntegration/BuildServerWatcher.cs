@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -63,6 +63,9 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(launchToken);
 
         _buildServerAdapter?.Dispose();
+
+        // When a build server adapter is available (including auto-detected),
+        // ensure the column visibility and width reflect the user's display preferences
         _buildServerAdapter = buildServerAdapter;
         ColumnProvider.Column.IsAvailable = buildServerAdapter is not null;
         _revisionGrid.ApplyColumnSettings();
@@ -274,6 +277,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             }
 
             IBuildServerAdapter adapter = export.Value;
+
+            // To run the `StartSettingsDialog()` in the UI Thread
             adapter.Initialize(
                 this,
                 BuildServerSettings.GetSettingsSource(effectiveSettings),
@@ -294,13 +299,13 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     }
 
     /// <summary>
-        ///  Attempts to detect the build server type from the repository's remote URLs
-        ///  by querying registered <see cref="IBuildServerAutoDetector"/> exports.
-        ///  When detected, writes adapter-specific settings to <paramref name="settingsSource"/>
-        ///  (if not already set) so the adapter can use them without re-parsing.
-        ///  Respects <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/> for remote ordering,
-        ///  so that forks resolve to the upstream project's CI rather than the fork's.
-        /// </summary>
+    ///  Attempts to detect the build server type from the repository's remote URLs
+    ///  by querying registered <see cref="IBuildServerAutoDetector"/> exports.
+    ///  When detected, writes adapter-specific settings to <paramref name="settingsSource"/>
+    ///  (if not already set) so the adapter can use them without re-parsing.
+    ///  Respects <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/> for remote ordering,
+    ///  so that forks resolve to the upstream project's CI rather than the fork's.
+    /// </summary>
     private string? TryAutoDetectBuildServerType(SettingsSource? settingsSource = null)
     {
         try
@@ -323,9 +328,9 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     }
 
     /// <summary>
-        ///  For an explicitly configured build server, runs the matching auto-detector
-        ///  to populate adapter-specific settings from remote URLs.
-        /// </summary>
+    ///  For an explicitly configured build server, runs the matching auto-detector
+    ///  to populate adapter-specific settings from remote URLs.
+    /// </summary>
     private void TryPopulateSettingsForBuildServer(string buildServerName, SettingsSource settingsSource)
     {
         try
@@ -347,9 +352,9 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     }
 
     /// <summary>
-        ///  Collects remote URLs from the current module, ordered by
-        ///  <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/>.
-        /// </summary>
+    ///  Collects remote URLs from the current module, ordered by
+    ///  <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/>.
+    /// </summary>
     private List<string> GetOrderedRemoteUrls()
     {
         IGitModule module = _module();

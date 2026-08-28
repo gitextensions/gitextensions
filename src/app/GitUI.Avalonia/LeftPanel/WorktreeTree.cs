@@ -1,4 +1,4 @@
-using System.Buffers;
+﻿using System.Buffers;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Properties;
@@ -119,12 +119,16 @@ internal sealed class WorktreeTree : Tree
             return string.Empty;
         }
 
+        // Snap to the last directory separator in the common prefix.
         int directorySeparatorIndex = prefix.LastIndexOfAny(DirectorySeparatorChars);
         if (directorySeparatorIndex >= 0)
         {
             return prefix[..(directorySeparatorIndex + 1)].ToString();
         }
 
+        // Fall back to word-boundary characters only when none of the paths contain
+        // directory separators. This handles the case where all worktrees are flat
+        // siblings in the same directory (e.g. "repo_dev", "repo_test").
         if (hasDirectorySeparator)
         {
             return string.Empty;

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using Avalonia.Controls;
@@ -92,6 +92,10 @@ public partial class PatchGrid : GitModuleControl
         string[] doneCommits = ReadCommitsDataFromRebaseFile(doneFilePath);
         string[] todoCommits = ReadCommitsDataFromRebaseFile(rebaseTodoFilePath);
         string commentChar = Module.GetEffectiveSetting("core.commentchar", defaultValue: "#");
+
+        // Filter comment lines and keep only lines containing at least 3 columns
+        // (action, commit hash and commit subject -- that could contain spaces and be cut in more --)
+        // ex: pick e0d861716540aa1ac83eaa2790ba5e79988b9489 this is the commit subject
         string[][] commitsInfos = [.. doneCommits.Concat(todoCommits)
             .Where(line => !line.StartsWith(commentChar, StringComparison.Ordinal))
             .Select(line => line.Split(Delimiters.Space))
@@ -176,6 +180,7 @@ public partial class PatchGrid : GitModuleControl
             return patches;
         }
 
+        // Select commits with `ObjectId` and patches with `Name`
         IEnumerable<PatchFile> skippedPatches = patches
             .TakeWhile(patchFile => !patchFile.IsNext)
             .Where(patchFile => _skipped.Any(skipped =>

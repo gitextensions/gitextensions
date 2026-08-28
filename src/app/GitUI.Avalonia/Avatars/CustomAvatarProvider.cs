@@ -43,8 +43,11 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
     }
 
     /// <summary>
-    /// Parses a custom avatar template string and creates an avatar provider from it.
+    /// Parses a custom avatar template string and creates an <see cref="IAvatarProvider"/> from it.
     /// </summary>
+    /// <param name="customProviderTemplates">The custom avatar provider template.</param>
+    /// <param name="downloader">The downloader that is used to download avatar images.</param>
+    /// <returns>Returns the <see cref="IAvatarProvider"/> described by the template.</returns>
     public static IAvatarProvider ParseTemplateString(string customProviderTemplates, IAvatarDownloader downloader)
     {
         ArgumentNullException.ThrowIfNull(downloader);
@@ -62,8 +65,8 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
     }
 
     /// <summary>
-        /// Parses a single template segment.
-        /// </summary>
+    /// Parses a single template segment.
+    /// </summary>
     private static IAvatarProvider? FromTemplateSegment(IAvatarDownloader downloader, string providerTemplate)
     {
         // if the segment is a tag like "<Demo>", we extract the name

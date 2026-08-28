@@ -454,6 +454,7 @@ public sealed partial class FormClone : GitExtensionsDialog
                 return;
             }
 
+            // If the authentication failed because of a missing key, ask the user to supply one.
             UpdateBranches(new RemoteActionResult<IReadOnlyList<IGitRef>>(
                 result: refs,
                 authenticationFail: false,

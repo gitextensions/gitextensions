@@ -165,6 +165,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
             bool success = UICommands.StartGitCommandProcessDialog(this, command);
             if (chkCreateOrphan.IsChecked == true && success && chkClearOrphan.IsChecked == true)
             {
+                // orphan AND orphan creation success AND clear
                 UICommands.StartGitCommandProcessDialog(this, Commands.Remove());
             }
 

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -53,6 +53,33 @@ public enum SortDirection
 public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisionGridInfo, IRevisionGridFilter, IRevisionGridUpdate
 {
     /// <summary>Occurs when the selected revision is double-clicked.</summary>
+    // Mnemonics:
+    // A manipulateCommitToolStripMenuItem
+    // B openBuildReportToolStripMenuItem
+    // C Copy to clipboard
+    // D deleteBranchToolStripMenuItem, deleteTagToolStripMenuItem, dropStashToolStripMenuItem
+    // E renameBranchToolStripMenuItem
+    // F
+    // G createTagToolStripMenuItem
+    // H tsmiPushBranch
+    // I archiveRevisionToolStripMenuItem
+    // J
+    // K checkoutBranchToolStripMenuItem
+    // L tsmiSelectInLeftPanel
+    // M mergeBranchToolStripMenuItem
+    // N navigateToolStripMenuItem
+    // O resetAnotherBranchToHereToolStripMenuItem, tsmiOtherActions
+    // P compareToolStripMenuItem
+    // Q
+    // R rebaseOnToolStripMenuItem
+    // S runScriptToolStripMenuItem, popStashToolStripMenuItem
+    // T checkoutRevisionToolStripMenuItem
+    // U resetCurrentBranchToHereToolStripMenuItem
+    // V revertCommitToolStripMenuItem
+    // W openPullRequestPageStripMenuItem
+    // X createNewBranchToolStripMenuItem
+    // Y cherryPickCommitToolStripMenuItem, applyStashToolStripMenuItem
+    // Z
     public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
 
     private const int RowSpacing = 9;
@@ -72,10 +99,14 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
 
     public event EventHandler? ArtificialChanged;
 
-    /// <summary>Occurs when refs and stash revisions for a reload become available.</summary>
+    /// <summary>
+    ///  Occurs whenever the revision graph has started loading the data.
+    /// </summary>
     public event EventHandler<RevisionLoadEventArgs>? RevisionsLoading;
 
-    /// <summary>Occurs after the corresponding revision reload reaches the UI.</summary>
+    /// <summary>
+    ///  Occurs whenever the revision graph has been populated with the data.
+    /// </summary>
     public event EventHandler<RevisionLoadEventArgs>? RevisionsLoaded;
     public static readonly string HotkeySettingsName = "RevisionGrid";
     private readonly TranslationString _droppingFilesBlocked = new("For you own protection dropping more than 10 patch files at once is blocked!");
@@ -287,8 +318,8 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     internal bool ShowBuildServerInfo { get; set; }
 
     /// <summary>
-        /// The last selected commit in the grid (with related CommitInfo in Browse).
-        /// </summary>
+    /// The last selected commit in the grid (with related CommitInfo in Browse).
+    /// </summary>
     public ObjectId SelectedId
     {
         get => SelectedRevision?.ObjectId ?? _pendingSelectedObjectId;
@@ -298,10 +329,10 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     internal RevisionGridMenuCommands MenuCommands { get; }
 
     /// <summary>
-        /// The (first) seen name for commits, for FileHistory with path filters.
-        /// See BuildFilter() for limitations of commits included.
-        /// The property is explicitly initialized by FileHistory.
-        /// </summary>
+    /// The (first) seen name for commits, for FileHistory with path filters.
+    /// See BuildFilter() for limitations of commits included.
+    /// The property is explicitly initialized by FileHistory.
+    /// </summary>
     internal Dictionary<ObjectId, string>? FilePathByObjectId { get; set; }
 
     internal Action<string>? SelectInLeftPanel { get; set; } = null;
@@ -756,9 +787,9 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     }
 
     /// <summary>
-        /// Get the actual GitRevision from grid or use GitModule if parents may be rewritten or the commit is not in the grid.
-        /// </summary>
-        /// <returns>The GitRevision or null if not found</returns>
+    /// Get the actual GitRevision from grid or use GitModule if parents may be rewritten or the commit is not in the grid.
+    /// </summary>
+    /// <returns>The GitRevision or null if not found</returns>
     public GitRevision? GetActualRevision(ObjectId objectId)
     {
         GitRevision? revision = GetRevision(objectId);
@@ -1628,6 +1659,7 @@ public partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisi
     /// </summary>
     public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus>? status)
     {
+        // Note that the count is updated also if AppSettings.ShowGitStatusForArtificialCommits is not set
         UpdateChangeCount(ObjectId.WorkTreeId, StagedStatus.WorkTree);
         UpdateChangeCount(ObjectId.IndexId, StagedStatus.Index);
         RefreshRealizedRows();

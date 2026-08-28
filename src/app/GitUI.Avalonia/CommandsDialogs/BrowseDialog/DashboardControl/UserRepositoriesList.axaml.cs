@@ -793,6 +793,8 @@ public partial class UserRepositoriesList : TranslatedControl
     private static void OnDragEnter(object? sender, DragEventArgs e)
     {
         string[] fileNameArray = GetDroppedFileNames(e.DataTransfer);
+
+        // Allow drop (copy, not move) folders
         e.DragEffects = CanDropRepositoryDirectory(fileNameArray)
             ? DragDropEffects.Copy
             : DragDropEffects.None;

@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using GitCommands;
@@ -172,6 +172,8 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
             DiffFiles.SetDiffs(groups, IsFileTreeMode);
             DisplayedRevision = revisions[0];
             RelativePath? itemToSelect = _lastExplicitlySelectedItem ?? FallbackFollowedFile ?? _previousItem;
+
+            // Select something by default
             if (itemToSelect is null || !DiffFiles.SelectFileOrFolder(itemToSelect, notify: true))
             {
                 DiffFiles.SelectFirstVisibleItem();
@@ -232,8 +234,8 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
     }
 
     /// <summary>
-        ///  Gets whether this control is showing the file tree in contrast to showing diffs.
-        /// </summary>
+    ///  Gets whether this control is showing the file tree in contrast to showing diffs.
+    /// </summary>
     // The RevisionDiff has a companion RevisionFileTree, but the latter has none.
     internal bool IsFileTreeMode => _revisionFileTree is null;
 
@@ -295,10 +297,10 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
     }
 
     /// <summary>
-        /// Show the file in the BlameViewer if Blame is visible.
-        /// </summary>
-        /// <param name="line">The line to start at.</param>
-        /// <returns>a task</returns>
+    /// Show the file in the BlameViewer if Blame is visible.
+    /// </summary>
+    /// <param name="line">The line to start at.</param>
+    /// <returns>a task</returns>
     private async Task ShowSelectedFileBlameAsync(FileStatusItem selectedItem, int? line)
     {
         BlameControl.IsVisible = true;
@@ -379,6 +381,9 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
     {
         // Switch to diff if the selection changes (but not for file tree mode)
         GitItemStatus? item = DiffFiles.SelectedGitItem;
+
+        // If this is not occurring after a revision change (implicit selection)
+        // save the selected item so it can be the "preferred" selection
         if (!IsFileTreeMode && _showBlame && item is not null && item.Name != _selectedBlameItem?.Name)
         {
             _showBlame = false;
@@ -421,9 +426,9 @@ public sealed partial class RevisionDiffControl : GitModuleControl, IRevisionGri
     }
 
     /// <summary>
-        /// Open the selected item in the FileTree tab
-        /// </summary>
-        /// <param name="requestBlame">Request that Blame is shown in the FileTree</param>
+    /// Open the selected item in the FileTree tab
+    /// </summary>
+    /// <param name="requestBlame">Request that Blame is shown in the FileTree</param>
     private void OpenInFileTreeTab(bool requestBlame)
     {
         if (_revisionFileTree is null)

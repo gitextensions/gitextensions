@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
@@ -162,6 +162,7 @@ public sealed partial class GitSettingsPage : SettingsPageWithHeader
     {
         if (!IsLoadingSettings)
         {
+            // If user pastes text or types in the box be sure to validate and save in the settings.
             CheckSettingsLogic.SolveGitCommand(GitPath.Text?.Trim());
         }
     }
@@ -170,6 +171,7 @@ public sealed partial class GitSettingsPage : SettingsPageWithHeader
     {
         if (!IsLoadingSettings && OperatingSystem.IsWindows())
         {
+            // If user pastes text or types in the box be sure to validate and save in the settings.
             CheckSettingsLogic.SolveLinuxToolsDir(LinuxToolsDir.Text?.Trim());
         }
     }
