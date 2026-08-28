@@ -807,7 +807,7 @@ internal static class SourceInventoryReader
                 });
             }
 
-            if (kind is "ContextMenu" or "MenuItem")
+            if (IsMenuContainerElement(kind))
             {
                 menuNames[element] = name;
             }
@@ -817,12 +817,14 @@ internal static class SourceInventoryReader
         {
             int order = 0;
             foreach (XElement child in element.Elements()
-                         .Where(child => child.Name.LocalName is "MenuItem" or "Separator"))
+                         .Where(child => IsMenuItemElement(child.Name.LocalName)
+                             || IsMenuSeparatorElement(child.Name.LocalName)))
             {
                 string? childName = (string?)child.Attribute(x + "Name");
                 if (string.IsNullOrWhiteSpace(childName))
                 {
-                    childName = $"<{child.Name.LocalName.ToLowerInvariant()}:{order}>";
+                    string anonymousKind = IsMenuSeparatorElement(child.Name.LocalName) ? "separator" : "menuitem";
+                    childName = $"<{anonymousKind}:{order}>";
                 }
 
                 part.Menus.Add(new MenuEntry
@@ -831,13 +833,22 @@ internal static class SourceInventoryReader
                     Parent = parent,
                     Order = order++,
                     Name = childName,
-                    Kind = child.Name.LocalName == "Separator" ? "separator" : "item"
+                    Kind = IsMenuSeparatorElement(child.Name.LocalName) ? "separator" : "item"
                 });
             }
         }
 
         parts.Add(part);
     }
+
+    private static bool IsMenuContainerElement(string localName) =>
+        localName is "ContextMenu" or "ContextMenuStrip" || IsMenuItemElement(localName);
+
+    private static bool IsMenuItemElement(string localName) =>
+        localName is "MenuItem" or "ToolStripMenuItem";
+
+    private static bool IsMenuSeparatorElement(string localName) =>
+        localName is "Separator" or "ToolStripSeparator";
 
     private static TranslationKeyEntry NewTranslationKey(string key, string origin) =>
         new()

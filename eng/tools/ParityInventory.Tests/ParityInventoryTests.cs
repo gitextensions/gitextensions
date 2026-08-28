@@ -226,6 +226,18 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_ignore_formatter_whitespace_inside_parameter_lists()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public sealed class Widget { private void Run(string value) { } }");
+        fixture.WriteTwin("Widget.cs", "namespace Sample; public sealed class Widget { private void Run( string value ) { } }");
+
+        InventoryReport report = fixture.Run();
+
+        report.Findings.Should().NotContain(item => item.Code == "member.signature");
+    }
+
+    [Test]
     public void Run_should_match_designer_fields_with_axaml_named_controls()
     {
         using InventoryFixture fixture = new();
@@ -785,6 +797,43 @@ public sealed class ParityInventoryTests
     }
 
     [Test]
+    public void Run_should_apply_an_exact_reviewed_extra_event_handler_adaptation()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public sealed class Widget { }");
+        fixture.WriteTwin("Widget.cs", """
+            namespace Sample;
+            public sealed class Widget
+            {
+                private void Wire() => button.PointerReleased += OnPointerReleased;
+                private void OnPointerReleased(object sender, PointerEventArgs e) { }
+            }
+            """);
+        FunctionalFinding finding = fixture.Run().Findings.Single(item => item.Code == "event.handler.extra");
+        fixture.WriteFrameworkAdaptations($$"""
+            {
+              "schemaVersion": 4,
+              "deviations": [
+                {
+                  "typeName": "Sample.Widget",
+                  "category": "events",
+                  "code": "event.handler.extra",
+                  "path": {{System.Text.Json.JsonSerializer.Serialize(finding.Path)}},
+                  "twinValue": {{System.Text.Json.JsonSerializer.Serialize(finding.TwinValue)}},
+                  "rationale": "Avalonia requires a routed pointer-event handler."
+                }
+              ]
+            }
+            """);
+
+        InventoryReport report = fixture.Run(useFrameworkAdaptations: true);
+
+        report.AcceptedFrameworkDeviations.Should().ContainSingle(item =>
+            item.Code == "event.handler.extra" && item.Path == finding.Path);
+        report.Findings.Should().Contain(item => item.Code == "event.wiring.extra");
+    }
+
+    [Test]
     public void Run_should_reject_a_reviewed_handwritten_comment_adaptation()
     {
         using InventoryFixture fixture = new();
@@ -914,9 +963,52 @@ public sealed class ParityInventoryTests
             {
                 private ContextMenuStrip menu;
                 private ToolStripMenuItem open;
+                private ToolStripSeparator separator;
                 private void InitializeComponent()
                 {
-                    menu.Items.AddRange(new[] { open });
+                    menu.Items.AddRange(new ToolStripItem[] { open, separator });
+                }
+            }
+            """);
+        fixture.WriteOriginal("Widget.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml.cs", "namespace Sample; public partial class Widget { }");
+        fixture.WriteTwin("Widget.axaml", """
+            <UserControl xmlns="https://github.com/avaloniaui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:wf="using:Sample.Compat"
+                         x:Class="Sample.Widget">
+              <wf:ContextMenuStrip x:Name="menu">
+                <wf:ToolStripMenuItem x:Name="open" Header="Open" />
+                <wf:ToolStripSeparator x:Name="separator" />
+              </wf:ContextMenuStrip>
+            </UserControl>
+            """);
+
+        InventoryReport report = fixture.Run();
+
+        report.Original.Menus.Should().Contain(item =>
+            item.Parent == "menu" && item.Name == "open");
+        report.Twin.Menus.Should().Contain(item =>
+            item.Parent == "menu" && item.Name == "open");
+        report.Twin.Menus.Should().Contain(item =>
+            item.Parent == "menu" && item.Name == "separator" && item.Kind == "separator");
+    }
+
+    [Test]
+    public void Run_should_align_menu_sequences_after_an_omitted_item()
+    {
+        using InventoryFixture fixture = new();
+        fixture.WriteOriginal("Widget.Designer.cs", """
+            namespace Sample;
+            public partial class Widget
+            {
+                private ContextMenuStrip menu;
+                private ToolStripMenuItem first;
+                private ToolStripMenuItem omitted;
+                private ToolStripMenuItem last;
+                private void InitializeComponent()
+                {
+                    menu.Items.AddRange(new ToolStripItem[] { first, omitted, last });
                 }
             }
             """);
@@ -927,17 +1019,16 @@ public sealed class ParityInventoryTests
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          x:Class="Sample.Widget">
               <ContextMenu x:Name="menu">
-                <MenuItem x:Name="open" Header="Open" />
+                <MenuItem x:Name="first" Header="First" />
+                <MenuItem x:Name="last" Header="Last" />
               </ContextMenu>
             </UserControl>
             """);
 
         InventoryReport report = fixture.Run();
 
-        report.Original.Menus.Should().ContainSingle(item =>
-            item.Parent == "menu" && item.Name == "open");
-        report.Twin.Menus.Should().ContainSingle(item =>
-            item.Parent == "menu" && item.Name == "open");
+        report.Findings.Where(item => item.Category == "menus").Should().ContainSingle(item =>
+            item.Code == "menu.item.missing" && item.Path.EndsWith(":omitted", StringComparison.Ordinal));
     }
 
     [Test]

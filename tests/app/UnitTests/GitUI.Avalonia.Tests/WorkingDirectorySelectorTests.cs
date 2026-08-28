@@ -358,8 +358,8 @@ public sealed class WorkingDirectorySelectorTests
             nameof(FormBrowse), "tsmiFavouriteRepositories", "Text", "&Favorite repositories");
         translation.DidNotReceive().AddTranslationItem(
             nameof(FormBrowse), "openToolStripMenuItem", "Text", Arg.Any<string>());
-        translation.Received(1).AddTranslationItem(
-            nameof(FormBrowse), "closeToolStripMenuItem", "Text", "&Close (go to Dashboard)");
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(FormBrowse), "closeToolStripMenuItem", "Text", Arg.Any<string>());
     }
 
     [AvaloniaTest]
