@@ -50,7 +50,15 @@
         <wf:ToolStripMenuItem x:Name="manageWorktreeToolStripMenuItem" Header="Manage _worktrees...">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.WorkTree}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
-        <wf:ToolStripSeparator />
+        <wf:ToolStripSeparator x:Name="toolStripSeparator44" />
+        <wf:ToolStripMenuItem x:Name="editgitignoreToolStripMenuItem1" Header="Edit .git_ignore">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.EditGitIgnore}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="editgitinfoexcludeToolStripMenuItem" Header="Edit .git/info/_exclude" />
+        <wf:ToolStripMenuItem x:Name="editGitAttributesToolStripMenuItem" Header="Edit .git_attributes" />
+        <wf:ToolStripMenuItem x:Name="editmailmapToolStripMenuItem" Header="Edit ._mailmap" />
+        <wf:ToolStripMenuItem x:Name="menuitemSparse" Header="Sparse Wor_king Copy" />
+        <wf:ToolStripSeparator x:Name="toolStripSeparator4" />
         <wf:ToolStripMenuItem x:Name="gitMaintenanceToolStripMenuItem" Header="_Git maintenance">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Maintenance}" /></MenuItem.Icon>
           <wf:ToolStripMenuItem x:Name="compressGitDatabaseToolStripMenuItem" Header="_Compress git database">
@@ -68,6 +76,10 @@
         </wf:ToolStripMenuItem>
         <wf:ToolStripMenuItem x:Name="repoSettingsToolStripMenuItem" Header="Rep_ository settings...">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Settings}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator13" />
+        <wf:ToolStripMenuItem x:Name="closeToolStripMenuItem" Header="_Close (go to Dashboard)">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.DashboardFolderGit}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
       </wf:ToolStripMenuItem>
       <wf:ToolStripMenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
@@ -89,6 +101,9 @@
         </wf:ToolStripMenuItem>
         <wf:ToolStripMenuItem x:Name="resetToolStripMenuItem" Header="_Reset changes...">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ResetWorkingDirChanges}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="cleanupToolStripMenuItem" Header="Clean _working directory...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CleanupRepo}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
         <wf:ToolStripSeparator />
         <wf:ToolStripMenuItem x:Name="branchToolStripMenuItem" Header="Create _branch...">
@@ -123,10 +138,19 @@
         <wf:ToolStripMenuItem x:Name="archiveToolStripMenuItem" Header="Archi_ve revision...">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ArchiveRevision}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="checkoutToolStripMenuItem" Header="Check_out revision...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Checkout}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripMenuItem x:Name="bisectToolStripMenuItem" Header="B_isect...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Bisect}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
         <wf:ToolStripMenuItem x:Name="toolStripMenuItemReflog" Header="Show reflo_g...">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.Book}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
         <wf:ToolStripSeparator />
+        <wf:ToolStripMenuItem x:Name="formatPatchToolStripMenuItem" Header="_Format patch...">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PatchFormat}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
         <wf:ToolStripMenuItem x:Name="applyPatchToolStripMenuItem" Header="_Apply patch...">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.PatchApply}" /></MenuItem.Icon>
         </wf:ToolStripMenuItem>
@@ -145,6 +169,12 @@
                   Header="_Create pull requests..." />
         <wf:ToolStripMenuItem x:Name="_addUpstreamRemoteToolStripMenuItem"
                   Header="_Add upstream remote" />
+      </wf:ToolStripMenuItem>
+      <wf:ToolStripMenuItem x:Name="dashboardToolStripMenuItem" Header="_Dashboard">
+        <wf:ToolStripMenuItem x:Name="refreshDashboardToolStripMenuItem" Header="_Refresh">
+          <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.ReloadRevisions}" /></MenuItem.Icon>
+        </wf:ToolStripMenuItem>
+        <wf:ToolStripSeparator x:Name="toolStripSeparator42" />
       </wf:ToolStripMenuItem>
       <wf:ToolStripMenuItem x:Name="pluginsToolStripMenuItem" Header="_Plugins">
         <wf:ToolStripMenuItem x:Name="pluginsLoadingToolStripMenuItem"

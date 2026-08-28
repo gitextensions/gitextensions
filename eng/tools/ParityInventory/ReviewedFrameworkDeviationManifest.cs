@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace GitExtensions.ParityInventory;
 
@@ -254,10 +254,17 @@ internal sealed class ReviewedFrameworkDeviationManifest
             && entry.OriginalValue is null
             && entry.TwinPart is not null
             && entry.TwinValue is not null;
-        if (!isDesignerComment && !isMissingEventWire && !isExtraEventWire)
+        bool isExtraEventHandler = entry.Category == "events"
+            && entry.Code == "event.handler.extra"
+            && entry.Path.StartsWith("event.handler/", StringComparison.Ordinal)
+            && entry.OriginalPart is null
+            && entry.OriginalValue is null
+            && entry.TwinPart is null
+            && entry.TwinValue is not null;
+        if (!isDesignerComment && !isMissingEventWire && !isExtraEventWire && !isExtraEventHandler)
         {
             throw new InvalidDataException(
-                $"Reviewed adaptation '{entry.Identity}' is not an exact supported generated-comment or event-wiring finding.");
+                $"Reviewed adaptation '{entry.Identity}' is not an exact supported generated-comment or event finding.");
         }
     }
 

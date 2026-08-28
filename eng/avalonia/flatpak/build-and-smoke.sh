@@ -143,8 +143,8 @@ metainfo_source="$flatpak_root/$package_app_id.metainfo.xml"
 desktop="$packaging_root/$app_id.desktop"
 metainfo="$packaging_root/$app_id.metainfo.xml"
 logo="$repo_root/setup/assets/Logo/git-extensions-logo-512px.png"
-sed "s/$package_app_id/$app_id/g" "$desktop_source" > "$desktop"
-sed "s/$package_app_id/$app_id/g" "$metainfo_source" > "$metainfo"
+sed -e 's/\r$//' -e "s/$package_app_id/$app_id/g" "$desktop_source" > "$desktop"
+sed -e 's/\r$//' -e "s/$package_app_id/$app_id/g" "$metainfo_source" > "$metainfo"
 
 sed \
     -e "s/$package_app_id/$app_id/g" \
