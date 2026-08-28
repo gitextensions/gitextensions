@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -51,6 +51,7 @@ public partial class FormStatus : GitExtensionsDialog
         ConsoleCommandRunner.ConsoleHostTerminated += (s, e) =>
         {
             // This means the control is not visible anymore, no use in keeping.
+            // Expected scenario: user hits ESC in the prompt after the git process exits
             Close();
         };
 
@@ -163,6 +164,7 @@ public partial class FormStatus : GitExtensionsDialog
         }
         catch (Exception exception)
         {
+            // Do nothing
             Trace.WriteLine(exception);
         }
 

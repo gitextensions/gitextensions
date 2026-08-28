@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using GitCommands;
@@ -38,6 +38,16 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
             UpdateIsExpandedState();
             if (_isLoaded)
             {
+                // to avoid calling this when InitializeComponents is called
+                /*
+                                 * ...
+                                            this.helpImageDisplayUserControl1.IsExpanded = false;                       // this before...
+                                            this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
+                                            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(30, 50);
+                                            this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";    // ...this gives wrong id!!!
+                                 * ...
+
+                                 */
                 AppSettings.SetBool("HelpIsExpanded" + GetId(), value);
             }
         }
@@ -75,8 +85,8 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     }
 
     /// <summary>
-        /// see also IsOnHoverShowImage2NoticeText.
-        /// </summary>
+    /// see also IsOnHoverShowImage2NoticeText.
+    /// </summary>
     public bool IsOnHoverShowImage2
     {
         get => _showImage2OnHover;
@@ -89,8 +99,8 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
     }
 
     /// <summary>
-        /// only shown when IsOnHoverShowImage2 is true.
-        /// </summary>
+    /// only shown when IsOnHoverShowImage2 is true.
+    /// </summary>
     public string IsOnHoverShowImage2NoticeText
     {
         get => labelHoverText.Text ?? string.Empty;

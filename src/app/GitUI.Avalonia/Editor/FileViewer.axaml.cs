@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -54,7 +54,7 @@ public partial class FileViewer : GitModuleControl
     private int _lastCaretLine = -1;
 
     /// <summary>
-    ///  Raised when Escape is pressed in the diff editor.
+    /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
     /// </summary>
     public event Action? EscapePressed;
 
@@ -477,6 +477,9 @@ public partial class FileViewer : GitModuleControl
 
         // Avalonia exposes device-independent pixels, so use the same character-width estimate
         // without WinForms' DpiUtil scaling and keep the even-width Difftastic contract.
+        // Guess a reasonable even column number from viewer width, so scrollbar is (barely) activated.
+        // At least 2*(2+linenoLength) of the width is used for difftastic lineno.
+        // DFT_WIDTH is also used when parsing in GE, must be in environment.
         int width = Math.Max(88, Math.Min(200, (int)internalFileViewer.Bounds.Width / 7)) / 2 * 2;
         SetEnvironmentVariable("DFT_WIDTH", width.ToString());
 
@@ -594,12 +597,12 @@ public partial class FileViewer : GitModuleControl
     public string GetText() => internalFileViewer.GetText();
 
     /// <summary>
-        /// Present the text as a patch in the file viewer.
-        /// </summary>
-        /// <param name="item">The gitItem to present.</param>
-        /// <param name="text">The patch text.</param>
-        /// <param name="line">The line number to display.</param>
-        /// <param name="openWithDifftool">The action to open the difftool.</param>
+    /// Present the text as a patch in the file viewer.
+    /// </summary>
+    /// <param name="item">The gitItem to present.</param>
+    /// <param name="text">The patch text.</param>
+    /// <param name="line">The line number to display.</param>
+    /// <param name="openWithDifftool">The action to open the difftool.</param>
     public async Task ViewPatchAsync(
         FileStatusItem item,
         string text,
@@ -644,11 +647,11 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-        /// Present the text as a patch in the file viewer.
-        /// </summary>
-        /// <param name="fileName">The fileName to present.</param>
-        /// <param name="text">The patch text.</param>
-        /// <param name="openWithDifftool">The action to open the difftool.</param>
+    /// Present the text as a patch in the file viewer.
+    /// </summary>
+    /// <param name="fileName">The fileName to present.</param>
+    /// <param name="text">The patch text.</param>
+    /// <param name="openWithDifftool">The action to open the difftool.</param>
     public async Task ViewFixedPatchAsync(
         string fileName,
         string text,
@@ -747,8 +750,13 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-    ///  Shows plain text without diff coloring, like the WinForms text mode.
+    /// Present the text in the file viewer.
     /// </summary>
+    /// <param name="fileName">The fileName to present.</param>
+    /// <param name="text">The patch text.</param>
+    /// <param name="line">The line to display.</param>
+    /// <param name="openWithDifftool">The action to open the difftool.</param>
+    /// <param name="checkGitAttributes">Check Git attributes to check for binary files.</param>
     public Task ViewTextAsync(
         string? fileName,
         string text,
@@ -804,14 +812,14 @@ public partial class FileViewer : GitModuleControl
         => ViewGitItemAsync(file, objectId, item: null, line, openWithDifftool, cancellationToken);
 
     /// <summary>
-        /// View the git item with the TreeId.
-        /// </summary>
-        /// <param name="file">GitItem file, with TreeId.</param>
-        /// <param name="objectId">Revision to present. Can be the zero <see cref="ObjectId"/> if file.TreeId is set.</param>
-        /// <param name="item">Metadata for line patching and presentation.</param>
-        /// <param name="line">The line to display.</param>
-        /// <param name="openWithDifftool">difftool command</param>
-        /// <returns>Task to view the item</returns>
+    /// View the git item with the TreeId.
+    /// </summary>
+    /// <param name="file">GitItem file, with TreeId.</param>
+    /// <param name="objectId">Revision to present. Can be the zero <see cref="ObjectId"/> if file.TreeId is set.</param>
+    /// <param name="item">Metadata for line patching and presentation.</param>
+    /// <param name="line">The line to display.</param>
+    /// <param name="openWithDifftool">difftool command</param>
+    /// <returns>Task to view the item</returns>
     private async Task ViewGitItemAsync(
         GitItemStatus file,
         ObjectId objectId,
@@ -821,6 +829,10 @@ public partial class FileViewer : GitModuleControl
         CancellationToken cancellationToken)
     {
         CancellationToken viewToken = BeginView(cancellationToken);
+
+        // set fields possibly not set from git-diff (etc); treeGuid and IsSubmodule.
+        // (git-status does not report submodule, IsSubmodule is not set if not TreeId is)
+        // treeId (blobId) is only recalculated if required.
         await LoadWithErrorHandlingAsync(
             () => ViewGitItemCoreAsync(file, objectId, item, line, openWithDifftool, viewToken),
             viewToken);
@@ -855,19 +867,21 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-    ///  Gets whether the current diff supports line patching.
+    /// If the file viewer contents support line patches.
     /// </summary>
     public bool SupportLinePatching { get; private set; }
 
     /// <summary>
-    ///  Gets or sets whether another line patch is blocked until the consumer reloads the diff.
+    /// Configuration to require that the form using the viewer reloads contents before allowing next line patch
+    /// by clearing <see cref="AllowLinePatching" />
+    /// Used for index/worktree where line patches modifies the diff.
     /// </summary>
     public bool LinePatchingBlocksUntilReload { private get; set; }
 
     /// <summary>
-        /// Current state for line patching allowed for worktree/index
-        /// Cleared when the file is reloaded.
-        /// </summary>
+    /// Current state for line patching allowed for worktree/index
+    /// Cleared when the file is reloaded.
+    /// </summary>
     private bool AllowLinePatching
     {
         get => _allowLinePatching;
@@ -918,6 +932,7 @@ public partial class FileViewer : GitModuleControl
         unstageSelectedLinesToolStripMenuItem.IsVisible = SupportLinePatching && isIndex;
         resetSelectedLinesToolStripMenuItem.IsVisible = SupportLinePatching;
 
+        // RangeDiff patch is undefined, could be new/old commit or to parents
         bool canCopyVersions = viewMode.IsNormalDiffView()
                                && AppSettings.DiffDisplayAppearance.Value == DiffDisplayAppearance.Patch;
         copyPatchToolStripMenuItem.IsVisible = canCopyVersions;
@@ -1082,6 +1097,8 @@ public partial class FileViewer : GitModuleControl
 
             // OFFSET
             str.Append($"{baseIndex:X4}   ");
+
+            // BYTES
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
             {
                 // space between columns
@@ -1321,9 +1338,17 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-    ///  Updates and returns the blob identifier for a Git item, preserving the original
-    ///  worktree/index distinction.
+    /// Update the current blob id for the GitItemStatus.
+    /// TreeId is immutable for normal commits, must always be updated before use for Index.
+    /// TreeId is irrelevant for worktree (if dirty), but this sets IsSubmodule
+    /// (treeId is not updated if set already).
+    /// TODO: add to GitModule, similar to GetFileBlobHash
     /// </summary>
+    /// <param fileName="file">The GitStatusItem to update.</param>
+    /// <param fileName="commitId">The commit to use..</param>
+    /// <param fileName="cancellationToken">The cancellation token.</param>
+    /// <returns>the current TreeId (normally blob id, could be commit id) to be used.
+    /// For worktree null is always returned also if there is a treeid (that really applies to the index)</returns>
     public ObjectId GetUpdateTreeId(
         GitItemStatus file,
         ObjectId commitId,
@@ -1356,8 +1381,8 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-        /// Use implementation matching the current viewItem.
-        /// </summary>
+    /// Use implementation matching the current viewItem.
+    /// </summary>
     private bool StageSelectedLines()
     {
         if (!SupportLinePatching)
@@ -1525,9 +1550,9 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-        /// Cherry-pick/revert patches (not worktree).
-        /// </summary>
-        /// <param name="reverse"><see langword="true"/> if patches is to be reversed; otherwise <see langword="false"/>.</param>.
+    /// Cherry-pick/revert patches (not worktree).
+    /// </summary>
+    /// <param name="reverse"><see langword="true"/> if patches is to be reversed; otherwise <see langword="false"/>.</param>.
     private void ApplySelectedLines(bool allFile, bool reverse)
     {
         if (!AllowLinePatching || _viewItem is null)
@@ -1598,6 +1623,7 @@ public partial class FileViewer : GitModuleControl
 
     private void ProcessApplyOutput(GitArgumentBuilder args, byte[] patch, bool patchUpdateDiff = false)
     {
+        // TODO Cleanup the handling and separate AllOutput to StandardOutput/StandardError
         ExecutionResult result = Module.GitExecutable.Execute(
             args,
             inputWriter => inputWriter.BaseStream.Write(patch),
@@ -1618,6 +1644,8 @@ public partial class FileViewer : GitModuleControl
                  || output.StartsWith("error: ", StringComparison.Ordinal)
                  || output.StartsWith("warning: ", StringComparison.Ordinal))
         {
+            // git-apply may fail on first attempt but succeed in subsequent attempts
+            // Trace such occurrences that may be interesting, some of these should maybe be presented to the user
             System.Diagnostics.Trace.WriteLineIf(
                 !string.IsNullOrWhiteSpace(output),
                 $"Patch output: {result.ExitCode}:{output} for: git {args}");
@@ -1632,10 +1660,10 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-        /// Copy selected text, excluding diff added/deleted information.
-        /// </summary>
-        /// <param name="sender">sender object.</param>
-        /// <param name="e">event args.</param>
+    /// Copy selected text, excluding diff added/deleted information.
+    /// </summary>
+    /// <param name="sender">sender object.</param>
+    /// <param name="e">event args.</param>
     private void CopyToolStripMenuItemClick(object? sender, EventArgs e)
     {
         string code = GetSelectedText();
@@ -1651,6 +1679,9 @@ public partial class FileViewer : GitModuleControl
             int hunkPosition = fileText.IndexOf("\n@@", StringComparison.Ordinal);
             if (hunkPosition <= position)
             {
+                // if header is selected then don't remove diff extra chars
+                // for range-diff, copy all info (hpos will never match)
+                // add artificial space if selected text is not starting from line beginning, it will be removed later
                 if (position > 0 && fileText[position - 1] != '\n')
                 {
                     code = " " + code;
@@ -1677,10 +1708,10 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-        /// Copy selected text as a patch.
-        /// </summary>
-        /// <param name="sender">sender object.</param>
-        /// <param name="e">event args.</param>
+    /// Copy selected text as a patch.
+    /// </summary>
+    /// <param name="sender">sender object.</param>
+    /// <param name="e">event args.</param>
     private void CopyPatchToolStripMenuItemClick(object? sender, EventArgs e)
     {
         string text = GetSelectedText();
@@ -1706,10 +1737,10 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-        /// Go to next change
-        /// For normal diffs, this is the next block of lines with a difference.
-        /// For range-diff, it is the next commit summary header.
-        /// </summary>
+    /// Go to next change
+    /// For normal diffs, this is the next block of lines with a difference.
+    /// For range-diff, it is the next commit summary header.
+    /// </summary>
     private void NextChangeButtonClick(object? sender, EventArgs e)
     {
         FocusViewer();

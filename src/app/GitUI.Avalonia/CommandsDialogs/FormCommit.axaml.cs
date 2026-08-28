@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -268,9 +268,9 @@ public sealed partial class FormCommit : GitModuleForm
     }
 
     /// <summary>
-        /// Flag whether the push needs to be forced, i.e. after amending a commit or after soft reset to the previous commit.
-        /// </summary>
-        /// The Amend checkbox is disabled after soft reset.
+    /// Flag whether the push needs to be forced, i.e. after amending a commit or after soft reset to the previous commit.
+    /// </summary>
+    /// The Amend checkbox is disabled after soft reset.
     private bool PushForced => (Amend.IsChecked == true || !Amend.IsEnabled) && AppSettings.CommitAndPushForcedWhenAmend;
 
     protected override void OnRuntimeLoad(EventArgs e)
@@ -1460,6 +1460,7 @@ public sealed partial class FormCommit : GitModuleForm
             bool lineChanged = FormatLine(line);
             if (_formattedLines.Count <= line)
             {
+                // line not formatted yet
                 _formattedLines.Add(Message.Line(line));
             }
             else
@@ -1668,10 +1669,10 @@ public sealed partial class FormCommit : GitModuleForm
     }
 
     /// <summary>
-        /// replace the Message.Text in an undo-able way.
-        /// </summary>
-        /// <param name="message">the new message.</param>
-        /// <param name="regexEnabled">regex replace is enabled</param>
+    /// replace the Message.Text in an undo-able way.
+    /// </summary>
+    /// <param name="message">the new message.</param>
+    /// <param name="regexEnabled">regex replace is enabled</param>
     private void ReplaceMessage(string message, bool regexEnabled = false)
     {
         if (regexEnabled)
@@ -1722,6 +1723,8 @@ public sealed partial class FormCommit : GitModuleForm
     private void gpgSignCommitChanged(object? sender, EventArgs e)
     {
         toolStripGpgKeyTextBox.IsVisible = gpgSignCommitToolStripComboBox.SelectedIndex == 3;
+
+        // Change the icon for commit button
         Commit.Icon = gpgSignCommitToolStripComboBox.SelectedIndex >= 2
             ? Properties.Images.Key
             : Properties.Images.RepoStateClean;

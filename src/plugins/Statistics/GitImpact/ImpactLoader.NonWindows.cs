@@ -48,7 +48,7 @@ public sealed class ImpactLoader : IDisposable
     }
 
     /// <summary>
-    /// Property to enable mailmap respectfulness.
+    /// property to enable mailmap respectfulness
     /// </summary>
     public bool RespectMailmap { get; set; }
 

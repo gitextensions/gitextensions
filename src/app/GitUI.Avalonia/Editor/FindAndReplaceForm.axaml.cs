@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using AvaloniaEdit;
@@ -438,6 +438,8 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         int removedLength = editor.SelectionLength;
         bool hasScanRegion = _search.HasScanRegion;
         int beginOffset = _search.BeginOffset;
+
+        // EndOffset actually is a LastOffset
         int selectionLength = _search.EndOffset - beginOffset;
 
         editor.SelectedText = text;

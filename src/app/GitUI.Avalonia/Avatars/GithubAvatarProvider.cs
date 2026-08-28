@@ -44,6 +44,13 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
         }
 
         byte[]? image = await _downloader.DownloadImageAsync(uri);
+
+        // Sadly GitHub doesn't provide an option to return a 404 error for non-custom avatars
+        // and always provides a fallback image (identicon). Using GitHubs fallback image would
+        // render the user defined fallback useless so we have to filter out the identicons.
+        // We do this by checking the size of the returned image, because identicons provided by
+        // GitHub are never scaled and always 420 x 420 - even if a different size was requested.
+        // We exploit that fact to filter out identicons.
         bool isIdenticon = imageSize != 420 && AvatarImage.GetPixelSize(image)?.Width is 420;
         return isIdenticon ? null : image;
     }
@@ -66,6 +73,16 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
 
         // email is an @users.noreply.github.com address
         string username = match.Groups["username"].Value;
+
+        // For real users we can directly access the avatar by using
+        // https://avatars.githubusercontent.com/{encodedUsername}?s={imageSize}
+        // But for bots this doesn't work. To get the avatar url we can make use of the
+        // GitHub API to get the profile (which includes the avatar url) but for unauthenticated
+        // requests the rate limits are pretty low (60 requests per hour)
+        // To mitigate the issue of possibly hitting the rate limit, we directly load the avatars
+        // for all "normal" users and only users that can't be resolved that way (like bots)
+        // query the GitHub profile first.
+        // GitHub user names can't contain square brackets but bots use them.
         if (username.Contains('['))
         {
             using HttpResponseMessage response = await _client.GetAsync($"https://api.github.com/users/{HttpUtility.UrlEncode(username)}");
