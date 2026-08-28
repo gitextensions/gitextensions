@@ -165,6 +165,19 @@ public sealed class WindowAndDialogBaseTests
     }
 
     [AvaloniaTest]
+    public void Base_window_should_raise_WinForms_lifecycle_once_and_in_order()
+    {
+        LifecycleForm form = new();
+
+        form.Show();
+        form.Hide();
+        form.Show();
+
+        form.Events.Should().Equal("Load", "RuntimeLoad", "Shown");
+        form.Close();
+    }
+
+    [AvaloniaTest]
     public void Base_window_should_route_default_and_cancel_buttons_and_preserve_logical_size_across_DPI_changes()
     {
         MockForm form = new(enablePositionRestore: false)
@@ -322,6 +335,20 @@ public sealed class WindowAndDialogBaseTests
             OwnerObservedOnOpen = Owner;
             base.OnOpened(e);
         }
+    }
+
+    private sealed class LifecycleForm : GitExtensionsFormBase
+    {
+        public List<string> Events { get; } = [];
+
+        protected override void OnLoad(EventArgs e)
+            => Events.Add("Load");
+
+        protected override void OnRuntimeLoad(EventArgs e)
+            => Events.Add("RuntimeLoad");
+
+        protected override void OnShown(EventArgs e)
+            => Events.Add("Shown");
     }
 
     private sealed class ConfirmingForm : GitExtensionsFormBase

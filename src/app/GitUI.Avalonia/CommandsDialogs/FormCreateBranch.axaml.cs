@@ -111,10 +111,9 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
         BranchNameTextBox.CaretIndex = Math.Min(caretPosition, BranchNameTextBox.Text.Length);
     }
 
-    protected override void OnOpened(EventArgs e)
+    protected override void OnShown(EventArgs e)
     {
-        base.OnOpened(e);
-
+        base.OnShown(e);
         chkCheckoutAfterCreate.IsChecked = CheckoutAfterCreation;
         commitPicker.IsEnabled = UserAbleToChangeRevision;
         grpOrphan.IsEnabled = CouldBeOrphan;

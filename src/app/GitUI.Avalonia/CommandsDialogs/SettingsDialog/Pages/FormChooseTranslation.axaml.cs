@@ -21,9 +21,9 @@ public partial class FormChooseTranslation : GitExtensionsForm
         InitializeComplete();
     }
 
-    protected override void OnOpened(EventArgs e)
+    protected override void OnLoad(EventArgs e)
     {
-        base.OnOpened(e);
+        base.OnLoad(e);
         LoadTranslations();
     }
 

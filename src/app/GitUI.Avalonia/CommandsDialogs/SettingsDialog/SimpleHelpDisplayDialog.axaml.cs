@@ -18,9 +18,9 @@ public sealed partial class SimpleHelpDisplayDialog : GitExtensionsFormBase
 
     public string? ContentText { get; set; }
 
-    protected override void OnOpened(EventArgs e)
+    protected override void OnLoad(EventArgs e)
     {
-        base.OnOpened(e);
+        base.OnLoad(e);
         Title = DialogTitle ?? string.Empty;
         textBox1.Text = ContentText;
         textBox1.CaretIndex = 0;
