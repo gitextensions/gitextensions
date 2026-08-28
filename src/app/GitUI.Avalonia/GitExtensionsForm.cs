@@ -51,11 +51,16 @@ public class GitExtensionsForm : GitExtensionsFormBase
 
     protected override void OnOpened(EventArgs e)
     {
+        base.OnOpened(e);
+        CaptureRestoreBounds();
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
         RestorePosition();
 
         // Should be called after restoring position
-        base.OnOpened(e);
-        CaptureRestoreBounds();
+        base.OnLoad(e);
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)
@@ -69,7 +74,7 @@ public class GitExtensionsForm : GitExtensionsFormBase
         base.OnClosing(e);
     }
 
-    /// <summary>Invoked at runtime during the <see cref="OnOpened"/> method.</summary>
+    /// <summary>Invoked at runtime during the <see cref="OnLoad"/> method.</summary>
     /// <remarks>In particular, this method is not invoked when running in a designer.</remarks>
     protected override void OnRuntimeLoad(EventArgs e)
     {

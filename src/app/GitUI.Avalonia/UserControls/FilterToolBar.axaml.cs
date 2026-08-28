@@ -18,17 +18,13 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.UserControls;
 
-public sealed partial class FilterToolBar : TranslatedControl
+internal sealed partial class FilterToolBar : TranslatedControl
 {
+    internal const string ReflogButtonName = nameof(tsbShowReflog);
     private const string TranslationCategory = nameof(FormBrowse);
     private const int MaxFilterItems = 30;
 
-    private static readonly string[] RevisionFilterPresets =
-    [
-        @"--invert-grep --grep=""EXCLUDE_COMMIT_MESSAGE_REGEX_PATTERN""",
-        @"--perl-regexp --author=""^(?!.*EXCLUDE_AUTHOR_REGEX_PATTERN)""",
-        @"--exclude=refs/remotes/EXCLUDE_REMOTE_REGEX_PATTERN",
-    ];
+    private static readonly string[] _noResultsFound = [TranslatedStrings.NoResultsFound];
 
     private static readonly (string Name, string Property, string Text)[] TranslationItems =
     [
@@ -74,30 +70,36 @@ public sealed partial class FilterToolBar : TranslatedControl
     {
         InitializeComponent();
 
+        // Select an option until we get a filter bound.
         tsbtnAdvancedFilter.Click += tsbtnAdvancedFilter_ButtonClick;
-        tsmiResetPathFilters.Click += (_, _) => RevisionGridFilter.SetAndApplyPathFilter(string.Empty);
-        tsmiResetAllFilters.Click += (_, _) => RevisionGridFilter.ResetAllFiltersAndRefresh();
-        tsmiAdvancedFilter.Click += (_, _) => RevisionGridFilter.ShowRevisionFilterDialog();
-        tsbShowReflog.Click += (_, _) => ApplyPresetBranchesFilter(RevisionGridFilter.ToggleShowReflogReferences);
-        tssbtnShowBranches.Click += (_, _) => tssbtnShowBranches.Flyout?.ShowAt(tssbtnShowBranches);
-        tsmiShowBranchesAll.Click += (_, _) => ApplyPresetBranchesFilter(RevisionGridFilter.ShowAllBranches);
-        tsmiShowBranchesCurrent.Click += (_, _) => ApplyPresetBranchesFilter(RevisionGridFilter.ShowCurrentBranchOnly);
-        tsmiShowBranchesFiltered.Click += (_, _) => ApplyPresetBranchesFilter(RevisionGridFilter.ShowFilteredBranches);
-        tsmiShowOnlyFirstParent.Click += (_, _) => RevisionGridFilter.ToggleShowOnlyFirstParent();
-        tscboBranchFilter.KeyUp += BranchFilterKeyUp;
-        tstxtRevisionFilter.KeyUp += RevisionFilterKeyUp;
-        tscboBranchFilter.DropDownOpened += (_, _) => UpdateBranchFilterItems();
-        tscboBranchFilter.PropertyChanged += BranchFilterPropertyChanged;
+        tsmiResetPathFilters.Click += tsmiDisablePathFilters_Click;
+        tsmiResetAllFilters.Click += tsmiDisableAllFilters_Click;
+        tsmiAdvancedFilter.Click += tsmiAdvancedFilter_Click;
+        tsbShowReflog.Click += tsmiShowReflog_Click;
+        tssbtnShowBranches.Click += tssbtnShowBranches_Click;
+        tsmiShowBranchesAll.Click += tsmiShowBranchesAll_Click;
+        tsmiShowBranchesCurrent.Click += tsmiShowBranchesCurrent_Click;
+        tsmiShowBranchesFiltered.Click += tsmiShowBranchesFiltered_Click;
+        tsmiShowOnlyFirstParent.Click += tsmiShowOnlyFirstParent_Click;
+        tscboBranchFilter.PointerPressed += tscboBranchFilter_Click;
+        tscboBranchFilter.DropDownOpened += tscboBranchFilter_DropDown;
+        tscboBranchFilter.KeyUp += tscboBranchFilter_KeyUp;
+        tscboBranchFilter.PropertyChanged += tscboBranchFilter_TextChanged;
+        tstxtRevisionFilter.KeyUp += tstxtRevisionFilter_KeyUp;
         tsmiBranchLocal.Click += (_, _) => UpdateBranchFilterItems();
         tsmiBranchRemote.Click += (_, _) => UpdateBranchFilterItems();
         tsmiBranchTag.Click += (_, _) => UpdateBranchFilterItems();
-        tsmiCommitFilter.Click += (_, _) => ApplyRevisionFilterIfPopulated();
-        tsmiCommitterFilter.Click += (_, _) => ApplyRevisionFilterIfPopulated();
-        tsmiAuthorFilter.Click += (_, _) => ApplyRevisionFilterIfPopulated();
-        tsmiDiffContainsFilter.Click += (_, _) => ApplyRevisionFilterIfPopulated();
+        tsmiCommitFilter.Click += revisionFilterBox_CheckedChanged;
+        tsmiCommitterFilter.Click += revisionFilterBox_CheckedChanged;
+        tsmiAuthorFilter.Click += revisionFilterBox_CheckedChanged;
+        tsmiDiffContainsFilter.Click += revisionFilterBox_CheckedChanged;
 
         _revisionFilters = AppSettings.RevisionFilterDropdowns
-            .Union(RevisionFilterPresets, StringComparer.Ordinal)
+            .Union([
+                @"--invert-grep --grep=""EXCLUDE_COMMIT_MESSAGE_REGEX_PATTERN""",
+                @"--perl-regexp --author=""^(?!.*EXCLUDE_AUTHOR_REGEX_PATTERN)""",
+                @"--exclude=refs/remotes/EXCLUDE_REMOTE_REGEX_PATTERN",
+            ], StringComparer.Ordinal)
             .ToList();
         RefreshRevisionFilterItems();
 
@@ -145,8 +147,8 @@ public sealed partial class FilterToolBar : TranslatedControl
                 : tscboBranchFilter.Text?.Trim() ?? string.Empty;
             if (checkBranch && !string.IsNullOrWhiteSpace(filter))
             {
-                List<string> acceptedFilters = [];
-                IReadOnlyList<IGitRef> refs = GetRefs(RefsFilter.NoFilter);
+                List<string> newFilter = [];
+                IReadOnlyList<IGitRef> refs = _getRefs?.Invoke(RefsFilter.NoFilter) ?? GetModule().GetRefs(RefsFilter.NoFilter);
 
                 // Split at whitespace (char[])null is default) but with split options.
                 // Ignore quoting, Git revisions do not allow spaces.
@@ -154,16 +156,31 @@ public sealed partial class FilterToolBar : TranslatedControl
                              (char[]?)null,
                              StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (IsValidBranchFilter(branch, refs))
+                    bool wildcardBranchFilter = branch.IndexOfAny(Delimiters.WildcardBranchSearchValues) >= 0;
+                    if (branch.StartsWith("--", StringComparison.Ordinal)
+                        || refs.Any(gitRef => gitRef.LocalName == branch)
+                        || branch.Contains("..", StringComparison.Ordinal))
                     {
-                        acceptedFilters.Add(branch);
-                        continue;
+                        // Added as git-log option or revision filter
+                    }
+                    else if (wildcardBranchFilter)
+                    {
+                        // Added as --branches= option
+                    }
+                    else
+                    {
+                        string gitRef = branch.StartsWith('^') ? branch[1..] : branch;
+                        if (GetModule().RevParse(gitRef).IsZero)
+                        {
+                            ShowInvalidReference(branch);
+                            continue;
+                        }
                     }
 
-                    ShowInvalidReference(branch);
+                    newFilter.Add(branch);
                 }
 
-                filter = string.Join(" ", acceptedFilters);
+                filter = string.Join(" ", newFilter);
             }
 
             RevisionGridFilter.SetAndApplyBranchFilter(filter);
@@ -208,7 +225,7 @@ public sealed partial class FilterToolBar : TranslatedControl
 
         _getModule = getModule;
         _revisionGridFilter = revisionGridFilter;
-        revisionGridFilter.FilterChanged += RevisionGridFilterChanged;
+        _revisionGridFilter.FilterChanged += revisionGridFilter_FilterChanged;
     }
 
     public void ClearQuickFilters()
@@ -238,7 +255,9 @@ public sealed partial class FilterToolBar : TranslatedControl
         ApplyCustomBranchFilter(checkBranch: false);
     }
 
-    /// <summary>Alternates focus between the revision and branch quick filters.</summary>
+    /// <summary>
+    /// If focus on branch filter, focus revision filter otherwise branch filter.
+    /// </summary>
     public void SetFocus()
     {
         if (tstxtRevisionFilter.IsFocused)
@@ -262,8 +281,9 @@ public sealed partial class FilterToolBar : TranslatedControl
     }
 
     /// <summary>
-    /// Sets and applies the text revision filter, matching the WinForms toolbar contract.
+    ///  Sets the revision filter.
     /// </summary>
+    /// <param name="filter">The filter to apply.</param>
     public void SetRevisionFilter(string? filter)
     {
         if (string.IsNullOrEmpty(tstxtRevisionFilter.Text) && string.IsNullOrEmpty(filter))
@@ -286,34 +306,60 @@ public sealed partial class FilterToolBar : TranslatedControl
         tscboBranchFilter.ItemsSource = Array.Empty<string>();
     }
 
-    private void BranchFilterKeyUp(object? sender, KeyEventArgs e)
+    private void InitBranchSelectionFilter(FilterChangedEventArgs e)
     {
-        if (e.Key == Key.Enter)
+        // Note: it is a weird combination, and it is mimicking the implementations in RevisionGridControl.
+        // Refer to it for more details.
+        if (e.ShowFilteredBranches)
         {
-            ApplyCustomBranchFilter();
+            // Show filtered branches
+            // Keep value if other filter
+            tscboBranchFilter.Text = e.BranchFilter;
+        }
+
+        if (e.ShowCurrentBranchOnly)
+        {
+            // Show current branch only
+            SelectShowBranchesFilterOption(selectedIndex: 1);
+        }
+        else if (e.ShowFilteredBranches)
+        {
+            SelectShowBranchesFilterOption(selectedIndex: 2);
+        }
+        else
+        {
+            // Show all branches
+            SelectShowBranchesFilterOption(selectedIndex: 0);
         }
     }
 
-    private void RevisionFilterKeyUp(object? sender, KeyEventArgs e)
+    public void InitToolStripStyles(Avalonia.Media.Color toolForeColor, Avalonia.Media.Color toolBackColor)
     {
-        if (e.Key == Key.Enter)
-        {
-            ApplyRevisionFilter();
-        }
+        Avalonia.Media.SolidColorBrush foreground = new(toolForeColor);
+        Avalonia.Media.SolidColorBrush background = new(toolBackColor);
+        tsddbtnRevisionFilter.Foreground = foreground;
+        tsddbtnRevisionFilter.Background = background;
+        tscboBranchFilter.Foreground = foreground;
+        tscboBranchFilter.Background = background;
+        tstxtRevisionFilter.Foreground = foreground;
+        tstxtRevisionFilter.Background = background;
     }
 
-    private void BranchFilterPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    private void SelectShowBranchesFilterOption(int selectedIndex)
     {
-        if (e.Property != ComboBox.TextProperty || _isApplyingFilter || _updatingSuggestions)
+        (MenuItem Item, Avalonia.Media.IImage Icon)[] options =
+        [
+            (tsmiShowBranchesAll, Properties.Images.BranchLocal),
+            (tsmiShowBranchesCurrent, Properties.Images.BranchFilter),
+            (tsmiShowBranchesFiltered, Properties.Images.BranchFilter),
+        ];
+        if ((uint)selectedIndex >= (uint)options.Length)
         {
-            return;
+            selectedIndex = 0;
         }
 
-        _filterBeingChanged = true;
-        if (tscboBranchFilter.IsDropDownOpen)
-        {
-            UpdateBranchFilterItems();
-        }
+        (MenuItem item, Avalonia.Media.IImage icon) = options[selectedIndex];
+        SetBranchMode(item, icon);
     }
 
     /// <summary>
@@ -338,7 +384,7 @@ public sealed partial class FilterToolBar : TranslatedControl
             | (tsmiBranchRemote.IsChecked ? RefsFilter.Remotes : RefsFilter.NoFilter)
             | (tsmiBranchTag.IsChecked ? RefsFilter.Tags : RefsFilter.NoFilter);
         string currentText = tscboBranchFilter.Text ?? string.Empty;
-        string[] matches = GetRefs(filter)
+        string[] matches = (_getRefs?.Invoke(filter) ?? GetModule().GetRefs(filter))
             .Select(gitRef => gitRef.Name)
             .Distinct(StringComparer.Ordinal)
             .Where(branch => branch.Contains(currentText, StringComparison.InvariantCultureIgnoreCase))
@@ -349,7 +395,7 @@ public sealed partial class FilterToolBar : TranslatedControl
         try
         {
             tscboBranchFilter.ItemsSource = matches.Length == 0
-                ? [TranslatedStrings.NoResultsFound]
+                ? _noResultsFound
                 : matches;
             tscboBranchFilter.Text = currentText;
             tscboBranchFilter.IsDropDownOpen = true;
@@ -360,26 +406,11 @@ public sealed partial class FilterToolBar : TranslatedControl
         }
     }
 
-    private bool IsValidBranchFilter(string branch, IReadOnlyList<IGitRef> refs)
+    public void SetShortcutKeys(Action<MenuItem, RevisionGridControl.Command> setShortcutString)
     {
-        bool isExpression = branch.StartsWith("--", StringComparison.Ordinal)
-                            || branch.Contains("..", StringComparison.Ordinal)
-                            || branch.IndexOfAny(Delimiters.WildcardBranchSearchValues) >= 0;
-        if (isExpression || refs.Any(gitRef => gitRef.LocalName == branch))
-        {
-            return true;
-        }
-
-        string gitRef = branch.StartsWith('^') ? branch[1..] : branch;
-        return !GetModule().RevParse(gitRef).IsZero;
-    }
-
-    private void ApplyRevisionFilterIfPopulated()
-    {
-        if (!string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
-        {
-            ApplyRevisionFilter();
-        }
+        setShortcutString(tsmiResetPathFilters, RevisionGridControl.Command.ResetRevisionPathFilter);
+        setShortcutString(tsmiResetAllFilters, RevisionGridControl.Command.ResetRevisionFilter);
+        setShortcutString(tsmiAdvancedFilter, RevisionGridControl.Command.RevisionFilter);
     }
 
     private void tsbtnAdvancedFilter_ButtonClick(object? sender, EventArgs e)
@@ -394,8 +425,89 @@ public sealed partial class FilterToolBar : TranslatedControl
         }
     }
 
-    private IReadOnlyList<IGitRef> GetRefs(RefsFilter filter)
-        => _getRefs?.Invoke(filter) ?? GetModule().GetRefs(filter);
+    private void revisionFilterBox_CheckedChanged(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
+        {
+            ApplyRevisionFilter();
+        }
+    }
+
+    private void tstxtRevisionFilter_KeyUp(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            ApplyRevisionFilter();
+        }
+    }
+
+    private void tscboBranchFilter_Click(object sender, EventArgs e)
+    {
+        if (!tscboBranchFilter.IsDropDownOpen)
+        {
+            tscboBranchFilter.IsDropDownOpen = true;
+        }
+    }
+
+    private void tscboBranchFilter_DropDown(object sender, EventArgs e)
+        => UpdateBranchFilterItems();
+
+    private void tscboBranchFilter_KeyUp(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            ApplyCustomBranchFilter(checkBranch: true);
+        }
+    }
+
+    private void tscboBranchFilter_TextChanged(object sender, EventArgs e)
+    {
+        if (e is AvaloniaPropertyChangedEventArgs args && args.Property != ComboBox.TextProperty)
+        {
+            return;
+        }
+
+        _filterBeingChanged = true;
+        tscboBranchFilter_TextUpdate(sender, e);
+    }
+
+    private void tscboBranchFilter_TextUpdate(object sender, EventArgs e)
+    {
+        if (!_isApplyingFilter && !_updatingSuggestions && tscboBranchFilter.IsDropDownOpen)
+        {
+            UpdateBranchFilterItems();
+        }
+    }
+
+    private void tsmiDisablePathFilters_Click(object sender, EventArgs e)
+        => RevisionGridFilter.SetAndApplyPathFilter(string.Empty);
+
+    private void tsmiDisableAllFilters_Click(object sender, EventArgs e)
+        => RevisionGridFilter.ResetAllFiltersAndRefresh();
+
+    private void tsmiAdvancedFilter_Click(object sender, EventArgs e)
+        => RevisionGridFilter.ShowRevisionFilterDialog();
+
+    private void tsmiShowReflogBranches_Click(object sender, EventArgs e)
+        => ApplyPresetBranchesFilter(RevisionGridFilter.ShowReflog);
+
+    private void tsmiShowBranchesAll_Click(object sender, EventArgs e)
+        => ApplyPresetBranchesFilter(RevisionGridFilter.ShowAllBranches);
+
+    private void tsmiShowBranchesCurrent_Click(object sender, EventArgs e)
+        => ApplyPresetBranchesFilter(RevisionGridFilter.ShowCurrentBranchOnly);
+
+    private void tsmiShowBranchesFiltered_Click(object sender, EventArgs e)
+        => ApplyPresetBranchesFilter(RevisionGridFilter.ShowFilteredBranches);
+
+    private void tsmiShowOnlyFirstParent_Click(object sender, EventArgs e)
+        => RevisionGridFilter.ToggleShowOnlyFirstParent();
+
+    private void tsmiShowReflog_Click(object sender, EventArgs e)
+        => RevisionGridFilter.ToggleShowReflogReferences();
+
+    private void tssbtnShowBranches_Click(object sender, EventArgs e)
+        => tssbtnShowBranches.Flyout?.ShowAt(tssbtnShowBranches);
 
     internal TestAccessor GetTestAccessor()
         => new(this);
@@ -421,18 +533,14 @@ public sealed partial class FilterToolBar : TranslatedControl
             page);
     }
 
-    private void RevisionGridFilterChanged(object? sender, FilterChangedEventArgs e)
+    private void revisionGridFilter_FilterChanged(object? sender, FilterChangedEventArgs e)
     {
         _isApplyingFilter = true;
         try
         {
             tsmiShowOnlyFirstParent.IsChecked = e.ShowOnlyFirstParent;
             tsbShowReflog.IsChecked = e.ShowReflogReferences;
-            if (e.ShowFilteredBranches)
-            {
-                // Preserve the typed branch expression while temporarily showing all/current.
-                tscboBranchFilter.Text = e.BranchFilter;
-            }
+            InitBranchSelectionFilter(e);
 
             List<(string Filter, MenuItem MenuItem)> revisionFilters =
             [
@@ -442,11 +550,13 @@ public sealed partial class FilterToolBar : TranslatedControl
                 (e.DiffContentFilter, tsmiDiffContainsFilter),
             ];
 
+            // If there is no filter in filterInfo, clear text but retain checks
             tstxtRevisionFilter.Text = string.Empty;
             if (revisionFilters.Any(item => !string.IsNullOrWhiteSpace(item.Filter)))
             {
                 foreach ((string filter, MenuItem menuItem) in revisionFilters)
                 {
+                    // Check the first menuitem that matches and following identical filters
                     bool selected = !string.IsNullOrWhiteSpace(filter)
                         && (string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text)
                             || filter == tstxtRevisionFilter.Text);
@@ -458,6 +568,7 @@ public sealed partial class FilterToolBar : TranslatedControl
                 }
             }
 
+            // Add to dropdown and settings, unless already included
             PromoteRevisionFilter(tstxtRevisionFilter.Text?.Trim() ?? string.Empty);
             ToolTip.SetTip(
                 tsbtnAdvancedFilter,
@@ -467,19 +578,6 @@ public sealed partial class FilterToolBar : TranslatedControl
                 : Properties.Images.FunnelPencil;
             tsmiResetPathFilters.IsEnabled = !string.IsNullOrEmpty(e.PathFilter);
             tsmiResetAllFilters.IsEnabled = e.HasFilter;
-
-            if (e.ShowCurrentBranchOnly)
-            {
-                SetBranchMode(tsmiShowBranchesCurrent, Properties.Images.BranchFilter);
-            }
-            else if (e.ShowFilteredBranches)
-            {
-                SetBranchMode(tsmiShowBranchesFiltered, Properties.Images.BranchFilter);
-            }
-            else
-            {
-                SetBranchMode(tsmiShowBranchesAll, Properties.Images.BranchLocal);
-            }
         }
         finally
         {

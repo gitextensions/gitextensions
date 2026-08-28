@@ -90,8 +90,8 @@ public partial class ImpactControl : UserControl, IDisposable
         InitializeComponent();
 
         _scrollBar.Scroll += OnScroll;
-        PointerWheelChanged += ImpactControl_PointerWheelChanged;
-        SizeChanged += OnSizeChanged;
+        PointerWheelChanged += ImpactControl_MouseWheel;
+        SizeChanged += OnResize;
     }
 
     public void Init(IGitModule module)
@@ -121,7 +121,7 @@ public partial class ImpactControl : UserControl, IDisposable
         }
     }
 
-    private void ImpactControl_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    private void ImpactControl_MouseWheel(object? sender, PointerWheelEventArgs e)
     {
         _scrollBar.Value = Math.Min(
             _scrollBar.Maximum,
@@ -309,7 +309,7 @@ public partial class ImpactControl : UserControl, IDisposable
         }
     }
 
-    private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
+    private void OnResize(object? sender, SizeChangedEventArgs e)
     {
         UpdatePathsAndLabels();
         UpdateScrollbar();

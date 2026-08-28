@@ -36,7 +36,6 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         chkMatchWholeWord.IsCheckedChanged += chkMatchWholeWord_CheckedChanged;
         chkShowSearchBox.IsCheckedChanged += chkShowSearchBox_CheckedChanged;
         txtOptions.TextChanged += txtOptions_TextChanged;
-        Opened += (_, e) => OnShown(e);
         Closing += FormFindInCommitFilesGitGrep_FormClosing;
         AcceptButton = btnSearch;
         ManualSectionAnchorName = "diff";
@@ -107,9 +106,10 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         }
     }
 
-    // Avalonia has OnOpened rather than WinForms OnShown; retain the original product method boundary.
-    protected void OnShown(EventArgs e)
+    protected override void OnShown(EventArgs e)
     {
+        base.OnShown(e);
+
         txtOptions.Text = AppSettings.GitGrepUserArguments.Value;
         chkMatchCase.IsChecked = !AppSettings.GitGrepIgnoreCase.Value;
         chkMatchWholeWord.IsChecked = AppSettings.GitGrepMatchWholeWord.Value;

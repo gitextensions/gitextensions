@@ -43,7 +43,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
     {
         Worktrees.ItemTemplate = new FuncDataTemplate<GitWorktree>(CreateWorktreeRow, supportsRecycling: false);
         Worktrees.SelectionChanged += Worktrees_SelectionChanged;
-        Worktrees.DoubleTapped += WorktreesOnDoubleTapped;
+        Worktrees.DoubleTapped += WorktreesOnCellDoubleClick;
         Worktrees.KeyDown += Worktrees_KeyDown;
         buttonPruneWorktrees.Click += buttonPruneWorktrees_Click;
         buttonDeleteSelectedWorktree.Click += buttonDeleteSelectedWorktree_Click;
@@ -144,7 +144,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
         OpenSelectedWorktree();
     }
 
-    private void WorktreesOnDoubleTapped(object? sender, TappedEventArgs e)
+    private void WorktreesOnCellDoubleClick(object? sender, TappedEventArgs e)
     {
         OpenSelectedWorktree();
     }
