@@ -40,7 +40,9 @@ internal static class ComponentFactory
         {
             "GitUI.CommandsDialogs.FormBrowse" => new FormBrowse(commands, new BrowseArguments()),
             "GitUI.CommandsDialogs.FormCommit" => new FormCommit(commands),
+            "GitUI.CommandsDialogs.FormFileHistory" => new FormFileHistory(commands, "src/App.cs", CreateRevision(commands)),
             "GitUI.CommandsDialogs.FormStash" => new FormStash(commands),
+            "GitUI.CommandsDialogs.FormVerify" => new FormVerify(commands),
             "GitUI.CommandsDialogs.FormSettings" => new FormSettings(commands),
             "GitUI.CommandsDialogs.FormDiff" => CreateFormDiff(commands),
             "GitUI.CommandsDialogs.FormCompareToBranch" => new FormCompareToBranch(commands, commands.Module.RevParse("HEAD")),

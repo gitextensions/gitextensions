@@ -127,6 +127,9 @@ public sealed class FileHistoryTests
         form.FindControl<FileViewer>("Diff").Should().NotBeNull();
         form.FindControl<FileViewer>("View").Should().NotBeNull();
         form.FindControl<GitUI.Blame.BlameControl>("Blame").Should().NotBeNull();
+        form.FindControl<MenuItem>("manipulateCommitToolStripMenuItem").Should().NotBeNull();
+        form.FindControl<MenuItem>("revertCommitToolStripMenuItem").Should().NotBeNull();
+        form.FindControl<MenuItem>("cherryPickThisCommitToolStripMenuItem").Should().NotBeNull();
     }
 
     [AvaloniaTest]
@@ -167,6 +170,9 @@ public sealed class FileHistoryTests
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "followFileHistoryToolStripMenuItem", "Text", "Detect and follow renames");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "showAuthorAvatarToolStripMenuItem", "Text", "Show author avatar");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "showFullHistoryToolStripMenuItem", "Text", "Show full history");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "manipulateCommitToolStripMenuItem", "Text", "Manipulate commit");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "revertCommitToolStripMenuItem", "Text", "Revert commit");
+        translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "cherryPickThisCommitToolStripMenuItem", "Text", "Cherry pick commit");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "toolStripSplitLoad", "ToolTipText", "Load file history");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "ShowFullHistory", "ToolTipText", "Show Full History");
         translation.Received(1).AddTranslationItem(nameof(FormFileHistory), "CommitInfoTabPage", "Text", "Commit");
