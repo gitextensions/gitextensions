@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.Templates;
+using Avalonia.Input;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -23,11 +24,12 @@ public sealed partial class FormStash : GitModuleForm
     private int _lastSelectedStashIndex = -1;
 
     public bool ManageStashes { get; set; }
+    private GitStash? _currentWorkingDirStashItem;
 
     public FormStash()
     {
         InitializeComponent();
-        InitializeComplete();
+        CompleteTheInitialization();
     }
 
     public FormStash(IGitUICommands commands, string? initialStash = null)
@@ -44,11 +46,12 @@ public sealed partial class FormStash : GitModuleForm
         Stashed.Bind(() => RefreshAll());
         Stashed.BindContextMenu(View.CherryPickAllChanges, () => View.SupportLinePatching);
         Stashed.SelectedIndexChanged += StashedSelectedIndexChanged;
-        View.ExtraDiffArgumentsChanged += StashedSelectedIndexChanged;
+        View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(this, EventArgs.Empty); };
         View.TopScrollReached += FileViewer_TopScrollReached;
         View.BottomScrollReached += FileViewer_BottomScrollReached;
-        View.EscapePressed += Close;
+        View.EscapePressed += () => DialogResult = WinFormsShims.DialogResult.Cancel;
         Stashes.SelectionChanged += StashesSelectedIndexChanged;
+        Stashes.DropDownOpened += Stashes_DropDown;
         Stash.Click += StashClick;
         StashSelectedFiles.Click += StashSelectedFiles_Click;
         Clear.Click += ClearClick;
@@ -63,11 +66,82 @@ public sealed partial class FormStash : GitModuleForm
             }
         }
 
+        CompleteTheInitialization();
+    }
+
+    private void CompleteTheInitialization()
+    {
         HotkeysEnabled = true;
         InitializeComplete();
     }
 
-    private GitStash? _currentWorkingDirStashItem;
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
+        {
+            if (Stashes.IsDropDownOpen)
+            {
+                Stashes.IsDropDownOpen = false;
+            }
+            else if (FocusManager?.GetFocusedElement() is TextBox { SelectionStart: var start, SelectionEnd: var end } textBox
+                     && start != end)
+            {
+                textBox.SelectionEnd = textBox.SelectionStart;
+            }
+            else
+            {
+                DialogResult = WinFormsShims.DialogResult.Cancel;
+            }
+
+            e.Handled = true;
+        }
+
+        if (!e.Handled)
+        {
+            base.OnKeyDown(e);
+        }
+    }
+
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = true;
+        }
+
+        if (!e.Handled)
+        {
+            base.OnKeyUp(e);
+        }
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        FormStashFormClosing(this, e);
+        _asyncLoader.Dispose();
+        _viewChangesSequence.Dispose();
+
+        base.OnClosed(e);
+    }
+
+    private void FormStashFormClosing(object? sender, EventArgs e)
+    {
+        AppSettings.StashKeepIndex = StashKeepIndex.IsChecked == true;
+        AppSettings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.IsChecked == true;
+    }
+
+    protected override void OnRuntimeLoad(EventArgs e)
+    {
+        base.OnRuntimeLoad(e);
+        FormStashLoad(this, e);
+    }
+
+    private void FormStashLoad(object? sender, EventArgs e)
+    {
+        StashKeepIndex.IsChecked = AppSettings.StashKeepIndex;
+        chkIncludeUntrackedFiles.IsChecked = AppSettings.IncludeUntrackedFilesInManualStash;
+        LoadHotkeys(HotkeySettingsName);
+    }
 
     private void Initialize()
     {
@@ -147,26 +221,6 @@ public sealed partial class FormStash : GitModuleForm
         ToolTip.SetTip(Stashes, toolTip);
     }
 
-    protected override void OnRuntimeLoad(EventArgs e)
-    {
-        base.OnRuntimeLoad(e);
-
-        StashKeepIndex.IsChecked = AppSettings.StashKeepIndex;
-        chkIncludeUntrackedFiles.IsChecked = AppSettings.IncludeUntrackedFilesInManualStash;
-        LoadHotkeys(HotkeySettingsName);
-        RefreshAll(force: true);
-    }
-
-    protected override void OnClosed(EventArgs e)
-    {
-        AppSettings.StashKeepIndex = StashKeepIndex.IsChecked == true;
-        AppSettings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.IsChecked == true;
-        _asyncLoader.Dispose();
-        _viewChangesSequence.Dispose();
-
-        base.OnClosed(e);
-    }
-
     private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         Stashed.SelectPreviousVisibleItem();
@@ -202,14 +256,14 @@ public sealed partial class FormStash : GitModuleForm
         return true;
     }
 
-    protected override bool ExecuteCommand(int command)
+    protected override bool ExecuteCommand(int cmd)
     {
-        switch ((Command)command)
+        switch ((Command)cmd)
         {
             case Command.NextStash: return ChangeSelectedStash(next: true);
             case Command.PreviousStash: return ChangeSelectedStash(next: false);
             case Command.Refresh: RefreshAll(); return true;
-            default: return base.ExecuteCommand(command);
+            default: return base.ExecuteCommand(cmd);
         }
     }
 
@@ -394,6 +448,11 @@ public sealed partial class FormStash : GitModuleForm
         StashSelectedFiles.IsEnabled = Stashes.SelectedIndex == 0 && Stashed.SelectedItems.Any();
     }
 
+    private void Stashes_DropDown(object? sender, EventArgs e)
+    {
+        Stashes.MinWidth = Math.Max(Stashes.MinWidth, Stashes.Bounds.Width);
+    }
+
     private void RefreshAll(bool force = false)
     {
         if (!force && Stashes.SelectedIndex != 0)
@@ -406,5 +465,17 @@ public sealed partial class FormStash : GitModuleForm
         {
             Initialize();
         }
+    }
+
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+        FormStashShown(this, e);
+    }
+
+    private void FormStashShown(object? sender, EventArgs e)
+    {
+        // shown when form is first displayed
+        RefreshAll(force: true);
     }
 }

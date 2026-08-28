@@ -18,7 +18,7 @@
     <Grid.ContextMenu>
       <ContextMenu x:Name="FileHistoryContextMenu">
         <revisionGrid:CopyContextMenuItem x:Name="copyToClipboardToolStripMenuItem" Header="Copy to clipboard" />
-        <Separator />
+        <Separator x:Name="separatorAfterCopySubmenu" />
         <MenuItem x:Name="openWithDifftoolToolStripMenuItem"
                   Header="Open with difftool"
                   InputGesture="F3">
@@ -28,7 +28,16 @@
         <MenuItem x:Name="saveAsToolStripMenuItem" Header="Save as">
           <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.SaveAs}" /></MenuItem.Icon>
         </MenuItem>
-        <Separator />
+        <Separator x:Name="toolStripSeparator2" />
+        <MenuItem x:Name="manipulateCommitToolStripMenuItem" Header="Manipulate commit">
+          <MenuItem x:Name="revertCommitToolStripMenuItem" Header="Revert commit">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.RevertCommit}" /></MenuItem.Icon>
+          </MenuItem>
+          <MenuItem x:Name="cherryPickThisCommitToolStripMenuItem" Header="Cherry pick commit">
+            <MenuItem.Icon><Image Classes="gitextensions-icon-16" Source="{x:Static properties:Images.CherryPick}" /></MenuItem.Icon>
+          </MenuItem>
+        </MenuItem>
+        <Separator x:Name="toolStripSeparator1" />
         <MenuItem x:Name="followFileHistoryToolStripMenuItem"
                   Header="Detect and follow renames"
                   ToggleType="CheckBox" />

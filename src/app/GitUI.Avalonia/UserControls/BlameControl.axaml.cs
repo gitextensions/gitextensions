@@ -27,6 +27,8 @@ namespace GitUI.Blame;
 // scroll-synchronised editor, so separate scroll-position handlers are unnecessary.
 public sealed partial class BlameControl : GitModuleControl
 {
+    public event EventHandler<CommandEventArgs>? CommandClick;
+
     /// <summary>
     /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
     /// </summary>
@@ -78,6 +80,8 @@ public sealed partial class BlameControl : GitModuleControl
         BlameFile.SelectedLineChanged += SelectedLineChanged;
         BlameFile.DoubleTapped += ActiveTextAreaControlDoubleClick;
         BlameFile.EscapePressed += () => EscapePressed?.Invoke();
+
+        CommitInfo.CommandClicked += commitInfo_CommandClicked;
 
         contextMenu.Opening += contextMenu_Opened;
         blameRevisionToolStripMenuItem.Click += blameRevisionToolStripMenuItem_Click;
@@ -193,6 +197,7 @@ public sealed partial class BlameControl : GitModuleControl
         CommitInfo.IsVisible = false;
         splitContainer1.RowDefinitions[0].Height = new GridLength(0);
         splitContainer1.RowDefinitions[1].Height = new GridLength(0);
+        CommitInfo.CommandClicked -= commitInfo_CommandClicked;
     }
 
     public async Task LoadBlameAsync(
@@ -264,6 +269,11 @@ public sealed partial class BlameControl : GitModuleControl
         {
             _loading = false;
         }
+    }
+
+    private void commitInfo_CommandClicked(object? sender, CommandEventArgs e)
+    {
+        CommandClick?.Invoke(sender, e);
     }
 
     private void BlameAuthor_MouseLeave(object? sender, PointerEventArgs e)
