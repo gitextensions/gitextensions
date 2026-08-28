@@ -69,6 +69,8 @@ public sealed class RemotesTests
         form.FindControl<ComboBox>("Url").Should().NotBeNull();
         form.FindControl<Label>("labelPushUrl")!.IsVisible.Should().BeFalse("the push url row shows only with a separate push url");
         form.FindControl<ListBox>("RemoteBranches").Should().NotBeNull();
+        form.FindControl<TextBox>("PuttySshKey").Should().NotBeNull();
+        form.FindControl<Grid>("pnlMgtPuttySsh")!.IsVisible.Should().BeFalse("the runtime SSH backend has not been evaluated");
     }
 
     [AvaloniaTest]
@@ -92,6 +94,10 @@ public sealed class RemotesTests
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "Save", "Text", "&Save changes");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "btnRemoteColor", "Text", "Set &color");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "btnRemoteColorReset", "Text", "Default color");
+        translation.Received(1).AddTranslationItem(nameof(FormRemotes), "LoadSSHKey", "Text", "&Load SSH key");
+        translation.Received(1).AddTranslationItem(nameof(FormRemotes), "SshBrowse", "Text", "Brows&e...");
+        translation.Received(1).AddTranslationItem(nameof(FormRemotes), "TestConnection", "Text", "&Test connection");
+        translation.Received(1).AddTranslationItem(nameof(FormRemotes), "label3", "Text", "Private &key file");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "SaveDefaultPushPull", "Text", "&Save changes");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "label4", "Text", "&Local branch name");
         translation.Received(1).AddTranslationItem(nameof(FormRemotes), "label5", "Text", "&Remote repository");
@@ -123,6 +129,7 @@ public sealed class RemotesTests
         form.Show();
         try
         {
+            form.FindControl<Grid>("pnlMgtPuttySsh")!.IsVisible.Should().Be(OperatingSystem.IsWindows() && GitSshHelpers.IsPlink);
             FormRemotes.TestAccessor accessor = form.GetTestAccessor();
 
             // No remotes yet: the management panel creates a new one.
@@ -217,9 +224,11 @@ public sealed class RemotesTests
         {
             FormRemotes.TestAccessor accessor = form.GetTestAccessor();
             accessor.RemoteColor.Color = MediaColor.Parse("#123456");
+            form.FindControl<TextBox>("PuttySshKey")!.Text = "C:\\keys\\origin.ppk";
             accessor.Save.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
             module.GetSetting("remote.origin.color").Should().Be("#123456");
+            module.GetSetting("remote.origin.puttykeyfile").Should().Be("C:\\keys\\origin.ppk");
             accessor.RemoteColor.Content.Should().BeOfType<Border>()
                 .Which.Background.Should().BeAssignableTo<Avalonia.Media.ISolidColorBrush>()
                 .Which.Color.Should().Be(MediaColor.Parse("#123456"));

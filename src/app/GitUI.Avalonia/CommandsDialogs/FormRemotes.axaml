@@ -12,7 +12,7 @@
   <TabControl x:Name="tabControl1" Margin="8">
     <TabItem x:Name="tabPage1" Header="Remote repositories">
       <Grid ColumnDefinitions="240,*" ColumnSpacing="10" Margin="0,8,0,0">
-        <Grid RowDefinitions="*,Auto">
+        <Grid x:Name="panel1" RowDefinitions="*,Auto">
           <ListBox x:Name="Remotes" />
           <StackPanel x:Name="panelButtons"
                       Grid.Row="1"
@@ -34,15 +34,19 @@
           </StackPanel>
         </Grid>
 
-        <HeaderedContentControl x:Name="gbMgtPanel"
-                                Classes="gitextensions-group-box"
-                                Grid.Column="1"
-                                Header="Create New Remote">
-          <Grid x:Name="flpnlRemoteManagement"
-                ColumnDefinitions="Auto,*,110"
-                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-                ColumnSpacing="8" RowSpacing="6"
-                VerticalAlignment="Top">
+        <Grid x:Name="pnlManagementContainer" Grid.Column="1">
+          <HeaderedContentControl x:Name="gbMgtPanel"
+                                  Classes="gitextensions-group-box"
+                                  Header="Create New Remote">
+            <Grid x:Name="flpnlRemoteManagement"
+                  RowDefinitions="Auto,Auto,*"
+                  RowSpacing="8"
+                  VerticalAlignment="Top">
+              <Grid x:Name="pnlMgtDetails">
+                <Grid x:Name="tblpnlMgtDetails"
+                      ColumnDefinitions="Auto,*,110"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnSpacing="8" RowSpacing="6">
             <Label x:Name="label1"
                    Padding="0"
                    Content="_Name"
@@ -108,20 +112,79 @@
             <TextBox x:Name="txtRemotePrefix"
                      Grid.Row="5" Grid.Column="1" />
 
-            <compat:IconButton x:Name="Save"
-                               Classes="gitextensions-dialog-action"
-                               Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"
-                               MinWidth="120"
-                               HorizontalAlignment="Right"
-                               Icon="{x:Static properties:Images.Save}"
-                               Content="_Save changes" />
-          </Grid>
-        </HeaderedContentControl>
+                </Grid>
+              </Grid>
+
+              <Grid x:Name="pnlMgtPuttySsh"
+                  Grid.Row="1"
+                  Margin="0,2,0,0"
+                  IsVisible="False"
+                  RowDefinitions="Auto,Auto">
+              <Grid ColumnDefinitions="Auto,*">
+                <TextBlock x:Name="lblMgtPuttyPanelHeader"
+                           Text="PuTTY SSH"
+                           FontWeight="SemiBold" />
+                <Border x:Name="lblHeaderLine2"
+                        Grid.Column="1"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                        BorderThickness="0,1,0,0" />
+              </Grid>
+              <Grid x:Name="tableLayoutPanel1"
+                    Grid.Row="1"
+                    Margin="0,6,0,0"
+                    ColumnDefinitions="Auto,*,104"
+                    RowDefinitions="Auto,Auto"
+                    ColumnSpacing="8"
+                    RowSpacing="6">
+                <Label x:Name="label3"
+                       Padding="0"
+                       MinWidth="100"
+                       Content="Private _key file"
+                       Target="{Binding #PuttySshKey}"
+                       VerticalAlignment="Center" />
+                <TextBox x:Name="PuttySshKey"
+                         Grid.Column="1" />
+                <compat:IconButton x:Name="SshBrowse"
+                                   Grid.Column="2"
+                                   MinWidth="104"
+                                   Icon="{x:Static properties:Images.FileNew}"
+                                   Content="Brows_e..." />
+                <StackPanel
+                            Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal"
+                            Spacing="6">
+                  <compat:IconButton x:Name="LoadSSHKey"
+                                     MinWidth="160"
+                                     Icon="{x:Static properties:Images.Putty}"
+                                     Content="_Load SSH key" />
+                  <compat:IconButton x:Name="TestConnection"
+                                     MinWidth="160"
+                                     Icon="{x:Static properties:Images.Putty}"
+                                     Content="_Test connection" />
+                </StackPanel>
+              </Grid>
+            </Grid>
+
+              <StackPanel x:Name="flowLayoutPanel2"
+                          Grid.Row="2"
+                          HorizontalAlignment="Right">
+                <compat:IconButton x:Name="Save"
+                                   Classes="gitextensions-dialog-action"
+                                   MinWidth="120"
+                                   Icon="{x:Static properties:Images.Save}"
+                                   Content="_Save changes" />
+              </StackPanel>
+            </Grid>
+          </HeaderedContentControl>
+        </Grid>
       </Grid>
     </TabItem>
 
     <TabItem x:Name="tabPage2" Header="Default pull behavior (fetch &amp; merge)">
-      <Grid RowDefinitions="*,Auto" Margin="0,8,0,0">
+      <Grid x:Name="tableLayoutPanel2" RowDefinitions="*,Auto" Margin="0,8,0,0">
         <Grid x:Name="columnsGrid" RowDefinitions="Auto,*">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -152,7 +215,8 @@
                    Grid.Row="1" Grid.ColumnSpan="3" />
         </Grid>
 
-        <Grid Grid.Row="1"
+        <Grid x:Name="panelDetails"
+              Grid.Row="1"
               Margin="0,10,0,0"
               ColumnDefinitions="Auto,*,Auto"
               RowDefinitions="Auto,Auto,Auto"
